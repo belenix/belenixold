@@ -1,0 +1,86 @@
+diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/configure.ac compiz-fusion-plugins-unsupported-0.6.0/configure.ac
+--- compiz-fusion-plugins-unsupported-0.6.0.orig/configure.ac	2007-10-15 14:06:18.000000000 -0400
++++ compiz-fusion-plugins-unsupported-0.6.0/configure.ac	2007-10-31 15:51:50.027096933 -0400
+@@ -1,6 +1,6 @@
+ AC_PREREQ(2.57)
+ 
+-AC_INIT([compiz-fusion-plugins-unsupported],esyscmd(. ./VERSION;echo -n $VERSION), [maniac@opencompositing.org])
++AC_INIT([compiz-fusion-plugins-unsupported],esyscmd(. ./VERSION;echo $VERSION | tr -d "\n"), [maniac@opencompositing.org])
+ 
+ AC_DEFINE_UNQUOTED(VERSION,"$VERSION",[Version])
+ 
+diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/fakeargb.xml.in compiz-fusion-plugins-unsupported-0.6.0/metadata/fakeargb.xml.in
+--- compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/fakeargb.xml.in	2007-10-15 14:06:19.000000000 -0400
++++ compiz-fusion-plugins-unsupported-0.6.0/metadata/fakeargb.xml.in	2007-10-31 16:03:44.444126929 -0400
+@@ -9,7 +9,7 @@
+ 		<_long>Toggle window fake ARGB.</_long>
+ 		<allowed key="true" button="true"/>
+ 		<default>
+-		   <key>&lt;Super&gt;f</key>
++		   <key>&lt;Mod4&gt;f</key>
+ 		</default>
+ 	    </option>
+ 	</display>
+diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/mswitch.xml.in compiz-fusion-plugins-unsupported-0.6.0/metadata/mswitch.xml.in
+--- compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/mswitch.xml.in	2007-10-15 14:06:19.000000000 -0400
++++ compiz-fusion-plugins-unsupported-0.6.0/metadata/mswitch.xml.in	2007-10-31 16:03:44.444980442 -0400
+@@ -9,7 +9,7 @@
+ 	<_long> Begin Mouse Gesture </_long>
+ 	<allowed key="true" button="true"/>
+ 	<default>
+-	  <key>&lt;Super&gt;s</key>
++	  <key>&lt;Mod4&gt;s</key>
+ 	</default>
+       </option>
+     </display>
+diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/snow.xml.in compiz-fusion-plugins-unsupported-0.6.0/metadata/snow.xml.in
+--- compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/snow.xml.in	2007-10-15 14:06:19.000000000 -0400
++++ compiz-fusion-plugins-unsupported-0.6.0/metadata/snow.xml.in	2007-10-31 16:03:44.445818001 -0400
+@@ -123,7 +123,7 @@
+ 					<_long>Snow toggle key</_long>
+ 					<allowed key="true"/>
+ 					<default>
+-						<key>&lt;Super&gt;F3</key>
++						<key>&lt;Mod4&gt;F3</key>
+ 					</default>
+ 				</option>
+ 			</group>
+diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/tile.xml.in compiz-fusion-plugins-unsupported-0.6.0/metadata/tile.xml.in
+--- compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/tile.xml.in	2007-10-15 14:06:19.000000000 -0400
++++ compiz-fusion-plugins-unsupported-0.6.0/metadata/tile.xml.in	2007-10-31 16:03:44.444446706 -0400
+@@ -116,7 +116,7 @@
+ 					<_long>Move and resize all visible windows both vertically and horizontally, so that the occupy whole screen and are in a grid.</_long>
+ 					<allowed key="true"/>
+ 					<default>
+-						<key>&lt;Super&gt;&lt;Shift&gt;a</key>
++						<key>&lt;Mod4&gt;&lt;Shift&gt;a</key>
+ 					</default>
+ 				</option>
+ 				<option name="tile_cascade" type="action">
+@@ -124,7 +124,7 @@
+ 					<_long>Move and resize all visible windows with the delta value set for cascading.</_long>
+ 					<allowed key="true"/>
+ 					<default>
+-						<key>&lt;Super&gt;&lt;Shift&gt;s</key>
++						<key>&lt;Mod4&gt;&lt;Shift&gt;s</key>
+ 					</default>
+ 				</option>
+ 				<option name="tile_restore" type="action">
+@@ -132,7 +132,7 @@
+ 					<_long>Restore windows to their original position they had before tiling.</_long>
+ 					<allowed key="true"/>
+ 					<default>
+-						<key>&lt;Super&gt;&lt;Shift&gt;z</key>
++						<key>&lt;Mod4&gt;&lt;Shift&gt;z</key>
+ 					</default>
+ 				</option>
+ 				<option name="tile_toggle" type="action">
+@@ -140,7 +140,7 @@
+ 					<_long>Toggle between tile and restore</_long>
+ 					<allowed key="true"/>
+ 					<default>
+-						<key>&lt;Super&gt;&lt;Shift&gt;x</key>
++						<key>&lt;Mod4&gt;&lt;Shift&gt;x</key>
+ 					</default>
+ 				</option>
+ 			</group>
