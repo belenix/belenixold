@@ -58,10 +58,16 @@ fi
 
 export CPPFLAGS="-I/usr/X11/include"
 export CFLAGS="%optflags"
-export LDFLAGS="%_ldflags -lX11"
+export LDFLAGS="%_ldflags -lX11 -L%{openwinlib} -lXt"
 export PATH="${PATH}:%{openwinbin}"
 
 xmkmf
+
+(cd lib/audio
+mv Makefile Makefile.orig
+echo "REQUIREDLIBS = -L%{openwinlib} -lXt" > Makefile
+cat Makefile.orig >> Makefile)
+
 make World
 
 %install
@@ -77,6 +83,7 @@ mv $RPM_BUILD_ROOT%{openwinlib}/lib*.so* $RPM_BUILD_ROOT%{_libdir}
 mv $RPM_BUILD_ROOT%{openwinbin} $RPM_BUILD_ROOT%{_bindir}
 mv $RPM_BUILD_ROOT%{openwininclude} $RPM_BUILD_ROOT%{_includedir}
 mv $RPM_BUILD_ROOT%{openwindata} $RPM_BUILD_ROOT%{_datadir}
+chmod a+x $RPM_BUILD_ROOT%{_libdir}/lib*.so*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
