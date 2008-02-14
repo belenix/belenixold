@@ -20,6 +20,8 @@ Summary:	Network Audio System
 Version:	%{src_ver}
 License:	Free
 Source:		%{src_url}/%{src_name}-%{version}.src.tar.gz
+Patch1:         nas-01-libaudio.diff
+
 SUNW_BaseDir:	%{_basedir}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 
@@ -49,6 +51,7 @@ SUNW_BaseDir:            /
 
 %prep
 %setup -q -n %{src_name}-%version
+%patch1 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -62,11 +65,6 @@ export LDFLAGS="%_ldflags -lX11 -L%{openwinlib} -lXt"
 export PATH="${PATH}:%{openwinbin}"
 
 xmkmf
-
-(cd lib/audio
-mv Makefile Makefile.orig
-echo "REQUIREDLIBS = -L%{openwinlib} -lXt" > Makefile
-cat Makefile.orig >> Makefile)
 
 make World
 
@@ -106,6 +104,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}
 
 %changelog
+* Thu Feb 14 2008 - moinak.ghosh@sun.com
+- Add patch to Imakefile to add proper linker flags for libaudio.
 * Fri Jan 11 2008 - moinak.ghosh@sun.com
 - Update source URL, bumped version to 1.9.1
 - Add openwinbin to PATH, use rm -f to quiesce rm

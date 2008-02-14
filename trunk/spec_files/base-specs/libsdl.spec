@@ -71,7 +71,6 @@ export LDFLAGS="%_ldflags"
         --with-esd-prefix=%{_prefix}	\
 	--disable-alsa			\
         --enable-joystick               \
-        --disable-nas			\
 	%nasm_option
 
 %if %arch_sse2
