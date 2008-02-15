@@ -126,22 +126,27 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n SUNWlibmr
 %defattr (-, root, bin)
+%dir %attr (0755, root, sys) %{_prefix}
 %dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, other) %{_docdir}
 %dir %attr (0755, root, other) %{_docdir}/SUNWlibmr
 %{_docdir}/SUNWlibmr/*
 
 %files -n SUNWlibms
 %defattr (-, root, bin)
 %dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, other) %{_docdir}
 %dir %attr (0755, root, other) %{_docdir}/SUNWlibms
 %{_docdir}/SUNWlibms/*
 
 %files -n SUNWlibmsr
 %defattr (-, root, bin)
+%dir %attr (0755, root, sys) %{_prefix}
 %dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, other) %{_docdir}
 %dir %attr (0755, root, other) %{_docdir}/SUNWlibmsr
 %{_docdir}/SUNWlibmsr/*
 
 %changelog
-* Fri Feb 15 2008 - moinak.ghosh@sun.com
+* Sun Feb 10 2008 - moinak.ghosh@sun.com
 - Initial spec.
