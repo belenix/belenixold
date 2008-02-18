@@ -42,6 +42,8 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 rm $RPM_BUILD_ROOT%{_libdir}/*.a
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/share/doc
 mv $RPM_BUILD_ROOT%{_prefix}/docs $RPM_BUILD_ROOT%{_prefix}/share/doc/bdb
+(cd $RPM_BUILD_ROOT%{_libdir}
+    ln -s libdb.so libdb.so.1)
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,6 +61,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Mon Feb 18 2008 - moinak.ghosh@sun.com
+- Add link to libdb.so.1
 * Fri Jan 05 2007 - daymobrew@users.sourceforge.net
 - Add URL.
 * Tue Nov 07 2006 - glynn.foster@sun.com
