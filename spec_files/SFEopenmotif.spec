@@ -16,8 +16,9 @@ URL:                     http://www.motifzone.net/index.php
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Patch0:                  %{src_name}-01-%{version}.diff
 Patch1:                  %{src_name}-02-compatibility.diff
+Patch2:                  %{src_name}-03-xicproc.diff
 Source1:                 XmStrDefs21.ht
-
+SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 
 Requires: SUNWcsu
@@ -27,8 +28,7 @@ BuildRequires: SUNWjpg-devel
 Requires: SUNWpng
 BuildRequires: SUNWpng-devel
 Requires: SUNWfontconfig
-Requires: SFEfreetype
-BuildRequires: SFEfreetype-devel
+Requires: SUNWfreetype2
 Conflicts: SUNWmfrun
 Conflicts: SUNWmfdev
 
@@ -50,9 +50,10 @@ Conflicts: SUNWmfdev
             --enable-xft \
             --enable-jpeg \
             --enable-png \
-            --with-freetype-config=%{gnu_bin}/freetype-config
+            --with-freetype-config=/usr/sfw/bin/freetype-config
 
 cat %{PATCH1} | gpatch -p1 --fuzz=0
+cat %{PATCH2} | gpatch -p1 --fuzz=0
 cp %{SOURCE1} lib/Xm
 
 make
@@ -130,6 +131,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{X11_DIR}/share/Xm/wsm/*
 
 %changelog
+* Wed Feb 20 2008 - moinak.ghosh@sun.com
+- Add patch to remove Solaris work-around not needed with FOX.
 * Thu Feb 07 2008 - moinak.ghosh@sun.com
 - Rework to add compatibility with Solaris Motif.
 - Add devel package.
@@ -137,4 +140,3 @@ rm -rf $RPM_BUILD_ROOT
 - Update dependencies.
 - Thu Feb 07 2008 - pradhap (at) gmail.com
 - Initial openmotif spec file.
-
