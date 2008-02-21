@@ -32,6 +32,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
 fi
 export CFLAGS="%optflags"
 export LDFLAGS="%_ldflags"
+export ACLOCAL=/usr/bin/aclocal-1.10
 
 libtoolize --copy --force
 aclocal $ACLOCAL_FLAGS
@@ -64,11 +65,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 %dir %attr (0755, root, bin) %{_bindir}
 %{_bindir}/dvdnav-config
-#%dir %attr (0755, root, sys) %{_datadir}
-#%dir %attr (0755, root, other) %{_datadir}/aclocal
-#%{_datadir}/aclocal/*
+%dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, other) %{_datadir}/aclocal
+%{_datadir}/aclocal/*
 
 %changelog
+* Thu Feb 22 2008 - moinak.ghosh@sun.com
+- Revert earlier change and set ACLOCAL to correctly generate aclocal directory.
 * Thu Feb 22 2008 - moinak.ghosh@sun.com
 - Comment unneeded aclocal directory.
 * Sun Jan  7 2007 - laca@sun.com
