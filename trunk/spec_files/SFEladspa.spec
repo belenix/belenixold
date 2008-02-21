@@ -34,7 +34,11 @@ fi
 
 
 export CFLAGS="%optflags"
+%if %cc_is_gcc
+export CXXFLAGS="%cxx_optflags"
+%else
 export CXXFLAGS="%cxx_optflags -library=Cstd"
+%endif
 export LDFLAGS="%_ldflags"
 export bindir=%{_bindir}
 export libexecdir=%{_libexecdir}
@@ -64,5 +68,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}
 
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Fix CXXFLAGS to build with Gcc.
 * Tue Jun  5 2007 - dougs@truemail.co.th
 - Initial version

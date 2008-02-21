@@ -26,8 +26,8 @@ Requires: SUNWTk
 %install
 rm -rf $RPM_BUILD_ROOT
 
-mkdir -p ${RPM_BUILD_ROOT}%{_prefix}/openwin/lib/X11/fonts/TrueType
-cp * ${RPM_BUILD_ROOT}%{_prefix}/openwin/lib/X11/fonts/TrueType
+mkdir -p ${RPM_BUILD_ROOT}%{_prefix}/X11/lib/X11/fonts/TrueType
+cp * ${RPM_BUILD_ROOT}%{_prefix}/X11/lib/X11/fonts/TrueType
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -43,5 +43,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/*
 
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Change install location to build with FOX.
 * Sun Feb 03 2008 - moinak.ghosh@sun.com
 - Initial spec.

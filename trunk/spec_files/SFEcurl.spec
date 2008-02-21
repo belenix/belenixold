@@ -59,7 +59,7 @@ export CPPFLAGS="-I/usr/sfw/include"
 export MSGFMT="/usr/bin/msgfmt"
 
 %ifarch amd64 sparcv9
-export CFLAGS="%optflags -m64 -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib/%_arch64"
+export CFLAGS="%optflags64 -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib/%_arch64"
 export RPM_OPT_FLAGS="$CFLAGS"
 export LDFLAGS="-m64 -L/usr/sfw/lib/%_arch64 -R/usr/sfw/lib/%_arch64"
 %curl64.build -d %name-%version/%_arch64
@@ -126,6 +126,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Fix 64Bit build flags to properly build with Gcc.
 * Sun Jan 06 2008 - moinak.ghosh@sun.com
 - Fixed pkgconfig directory permission
 * Wed Dec 12 2007 - Michal Bielicki

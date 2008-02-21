@@ -56,6 +56,7 @@ nlsopt=-disable-nls
 export CC=gcc
 export CFLAGS="%optflags -D__C99FEATURES__"
 export LDFLAGS="%_ldflags -lm"
+export PATH="%{gnu_bin}:${PATH}"
 bash ./configure	\
     --prefix=%{_prefix} \
     --enable-mp4-output	\
@@ -105,6 +106,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Add /usr/gnu/bin to PATH to enable use of xgettext from GNU gettext in Indiana env.
 * tue Jan 08 2008 - moinak.ghosh@sun.com
 - Build with gcc and enable C99FEATURES.
 * Tue Nov 20 2007 - daymobrew@users.sourceforge.net

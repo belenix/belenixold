@@ -16,6 +16,7 @@ Patch1:		     gpac-01-libs.diff
 Patch2:		     gpac-02-gcc.diff
 Patch3:		     gpac-03-install.diff
 Patch4:		     gpac-04-inaddr.diff
+Patch5:              gpac-05-crazy.diff
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -42,6 +43,7 @@ Requires: %name
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -90,6 +92,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr (-, root, bin)
 %{_includedir}
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Add patch to fix silly problem building in Indiana-like environment.
 * Mon Dec 31 6 2007 - markwright@internode.on.net
 - Add patch 4 to fix trivial compiler error missing INADDR_NONE.
 - Add --extra-libs="-lrt -lm".

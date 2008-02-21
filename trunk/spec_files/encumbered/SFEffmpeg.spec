@@ -32,8 +32,9 @@ Requires: SUNWmlib
 %else
 %define mlib_opt
 %endif
-BuildRequires: SUNWxwinc
-Requires: SUNWxwrtl
+Requires: FSWxwrtl
+Requires: FSWxorg-clientlibs
+BuildRequires: FSWxorg-headers
 Requires: SUNWzlib
 %if %SUNWlibsdl
 BuildRequires: SUNWlibsdl-devel
@@ -162,6 +163,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/postproc
 
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Fix dependencies to build with FOX.
 * Sat Aug 11 2007 - trisk@acm.jhu.edu
 - Disable mediaLib support on non-sparc (conflicts with MMX)
 - Enable x11grab for X11 recording

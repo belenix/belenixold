@@ -40,6 +40,7 @@ Requires: SUNWlibms
 Summary:                 %{summary} - development files
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
+Requires: %{name}
 
 %prep
 rm -rf %name-%version
@@ -138,6 +139,8 @@ rm -rf $RPM_BUILD_ROOT
 #%{_mandir}/man3/*
 
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Fix dependency of devel package.
 * Wed Nov 28 2007 - Thomas.Wagner@Sun.COM
 - rework BuildRequires: CBEbison or SUNWbison required.
   suggestions welcome, new OS releases have SUNWbison but PATH results in /opt/jdsbld/bin/bison w/o packagename CBEbison
