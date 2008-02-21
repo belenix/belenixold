@@ -28,8 +28,10 @@ SUNW_BaseDir:		%{_basedir}
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 Requires: SUNWlibms
-Requires: SUNWxwrtl
-Requires: SUNWxwplt
+Requires: FSWxwrtl
+BuildRequires: FSWxorg-headers
+Requires: SUNWxorg-mesa
+Requires: FSWxorg-clientlibs
 BuildConflicts: SUNWlibsdl
 
 %package devel
@@ -123,6 +125,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Fix dependencies to build with FOX.
 * Thu Aug 16 2007 - trisk@acm.jhu.edu
 - Inherit base-spec properties
 * Sat Jul 14 2007 - dougs@truemail.co.th

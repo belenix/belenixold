@@ -44,18 +44,18 @@ fi
 
 export CFLAGS="-O4 -fPIC -DPIC -I/usr/X11/include -I/usr/openwin/include -D_LARGEFILE64_SOURCE -I/usr/gnu/include -mcpu=pentiumpro -mtune=pentiumpro -msse2 -mfpmath=sse"
 export LDFLAGS=
-export CC="/usr/gnu/bin/gcc"
-export LD="/usr/gnu/bin/ld"
+#export CC="/usr/gnu/bin/gcc"
+#export LD="/usr/gnu/bin/ld"
 
 cd build/generic
 bash ./bootstrap.sh
-# autotools changes -Wl,--version-script to -Wl,-M since
-# it thinks we are using the Sun linker.  I do not know
-# how to persuade autotools that we are actually using the
-# gnu linker /usr/gnu/ld.  Hence the following sed hack.
-mv configure configure.genned
-sed -e 's/-Wl,-M,libxvidcore.ld/-Wl,--version-script,libxvidcore.ld/' configure.genned >configure
-chmod ug+x configure
+## autotools changes -Wl,--version-script to -Wl,-M since
+## it thinks we are using the Sun linker.  I do not know
+## how to persuade autotools that we are actually using the
+## gnu linker /usr/gnu/ld.  Hence the following sed hack.
+#mv configure configure.genned
+#sed -e 's/-Wl,-M,libxvidcore.ld/-Wl,--version-script,libxvidcore.ld/' configure.genned >configure
+#chmod ug+x configure
 ./configure --prefix=%{_prefix}			\
             --libdir=%{_libdir}			\
             --includedir=%{_includedir}
@@ -84,6 +84,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}
 
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Comment hardcoded dependency on SFEgcc for now.
 * Tue Jan 08 2008 - moinak.ghosh@sun.com
 - Removed redundant CFLAGS setting that was overwriting the earlier value.
 * Mon Dec 31 2007 - markwright@internode.on.net

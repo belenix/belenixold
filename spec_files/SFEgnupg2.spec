@@ -7,6 +7,7 @@
 
 %include Solaris.inc
 %use gnupg = gnupg2.spec
+%define sunw_gnu_iconv %(pkginfo -q SUNWgnu-libiconv && echo 1 || echo 0)
 
 Name:          SFEgnupg2
 Summary:       %{gnupg.summary}
@@ -22,8 +23,13 @@ Requires: SFEreadline
 BuildRequires: SFEreadline-devel
 Requires: SUNWcurl
 %if %build_l10n
+%if %sunw_gnu_iconv
+Requires: SUNWgnu-libiconv
+Requires: SUNWgnu-gettext
+%else
 Requires: SFEgettext
 Requires: SFElibiconv
+%endif
 %endif
 
 %if %build_l10n
@@ -99,6 +105,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Feb 21 2008 - moinak.ghosh@sun.com
+- Build with SUNWgnu-gettext/libiconv from JDS gate for Indiana environment.
 * Sun Jan 20 2008 - moinak.ghosh@sun.com
 - Fixed various nits.
 - Fixed build using SUN Studio.

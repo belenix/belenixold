@@ -17,7 +17,11 @@
 %define can_isaexec 1
 %define gtk_doc_option --disable-gtk-doc
 
+%if %option_with_gnu_iconv
+%define arch_ldadd -L%{_libdir} -R%{_libdir} -Wl,-zignore -R/usr/gnu/lib/%{_arch64} -lgnuintl -lgnuiconv
+%else
 %define arch_ldadd -L%{_libdir} -R%{_libdir}
+%endif
 
 %ifarch amd64
 %define opt_amd64 1
@@ -46,21 +50,25 @@
 %ifarch sparc
 %define gcc_optflags64           %_gcc64_opt_level -mcpu=ultrasparc -m64 -Xlinker -i %gcc_picflags
 %define gcc_cxx_optflags64       %gcc_optflags64
+%define gcc_ldflags64		-m64
 %endif
 
 %ifarch i386
 %define gcc_optflags64           %_gcc64_opt_level -march=opteron -m64 -Xlinker -i -fno-omit-frame-pointer %gcc_picflags
 %define gcc_cxx_optflags64       %gcc_optflags64
+%define gcc_ldflags64		-m64
 %endif
 
 %ifarch sparc
 %define suncc_optflags64           -i %_cc64_opt_level -xstrconst -xarch=v9 -xcode=pic32 -mr
 %define suncc_cxx_optflags64       -i %_cxx64_opt_level -xarch=v9 -xcode=pic32 -mr -norunpath
+%define suncc_ldflags64
 %endif
 
 %ifarch i386
 %define suncc_optflags64           -i %_cc64_opt_level -xstrconst -xarch=generic64 -Kpic -xregs=no%%frameptr
 %define suncc_cxx_optflags64       -i %_cxx64_opt_level -xarch=generic64 -Kpic -pentium -mr -norunpath -xregs=no%%frameptr
+%define suncc_ldflags64
 %endif
 
 %if %cc_is_gcc
@@ -70,6 +78,7 @@
 %define cxx_optflags64 %gcc_cxx_optflags64
 %define _gpp_version %(g++ --version | head -1 | cut -f3 -d' ')
 %define _cxx_libdir	   %{_prefix}/lib/g++/%{_gpp_version}/%{_arch64}
+%define _ldflags64 %gcc_ldflags64
 
 %else
 # cc is not gcc
@@ -78,11 +87,13 @@
 %define optflags64 %suncc_optflags64
 %define cxx_optflags64 %suncc_cxx_optflags64
 %define _cxx_libdir %{_prefix}/lib
+%define _ldflags64 %suncc_ldflags64
 
 %endif
 
 %define optflags %optflags64 ${EXTRA_CFLAGS}
 %define cxx_optflags %cxx_optflags64 ${EXTRA_CXXFLAGS}
+%define _ldflags %__ldflags %_ldflags64
 
 %define _bindir		 %{_prefix}/bin/%{bld_arch}
 %define _libdir		 %{_prefix}/lib/%{bld_arch}
@@ -108,6 +119,9 @@
 %define xorg_lib_path   -L%xorg_lib -R%xorg_lib
 
 # ChangeLog:
+# 2008-02-21  moinak.ghosh@sun.com
+# - Add definitions to properly define 64Bit LDFLAGS for Gcc.
+# - Merge in definitions from SFE repo for building with gnu gettext.
 # 2008-02-17  Laszlo (Laca) Peter  <laca@sun.com>
 # - define _cxx_libdir and _gpp_version for building C++ libs
 # 2007-03-20  Doug Scott  <dougs@truemail.co.th>

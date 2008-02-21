@@ -28,9 +28,10 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
 fi
 export CFLAGS="%optflags"
 export LDFLAGS="%_ldflags"
-export CXXFLAGS="%cxx_optflags -features=extensions"
 %if %cc_is_gcc
+export CXXFLAGS="%cxx_optflags"
 %else
+export CXXFLAGS="%cxx_optflags -features=extensions"
 export CXX="${CXX} -norunpath"
 %endif
 

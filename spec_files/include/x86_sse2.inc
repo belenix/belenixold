@@ -12,8 +12,6 @@
 %define can_isaexec 1
 %define gtk_doc_option --disable-gtk-doc
 
-%define arch_ldadd           -xarch=sse2 -L%{_libdir} -R%{_libdir}
-
 %if %debug_build
 %define pkgbuild_postprocess /bin/true
 %define _cc_opt_level      -g
@@ -42,6 +40,12 @@
 %define optflags %gcc_optflags
 %define cxx_optflags %gcc_cxx_optflags
 
+%if %option_with_gnu_iconv
+%define arch_ldadd           -Wl,-zignore -lgnuintl -lgnuiconv -msse2 -L%{_libdir} -R%{_libdir} -R/usr/gnu/lib
+%else
+%define arch_ldadd           -msse2 -L%{_libdir} -R%{_libdir}
+%endif
+
 %else
 # cc is not gcc
 
@@ -49,8 +53,15 @@
 %define optflags %suncc_optflags ${EXTRA_CFLAGS}
 %define cxx_optflags %suncc_cxx_optflags ${EXTRA_CXXFLAGS}
 
+%if %option_with_gnu_iconv
+%define arch_ldadd           -Wl,-zignore -lgnuintl -lgnuiconv -xarch=sse2 -L%{_libdir} -R%{_libdir} -R/usr/gnu/lib
+%else
+%define arch_ldadd           -xarch=sse2 -L%{_libdir} -R%{_libdir}
 %endif
 
+%endif
+
+%define _ldflags         %__ldflags
 %define _bindir		 %{_prefix}/bin/%{bld_arch}
 %define _libdir		 %{_prefix}/lib/%{bld_arch}
 %define _libexecdir	 %{_prefix}/lib/%{bld_arch}
@@ -71,6 +82,9 @@
 %define xorg_lib_path	-L%xorg_lib -L/usr/X11/lib -R%xorg_lib -R/usr/X11/lib
 
 # ChangeLog:
+# 2008-02-21  moinak.ghosh@sun.com
+# - Add definitions to properly define 64Bit LDFLAGS for Gcc.
+# - Merge in definitions from SFE repo for building with gnu gettext.
 # 2007-04-23  Doug Scott  <dougs@truemail.co.th>
 # - move -xvector the optimized flags as it required -xO3 or higher
 # 2007-03-20  Doug Scott  <dougs@truemail.co.th>

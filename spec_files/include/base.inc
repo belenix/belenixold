@@ -16,7 +16,11 @@
 # default: build gtk-doc API docs
 %define gtk_doc_option %{?!_without_gtk_doc:--enable-gtk-doc}%{?_without_gtk_doc:--disable-gtk-doc}
 
-%define arch_ldadd
+%if %option_with_gnu_iconv
+%define arch_ldadd -L%{_libdir} -R%{_libdir} -Wl,-zignore -R/usr/gnu/lib/%{_arch64} -lgnuintl -lgnuiconv
+%else
+%define arch_ldadd -L%{_libdir} -R%{_libdir}
+%endif
 
 %if %debug_build
 %define pkgbuild_postprocess /bin/true
@@ -69,6 +73,7 @@
 
 %endif
 
+%define _ldflags %__ldflags
 %define _bindir		 %{_prefix}/bin
 %define _libdir		 %{_prefix}/lib
 %define _libexecdir	 %{_prefix}/lib
@@ -90,6 +95,9 @@
 %define xorg_lib_path   -L%xorg_lib -R%xorg_lib
 
 # ChangeLog:
+# 2008-02-21  moinak.ghosh@sun.com
+# - Add definitions to properly define 64Bit LDFLAGS for Gcc.
+# - Merge in definitions from SFE repo for building with gnu gettext.
 # 2008-02-17  Laszlo (Laca) Peter  <laca@sun.com>
 # - define _cxx_libdir and _gpp_version for building C++ libs
 # 2007-06-09  Laszlo (Laca) Peter  <laca@sun.com>

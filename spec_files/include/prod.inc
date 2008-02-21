@@ -18,8 +18,11 @@ SUNW_ProdVers:             1.0
 Vendor:			   http://pkgbuild.sf.net/spec-files-extra
 %define                    pkg_prefix SFE
 %{?sf_mirror:#}%define sf_mirror easynews.dl.sourceforge.net
+%{?sf_download:#}%define sf_download http://downloads.sourceforge.net
 
 # ChangeLog:
+# 2008-02-21  moinak.ghosh@sun.com
+# - Add Sourceforge download URL for auto-selecting best mirror.
 # 2007-03-16  Laszlo (Laca) Peter  <laca@sun.com>
 # - copied from the JDS spec-files and updated for SFE
 # 2007-03-15  Laszlo (Laca) Peter  <laca@sun.com>
