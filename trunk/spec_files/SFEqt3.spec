@@ -40,14 +40,17 @@ Requires: SUNWgccruntime
 #FIXME: Requires: SUNWxorg-mesa
 # Guarantee X/freetype environment concisely (hopefully):
 Requires: SUNWGtku
-Requires: SUNWxwplt
+Requires: FSWxwpft
+Requires: FSWxorg-clientlibs
 # The above bring in many things, including SUNWxwice and SUNWzlib
 Requires: SUNWxwxft
+BuildRequires: FSWxorg-headers
+BuildRequires: SUNWxorg-mesa
 # The above also pulls in SUNWfreetype2
 Requires: SFEcups
 Requires: SFElibmng
 BuildRequires: SFEcups-devel
-BuildRequires: SUNWsqlite-devel
+BuildRequires: SUNWsqlite3-devel
 BuildRequires: SUNWsfwhea
 BuildRequires: SUNWpostgr-devel
 BuildRequires: SFElibmng-devel
@@ -180,17 +183,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Update dependencies for sqlite and FOX.
 * Thu Feb 15 2008 - Thomas Wagner
 - add (Build-)Requires: SFElibmng(-devel)
-* Thu Jan 24 2008 - moinak.ghosh@sun.com
+* Thu Jan 24 2008 - moinakg@gmail.com
 - Create a compatibility doc link so that KDE and other software
 - can find QT documentation.
 - Do not remove static libs. Put them in devel package.
-* Sun Jan 20 2008 - moinak.ghosh@sun.com
+* Sun Jan 20 2008 - moinakg@gmail.com
 - Commented out patch 3 for now. Leaks memory like a sieve without
 - showing any perceptible performance improvement.
-* Fri Jan 11 2008 - moinak.ghosh@sun.com
+* Fri Jan 11 2008 - moinakg@gmail.com
 - Fix Postgres dependency
 - Fix copyright year
-* Tue Jan 08 2008 - moinak.ghosh@sun.com
+* Tue Jan 08 2008 - moinakg@gmail.com
 - Initial spec. Thanks to Stefan Teleman for the patches.

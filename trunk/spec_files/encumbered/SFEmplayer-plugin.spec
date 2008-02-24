@@ -50,12 +50,18 @@ CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
 if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
+%if %cc_is_gcc
+export CFLAGS="-O3"
+export CXXFLAGS="-O3"
+%else
+
 %ifarch sparc
 export CFLAGS="-xO5 -xlibmil -DG_GNUC_INTERNAL=\"\""
 export CXXFLAGS="-norunpath -xO5 -xlibmil -xlibmopt -features=tmplife -DG_GNUC_INTERNAL=\"\""
 %else
 export CFLAGS="-xO3 -xlibmil -DG_GNUC_INTERNAL=\"\" -I/usr/include/mps"
 export CXXFLAGS="-norunpath -xO3 -xlibmil -xlibmopt -features=tmplife -DG_GNUC_INTERNAL=\"\""
+%endif
 %endif
 
 CPPFLAGS="-I/usr/include/firefox"                   \
@@ -103,6 +109,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Fixes to allow build with Gcc.
 * Sat Sep 29 2007 - dick@nagual.nl
 - Bumped to the latest stable release v2.45
 * Sun May 20 2007 - dick@nagual.nl

@@ -19,7 +19,7 @@ Requires: SFEgawk
 Requires: SFElibapr
 BuildRequires: SFElibapr-devel
 BuildRequires: SUNWpostgr-devel
-BuildRequires: SUNWsqlite-devel
+BuildRequires: SUNWsqlite3-devel
 BuildRequires: SUNWsfwhea
 
 %description
@@ -37,7 +37,7 @@ Requires:                %{name}
 Requires:                SUNWhea
 Requires:                SFElibapr-devel
 Requires:                SUNWpostgr-devel
-Requires:                SUNWsqlite-devel
+Requires:                SUNWsqlite3-devel
 Requires:                SUNWsfwhea
 
 %prep
@@ -108,5 +108,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
-* Tue Jan 22 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Update sqlite dependency.
+* Tue Jan 22 2008 - moinakg@gmail.com
 - Initial spec.

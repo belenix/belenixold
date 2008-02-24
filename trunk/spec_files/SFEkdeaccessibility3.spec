@@ -38,7 +38,7 @@ export CFLAGS="%optflags -fPIC -I/usr/X11/include -I/usr/gnu/include -I/usr/sfw/
 
 export CXXFLAGS="%cxx_optflags -I/usr/X11/include -I/usr/gnu/include -I/usr/sfw/include -D__C99FEATURES__ -D__EXTENSIONS__"
 
-export LDFLAGS="%_ldflags -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib -lc -lsocket -lnsl"
+export LDFLAGS="%_ldflags -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib -lc -lsocket -lnsl -lartsflow -lartsflow_idl -lkmedia2 -lkmedia2_idl -lmcop"
 
 export LIBS=$LDFLAGS
 
@@ -101,5 +101,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
-* Tue Jan 22 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Add link flags to properly link with Arts.
+* Tue Jan 22 2008 - moinakg@gmail.com
 - Initial spec.

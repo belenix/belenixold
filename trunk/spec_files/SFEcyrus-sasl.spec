@@ -16,8 +16,8 @@ SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 
-Requires: SUNWsqlite
-BuildRequires: SUNWsqlite-devel
+Requires: SUNWsqlite3
+BuildRequires: SUNWsqlite3-devel
 Requires: SUNWopenssl-libraries
 BuildRequires: SUNWopenssl-include
 Requires: SFElibntlm
@@ -79,6 +79,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/*
 
 %changelog
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Updated sqlite dependency.
 * Sun Feb 03 2008 - moinak.ghosh@sun.com
 - Add dependency on SFElibntlm.
 * Tue Jan 15 2008 - moinak.ghosh@sun.com

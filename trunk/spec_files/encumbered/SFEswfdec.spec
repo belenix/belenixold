@@ -22,7 +22,7 @@ Requires: SUNWlibms
 Requires: SUNWliboil
 Requires: SUNWlxml
 Requires: SUNWmlib
-Requires: SUNWxwrtl
+Requires: FSWxwrtl
 Requires: SUNWzlib
 Requires: SFElibmad
 Requires: SFEffmpeg
@@ -96,6 +96,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc
 
 %changelog
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Fix dependency for FOX.
 * Sun Jan 14 2007 - laca@sun.com
 - bump to 0.4.1; update %files
 * Mon Jul 10 2006 - laca@sun.com

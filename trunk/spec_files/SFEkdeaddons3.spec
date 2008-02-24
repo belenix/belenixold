@@ -20,8 +20,8 @@ BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 Requires: SFEkdebase3
 BuildRequires: SFEkdebase3-devel
 BuildRequires: SFEkdegames3-devel
-Requires: SUNWlibsdl
-BuildRequires: SUNWlibsdl-devel
+Requires: SFEsdl
+BuildRequires: SFEsdl-devel
 
 %prep
 %setup -q -n kdeaddons-%version
@@ -101,7 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
-* Tue Jan 22 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Depend on SFEsdl instead of SUNWlibsdl.
+* Tue Jan 22 2008 - moinakg@gmail.com
 - Fixed typo in configure options.
-* Sun Jan 20 2008 - moinak.ghosh@sun.com
+* Sun Jan 20 2008 - moinakg@gmail.com
 - Initial spec.

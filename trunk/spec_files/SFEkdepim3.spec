@@ -46,7 +46,7 @@ Requires: SFEkdemultimedia3-devel
 
 %prep
 %setup -q -n kdepim-%version
-%patch1 -p1
+%patch1 -p0
 
 if [ "x`basename $CC`" != xgcc ]
 then
@@ -63,7 +63,7 @@ export CFLAGS="%optflags -fPIC -I%{xorg_inc} -I%{gnu_inc} -I%{sfw_inc} `/usr/bin
 
 export CXXFLAGS="%cxx_optflags -I%{xorg_inc} -I%{gnu_inc} -I%{sfw_inc} `/usr/bin/libart2-config --cflags` -D__C99FEATURES__ -D__EXTENSIONS__"
 
-export LDFLAGS="%_ldflags %{xorg_lib_path} %{gnu_lib_path} %{sfw_lib_path} -lc -lsocket -lnsl `/usr/bin/libart2-config --libs`"
+export LDFLAGS="%_ldflags %{xorg_lib_path} %{gnu_lib_path} %{sfw_lib_path} -lc -lsocket -lnsl `/usr/bin/libart2-config --libs` -lartsflow -lartsflow_idl -lkmedia2 -lkmedia2_idl -lmcop"
 
 export LIBS=$LDFLAGS
 
@@ -140,8 +140,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
-* Thu Jan 24 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Update link flags for Arts.
+- Fix kalarm patch.
+* Thu Jan 24 2008 - moinakg@gmail.com
 - Use perl-depend definitions
 - Use predefined macros instead of hardcoding pathnames
-* Tue Jan 22 2008 - moinak.ghosh@sun.com
+* Tue Jan 22 2008 - moinakg@gmail.com
 - Initial spec.

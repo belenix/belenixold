@@ -120,12 +120,18 @@ glib-gettextize --force
 	export CXX=/usr/sfw/bin/g++
 	export CC=/usr/sfw/bin/gcc
 	export LDFLAGS="%arch_ldadd %ldadd ${EXTRA_LDFLAGS} -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib"
+	export AS=/usr/sfw/bin/gas
 %else
 	export CXX=/usr/gnu/bin/gcc
 	export CC=/usr/gnu/bin/gcc
 	export LD=/usr/gnu/bin/ld
 	export LDFLAGS="%arch_ldadd %ldadd ${EXTRA_LDFLAGS} -Wl,-export-dynamic -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib"
+	export AS=/usr/gnu/bin/gas
 %endif
+
+echo "################################"
+$CC --print-prog-name=as
+echo "################################"
 
 libtoolize --copy --force
 aclocal $ACLOCAL_FLAGS -I m4
@@ -141,7 +147,8 @@ export CXXFLAGS="$CXXFLAGS -I/usr/gnu/include -L/usr/gnu/lib -R/usr/gnu/lib -lin
             --with-w32-path=%{mplayer.codecdir} \
             --with-external-libmad \
             --with-external-dvdnav \
-            --disable-opengl
+            --disable-opengl \
+            --with-gnu-as=yes
 gmake -j $CPUS
 
 %install
@@ -243,8 +250,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/xine/plugins/1.1.8/xineplug_inp_stdin_fifo.so
 %{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_aa.so
 %{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_none.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_pgx32.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_pgx64.so
+#%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_pgx32.so
+#%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_pgx64.so
+%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_xxmc.so
+%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_xvmc.so
 %{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_sdl.so
 %{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_xshm.so
 %{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_xv.so
@@ -313,7 +322,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Sat Jan 26 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Force GNU as to work around configure script weirdness.
+- Changes to video out plugins when building with FOX.
+* Sat Jan 26 2008 - moinakg@gmail.com
 - Change SFEgcc deps, follows from SFEgcc refactoring.
 * Sat Jan 26 2008 - moinak.ghosh@sun.com
 - Refactor package into encumbered and non-encumbered parts.

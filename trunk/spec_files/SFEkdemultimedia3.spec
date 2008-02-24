@@ -89,7 +89,7 @@ export CFLAGS="%optflags -fPIC -I/usr/X11/include -I/usr/gnu/include -I/usr/gnu/
 
 export CXXFLAGS="%cxx_optflags -I/usr/X11/include -I/usr/gnu/include -I/usr/gnu/include/sasl -I/usr/sfw/include -I/usr/include/pcre `/usr/bin/libart2-config --cflags` -D__C99FEATURES__ -D__EXTENSIONS__ -fPIC -DPIC"
 
-export LDFLAGS="%_ldflags -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib -lc -lsocket -lnsl `/usr/bin/libart2-config --libs` -lartsflow -lartsflow_idl -lkmedia2 -lkmedia2_idl"
+export LDFLAGS="%_ldflags -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib -lc -lsocket -lnsl `/usr/bin/libart2-config --libs` -lartsflow -lartsflow_idl -lkmedia2 -lkmedia2_idl -lmcop"
 
 export LIBS=$LDFLAGS
 
@@ -243,9 +243,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Jan 22 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Fix link flags for Arts.
+* Tue Jan 22 2008 - moinakg@gmail.com
 - Fixed typo in configure options.
-* Sun Jan 20 2008 - moinak.ghosh@sun.com
+* Sun Jan 20 2008 - moinakg@gmail.com
 - Add dependencies to devel package. Added oss dependency.
-* Sat Jan 19 2008 - moinak.ghosh@sun.com
+* Sat Jan 19 2008 - moinakg@gmail.com
 - Initial spec.

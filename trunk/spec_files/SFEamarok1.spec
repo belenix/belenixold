@@ -22,8 +22,8 @@ Requires: SFEkdebase3
 BuildRequires: SFEkdebase3-devel
 Requires: SUNWlibusb
 BuildRequires: SUNWlibusb
-Requires: SUNWlibsdl
-BuildRequires: SUNWlibsdl-devel
+Requires: SFEsdl
+BuildRequires: SFEsdl-devel
 Requires: SFExmms1
 BuildRequires: SFExmms1-devel
 Requires: SFEkdemultimedia3
@@ -36,8 +36,8 @@ BuildRequires: SUNWgnome-common-devel
 BuildRequires: SFEdoxygen
 Requires: SFEgraphviz
 BuildRequires: SFEgraphviz-devel
-Requires: SUNWsqlite
-BuildRequires: SUNWsqlite-devel
+Requires: SUNWsqlite3
+BuildRequires: SUNWsqlite3-devel
 Requires: SFElibmusicbrainz3
 BuildRequires: SFElibmusicbrainz3-devel
 Requires: SFElibtunepimp
@@ -181,7 +181,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Tue Jan 29 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Update sqlite dependency.
+- Update SDL dependency.
+* Tue Jan 29 2008 - moinakg@gmail.com
 - Added dependency to libvisual and libvisual-plugins.
-* Sat Jan 26 2008 - moinak.ghosh@sun.com
+* Sat Jan 26 2008 - moinakg@gmail.com
 - Initial spec.

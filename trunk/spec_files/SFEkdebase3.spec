@@ -13,7 +13,9 @@ Summary:             Base KDE3 applications, infrastructure files and libraries
 Version:             %{kde_version}
 Source:              http://mirrors.isc.org/pub/kde/stable/%{kde_version}/src/kdebase-%{version}.tar.bz2
 Source1:             kde.desktop
+Source2:             kdm.xml
 Patch1:              kdebase-01-startkde.diff
+Patch2:              kdebase-02-Xsession.diff
 
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
@@ -59,7 +61,7 @@ export CFLAGS="-fPIC -I/usr/X11/include -I/usr/gnu/include -I/usr/gnu/include/sa
 
 export CXXFLAGS="-I/usr/X11/include -I/usr/gnu/include -I/usr/gnu/include/sasl -I/usr/sfw/include -I/usr/include/pcre `/usr/bin/libart2-config --cflags` -D__C99FEATURES__ -D__EXTENSIONS__"
 
-export LDFLAGS="-L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib -lc -lsocket -lnsl `/usr/bin/libart2-config --libs`"
+export LDFLAGS="-Wl,-zignore -Wl,-zcombreloc -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib -lc -lsocket -lnsl `/usr/bin/libart2-config --libs`"
 
 export LIBS=$LDFLAGS
 
@@ -112,6 +114,12 @@ install -d $RPM_BUILD_ROOT%{_sessionsdir}
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sessionsdir}
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/kapplications-merged
 (cd $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/kapplications-merged; ln -s ../applications-merged/kde-essential.menu)
+
+(cd $RPM_BUILD_ROOT%
+    cat %{PATCH2} | gpatch -p0 --fuzz=0)
+
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/graphical-login
+cp %{SOURCE2} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/graphical-login
 
 # KDE requires the .la files
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.a
@@ -187,8 +195,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files root
 %defattr (-, root, sys)
-%attr (0755, root, sys) %dir %{_sysconfdir}
+%dir %attr (0755, root, sys) %{_sysconfdir}
 %{_sysconfdir}/*
+%dir %attr (0755, root, sys) %{_localstatedir}
+%dir %attr (0755, root, sys) %{_localstatedir}/svc
+%dir %attr (0755, root, sys) %{_localstatedir}/svc/manifest
+%dir %attr (0755, root, sys) %{_localstatedir}/svc/manifest/application
+%dir %attr (0755, root, sys) %{_localstatedir}/svc/manifest/application/graphical-login
+%class(manifest) %{_localstatedir}/svc/manifest/application/graphical-login/kdm.xml
 
 %files devel
 %defattr (-, root, bin)
@@ -196,13 +210,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
-* Tue Jan 22 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Add SMF Manifest for KDM.
+- Add Xsession patch to use ctrun on OpenSolaris.
+* Tue Jan 22 2008 - moinakg@gmail.com
 - Fixed typo in configure options.
-* Sun Jan 20 2008 - moinak.ghosh@sun.com
+* Sun Jan 20 2008 - moinakg@gmail.com
 - Updated devel package dependency.
-* Sat Jan 19 2008 - moinak.ghosh@sun.com
+* Sat Jan 19 2008 - moinakg@gmail.com
 - Handle a few startkde nits
-* Wed Jan 16 2008 - moinak.ghosh@sun.com
+* Wed Jan 16 2008 - moinakg@gmail.com
 - Initial spec.
 - Handle setting setuid attributes for non-root builds.
 - Add kapplications-merged to properly get kde-essential menu.

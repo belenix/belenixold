@@ -36,7 +36,7 @@ fi
 export CFLAGS32="%optflags -I/usr/sfw/include -DANSICPP"
 export CFLAGS64="%optflags64 -I/usr/sfw/include -DANSICPP"
 export LDFLAGS32="%_ldflags -lcurses"
-export LDFLAGS64="%_ldflags -lcurses"
+export LDFLAGS64="%_ldflags64 -lcurses"
 
 %ifarch amd64 sparcv9
 export CC=${CC64:-$CC}
@@ -52,7 +52,9 @@ cd readline-%{version}-64
 	    --libexecdir=%{_libexecdir}/%{_arch64}	\
 	    --mandir=%{_mandir}                 	\
 	    --datadir=%{_datadir}               	\
-            --infodir=%{_datadir}/info
+            --infodir=%{_datadir}/info			\
+            --enable-shared				\
+            --disable-static
 	    		
 make -j$CPUS
 cd ..
@@ -69,7 +71,9 @@ export LDFLAGS="$LDFLAGS32"
 	    --libexecdir=%{_libexecdir}         \
 	    --mandir=%{_mandir}                 \
 	    --datadir=%{_datadir}               \
-            --infodir=%{_datadir}/info
+            --infodir=%{_datadir}/info		\
+            --enable-shared			\
+            --disable-static
 	    		
 make -j$CPUS
 
@@ -91,7 +95,7 @@ sed -e 's/^\.TH \([^ ]*\) "*3"*/.TH \1 "3GNU"/' $RPM_BUILD_ROOT%{_mandir}/man3/h
 rm $RPM_BUILD_ROOT%{_mandir}/man3/history.3
 rm $RPM_BUILD_ROOT%{_datadir}/info/dir
 
-rm $RPM_BUILD_ROOT%{_libdir}/lib*a
+rm -f $RPM_BUILD_ROOT%{_libdir}/lib*a
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -138,6 +142,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sun feb 24 2008 - moinakg@gmail.com
+- Fix 64bit build.
 * Mon May 14 2007 - dougs@truemail.co.th
 - Forced to link with libcurses
 * Tue Mar  7 2007 - dougs@truemail.co.th

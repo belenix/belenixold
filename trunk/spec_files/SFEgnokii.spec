@@ -20,8 +20,10 @@ Patch3:                 gnokii-03-makefile.diff
 SUNW_BaseDir:           %{_basedir}
 BuildRoot:              %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
+
 Requires: SFElibical
 BuildRequires: SFElibical-devel
+%if %option_with_gnu_iconv
 %if %sunw_gnu_iconv
 Requires: SUNWgnu-libiconv
 Requires: SUNWgnu-gettext
@@ -31,9 +33,9 @@ BuildRequires: SFElibiconv-devel
 Requires: SFEgettext
 BuildRequires: SFEgettext-devel
 %endif
-
-Requires: SFEgettext
-Requires: SFElibiconv
+%else
+Requires: SUNWuiu8
+%endif
 
 %prep
 %setup -q -n gnokii-%{version}
@@ -94,7 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/locale/*
 
 %changelog
-* Mon Jan 28 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Add check for gnu iconv option.
+* Mon Jan 28 2008 - moinakg@gmail.com
 - Add check for presence on SUNWgnu-iconv and SUNWgnu-gettext packages.
 - Fixed a typo.
 * Mon Jan 21 2008 - moinak.ghosh@sun.com
