@@ -1,4 +1,4 @@
---- /tmp/dcophandler.cpp.orig	2008-01-22 09:43:06.848250490 +0530
+--- kalarm/dcophandler.cpp.orig	2008-01-22 09:43:06.848250490 +0530
 +++ kalarm/dcophandler.cpp	2008-01-22 09:10:11.797835000 +0530
 @@ -479,7 +479,7 @@
  	kdDebug(5950) << "DcopHandlerOld::process(): " << func << endl;

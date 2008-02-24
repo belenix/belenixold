@@ -89,9 +89,9 @@ cp root_i386/README.DEVPROLIBMTSKBINARIES.i386 ${RPM_BUILD_ROOT}/usr/share/doc/l
     ln -s ../../../lib/%{_arch64}/llib-lm.ln
     ln -s ../../../lib/%{_arch64}/libm.so.2 libm.so
     ln -s ../../../lib/%{_arch64}/libm.so.2
-    ln -s ./../../lib/%{_arch64}/libm.so.1
-    ln -s ./../../lib/%{_arch64}/libmvec.so.1 libmvec.so
-    ln -s ./../../lib/%{_arch64}/libmvec.so.1)
+    ln -s ../../../lib/%{_arch64}/libm.so.1
+    ln -s ../../../lib/%{_arch64}/libmvec.so.1 libmvec.so
+    ln -s ../../../lib/%{_arch64}/libmvec.so.1)
 
 cat << __EOF__ > ${RPM_BUILD_ROOT}%{_docdir}/SUNWlibm/README.txt
 This is a dummy package retained for backward compatibility.
@@ -164,7 +164,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/SUNWlibmsr/*
 
 %changelog
-* Wed Feb 20 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Fix a couple of typos.
+* Wed Feb 20 2008 - moinakg@gmail.com
 - Add some missing links under /usr/lib.
-* Sun Feb 10 2008 - moinak.ghosh@sun.com
+* Sun Feb 10 2008 - moinakg@gmail.com
 - Initial spec.

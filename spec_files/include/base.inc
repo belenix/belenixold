@@ -17,7 +17,7 @@
 %define gtk_doc_option %{?!_without_gtk_doc:--enable-gtk-doc}%{?_without_gtk_doc:--disable-gtk-doc}
 
 %if %option_with_gnu_iconv
-%define arch_ldadd -L%{_libdir} -R%{_libdir} -Wl,-zignore -R/usr/gnu/lib/%{_arch64} -lgnuintl -lgnuiconv
+%define arch_ldadd -L%{_libdir} -R%{_libdir} -Wl,-zignore -R/usr/gnu/lib -lgnuintl -lgnuiconv
 %else
 %define arch_ldadd -L%{_libdir} -R%{_libdir}
 %endif
@@ -95,7 +95,9 @@
 %define xorg_lib_path   -L%xorg_lib -R%xorg_lib
 
 # ChangeLog:
-# 2008-02-21  moinak.ghosh@sun.com
+# 2008-02-24  moinakg@gmail.com
+# More 64Bit flags fixes.
+# 2008-02-21  moinakg@gmail.com
 # - Add definitions to properly define 64Bit LDFLAGS for Gcc.
 # - Merge in definitions from SFE repo for building with gnu gettext.
 # 2008-02-17  Laszlo (Laca) Peter  <laca@sun.com>

@@ -27,6 +27,12 @@ SUNW_BaseDir:   %{_basedir}
 Requires: %name
 Requires: SUNWgnome-common-devel
 
+%package l10n
+Summary:                 %{summary} - l10n files
+SUNW_BaseDir:            %{_basedir}
+%include default-depend.inc
+Requires:                %{name}
+
 %prep
 %setup -q -n libvisual-%{version}
 %patch1 -p1
@@ -74,6 +80,13 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
 
+%files l10n
+%defattr (-, root, bin)
+%dir %attr (0755, root, sys) %{_datadir}
+%attr (-, root, other) %{_datadir}/locale
+
 %changelog
-* Thu Jan 24 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Add l10n package.
+* Thu Jan 24 2008 - moinakg@gmail.com
 - Initial spec.

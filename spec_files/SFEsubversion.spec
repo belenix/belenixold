@@ -118,7 +118,7 @@ rm -rf $RPM_BUILD_ROOT%{_infodir}
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.exp
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}
+cp %{SOURCE1} $RPM_BUILD_ROOT%{_bindir}
 
 # Patch svn-config with the correct version
 cat $RPM_BUILD_ROOT%{_bindir}/svn-config | sed s/SVN_VERSION/%{version}/ > $RPM_BUILD_ROOT%{_bindir}/svn-config.new
@@ -173,7 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Tue Jan 22 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Change to fix install weirdness.
+* Tue Jan 22 2008 - moinakg@gmail.com
 - Major rework to install in /usr/gnu and avoid conflict with SUNWsvn
 - Depends on two new package SFElibapr and SFEaprutil. Having svn to depend on whole
 - of Apache seems a bit of an overkill. These are also needed by kdesdk.

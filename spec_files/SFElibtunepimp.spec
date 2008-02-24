@@ -11,6 +11,8 @@
 #
 %include Solaris.inc
 
+%define sunw_gnu_iconv %(pkginfo -q SUNWgnu-libiconv && echo 1 || echo 0)
+
 Name:          SFElibtunepimp
 Summary:       Libtunepimp is a library for creating MusicBrainz enabled tagging applications.
 Version:       0.5.3
@@ -24,8 +26,13 @@ Requires:      SFEreadline
 BuildRequires: SFEreadline-devel
 Requires:      SFEtaglib
 BuildRequires: SFEtaglib-devel
+%if %sunw_gnu_iconv
+Requires: SUNWgnu-libiconv
+Requires: SUNWgnu-gettext
+%else
 Requires:      SFElibiconv
 BuildRequires: SFElibiconv-devel
+%endif
 BuildRequires: SFElibmad-devel
 BuildRequires: SUNWogg-vorbis-devel
 BuildRequires: SUNWflac-devel
@@ -109,5 +116,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/tunepimp/plugins/wma.tpp
 
 %changelog
-* Fri Jan 18 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Add dependency on SUNWgnu-iconv/gettext.
+* Fri Jan 18 2008 - moinakg@gmail.com
 - Initial spec

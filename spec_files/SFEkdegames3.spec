@@ -19,8 +19,8 @@ BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 # This also brings in all relevenat deps including kdelibs, qt, aRts and others.
 Requires: SFEkdebase3
 BuildRequires: SFEkdebase3-devel
-Requires: SUNWlibsdl
-BuildRequires: SUNWlibsdl-devel
+Requires: SFEsdl
+BuildRequires: SFEsdl-devel
 Requires: SFEdoxygen
 
 %package devel
@@ -29,7 +29,7 @@ SUNW_BaseDir:   %{_basedir}
 %include default-depend.inc
 Requires: %name
 Requires: SFEkdebase3-devel
-Requires: SUNWlibsdl-devel
+Requires: SFEsdl-devel
 
 %prep
 %setup -q -n kdegames-%version
@@ -112,6 +112,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Changed dependency to SFEsdl.
 * Tue Jan 22 2008 - moinak.ghosh@sun.com
 - Fixed typo in configure options.
 * Sun Jan 20 2008 - moinak.ghosh@sun.com

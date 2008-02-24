@@ -22,7 +22,7 @@ BuildRoot:          %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 Requires:           SUNWlibC
 Requires:           SUNWlibms
-Requires:           SUNWxwrtl
+Requires:           FSWxwrtl
 
 %prep
 rm -rf %name-%version
@@ -51,5 +51,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 
 %changelog
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Fix dependency for FOX.
 * Mon Jul 30 2007 - nonsea@users.sourceforge.net
 - Initial spec

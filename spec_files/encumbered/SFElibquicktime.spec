@@ -98,6 +98,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{_arch64}/libquicktime/*.so*
 %endif
 
+%defattr (-, root, other)
+%dir %attr (0755, root, other) %{_datadir}/locale
+%{_datadir}/locale/*
+
 %files devel
 %defattr (-, root, bin)
 %{_includedir}
@@ -114,5 +118,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Include l10n files.
 * Tue Sep  4 2007 - dougs@truemail.co.th
 - Initial version

@@ -90,7 +90,7 @@ export ABI=64
             --libexecdir=%{_libexecdir}/%{_arch64}      \
             --sysconfdir=%{_sysconfdir}      		\
             --disable-cxx
-make -j$CPUS 
+make -j $CPUS 
 cd ..
 %endif
 
@@ -111,7 +111,7 @@ export ABI=32
             --libexecdir=%{_libexecdir} \
             --sysconfdir=%{_sysconfdir} \
             --disable-cxx
-make -j$CPUS 
+make -j $CPUS 
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -169,6 +169,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Change to avoid wierd error from make.
 * Fri Nov 02 2007 - nonsea@users.sourceforge.net
 - Remove Requires/BuildRequires to SFEreadline
 * Fri Aug 17 2007 - trisk@acm.jhu.edu

@@ -7,6 +7,8 @@
 
 %define kde_version 3.5.8
 
+%define SUNWaspell      %(/usr/bin/pkginfo -q SUNWaspell && echo 1 || echo 0)
+
 Name:                SFEkdelibs3
 Summary:             Base KDE3 libraries
 Version:             %{kde_version}
@@ -35,10 +37,12 @@ BuildRequires: SUNWpng-devel
 Requires: SUNWjpg
 BuildRequires: SUNWjpg-devel
 Requires: SUNWgccruntime
-Requires: SUNWxwplt
+Requires: FSWxwpft
+Requires: FSWxorg-clientlibs
 # The above bring in many things, including SUNWxwice and SUNWzlib
 Requires: SUNWxwxft
 # The above also pulls in SUNWfreetype2
+BuildRequires: FSWxorg-headers
 BuildRequires: SFEdoxygen
 Requires: SUNWgnu-coreutils
 Requires: SFEcups
@@ -53,15 +57,20 @@ BuildRequires: SUNWTiff-devel
 BuildRequires: SUNWgnome-common-devel
 Requires: SUNWgnome-base-libs
 BuildRequires: SUNWgnome-base-libs-devel
-Requires: SFEfam
-BuildRequires: SFEfam-devel
+Requires: SUNWgamin
+BuildRequires: SUNWgamin-devel
 Requires: SUNWopenssl-libraries
 BuildRequires: SUNWopenssl-include
 Requires: SUNWopensslr
 Requires: SUNWkrbu
 Requires: SUNWpcre
+%if %SUNWaspell
 Requires: SUNWaspell
 BuildRequires: SUNWaspell-devel
+%else
+Requires: SFEaspell
+BuildRequires: SFEaspell-devel
+%endif
 Requires: SFEopenexr
 BuildRequires: SFEopenexr-devel
 BuildRequires: oss
@@ -87,9 +96,13 @@ Requires: SUNWlxsl-devel
 Requires: SUNWTiff-devel
 Requires: SUNWgnome-common-devel
 Requires: SUNWgnome-base-libs-devel
-Requires: SFEfam-devel
+Requires: SUNWgamin-devel
 Requires: SUNWopenssl-include
+%if %SUNWaspell
 Requires: SUNWaspell-devel
+%else
+Requires: SFEaspell-devel
+%endif
 Requires: SFEopenexr-devel
 Requires: oss
 
@@ -211,19 +224,22 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
-* Fri Feb 01 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Fix aspell dependency.
+- Use gamin instead of FAM.
+* Fri Feb 01 2008 - moinakg@gmail.com
 - Add patch to fix timezone handing on Solaris.
-* Thu Jan 24 2008 - moinak.ghosh@sun.com
+* Thu Jan 24 2008 - moinakg@gmail.com
 - Set QTDOCDIR to satisfy internal doxygen script.
 - Use predefined macros instead of hardcoding pathnames.
-* Tue Jan 22 2008 - moinak.ghosh@sun.com
+* Tue Jan 22 2008 - moinakg@gmail.com
 - Fixed typo in configure options.
-* Sun Jan 20 2008 - moinak.ghosh@sun.com
+* Sun Jan 20 2008 - moinakg@gmail.com
 - Add dependencies to devel package. Added oss dependency.
-* Sat Jan 19 2008 - moinak.ghosh@sun.com
+* Sat Jan 19 2008 - moinakg@gmail.com
 - Fix some startkde/kdeinit nits, disable debug to avoid filling up log file.
-* Wed Jan 16 2008 - moinak.ghosh@sun.com
+* Wed Jan 16 2008 - moinakg@gmail.com
 - Get rid of custom kde3-prefixed datadir and includedir. Unsettles KDE3.
 - Handle setting setuid attributes for non-root builds.
-* Tue Jan 12 2008 - moinak.ghosh@sun.com
+* Tue Jan 12 2008 - moinakg@gmail.com
 - Initial spec.

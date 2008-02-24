@@ -13,6 +13,7 @@ Version:             %{kde_version}
 Source:              http://mirrors.isc.org/pub/kde/stable/%{kde_version}/src/kdenetwork-%{version}.tar.bz2
 Patch1:              kdenetwork-01-kopete.diff
 Patch2:              kdenetwork-02-oscar.diff
+Patch3:              kdenetwork-03-groupwise.diff
 
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
@@ -40,6 +41,7 @@ Requires: SUNWlibtool
 %setup -q -n kdenetwork-%version
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 if [ "x`basename $CC`" != xgcc ]
 then
@@ -129,7 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
-* Tue Jan 22 2008 - moinak.ghosh@sun.com
+* Sun Feb 24 2008 - moinakg@gmail.com
+- Add patch missed out earlier.
+* Tue Jan 22 2008 - moinakg@gmail.com
 - Fixed typo in configure options.
-* Sun Jan 20 2008 - moinak.ghosh@sun.com
+* Sun Jan 20 2008 - moinakg@gmail.com
 - Initial spec.
