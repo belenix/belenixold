@@ -1,4 +1,3 @@
-#!/bin/sh
 #
 # CDDL HEADER START
 #
@@ -26,42 +25,15 @@
 # Author: Moinak.Ghosh@Sun.COM
 #
 
-NUMDISKS=0
-LASTDISK=""
-DISKLIST=""
+all: mounts
 
-dumpdisks() {
-fmt=`echo "" | /usr/sbin/format`
-flag=0
-cnt=0
-for item in $fmt
-do
-        if [ $flag -eq 1 ]; then
-                flag=0
-		NUMDISKS=`expr $NUMDISKS+1`
-		LASTDISK="/dev/rdsk/${item}p0"
-		DISKLIST="$DISKLIST\n/dev/rdsk/${item}p0"
-		#echo "/dev/rdsk/${item}p0"
-        fi
-        if [ "$item" = "$cnt." ]; then flag=1; cnt=`expr $cnt + 1`; fi
-done
-}
+clean:
 
-if [ $# -eq 0 ]
-then
-	dumpdisks
-	if [ $NUMDISKS -gt 1 ]
-	then
-		echo "Available disk devices:"
-		echo $DISKLIST
-		echo ""
-		echo "Use /usr/bin/prtpart <disk device> to get partition details"
-		echo "Use /usr/bin/prtpart -help for usage help"
-		exit 0
-	else
-		exec /usr/bin/prtpart.bin $LASTDISK
-	fi
-fi
-
-exec /usr/bin/prtpart.bin "$@"
-
+install:
+	@mkdir -p $(DESTDIR)/usr/bin
+	@cp mounts $(DESTDIR)/usr/bin
+	@chmod 0755 $(DESTDIR)/usr/bin/mounts
+	@mkdir -p $(DESTDIR)/usr/share/pixmaps
+	@cp disk_mounts.png $(DESTDIR)/usr/share/pixmaps
+	@mkdir -p $(DESTDIR)/usr/share/applications
+	@cp hdd_mount.desktop $(DESTDIR)/usr/share/applications

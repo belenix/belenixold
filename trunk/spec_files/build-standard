@@ -377,7 +377,6 @@ XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-places-plugin.spec:xfce/xfce4-verve-plu
 XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-weather-plugin.spec:xfce/xfce4-xfapplet-plugin.spec"
 
 call_pkgtool $_GCC ${XFCE_GOODIES}
-fi
 
 call_pkgtool $_GCC SFEntfsprogs.spec
 (cd ../apps; tar cpf - prtpart | gzip -c) > ext-sources/prtpart-0.1.tar.gz
@@ -386,3 +385,7 @@ call_pkgtool $_GCC SFEprtpart.spec
 call_pkgtool $_GCC SFEmount-ext2fs.spec
 (cd ../apps; tar cpf - mount_ntfs | gzip -c) > ext-sources/mount-ntfs-0.1.tar.gz
 call_pkgtool $_GCC SFEmount-ntfs.spec
+fi
+
+(cd ../apps/utilities; tar cpf - mountgui | gzip -c) > ext-sources/mountgui-0.1.tar.gz
+call_pkgtool $_GCC SFEmountgui.spec
