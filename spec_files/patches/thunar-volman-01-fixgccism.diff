@@ -1,0 +1,405 @@
+diff -ur thunar-volman-orig/thunar-volman/tvm-block-device.h thunar-volman/thunar-volman/tvm-block-device.h
+--- thunar-volman-orig/thunar-volman/tvm-block-device.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-block-device.h	2007-04-14 20:01:01.256160508 +0700
+@@ -22,14 +22,15 @@
+ 
+ #include <thunar-volman/tvm-device.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
++G_GNUC_INTERNAL
+ gboolean tvm_block_device_added (TvmPreferences *preferences,
+                                  LibHalContext  *context,
+                                  const gchar    *udi,
+                                  const gchar    *capability,
+-                                 GError        **error) G_GNUC_INTERNAL;
++                                 GError        **error);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_BLOCK_DEVICE_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-camera-device.h thunar-volman/thunar-volman/tvm-camera-device.h
+--- thunar-volman-orig/thunar-volman/tvm-camera-device.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-camera-device.h	2007-04-14 20:01:26.816518926 +0700
+@@ -22,14 +22,15 @@
+ 
+ #include <thunar-volman/tvm-device.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
++G_GNUC_INTERNAL
+ gboolean tvm_camera_device_added (TvmPreferences *preferences,
+                                   LibHalContext  *context,
+                                   const gchar    *udi,
+                                   const gchar    *capability,
+-                                  GError        **error) G_GNUC_INTERNAL;
++                                  GError        **error);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_CAMERA_DEVICE_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-command-entry.h thunar-volman/thunar-volman/tvm-command-entry.h
+--- thunar-volman-orig/thunar-volman/tvm-command-entry.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-command-entry.h	2007-04-14 20:02:49.978191480 +0700
+@@ -22,7 +22,7 @@
+ 
+ #include <exo/exo.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _TvmCommandEntryClass TvmCommandEntryClass;
+ typedef struct _TvmCommandEntry      TvmCommandEntry;
+@@ -47,15 +47,20 @@
+   gchar     *command;
+ };
+ 
+-GType        tvm_command_entry_get_type       (void) G_GNUC_CONST G_GNUC_INTERNAL;
++G_GNUC_CONST G_GNUC_INTERNAL
++GType        tvm_command_entry_get_type       (void);
+ 
+-GtkWidget   *tvm_command_entry_new            (void) G_GNUC_INTERNAL G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT;
+-GtkWidget   *tvm_command_entry_new_with_label (const gchar     *label) G_GNUC_INTERNAL G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT;
+-
+-const gchar *tvm_command_entry_get_command    (TvmCommandEntry *command_entry) G_GNUC_INTERNAL;
++G_GNUC_INTERNAL G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT
++GtkWidget   *tvm_command_entry_new            (void);
++G_GNUC_INTERNAL G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT
++GtkWidget   *tvm_command_entry_new_with_label (const gchar     *label);
++
++G_GNUC_INTERNAL
++const gchar *tvm_command_entry_get_command    (TvmCommandEntry *command_entry);
++G_GNUC_INTERNAL
+ void         tvm_command_entry_set_command    (TvmCommandEntry *command_entry,
+-                                               const gchar     *command) G_GNUC_INTERNAL;
++                                               const gchar     *command);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_COMMAND_ENTRY_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-device.h thunar-volman/thunar-volman/tvm-device.h
+--- thunar-volman-orig/thunar-volman/tvm-device.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-device.h	2007-04-14 20:03:13.802658416 +0700
+@@ -26,7 +26,7 @@
+ 
+ #include <thunar-volman/tvm-preferences.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ /**
+  * TvmDeviceCallback:
+@@ -49,10 +49,11 @@
+                                        const gchar    *capability,
+                                        GError        **error);
+ 
++G_GNUC_INTERNAL
+ gboolean tvm_device_added (TvmPreferences *preferences,
+                            const gchar    *udi,
+-                           GError        **error) G_GNUC_INTERNAL;
++                           GError        **error);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_DEVICE_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-input-device.h thunar-volman/thunar-volman/tvm-input-device.h
+--- thunar-volman-orig/thunar-volman/tvm-input-device.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-input-device.h	2007-04-14 20:03:48.875385828 +0700
+@@ -22,14 +22,15 @@
+ 
+ #include <thunar-volman/tvm-device.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
++G_GNUC_INTERNAL
+ gboolean tvm_input_device_added (TvmPreferences *preferences,
+                                  LibHalContext  *context,
+                                  const gchar    *udi,
+                                  const gchar    *capability,
+-                                 GError        **error) G_GNUC_INTERNAL;
++                                 GError        **error);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_INPUT_DEVICE_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-pango-extensions.h thunar-volman/thunar-volman/tvm-pango-extensions.h
+--- thunar-volman-orig/thunar-volman/tvm-pango-extensions.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-pango-extensions.h	2007-04-14 20:04:56.548884051 +0700
+@@ -22,15 +22,21 @@
+ 
+ #include <pango/pango.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+-PangoAttrList *tvm_pango_attr_list_big               (void) G_GNUC_CONST G_GNUC_INTERNAL;
+-PangoAttrList *tvm_pango_attr_list_big_bold          (void) G_GNUC_CONST G_GNUC_INTERNAL;
+-PangoAttrList *tvm_pango_attr_list_bold              (void) G_GNUC_CONST G_GNUC_INTERNAL;
+-PangoAttrList *tvm_pango_attr_list_italic            (void) G_GNUC_CONST G_GNUC_INTERNAL;
+-PangoAttrList *tvm_pango_attr_list_small_italic      (void) G_GNUC_CONST G_GNUC_INTERNAL;
+-PangoAttrList *tvm_pango_attr_list_underline_single  (void) G_GNUC_CONST G_GNUC_INTERNAL;
++G_GNUC_CONST G_GNUC_INTERNAL
++PangoAttrList *tvm_pango_attr_list_big               (void);
++G_GNUC_CONST G_GNUC_INTERNAL
++PangoAttrList *tvm_pango_attr_list_big_bold          (void);
++G_GNUC_CONST G_GNUC_INTERNAL
++PangoAttrList *tvm_pango_attr_list_bold              (void);
++G_GNUC_CONST G_GNUC_INTERNAL
++PangoAttrList *tvm_pango_attr_list_italic            (void);
++G_GNUC_CONST G_GNUC_INTERNAL
++PangoAttrList *tvm_pango_attr_list_small_italic      (void);
++G_GNUC_CONST G_GNUC_INTERNAL
++PangoAttrList *tvm_pango_attr_list_underline_single  (void);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_PANGO_EXTENSIONS_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-pda-device.h thunar-volman/thunar-volman/tvm-pda-device.h
+--- thunar-volman-orig/thunar-volman/tvm-pda-device.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-pda-device.h	2007-04-14 20:05:19.173174949 +0700
+@@ -22,14 +22,15 @@
+ 
+ #include <thunar-volman/tvm-device.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
++G_GNUC_INTERNAL
+ gboolean tvm_pda_device_added (TvmPreferences *preferences,
+                                LibHalContext  *context,
+                                const gchar    *udi,
+                                const gchar    *capability,
+-                               GError        **error) G_GNUC_INTERNAL;
++                               GError        **error);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_PDA_DEVICE_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-preferences-dialog.h thunar-volman/thunar-volman/tvm-preferences-dialog.h
+--- thunar-volman-orig/thunar-volman/tvm-preferences-dialog.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-preferences-dialog.h	2007-04-14 20:06:22.718588460 +0700
+@@ -22,7 +22,7 @@
+ 
+ #include <thunar-volman/tvm-preferences.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _TvmPreferencesDialogClass TvmPreferencesDialogClass;
+ typedef struct _TvmPreferencesDialog      TvmPreferencesDialog;
+@@ -34,10 +34,12 @@
+ #define TVM_IS_PREFERENCES_DIALOG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TVM_TYPE_PREFERENCES_DIALOG))
+ #define TVM_PREFERENCES_DIALOG_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), TVM_TYPE_PREFERENCES_DIALOG, TvmPreferencesDialogClass))
+ 
+-GType      tvm_preferences_dialog_get_type (void) G_GNUC_CONST G_GNUC_INTERNAL;
++G_GNUC_CONST G_GNUC_INTERNAL
++GType      tvm_preferences_dialog_get_type (void);
+ 
+-GtkWidget *tvm_preferences_dialog_new      (void) G_GNUC_INTERNAL G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT;
++G_GNUC_INTERNAL G_GNUC_MALLOC G_GNUC_WARN_UNUSED_RESULT
++GtkWidget *tvm_preferences_dialog_new      (void);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_PREFERENCES_DIALOG_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-preferences.h thunar-volman/thunar-volman/tvm-preferences.h
+--- thunar-volman-orig/thunar-volman/tvm-preferences.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-preferences.h	2007-04-14 20:06:54.919135112 +0700
+@@ -22,7 +22,7 @@
+ 
+ #include <exo/exo.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _TvmPreferencesClass TvmPreferencesClass;
+ typedef struct _TvmPreferences      TvmPreferences;
+@@ -34,10 +34,12 @@
+ #define TVM_IS_PREFERENCES_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), TVM_TYPE_PREFERENCES))
+ #define TVM_PREFERENCES_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), TVM_TYPE_PREFERENCES, TvmPreferencesClass))
+ 
+-GType           tvm_preferences_get_type (void) G_GNUC_CONST;
++
++G_GNUC_CONST
++GType           tvm_preferences_get_type (void);
+ 
+ TvmPreferences *tvm_preferences_get      (void);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_PREFERENCES_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-printer-device.h thunar-volman/thunar-volman/tvm-printer-device.h
+--- thunar-volman-orig/thunar-volman/tvm-printer-device.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-printer-device.h	2007-04-14 20:07:14.895512343 +0700
+@@ -22,14 +22,15 @@
+ 
+ #include <thunar-volman/tvm-device.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
++G_GNUC_INTERNAL
+ gboolean tvm_printer_device_added (TvmPreferences *preferences,
+                                    LibHalContext  *context,
+                                    const gchar    *udi,
+                                    const gchar    *capability,
+-                                   GError        **error) G_GNUC_INTERNAL;
++                                   GError        **error);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_PRINTER_DEVICE_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-prompt.h thunar-volman/thunar-volman/tvm-prompt.h
+--- thunar-volman-orig/thunar-volman/tvm-prompt.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-prompt.h	2007-04-14 20:07:37.696087107 +0700
+@@ -22,7 +22,7 @@
+ 
+ #include <thunar-volman/tvm-device.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ enum
+ {
+@@ -37,6 +37,7 @@
+   TVM_RESPONSE_BURN_AUDIO_CD,
+ };
+ 
++G_GNUC_INTERNAL G_GNUC_NULL_TERMINATED
+ gint tvm_prompt (LibHalContext *context,
+                  const gchar   *udi,
+                  const gchar   *icon,
+@@ -44,8 +45,8 @@
+                  const gchar   *primary_text,
+                  const gchar   *secondary_text,
+                  const gchar   *first_button_text,
+-                 ...) G_GNUC_INTERNAL G_GNUC_NULL_TERMINATED;
++                 ...);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_PROMPT_H__ */
+diff -ur thunar-volman-orig/thunar-volman/tvm-run.h thunar-volman/thunar-volman/tvm-run.h
+--- thunar-volman-orig/thunar-volman/tvm-run.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/tvm-run.h	2007-04-14 20:08:18.320808717 +0700
+@@ -22,25 +22,28 @@
+ 
+ #include <thunar-volman/tvm-device.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
++G_GNUC_INTERNAL
+ gboolean tvm_run_cdburner (TvmPreferences *preferences,
+                            LibHalContext  *context,
+                            const gchar    *udi,
+-                           GError        **error) G_GNUC_INTERNAL;
++                           GError        **error);
+ 
++G_GNUC_INTERNAL
+ gboolean tvm_run_cdplayer (TvmPreferences *preferences,
+                            LibHalContext  *context,
+                            const gchar    *udi,
+-                           GError        **error) G_GNUC_INTERNAL;
++                           GError        **error);
+ 
++G_GNUC_INTERNAL
+ gboolean tvm_run_command  (LibHalContext  *context,
+                            const gchar    *udi,
+                            const gchar    *command,
+                            const gchar    *device_file,
+                            const gchar    *mount_point,
+-                           GError        **error) G_GNUC_INTERNAL;
++                           GError        **error);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TVM_RUN_H__ */
+diff -ur thunar-volman-orig/thunar-volman/xfce-heading.h thunar-volman/thunar-volman/xfce-heading.h
+--- thunar-volman-orig/thunar-volman/xfce-heading.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/xfce-heading.h	2007-04-14 20:08:57.009596420 +0700
+@@ -23,7 +23,7 @@
+ 
+ #include <gtk/gtk.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _XfceHeadingPrivate XfceHeadingPrivate;
+ typedef struct _XfceHeadingClass   XfceHeadingClass;
+@@ -57,9 +57,11 @@
+   XfceHeadingPrivate *priv;
+ };
+ 
+-GType                 xfce_heading_get_type      (void) G_GNUC_CONST;
++G_GNUC_CONST
++GType                 xfce_heading_get_type      (void);
+ 
+-GtkWidget            *xfce_heading_new           (void) G_GNUC_MALLOC;
++G_GNUC_MALLOC
++GtkWidget            *xfce_heading_new           (void);
+ 
+ GdkPixbuf            *xfce_heading_get_icon      (XfceHeading *heading);
+ void                  xfce_heading_set_icon      (XfceHeading *heading,
+@@ -77,6 +79,6 @@
+ void                  xfce_heading_set_title     (XfceHeading *heading,
+                                                   const gchar *title);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__XFCE_HEADING_H__ */
+diff -ur thunar-volman-orig/thunar-volman/xfce-titled-dialog.h thunar-volman/thunar-volman/xfce-titled-dialog.h
+--- thunar-volman-orig/thunar-volman/xfce-titled-dialog.h	2007-04-14 19:52:45.000000000 +0700
++++ thunar-volman/thunar-volman/xfce-titled-dialog.h	2007-04-14 20:09:52.842685986 +0700
+@@ -23,7 +23,7 @@
+ 
+ #include <gtk/gtk.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _XfceTitledDialogPrivate XfceTitledDialogPrivate;
+ typedef struct _XfceTitledDialogClass   XfceTitledDialogClass;
+@@ -57,19 +57,22 @@
+   XfceTitledDialogPrivate *priv;
+ };
+ 
+-GType                 xfce_titled_dialog_get_type         (void) G_GNUC_CONST;
++G_GNUC_CONST
++GType                 xfce_titled_dialog_get_type         (void);
+ 
+-GtkWidget            *xfce_titled_dialog_new              (void) G_GNUC_MALLOC;
++G_GNUC_MALLOC
++GtkWidget            *xfce_titled_dialog_new              (void);
++G_GNUC_MALLOC
+ GtkWidget            *xfce_titled_dialog_new_with_buttons (const gchar      *title,
+                                                            GtkWindow        *parent,
+                                                            GtkDialogFlags    flags,
+                                                            const gchar      *first_button_text,
+-                                                           ...) G_GNUC_MALLOC;
++                                                           ...);
+ 
+ G_CONST_RETURN gchar *xfce_titled_dialog_get_subtitle     (XfceTitledDialog *titled_dialog);
+ void                  xfce_titled_dialog_set_subtitle     (XfceTitledDialog *titled_dialog,
+                                                            const gchar      *subtitle);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__XFCE_TITLED_DIALOG_H__ */

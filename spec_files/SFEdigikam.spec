@@ -28,6 +28,8 @@ Requires: SUNWTiff
 Requires: SFEimlib2
 Requires: SUNWsqlite3
 BuildRequires: SUNWsqlite3-devel
+Requires: SUNWgnome-camera
+BuildRequires: SUNWgnome-camera-devel
 
 %package devel
 Summary:        %{summary} - development files
@@ -141,6 +143,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Mar 01 2008 - moinakg@gmail.com
+- Add dependency on SUNWgnome-camera.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Update sqlite dependency.
 * Wed Jan 30 2008 - moinakg@gmail.com

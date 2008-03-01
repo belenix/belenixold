@@ -50,7 +50,7 @@ mkdir -p $RPM_BUILD_ROOT%{_basedir}/share/man
 indirb="../.."
 for d in `echo %{_basedir} | sed '/\// /g'`
 do
-	indirb="${indirb}/..
+	indirb="${indirb}/.."
 done
 
 (cd $RPM_BUILD_ROOT%{_basedir}/bin
@@ -75,7 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_basedir}/share/man/*
 
 %changelog
-* Sat Feb 02 2008 - moinak.ghosh@sun.com
+* Sat Mar 01 2008 - moinakg@gmail.com
+- Fix a typo.
+* Sat Feb 02 2008 - moinakg@gmail.com
 - Fix a symbolic link.
-* Tue Jan 29 2008 - moinak.ghosh@sun.com
+* Tue Jan 29 2008 - moinakg@gmail.com
 - Initial spec.

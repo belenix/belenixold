@@ -1,0 +1,19 @@
+--- xfdesktop-4.4.0-orig/src/xfdesktop-clipboard-manager.h	Sat Jan 20 22:18:37 2007
++++ xfdesktop-4.4.0/src/xfdesktop-clipboard-manager.h	Sun Mar  4 18:46:54 2007
+@@ -22,7 +22,7 @@
+ #ifndef __XFDESKTOP_CLIPBOARD_MANAGER_H__
+ #define __XFDESKTOP_CLIPBOARD_MANAGER_H__
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ /* fwd decl */
+ struct _XfdesktopFileIcon;
+@@ -55,6 +55,6 @@
+                                                                      GtkWidget *widget,
+                                                                      GClosure *new_files_closure);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__XFDESKTOP_CLIPBOARD_MANAGER_H__ */

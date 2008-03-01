@@ -28,7 +28,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
      CPUS=1
 fi
 
-export CFLAGS="%optflags"
+export CFLAGS="-O3 -fno-omit-frame-pointer -fPIC -DPIC"
 export LDFLAGS="%_ldflags"
 
 ./configure --prefix=%{_prefix}	\
@@ -56,5 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/man/*
 
 %changelog
-* Fri Feb 08 2008 - moinak.ghosh@sun.com
+* Sat Mar 01 2008 - moinakg@gmail.com
+- Fix CFLAGS.
+* Fri Feb 08 2008 - moinakg@gmail.com
 - Initial spec.

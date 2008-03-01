@@ -1,0 +1,201 @@
+diff -ur xfce4-panel-4.4.1-orig/libxfce4panel/xfce-panel-external-item.c xfce4-panel-4.4.1/libxfce4panel/xfce-panel-external-item.c
+--- xfce4-panel-4.4.1-orig/libxfce4panel/xfce-panel-external-item.c	2007-01-26 03:52:19.000000000 +0700
++++ xfce4-panel-4.4.1/libxfce4panel/xfce-panel-external-item.c	2007-04-11 08:31:10.040812547 +0700
+@@ -113,7 +113,7 @@
+ G_DEFINE_TYPE_EXTENDED (XfceExternalPanelItem, xfce_external_panel_item,
+         GTK_TYPE_SOCKET, 0,
+         G_IMPLEMENT_INTERFACE (XFCE_TYPE_PANEL_ITEM,
+-                               xfce_external_panel_item_interface_init));
++                               xfce_external_panel_item_interface_init))
+ 
+ static void
+ xfce_external_panel_item_interface_init (gpointer g_iface, gpointer data)
+diff -ur xfce4-panel-4.4.1-orig/libxfce4panel/xfce-panel-external-plugin.c xfce4-panel-4.4.1/libxfce4panel/xfce-panel-external-plugin.c
+--- xfce4-panel-4.4.1-orig/libxfce4panel/xfce-panel-external-plugin.c	2007-01-26 03:52:19.000000000 +0700
++++ xfce4-panel-4.4.1/libxfce4panel/xfce-panel-external-plugin.c	2007-04-11 08:31:10.041263443 +0700
+@@ -157,7 +157,7 @@
+                         xfce_external_panel_plugin,
+                         GTK_TYPE_PLUG, 0,
+                         G_IMPLEMENT_INTERFACE (XFCE_TYPE_PANEL_PLUGIN,
+-                            xfce_external_panel_plugin_interface_init));
++                            xfce_external_panel_plugin_interface_init))
+ 
+ static void
+ xfce_external_panel_plugin_interface_init (gpointer g_iface, gpointer data)
+diff -ur xfce4-panel-4.4.1-orig/libxfce4panel/xfce-panel-internal-plugin.c xfce4-panel-4.4.1/libxfce4panel/xfce-panel-internal-plugin.c
+--- xfce4-panel-4.4.1-orig/libxfce4panel/xfce-panel-internal-plugin.c	2007-01-26 03:52:19.000000000 +0700
++++ xfce4-panel-4.4.1/libxfce4panel/xfce-panel-internal-plugin.c	2007-04-11 08:31:10.041600325 +0700
+@@ -163,7 +163,7 @@
+         G_IMPLEMENT_INTERFACE (XFCE_TYPE_PANEL_ITEM,
+             xfce_internal_panel_plugin_init_item_interface)
+         G_IMPLEMENT_INTERFACE (XFCE_TYPE_PANEL_PLUGIN,
+-            xfce_internal_panel_plugin_init_plugin_interface));
++            xfce_internal_panel_plugin_init_plugin_interface))
+ 
+ static void
+ xfce_internal_panel_plugin_init_item_interface (gpointer g_iface,
+diff -ur xfce4-panel-4.4.1-orig/panel/frap-icon-entry.c xfce4-panel-4.4.1/panel/frap-icon-entry.c
+--- xfce4-panel-4.4.1-orig/panel/frap-icon-entry.c	2007-01-26 03:52:23.000000000 +0700
++++ xfce4-panel-4.4.1/panel/frap-icon-entry.c	2007-04-11 08:31:10.041894643 +0700
+@@ -87,7 +87,7 @@
+ 
+ G_DEFINE_TYPE (FrapIconEntry,
+                frap_icon_entry,
+-               GTK_TYPE_ENTRY);
++               GTK_TYPE_ENTRY)
+ 
+ 
+ 
+diff -ur xfce4-panel-4.4.1-orig/panel/frap-icon-entry.h xfce4-panel-4.4.1/panel/frap-icon-entry.h
+--- xfce4-panel-4.4.1-orig/panel/frap-icon-entry.h	2007-01-26 03:52:23.000000000 +0700
++++ xfce4-panel-4.4.1/panel/frap-icon-entry.h	2007-04-11 08:31:10.042063538 +0700
+@@ -22,7 +22,7 @@
+ 
+ #include <gtk/gtk.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _FrapIconEntryPrivate FrapIconEntryPrivate;
+ typedef struct _FrapIconEntryClass   FrapIconEntryClass;
+@@ -59,6 +59,6 @@
+ void         frap_icon_entry_set_stock_id (FrapIconEntry *icon_entry,
+                                            const gchar   *stock_id);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__FRAP_ICON_ENTRY_H__ */
+diff -ur xfce4-panel-4.4.1-orig/panel/panel.c xfce4-panel-4.4.1/panel/panel.c
+--- xfce4-panel-4.4.1-orig/panel/panel.c	2007-01-26 03:52:23.000000000 +0700
++++ xfce4-panel-4.4.1/panel/panel.c	2007-04-11 08:31:10.042498361 +0700
+@@ -135,7 +135,7 @@
+ 
+ 
+ /* this sets up a lot of stuff, see GObject API reference */
+-G_DEFINE_TYPE (Panel, panel, XFCE_TYPE_PANEL_WINDOW);
++G_DEFINE_TYPE (Panel, panel, XFCE_TYPE_PANEL_WINDOW)
+ 
+ static void
+ panel_class_init (PanelClass * klass)
+diff -ur xfce4-panel-4.4.1-orig/plugins/actions/actions.c xfce4-panel-4.4.1/plugins/actions/actions.c
+--- xfce4-panel-4.4.1-orig/plugins/actions/actions.c	2007-04-07 16:32:29.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/actions/actions.c	2007-04-11 08:31:10.042780967 +0700
+@@ -71,7 +71,7 @@
+ 
+ /* Register with the panel */
+ 
+-XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (actions_construct);
++XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (actions_construct)
+ 
+ 
+ /* Interface Implementation */
+Only in xfce4-panel-4.4.1/plugins/actions: actions.c~
+diff -ur xfce4-panel-4.4.1-orig/plugins/clock/clock.c xfce4-panel-4.4.1/plugins/clock/clock.c
+--- xfce4-panel-4.4.1-orig/plugins/clock/clock.c	2007-01-26 03:52:20.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/clock/clock.c	2007-04-11 08:31:10.043117888 +0700
+@@ -216,7 +216,7 @@
+ 
+ /* Register with the panel */
+ 
+-XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (clock_construct);
++XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (clock_construct)
+ 
+ 
+ /* Interface Implementation */
+diff -ur xfce4-panel-4.4.1-orig/plugins/iconbox/iconbox.c xfce4-panel-4.4.1/plugins/iconbox/iconbox.c
+--- xfce4-panel-4.4.1-orig/plugins/iconbox/iconbox.c	2007-01-26 03:52:19.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/iconbox/iconbox.c	2007-04-11 08:31:10.043476538 +0700
+@@ -606,7 +606,7 @@
+ 
+ /* Register with the panel */
+ 
+-XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (iconbox_construct);
++XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (iconbox_construct)
+ 
+ 
+ /* Interface Implementation */
+diff -ur xfce4-panel-4.4.1-orig/plugins/launcher/launcher.c xfce4-panel-4.4.1/plugins/launcher/launcher.c
+--- xfce4-panel-4.4.1-orig/plugins/launcher/launcher.c	2007-01-26 03:52:19.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/launcher/launcher.c	2007-04-11 08:31:10.043962002 +0700
+@@ -61,7 +61,7 @@
+ 
+ /* Register with the panel */
+ 
+-XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (launcher_construct);
++XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (launcher_construct)
+ 
+ 
+ /* Interface Implementation */
+diff -ur xfce4-panel-4.4.1-orig/plugins/pager/pager.c xfce4-panel-4.4.1/plugins/pager/pager.c
+--- xfce4-panel-4.4.1-orig/plugins/pager/pager.c	2007-01-26 03:52:20.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/pager/pager.c	2007-04-11 08:31:10.044197209 +0700
+@@ -59,7 +59,7 @@
+ 
+ /* Register with the panel */
+ 
+-XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (pager_construct);
++XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (pager_construct)
+ 
+ 
+ /* Interface Implementation */
+diff -ur xfce4-panel-4.4.1-orig/plugins/separator/separator.c xfce4-panel-4.4.1/plugins/separator/separator.c
+--- xfce4-panel-4.4.1-orig/plugins/separator/separator.c	2007-01-26 03:52:19.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/separator/separator.c	2007-04-11 08:31:10.044397969 +0700
+@@ -44,7 +44,7 @@
+ 
+ /* Register with the panel */
+ 
+-XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (separator_construct);
++XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (separator_construct)
+ 
+ 
+ /* Interface Implementation */
+diff -ur xfce4-panel-4.4.1-orig/plugins/showdesktop/showdesktop.c xfce4-panel-4.4.1/plugins/showdesktop/showdesktop.c
+--- xfce4-panel-4.4.1-orig/plugins/showdesktop/showdesktop.c	2007-01-26 03:52:20.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/showdesktop/showdesktop.c	2007-04-11 08:31:10.044572023 +0700
+@@ -54,7 +54,7 @@
+ 
+ static void showdesktop_construct (XfcePanelPlugin * plugin);
+ 
+-XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (showdesktop_construct);
++XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (showdesktop_construct)
+ 
+ 
+ /* internal functions */
+diff -ur xfce4-panel-4.4.1-orig/plugins/systray/systray.c xfce4-panel-4.4.1/plugins/systray/systray.c
+--- xfce4-panel-4.4.1-orig/plugins/systray/systray.c	2007-01-26 03:52:20.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/systray/systray.c	2007-04-11 08:31:10.044793363 +0700
+@@ -168,7 +168,7 @@
+ /* Register with the panel */
+ 
+ XFCE_PANEL_PLUGIN_REGISTER_INTERNAL_WITH_CHECK (systray_construct, 
+-                                                systray_check);
++                                                systray_check)
+ 
+ 
+ /* Interface Implementation */
+diff -ur xfce4-panel-4.4.1-orig/plugins/tasklist/tasklist.c xfce4-panel-4.4.1/plugins/tasklist/tasklist.c
+--- xfce4-panel-4.4.1-orig/plugins/tasklist/tasklist.c	2007-01-26 03:52:20.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/tasklist/tasklist.c	2007-04-11 08:31:10.045055173 +0700
+@@ -62,7 +62,7 @@
+ 
+ /* Register with the panel */
+ 
+-XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (tasklist_construct);
++XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (tasklist_construct)
+ 
+ 
+ /* Interface Implementation */
+diff -ur xfce4-panel-4.4.1-orig/plugins/windowlist/windowlist.c xfce4-panel-4.4.1/plugins/windowlist/windowlist.c
+--- xfce4-panel-4.4.1-orig/plugins/windowlist/windowlist.c	2007-01-26 03:52:20.000000000 +0700
++++ xfce4-panel-4.4.1/plugins/windowlist/windowlist.c	2007-04-11 08:31:10.045495535 +0700
+@@ -66,7 +66,7 @@
+  **/
+ static void windowlist_construct (XfcePanelPlugin *plugin);
+ 
+-XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (windowlist_construct);
++XFCE_PANEL_PLUGIN_REGISTER_INTERNAL (windowlist_construct)
+ 
+ /**
+  * Common functions

@@ -1,0 +1,12 @@
+diff -ur xfce4-netload-plugin-0.4.0-orig/panel-plugin/os.h xfce4-netload-plugin-0.4.0/panel-plugin/os.h
+--- xfce4-netload-plugin-0.4.0-orig/panel-plugin/os.h	2005-02-05 01:12:01.000000000 +0700
++++ xfce4-netload-plugin-0.4.0/panel-plugin/os.h	2007-03-18 10:55:51.707001043 +0700
+@@ -18,7 +18,7 @@
+ #ifndef _OS_H
+ #define _OS_H
+ 
+-#if defined (__sun__)
++#if defined(sun) && defined(__SVR4)
+ #define __Solaris__ 1
+ #endif
+ 

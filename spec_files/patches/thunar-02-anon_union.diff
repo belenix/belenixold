@@ -1,0 +1,59 @@
+diff -ur Thunar-0.8.0-orig/thunar-vfs/thunar-vfs-thumb-jpeg.c Thunar-0.8.0/thunar-vfs/thunar-vfs-thumb-jpeg.c
+--- Thunar-0.8.0-orig/thunar-vfs/thunar-vfs-thumb-jpeg.c	2007-01-21 03:39:09.000000000 +0700
++++ Thunar-0.8.0/thunar-vfs/thunar-vfs-thumb-jpeg.c	2007-02-02 18:54:24.496315767 +0700
+@@ -299,7 +299,47 @@
+ }
+ 
+ 
++#ifdef __SUNPRO_C
++/* Sunpro does not like anonymous structs or unions */
++typedef struct /* thumbnail JPEG */
++{
++      guint     thumb_jpeg_length;
++      guint     thumb_jpeg_offset;
++} th_jpeg_t;
++
++typedef struct /* thumbnail TIFF */
++{
++      guint     thumb_tiff_length;
++      guint     thumb_tiff_offset;
++      guint     thumb_tiff_interp;
++      guint     thumb_tiff_height;
++      guint     thumb_tiff_width;
++} th_tiff_t;
++
++typedef struct
++{
++  const guchar *data_ptr;
++  guint         data_len;
++
++  guint         thumb_compression;
++  union
++  {
++    th_jpeg_t jpeg;
++    th_tiff_t tiff;
++  } th_img;
++
++  gboolean      big_endian;
++} TvtjExif;
++
++#define thumb_jpeg_length	th_img.jpeg.thumb_jpeg_length
++#define thumb_jpeg_offset	th_img.jpeg.thumb_jpeg_offset
++#define thumb_tiff_length	th_img.tiff.thumb_tiff_length
++#define thumb_tiff_offset	th_img.tiff.thumb_tiff_offset
++#define thumb_tiff_interp	th_img.tiff.thumb_tiff_interp
++#define thumb_tiff_height	th_img.tiff.thumb_tiff_height
++#define thumb_tiff_width	th_img.tiff.thumb_tiff_width
+ 
++#else
+ typedef struct
+ {
+   const guchar *data_ptr;
+@@ -326,6 +366,7 @@
+   gboolean      big_endian;
+ } TvtjExif;
+ 
++#endif
+ 
+ 
+ static guint

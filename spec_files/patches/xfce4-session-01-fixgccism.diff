@@ -1,0 +1,269 @@
+diff -ur xfce4-session-4.4.0-orig//engines/balou/balou-theme.h xfce4-session-4.4.0//engines/balou/balou-theme.h
+--- xfce4-session-4.4.0-orig//engines/balou/balou-theme.h	Sat Jan 20 18:48:53 2007
++++ xfce4-session-4.4.0//engines/balou/balou-theme.h	Sun Mar  4 19:08:48 2007
+@@ -25,7 +25,7 @@
+ #include <gdk/gdk.h>
+ 
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _BalouTheme BalouTheme;
+ 
+@@ -51,7 +51,7 @@
+                                            gint              height);
+ void         balou_theme_destroy          (BalouTheme       *theme);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ 
+ #endif /* !__BALOU_THEME_H__ */
+diff -ur xfce4-session-4.4.0-orig//engines/balou/balou.h xfce4-session-4.4.0//engines/balou/balou.h
+--- xfce4-session-4.4.0-orig//engines/balou/balou.h	Sat Jan 20 18:48:53 2007
++++ xfce4-session-4.4.0//engines/balou/balou.h	Sun Mar  4 19:09:04 2007
+@@ -27,7 +27,7 @@
+ #include <engines/balou/balou-theme.h>
+ 
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ #define BALOU(obj)  ((Balou *)(obj))
+ 
+@@ -63,7 +63,7 @@
+                        GtkWidget    *dialog);
+ void  balou_destroy   (Balou *balou);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ 
+ #endif /* !__BALOU_H__ */
+diff -ur xfce4-session-4.4.0-orig//libxfsm/xfsm-splash-rc.h xfce4-session-4.4.0//libxfsm/xfsm-splash-rc.h
+--- xfce4-session-4.4.0-orig//libxfsm/xfsm-splash-rc.h	Sat Jan 20 18:48:56 2007
++++ xfce4-session-4.4.0//libxfsm/xfsm-splash-rc.h	Sun Mar  4 19:07:59 2007
+@@ -26,7 +26,7 @@
+ #include <libxfce4util/libxfce4util.h>
+ 
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _XfsmSplashRc XfsmSplashRc;
+ 
+@@ -69,7 +69,7 @@
+                                                const gchar  *delimiter);
+ void          xfsm_splash_rc_free             (XfsmSplashRc *splash_rc);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ 
+ #endif /* !__XFSM_SPLASH_RC_H__ */
+diff -ur xfce4-session-4.4.0-orig//libxfsm/xfsm-util.h xfce4-session-4.4.0//libxfsm/xfsm-util.h
+--- xfce4-session-4.4.0-orig//libxfsm/xfsm-util.h	Sat Jan 20 18:48:56 2007
++++ xfce4-session-4.4.0//libxfsm/xfsm-util.h	Sun Mar  4 19:14:01 2007
+@@ -26,7 +26,7 @@
+ 
+ #include <libxfce4util/libxfce4util.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ GtkWidget	*xfsm_imgbtn_new(const gchar *, const gchar *, GtkWidget **);
+ 
+@@ -51,6 +51,6 @@
+ 
+ XfceRc *xfsm_open_config (gboolean readonly);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__XFSM_UTIL_H__ */
+diff -ur xfce4-session-4.4.0-orig//settings/session/session.c xfce4-session-4.4.0//settings/session/session.c
+--- xfce4-session-4.4.0-orig//settings/session/session.c	Sat Jan 20 18:48:55 2007
++++ xfce4-session-4.4.0//settings/session/session.c	Sun Mar  4 19:11:02 2007
+@@ -389,4 +389,4 @@
+ }
+ 
+ 
+-MCS_PLUGIN_CHECK_INIT;
++MCS_PLUGIN_CHECK_INIT
+diff -ur xfce4-session-4.4.0-orig//settings/splash/module.h xfce4-session-4.4.0//settings/splash/module.h
+--- xfce4-session-4.4.0-orig//settings/splash/module.h	Sat Jan 20 18:48:55 2007
++++ xfce4-session-4.4.0//settings/splash/module.h	Sun Mar  4 19:10:20 2007
+@@ -27,7 +27,7 @@
+ #include <libxfce4util/libxfce4util.h>
+ 
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ #define MODULE(obj) ((Module *)(obj))
+ 
+@@ -61,7 +61,7 @@
+ 
+ void         module_free          (Module       *module);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ 
+ #endif /* !__XFSM_SPLASH_MODULE_H__ */
+diff -ur xfce4-session-4.4.0-orig//settings/splash/splash.c xfce4-session-4.4.0//settings/splash/splash.c
+--- xfce4-session-4.4.0-orig//settings/splash/splash.c	Sat Jan 20 18:48:55 2007
++++ xfce4-session-4.4.0//settings/splash/splash.c	Sun Mar  4 19:10:50 2007
+@@ -591,4 +591,4 @@
+ }
+ 
+ 
+-MCS_PLUGIN_CHECK_INIT;
++MCS_PLUGIN_CHECK_INIT
+diff -ur xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-dialog.h xfce4-session-4.4.0//xfce4-autostart-editor/xfae-dialog.h
+--- xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-dialog.h	Sat Jan 20 18:48:52 2007
++++ xfce4-session-4.4.0//xfce4-autostart-editor/xfae-dialog.h	Sun Mar  4 19:15:05 2007
+@@ -24,7 +24,7 @@
+ 
+ #include <libxfcegui4/libxfcegui4.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _XfaeDialogClass XfaeDialogClass;
+ typedef struct _XfaeDialog      XfaeDialog;
+@@ -45,6 +45,6 @@
+                                  gchar     **descr,
+                                  gchar     **command);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__XFAE_DIALOG_H__ */
+diff -ur xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-model.c xfce4-session-4.4.0//xfce4-autostart-editor/xfae-model.c
+--- xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-model.c	Sat Jan 20 18:48:52 2007
++++ xfce4-session-4.4.0//xfce4-autostart-editor/xfae-model.c	Sun Mar  4 19:16:28 2007
+@@ -106,7 +106,7 @@
+                          xfae_model,
+                          G_TYPE_OBJECT,
+                          G_IMPLEMENT_INTERFACE (GTK_TYPE_TREE_MODEL,
+-                                                xfae_model_tree_model_init));
++                                                xfae_model_tree_model_init))
+ 
+ 
+ 
+diff -ur xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-model.h xfce4-session-4.4.0//xfce4-autostart-editor/xfae-model.h
+--- xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-model.h	Sat Jan 20 18:48:52 2007
++++ xfce4-session-4.4.0//xfce4-autostart-editor/xfae-model.h	Sun Mar  4 19:15:26 2007
+@@ -24,7 +24,7 @@
+ 
+ #include <libxfcegui4/libxfcegui4.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _XfaeModelClass XfaeModelClass;
+ typedef struct _XfaeModel      XfaeModel;
+@@ -69,6 +69,6 @@
+                                    GtkTreeIter *iter,
+                                    GError     **error);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__XFAE_MODEL_H__ */
+diff -ur xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-window.c xfce4-session-4.4.0//xfce4-autostart-editor/xfae-window.c
+--- xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-window.c	Sat Jan 20 18:48:52 2007
++++ xfce4-session-4.4.0//xfce4-autostart-editor/xfae-window.c	Sun Mar  4 19:16:48 2007
+@@ -57,7 +57,7 @@
+ 
+ 
+ 
+-G_DEFINE_TYPE (XfaeWindow, xfae_window, GTK_TYPE_WINDOW);
++G_DEFINE_TYPE (XfaeWindow, xfae_window, GTK_TYPE_WINDOW)
+ 
+ 
+ 
+diff -ur xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-window.h xfce4-session-4.4.0//xfce4-autostart-editor/xfae-window.h
+--- xfce4-session-4.4.0-orig//xfce4-autostart-editor/xfae-window.h	Sat Jan 20 18:48:52 2007
++++ xfce4-session-4.4.0//xfce4-autostart-editor/xfae-window.h	Sun Mar  4 19:15:38 2007
+@@ -24,7 +24,7 @@
+ 
+ #include <xfce4-autostart-editor/xfae-model.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _XfaeWindowClass XfaeWindowClass;
+ typedef struct _XfaeWindow      XfaeWindow;
+@@ -40,6 +40,6 @@
+ 
+ GtkWidget *xfae_window_new      (void);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__XFAE_WINDOW_H__ */
+diff -ur xfce4-session-4.4.0-orig//xfce4-session/xfsm-chooser.h xfce4-session-4.4.0//xfce4-session/xfsm-chooser.h
+--- xfce4-session-4.4.0-orig//xfce4-session/xfsm-chooser.h	Sat Jan 20 18:48:55 2007
++++ xfce4-session-4.4.0//xfce4-session/xfsm-chooser.h	Sun Mar  4 19:13:03 2007
+@@ -25,7 +25,7 @@
+ #include <gtk/gtk.h>
+ 
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ #define XFSM_TYPE_CHOOSER xfsm_chooser_get_type()
+ #define XFSM_CHOOSER(obj) G_TYPE_CHECK_INSTANCE_CAST(obj, XFSM_TYPE_CHOOSER, XfsmChooser)
+@@ -60,7 +60,7 @@
+ 
+ gchar *xfsm_chooser_get_session (const XfsmChooser *chooser);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ 
+ #endif /* !__XFSM_CHOOSER_H__ */
+diff -ur xfce4-session-4.4.0-orig//xfce4-session/xfsm-fadeout.h xfce4-session-4.4.0//xfce4-session/xfsm-fadeout.h
+--- xfce4-session-4.4.0-orig//xfce4-session/xfsm-fadeout.h	Sat Jan 20 18:48:55 2007
++++ xfce4-session-4.4.0//xfce4-session/xfsm-fadeout.h	Sun Mar  4 19:12:38 2007
+@@ -25,7 +25,7 @@
+ #include <gdk/gdk.h>
+ 
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _XfsmFadeout XfsmFadeout;
+ 
+@@ -32,7 +32,7 @@
+ XfsmFadeout *xfsm_fadeout_new     (GdkDisplay  *display);
+ void         xfsm_fadeout_destroy (XfsmFadeout *fadeout);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ 
+ #endif /* !__XFSM_FADEOUT_H__ */
+diff -ur xfce4-session-4.4.0-orig//xfce4-session/xfsm-splash-screen.h xfce4-session-4.4.0//xfce4-session/xfsm-splash-screen.h
+--- xfce4-session-4.4.0-orig//xfce4-session/xfsm-splash-screen.h	Sat Jan 20 18:48:55 2007
++++ xfce4-session-4.4.0//xfce4-session/xfsm-splash-screen.h	Sun Mar  4 19:11:48 2007
+@@ -27,7 +27,7 @@
+ #include <libxfce4util/libxfce4util.h>
+ 
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _XfsmSplashScreen XfsmSplashScreen;
+ 
+@@ -52,7 +52,7 @@
+ 
+ void              xfsm_splash_screen_free (XfsmSplashScreen *splash);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ 
+ #endif /* !__XFSM_SPLASH_SCREEN_H__ */
