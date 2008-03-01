@@ -1,0 +1,13 @@
+diff -ur exo-0.3.2-orig/exo/exo-mount-point.c exo-0.3.2/exo/exo-mount-point.c
+--- exo-0.3.2-orig/exo/exo-mount-point.c	2007-01-20 20:58:22.000000000 +0700
++++ exo-0.3.2/exo/exo-mount-point.c	2007-01-25 12:28:34.479136652 +0700
+@@ -38,6 +38,9 @@
+ #include <sys/mount.h>
+ #endif
+ #ifdef HAVE_SYS_MNTTAB_H
++#ifdef sun
++#include <stdio.h>
++#endif
+ #include <sys/mnttab.h>
+ #endif
+ 

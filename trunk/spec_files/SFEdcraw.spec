@@ -24,7 +24,12 @@ Requires: SFElcms
 %patch1 -p1
 
 %build
+
+%if %cc_is_gcc
+gcc -o dcraw dcraw.c -lm -ljpeg -llcms
+%else
 cc -o dcraw dcraw.c -lm -ljpeg -llcms
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -42,5 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Mar 01 2008 - moinakg@gmail.com
+- Enable Gcc build.
 * Fri Nov 16 2007 - Damien Carbery <daymobrew@users.sourceforge.net>
 - Initial version.

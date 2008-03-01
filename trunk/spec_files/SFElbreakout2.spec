@@ -3,6 +3,7 @@
 #
 #
 %include Solaris.inc
+%define SUNWlibsdl      %(/usr/bin/pkginfo -q SUNWlibsdl && echo 1 || echo 0)
 
 Name:                    SFElbreakout2
 Summary:                 LBreakout2 is a successor to LBreakout a breakout-style arcade game
@@ -17,8 +18,13 @@ BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 
 %include default-depend.inc
 Requires: SUNWcsu
+%if %SUNWlibsdl
 Requires: SUNWlibsdl
 BuildRequires: SUNWlibsdl-devel
+%else
+Requires: SFEsdl
+BuildRequires: SFEsdl-devel
+%endif
 Requires: SUNWpng
 BuildRequires: SUNWpng-devel
 Requires: %{name}-root
@@ -88,6 +94,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_localstatedir}/lbreakout2/*
 
 %changelog
+* Sat Mar 01 2008 - moinakg@gmail.com
+- Add check to enable SFEsdl dependency.
 - Wed Feb  6 pradhap (at) gmail.com
 - Initial lbreakout spec file.
 

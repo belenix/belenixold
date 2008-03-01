@@ -32,24 +32,27 @@
 #
 # Changelog
 #
-# 2008-01-30 - Moinak Ghosh <moinak.ghosh@sun.com>
+# 2008-03-01 - Moinak Ghosh <moinakg@gmail.com>
+# Add more packages.
+#
+# 2008-01-30 - Moinak Ghosh <moinakg@gmail.com>
 # Add new packages.
 #
-# 2008-01-28 - Moinak Ghosh <moinak.ghosh@sun.com>
+# 2008-01-28 - Moinak Ghosh <moinakg@gmail.com>
 # Add new packages.
 #
-# 2008-01-26 - Moinak Ghosh <moinak.ghosh@sun.com>
+# 2008-01-26 - Moinak Ghosh <moinakg@gmail.com>
 # Fix another bad mistake in previous commit.
 #
-# 2008-01-26 - Moinak Ghosh <moinak.ghosh@sun.com>
+# 2008-01-26 - Moinak Ghosh <moinakg@gmail.com>
 # Various typo and other fixes.
 # Re-order some specs.
 #
-# 2008-01-26 - Moinak Ghosh <moinak.ghosh@sun.com>
+# 2008-01-26 - Moinak Ghosh <moinakg@gmail.com>
 # Add remaining spec files for KDE3 dependencies and a few additional stuff.
 # TODO: Need review.
 #
-# 2008-01-26 - Moinak Ghosh <moinak.ghosh@sun.com>
+# 2008-01-26 - Moinak Ghosh <moinakg@gmail.com>
 # Initial version.
 #
 
@@ -64,10 +67,19 @@ then
 	exit 1
 fi
 
+export BUILD_DRIVERS=0
+if [ -n "$2" ]
+then
+	if [ "$2" = "--with-drivers" ]
+	then
+		BUILD_DRIVERS=1
+	fi
+fi
+
 SPEC_PATH=$1
 cd $SPEC_PATH
 
-PKGTOOL_OPTIONS="--halt-on-errors --with-gnu-iconv --without-dt --with-l10n --src=/packages/SOURCES:${SPEC_PATH}/include:${SPEC_PATH}/ext-sources"
+PKGTOOL_OPTIONS="--halt-on-errors --with-fox --with-gnu-iconv --without-dt --with-l10n --src=/packages/SOURCES:${SPEC_PATH}/include:${SPEC_PATH}/ext-sources"
 export PKGTOOL_OPTIONS
 
 call_pkgtool() {
@@ -212,7 +224,7 @@ call_pkgtool $_GCC "encumbered/SFEvlc.spec:encumbered/SFEvnc2swf.spec"
 
 call_pkgtool $_GCC "SFElibpcap.spec:SFEsed.spec"
 call_pkgtool $_STUDIO "SFEethereal.spec"
-call_pkgtool $_GCC "SFEcmake.spec:SFEphysfs.spec:SFEreadline.spec"
+call_pkgtool $_GCC "SFEcmake.spec:SFEphysfs.spec:SFEreadline.spec:SFEcups.spec"
 call_pkgtool $_GCC "SFEqt3.spec:SFEcurl.spec:SFElibsndfile.spec:SFEjack.spec:SFEnas.spec:SFEarts.spec:SFEfltk.spec:SFEilmbase.spec:SFEopenexr.spec"
 
 call_pkgtool $_GCC "SFEbdb.spec:SFEgdbm.spec:SFElibntlm.spec:SFEcyrus-sasl.spec"
@@ -319,15 +331,47 @@ call_pkgtool $_GCC "SFEwpd.spec:SFElibpqxx.spec"
 
 # TODO: Need to upgrade SUNW imagick
 # call_pkgtool $_STUDIO "SFEimagemagick.spec"
-call_pkgtool $_GCC "SFEgraphicsmagick.spec"
+call_pkgtool $_STUDIO "SFEgraphicsmagick.spec"
 
-call_pkgtool $_GCC "SFEkoffice3.spec:SFElibkipi.spec:SFEexiv2.spec:SFEdcraw.spec:SFElibkdcraw.spec:SFElibkexiv2.spec:SFEkipi-plugins.spec:SFEjasper.spec:SFEdigikam.spec"
+call_pkgtool $_GCC "SFEkoffice3.spec:SFElibkipi.spec:SFEexiv2.spec:SFEdcraw.spec:SFElibkdcraw.spec:SFElibkexiv2.spec:SFEkipi-plugins.spec:SFEjasper.spec:SFEimlib2.spec:SFEdigikam.spec"
 
 call_pkgtool $_GCC "SFEktorrent.spec:SFEctags.spec:SFEcscope.spec:SFEkscope.spec"
-call_pkgtool $_GCC "SFEnicdrv.spec:SFEscreen.spec:SFEsudo.spec:SFEtop.spec:SFEimlib2.spec:SFEmultitail.spec"
-call_pkgtool $_GCC "SFEheroes.spec:SFEbyacc.spec:SFExcdroast.spec:SFEp7zip.spec:SFEe2fsprogs.spec"
+
+if [ $BUILD_DRIVERS -eq 1 ]
+then
+	CC=/opt/SUNWspro/bin/cc pkgtool build-only ${PKGTOOL_OPTIONS} --download SFEnicdrv.spec
+fi
+
+call_pkgtool $_GCC "SFEscreen.spec:SFEsudo.spec:SFEtop.spec:SFEmultitail.spec"
+call_pkgtool $_GCC "SFEheroes.spec:SFEbyacc.spec:SFExcdroast.spec:SFEe2fsprogs.spec"
 call_pkgtool $_GCC "SFEmc.spec:SFEmrxvt.spec:SFElbreakout2.spec:SFEsharutils.spec:SFEcvs.spec"
 call_pkgtool $_GCC "SFEsupertux.spec:SFEdtracetoolkit.spec:SFEdttdocviewer.spec:SFEmtools.spec"
 call_pkgtool $_STUDIO "SFEperl-curses.spec:SFEperl-locale-mt-simple.spec:SFEperl-term-readkey.spec"
 call_pkgtool $_STUDIO "SFEperl-curses-ui.spec:SFEbwidget.spec:SFEprtpci.spec"
+
+
+call_pkgtool $_GCC "SFElibsexy.spec"
+
+XFCE_SPECS="OSOLperl-uri.spec:xfce/OSOLgtk-xfce-engine.spec:xfce/OSOLthunar.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce4-icon-theme.spec:xfce/OSOLlibexo.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfcalendar.spec:xfce/OSOLxfce4-mixer.spec:xfce/OSOLlibnotify.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce-loginmgr.spec:xfce/OSOLxfce4-panel.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLlibxfce4mcs.spec:xfce/OSOLxfce-mcs-manager.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce4-session.spec:xfce/OSOLlibxfce4util.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce-mcs-plugins.spec:xfce/OSOLxfdesktop.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLlibxfcegui4.spec:xfce/OSOLxfce-utils.spec:xfce/OSOLxfprint.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLmousepad.spec:xfce/OSOLxfce4-appfinder.spec:xfce/OSOLxfwm4.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce4-dev-tools.spec"
+
+call_pkgtool $_GCC ${XFCE_SPECS}
+
+XFCE_GOODIES="xfce/thunar-archive-plugin.spec:xfce/thunar-volman.spec:xfce/xfce4-cpugraph-plugin.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-dict-plugin.spec:xfce/xfce4-genmon-plugin.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-mpc-plugin.spec:xfce/xfce4-netload-plugin.spec"
+#XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-notes-plugin.spec:xfce/xfce4-notification-daemon.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-notes-plugin.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-places-plugin.spec:xfce/xfce4-verve-plugin.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-weather-plugin.spec:xfce/xfce4-xfapplet-plugin.spec"
+
+call_pkgtool $_GCC ${XFCE_GOODIES}
 

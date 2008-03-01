@@ -11,7 +11,8 @@ License:      Other
 Group:        System/Libraries
 Version:      0.1.11
 Summary:      libsexy is a collection of GTK+ widgets that extend the functionality of such standard widget.
-Source:       http://releases.chipx86.com/libsexy/libsexy/libsexy-%{version}.tar.gz
+#Source:       http://releases.chipx86.com/libsexy/libsexy/libsexy-%{version}.tar.gz
+Source:       http://ftp.de.debian.org/debian/pool/main/libs/libsexy/libsexy_%{version}.orig.tar.gz
 URL:          http://www.chipx86.com/wiki/Libsexy
 BuildRoot:    %{_tmppath}/%{name}-%{version}-build
 Docdir:	      %{_defaultdocdir}/doc
@@ -76,6 +77,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Sat Mar 01 2008 - moinakg@gmail.com
+- Pull from debian pool since main site is down.
 * Fri Aug 24 2007 Erwann Chenede <erwann@sun.com>
 - bumped to 0.1.11 and removed patch
 * Fri Feb 16 2007 - Doug Scott <dougs@truemail.co.th>

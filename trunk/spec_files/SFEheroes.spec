@@ -120,7 +120,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 cd ..
 
 rm ${RPM_BUILD_ROOT}%{_datadir}/info/dir
-rm -r ${RPM_BUILD_ROOT}%{_libdir}
+rm -rf ${RPM_BUILD_ROOT}%{_libdir}
 
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/locale/locale.alias
 
@@ -139,7 +139,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Tue Jan 29 2008 - moinak.ghosh@sun.com
+* Sat Mar 01 2008 - moinakg@gmail.com
+- Prevent rm from complaining.
+* Tue Jan 29 2008 - moinakg@gmail.com
 - Fix a conflict if building with l10n.
 * Thu Sep 6 2007 - sobotkap@centrum.cz
 - Fix sdl mixer dependency.

@@ -20,6 +20,7 @@ BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 Summary:       mediaLib - Header files
 SUNW_BaseDir:  %{_basedir}
 %include default-depend.inc
+Requires:      %{name}
 
 %prep
 rm -rf %{name}-%{version}-build
@@ -49,6 +50,10 @@ mkdir ${RPM_BUILD_ROOT}
 
 cd usr/src/mlib/dist/x86
 tar cpf - * | (cd ${RPM_BUILD_ROOT}; tar xpf - )
+(cd ${RPM_BUILD_ROOT}%{_libdir}
+    ln -sf libmlib.so.2 libmlib.so)
+(cd ${RPM_BUILD_ROOT}%{_libdir}/%{_arch64}
+    ln -sf libmlib.so.2 libmlib.so)
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -56,7 +61,13 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_libdir}
-%{_libdir}/*
+%{_libdir}/*.so*
+%dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
+%{_libdir}/%{_arch64}/*.so*
+%dir %attr (0755, root, bin) %{_libdir}/libmlib
+%{_libdir}/libmlib/*.so*
+%dir %attr (0755, root, bin) %{_libdir}/libmlib/%{_arch64}
+%{_libdir}/libmlib/%{_arch64}/*.so*
 
 %files -n SUNWmlibh
 %defattr (-, root, bin)
@@ -64,5 +75,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
-* Sun Feb 10 2008 - moinak.ghosh@sun.com
+* Sat Mar 01 2008 - moinakg@gmail.com
+- Add missing symbolic links.
+* Sun Feb 10 2008 - moinakg@gmail.com
 - Initial spec.

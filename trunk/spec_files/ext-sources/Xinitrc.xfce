@@ -1,0 +1,63 @@
+#!/bin/ksh
+#####################################################################
+###  File:              Xinitrc.xfce  Version 0.1 $Revision: 1.0 $
+###
+###  Default Location:  /usr/dt/config/Xinitrc.xfce
+###
+###  Purpose:           Xfce Desktop session startup script 
+###
+###  Invoked by:        /usr/dt/bin/Xsession
+###
+#####################################################################
+
+if [ "x$LC_ALL" = x -a "x$LANG" = x -o "x$LANG" = xC ]; then
+  export LC_ALL="C"
+  export LC_CTYPE="C"
+else
+  export LC_MESSAGES=$LANG
+fi
+
+export G_FILENAME_ENCODING=@locale,UTF-8
+export G_BROKEN_FILENAMES=yes
+
+/usr/openwin/bin/xrdb -merge << EOF
+! Default CDE resources
+*WindowColor:           #8A008A008A00
+!*WindowForeground:      #FF0000000000
+!*DataBackground:        #0000FF000000
+*DataForeground:        #FF0000000000
+*WorkspaceColor:        #8A008A008A00
+*Color.Background:      #FF000000FF00
+!*Color.Foreground:      #0000FF000000
+*foreground:            #000000000000
+! Hack for Dtmail
+*XmText*background: seashell
+*XmTextField*background: seashell
+*Message_List*background: seashell
+*background:    #AE00B200C300
+Dthello*string:		Welcome to the OpenSolaris Xfce Desktop
+EOF
+
+if [ -f $HOME/.Xdefaults ]; then
+    xrdb -merge $HOME/.Xdefaults        # Load Users X11 resource database
+fi
+
+/usr/bin/linc-cleanup-sockets
+
+command=/usr/bin/xfce4-session
+
+# start xfce4-session through dbus-launch if found
+if [ -x "/usr/bin/dbus-launch" -a -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    command="/usr/bin/dbus-launch --exit-with-session $command"
+else
+    echo "$0: dbus-launch not found."
+fi
+
+if [ -x "/usr/bin/ssh-agent" ] && [ -z "$SSH_AUTH_SOCK" ]; then
+    command="/usr/bin/ssh-agent -- $command"
+else
+    echo "$0: ssh-agent not found."
+fi
+
+echo 'Starting xfce4-session'
+exec $command

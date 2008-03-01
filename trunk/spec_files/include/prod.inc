@@ -20,8 +20,15 @@ Vendor:			   http://pkgbuild.sf.net/spec-files-extra
 %{?sf_mirror:#}%define sf_mirror easynews.dl.sourceforge.net
 %{?sf_download:#}%define sf_download http://downloads.sourceforge.net
 
+%define xfce_pkg_version 4.4.2
+%define xfce_src_url http://www.us.xfce.org/archive/xfce-%{xfce_pkg_version}/src
+%define xfce_banding OSOL
+
+
 # ChangeLog:
-# 2008-02-21  moinak.ghosh@sun.com
+# 2008-03-01  moinakg@gmail.com
+# - Add Xfce definitions.
+# 2008-02-21  moinakg@gmail.com
 # - Add Sourceforge download URL for auto-selecting best mirror.
 # 2007-03-16  Laszlo (Laca) Peter  <laca@sun.com>
 # - copied from the JDS spec-files and updated for SFE
