@@ -20,3 +20,9 @@ mount_ntfs: $(objs)
 
 clean:
 	@rm -f *.o
+	@rm -f mount_ntfs
+
+install:
+	@mkdir -p $(DESTDIR)/usr/lib/fs/ntfs
+	@cp mount_ntfs $(DESTDIR)/usr/lib/fs/ntfs/mount
+

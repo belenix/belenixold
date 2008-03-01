@@ -67,7 +67,7 @@ then
 	exit 1
 fi
 
-export BUILD_DRIVERS=0
+BUILD_DRIVERS=0
 if [ -n "$2" ]
 then
 	if [ "$2" = "--with-drivers" ]
@@ -111,6 +111,9 @@ call_pkgtool() {
 		exit 1
 	fi
 }
+
+if [ `/usr/bin/false` ]
+then
 
 if [ `pkginfo -q SUNWgnu-libiconv` ]
 then
@@ -374,4 +377,12 @@ XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-places-plugin.spec:xfce/xfce4-verve-plu
 XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-weather-plugin.spec:xfce/xfce4-xfapplet-plugin.spec"
 
 call_pkgtool $_GCC ${XFCE_GOODIES}
+fi
 
+call_pkgtool $_GCC SFEntfsprogs.spec
+(cd ../apps; tar cpf - prtpart | gzip -c) > ext-sources/prtpart-0.1.tar.gz
+call_pkgtool $_GCC SFEprtpart.spec
+(cd ../apps; tar cpf - mount_ext2fs | gzip -c) > ext-sources/mount-ext2fs-0.1.tar.gz
+call_pkgtool $_GCC SFEmount-ext2fs.spec
+(cd ../apps; tar cpf - mount_ntfs | gzip -c) > ext-sources/mount-ntfs-0.1.tar.gz
+call_pkgtool $_GCC SFEmount-ntfs.spec

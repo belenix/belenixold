@@ -55,8 +55,8 @@ fi
 
 %build
 
-export CFLAGS="%optflags -I%{gnu_inc} -DINSTALLPREFIX=\\\"%{_prefix}\\\""
-export LDFLAGS="%_ldflags %{gnu_lib_path} -liconv -lintl"
+export CFLAGS="%optflags -DINSTALLPREFIX=\\\"%{_prefix}\\\""
+export LDFLAGS="%_ldflags -L/usr/gnu/lib -R/usr/gnu/lib -liconv -lintl"
 export PATH=/usr/bin:${PATH}
 
 ./configure --prefix=%{_prefix}	\
@@ -126,5 +126,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/gnome-vfs-2.0/modules/*
 
 %changelog
-* Sat Feb 02 2008 - moinak.ghosh@sun.com
+* Sat Mar 01 2008 - moinakg@gmail.com
+- Fix CFLAGS and LDFLAGS.
+* Sat Feb 02 2008 - moinakg@gmail.com
 - Initial spec.

@@ -32,3 +32,14 @@ clean:
 	@rm -f mount_ext2fs
 	@rm -f xlsmounts
 	@rm -f xumount
+
+install:
+	@mkdir -p $(DESTDIR)/usr/bin
+	@mkdir -p $(DESTDIR)/usr/lib/fs/ext2fs
+	@cp xumount $(DESTDIR)/usr/bin
+	@cp xlsmounts $(DESTDIR)/usr/bin
+	@cp mount_ext2fs $(DESTDIR)/usr/lib/fs/ext2fs/mount
+	@ln -sf mount $(DESTDIR)/usr/lib/fs/ext2fs/fstyp
+	@chmod 0755 $(DESTDIR)/usr/bin/xumount
+	@chmod 0755 $(DESTDIR)/usr/bin/xlsmounts
+	@chmod 0755 $(DESTDIR)/usr/lib/fs/ext2fs/*
