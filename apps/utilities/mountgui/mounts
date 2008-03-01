@@ -1,0 +1,379 @@
+#!/usr/bin/wish
+
+package require BWidget
+
+set fstypes {zfs ufs pcfs udfs hsfs}
+set sfstypes {ntfs ext2fs}
+set mntlst {}
+set fslst {}
+set xvalidopts [list ro rw]
+
+set MNTCOLOR "#e5ffb7"
+set UMNTCOLOR "#ffd2b7"
+
+set MNTINDICATOR lightgreen
+set UMNTINDICATOR red
+
+proc bevelrect {canv topx topy wd ht ic fill outline hil} {
+	set polypoints {}
+	lappend polypoints $topx [expr {$topy + $ic}] \
+			[expr {$topx + $ic}] $topy
+	lappend polypoints [expr {$topx + $wd - $ic}] \
+			$topy [expr {$topx + $wd}] [expr {$topy + $ic}]
+	lappend polypoints [expr {$topx + $wd}] [expr {$topy + $ht - $ic}] \
+			[expr {$topx + $wd - $ic}] [expr {$topy + $ht}]
+	lappend polypoints [expr {$topx + $ic}] [expr {$topy + $ht}] \
+			$topx [expr {$topy + $ht - $ic}]
+	lappend polypoints $topx [expr {$topy + $ic}]
+
+	set tag [$canv create polygon $polypoints -fill $fill -outline $outline]
+
+	if {$hil == 1} {
+		$canv bind $tag <Enter> "$canv itemconfigure $tag -outline black"
+		$canv bind $tag <Leave> "$canv itemconfigure $tag -outline $outline"
+	}
+	return $tag
+}
+
+proc mountfs {pos} {
+	global fslst
+
+	set lst [split [lindex $fslst $pos] ";"]
+	set dev [lindex $lst 0]
+	set mntpt [lindex $lst 1]
+	set fstyp [lindex $lst 2]
+	set mounted [lindex $lst 3]
+	set opt [lindex $lst 4]
+
+	set result ""
+	set status 0
+	if {[string compare "$opt" "-"] != 0} {
+		set mntf [open "| /usr/sbin/mount -F $fstyp -o \"$opt\" $dev $mntpt"]
+
+	} else {
+		set mntf [open "| /usr/sbin/mount -F $fstyp $dev $mntpt"]
+	}
+	if {[catch {close $mntf} result]} {
+		if {[string compare [lindex $::errorCode 0] "CHILDSTATUS"] == 0} {
+			set status [lindex $::errorCode 2]
+		} else {
+			set status -1
+		}
+		if {$status == 0 || [regexp -nocase "WARNING" $result] == 1} {
+			set fslst [lreplace $fslst $pos $pos "${dev};${mntpt};${fstyp};1;${opt}"]
+		}
+	} else {
+		set fslst [lreplace $fslst $pos $pos "${dev};${mntpt};${fstyp};1;${opt}"]
+	}
+	return [list $status "$result"]
+}
+
+proc umountfs {pos} {
+	global sfstypes
+	global fslst
+
+	set status 0
+	set result ""
+	set lst [split [lindex $fslst $pos] ";"]
+	set dev [lindex $lst 0]
+	set mntpt [lindex $lst 1]
+	set fstyp [lindex $lst 2]
+	set mounted [lindex $lst 3]
+	set opt [lindex $lst 4]
+
+	if {$mounted == 1} {
+		set umcmd "/usr/sbin/umount"
+		if {[lsearch $sfstypes $fstyp] > -1} {
+			set umcmd "/usr/bin/xumount"
+		}
+		if {[catch {exec $umcmd $mntpt} result]} {
+			if {[string compare [lindex $::errorCode 0] "CHILDSTATUS"] == 0} {
+				set status [lindex $::errorCode 2]
+			} else {
+				set status -1
+			}
+			if {$status == 0 || [regexp -nocase "WARNING" $result] == 1} {
+				set fslst [lreplace $fslst $pos $pos "${dev};${mntpt};${fstyp};0;${opt}"]
+			}
+		} else {
+			set fslst [lreplace $fslst $pos $pos "${dev};${mntpt};${fstyp};0;${opt}"]
+		}
+	} else {
+		set result "Not mounted, not in mount table"
+		set status -1
+	}
+	return [list $status "$result"]
+}
+
+proc mount_umount {pos tag otag canv} {
+	global fslst
+	global MNTCOLOR
+	global UMNTCOLOR
+	global MNTINDICATOR
+	global UMNTINDICATOR
+
+	set line [lindex $fslst $pos]
+	if {[string compare "$line" ""] == 0} {
+		tk_messageBox -title "Error" -type ok -icon error 
+			-message "No such mountpoint resource" -parent $canv
+		return
+	}
+ 
+	set lst [split [lindex $fslst $pos] ";"]
+	set mounted [lindex $lst 3]
+
+	if {$mounted == 1} {
+		set yn [tk_messageBox -title "Query" -type yesno -default no -icon question \
+			-message "Do you really want to Unmount this resource ?"]
+		if {[string compare "$yn" "yes"] == 0} {
+			set rv [umountfs $pos]
+			if {[lindex $rv 0] != 0} {
+				tk_messageBox -title "Error" -type ok -icon error 
+					-message "[lindex $rv 1]"
+				return
+			}
+			$canv itemconfigure $tag -fill $UMNTCOLOR
+
+			if {[$canv itemcget $otag -fill] == $MNTINDICATOR} {
+				$canv itemconfigure $otag -fill $UMNTINDICATOR
+			}
+		}
+	} else {
+		set yn [tk_messageBox -type yesno -default no -icon question \
+			-message "Do you really want to Mount this resource ?"]
+		if {[string compare "$yn" "yes"] == 0} {
+			set rv [mountfs $pos]
+			if {[lindex $rv 0] != 0} {
+				tk_messageBox -title "Error" -type ok -icon error 
+					-message "[lindex $rv 1]"
+				return
+			}
+			$canv itemconfigure $tag -fill $MNTCOLOR
+
+			if {[$canv itemcget $otag -fill] == $UMNTINDICATOR} {
+				$canv itemconfigure $otag -fill $MNTINDICATOR
+			}
+		}
+	}
+}
+
+set FSTAB "/etc/vfstab"
+set EXTRATAB "/etc/extratab"
+set MNTTAB "/etc/mnttab"
+
+set width 500
+set height 200
+set tfont_bold {screen 10 bold}
+set tfont {screen 10}
+
+wm title . "Hard Disk Mounts"
+set sw [ScrolledWindow .sw -scrollbar vertical -auto none]
+set canv [canvas $sw.canv -relief sunken -bd 2 \
+	-width $width -height $height -background white]
+
+set mnt [open $MNTTAB "r"]
+while {! [eof $mnt]} {
+	set line [gets $mnt]
+	set lst [split $line]
+	set dev [lindex $lst 0]
+	if {[string length "$dev"] == 0} {
+		continue
+	}
+	set mntpt [lindex $lst 1]
+	set fstyp [lindex $lst 2]
+	set opt [lindex $lst 3]
+	lappend mntlst "${dev};${mntpt};${fstyp};${opt}"
+}
+close $mnt
+
+set mntf [open "|/usr/bin/xlsmounts" "r"]
+while {![eof $mntf]} {
+	gets $mntf line
+
+	if {![regexp "PHYSICAL DEVICE" $line]} {
+		set dev [lindex $line 1]
+		if {[string length "$dev"] == 0} {
+			continue
+		}
+		set mntpt [lindex $line 5]
+		set fstyp [lindex $line 2]
+		set opt "-"
+		set pos [lsearch -regexp $mntlst "127.0.0.1:/;${mntpt};nfs"]
+		if {$pos != -1} {
+			set lst [split [lindex $mntlst $pos] ";"]
+			set opt [lindex $lst 3]
+			set opts {}
+			foreach o [split $opt ","] {
+				if {[lsearch -exact $xvalidopts $o] != -1} {
+					lappend opts $o
+				}
+			}
+			set opt [join $opts ","]
+			lset mntlst $pos "${dev};${mntpt};${fstyp};${opt}"
+		} else {
+			lappend mntlst "${dev};${mntpt};${fstyp};${opt}"
+		}
+	}
+}
+close $mntf
+
+set num 0
+set topy 4
+set ic 5
+set wd [expr {$width - 4}]
+set ht 28
+set lht [font metrics $tfont -displayof $canv -linespace ]
+set tspc [expr {($ht - $lht) / 2}]
+set finc 20
+
+set fwidth(dev) [font measure $tfont -displayof $canv "Device"]
+set fwidth(mntpt) [font measure $tfont -displayof $canv "Mounted On"]
+set fwidth(fstyp) [font measure $tfont -displayof $canv "Filesystem"]
+
+set fst [open $FSTAB "r"]
+
+while {! [eof $fst]} {
+	set line [gets $fst]
+	if {[string length $line] == 0} {
+		continue
+	}
+	if {[string compare [string index $line 0] "#"] == 0} {
+		continue
+	}
+	set dev [lindex $line 0]
+	set mntpt [lindex $line 2]
+	set fstyp [lindex $line 3]
+	set opt [lindex $line 6]
+
+	set mounted 0
+	if {[lsearch $fstypes $fstyp] == -1 && [lsearch $sfstypes $fstyp] == -1} {
+		continue
+	}
+	if {[lsearch -regexp $mntlst "^${dev};${mntpt};${fstyp}*"] > -1} {
+		set mounted 1
+	}
+
+	lappend fslst "${dev};${mntpt};${fstyp};${mounted};${opt}"
+
+	set w [expr {[font measure $tfont -displayof $canv "$dev"] + $finc}]
+	if {$w > $fwidth(dev)} {
+		set fwidth(dev) $w
+	}
+
+	set w [expr {[font measure $tfont -displayof $canv "$mntpt"] + $finc}]
+	if {$w > $fwidth(mntpt)} {
+		set fwidth(mntpt) $w
+	}
+
+	set w [expr {[font measure $tfont -displayof $canv "$fstyp"] + $finc}]
+	if {$w > $fwidth(fstyp)} {
+		set fwidth(fstyp) $w
+	}
+}
+
+incr fwidth(dev) $finc
+incr fwidth(mntpt) $finc
+incr fwidth(fstyp) $finc
+set fwidth(mtd) [expr {[font measure $tfont -displayof $canv "Mounted"] + $finc}]
+set finc [expr {$finc / 2}]
+
+bevelrect $canv 0 $topy $wd $ht $ic gray darkgray 0
+bevelrect $canv 0 $topy [expr {$wd - 2}] [expr {$ht - 2}] $ic white white 0
+bevelrect $canv 1 [expr {$topy + 1}] [expr {$wd - 2}] \
+		[expr {$ht - 2}] $ic yellow yellow 0
+
+set topx $finc
+$canv create text $topx [expr {$topy + $tspc}] \
+		-font $tfont_bold -anchor nw -text "Mounted"
+set topx [expr {$finc + $fwidth(mtd)}]
+$canv create text $topx [expr {$topy + $tspc}] \
+		-font $tfont_bold -anchor nw -text "Device"
+set topx [expr {$fwidth(mtd) + $fwidth(dev)}]
+$canv create text $topx [expr {$topy + $tspc}] \
+		-font $tfont_bold -anchor nw -text "Mounted On"
+set topx [expr {$fwidth(mtd) + $fwidth(dev) + $fwidth(mntpt)}]
+$canv create text $topx [expr {$topy + $tspc}] \
+		-font $tfont_bold -anchor nw -text "Filesystem"
+
+
+set topy [expr {$topy + $ht + 2}]
+
+foreach line $fslst {
+	set lst [split $line ";"]
+
+	set dev [lindex $lst 0]
+	set mntpt [lindex $lst 1]
+	set fstyp [lindex $lst 2]
+	set mounted [lindex $lst 3]
+	set opt [lindex $lst 4]
+
+	if {$mounted == 1} {
+		set hcol $MNTCOLOR
+		set bcol $MNTINDICATOR
+	} else {
+		set hcol $UMNTCOLOR
+		set bcol $UMNTINDICATOR
+	}
+
+	set tag [bevelrect $canv 0 $topy $wd $ht $ic $hcol $hcol 1]
+	set topx $finc
+
+	set otag [$canv create oval [expr {$topx + $tspc}] [expr {$topy + $tspc}] \
+		[expr {$topx + $tspc + $lht}] [expr {$topy + $tspc + $lht}] \
+		-fill $bcol]
+	set topx [expr {$finc + $fwidth(mtd)}]
+	$canv create text $topx [expr {$topy + $tspc}] \
+		-font $tfont -anchor nw -text $dev -tag $tag
+	set topx [expr {$fwidth(mtd) + $fwidth(dev)}]
+	$canv create text $topx [expr {$topy + $tspc}] \
+		-font $tfont -anchor nw -text $mntpt -tag $tag
+	set topx [expr {$fwidth(mtd) + $fwidth(dev) + $fwidth(mntpt)}]
+	$canv create text $topx [expr {$topy + $tspc}] \
+		-font $tfont -anchor nw -text $fstyp -tag $tag
+
+	if {[string compare "$mntpt" "/"] == 0} {
+		$canv itemconfigure $otag -fill gray
+	} else {
+		$canv bind $otag <Enter> "$canv itemconfigure $otag -fill blue
+				$canv itemconfigure $tag -outline black"
+
+		$canv bind $otag <Leave> "set line \[lindex \$fslst $num\]
+				set mounted \[lindex \[split \$line \";\"\] 3\]
+				if {\$mounted == 1} {
+					$canv itemconfigure $otag -fill $MNTINDICATOR
+					$canv itemconfigure $tag -outline $MNTCOLOR
+				} else {
+					$canv itemconfigure $otag -fill $UMNTINDICATOR
+					$canv itemconfigure $tag -outline $UMNTCOLOR
+				}"
+
+		$canv bind $otag <ButtonRelease-1> "mount_umount $num $tag $otag $canv"
+
+		set m [menu .mpopup$num -tearoff 0 -relief groove -bg $MNTCOLOR]
+		$m add command -label "Mount" -command "mount_umount $num $tag $otag $canv"
+		set u [menu .upopup$num -tearoff 0 -relief groove -bg $UMNTCOLOR]
+		$u add command -label "Unmount" -command "mount_umount $num $tag $otag $canv"
+		$canv bind $tag <ButtonRelease-3> "set line \[lindex \$fslst $num\]
+				set mounted \[lindex \[split \$line \";\"\] 3\]
+				if {\$mounted == 1} {
+					tk_popup .upopup$num %X %Y
+				} else {
+					tk_popup .mpopup$num %X %Y
+				}"
+	}
+
+	set topy [expr {$topy + $ht + 2}]
+	set num [expr {$num + 1}]
+}
+
+$sw setwidget $canv
+
+label .descr -text "List of recognized harddisk partitions.
+Right/Click or Click on the colored circles to mount/unmount" \
+	-font {screen 11 bold} -relief raised -fg black -bg white -pady 5
+
+pack .descr -side top -fill x
+pack $sw -side top -fill both -expand yes
+
+set bbx [$canv bbox all]
+$canv configure -scrollregion $bbx
