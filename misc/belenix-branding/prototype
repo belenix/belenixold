@@ -56,3 +56,12 @@ f none info/Intro.htm=info/Intro.htm 0544 root sys
 f none info/bg.jpg=info/bg.jpg 0544 root sys
 f none info/bicon.png=info/bicon.png 0544 root sys
 f none info/innov.gif=info/innov.gif 0544 root sys
+
+d none etc 0755 root sys
+d none etc/profile.d 0755 root sys
+f none etc/profile.d/env.sh=profile.d/env.sh 0755 root other
+f none etc/profile.d/kde.compiz.pagein=profile.d/kde.compiz.pagein 0755 root other
+f none etc/profile.d/kde.minimal.pagein=profile.d/kde.minimal.pagein 0755 root other
+f none etc/profile.d/kde.pagein=profile.d/kde.pagein 0755 root other
+f none etc/profile.d/xfce.minimal.pagein=profile.d/xfce.minimal.pagein 0755 root other
+f none etc/profile.d/xfce.pagein=profile.d/xfce.pagein 0755 root other
