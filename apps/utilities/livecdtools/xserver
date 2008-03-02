@@ -1,0 +1,153 @@
+#!/sbin/sh
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2005 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# Author: Moinak.Ghosh@Sun.COM
+
+
+USAGE="Usage: $0 <method> [-- <X server arguments>]"
+
+. /etc/profile.d/*.sh
+
+DISPLAY="0"
+DEFUSER=jack
+
+METHOD=$1
+if [ $# -lt 1 ] ; then
+    echo $USAGE
+    exit 2
+fi
+shift
+
+case $METHOD in
+    start)
+	# Continue with rest of script
+	;;
+    *)
+	echo "Invalid method $METHOD"
+	exit 2
+	;;
+esac
+
+if [ "$1" = "--" ] ; then
+    shift
+else
+    if [ "$1" != "" ] ; then
+	echo $USAGE
+	exit 2
+    fi
+fi
+
+if [ -f /.livecd ]
+then
+	if [ -f /.desk ]
+	then
+		desk=`cat /.desk`
+	else
+		desk="1"
+	fi
+
+	if [ "$desk" -ne "3" ]
+	then
+		if [ ! -f /etc/X11/xorg.conf ]
+		then
+		  HOME=/${DEFUSER};  export HOME
+		  cd $HOME
+		  TERM=sun-color; export TERM
+
+		  exec < /dev/console > /dev/console 2>&1
+		  /usr/bin/xautocfg $desk
+		fi
+
+		if [ ! -f /etc/X11/xorg.conf ]
+		then
+			/usr/sbin/svcadm disable -t application/xserver
+			exit 0
+		fi
+		echo "Starting X11 (Keeping my fingers crossed!)" > /dev/console
+
+		if [ "$desk" -eq "1" -o "$desk" -eq "4" ]
+		then
+			# Adjust wallpaper based on RAM size
+			RAM=`/usr/bin/cat /.ram`
+			if [ "$RAM" -le "256" ]
+			then
+				/usr/bin/cat /${DEFUSER}/.config/xfce4/mcs_settings/desktop.xml | sed s/belenix\-large\.jpg/belenix_wall4\.jpg/ > /${DEFUSER}/.config/xfce4/mcs_settings/desktop1.xml
+				/usr/bin/mv /${DEFUSER}/.config/xfce4/mcs_settings/desktop1.xml /${DEFUSER}/.config/xfce4/mcs_settings/desktop.xml
+			fi
+
+			# Adjust desktop if not supported
+			# TODO: More generic check in future
+			if [ ! -f /.nvidia ]
+			then
+				desk="1"
+				rm -f /.desk; echo "$desk" > /.desk
+			fi
+
+			if [ "$desk" -eq "4" ]
+			then
+				cp /usr/share/misc/xfce4-session.rc.compiz /etc/xdg/xfce4-session/xfce4-session.rc
+			else
+				cp /usr/share/misc/xfce4-session.rc.standard /etc/xdg/xfce4-session/xfce4-session.rc
+			fi
+
+			/usr/sbin/startxfce &
+
+		elif [ "$desk" -eq "2" -o "$desk" -eq "5" ]
+		then
+			if [ -f /.lg3d ]
+			then
+				/usr/bin/startlg3d &
+
+			else
+				# Adjust desktop if not supported
+				# TODO: More generic check in future
+				if [ ! -f /.nvidia ]
+				then
+					desk="2"
+					rm -f /.desk; echo "$desk" > /.desk
+				fi
+
+				if [ "$desk" -eq "5" ]
+				then
+					cp /usr/share/misc/kdecompiz.desktop /${DEFUSER}/.kde/Autostart
+				else
+					rm -f /${DEFUSER}/.kde/Autostart/kdecompiz.desktop
+				fi
+				/usr/sbin/startkde &
+			fi
+		fi
+	else
+		echo "Dropping to console login. Execute:" > /dev/console
+		echo "/usr/bin/startgui to re-enable GUI desktop" > /dev/console
+		echo "" > /dev/console
+		/usr/sbin/svcadm disable -t application/xserver
+	fi
+else
+	
+	/usr/sbin/svcadm disable -t application/xserver
+fi
+
+sleep 1
+exit 0

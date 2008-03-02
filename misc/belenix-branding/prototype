@@ -65,3 +65,7 @@ f none etc/profile.d/kde.minimal.pagein=profile.d/kde.minimal.pagein 0755 root o
 f none etc/profile.d/kde.pagein=profile.d/kde.pagein 0755 root other
 f none etc/profile.d/xfce.minimal.pagein=profile.d/xfce.minimal.pagein 0755 root other
 f none etc/profile.d/xfce.pagein=profile.d/xfce.pagein 0755 root other
+
+d none boot 0755 root sys
+d none boot/grub 0755 root sys
+f none boot/grub/belenixboot.xpm.gz=belenixboot.xpm.gz 0755 root sys

@@ -18,24 +18,12 @@
 #
 # CDDL HEADER END
 #
-#
-# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# Author: moinakg@gmail.com
-#
 
-all: man
+The package SFElivecdtools is required to build the Live Media images.
 
-man:
-	@cp man.sh man
-	@chmod 0755 man
+This package, and all it contents must in the package repository
+being used to build the Live Media.
 
-clean:
-	@rm -f man
-
-install:
-	@mkdir -p $(DESTDIR)/usr/sbin
-	@cp man $(DESTDIR)/usr/sbin
-	@chmod 0755 $(DESTDIR)/usr/sbin/man
-	@ln -sf man $(DESTDIR)/usr/sbin/nroff

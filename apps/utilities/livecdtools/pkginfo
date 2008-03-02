@@ -18,24 +18,25 @@
 #
 # CDDL HEADER END
 #
-#
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# Author: moinakg@gmail.com
-#
 
-all: man
-
-man:
-	@cp man.sh man
-	@chmod 0755 man
-
-clean:
-	@rm -f man
-
-install:
-	@mkdir -p $(DESTDIR)/usr/sbin
-	@cp man $(DESTDIR)/usr/sbin
-	@chmod 0755 $(DESTDIR)/usr/sbin/man
-	@ln -sf man $(DESTDIR)/usr/sbin/nroff
+CLASSES=none
+BASEDIR=/
+TZ=PST
+PATH=/sbin:/usr/sbin:/usr/bin:/usr/sadm/install/bin
+PKG=FSWlivecdtools
+NAME=LiveCD-Tools
+VERSION=1.0,REV=2008.03.05
+CATEGORY=system
+DESC=Utilities used by the BeleniX Live Media Kit
+VENDOR="BeleniX"
+EMAIL=
+PKGSAV=/var/sadm/pkg/FSWlivecdtools/save
+MAXINST="1000"
+SUNW_PRODNAME="SunOS"
+SUNW_PRODVERS="5.11"
+SUNW_PKGTYPE="root"
+SUNW_PKGVERS="1.0"
+HOTLINE="Please contact your local service provider"
