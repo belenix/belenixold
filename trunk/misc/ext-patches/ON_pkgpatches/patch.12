@@ -1,0 +1,7 @@
+--- usr/src/pkgdefs/SUNWndmpu/prototype_com.orig	2008-02-07 00:25:43.944419662 +0530
++++ usr/src/pkgdefs/SUNWndmpu/prototype_com	2008-02-07 00:25:48.587281549 +0530
+@@ -46,4 +46,3 @@
+ f none usr/lib/llib-lndmp.ln 644 root bin
+ f none usr/lib/llib-lndmp 644 root bin
+ d none usr/include 755 root bin
+-f none usr/include/libndmp.h 644 root bin
