@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+#  DEFAULT KDE STARTUP SCRIPT ( KDE-3.5.1 )
+#
+
+displaymanager=$1
+
+if [ -z "$displaymanager" ]
+then
+	. /etc/default/init
+
+	if [ -z "$HOME" ]
+	then
+		HOME=/root
+		export HOME
+	fi
+
+	. /etc/profile.d/*.sh
+fi
+
+if [ ! -f /.prtconf ]
+then
+        /usr/sbin/prtconf -pv > /.prtconf
+fi
+mem=`cat /.prtconf | grep "Memory size" | cut -f3 -d" "`
+
+if [ $mem -le "256" ]
+then
+        /usr/bin/pagein `cat /etc/profile.d/kde.minimal.pagein`
+else
+        /usr/bin/pagein `cat /etc/profile.d/kde.pagein`
+fi
+
+exec /usr/bin/ctrun -i none -l child /usr/X11/bin/xinit /usr/bin/startkde
+
