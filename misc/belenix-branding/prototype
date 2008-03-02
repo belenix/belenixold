@@ -1,0 +1,58 @@
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+i pkginfo
+i copyright
+i depend
+!default 0555 root bin
+d none usr/share 0755 root sys
+d none usr/share/pixmaps 0755 root other
+f none usr/share/pixmaps/belenix-large.jpg=belenix-large.jpg 0755 root bin
+f none usr/share/pixmaps/belenix-large.png=belenix-large.png 0755 root bin
+f none usr/share/pixmaps/belenix_wall1_large.jpg=belenix_wall1_large.jpg 0755 root bin
+f none usr/share/pixmaps/belenix_wall2_large.png=belenix_wall2_large.png 0755 root bin
+f none usr/share/pixmaps/belenix_wall4.jpg=belenix_wall4.jpg 0755 root bin
+f none usr/share/pixmaps/belenix_wall4.png=belenix_wall4.png 0755 root bin
+f none usr/share/pixmaps/firefox.png=firefox.png 0755 root bin
+
+d none usr/share/doc 0755 root other
+f none usr/share/doc/belenix_basics.txt 0644 root other
+
+d none usr/share/misc 0755 root other
+f none usr/share/misc/kdecompiz.desktop 0644 root other
+f none usr/share/misc/xfce4-session.rc.compiz 0644 root other
+f none usr/share/misc/xfce4-session.rc.standard 0644 root other
+
+d none usr/share/misc/xconfigs 0755 root other
+f none usr/share/misc/xconfigs/xorg.conf.f4k=xconfigs/xorg.conf.f4k 0644 root other
+f none usr/share/misc/xconfigs/xorg.conf.virtpc=xconfigs/xorg.conf.virtpc 0644 root other
+
+f none AUTORUN.INF 0644 root sys
+f none info/1.gif=info/1.gif 0544 root sys
+f none info/16.gif=info/16.gif 0544 root sys
+f none info/4.gif=info/4.gif 0544 root sys
+f none info/Intro.htm=info/Intro.htm 0544 root sys
+f none info/bg.jpg=info/bg.jpg 0544 root sys
+f none info/bicon.png=info/bicon.png 0544 root sys
+f none info/innov.gif=info/innov.gif 0544 root sys
