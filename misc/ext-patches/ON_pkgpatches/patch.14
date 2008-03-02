@@ -1,0 +1,11 @@
+--- usr/src/pkgdefs/SUNWllc/prototype_com.orig	2008-02-07 00:03:42.979997367 +0530
++++ usr/src/pkgdefs/SUNWllc/prototype_com	2008-02-07 00:05:57.414965587 +0530
+@@ -56,8 +56,6 @@
+ 
+ f none	usr/kernel/drv/llc2.conf 644 root sys
+ 
+-f none  usr/include/sys/llc2.h 644 root bin
+-
+ f none  usr/lib/llc2/llc2_autoconfig 555 root bin
+ f none  usr/lib/llc2/llc2_config 555 root bin
+ f none  usr/lib/llc2/llc2_stats 555 root bin
