@@ -1,0 +1,10 @@
+/usr/X11/lib/libX11.so.6
+/usr/sfw/lib/libfreetype.so.6
+/usr/foss/lib/libkdecore.so
+/usr/foss/lib/libDCOP.so
+/usr/foss/lib/libqt-mt.so
+/usr/foss/lib/libksplashthemes.so
+/usr/foss/lib/libkdeui.so
+/usr/foss/lib/libgtk-x11-2.0.so
+/usr/foss/lib/libgdk-x11-2.0.so
+/usr/foss/lib/libpango-1.0.so
