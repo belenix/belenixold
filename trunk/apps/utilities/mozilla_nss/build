@@ -1,0 +1,7 @@
+#!/bin/sh
+
+./download_tarballs
+
+./build_nspr
+./build_nss
+
