@@ -1,6 +1,7 @@
 !/bin/sh
 
 . ./versions
+gpatch -p0 --fuzz=0 < nspr-${nspr_ver}.diff 
 cd nspr-${nspr_ver}/mozilla/nsprpub/
 ./configure --prefix=/usr --enable-optimize=-O2 --with-pthreads --enable-64bit
 gmake
