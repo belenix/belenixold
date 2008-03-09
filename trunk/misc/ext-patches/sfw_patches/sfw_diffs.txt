@@ -1,0 +1,15 @@
+--- usr/src/pkgdefs/SUNWimagick/depend.orig	2008-02-20 00:49:10.534101706 +0530
++++ usr/src/pkgdefs/SUNWimagick/depend	2008-02-20 00:49:52.299002111 +0530
+@@ -61,4 +61,4 @@
+ P SUNWlibrsvg         SVG-format scalable graphics support library
+ P SUNWlxml            The XML library
+ P SUNWmlib            mediaLib - Shared Libraries
+-
++P SFElcms        Little ColorManagement System
+--- usr/src/pkgdefs/SUNWgscr/depend.orig	2008-02-21 18:18:51.148542658 +0530
++++ usr/src/pkgdefs/SUNWgscr/depend	2008-02-21 18:19:17.377646490 +0530
+@@ -60,3 +60,4 @@
+ P SUNWperl584core	Perl 5.8.4 (core)
+ P SUNWxwrtl	X Window System & Graphics Runtime Library Links in /usr/lib
+ P SUNWxwplt	X Window System platform software
++P SFEcups	Common Unix Printing System
