@@ -1,0 +1,548 @@
+Index: spec-files/SUNWperl-xml-parser.spec
+===================================================================
+--- spec-files/SUNWperl-xml-parser.spec	(revision 13031)
++++ spec-files/SUNWperl-xml-parser.spec	(working copy)
+@@ -15,7 +15,7 @@
+ Summary:                 XML::Parser and XML::Simple PERL modules
+ Version:                 5.8.4
+ %define xml_parser_version 2.34
+-%define xml_simple_version 2.16
++%define xml_simple_version 2.17
+ Source:                  http://www.cpan.org/authors/id/M/MS/MSERGEANT/XML-Parser-%{xml_parser_version}.tar.gz
+ Source1:                 http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/XML-Simple-%{xml_simple_version}.tar.gz
+ SUNW_BaseDir:            %{_basedir}
+Index: spec-files/SUNWimagick.spec
+===================================================================
+--- spec-files/SUNWimagick.spec	(revision 13031)
++++ spec-files/SUNWimagick.spec	(working copy)
+@@ -18,7 +18,7 @@
+ %define tarball_version  6.3.4
+ Summary:                 ImageMagick - Image Manipulation Utilities and Libraries %{tarball_version}
+ Version:                 11.10.1
+-%define im_rev -1
++%define im_rev -10
+ Source:                  ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick-%{tarball_version}%{im_rev}.tar.bz2
+ # owner:laca type:feature date:2007-05-18
+ Patch1:                  imagemagick-01-ltdl.diff
+Index: spec-files/SUNWlibpopt.spec
+===================================================================
+--- spec-files/SUNWlibpopt.spec	(revision 13031)
++++ spec-files/SUNWlibpopt.spec	(working copy)
+@@ -15,8 +15,8 @@
+ 
+ Name:                    SUNWlibpopt
+ Summary:                 Command line parsing library
+-Version:                 1.7
+-Source:                  ftp://ftp.rpm.org/pub/rpm/dist/rpm-4.1.x/popt-%{version}.tar.gz
++Version:                 1.10.2
++Source:                  http://rpm5.org/files/popt/popt-%{version}.tar.gz
+ Source1:                 %{name}-manpages-0.1.tar.gz
+ Source2:                 l10n-configure.sh
+ SUNW_BaseDir:            %{_prefix}
+Index: spec-files/SUNWthunderbird.spec
+===================================================================
+--- spec-files/SUNWthunderbird.spec	(revision 13031)
++++ spec-files/SUNWthunderbird.spec	(working copy)
+@@ -39,7 +39,9 @@
+ Requires: SUNWjdsrm
+ Requires: SUNWj5rt
+ Requires: SUNWgnome-base-libs
++%if %option_with_sun_branding
+ Requires: SUNWdtbas
++%endif
+ Requires: SUNWfontconfig
+ Requires: SUNWfreetype2
+ Requires: SUNWgnome-config
+Index: spec-files/SUNWgnome-display-mgr.spec
+===================================================================
+--- spec-files/SUNWgnome-display-mgr.spec	(revision 13031)
++++ spec-files/SUNWgnome-display-mgr.spec	(working copy)
+@@ -54,7 +54,7 @@
+ %if %option_with_dt
+ Requires: SUNWgnome-dtlogin-integration
+ %else
+-Requires: SUNWgnome-dtstart
++#Requires: SUNWgnome-dtstart
+ %endif
+ 
+ %package root
+@@ -201,7 +201,7 @@
+ %{_sysconfdir}/X11/gdm/Pre*
+ %{_sysconfdir}/X11/gdm/X*
+ %{_sysconfdir}/X11/gdm/gdmprefetchlist
+-%config %class(preserve) %{_sysconfdir}/X11/gdm/custom.conf
++%config %{_sysconfdir}/X11/gdm/custom.conf
+ %{_sysconfdir}/X11/gdm/locale.alias
+ %{_sysconfdir}/X11/gdm/modules
+ # don't use %_localstatedir here, because this is an absolute path
+Index: spec-files/SUNWsqlite3.spec
+===================================================================
+--- spec-files/SUNWsqlite3.spec	(revision 0)
++++ spec-files/SUNWsqlite3.spec	(revision 0)
+@@ -0,0 +1,115 @@
++#
++# spec file for package SUNWsqlite3
++#
++# includes module(s): sqlite
++#
++# Copyright (c) 2007 Sun Microsystems, Inc.
++# This file and all modifications and additions to the pristine
++# package are under the same license as the package itself.
++#
++# Owner: hawklu
++#
++%include Solaris.inc
++
++%use sqlite = sqlite.spec
++
++Name:           SUNWsqlite3
++Summary:        SQLite - a C library that implements an embeddable SQL database engine
++Version:        %{default_pkg_version}
++SUNW_BaseDir:   %{_basedir}
++BuildRoot:      %{_tmppath}/%{name}-%{version}-build
++%include default-depend.inc
++BuildRequires: SUNWfirefox
++
++%package devel
++Summary: %{summary} - development files
++SUNW_BaseDir:   %{_basedir}
++%include default-depend.inc
++Requires: %name
++
++%prep
++rm -rf %name-%version
++mkdir -p %name-%version
++%sqlite.prep -d %name-%version
++
++%build
++export ACLOCAL_FLAGS="-I %{_datadir}/aclocal"
++export CFLAGS="%optflags -mt -DSOLARIS -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_REENTRANT -D_POSIX_PTHREAD_SEMANTICS -D_FILE_OFFSET_BITS=64 -D_XOPEN_SOURCE=500 -D__EXTENSIONS__ -DSQLITE_ENABLE_REDEF_IO"
++export LDFLAGS="%{_ldflags}"
++export RPM_OPT_FLAGS="$CFLAGS"
++%sqlite.build -d %name-%version
++
++%install
++rm -rf $RPM_BUILD_ROOT
++%sqlite.install -d %name-%version
++cd %{_builddir}/%name-%version
++
++%clean
++rm -rf $RPM_BUILD_ROOT
++
++%files
++%defattr (-, root, bin)
++%dir %attr (0755, root, bin) %{_bindir}
++%{_bindir}/*
++%dir %attr (0755, root, bin) %{_libdir}
++%{_libdir}/lib*so*
++
++%files devel 
++%defattr (-, root, bin)
++%dir %attr (0755, root, bin) %{_libdir}
++%dir %attr (0755, root, other) %{_libdir}/pkgconfig
++%{_libdir}/pkgconfig/*
++%dir %attr (0755, root, bin) %{_includedir}
++%{_includedir}/*
++
++
++%changelog
++* Wed Jan 09 2008 - dave.lin@sun.com
++- Add fake dependency "BuildRequires: SUNWfirefox3" to make FF 3 build
++  ahead of Sqlite, would remove it when FF 3 is able to compile with 
++  SUNWsqlite
++* Fri Jan 04 2008 - dave.lin@sun.com
++- Port sqlite spec files from SFE to JDS repos
++* Wed Jan 02 2008 - nonsea@users.sourceforge.net
++- Rename from SFEsqlite to SUNWsqlite.
++* Mon Nov 12 2007 - nonsea@users.sourceforge.net
++- Spilit into sqlite.spec
++- Tue Oct 09 2007 - brian.cameron@sun.com
++- Revert back to 3.4.2.  Found crashing problems running the examples
++  in pysqlite with the 3.5.1 version.
++* Fri Oct 05 2007 - brian.cameron@sun.com
++- Bump to 3.5.1
++* Mon Sep 17 2007 - nonsea@users.sourceforge.net
++- Add -DSQLITE_ENABLE_REDEF_IO to CFLAGS for firefox3.
++* Thu Sep 06 2007 - nonsea@users.sourceforge.net
++- Bump to 3.4.2, 3.5.0 is still alpha.
++- Uncomment patch1.
++* Wed Sep 05 2007 - nonsea@users.sourceforge.net
++- Bump to 3.5.0
++- Comment patch1, seems no crash when run sqlite and opensync,
++  will contact patch owner laca.
++* Mon Jul 30 2007 - markwright@internode.on.net
++- Bump to 3.4.1
++* Thu May 03 2007 - nonsea@users.sourceforge.net
++- Add --enable-threads-override-locks and --disable-debug option for tracker.
++* Thu May 03 2007 - nonsea@users.sourceforge.net
++- Bump to 3.3.17.
++* Wed Feb 28 2007 - markgraf@med.ovgu.de
++- bump to 3.3.13 as source for 3.3.8 is no longer available
++* Tue Nov 11 2006 - halton.huo@sun.com
++- Rename from SUNWsqlite3 to SUNWsqlite
++- Bump to 3.3.8
++* Wed Sep  7 2006 - jedy.wang@sun.com
++- bump to 3.3.7
++* Mon Jul 10 2006 - laca@sun.com
++- rename to SFEsqlite3
++- move to /usr
++- update file attributes
++- delete unnecessary env variables
++- add patch thread-lock-test.diff: it disables a thread locking behaviour
++  test on Solaris and hardcodes the result of the test, which I obtained
++  by separating this code into a test program.  The thread operations
++  in this test conflict with thread operations in the hans boehm garbage
++  collector and crash mono apps that attempt to use sqlite3.
++* Fri Mar 17 2006 - markgraf@neuro2.med.uni.magdeburg.de
++- Initial spec
+Index: spec-files/SUNWgnome-img-editor-help.spec
+===================================================================
+--- spec-files/SUNWgnome-img-editor-help.spec	(revision 13031)
++++ spec-files/SUNWgnome-img-editor-help.spec	(working copy)
+@@ -144,7 +144,7 @@
+ %{_datadir}/gimp/*/help/images/dialogs/*.png
+ %{_datadir}/gimp/*/help/images/dialogs/examples/*.{png,gif,jpg,mng}
+ %{_datadir}/gimp/*/help/images/filters/*.{png,gif}
+-%{_datadir}/gimp/*/help/images/filters/examples/en
++#%{_datadir}/gimp/*/help/images/filters/examples/en
+ %{_datadir}/gimp/*/help/images/filters/examples/*.{png,jpg,mng,xcf,gif}
+ %{_datadir}/gimp/*/help/images/glossary/*.png
+ %{_datadir}/gimp/*/help/images/math/*.png
+@@ -229,7 +229,7 @@
+ %files cs
+ %defattr (-, root, bin)
+ %dir %attr (0755, root, sys) %{_datadir}
+-%{_datadir}/gimp/*/help/cs
++#%{_datadir}/gimp/*/help/cs
+ %{_datadir}/gimp/*/help/images/dialogs/cs
+ %{_datadir}/gimp/*/help/images/filters/cs
+ %{_datadir}/gimp/*/help/images/menus/cs
+@@ -239,7 +239,7 @@
+ %files zhCN
+ %defattr (-, root, bin)
+ %dir %attr (0755, root, sys) %{_datadir}
+-%{_datadir}/gimp/*/help/zh_CN
++#%{_datadir}/gimp/*/help/zh_CN
+ %{_datadir}/gimp/*/help/images/dialogs/zh_CN
+ %{_datadir}/gimp/*/help/images/filters/zh_CN
+ %{_datadir}/gimp/*/help/images/menus/zh_CN
+@@ -266,9 +266,10 @@
+ %{_datadir}/gimp/*/help/images/preferences/no
+ %{_datadir}/gimp/*/help/images/toolbox/no
+ %{_datadir}/gimp/*/help/images/tutorials/no
++%{_datadir}/gimp/*/help/images/tutorials/it
+ %{_datadir}/gimp/*/help/images/using/no
+ # hr locale
+-%{_datadir}/gimp/*/help/hr
++#%{_datadir}/gimp/*/help/hr
+ %{_datadir}/gimp/*/help/images/using/hr
+ %endif
+ 
+Index: spec-files/SUNWgnome-a11y-libs.spec
+===================================================================
+--- spec-files/SUNWgnome-a11y-libs.spec	(revision 13031)
++++ spec-files/SUNWgnome-a11y-libs.spec	(working copy)
+@@ -37,7 +37,10 @@
+ Requires: SUNWj5rt
+ Requires: SUNWzoner
+ Requires: SUNWzoneu
++%if %option_with_indiana_branding
++%else
+ Requires: SUNWpkgcmdsu
++%endif
+ 
+ BuildRequires: SUNWgnome-base-libs-devel
+ BuildRequires: SUNWgnome-config-devel
+Index: spec-files/SUNWfirefox.spec
+===================================================================
+--- spec-files/SUNWfirefox.spec	(revision 13031)
++++ spec-files/SUNWfirefox.spec	(working copy)
+@@ -43,7 +43,6 @@
+ Requires: SUNWjdsrm
+ Requires: SUNWj5rt
+ Requires: SUNWgnome-base-libs
+-Requires: SUNWdtbas
+ Requires: SUNWfontconfig
+ Requires: SUNWfreetype2
+ Requires: SUNWgnome-config
+@@ -64,6 +63,7 @@
+ Requires: SUNWpostrun
+ %if %option_with_sun_branding
+ Requires: SUNWsolaris-devel-docs
++Requires: SUNWdtbas
+ %endif
+ %if %option_with_indiana_branding
+ Requires: SUNWgetting-started-guide
+Index: spec-files/base-specs/sqlite.spec
+===================================================================
+--- spec-files/base-specs/sqlite.spec	(revision 0)
++++ spec-files/base-specs/sqlite.spec	(revision 0)
+@@ -0,0 +1,107 @@
++#
++# spec file for package sqlite
++#
++# Copyright (c) 2007 Sun Microsystems, Inc.
++# This file and all modifications and additions to the pristine
++# package are under the same license as the package itself.
++#
++# Owner: hawklu 
++#
++
++Name:           sqlite
++License:        Public Domain
++Group:          System/Libraries
++Version:        3.5.4
++Release:        4
++Distribution:   Java Desktop System
++Vendor:         Sun Microsystems, Inc.
++URL:            http://www.sqlite.org
++Summary:        SQLite - a C library that implements an embeddable SQL database engine
++Source:         http://www.sqlite.org/%{name}-%{version}.tar.gz
++BuildRoot:      %{_tmppath}/%{name}-%{version}-root
++
++%description
++SQLite is a C library that implements an embeddable SQL database engine.
++Programs that link with the SQLite library can have SQL database access
++without running a separate RDBMS process. The distribution comes with a
++standalone command-line access program (sqlite) that can be used to
++administer an SQLite database and which serves as an example of how to
++use the SQLite library.
++
++%package devel
++Summary: Header files and libraries for developing apps which will use %{name}
++Group: Development/C
++Requires: %{name} = %{version}-%{release}
++
++%description devel
++The sqlite-devel package contains the header files and libraries needed
++to develop programs that use the sqlite database library.
++
++%prep
++%setup -q -n %{name}-%{version}
++
++%build
++%ifos linux
++if [ -x /usr/bin/getconf ]; then
++  CPUS=`getconf _NPROCESSORS_ONLN`
++fi
++%else
++  CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
++%endif
++if test "x$CPUS" = "x" -o $CPUS = 0; then
++  CPUS=1
++fi
++
++./configure --prefix=%{_prefix} \
++	--bindir=%{_bindir} \
++	--mandir=%{_mandir} \
++	--libdir=%{_libdir} \
++	--datadir=%{_datadir} \
++	--includedir=%{_includedir} \
++	--sysconfdir=%{_sysconfdir} \
++	--enable-static=no                  \
++	--enable-releasemode                \
++	--enable-threadsafe                 \
++	--disable-tcl                       \
++	--disable-cross-thread-connections  \
++	--enable-tempstore                  \
++	--enable-threads-override-locks     \
++	--disable-debug                     
++
++make -j $CPUS
++
++%install
++export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
++make -i install DESTDIR=$RPM_BUILD_ROOT
++unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
++find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
++find $RPM_BUILD_ROOT -type f -name "*.a" -exec rm -f {} ';'
++
++%clean
++rm -rf $RPM_BUILD_ROOT
++
++%post
++/sbin/ldconfig
++
++%postun
++/sbin/ldconfig
++
++%files
++%defattr(-, root, root)
++%{_libdir}/*.so*
++%{_bindir}/*
++
++%files devel
++%defattr(-, root, root)
++%{_libdir}/pkgconfig/sqlite3.pc
++%{_libdir}/*.a
++%{_libdir}/*.la
++%{_includedir}/*
++
++%changelog
++* Fri Jan 04 2008 - dave.lin@sun.com
++- Port sqlite spec files from SFE to JDS repos
++* Mon Nov 12 2007 - nonsea@users.sourceforge.net
++- Bump to 3.5.2.
++- Remove upstreamed patch thread-lock-test.diff.
++- Initial version, spilit from SFEsqlite.spec
+Index: spec-files/base-specs/gdm.spec
+===================================================================
+--- spec-files/base-specs/gdm.spec	(revision 13031)
++++ spec-files/base-specs/gdm.spec	(working copy)
+@@ -162,13 +162,13 @@
+ %endif
+ 
+ %if %option_without_dt
+-rm $RPM_BUILD_ROOT%{_datadir}/xsessions/CDE.desktop
++rm -f $RPM_BUILD_ROOT%{_datadir}/xsessions/CDE.desktop
+ %endif
+ 
+ # Clean up unpackaged files
+ #
+-rm $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.a
+-rm $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.la
++rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.a
++rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.la
+ rm -rf $RPM_BUILD_ROOT%{_localstatedir}/lib/scrollkeeper
+ 
+ %clean
+Index: spec-files/base-specs/librsvg.spec
+===================================================================
+--- spec-files/base-specs/librsvg.spec	(revision 13031)
++++ spec-files/base-specs/librsvg.spec	(working copy)
+@@ -7,15 +7,19 @@
+ #
+ # Owner: alo
+ #
++
++%define v_minor 2
++%define v_major 2.18
++
+ Name:         librsvg
+ License:      LGPL
+ Group:        System/Libraries/GNOME
+-Version:      2.18.2
++Version:      %{v_major}.%{v_minor}
+ Release:      1 
+ Distribution: Java Desktop System
+ Vendor:       Sun Microsystems, Inc.
+ Summary:      Library for SVG support for GNOME
+-Source:       http://ftp.gnome.org/pub/GNOME/sources/librsvg/2.16/librsvg-%{version}.tar.bz2
++Source:       http://ftp.gnome.org/pub/GNOME/sources/librsvg/%{v_major}/librsvg-%{version}.tar.bz2
+ URL:          http://www.gnome.org
+ BuildRoot:    %{_tmppath}/%{name}-%{version}-build
+ Docdir:       %{_docdir}/librsvg
+Index: spec-files/base-specs/pidgin-otr.spec
+===================================================================
+--- spec-files/base-specs/pidgin-otr.spec	(revision 13031)
++++ spec-files/base-specs/pidgin-otr.spec	(working copy)
+@@ -9,8 +9,8 @@
+ # bugdb :
+ #
+ Name:		pidgin-otr
+-Version:	3.0.1
+-%define libotr_version 3.0.0
++Version:	3.1.0
++%define libotr_version 3.1.0
+ Release:        1
+ License:	GPL
+ Group:		Applications/Internet
+Index: spec-files/base-specs/pwlib.spec
+===================================================================
+--- spec-files/base-specs/pwlib.spec	(revision 13031)
++++ spec-files/base-specs/pwlib.spec	(working copy)
+@@ -15,7 +15,7 @@
+ Distribution: Java Desktop System
+ Vendor:       Sun Microsystems, Inc.
+ Summary:      PWLib Class Library
+-Source:       http://www.ekiga.org/admin/downloads/latest/sources/sources/pwlib-%{version}.tar.bz2
++Source:       http://www.ekiga.org/admin/downloads/latest/sources/sources/pwlib-%{version}.tar.gz
+ 
+ # owner:davelam date:2006-04-14 type:branding
+ # use cxxflags to fix build problem
+Index: spec-files/base-specs/devhelp.spec
+===================================================================
+--- spec-files/base-specs/devhelp.spec	(revision 13031)
++++ spec-files/base-specs/devhelp.spec	(working copy)
+@@ -6,15 +6,19 @@
+ # package are under the same license as the package itself.
+ #
+ #
++
++%define v_minor 1
++%define v_major 0.16
++
+ Name:          devhelp
+ License:       GPL
+ Group:         System/GUI/GNOME
+-Version:       0.16.1
++Version:       %{v_major}.%{v_minor}
+ Release:       1
+ Distribution:  Java Desktop System
+ Vendor:        Sun Microsystems, Inc.
+ Summary:       API documentation browser for GNOME 
+-Source:        http://ftp.gnome.org/pub/GNOME/sources/devhelp/%{version}/devhelp-%{version}.tar.bz2
++Source:        http://ftp.gnome.org/pub/GNOME/sources/devhelp/%{v_major}/devhelp-%{version}.tar.bz2
+ URL:           http://developer.imendio.com/projects/devhelp
+ BuildRoot:     %{_tmppath}/%{name}-%{version}-build
+ 
+Index: spec-files/base-specs/opal.spec
+===================================================================
+--- spec-files/base-specs/opal.spec	(revision 13031)
++++ spec-files/base-specs/opal.spec	(working copy)
+@@ -15,7 +15,7 @@
+ Distribution: Java Desktop System
+ Vendor:       Sun Microsystems, Inc.
+ Summary:      OPAL - Open Phone Abstraction Library
+-Source:       http://www.ekiga.org/admin/downloads/latest/sources/sources/opal-%{version}.tar.bz2
++Source:       http://www.ekiga.org/admin/downloads/latest/sources/sources/opal-%{version}.tar.gz
+ 
+ # owner:davelam date:2006-04-14 type:branding
+ # change library naming rule to fit unix style
+Index: spec-files/base-specs/libgcrypt.spec
+===================================================================
+--- spec-files/base-specs/libgcrypt.spec	(revision 13031)
++++ spec-files/base-specs/libgcrypt.spec	(working copy)
+@@ -18,7 +18,7 @@
+ Group:        Development/Libraries/C and C++
+ Autoreqprov:  on
+ URL:          http://www.gnupg.org/
+-Source:       http://ftp.gnupg.org/gcrypt/libgcrypt/%{name}-%{version}.tar.bz2
++Source:       ftp://ftp.gnupg.org/gcrypt/libgcrypt/%{name}-%{version}.tar.bz2
+ Source1:      l10n-configure.sh
+ BuildRoot:    %{_tmppath}/%{name}-%{version}-build
+ 
+Index: spec-files/base-specs/gimp-help.spec
+===================================================================
+--- spec-files/base-specs/gimp-help.spec	(revision 13031)
++++ spec-files/base-specs/gimp-help.spec	(working copy)
+@@ -10,13 +10,13 @@
+ Name:         gimp-help
+ License:      GPL/LGPL
+ Group:        System/Documentation/GNOME
+-Version:      2.0.13
+-%define tarball_version 2-0.13
++Version:      2.4.0
++%define tarball_version 2.4.0
+ Release:      1
+ Distribution: Java Desktop System
+ Vendor:       Sun Microsystems, Inc.
+ Summary:      On-line Help for the GIMP (GNU Image Manipulation Program)
+-Source:       ftp://ftp.gimp.org/pub/gimp/help/%{name}-%{tarball_version}.tar.gz
++Source:       ftp://ftp.gimp.org/pub/gimp/help/%{name}-%{tarball_version}.tar.bz2
+ URL:          http://www.gimp.org
+ BuildRoot:    %{_tmppath}/%{name}-%{version}-build
+ Docdir:       %{_defaultdocdir}/doc
+Index: spec-files/base-specs/gtk-doc.spec
+===================================================================
+--- spec-files/base-specs/gtk-doc.spec	(revision 13031)
++++ spec-files/base-specs/gtk-doc.spec	(working copy)
+@@ -16,7 +16,7 @@
+ Distribution:		Java Desktop System
+ Vendor:			Sun Microsystems, Inc.
+ Summary:		GTK+ DocBook Documentation Generator
+-Source:			http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/1.8/gtk-doc-%{version}.tar.bz2
++Source:			http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/%{version}/gtk-doc-%{version}.tar.bz2
+ URL:			http://www.gnome.org
+ BuildRoot:		%{_tmppath}/%{name}-%{version}-build
+ Docdir:			%{_defaultdocdir}/doc
