@@ -1,0 +1,25 @@
+#!/bin/sh
+
+. ./versions
+
+if [ ! -f nspr-${nspr_ver}.tar.gz ]
+then
+	wget ftp://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v${nspr_ver}/src/nspr-${nspr_ver}.tar.gz
+fi
+
+if [ ! -f nss-${nss_ver}.tar.gz ]
+then
+	wget ftp://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_${nss_dir_ver}_RTM/src/nss-${nss_ver}.tar.gz
+fi
+
+if [ ! -d nspr-${nspr_ver} ]
+then
+	echo "Extracting NSPR tarball ..."
+	gunzip -c nspr-${nspr_ver}.tar.gz | tar xpf -
+fi
+
+if [ ! -d nss-${nss_ver} ]
+then
+	echo "Extracting NSS tarball ..."
+	gunzip -c nss-${nss_ver}.tar.gz | tar xpf - 
+fi

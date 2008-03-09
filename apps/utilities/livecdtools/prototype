@@ -87,7 +87,6 @@ d none etc 0755 root sys
 d none boot 0755 root sys
 d none boot/grub 0755 root sys
 f none boot/grub/menu.lst.default=menu.lst.default 0755 root sys
-f none boot/grub/menu.lst=menu.lst 0755 root sys
 f none etc/vfstab.default=vfstab.default 0755 root sys
 d none .cdrom 755 root sys
 d none mnt 755 root sys
