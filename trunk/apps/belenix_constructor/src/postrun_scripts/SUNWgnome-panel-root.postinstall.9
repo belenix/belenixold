@@ -1,0 +1,17 @@
+test -x /usr/bin/gconftool-2 || {
+  echo "ERROR: gconftool-2 not found"
+  exit 1
+}
+umask 0022
+GCONF_CONFIG_SOURCE=xml:merged:/etc/gconf/gconf.xml.defaults
+export GCONF_CONFIG_SOURCE
+SDIR=/etc/gconf/schemas
+retval=0
+for schemas in clock panel-compatibility panel-general panel-global \
+               panel-object panel-toplevel window-list \
+               workspace-switcher; do
+  /usr/bin/gconftool-2 --makefile-install-rule $SDIR/$schemas.schemas || retval=1
+done
+/usr/bin/gconftool-2  --direct --config-source=$GCONF_CONFIG_SOURCE --load /etc/gconf/schemas/panel-default-setup.entries || retval=1
+/usr/bin/gconftool-2  --direct --config-source=$GCONF_CONFIG_SOURCE --load /etc/gconf/schemas/panel-default-setup.entries /apps/panel/profiles/default|| retval=1
+exit $retval

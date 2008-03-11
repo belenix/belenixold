@@ -1,0 +1,9 @@
+test -d /etc/gtk-2.0 || exit 0
+test -x /usr/bin/gdk-pixbuf-query-loaders || exit 0
+/usr/bin/gdk-pixbuf-query-loaders \
+    > /etc/gtk-2.0/gdk-pixbuf.loaders
+/bin/isainfo | /bin/egrep -s '(amd64|sparcv9)' || exit 0
+test -d /etc/amd64/gtk-2.0 || exit 0
+test -x /usr/bin/amd64/gdk-pixbuf-query-loaders || exit 0
+/usr/bin/amd64/gdk-pixbuf-query-loaders \
+    > /etc/amd64/gtk-2.0/gdk-pixbuf.loaders

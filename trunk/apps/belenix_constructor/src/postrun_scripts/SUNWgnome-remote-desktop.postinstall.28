@@ -1,0 +1,5 @@
+test -x /usr/bin/update-desktop-database || exit 0
+/usr/bin/update-desktop-database
+test -x /usr/bin/gtk-update-icon-cache || exit 0
+rm -f /usr/share/icons/*/icon-theme.cache
+ls -d /usr/share/icons/* | xargs -l1 /usr/bin/gtk-update-icon-cache
