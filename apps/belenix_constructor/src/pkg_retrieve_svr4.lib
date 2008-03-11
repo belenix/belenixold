@@ -1,0 +1,119 @@
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+# Arg1: file list of packages
+# Arg2: directory containing the packages
+# Arg3: proto directory which is the staging area
+pkg_add $DIST_PKG_LIST $DIST_PKG_DIR $DIST_PROTO
+pkg_add()
+{
+
+	local PKGS_FILE=$1
+	local PKGS_DIR=$2
+	local ROOT_DIR=$3
+	local BASECMD="pkgadd -n -d $PKGS_DIR -R $ROOT_DIR "
+	local status=0
+
+	#
+	# Apply packages in two steps.  First install SUNWcsr, SUNWcsu
+	# and SUNWcsd to ensure basic infrastructure like /etc/passwd
+	# is in place.  Then install the other packages listed in the
+	# file provided.
+	#
+	$BASECMD SUNWcsd || return $?
+	#$BASECMD slim_cd || return $?
+	$BASECMD SUNWcsr || return $?
+	$BASECMD SUNWcsu || return $?
+
+	# Create admin file for non-interactive pkgadd's
+	ADMIN_FILE=$TMPDIR/admin
+	cat << \ADMIN_EOF > $ADMIN_FILE
+mail=
+instance=unique
+partial=nocheck
+runlevel=nocheck
+idepend=nocheck
+rdepend=nocheck
+space=nocheck
+setuid=nocheck
+conflict=nocheck
+action=nocheck
+networktimeout=60
+networkretries=3
+authentication=quit
+keystore=/var/sadm/security
+proxy=
+basedir=default
+ADMIN_EOF
+
+	echo "Generating ordered package list from $PKG_DIR and installing to $ROOT_DIR"
+
+	/usr/bin/perl $SRC/proc_toc.pl $DIST_METACLUSTER $PKG_DIR $PKGS_FILE | /usr/ccs/bin/tsort | grep -v "INFORM: cycle" | grep -v "SUNWdummy" > $TMPDIR/ordered
+	perl $SRC/rev_file.pl $TMPDIR/ordered | while read pkg
+	do
+		if [ -d $PKG_DIR/$pkg ]; then
+			$BASECMD -a $ADMIN_FILE $pkg
+		else
+			pkgi="${pkg}.i"
+			if [ -d $PKGREPOS/$pkgi ]
+			then
+				$BASECMD -a $ADMIN_FILE $pkgi
+			fi
+		fi
+		if [[ $? -ne 0 ]]
+		then
+			echo "******* Install of $pkg failed *******"
+		fi
+	done
+
+	return $?
+}
+
+# Arg1: file list of packages
+# Arg2: directory where packages are stored
+pkg_list_verify()
+{
+	local PKGS_FILE=$1
+	local PKGS_DIR=$2
+	local TEMP_STATUS_FILE=/tmp/pkg-status.out
+	local another_pkg
+	local status
+	local rval=0
+
+	(cd $DIST_PKG_DIR; ls) > $TEMP_STATUS_FILE
+
+	echo "Verifying that needed packages are in directory..."
+	echo "Checking against list of requested packages..."
+	while read -r another_pkg ; do
+		/usr/xpg4/bin/grep -q $another_pkg $TEMP_STATUS_FILE
+		if [ $? -eq 0 ] ; then
+			echo "$another_pkg..."
+		else
+			echo "$another_pkg is not in the directory!"
+			rval=2	# ENOENT
+		fi
+        done < $PKGS_FILE
+	return $rval
+}
+

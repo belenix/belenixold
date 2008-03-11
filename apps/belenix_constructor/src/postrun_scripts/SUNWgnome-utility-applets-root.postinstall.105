@@ -1,0 +1,20 @@
+test -x /usr/bin/gconftool-2 || {
+  echo "ERROR: gconftool-2 not found"
+  exit 1
+}
+umask 0022
+GCONF_CONFIG_SOURCE=xml:merged:/etc/gconf/gconf.xml.defaults
+export GCONF_CONFIG_SOURCE
+JDS_LIST1=/apps/panel/default_setup/general/applet_id_list_jds
+JDS_LIST2=/apps/panel/profiles/default/general/applet_id_list_jds
+/usr/bin/gconftool-2 --makefile-install-rule /etc/gconf/schemas/*.schemas
+test -c /devices/pseudo/battery@0:battery0 && {
+	/usr/bin/gconftool-2  --direct --config-source=$GCONF_CONFIG_SOURCE --load /etc/gconf/schemas/panel-default-setup-laptop.entries
+	/usr/bin/gconftool-2  --direct --config-source=$GCONF_CONFIG_SOURCE --load /etc/gconf/schemas/panel-default-setup-laptop.entries /apps/panel/profiles/default
+	APPLETS=`gconftool-2 --direct --config-source=$GCONF_CONFIG_SOURCE --owner=panel --get $JDS_LIST1 | sed  -n "s/\(\[.*\)\]/\1,battstat]/p"`
+	gconftool-2 --direct --config-source=$GCONF_CONFIG_SOURCE --owner=panel --unset $JDS_LIST1
+	gconftool-2 --direct --config-source=$GCONF_CONFIG_SOURCE --owner=panel --type=list --list-type=string --set $JDS_LIST1 $APPLETS
+	APPLETS=`gconftool-2 --direct --config-source=$GCONF_CONFIG_SOURCE --owner=panel --get $JDS_LIST2 | sed  -n "s/\(\[.*\)\]/\1,battstat]/p"`
+	gconftool-2 --direct --config-source=$GCONF_CONFIG_SOURCE --owner=panel --unset $JDS_LIST2
+	gconftool-2 --direct --config-source=$GCONF_CONFIG_SOURCE --owner=panel --type=list --list-type=string --set $JDS_LIST2 $APPLETS
+}
