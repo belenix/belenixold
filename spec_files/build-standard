@@ -389,4 +389,4 @@ call_pkgtool $_GCC SFEmountgui.spec
 (cd ../apps/utilities; tar cpf - eman | gzip -c) > ext-sources/eman-0.1.tar.gz
 call_pkgtool $_GCC SFEeman.spec
 
-call_pkgtool $_GCC SFEdialog.spec
+call_pkgtool $_GCC "SFEdialog.spec:SFEzsvcadm.spec:SFElynx.spec:SFEmikmod.spec"
