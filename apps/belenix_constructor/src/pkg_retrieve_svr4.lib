@@ -25,7 +25,6 @@
 # Arg1: file list of packages
 # Arg2: directory containing the packages
 # Arg3: proto directory which is the staging area
-pkg_add $DIST_PKG_LIST $DIST_PKG_DIR $DIST_PROTO
 pkg_add()
 {
 
@@ -73,12 +72,22 @@ ADMIN_EOF
 	perl $SRC/rev_file.pl $TMPDIR/ordered | while read pkg
 	do
 		if [ -d $PKG_DIR/$pkg ]; then
-			$BASECMD -a $ADMIN_FILE $pkg
+			if [ -x $PKG_DIR/$pkg/pkginstall ]
+			then
+				$PKG_DIR/$pkg/pkginstall $ROOT_DIR
+			else
+				$BASECMD -a $ADMIN_FILE $pkg
+			fi
 		else
 			pkgi="${pkg}.i"
-			if [ -d $PKGREPOS/$pkgi ]
+			if [ -d $PKG_DIR/$pkgi ]
 			then
 				$BASECMD -a $ADMIN_FILE $pkgi
+			else
+				if [ -f $PKG_DIR/${pkg}.pkg ]
+				then
+					pkgadd -n -d $PKGS_DIR/${pkg}.pkg -R $ROOT_DIR
+				fi
 			fi
 		fi
 		if [[ $? -ne 0 ]]
