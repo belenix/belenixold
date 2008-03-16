@@ -61,12 +61,12 @@
         </dependency>
 
         <dependency  
-                name='xserver_sysconfigure'
+                name='xserver_sysidtool'
                 grouping='require_all'
                 restart_on='none'
                 type='service'>
                 <service_fmri
-                        value='svc:/system/sysconfigure:net' />
+                        value='svc:/system/sysidtool:net' />
         </dependency>      
 
         <dependency  
