@@ -7,23 +7,23 @@ splashimage=/boot/grub/belenixboot.xpm.gz
 foreground=7f4e00
 background=e0e0e0
 title BeleniX (32 bit) 
-	kernel /boot/platform/i86pc/kernel/unix
+	kernel /platform/i86pc/kernel/unix
 	module /boot/x86.microroot
 
 title BeleniX (32 bit, No ACPI) 
-	kernel /boot/platform/i86pc/kernel/unix -B acpi-user-options=2
+	kernel /platform/i86pc/kernel/unix -B acpi-user-options=2
 	module /boot/x86.microroot
 
 title BeleniX (32 bit, No ACPI, Verbose, Debug)
-	kernel /boot/platform/i86pc/kernel/unix -B acpi-user-options=2 -kv -m verbose
+	kernel /platform/i86pc/kernel/unix -B acpi-user-options=2 -kv -m verbose
 	module /boot/x86.microroot
 
 title BeleniX text console (32 bit)
-	kernel /boot/platform/i86pc/kernel/unix -B livemode=text
+	kernel /platform/i86pc/kernel/unix -B livemode=text
 	module /boot/x86.microroot
 
 title BeleniX (32 bit) I/O tracing
-	kernel /boot/platform/i86pc/kernel/unix -B trace=on
+	kernel /platform/i86pc/kernel/unix -B trace=on
 	module /boot/x86.microroot
 
 title Boot from Hard Disk

@@ -94,6 +94,9 @@ sub scan_toc($) {
 					scan_depends($value);
 					return;
 
+				} elsif (substr($tag, 0, 1) eq "#") {
+					return;
+
 				} else {
 					die "Invalid entry $line";	
 				}

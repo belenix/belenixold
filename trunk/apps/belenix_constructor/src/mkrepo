@@ -135,7 +135,7 @@ fi
 svccfg_apply ${ROOTDIR}/var/svc/profile/platform.xml
 
 # Apply Live environment modifications
-svccfg_apply ${SRCDIR}/generic_live.xml
+svccfg_apply ${ROOTDIR}/var/svc/profile/generic_live.xml
 
 # Apply name service profile
 svccfg_apply ${ROOTDIR}/var/svc/profile/ns_files.xml
@@ -157,6 +157,6 @@ svccfg -s application/font/fc-cache setprop start/exec=:true
 #
 svccfg -s system/dbus setprop start/timeout_seconds=90
 svccfg -s application/opengl/ogl-select setprop start/timeout_seconds=90
-svccfg -s application/graphical-login/gdm setprop start/timeout_seconds=120
+svccfg -s application/xserver setprop start/timeout_seconds=120
 
 exit 0

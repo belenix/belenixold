@@ -34,17 +34,6 @@ pkg_add()
 	local BASECMD="pkgadd -n -d $PKGS_DIR -R $ROOT_DIR "
 	local status=0
 
-	#
-	# Apply packages in two steps.  First install SUNWcsr, SUNWcsu
-	# and SUNWcsd to ensure basic infrastructure like /etc/passwd
-	# is in place.  Then install the other packages listed in the
-	# file provided.
-	#
-	$BASECMD SUNWcsd || return $?
-	#$BASECMD slim_cd || return $?
-	$BASECMD SUNWcsr || return $?
-	$BASECMD SUNWcsu || return $?
-
 	# Create admin file for non-interactive pkgadd's
 	ADMIN_FILE=$TMPDIR/admin
 	cat << \ADMIN_EOF > $ADMIN_FILE
@@ -66,37 +55,71 @@ proxy=
 basedir=default
 ADMIN_EOF
 
+	#
+	# Apply packages in two steps.  First install SUNWcsr, SUNWcsu
+	# and SUNWcsd to ensure basic infrastructure like /etc/passwd
+	# is in place.  Then install the other packages listed in the
+	# file provided.
+	#
+	$BASECMD -a $ADMIN_FILE SUNWcsr || return $?
+	$BASECMD -a $ADMIN_FILE SUNWcsd || return $?
+	#$BASECMD slim_cd || return $?
+	$BASECMD -a $ADMIN_FILE SUNWcsr || return $?
+	$BASECMD -a $ADMIN_FILE SUNWcsu || return $?
+	$BASECMD -a $ADMIN_FILE SUNWpostrun-root || return $?
+	$BASECMD -a $ADMIN_FILE SUNWpostrun || return $?
+
+
 	echo "Generating ordered package list from $PKG_DIR and installing to $ROOT_DIR"
 
-	/usr/bin/perl $SRC/proc_toc.pl $DIST_METACLUSTER $PKG_DIR $PKGS_FILE | /usr/ccs/bin/tsort | grep -v "INFORM: cycle" | grep -v "SUNWdummy" > $TMPDIR/ordered
+	rm -f $TMPDIR/.pkg_failed
+	/usr/bin/perl $SRC/proc_toc.pl $DIST_METACLUSTER $PKGS_DIR $PKGS_FILE | /usr/ccs/bin/tsort | grep -v "INFORM: cycle" | grep -v "SUNWdummy" > $TMPDIR/ordered
 	perl $SRC/rev_file.pl $TMPDIR/ordered | while read pkg
 	do
-		if [ -d $PKG_DIR/$pkg ]; then
-			if [ -x $PKG_DIR/$pkg/pkginstall ]
+		echo "Installing $pkg"
+		if [ -d $PKGS_DIR/$pkg ]; then
+			if [ -x $PKGS_DIR/$pkg/pkginstall ]
 			then
-				$PKG_DIR/$pkg/pkginstall $ROOT_DIR
+				(cd $PKGS_DIR/$pkg
+				 ./pkginstall $ROOT_DIR)
 			else
 				$BASECMD -a $ADMIN_FILE $pkg
 			fi
 		else
 			pkgi="${pkg}.i"
-			if [ -d $PKG_DIR/$pkgi ]
+			if [ -d $PKGS_DIR/$pkgi ]
 			then
 				$BASECMD -a $ADMIN_FILE $pkgi
 			else
-				if [ -f $PKG_DIR/${pkg}.pkg ]
+				if [ -f $PKGS_DIR/${pkg}.pkg ]
 				then
-					pkgadd -n -d $PKGS_DIR/${pkg}.pkg -R $ROOT_DIR
+					pkgadd -n -a $ADMIN_FILE -d $PKGS_DIR/${pkg}.pkg -R $ROOT_DIR all
 				fi
 			fi
 		fi
 		if [[ $? -ne 0 ]]
 		then
 			echo "******* Install of $pkg failed *******"
+			if [ "$QUIT_ON_PKG_FAILURES" = "yes" ]
+			then
+				touch $TMPDIR/.pkg_failed
+				break
+			fi
 		fi
 	done
 
-	return $?
+	if [ -f $TMPDIR/.pkg_failed ]
+	then
+		rm -f $TMPDIR/.pkg_failed
+		return 1
+	else
+		# Add Skeleton and livecd tools
+		#
+		apply_skeleton $ROOT_DIR
+		$BASECMD -a $ADMIN_FILE FSWlivecdtools
+
+		return $?
+	fi
 }
 
 # Arg1: file list of packages
@@ -115,11 +138,15 @@ pkg_list_verify()
 	echo "Verifying that needed packages are in directory..."
 	echo "Checking against list of requested packages..."
 	while read -r another_pkg ; do
-		/usr/xpg4/bin/grep -q $another_pkg $TEMP_STATUS_FILE
+		echo $another_pkg | grep "^SUNW_CSRMEMBER" > /dev/null
+		[ $? -ne 0 ] && continue
+
+		apkg=`echo $another_pkg | cut -d"=" -f2`
+		/usr/xpg4/bin/grep -q $apkg $TEMP_STATUS_FILE
 		if [ $? -eq 0 ] ; then
-			echo "$another_pkg..."
+			echo "$apkg..."
 		else
-			echo "$another_pkg is not in the directory!"
+			echo "$apkg is not in the directory!"
 			rval=2	# ENOENT
 		fi
         done < $PKGS_FILE

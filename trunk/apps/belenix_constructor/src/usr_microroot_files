@@ -19,6 +19,7 @@ usr/bin/cd
 usr/bin/test
 usr/bin/sleep
 usr/bin/expr
+usr/bin/coreadm
 usr/lib/fs/hsfs/fstyp
 usr/lib/fs/hsfs/fstyp.so.1
 usr/lib/fs/hsfs/mount

@@ -51,6 +51,8 @@ if [ $# != "1" ] ; then
 fi
 source $SRC/build_dist.lib
 
+source $1  #read the configuration file passed in
+
 if [ "$DIST_PKGS_TYPE" = "IPS" ]
 then
 	source $SRC/pkg_retrieve_ips.lib
@@ -59,8 +61,6 @@ if [ "$DIST_PKGS_TYPE" = "SVR4" ]
 then
 	source $SRC/pkg_retrieve_svr4.lib
 fi
-
-source $1  #read the configuration file passed in
 
 #Verify the validity of the values specified in the configuration file
 #and make sure all required values are specified.
@@ -122,13 +122,14 @@ fi
 if [ "$DIST_PKGS_TYPE" = "SVR4" ]
 then
 
-pkg_list_verify $DIST_PKG_LIST $DIST_PKG_DIR
-if [ $? -ne 0 ] ; then
-	echo "Error in pkg list verify.  Pkgs missing from the directory?"
-	if [ "$QUIT_ON_PKG_FAILURES" = "yes" ] ; then
-		exit 1
-	fi
-fi
+echo "Processing SVR4 Packages ..."
+#pkg_list_verify $DIST_PKG_LIST $DIST_PKG_DIR
+#if [ $? -ne 0 ] ; then
+#	echo "Error in pkg list verify.  Pkgs missing from the directory?"
+#	if [ "$QUIT_ON_PKG_FAILURES" = "yes" ] ; then
+#		exit 1
+#	fi
+#fi
 
 # Add each of the packages specified for the product into the proto area
 pkg_add $DIST_PKG_LIST $DIST_PKG_DIR $DIST_PROTO
@@ -141,8 +142,6 @@ fi
 
 fi
 
-apply_skeleton $DIST_PROTO
-
 #
 # Create the boot archive. This is a UFS filesystem image in a file
 # that is loaded into RAM by Grub. A file is created using mkfile
@@ -151,9 +150,9 @@ apply_skeleton $DIST_PROTO
 # mounted and all the files required for a minimal root fs are
 # copied.
 #
-initialize_root_archive
+initialize_root_archive 
 
-populate_root_archive
+populate_root_archive $DIST_PROTO
 
 # Perform special processing to create Live CD
 livemedia_processing $DIST_PROTO $MICROROOT $TMPDIR
