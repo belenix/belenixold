@@ -71,5 +71,5 @@ d none boot/grub 0755 root sys
 f none boot/grub/belenixboot.xpm.gz=belenixboot.xpm.gz 0755 root sys
 
 d none var 0755 root sys
-d none var/adm 0755 root sys
+d none var/adm 0775 root sys
 s none var/adm/utmp=utmpx

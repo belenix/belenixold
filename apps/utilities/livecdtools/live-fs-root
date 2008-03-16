@@ -174,10 +174,7 @@ then
 		lcmd="/sbin/listusb"
 	else
 		lcmd="/sbin/listcd"
-											fi
-
-	export LIVEUSB
-	MOUNTED=0
+	fi
 
 	$lcmd | while read dev rdev
 	do
@@ -225,11 +222,11 @@ then
 			/sbin/mount -F hsfs -o ro /dev/lofi/1 /usr 2>/dev/msglog || break
 			/sbin/mount -F hsfs -o ro /dev/lofi/2 /mnt/misc 2>/dev/msglog || break
 
-			MOUNTED=1
+			touch /.mounted
 			break
 		fi
 	done
-	if [ $MOUNTED != 1 ]
+	if [ ! -f /.mounted ]
 	then
 		echo "** FATAL **: Unable to mount Live image!"
 		exit $SMF_EXIT_ERR_FATAL

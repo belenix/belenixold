@@ -103,6 +103,7 @@ FAIL=0
 	else
 # Check to see if the proto area is there, delete, and recreate.
                 if [  -d "$DIST_PROTO" ] ; then
+			echo "Cleaning up existing $DIST_PROTO ..."
                         rm -rf "$DIST_PROTO"
                 fi
                 mkdir -p "$DIST_PROTO"
@@ -201,10 +202,12 @@ populate_root_archive()
 	PROTO=$1
 
         echo "Adding files to Boot Archive"
-	$MICROROOT , $DIST_MICROROOT_LIST
-
 	copyfiles "$PROTO" "$MICROROOT" $DIST_MICROROOT_LIST
-	
+
+	# Add in from usr_microroot_files
+	cat ${SRC}/usr_microroot_files | (cd $PROTO
+		cpio -pdum $MICROROOT)
+
 	echo "$DIST_ID" > $MICROROOT/.volumeid
 	chmod 0444 $MICROROOT/.volumeid
 	chown root:root $MICROROOT/.volumeid
@@ -434,6 +437,65 @@ RTC_CONFIG_EOF
 		echo "^$p" >> ${TMPDIR}/plist
 	done
 
+        # Create the boot archive.
+        MICROROOT2=${MICROROOT}2
+        BOOT_FILENAME=x86.microroot
+        BOOT_ARCHIVE2=$TMPDIR/$BOOT_FILENAME
+        rm -f $BOOT_ARCHIVE2
+        /usr/sbin/mkfile ${RAMDISK_SIZE}k $BOOT_ARCHIVE2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to create file for $BOOT_ARCHIVE2"
+                fatal_micro_exit
+        fi
+
+        # loopback mount the boot archive
+        lofidev=`/usr/sbin/lofiadm -a $BOOT_ARCHIVE2`
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to create loopback device for $BOOT_ARCHIVE2"
+                fatal_micro_exit
+        fi
+
+        rlofidev=`echo $lofidev | sed s/lofi/rlofi/`
+        newfs -m 0 $rlofidev < /dev/null 2> /dev/null
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to newfs $rlofidev"
+                fatal_micro_exit
+        fi
+        [ -d $MICROROOT2 ] || mkdir $MICROROOT2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to mkdir $MICROROOT2"
+                fatal_micro_exit
+        fi
+
+        mount -o nologging $lofidev $MICROROOT2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to mount $lofidev on $MICROROOT2"
+                fatal_micro_exit
+        fi
+
+        cd $MICROROOT
+        # cpio the microroot image to the ramdisk.
+        /bin/find . -depth -print | /bin/cpio -pdmv $MICROROOT2
+        # Unmount the smaller microroot lofi device and remove it.
+        lockfs -f $MICROROOT2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: lockfs of $MICROROOT2 did not complete successfully"
+                fatal_micro_exit
+        fi
+
+        umount $MICROROOT2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to unmount $MICROROOT2"
+                fatal_micro_exit
+        fi
+
+        rmdir $MICROROOT2
+        lofiadm -d $BOOT_ARCHIVE2;
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Failure to perform lofiadm -d $BOOT_ARCHIVE2"
+                fatal_micro_exit
+        fi
+
 	cd $WORKING_DIR
 }
 
@@ -477,37 +539,43 @@ copyfiles() {
 		ln -f $trg `basename "$fl"`
 		cd $dir
 
-	elif [[ "$type" = "id" ]]
+	elif [[ "$typ" = "id" ]]
 	then
 		inc=$perms
 		exc=$own
-		BASECMD="(cd $SRCDIR; find $f "
-		if [[ "$inc" != "-" ]]
-		then
-			$BASECMD="$BASECMD | egrep '$inc' "
-		fi
-		if [[ "$exc" != "-" ]]
-		then
-			$BASECMD="$BASECMD | egrep -v '$exc' "
-		fi
-		$BASECMD="$BASECMD | cpio -pdum $TARGETDIR)"
-		$BASECMD
 
-	elif [[ "$type" = "i" ]]
+		echo "Copying $f ..."
+		BASECMD="cd $SRCDIR ; find $f "
+		if [ "$inc" != "-" ]
+		then
+			BASECMD="$BASECMD | egrep '$inc' "
+		fi
+		if [ "$exc" != "-" ]
+		then
+			BASECMD="$BASECMD | egrep -v '$exc' "
+		fi
+		BASECMD="$BASECMD | cpio -pdum $TARGETDIR"
+		sh -c "$BASECMD"
+		continue
+
+	elif [[ "$typ" = "i" ]]
 	then
 		inc=$perms
 		exc=$own
-		BASECMD="(cd $SRCDIR; echo $f; find $f/* -prune -type f "
+
+		echo "Copying $f/* ..."
+		BASECMD="cd $SRCDIR ; echo $f ; find $f/* -prune -type f "
 		if [[ "$inc" != "-" ]]
 		then
-			$BASECMD="$BASECMD | egrep '$inc' "
+			BASECMD="$BASECMD | egrep '$inc' "
 		fi
 		if [[ "$exc" != "-" ]]
 		then
-			$BASECMD="$BASECMD | egrep -v '$exc' "
+			BASECMD="$BASECMD | egrep -v '$exc' "
 		fi
-		$BASECMD="$BASECMD | cpio -pdum $TARGETDIR)"
-		$BASECMD
+		BASECMD="$BASECMD | cpio -pdum $TARGETDIR"
+		sh -c "$BASECMD"
+		continue
 	else
                 continue
 	fi
@@ -559,5 +627,7 @@ apply_skeleton()
 	done <$SKEL/bootcd_skel.files | (cd $PROTO; cpio -o -O skeleton.cpio)
 	# Now copy skeleton into place
 	copyfiles "$SKEL" "$PROTO" $SKEL/bootcd_skel.files
+
+	
 }
 

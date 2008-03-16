@@ -175,9 +175,6 @@
   <service name='application/management/snmpdx' version='1' type='service'>
     <instance name='default' enabled='false' />
   </service>
-  <service name='application/management/wbem' version='1' type='service'>
-    <instance name='default' enabled='false' />
-  </service>
 
   <service name='application/print/cleanup' version='1' type='service'>
     <instance name='default' enabled='false' />
@@ -195,17 +192,6 @@
     <instance name='default' enabled='false' />
   </service>
 
-  <!--
-      Enable CDE services.
-  -->
-  <service name='application/cde-printinfo' version='1' type='service'>
-    <instance name='default' enabled='true' />
-  </service>
-  <service name='application/graphical-login/cde-login' version='1'
-    type='service'>
-    <instance name='default' enabled='true' />
-  </service>
-
   <service name='application/x11/xfs' version='1' type='service'>
     <instance name='default' enabled='true'/>
   </service>
@@ -214,6 +200,9 @@
       Enable X11 services
   -->
   <service name='application/opengl/ogl-select' version='1' type='service'>
+    <instance name='default' enabled='true'/>
+  </service>
+  <service name='application/xserver' version='1' type='service'>
     <instance name='default' enabled='true'/>
   </service>
  
