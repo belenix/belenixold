@@ -1,10 +1,11 @@
---- usr/src/pkgdefs/Makefile.orig	2008-03-13 11:49:35.715605432 +0530
-+++ usr/src/pkgdefs/Makefile	2008-03-13 11:36:11.790962113 +0530
-@@ -36,6 +36,7 @@
+--- Makefile.orig	2008-03-13 11:49:35.715605432 +0530
++++ Makefile	2008-03-19 00:01:34.630055368 +0530
+@@ -36,6 +36,8 @@
  COMMON_SUBDIRS	= \
  	SUNWinstall \
  	SUNWpackaging \
 +	SUNWwsr2 \
++	SUNWadmlib-sysid \
  	SUNWdistro-license
  
  #

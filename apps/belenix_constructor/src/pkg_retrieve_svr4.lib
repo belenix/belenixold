@@ -76,6 +76,13 @@ ADMIN_EOF
 	/usr/bin/perl $SRC/proc_toc.pl $DIST_METACLUSTER $PKGS_DIR $PKGS_FILE | /usr/ccs/bin/tsort | grep -v "INFORM: cycle" | grep -v "SUNWdummy" > $TMPDIR/ordered
 	perl $SRC/rev_file.pl $TMPDIR/ordered | while read pkg
 	do
+		grep "^SUNW_CSRMEMBER=$pkg" $PKGS_FILE > /dev/null
+		if [ $? -ne 0 ]
+		then
+			echo "Skipping $pkg, not listed in $PKGS_FILE"
+			continue
+		fi
+
 		echo "Installing $pkg"
 		if [ -d $PKGS_DIR/$pkg ]; then
 			if [ -x $PKGS_DIR/$pkg/pkginstall ]

@@ -25,6 +25,7 @@ BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 Requires: SFEkdelibs3
 BuildRequires: SFEkdelibs3-devel
 Requires: SFEcyrus-sasl
+Requires: %{name}-root
 
 # For md5sum
 Requires: SUNWgnu-coreutils
@@ -210,6 +211,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Tue Mar 18 2008 - moinakg@gmail.com
+- Add missing dependency on root package.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Add SMF Manifest for KDM.
 - Add Xsession patch to use ctrun on OpenSolaris.

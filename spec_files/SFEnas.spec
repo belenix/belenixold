@@ -21,6 +21,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 Requires:       FSWxorg-clientlibs
 Requires:       FSWxwpft
 BuildRequires:  FSWxorg-client-programs
+Requires:       %{name}-root
 
 %description
 This package contains a network-transparent, client/server audio
@@ -112,6 +113,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}
 
 %changelog
+* Tue Mar 18 2008 - moinakg@gmail.com
+- Add missing dependency on root package.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Rework to build with FOX.
 * Thu Feb 14 2008 - moinak.ghosh@sun.com

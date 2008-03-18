@@ -23,6 +23,7 @@ BuildRoot:              %{_tmppath}/%{name}-%{version}-build
 %include perl-depend.inc
 Requires: SUNWzlib
 BuildRequires: SUNWzlib
+Requires: %{name}-root
 
 %package root
 Summary:                 %{summary} - / filesystem
@@ -97,6 +98,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr (0755, root, bin) %dir %{_localstatedir}/htdig
 
 %changelog
+* Tue Mar 18 2008 - moinakg@gmail.com
+- Add missing dependency on root package.
 * Fri Feb 01 2008 - moinak.ghosh@sun.com
 - Added jumbo patch from Debian Etch (several improvemements) with
 - further additions to fix Makefile issues causing undefined symbols

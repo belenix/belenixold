@@ -25,6 +25,7 @@ Source:		%{src_url}/%{src_name}-%{version}-source.tar.bz2
 Patch1:		cups-01-gss.diff
 SUNW_BaseDir:	%{_basedir}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
+Requires:       %{name}-root
 
 %description
 CUPS provides a portable printing layer for UNIX-based operating
@@ -164,6 +165,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Tue Mar 18 2008 - moinakg@gmail.com
+- Add missing dependency on root package.
 * Wed Aug 15 2007 - dougs@truemail.co.th
 - bump to 1.3.0, added --disable-gssapi
 * Fri Aug  3 2007 - dougs@truemail.co.th

@@ -74,6 +74,7 @@ BuildRequires: SFEaspell-devel
 Requires: SFEopenexr
 BuildRequires: SFEopenexr-devel
 BuildRequires: oss
+Requires: %{name}-root
 
 %package root
 Summary:                 %{summary} - root
@@ -130,7 +131,7 @@ export CFLAGS="%optflags -I%{xorg_inc} -I%{gnu_inc} -I%{sfw_inc} -I/usr/include/
 
 export CXXFLAGS="%cxx_optflags -I%{xorg_inc} -I%{gnu_inc} -I%{sfw_inc} -I/usr/include/pcre `/usr/bin/libart2-config --cflags` -D__C99FEATURES__ -D__EXTENSIONS__"
 
-export LDFLAGS="%_ldflags %{xorg_lib_path} %{gnu_lib_path} %{sfw_lib_path} -lc -lsocket -lnsl `/usr/bin/libart2-config --libs`"
+export LDFLAGS="%_ldflags %{xorg_lib_path} %{gnu_lib_path} %{sfw_lib_path} -lc -lsocket -lnsl `/usr/bin/libart2-config --libs` -lartsflow -lartsflow_idl"
 
 export QTDOCDIR=%{_datadir}/qt3/doc/html
 extra_inc="%{xorg_inc}:%{gnu_inc}:%{sfw_inc}:/usr/include/pcre"
@@ -224,6 +225,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Tue Mar 18 2008 - moinakg@gmail.com
+- Add missing dependency on root package.
+- Update LDFLAGS.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Fix aspell dependency.
 - Use gamin instead of FAM.

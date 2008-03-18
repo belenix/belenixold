@@ -50,10 +50,11 @@ icmp		read_priv_set=net_icmpaccess	write_priv_set=net_icmpaccess
 icmp6		read_priv_set=net_icmpaccess	write_priv_set=net_icmpaccess
 ip		read_priv_set=net_rawaccess	write_priv_set=net_rawaccess
 ip6		read_priv_set=net_rawaccess	write_priv_set=net_rawaccess
-keysock		read_priv_set=sys_net_config	write_priv_set=sys_net_config
-ipsecah		read_priv_set=sys_net_config	write_priv_set=sys_net_config
-ipsecesp	read_priv_set=sys_net_config	write_priv_set=sys_net_config
-spdsock		read_priv_set=sys_net_config	write_priv_set=sys_net_config
+keysock         read_priv_set=sys_ip_config     write_priv_set=sys_ip_config
+ipsecah         read_priv_set=sys_ip_config     write_priv_set=sys_ip_config
+ipsecesp        read_priv_set=sys_ip_config     write_priv_set=sys_ip_config
+spdsock         read_priv_set=sys_ip_config     write_priv_set=sys_ip_config
+
 #
 # Raw network interface access permissions
 #
@@ -103,9 +104,14 @@ random						write_priv_set=sys_devices
 openeepr					write_priv_set=all
 dld:ctl		read_priv_set=sys_net_config	write_priv_set=sys_net_config
 aggr:ctl	read_priv_set=sys_net_config	write_priv_set=sys_net_config
+scsi_vhci:devctl                                write_priv_set=sys_devices
+vnic:ctl        read_priv_set=sys_net_config    write_priv_set=sys_net_config
+
 #
 # IP Filter
 #
+aggr		read_priv_set=net_rawaccess	write_priv_set=net_rawaccess
+vnic		read_priv_set=net_rawaccess	write_priv_set=net_rawaccess
 ipf             read_priv_set=sys_net_config    write_priv_set=sys_net_config
 pfil            read_priv_set=net_rawaccess     write_priv_set=net_rawaccess
 

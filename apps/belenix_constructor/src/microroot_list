@@ -4,6 +4,7 @@ d 0755 65432:10 jack
 d 0755 root:sys .cdrom
 d 0755 root:sys mnt
 d 0755 root:sys mnt/misc
+d 0755 root:sys opt
 id - - proc
 id - - system
 id - - dev
@@ -12,7 +13,7 @@ id - - boot
 id - amd64 kernel
 id - amd64 platform
 id - amd64|llib lib
-id - amd64 sbin
+id - - sbin
 s 0777 root:root bin=./usr/bin
 i - amd64 etc
 id - - etc/certs
