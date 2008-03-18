@@ -24,8 +24,6 @@ Requires: SUNWgnome-base-libs
 BuildRequires: SUNWgnome-base-libs-devel
 Requires: SUNWogg-vorbis
 BuildRequires: SUNWogg-vorbis-devel
-Requires: SFElibmad
-BuildRequires: SFElibmad-devel
 Requires: SFEjack
 BuildRequires: SFEjack-devel
 BuildRequires: SFEnas-devel
@@ -94,6 +92,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Tue Mar 18 2008 - moinakg@gmail.com
+- Arts should not depend on libmad.
 * Tue Feb 12 2008 <pradhap (at) gmail.com>
 - Fixed links
 * Sun Jan 20 2008 - moinak.ghosh@sun.com

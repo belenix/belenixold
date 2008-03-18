@@ -70,21 +70,21 @@ then
 
 	if [ "$desk" -ne "3" ]
 	then
-		if [ ! -f /etc/X11/xorg.conf ]
-		then
-		  HOME=/${DEFUSER};  export HOME
-		  cd $HOME
-		  TERM=sun-color; export TERM
+		#if [ ! -f /etc/X11/xorg.conf ]
+		#then
+		#  HOME=/${DEFUSER};  export HOME
+		#  cd $HOME
+		#  TERM=sun-color; export TERM
 
-		  exec < /dev/console > /dev/console 2>&1
-		  /usr/bin/xautocfg $desk
-		fi
+		#  exec < /dev/console > /dev/console 2>&1
+		#  /usr/bin/xautocfg $desk
+		#fi
 
-		if [ ! -f /etc/X11/xorg.conf ]
-		then
-			/usr/sbin/svcadm disable -t application/xserver
-			exit 0
-		fi
+		#if [ ! -f /etc/X11/xorg.conf ]
+		#then
+		#	/usr/sbin/svcadm disable -t application/xserver
+		#	exit 0
+		#fi
 		echo "Starting X11 (Keeping my fingers crossed!)" > /dev/console
 
 		if [ "$desk" -eq "1" -o "$desk" -eq "4" ]
@@ -99,7 +99,7 @@ then
 
 			# Adjust desktop if not supported
 			# TODO: More generic check in future
-			if [ ! -f /.nvidia ]
+			if [ `/usr/X11/bin/constype` != "NVDAnvda" ]
 			then
 				desk="1"
 				rm -f /.desk; echo "$desk" > /.desk
@@ -123,7 +123,7 @@ then
 			else
 				# Adjust desktop if not supported
 				# TODO: More generic check in future
-				if [ ! -f /.nvidia ]
+				if [ `/usr/X11/bin/constype` != "NVDAnvda" ]
 				then
 					desk="2"
 					rm -f /.desk; echo "$desk" > /.desk

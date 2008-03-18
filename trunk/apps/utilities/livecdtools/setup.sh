@@ -134,11 +134,11 @@ fi
 
 if [ ! -f /.lg3d ]
 then
-	tag_values="A \"Xfce Desktop\" B \"KDE Desktop\" C \"Command Line Login\" D \"Compiz 3D Manager + Xfce (Nvidia/Intel)\" E \"Compiz 3D Manager + KDE (Nvidia/Intel)\""
+	tag_values="A \"Xfce Desktop\" B \"KDE Desktop\" C \"Compiz 3D Manager + Xfce (Nvidia/Intel)\" D \"Compiz 3D Manager + KDE (Nvidia/Intel)\""
 else
 	tag_values="A \"Xfce Desktop\" B \"Looking Glass 3D Desktop\" C \"Command Line Login\""
 fi
-eval "$DIALOG --nocancel --menu 'Desktop UI Selection' 20 70 12 $tag_values 2> /.desk"
+eval "$DIALOG --no-cancel --menu 'Desktop UI Selection' 20 70 12 $tag_values 2> /.desk"
 
 type="1"
 if [ -f /.desk ]
@@ -152,10 +152,6 @@ then
 	elif [ "$type" = "D" ]
 	then
 		type="4"
-
-	elif [ "$type" = "C" ]
-	then
-		type="3"
 
 	elif [ "$type" = "B" ]
 	then

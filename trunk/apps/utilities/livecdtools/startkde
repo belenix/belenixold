@@ -26,9 +26,9 @@ mem=`cat /.prtconf | grep "Memory size" | cut -f3 -d" "`
 
 if [ $mem -le "256" ]
 then
-        /usr/bin/pagein `cat /etc/profile.d/kde.minimal.pagein`
+        /sbin/pagein `cat /etc/profile.d/kde.minimal.pagein`
 else
-        /usr/bin/pagein `cat /etc/profile.d/kde.pagein`
+        /sbin/pagein `cat /etc/profile.d/kde.pagein`
 fi
 
 exec /usr/bin/ctrun -i none -l child /usr/X11/bin/xinit /usr/bin/startkde

@@ -41,6 +41,7 @@ Requires: SFElibtunepimp
 BuildRequires: SFElibtunepimp-devel
 BuildRequires: SFElibtunepimp-encumbered
 BuildRequires: oss
+Requires: %{name}-root
 
 %package devel
 Summary:        %{summary} - development files
@@ -243,6 +244,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Mar 18 2008 - moinakg@gmail.com
+- Add missing dependency on root package.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Fix link flags for Arts.
 * Tue Jan 22 2008 - moinakg@gmail.com

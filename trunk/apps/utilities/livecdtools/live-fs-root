@@ -370,6 +370,7 @@ then
 	if [ "$livemode" = "text" ]; then
 		#/usr/sbin/svcadm disable -t application/graphical-login/gdm
 		svcadm disable -t application/xserver
+		echo "3" > /.desk
 	else
 		#
 		# Now select which desktop to run

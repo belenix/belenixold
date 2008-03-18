@@ -193,7 +193,7 @@ echo "Archiving Boot Archive"
 
 rm -rf $MICROROOT
  
-gzip -f ${TMPDIR}/x86.microroot
+gzip -9 -f ${TMPDIR}/x86.microroot
 mv ${TMPDIR}/x86.microroot.gz $BOOT_ARCHIVE
 chmod a+r $BOOT_ARCHIVE
 

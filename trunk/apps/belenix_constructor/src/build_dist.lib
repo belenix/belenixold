@@ -242,8 +242,8 @@ create_iso()
 	fi
 
 	echo "Compressing usr filesystem image"
-	echo "${DIST_PROTO}/usr/sbin/lofiadm  -C `pwd`/solaris.zlib"
-	time ${DIST_PROTO}/usr/sbin/lofiadm -C `pwd`/solaris.zlib
+	echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solaris.zlib"
+	time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solaris.zlib
 	if [ $? -ne 0 ] ; then
 		echo "FAILURE: compression of solaris failed"
 		fatal_exit	
@@ -264,8 +264,8 @@ create_iso()
 	rm -rf miscdirs
 
 	echo "Compressing misc filesystem image"
-	echo "${DIST_PROTO}/usr/sbin/lofiadm  -C `pwd`/solarismisc.zlib"
-	time ${DIST_PROTO}/usr/sbin/lofiadm -C `pwd`/solarismisc.zlib
+	echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solarismisc.zlib"
+	time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solarismisc.zlib
 	if [ $? -ne 0 ] ; then
 		echo "FAILURE: compression of solarismisc failed"
 		fatal_exit	
@@ -396,9 +396,11 @@ RTC_CONFIG_EOF
 	# Pack up a bunch of extra stuff
 	#
 	(cd $PROTO
-	    (find . -name "llib-"; find kernel lib) | cpio -oc | bzip2 -c > archive.bz2
+	    (find . -name "llib-"
+	      find kernel lib platform | grep amd64) | cpio -oc | bzip2 -c > archive.bz2
 	    find . -name "llib-" | xargs rm -f
-	    rm -rf kernel lib)
+	    rm -rf kernel lib sbin
+            find platform | grep amd64 | xargs rm -f)
 
 	#
 	# Additional /var /etc setup. A bunch of files in /var and /etc

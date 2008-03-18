@@ -19,6 +19,7 @@ Patch2:              ntfsprogs-02-libntfs.diff
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
+Requires:            %{name}-root
 
 %description
 The Linux-NTFS project (http://www.linux-ntfs.org/) aims to bring full support
@@ -126,6 +127,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/gnome-vfs-2.0/modules/*
 
 %changelog
+* Tue Mar 18 2008 - moinakg@gmail.com
+- Add missing dependency on root package.
 * Sat Mar 01 2008 - moinakg@gmail.com
 - Fix CFLAGS and LDFLAGS.
 * Sat Feb 02 2008 - moinakg@gmail.com

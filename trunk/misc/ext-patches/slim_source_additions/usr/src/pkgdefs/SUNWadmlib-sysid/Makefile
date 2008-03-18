@@ -2,9 +2,8 @@
 # CDDL HEADER START
 #
 # The contents of this file are subject to the terms of the
-# Common Development and Distribution License, Version 1.0 only
-# (the "License").  You may not use this file except in compliance
-# with the License.
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
 #
 # You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
 # or http://www.opensolaris.org/os/licensing.
@@ -19,20 +18,22 @@
 #
 # CDDL HEADER END
 #
-# Copyright (c) 1996 - 2001 by Sun Microsystems, Inc.
-# All rights reserved.
 #
-#pragma ident	"@(#)power.conf	1.17	05/06/08 SMI"
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
 #
-# Power Management Configuration File
+#pragma ident   "%Z%%M% %I%     %E% SMI"
 #
-# This entry keeps removable media from being powered down unless the
-# console framebuffer and monitor are powered down
-# (See removable-media(9P))
 
-device-dependency-property removable-media /dev/fb
+include ../Makefile.com
 
-# Auto-Shutdown		Idle(min)	Start/Finish(hh:mm)	Behavior
-autoshutdown		30		9:00 9:00		default
+DATAFILES +=
 
-autopm			default
+MACHDATAFILES =
+
+.KEEP_STATE:
+
+all: $(FILES) $(MACHDATAFILES)
+install: all .WAIT pkg
+
+include ../Makefile.targ
