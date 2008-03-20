@@ -30,5 +30,5 @@
 adm::::profiles=Log Management
 dladm::::auths=solaris.smf.manage.wpa,solaris.smf.modify
 lp::::profiles=Printer Management
-root::::auths=solaris.*,solaris.grant;profiles=All;lock_after_retries=no;min_label=admin_low;clearance=admin_high
-jack::::profiles=Primary Administrator
+root::::type=role;auths=solaris.*,solaris.grant;profiles=All;lock_after_retries=no;min_label=admin_low;clearance=admin_high
+jack::::profiles=Primary Administrator;roles=root
