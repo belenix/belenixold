@@ -5,11 +5,13 @@
 # Do not execute keyboard selection here for now
 # We are using kbd -s.
 #
+
+DIALOG=/usr/bin/dialog
+
 if [ `/usr/bin/false` ]
 then
 
 kbd_type=`/usr/bin/kbd -t`
-DIALOG=/usr/bin/dialog
 
 tag_values="33 US-English 32 UK-English 6 Danish 18 Dutch 8 French 9 German 14 Italian 15 Japanese(106) 271 Japanese-type6 16 Korean 19 Norwegian 22 Portuguese 25 Spanish 26 Swedish 27 Swiss-French 28 Swiss-German 30 Taiwanese 23 Russian 264 Albanian 261 Belarusian 2 Belgian 260 Bulgarian 259 Croatian 5 Czech 34 Czech(Qwerty) 7 Finnish 4 French-Canadian 12 Hungarian 10 Greek 258 Icelandic 17 Latin-American 265 Lithuanian 266 Latvian 267 Macedonian 263 Malta_UK 262 Malta_US 21 Polish 257 Serbia-And-Montenegro 256 Slovenian 24 Slovakian 31 TurkishQ 35 TurkishF"
 

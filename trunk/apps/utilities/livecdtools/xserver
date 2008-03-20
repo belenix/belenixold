@@ -112,7 +112,7 @@ then
 				cp /usr/share/misc/xfce4-session.rc.standard /etc/xdg/xfce4-session/xfce4-session.rc
 			fi
 
-			/usr/sbin/startxfce &
+			su - jack -c /usr/sbin/startxfce &
 
 		elif [ "$desk" -eq "2" -o "$desk" -eq "5" ]
 		then
@@ -135,7 +135,7 @@ then
 				else
 					rm -f /${DEFUSER}/.kde/Autostart/kdecompiz.desktop
 				fi
-				/usr/sbin/startkde &
+				su - jack -c /usr/sbin/startkde &
 			fi
 		fi
 	else

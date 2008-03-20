@@ -70,7 +70,7 @@ TMPDIR=/tmp/distro_tool.$$
 ADMIN_FILE=$TMPDIR/admin
 BOOT_ARCHIVE=$DIST_PROTO/boot/x86.microroot
 MICROROOT=$DIST_PROTO/bootcd_microroot
-RAMDISK_SIZE=160000
+RAMDISK_SIZE=82000
 DIST_MICROROOT_LIST=$SRC/microroot_list
 
 # Set up root of the proto area
@@ -193,7 +193,7 @@ echo "Archiving Boot Archive"
 
 rm -rf $MICROROOT
  
-gzip -9 -f ${TMPDIR}/x86.microroot
+7za a -tGzip -mx=7 ${TMPDIR}/x86.microroot.gz ${TMPDIR}/x86.microroot
 mv ${TMPDIR}/x86.microroot.gz $BOOT_ARCHIVE
 chmod a+r $BOOT_ARCHIVE
 
