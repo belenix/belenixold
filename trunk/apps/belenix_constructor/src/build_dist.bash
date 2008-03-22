@@ -70,7 +70,7 @@ TMPDIR=/tmp/distro_tool.$$
 ADMIN_FILE=$TMPDIR/admin
 BOOT_ARCHIVE=$DIST_PROTO/boot/x86.microroot
 MICROROOT=$DIST_PROTO/bootcd_microroot
-RAMDISK_SIZE=82000
+RAMDISK_SIZE=84000
 DIST_MICROROOT_LIST=$SRC/microroot_list
 
 # Set up root of the proto area

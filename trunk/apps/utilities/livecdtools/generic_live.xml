@@ -153,6 +153,12 @@
   <service name='network/inetd-ugrade' version='1' type='service'>
     <instance name='default' enabled='false'/>
   </service>
+  <service name='network/ipsec/policy' version='1' type='service'>
+    <instance name='default' enabled='false'/>
+  </service>
+  <service name='network/ipsec/ipsecalgs' version='1' type='service'>
+    <instance name='default' enabled='false'/>
+  </service>
   <service name='system/dumpadm' version='1' type='service'>
     <instance name='default' enabled='false'/>
   </service>
