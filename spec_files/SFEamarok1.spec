@@ -22,6 +22,8 @@ Requires: SFEkdebase3
 BuildRequires: SFEkdebase3-devel
 Requires: SUNWlibusb
 BuildRequires: SUNWlibusb
+Requires: SUNWcurl
+BuildRequires: SUNWcurl
 Requires: SFEsdl
 BuildRequires: SFEsdl-devel
 Requires: SFExmms1
@@ -181,6 +183,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Mar 22 2008 - moinakg@gmail.com
+- Add dependency to SUNWcurl
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Update sqlite dependency.
 - Update SDL dependency.

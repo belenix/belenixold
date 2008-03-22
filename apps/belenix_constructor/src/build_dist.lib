@@ -372,13 +372,6 @@ RTC_CONFIG_EOF
 	#echo "opensolaris" >$MICROROOT/etc/nodename
 
 	#
-	# Add exec attributes for gui-install
-	#
-	echo "Software Installation:suser:cmd:::/usr/bin/gui-install:uid=0" >> $MICROROOT/etc/security/exec_attr
-	echo "Software Installation:suser:cmd:::/usr/bin/install-lan:uid=0" >> MICROROOT/etc/security/exec_attr
-
-
-	#
 	# Pre-configure Gnome databases and SMF repository
 	# 
 
@@ -405,17 +398,40 @@ RTC_CONFIG_EOF
 	(cd $PROTO
 	    (find . -name "llib-"
 	      find kernel lib platform | grep amd64
-	      for d in `cat $SRC/archive_dirs`
+	      cat $SRC/archive_paths | while read typ pspec
 	      do
-		find $d
+		if [ "$typ" = "d" ]
+		then
+		    find $pspec
+		elif [ "$typ" = "p" ]
+		then
+		    find * -name "$pspec"
+		fi
 	      done
 	      ) | cpio -oc | 7za a -mx=9 -si archive.7z
 	    find . -name "llib-" | xargs rm -f
-	    rm -rf kernel lib sbin
+	    rm -rf kernel lib sbin tmp system proc export home
             find platform | grep amd64 | xargs rm -f
-	    for d in `cat $SRC/archive_dirs`
+	    cat $SRC/archive_paths | while read typ pspec
 	    do
-		rm -rf $d
+		if [ "$typ" = "d" ]
+		then
+		    rm -rf $pspec
+		elif [ "$typ" = "p" ]
+		then
+		    find * -name "$pspec" | xargs rm -f
+		fi
+	    done)
+
+	#
+	# Remove some extra duplicates
+	#
+	(cd $PROTO
+	    for sdir in kernel/dacf kernel/drv kernel/kmdb kernel/mach kernel/misc kernel/tod kernel/cpu kernel/sys
+	    do
+		rm -rf platform/i86pc/${sdir}
+		rm -rf platform/i86xpv/${sdir}
+		rm -rf platform/i86hvm/${sdir}
 	    done)
 
 	#
@@ -450,7 +466,7 @@ RTC_CONFIG_EOF
 			echo $dir >> ${TMPDIR}/mfiles
 		fi
 		p=$f
-		[ -d $MICROROOT/$p ] && p=$p/
+		[ -d $PROTO/$p ] && p=$p/
 		ln -sf /mnt/misc/$f $f
 		echo "^$p" >> ${TMPDIR}/plist
 	done

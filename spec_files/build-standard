@@ -185,7 +185,7 @@ call_pkgtool $_GCC "encumbered/SFEgpac.spec"
 PATH=$_OPATH
 export PATH
 
-call_pkgtool $_GCC "SFElibx264.spec:SFEamrwb.spec:SFEncurses.spec:SFEswig.spec:SFElibmng.spec:encumbered/SFElibnjb.spec:SFElibao.spec:SFEliveMedia.spec:SFElibcdio.spec:SFElibfribidi.spec:SFEladspa.spec:SFEopenal.spec:SFEgawk.spec:SFEsdl.spec:SFEsdl-image.spec:SFElibebml.spec:SFElibmatroska.spec:SFElibcddb.spec:SFElibupnp.spec:SFEvcdimager.spec:SFElibtar.spec:SFEcurl.spec:SFElibdiscid.spec:SFEjack.spec:SFEfftw.spec"
+call_pkgtool $_GCC "SFElibx264.spec:SFEamrwb.spec:SFEncurses.spec:SFEswig.spec:SFElibmng.spec:encumbered/SFElibnjb.spec:SFElibao.spec:SFEliveMedia.spec:SFElibcdio.spec:SFElibfribidi.spec:SFEladspa.spec:SFEopenal.spec:SFEgawk.spec:SFEsdl.spec:SFEsdl-image.spec:SFElibebml.spec:SFElibmatroska.spec:SFElibcddb.spec:SFElibupnp.spec:SFEvcdimager.spec:SFElibtar.spec:SFElibdiscid.spec:SFEjack.spec:SFEfftw.spec"
 
 call_pkgtool $_STUDIO "SFEnetpbm.spec"
 
@@ -225,7 +225,7 @@ call_pkgtool $_GCC "encumbered/SFEvlc.spec:encumbered/SFEvnc2swf.spec"
 call_pkgtool $_GCC "SFElibpcap.spec:SFEsed.spec"
 call_pkgtool $_STUDIO "SFEethereal.spec"
 call_pkgtool $_GCC "SFEcmake.spec:SFEphysfs.spec:SFEreadline.spec:SFEcups.spec"
-call_pkgtool $_GCC "SFEqt3.spec:SFEcurl.spec:SFElibsndfile.spec:SFEjack.spec:SFEnas.spec:SFEarts.spec:SFEfltk.spec:SFEilmbase.spec:SFEopenexr.spec"
+call_pkgtool $_GCC "SFEqt3.spec:SFElibsndfile.spec:SFEjack.spec:SFEnas.spec:SFEarts.spec:SFEfltk.spec:SFEilmbase.spec:SFEopenexr.spec"
 
 call_pkgtool $_GCC "SFEbdb.spec:SFEgdbm.spec:SFElibntlm.spec:SFEcyrus-sasl.spec"
 call_pkgtool $_GCC "SFEaspell.spec:SFEaspell-en.spec"

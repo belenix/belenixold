@@ -348,16 +348,16 @@ create_window1 (void)
   GLADE_HOOKUP_OBJECT (window1, image1, "image1");
   GLADE_HOOKUP_OBJECT (window1, label13, "label13");
 
-  load_file(Guideview, "/opt/DTT/Guide");
-  load_file(Contentsview, "/opt/DTT/Docs/Contents");
-  load_file(FAQview, "/opt/DTT/Docs/Faq");
-  load_file(Historyview, "/opt/DTT/Docs/History");
-  load_file(Linkview, "/opt/DTT/Docs/Links");
-  load_file(Maintainerview, "/opt/DTT/Docs/Maintainer");
-  load_file(Readmeview, "/opt/DTT/Docs/Readme");
-  load_file(TODOview, "/opt/DTT/Docs/ToDo");
-  load_file(Whoview, "/opt/DTT/Docs/Who");
-  load_file(Onelinersview, "/opt/DTT/Docs/oneliners.txt");
+  load_file(Guideview, "/opt/DTraceToolkit/Guide");
+  load_file(Contentsview, "/opt/DTraceToolkit/Docs/Contents");
+  load_file(FAQview, "/opt/DTraceToolkit/Docs/Faq");
+  load_file(Historyview, "/opt/DTraceToolkit/Docs/History");
+  load_file(Linkview, "/opt/DTraceToolkit/Docs/Links");
+  load_file(Maintainerview, "/opt/DTraceToolkit/Docs/Maintainer");
+  load_file(Readmeview, "/opt/DTraceToolkit/Docs/Readme");
+  load_file(TODOview, "/opt/DTraceToolkit/Docs/ToDo");
+  load_file(Whoview, "/opt/DTraceToolkit/Docs/Who");
+  load_file(Onelinersview, "/opt/DTraceToolkit/Docs/oneliners.txt");
 
   return window1;
 }

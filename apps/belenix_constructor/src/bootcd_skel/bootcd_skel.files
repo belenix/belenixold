@@ -25,6 +25,8 @@ f 0644 root:root etc/ssh/ssh_host_dsa_key.pub
 f 0600 root:root etc/ssh/ssh_host_rsa_key
 f 0644 root:root etc/ssh/ssh_host_rsa_key.pub
 f 0644 root:sys etc/security/device_policy
+f 0644 root:sys etc/security/auth_attr
+f 0644 root:sys etc/security/prof_attr
 f 0644 root:sys etc/security/exec_attr
 f 0640 root:smmsp etc/mail/aliases.db
 f 0644 root:other etc/.UNCONFIGURED
