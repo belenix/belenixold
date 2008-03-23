@@ -18,7 +18,10 @@ Name:           SFEcompiz
 Summary:        compiz
 Version:        0.6.2
 Source:		http://xorg.freedesktop.org/archive/individual/app/compiz-%{version}.tar.gz
+%if %option_with_fox
+%else
 Source1:	http://www.gnome.org/~erwannc/compiz/missing-stuff-%{version}.tar.bz2
+%endif
 Source2:	http://trisk.acm.jhu.edu/compiz/gnome-integration-%{version}.tar.bz2
 Patch1:		compiz-01-solaris-port.diff
 SUNW_BaseDir:   %{_basedir}
@@ -29,11 +32,14 @@ Requires: 	SUNWpng
 Requires: 	SUNWdbus
 Requires: 	SUNWgnome-base-libs
 Requires: 	SUNWgnome-wm
+Requires:       SFEdbus-qt3
 BuildRequires: 	SUNWpng-devel
 BuildRequires: 	SUNWdbus-devel
 BuildRequires: 	SUNWgnome-base-libs-devel
 BuildRequires: 	SUNWgnome-wm-devel
 BuildRequires: 	SFEsed
+BuildRequires: 	SFEdbus-qt3-devel
+BuildRequires:  SUNWgnome-desktop-prefs-devel
 
 %package root
 Summary:         %summary - platform dependent files, / filesystem
@@ -56,7 +62,10 @@ Requires:        %{name}
 
 %prep
 %setup -q -c -n %{name}
+%if %option_with_fox
+%else
 gtar fxvj %{SOURCE1}
+%endif
 gtar fxvj %{SOURCE2}
 cd compiz-%{version}
 %patch1 -p1
@@ -79,8 +88,11 @@ export LDFLAGS="-L$PROTO_LIB -L/usr/X11/lib -R/usr/X11/lib"
 
 mkdir -p $PROTO_INC/X11/extensions
 mkdir -p $PROTO_PKG
+%if %option_with_fox
+%else
 cp missing-stuff/missing-headers/Xregion.h $PROTO_INC/X11
 cp missing-stuff/missing-pc-files/*.pc $PROTO_PKG
+%endif
 
 cd compiz-%{version}
 
@@ -105,9 +117,12 @@ make -j$CPUS
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/pkgconfig
+%if %option_with_fox
+%else
 cp missing-stuff/missing-pc-files/*.pc $RPM_BUILD_ROOT%{_libdir}/pkgconfig
 mkdir -p  $RPM_BUILD_ROOT%{_prefix}/X11/include/X11
 cp missing-stuff/missing-headers/Xregion.h $RPM_BUILD_ROOT%{_prefix}/X11/include/X11
+%endif
 
 cd compiz-%{version}
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -123,10 +138,13 @@ ln -s start-compiz $RPM_BUILD_ROOT%{_bindir}/run-compiz
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps
 cp compiz.png $RPM_BUILD_ROOT%{_datadir}/pixmaps
 
+%if %option_with_fox
+%else
 cd $RPM_BUILD_ROOT%{_libdir}/pkgconfig
 for pc in ice.pc sm.pc; do
     test -f /usr/lib/pkgconfig/$pc && rm $pc
 done
+%endif
 
 
 %if %build_l10n
@@ -203,10 +221,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*
+%if %option_with_fox
+%else
 %dir %attr (0755, root, bin) %{_prefix}/X11
 %dir %attr (0755, root, bin) %{_prefix}/X11/include
 %dir %attr (0755, root, bin) %{_prefix}/X11/include/X11
 %{_prefix}/X11/include/X11/*
+%endif
 
 %if %build_l10n
 %files l10n
@@ -216,6 +237,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Mar 23 2008 - moinakg@gmail.com
+- Changes to build with FOX. Add missing dependencies.
 * Sun Nov 04 2007 - erwann@sun.com
 - remove unneeded X bits
 - lighter version of missing-stuff
