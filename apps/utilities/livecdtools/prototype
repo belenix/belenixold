@@ -50,7 +50,7 @@ d none jack/.config 755 jack staff
 d none jack/.config/autostart 755 jack staff
 #f none jack/.config/autostart/license.desktop=license.desktop 644 jack staff
 d none jack/Desktop 755 jack staff
-f none jack/Desktop/install_opensolaris.desktop=install_opensolaris.desktop 644 jack staff
+f none jack/Desktop/install_belenix.desktop=install_belenix.desktop 644 jack staff
 f none jack/Desktop/hdd_mount.desktop=hdd_mount.desktop 644 jack staff
 f none jack/Desktop/osolinfo.desktop=osolinfo.desktop 644 jack staff
 f none jack/Desktop/belenixinfo.desktop=belenixinfo.desktop 644 jack staff

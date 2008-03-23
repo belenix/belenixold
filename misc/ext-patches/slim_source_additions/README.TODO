@@ -1,0 +1,12 @@
+**** NOTE ****
+
+We need to identify a better method to handling branding in
+the installer. At present I have done the ridiculous method
+of manually editing all the Installer sources (*.txt, *.c,
+*.glade) to replace occurrences of OpenSolaris, OpenSolaris
+Developer Preview and OpenSolaris <year>.<month> with the
+relevant BeleniX strings.
+
+This *must* change. We should work with the Caiman people
+to implement a flexible branding framework in the installer
+for other distros to use.
