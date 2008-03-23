@@ -1,11 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Install OpenSolaris
+Name=Install BeleniX
 Type=Application
 Terminal=false
 Exec=/usr/bin/pfexec /usr/bin/gui-install
 Icon=/jack/install-icon.png
-GenericName=Install OpenSolaris to disk
+GenericName=Install BeleniX to disk
 Comment=
 Categories=Applications;System
 

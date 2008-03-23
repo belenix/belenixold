@@ -34,6 +34,7 @@ f none usr/share/pixmaps/belenix_wall1_large.jpg=belenix_wall1_large.jpg 0755 ro
 f none usr/share/pixmaps/belenix_wall2_large.png=belenix_wall2_large.png 0755 root bin
 f none usr/share/pixmaps/belenix_wall4.jpg=belenix_wall4.jpg 0755 root bin
 f none usr/share/pixmaps/belenix_wall4.png=belenix_wall4.png 0755 root bin
+f none usr/share/pixmaps/belenix_logo_small.png=belenix_logo_small.png 0755 root bin
 f none usr/share/pixmaps/firefox.png=firefox.png 0755 root bin
 
 d none usr/share/doc 0755 root other
