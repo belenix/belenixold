@@ -38,13 +38,13 @@ SUNW_BaseDir:            %{_basedir}
 Requires:                %{name} = %{version}
 %include default-depend.inc
 
-%if %build_l10n
-%package l10n
-Summary:                 %{summary} - l10n files
-SUNW_BaseDir:            %{_basedir}
-%include default-depend.inc
-Requires:                %{name}
-%endif
+#%if %build_l10n
+#%package l10n
+#Summary:                 %{summary} - l10n files
+#SUNW_BaseDir:            %{_basedir}
+#%include default-depend.inc
+#Requires:                %{name}
+#%endif
 
 %prep
 %setup -q -n %{src_name}-%version
@@ -80,17 +80,19 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.*a
 rm -f $RPM_BUILD_ROOT%{_libdir}/compiz/*.*a
 rm -f $RPM_BUILD_ROOT%{_libdir}/compizconfig/backends/*.*a
 
+rm -rf $RPM_BUILD_ROOT%{_datadir}/locale
+
 #
 # when not building -l10n packages, remove anything l10n related from
 # $RPM_BUILD_ROOT
 #
-%if %build_l10n
-%else
+#%if %build_l10n
+#%else
 # REMOVE l10n FILES
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale
-rm -rf $RPM_BUILD_ROOT%{_datadir}/gnome/help/*/[a-z]*
-rm -rf $RPM_BUILD_ROOT%{_datadir}/omf/*/*-[a-z]*.omf
-%endif
+#rm -rf $RPM_BUILD_ROOT%{_datadir}/locale
+#rm -rf $RPM_BUILD_ROOT%{_datadir}/gnome/help/*/[a-z]*
+#rm -rf $RPM_BUILD_ROOT%{_datadir}/omf/*/*-[a-z]*.omf
+#%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -101,11 +103,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/compiz
 %{_libdir}/compizconfig
 %{_libdir}/lib*.so*
+%dir %attr(0755, root, sys) %{_datadir}
+%{_datadir}/*
 
 %files root
 %defattr (0755, root, sys)
-%dir %attr(0755, root, sys) %{_datadir}
-%{_datadir}/*
 %attr (0755, root, sys) %dir %{_sysconfdir}
 %{_sysconfdir}/*
 
@@ -119,16 +121,19 @@ rm -rf $RPM_BUILD_ROOT
 #
 # The files included here should match the ones removed in %install
 #
-%if %build_l10n
-%files l10n
-%defattr (-, root, other)
-%dir %attr (0755, root, sys) %{_datadir}
-%{_datadir}/locale
-%{_datadir}/gnome/help/*/[a-z]*
-%{_datadir}/omf/*/*-[a-z]*.omf
-%endif
+#%if %build_l10n
+#%files l10n
+#%defattr (-, root, other)
+#%dir %attr (0755, root, sys) %{_datadir}
+#%dir %attr (0755, root, other) %{_datadir}/locale
+#%{_datadir}/locale/*
+#%{_datadir}/gnome/help/*/[a-z]*
+#%{_datadir}/omf/*/*-[a-z]*.omf
+#%endif
 
 %changelog
+* Sun Mar 23 2008 - moinakg@gmail.com
+- Comment out locale files since they are not built.
 * Wed Nov 14 2007 - daymobrew@users.sourceforge.net
 - Add l10n package.
 * Mon Oct 29 2007 - trisk@acm.jhu.edu

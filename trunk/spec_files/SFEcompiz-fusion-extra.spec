@@ -127,11 +127,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr (-, root, other)
 %dir %attr (0755, root, sys) %{_datadir}
 %{_datadir}/locale
-%{_datadir}/gnome/help/*/[a-z]*
-%{_datadir}/omf/*/*-[a-z]*.omf
+#%{_datadir}/gnome/help/*/[a-z]*
+#%{_datadir}/omf/*/*-[a-z]*.omf
 %endif
 
 %changelog
+* Sun Mar 23 2008 - moinakg@gmail.com
+- Comment out help dirs since they do not get built.
 * Mon Oct 29 2007 - trisk@acm.jhu.edu
 - Bump to 0.6.0
 * Fri Sep 07 2007 - trisk@acm.jhu.edu
