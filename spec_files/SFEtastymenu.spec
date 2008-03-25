@@ -20,8 +20,8 @@ BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 # This also brings in all relevant deps including kdelibs, qt, aRts and others.
 Requires: SFEkdebase3
 BuildRequires: SFEkdebase3-devel
-Requires: SFEfam
-BuildRequires: SFEfam-devel
+Requires: SUNWgamin
+BuildRequires: SUNWgamin-devel
 %if %SFEfreetype
 Requires: SFEfreetype
 BuildRequires: SFEfreetype-devel
@@ -33,8 +33,9 @@ Requires: SUNWlexpt
 Requires: SUNWlibms
 Requires: SUNWpng
 Requires: SUNWxorg-clientlibs
-Requires: SUNWxwplt
-Requires: SUNWxwrtl
+Requires: FSWxorg-clientlibs
+Requires: SUNWxwplr
+Requires: FSWxwrtl
 Requires: SUNWxwxft
 Requires: SUNWzlib
 
@@ -103,6 +104,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %dir %attr (0755, root, other) %{_libdir}/kde3
 %{_libdir}/kde3/*
+%dir %attr (0755, root, other) %{_docdir}
+%{_docdir}/*
 
 %defattr (-, root, other)
 %dir %attr (0755, root, sys) %{_datadir}
@@ -110,8 +113,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/*
 %dir %attr (0755, root, other) %{_datadir}/config.kcfg
 %{_datadir}/config.kcfg/*
-%dir %attr (0755, root, other) %{_docdir}
-%{_docdir}/*
 
 %if %build_l10n
 %files l10n
@@ -121,5 +122,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Mar 25 2008 - moinakg@gmail.com
+- Fixed a few permissions.
 * Sat Feb 23 2008 - ananth@sun.com
 - Initial spec
