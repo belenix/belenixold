@@ -383,7 +383,19 @@ RTC_CONFIG_EOF
 		#Remove the scripts after finish executing them so the image is
 		#not polluted with temporary files.
 		/bin/rm -rf ${PROTO}/postrun_scripts
+	else
+		[ -x $PROTO/var/lib/postrun/postrun-runq ] && chroot $PROTO /var/lib/postrun/postrun-runq
 	fi
+
+	# Remove password lock file left around from user actions during
+	# package installation; if left in place it becomes a symlink
+	# into /mnt/misc which will cause the installer's attempt to
+	# create a user account to fail
+	/bin/rm $PROTO/etc/.pwd.lock
+
+	# Remove the icon theme caches
+	echo "Cleaning out icon theme cache"
+	(cd $PROTO/usr; find . -name icon-theme.cache -print|xargs rm)
 
 	echo "Creating font cache"
 	[ -x ${PROTO}/usr/bin/fc-cache ] && chroot $PROTO /usr/bin/fc-cache --force
@@ -654,14 +666,12 @@ apply_skeleton()
 	# Copy all the basic customizations required for the Live DVD to
 	# work. These are called the skeleton customisation files.
 	#
-	# First save the originals for use in installation
-	echo "Copying skeleton configuration files"
-	while read t m p f; do
-		[ -f $PROTO/$f ] && echo $f
-	done <$SKEL/bootcd_skel.files | (cd $PROTO; cpio -o -O skeleton.cpio)
+	## First save the originals for use in installation
+	#echo "Copying skeleton configuration files"
+	#while read t m p f; do
+	#	[ -f $PROTO/$f ] && echo $f
+	#done <$SKEL/bootcd_skel.files | grep -v generic_ | (cd $PROTO; cpio -o -O skeleton.cpio)
 	# Now copy skeleton into place
 	copyfiles "$SKEL" "$PROTO" $SKEL/bootcd_skel.files
-
-	
 }
 

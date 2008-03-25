@@ -361,7 +361,7 @@ fi
 # Solaris. And, even though /etc/release says OpenSolaris it truncates
 # the 'Open' off. Replace this globally.
 
-/bin/sed -e 's/title Solaris/title OpenSolaris/g' $MENUFILE > $MENUFILE.new
+/bin/sed -e 's/title Solaris/title BeleniX/g' $MENUFILE > $MENUFILE.new
 if [ $? == 0 ]; then
 	cat "${MENUFILE}.new" > "$MENUFILE"
 	rm "${MENUFILE}.new"
@@ -455,6 +455,13 @@ rm -f ${BASEDIR}/var/svc/profile/generic.xml \
 ln -s generic_limited_net.xml ${BASEDIR}/var/svc/profile/generic.xml
 ln -s ns_dns.xml ${BASEDIR}/var/svc/profile/name_service.xml
 ln -s inetd_generic.xml ${BASEDIR}/var/svc/profile/inetd_generic.xml
+
+# HACK!! Create a few needed dirs
+mkdir -p ${BASEDIR}/system/contract
+mkdir -p ${BASEDIR}/system/object
+mkdir -p ${BASEDIR}/tmp
+chown root:sys ${BASEDIR}/tmp
+chmod 1777 ${BASEDIR}/tmp
 
 # Add entries for sysidtool to run.
 
