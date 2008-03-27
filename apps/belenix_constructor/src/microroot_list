@@ -55,6 +55,7 @@ id - - etc/ssh
 id - - etc/fm
 id - - etc/lp
 id - - etc/opt
+id - - etc/oss
 id - - etc/rcm
 id - - etc/rpcsec
 id - - etc/sasl

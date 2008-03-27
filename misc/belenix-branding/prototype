@@ -35,6 +35,7 @@ f none usr/share/pixmaps/belenix_wall2_large.png=belenix_wall2_large.png 0755 ro
 f none usr/share/pixmaps/belenix_wall4.jpg=belenix_wall4.jpg 0755 root bin
 f none usr/share/pixmaps/belenix_wall4.png=belenix_wall4.png 0755 root bin
 f none usr/share/pixmaps/belenix_logo_small.png=belenix_logo_small.png 0755 root bin
+f none usr/share/pixmaps/worldkdeback.jpg=worldkdeback.jpg 0755 root bin
 f none usr/share/pixmaps/firefox.png=firefox.png 0755 root bin
 
 d none usr/share/doc 0755 root other
@@ -66,6 +67,13 @@ f none etc/profile.d/kde.minimal.pagein=profile.d/kde.minimal.pagein 0755 root o
 f none etc/profile.d/kde.pagein=profile.d/kde.pagein 0755 root other
 f none etc/profile.d/xfce.minimal.pagein=profile.d/xfce.minimal.pagein 0755 root other
 f none etc/profile.d/xfce.pagein=profile.d/xfce.pagein 0755 root other
+
+d none etc/skel 0755 root sys
+d none etc/skel/.kde 0755 root other
+d none etc/skel/.kde/share 0755 root other
+d none etc/skel/.kde/share/config 0755 root other
+f none etc/skel/.kde/share/config/kdeglobals=kdeglobals 0644 root other
+f none etc/skel/.kderc=.kderc 0644 root other
 
 d none boot 0755 root sys
 d none boot/grub 0755 root sys
