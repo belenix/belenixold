@@ -4,6 +4,7 @@ f 0777 root:root noautoshutdown
 f 0555 root:bin lib/svc/method/net-loopback
 f 0555 root:bin lib/svc/method/sshd
 f 0644 root:root usr/share/config/kdm/kdmrc
+f 0644 root:root usr/share/config/kdm/backgroundrc
 f 0444 root:sys var/svc/profile/generic_limited_net.xml
 f 0444 root:sys var/svc/profile/generic_open.xml
 f 0644 root:sys boot/grub/menu.lst

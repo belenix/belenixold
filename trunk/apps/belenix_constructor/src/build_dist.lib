@@ -375,6 +375,7 @@ RTC_CONFIG_EOF
 	# Pre-configure Gnome databases and SMF repository
 	# 
 
+	echo "Running GNOME postrun scripts"
 	if [ "$DIST_PKGS_TYPE" = "IPS" ]
 	then
 		echo "Configuring Gnome in PROTO area"
@@ -384,24 +385,44 @@ RTC_CONFIG_EOF
 		#not polluted with temporary files.
 		/bin/rm -rf ${PROTO}/postrun_scripts
 	else
+		mount -F lofs /proc $PROTO/proc
 		[ -x $PROTO/var/lib/postrun/postrun-runq ] && chroot $PROTO /var/lib/postrun/postrun-runq
+		umount $PROTO/proc
 	fi
 
 	# Remove password lock file left around from user actions during
 	# package installation; if left in place it becomes a symlink
 	# into /mnt/misc which will cause the installer's attempt to
 	# create a user account to fail
-	/bin/rm $PROTO/etc/.pwd.lock
+	/bin/rm -f $PROTO/etc/.pwd.lock
 
 	# Remove the icon theme caches
 	echo "Cleaning out icon theme cache"
-	(cd $PROTO/usr; find . -name icon-theme.cache -print|xargs rm)
+	(cd $PROTO/usr; find . -name icon-theme.cache -print|xargs rm -f)
 
 	echo "Creating font cache"
 	[ -x ${PROTO}/usr/bin/fc-cache ] && chroot $PROTO /usr/bin/fc-cache --force
 
 	echo "Preloading SMF repository"
 	$SRC/mkrepo $MICROROOT $SRC
+
+	#
+	# /var/log and /var/spool are a little largish and already in microroot
+	#
+	rm -rf $PROTO/var/log
+	rm -rf $PROTO/var/spool
+
+	#
+	# Postrun entries are already processed in proto, so remove
+	# them from microroot.
+	#
+	rm -f $MICROROOT/var/spool/postrun/*
+
+	#
+	# Replace manifest in microroot with a link
+	#
+	rm -rf $MICROROOT/var/svc/manifest
+	(cd $MICROROOT/var/svc/; ln -sf /mnt/misc/var/svc/manifest)
 
 	echo "Packing unused files into archive"
 	#
@@ -675,3 +696,27 @@ apply_skeleton()
 	copyfiles "$SKEL" "$PROTO" $SKEL/bootcd_skel.files
 }
 
+apply_config()
+{
+	PROTO=$1
+	USER=$2
+	ESKEL=${PROTO}/etc/skel
+
+	#
+	# Copy /etc/skel stuff into user's home
+	#
+	(cd ${ESKEL}; find .) > /tmp/cfg.$$
+	(cd ${PROTO}/${USER}; find .) > /tmp/cfg2.$$
+	for p in `cat /tmp/cfg.$$`
+	do
+		egrep "^$p$" /tmp/cfg2.$$ > /dev/null
+		if [ $? -ne 0 ]
+		then
+			echo $p >> /tmp/cfg3.$$
+		fi
+	done
+
+	rm -f /tmp/cfg.$$ /tmp/cfg2.$$
+	(cd ${ESKEL}; cat /tmp/cfg3.$$ | cpio -pdumv ${PROTO}/${USER})
+	rm -f /tmp/cfg3.$$
+}
