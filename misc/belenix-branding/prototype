@@ -71,9 +71,22 @@ f none etc/profile.d/xfce.pagein=profile.d/xfce.pagein 0755 root other
 d none etc/skel 0755 root sys
 d none etc/skel/.kde 0755 root other
 d none etc/skel/.kde/share 0755 root other
+d none etc/skel/.kde/share/Autostart 0755 root other
 d none etc/skel/.kde/share/config 0755 root other
 f none etc/skel/.kde/share/config/kdeglobals=kdeglobals 0644 root other
+f none etc/skel/.kde/share/config/startupconfig=startupconfig 0644 root other
+f none etc/skel/.kde/share/config/startupconfigkeys=startupconfigkeys 0644 root other
+f none etc/skel/.kde/share/config/khotkeysrc=khotkeysrc 0644 root other
+f none etc/skel/.kde/share/config/kwinrc=kwinrc 0644 root other
+f none etc/skel/.kde/share/config/kpersonalizerrc=kpersonalizerrc 0644 root other
+f none etc/skel/.kde/share/config/kdedrc=kdedrc 0644 root other
+f none etc/skel/.kde/share/config/kdesktoprc=kdesktoprc 0644 root other
+f none etc/skel/.kde/share/config/ksplashrc=ksplashrc 0644 root other
+f none etc/skel/.kde/share/config/ktiprc=ktiprc 0644 root other
+f none etc/skel/.kde/share/config/kcmartsrc=kcmartsrc 0644 root other
+
 f none etc/skel/.kderc=.kderc 0644 root other
+d none etc/skel/.kde/share/config/session 0755 root other
 
 d none boot 0755 root sys
 d none boot/grub 0755 root sys

@@ -269,7 +269,7 @@ if [ -z "$osconsole" ]; then
 fi
 
 # Add splash image reference and timeout
-echo "splashimage /boot/grub/splash.xpm.gz" >>$GRUBMENU
+echo "splashimage /boot/grub/belenixboot.xpm.gz" >>$GRUBMENU
 echo "timeout 30" >>$GRUBMENU
 
 # Now, turn on splashimage if osconsole is "text" or "screen"

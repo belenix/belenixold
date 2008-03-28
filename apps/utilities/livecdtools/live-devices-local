@@ -197,6 +197,6 @@ fi
 #
 # Setup OSS if present
 #
-[ -x /usr/sbin/ossdetect ] && /usr/sbin/ossdetect
+/usr/bin/osssetup
 
 exit $SMF_EXIT_OK
