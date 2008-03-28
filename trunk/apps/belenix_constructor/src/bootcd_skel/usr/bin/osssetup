@@ -1,0 +1,24 @@
+#!/bin/sh
+
+#
+# Setup OSS if present
+#
+if [ -x /usr/sbin/ossdetect ]
+then
+	/usr/sbin/ossdetect
+	/usr/sbin/devlinks
+	/usr/sbin/ossdevlinks
+
+	if [ -h /dev/audio ]
+	then
+        	chmod 0666 /dev/audio
+        	chmod 0666 /dev/audioctl
+        	ossmix connector.green.headphone-sel front
+        	ossmix connector.int-speaker.front 54
+        	ossmix connector.int-mic 0
+        	ossmix misc.int-mic 0
+        	ossmix misc.mic 0
+	fi
+fi
+
+exit 0

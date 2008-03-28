@@ -422,7 +422,7 @@ RTC_CONFIG_EOF
 	# Replace manifest in microroot with a link
 	#
 	rm -rf $MICROROOT/var/svc/manifest
-	(cd $MICROROOT/var/svc/; ln -sf /mnt/misc/var/svc/manifest)
+	#(cd $MICROROOT/var/svc/; ln -sf /mnt/misc/var/svc/manifest)
 
 	echo "Packing unused files into archive"
 	#
@@ -700,6 +700,7 @@ apply_config()
 {
 	PROTO=$1
 	USER=$2
+	GROUP=$3
 	ESKEL=${PROTO}/etc/skel
 
 	#
@@ -719,4 +720,16 @@ apply_config()
 	rm -f /tmp/cfg.$$ /tmp/cfg2.$$
 	(cd ${ESKEL}; cat /tmp/cfg3.$$ | cpio -pdumv ${PROTO}/${USER})
 	rm -f /tmp/cfg3.$$
+
+	chroot ${PROTO} chown -R ${USER}:${GROUP} /${USER}
+
+	#
+	# HACK: Enable KDE delayed check in LiveCD env for
+	# startup performance.
+	# Need to have this code somewhere else. This is not
+	# a good place.
+	#
+	echo "" >> ${PROTO}/${USER}/.kde/share/config/kdedrc
+	echo "[General]" >> ${PROTO}/${USER}/.kde/share/config/kdedrc
+	echo "DelayedCheck=true" >> ${PROTO}/${USER}/.kde/share/config/kdedrc
 }

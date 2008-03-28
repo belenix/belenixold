@@ -73,6 +73,7 @@ d usr/X11/lib/modules/dri/amd64
 d usr/X11/lib/modules/multimedia/amd64
 d usr/X11/lib/mesa/amd64
 d usr/X11/lib/X11/xserver/amd64
+d usr/X11/lib/NVIDIA/amd64
 d usr/X11/bin/amd64
 d usr/kernel/drv/amd64
 d usr/kernel/strmod/amd64

@@ -15,6 +15,7 @@ Source1:             http://www.kde-look.org/CONTENT/content-files/75534-Kdmworl
 Source2:             http://www.kde-look.org/CONTENT/content-files/75036-SweetDarkness.tar.gz
 Source3:             belenix_small.png
 Source4:             belenix_small_grey.png
+Source5:             http://www.kde-look.org/CONTENT/content-files/75543-KDEworld1440x900.tar.gz
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -33,6 +34,7 @@ gunzip -c %{SOURCE2} | tar xpf -
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p ${RPM_BUILD_ROOT}/%{_datadir}/apps/kdm/themes
+mkdir -p ${RPM_BUILD_ROOT}/%{_datadir}/apps/ksplash/Themes
 mkdir -p ${RPM_BUILD_ROOT}/usr/X11/lib/X11/fonts/TrueType
 cd %name-%version
 
@@ -45,6 +47,7 @@ rm -f Worldkdm.tar.gz
 rm -f SweetDarkness/logos/*
 cp %{SOURCE3} SweetDarkness/logos/
 cp %{SOURCE4} SweetDarkness/logos/
+gunzip -c %{SOURCE5} | (cd ${RPM_BUILD_ROOT}/%{_datadir}/apps/ksplash/Themes; tar xpf -)
 
 #
 # Patch SweetDarkness theme file to load BeleniX logo
