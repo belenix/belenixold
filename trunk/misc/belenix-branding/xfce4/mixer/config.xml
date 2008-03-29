@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<Mixer>
+  <device name="/dev/audioctl">
+    <position x="335" y="378"/>
+    <size width="600" height="232"/>
+    <state sticky="0"/>
+    <disclosure expanded="0"/>
+  </device>
+</Mixer>

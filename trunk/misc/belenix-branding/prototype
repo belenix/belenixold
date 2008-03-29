@@ -36,6 +36,7 @@ f none usr/share/pixmaps/belenix_wall4.jpg=belenix_wall4.jpg 0755 root bin
 f none usr/share/pixmaps/belenix_wall4.png=belenix_wall4.png 0755 root bin
 f none usr/share/pixmaps/belenix_logo_small.png=belenix_logo_small.png 0755 root bin
 f none usr/share/pixmaps/worldkdeback.jpg=worldkdeback.jpg 0755 root bin
+f none usr/share/pixmaps/worldxfceback.jpg=worldxfceback.jpg 0755 root bin
 f none usr/share/pixmaps/firefox.png=firefox.png 0755 root bin
 
 d none usr/share/doc 0755 root other
@@ -68,6 +69,9 @@ f none etc/profile.d/kde.pagein=profile.d/kde.pagein 0755 root other
 f none etc/profile.d/xfce.minimal.pagein=profile.d/xfce.minimal.pagein 0755 root other
 f none etc/profile.d/xfce.pagein=profile.d/xfce.pagein 0755 root other
 
+#
+# KDE Branding
+#
 d none etc/skel 0755 root sys
 d none etc/skel/.kde 0755 root other
 d none etc/skel/.kde/share 0755 root other
@@ -87,6 +91,51 @@ f none etc/skel/.kde/share/config/kcmartsrc=kcmartsrc 0644 root other
 
 f none etc/skel/.kderc=.kderc 0644 root other
 d none etc/skel/.kde/share/config/session 0755 root other
+
+#
+# Xfce Branding
+#
+d none etc/skel/.config 0755 root other
+d none etc/skel/.config/xfce4 0755 root other
+f none etc/skel/.config/xfce4/helpers.rc=xfce4/helpers.rc 0644 root other
+f none etc/skel/.config/xfce4/Xft.xrdb=xfce4/Xft.xrdb 0644 root other
+d none etc/skel/.config/xfce4/panel 0755 root other
+f none etc/skel/.config/xfce4/panel/clock-14.rc=xfce4/panel/clock-14.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/xfce4-menu-5.rc=xfce4/panel/xfce4-menu-5.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/panels.xml=xfce4/panel/panels.xml 0644 root other
+f none etc/skel/.config/xfce4/panel/launcher-10.rc=xfce4/panel/launcher-10.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/separator-11.rc=xfce4/panel/separator-11.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/systray-4.rc=xfce4/panel/systray-4.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/actions-12.rc=xfce4/panel/actions-12.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/separator-13.rc=xfce4/panel/separator-13.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/pager-2.rc=xfce4/panel/pager-2.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/tasklist-3.rc=xfce4/panel/tasklist-3.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/separator-6.rc=xfce4/panel/separator-6.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/xfce4-mixer-12067931680.rc=xfce4/panel/xfce4-mixer-12067931680.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/launcher-7.rc=xfce4/panel/launcher-7.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/launcher-8.rc=xfce4/panel/launcher-8.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/launcher-9.rc=xfce4/panel/launcher-9.rc 0644 root other
+d none etc/skel/.config/xfce4/mcs_settings 0755 root other
+f none etc/skel/.config/xfce4/mcs_settings/desktop.xml=xfce4/mcs_settings/desktop.xml 0644 root other
+f none etc/skel/.config/xfce4/mcs_settings/gtk.xml=xfce4/mcs_settings/gtk.xml 0644 root other
+f none etc/skel/.config/xfce4/mcs_settings/orage.xml=xfce4/mcs_settings/orage.xml 0644 root other
+f none etc/skel/.config/xfce4/mcs_settings/sound.xml=xfce4/mcs_settings/sound.xml 0644 root other
+f none etc/skel/.config/xfce4/mcs_settings/xfwm4.xml=xfce4/mcs_settings/xfwm4.xml 0644 root other
+d none etc/skel/.config/xfce4/mixer 0755 root other
+f none etc/skel/.config/xfce4/mixer/profiles.xml=xfce4/mixer/profiles.xml 0644 root other
+f none etc/skel/.config/xfce4/mixer/config.xml=xfce4/mixer/config.xml 0644 root other
+d none etc/skel/.config/xfce4/notication-daemon-xfce 0755 root other
+f none etc/skel/.config/xfce4/notication-daemon-xfce/settingsrc=xfce4/notication-daemon-xfce/settingsrc 0644 root other
+d none etc/skel/.config/xfce4-session 0755 root other
+f none etc/skel/.config/xfce4-session/xfce4-session.rc=xfce4-session/xfce4-session.rc 0644 root other
+d none etc/skel/.config/autostart 0755 root other
+f none etc/skel/.config/autostart/xfce4-tips-autostart.desktop=xfce4/autostart/xfce4-tips-autostart.desktop 0644 root other
+
+d none etc/skel/.local 0755 root other
+d none etc/skel/.local/share 0755 root other
+d none etc/skel/.local/share/xfce4 0755 root other
+d none etc/skel/.local/share/xfce4/helpers 0755 root other
+f none etc/skel/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop=xfce4/helpers/custom-TerminalEmulator.desktop 0644 root other
 
 d none boot 0755 root sys
 d none boot/grub 0755 root sys
