@@ -167,7 +167,7 @@ if [ "$trace" = "on" ]; then
         if [ -n "$mntpt" ]; then
                 outputfile="${mntpt}/traceout"
                 echo "Enabling I/O Tracing ..." > /dev/console
-                /opt/DTT/Bin/iosnoop -Deg > "$outputfile" 2> /dev/console &
+                /opt/DTraceToolkit/Bin/iosnoop -Deg > "$outputfile" 2> /dev/console &
                 # Wait for iosnoop to actually initialize
                 sleep 10
         else

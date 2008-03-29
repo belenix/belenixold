@@ -1,0 +1,7 @@
+[mixer-plugin]
+Device=/dev/audioctl
+LauncherCommand=xfce4-mixer
+LauncherRunInTerminal=false
+LauncherUseStartupNotification=true
+MasterControl=Output Volume
+
