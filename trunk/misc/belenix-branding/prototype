@@ -50,6 +50,7 @@ f none usr/share/misc/xfce4-session.rc.standard 0644 root other
 d none usr/share/misc/xconfigs 0755 root other
 f none usr/share/misc/xconfigs/xorg.conf.f4k=xconfigs/xorg.conf.f4k 0644 root other
 f none usr/share/misc/xconfigs/xorg.conf.virtpc=xconfigs/xorg.conf.virtpc 0644 root other
+s none usr/X=X11
 
 f none AUTORUN.INF 0644 root sys
 f none info/1.gif=info/1.gif 0544 root sys
@@ -88,6 +89,8 @@ f none etc/skel/.kde/share/config/kdesktoprc=kdesktoprc 0644 root other
 f none etc/skel/.kde/share/config/ksplashrc=ksplashrc 0644 root other
 f none etc/skel/.kde/share/config/ktiprc=ktiprc 0644 root other
 f none etc/skel/.kde/share/config/kcmartsrc=kcmartsrc 0644 root other
+f none etc/skel/.kde/share/config/kickerrc=kickerrc 0644 root other
+f none etc/skel/.kde/share/config/tastymenu_panelapplet_3tvgdzsuzex1fmfn9qga_rc=tastymenu_panelapplet_3tvgdzsuzex1fmfn9qga_rc 0644 root other
 
 f none etc/skel/.kderc=.kderc 0644 root other
 d none etc/skel/.kde/share/config/session 0755 root other
@@ -136,6 +139,8 @@ d none etc/skel/.local/share 0755 root other
 d none etc/skel/.local/share/xfce4 0755 root other
 d none etc/skel/.local/share/xfce4/helpers 0755 root other
 f none etc/skel/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop=xfce4/helpers/custom-TerminalEmulator.desktop 0644 root other
+f none etc/skel/.bashrc=local.bashrc 0644 root other
+f none etc/skel/.bash_profile=local.bashrc 0644 root other
 
 d none boot 0755 root sys
 d none boot/grub 0755 root sys

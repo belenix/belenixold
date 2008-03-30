@@ -482,5 +482,12 @@ export SVCCFG_DTD SVCCFG_REPOSITORY
 # Remove install-specific packages
 pkgrm -n -R ${BASEDIR} FSWlivecdtools
 
-
-
+#
+# HACK!! Copy default settings to root's home
+# TODO: This needs to go into the Transfer Module
+#
+if [ -d ${BASEDIR}/root ]
+then
+	(cd ${BASEDIR}/etc/skel
+	  find . | cpio -pdum ${BASEDIR}/root)
+fi

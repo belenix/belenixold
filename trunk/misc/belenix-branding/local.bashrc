@@ -15,3 +15,21 @@ export PAGER="/usr/bin/less -ins"
 PS1='${LOGNAME}@$(hostname):$(
     [[ "$LOGNAME" = "root" ]] && printf "${PWD/${HOME}/~}# " ||
     printf "${PWD/${HOME}/~}\$ ")'
+
+#
+# Enable color ls only for some known terminal types and
+# if we are having GNU ls in PATH.
+#
+if [ "$TERM" = "xterm" -o "$TERM" = "xterm-color" -o "$TERM" = "sun-color" -o "$TERM" = "vt100"  -o "$TERM" = "dtterm" ]
+then
+	ls --version 2>&1 > /dev/null
+	if [ $? -eq 0 ]
+	then
+		[ -e "$HOME/.dircolors" ] && DIR_COLORS="$HOME/.dircolors"
+		[ -e "$HOME/.dir_colors" ] && DIR_COLORS="$HOME/.dir_colors"
+		[ -e "$DIR_COLORS" ] || DIR_COLORS=""
+		eval "`dircolors -b $DIR_COLORS`"
+		alias ls='ls --color=auto'
+	fi
+fi
+

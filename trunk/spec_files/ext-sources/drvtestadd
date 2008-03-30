@@ -36,7 +36,7 @@ test_get_dev_list() {
 	DEVLIST="'"
 	for i in "$@"
 	do
-		grep $i /etc/driver_aliases > /dev/null
+		grep $i ${BASEDIR}/etc/driver_aliases > /dev/null
 		if [ $? -ne 0 ]
 		then
 			DEVLIST="${DEVLIST}$i "
@@ -56,7 +56,7 @@ check_add_drv() {
 		drv=$7
 		if [ $count -gt 0 ]
 		then
-			grep "$drv " ${BASEDIR:=/}/etc/driver_aliases > /dev/null
+			grep "^$drv " ${BASEDIR:=/}/etc/driver_aliases > /dev/null
 			if [ $? -eq 0 ]
 			then
 				echo $arg > /tmp/cnt
