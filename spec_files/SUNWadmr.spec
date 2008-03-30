@@ -6,9 +6,10 @@
 
 %include Solaris.inc
 
-Name:                SUNWsolnm
-Summary:             BeleniX Naming enabler
+Name:                SUNWadmr
+Summary:             System Admin root files - dependency package
 Version:             5.11
+Source:              sysidtool.xml
 
 SUNW_BaseDir:        /
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
@@ -20,9 +21,9 @@ mkdir %{name}-%{version}-build
 
 %build
 cd %{name}-%{version}-build
-echo "                               BeleniX 0.7 03/08" > release
-echo "                           Innovating on OpenSolaris" >> release
-echo "                            Assembled 20 March 2008" >> release
+echo "OS=OpenSolaris" >> INST_RELEASE
+echo "VERSION=11" >> INST_RELEASE
+echo "REV=0" >> INST_RELEASE
 
 
 %install
@@ -30,17 +31,20 @@ echo "                            Assembled 20 March 2008" >> release
 cd %{name}-%{version}-build
 rm -rf ${RPM_BUILD_ROOT}
 mkdir ${RPM_BUILD_ROOT}
-mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}
-cp release ${RPM_BUILD_ROOT}%{_sysconfdir}
+mkdir -p ${RPM_BUILD_ROOT}%{_localstatedir}/svc/manifest/system
+mkdir -p ${RPM_BUILD_ROOT}%{_localstatedir}/sadm/softinfo
+
+cp %{SOURCE} ${RPM_BUILD_ROOT}%{_localstatedir}/svc/manifest/system
+cp INST_RELEASE ${RPM_BUILD_ROOT}%{_localstatedir}/sadm/softinfo
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr (-, root, sys)
-%dir %attr (0755, root, sys) %{_sysconfdir}
-%{_sysconfdir}/*
+%dir %attr (0755, root, sys) %{_localstatedir}
+%{_localstatedir}/*
 
 %changelog
-* Wed Feb 20 2008 - moinak.ghosh@sun.com
+* Sun Mar 30 2008 - moinakg@gmail.com
 - Initial spec.

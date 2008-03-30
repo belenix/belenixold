@@ -57,8 +57,8 @@ f none jack/Desktop/belenixinfo.desktop=belenixinfo.desktop 644 jack staff
 f none jack/Desktop/dttdocs.desktop=dttdocs.desktop 644 jack staff
 d none jack/Documents 755 jack staff
 f none jack/install-icon.png=install-icon.png 644 jack staff
-f none jack/.bashrc=local.bashrc 755 jack staff
-f none jack/.profile=local.bashrc 755 jack staff
+#f none jack/.bashrc=local.bashrc 755 jack staff
+#f none jack/.profile=local.bashrc 755 jack staff
 f none jack/.xscreensaver=xscreensaver 644 jack staff
 d none lib 755 root bin
 d none lib/svc 755 root bin

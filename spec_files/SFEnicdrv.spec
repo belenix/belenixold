@@ -63,6 +63,16 @@ URL:                 http://homepage2.nifty.com/mrym3/taiyodo/eng/
 SUNW_BaseDir:        /
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
+#
+# This dep ensures that dmfe/mxfe/afe installs first and 
+# tu does not acquire the driver aliases for dmfe/mxfe
+#
+Requires: SUNWmxfe
+Requires: SUNWdmfe
+Requires: SUNWafe
+Requires: SUNWrtls
+Requires: SUNWrge
+Requires: SUNWintgige
 
 %package vfe
 Summary:       Nic driver for VIA Rhine family fast ethernet chipset 
@@ -429,6 +439,20 @@ done
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+#
+# Remove references to the closed pcn driver
+#
+BASEDIR=${BASEDIR:=/}
+grep "pcn " ${BASEDIR}/etc/driver_aliases > /dev/null
+if [ $? -eq 0 ]
+then
+	(rem_drv -b ${BASEDIR} pcn; exit 0)
+	cat ${BASEDIR}/etc/driver_aliases | grep -v "pcn " > /tmp/driver_aliases.$$
+	cp /tmp/driver_aliases.$$ ${BASEDIR}/etc/driver_aliases
+	rm -f /tmp/driver_aliases.$$
+fi
+
 # We are calling external postinstall scripts since there is no way in an
 # RPM spec file to include a generated script in the %post directives.
 #
@@ -496,11 +520,15 @@ BASEDIR=${BASEDIR:=/}
 ${BASEDIR}%{_localstatedir}/nicdrv/scripts/drvrm ${BASEDIR} mtd
 
 %post ae
-. ${BASEDIR:=}%{_localstatedir}/nicdrv/scripts/ae.postinst
+BASEDIR=${BASEDIR:=/}
+. ${BASEDIR}%{_localstatedir}/nicdrv/scripts/ae.postinst
+${BASEDIR}/usr/sbin/update_drv -b ${BASEDIR} -a -i '"pci103c,104c"' ae
 
 %postun ae
 BASEDIR=${BASEDIR:=/}
 ${BASEDIR}%{_localstatedir}/nicdrv/scripts/drvrm ${BASEDIR} ae
+${BASEDIR}/usr/sbin/add_drv -b ${BASEDIR} -i '"pci1022,2000" "pci103c,104c"' pcn
+exit 0
 
 %post gani
 . ${BASEDIR:=}%{_localstatedir}/nicdrv/scripts/gani.postinst
@@ -531,7 +559,19 @@ BASEDIR=${BASEDIR:=/}
 ${BASEDIR}%{_localstatedir}/nicdrv/scripts/drvrm ${BASEDIR} sige
 
 %post myk
-. ${BASEDIR:=}%{_localstatedir}/nicdrv/scripts/myk.postinst
+BASEDIR=${BASEDIR:=/}
+. ${BASEDIR}%{_localstatedir}/nicdrv/scripts/myk.postinst
+grep "pciex11ab,436a" ${BASEDIR}/etc/driver_aliases > /dev/null
+if [ $? -ne 0 ]
+then
+	grep "myk " ${BASEDIR}/etc/driver_aliases > /dev/null
+	if [ $? -eq 0 ]
+	then
+		update_drv -b ${BASEDIR} -a -i '"pciex11ab,436a"' myk
+	else
+		add_drv -b ${BASEDIR} -i '"pciex11ab,436a"' myk
+	fi
+fi
 
 %postun myk
 BASEDIR=${BASEDIR:=/}
@@ -738,5 +778,8 @@ ${BASEDIR}%{_localstatedir}/nicdrv/scripts/drvrm ${BASEDIR} em
 %attr (0644, root, bin) %{_localstatedir}/nicdrv/scripts/em.postinst
 
 %changelog
+* Sun Mar 30 2008 - moinakg@gmail.com
+- Add aliases for nics in VirtualBox and MacBook PRO
+- A variety of scripting fixes.
 * Sun Feb 10 2008 - moinak.ghosh@sun.com
 - Initial spec.
