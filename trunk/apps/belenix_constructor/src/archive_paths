@@ -57,6 +57,7 @@ d usr/lib/fm/amd64
 d usr/lib/dns/amd64
 d usr/lib/ipf/amd64
 d usr/lib/sasl/amd64
+d usr/lib/fm/fmd/schemes/amd64
 d usr/gnu/lib/amd64
 d usr/sfw/lib/amd64
 d usr/sfw/bin/amd64
@@ -71,6 +72,7 @@ d usr/X11/lib/modules/fonts/amd64
 d usr/X11/lib/modules/input/amd64
 d usr/X11/lib/modules/dri/amd64
 d usr/X11/lib/modules/multimedia/amd64
+d usr/X11/lib/modules/NVIDIA/amd64
 d usr/X11/lib/mesa/amd64
 d usr/X11/lib/X11/xserver/amd64
 d usr/X11/lib/NVIDIA/amd64
@@ -78,6 +80,8 @@ d usr/X11/bin/amd64
 d usr/kernel/drv/amd64
 d usr/kernel/strmod/amd64
 d usr/platform/i86pc/lib/mdb/kvm/amd64
+d usr/platform/i86xpv/lib/mdb/kvm/amd64
+d usr/benchmarks/filebench/bin/amd64
 d var/apache2
 p *noatun*
 p S98deallocate

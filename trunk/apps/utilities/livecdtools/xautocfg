@@ -653,7 +653,7 @@ sub postprocess() {
 
 			} elsif ($line =~ /^Monitor/) {
 				if ($monitorprobe) {
-					print CNF "\tMonitor \"Monitor2\"\n";
+					print CNF "\tMonitor \"Monitor0\"\n";
 				} else {
 					print CNF "$oline\n";
 				}

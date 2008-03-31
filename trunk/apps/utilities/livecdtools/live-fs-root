@@ -371,6 +371,7 @@ then
 		#/usr/sbin/svcadm disable -t application/graphical-login/gdm
 		svcadm disable -t application/xserver
 		echo "3" > /.desk
+		chmod 0777 /.desk
 	else
 		#
 		# Now select which desktop to run
@@ -380,6 +381,7 @@ then
 		#/usr/sbin/svcadm enable application/graphical-login/gdm
 		[ -f /.desk ] || echo "1" > /.desk
 		/usr/sbin/svcadm enable application/xserver
+		chmod 0777 /.desk
 	fi
 
 fi

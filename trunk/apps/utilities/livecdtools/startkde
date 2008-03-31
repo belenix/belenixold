@@ -1,22 +1,18 @@
 #!/bin/sh
 #
-#  DEFAULT KDE STARTUP SCRIPT ( KDE-3.5.1 )
+#  LIVECD KDE STARTUP SCRIPT ( KDE-3.5.1 )
 #
 
-displaymanager=$1
+dtype=$1
+. /etc/default/init
 
-if [ -z "$displaymanager" ]
+if [ -z "$HOME" ]
 then
-	. /etc/default/init
-
-	if [ -z "$HOME" ]
-	then
-		HOME=/root
-		export HOME
-	fi
-
-	. /etc/profile.d/*.sh
+	HOME=/root
+	export HOME
 fi
+
+. /etc/profile.d/*.sh
 
 if [ ! -f /.prtconf ]
 then
@@ -31,5 +27,10 @@ else
         /sbin/pagein `cat /etc/profile.d/kde.pagein`
 fi
 
-exec /usr/bin/ctrun -i none -l child /usr/X11/bin/xinit /usr/bin/startkde
+if [ "$dtype" = "compiz" ]
+then
+	exec /usr/bin/ctrun -i none -l child /usr/X11/bin/xinit /usr/bin/kde-compiz
+else
+	exec /usr/bin/ctrun -i none -l child /usr/X11/bin/xinit /usr/bin/startkde
+fi
 
