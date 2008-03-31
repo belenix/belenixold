@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Enable xfce4-session to pick up alternate rc file
+XFCE_SESSION_RC="xfce4-session/xfce4-session.rc.compiz"
+export XFCE_SESSION_RC
+
+/usr/bin/startxfce4

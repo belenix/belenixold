@@ -136,7 +136,7 @@ fi
 
 if [ ! -f /.lg3d ]
 then
-	tag_values="A \"Xfce Desktop\" B \"KDE Desktop\" C \"Compiz 3D Manager + Xfce (Nvidia/Intel)\" D \"Compiz 3D Manager + KDE (Nvidia/Intel)\""
+	tag_values="A \"Xfce Desktop\" B \"KDE Desktop\" C \"Compiz 3D Manager + Xfce \" D \"Compiz 3D Manager + KDE\""
 else
 	tag_values="A \"Xfce Desktop\" B \"Looking Glass 3D Desktop\" C \"Command Line Login\""
 fi
@@ -147,13 +147,13 @@ if [ -f /.desk ]
 then
 	type=`/usr/bin/cat /.desk`
 
-	if [ "$type" = "E" ]
-	then
-		type="5"
-
-	elif [ "$type" = "D" ]
+	if [ "$type" = "D" ]
 	then
 		type="4"
+
+	elif [ "$type" = "C" ]
+	then
+		type="3"
 
 	elif [ "$type" = "B" ]
 	then

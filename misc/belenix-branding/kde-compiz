@@ -1,0 +1,9 @@
+#!/bin/sh
+
+OPTIONS="$@"
+
+# start kde using compiz fusion instead of kwin
+KDEWM=kde-compiz.kdewm
+export KDEWM
+
+/usr/bin/startkde $OPTIONS

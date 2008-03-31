@@ -23,6 +23,7 @@ Source:		http://xorg.freedesktop.org/archive/individual/app/compiz-%{version}.ta
 Source1:	http://www.gnome.org/~erwannc/compiz/missing-stuff-%{version}.tar.bz2
 %endif
 Source2:	http://trisk.acm.jhu.edu/compiz/gnome-integration-%{version}.tar.bz2
+
 Patch1:		compiz-01-solaris-port.diff
 SUNW_BaseDir:   %{_basedir}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
@@ -31,15 +32,17 @@ Requires:	%name-root
 Requires: 	SUNWpng
 Requires: 	SUNWdbus
 Requires: 	SUNWgnome-base-libs
-Requires: 	SUNWgnome-wm
+#Requires: 	SUNWgnome-wm
 Requires:       SFEdbus-qt3
+Requires:       SFEkdelibs3
 BuildRequires: 	SUNWpng-devel
 BuildRequires: 	SUNWdbus-devel
 BuildRequires: 	SUNWgnome-base-libs-devel
-BuildRequires: 	SUNWgnome-wm-devel
+#BuildRequires: 	SUNWgnome-wm-devel
 BuildRequires: 	SFEsed
 BuildRequires: 	SFEdbus-qt3-devel
 BuildRequires:  SUNWgnome-desktop-prefs-devel
+BuildRequires:  SFEkdelibs3-devel
 
 %package root
 Summary:         %summary - platform dependent files, / filesystem
@@ -103,14 +106,16 @@ automake -a -c -f
 autoconf
  
 export CFLAGS="%optflags -I$PROTO_INC -I/usr/include/startup-notification-1.0 -I/usr/X11/include" 
-export LDFLAGS="-L$PROTO_LIB -L/usr/X11/lib -L/usr/openwin/lib -R/usr/X11/lib -R/usr/openwin/lib -lX11 -lXext"
+export LDFLAGS="-L$PROTO_LIB -L/usr/X11/lib -L/usr/openwin/lib -R/usr/X11/lib -R/usr/openwin/lib -lX11 -lXext -L/usr/gnu/lib -R/usr/gnu/lib"
+export QTINC="/usr/include/qt3"
 
 ./configure --prefix=%{_prefix}		\
 	    --bindir=%{_bindir}         \
 	    --sysconfdir=%{_sysconfdir}	\
 	    --libdir=%{_libdir}         \
             --includedir=%{_includedir} \
-	    --datadir=%{_datadir}	
+	    --datadir=%{_datadir}	\
+            --disable-metacity
 
 make -j$CPUS
 
@@ -209,6 +214,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gnome/wm-properties/compiz.desktop
 %{_datadir}/gnome-control-center/keybindings/*
 %{_datadir}/pixmaps/*
+%dir %attr (0755, root, bin) %{_sessionsdir}
+%{_sessionsdir}/*
 
 %files root
 %defattr (0755, root, sys)
@@ -237,8 +244,11 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Sun Mar 23 2008 - moinakg@gmail.com
-- Changes to build with FOX. Add missing dependencies.
+* Mon Mar 31 2008 - moinakg@gmail.com
+- Add /usr/gnu/lib to link path for libiconv/libintl.
+- Add dependency on kdelibs for kde-window-decorator.
+- Disable Metacity theme support. We do not want a dependency
+- on SUNWgnome-wm.
 * Sun Nov 04 2007 - erwann@sun.com
 - remove unneeded X bits
 - lighter version of missing-stuff

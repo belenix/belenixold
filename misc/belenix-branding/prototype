@@ -42,15 +42,23 @@ f none usr/share/pixmaps/firefox.png=firefox.png 0755 root bin
 d none usr/share/doc 0755 root other
 f none usr/share/doc/belenix_basics.txt 0644 root other
 
-d none usr/share/misc 0755 root other
-f none usr/share/misc/kdecompiz.desktop 0644 root other
-f none usr/share/misc/xfce4-session.rc.compiz 0644 root other
-f none usr/share/misc/xfce4-session.rc.standard 0644 root other
+#f none usr/share/misc/xfce4-session.rc.standard 0644 root other
+#f none usr/share/misc/kdecompiz.desktop 0644 root other
 
+d none usr/share/misc 0755 root other
 d none usr/share/misc/xconfigs 0755 root other
 f none usr/share/misc/xconfigs/xorg.conf.f4k=xconfigs/xorg.conf.f4k 0644 root other
 f none usr/share/misc/xconfigs/xorg.conf.virtpc=xconfigs/xorg.conf.virtpc 0644 root other
 s none usr/X=X11
+
+d none usr/share/xsessions 0755 root bin
+f none usr/share/xsessions/kde-compiz.desktop=kde-compiz.desktop 0644 root bin
+f none usr/share/xsessions/xfce-compiz.desktop=xfce-compiz.desktop 0644 root bin
+
+d none usr/bin 0755 root bin
+f none usr/bin/kde-compiz 0755 root bin
+f none usr/bin/kde-compiz.kdewm 0755 root bin
+f none usr/bin/xfce-compiz 0755 root bin
 
 f none AUTORUN.INF 0644 root sys
 f none info/1.gif=info/1.gif 0544 root sys
@@ -69,6 +77,10 @@ f none etc/profile.d/kde.minimal.pagein=profile.d/kde.minimal.pagein 0755 root o
 f none etc/profile.d/kde.pagein=profile.d/kde.pagein 0755 root other
 f none etc/profile.d/xfce.minimal.pagein=profile.d/xfce.minimal.pagein 0755 root other
 f none etc/profile.d/xfce.pagein=profile.d/xfce.pagein 0755 root other
+
+d none etc/xdg 0755 root sys
+d none etc/xdg/xfce4-session 0755 root sys
+f none etc/xdg/xfce4-session/xfce4-session.rc.compiz=xfce4-session.rc.compiz 0644 root other
 
 #
 # KDE Branding

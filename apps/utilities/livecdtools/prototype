@@ -36,7 +36,7 @@ f none sbin/install-finish=install-finish 0755 root bin
 d none usr 0755 root sys
 d none usr/bin 0755 root bin
 f none usr/bin/startgui=startgui 555 root bin
-f none usr/bin/xautocfg=xautocfg 555 root bin
+f none usr/bin/modify-xorg-conf=modify-xorg-conf 555 root bin
 f none usr/bin/startkdm=startkdm 555 root bin
 f none usr/bin/stopgui=stopgui 555 root bin
 f none usr/bin/scanpartitions=scanpartitions 555 root bin

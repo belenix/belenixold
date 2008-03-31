@@ -36,16 +36,14 @@ DisableTcp=True
 # user hasn't saved any session yet or creates a new session.
 [Failsafe Session]
 Count=5
-Client0_Command=gtk-window-decorator,--replace
+Client0_Command=start-compiz
 Client0_PerScreen=False
-Client1_Command=compiz,--replace,gconf
+Client1_Command=xfce4-panel
 Client1_PerScreen=False
-Client2_Command=xfce4-panel
+Client2_Command=Thunar,--daemon
 Client2_PerScreen=False
-Client3_Command=Thunar,--daemon
+Client3_Command=xfdesktop
 Client3_PerScreen=False
-Client4_Command=xfdesktop
-Client4_PerScreen=False
 
 
 # Default splash screen selection.

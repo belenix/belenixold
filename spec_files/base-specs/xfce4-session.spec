@@ -11,11 +11,13 @@ URL:			http://www.xfce.org/
 Version:		4.4.2
 Source0:		%{xfce_src_url}/%{src_name}-%{version}.tar.bz2
 Patch1:			xfce4-session-01-fixgccism.diff
+Patch2:                 xfce4-xfsm-util-01-rcenv.diff
 
 %prep
 %setup -q -n %{src_name}-%{version}
 
 %patch1 -p1
+%patch2 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
