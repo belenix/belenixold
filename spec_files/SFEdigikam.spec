@@ -22,8 +22,12 @@ Requires: SFElibkipi
 BuildRequires: SFElibkipi-devel
 Requires: SFEexiv2
 BuildRequires: SFEexiv2-devel
+Requires: SFElibkexiv2
+BuildRequires: SFElibkexiv2-devel
 Requires: SFElibkdcraw
 BuildRequires: SFElibkdcraw-devel
+Requires: SFEjasper
+BuildRequires: SFEjasper-devel
 Requires: SUNWTiff
 Requires: SFEimlib2
 Requires: SUNWsqlite3
@@ -41,6 +45,8 @@ Requires: SFEkdebase3-devel
 Requires: SFElibkipi-devel
 Requires: SFEexiv2-devel
 Requires: SFElibkdcraw-devel
+Requires: SFElibkexiv2-devel
+Requires: SFEjasper-devel
 
 %if %build_l10n
 %package l10n
@@ -143,6 +149,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Apr 02 2008 - moinakg@gmail.com
+- Add missing dependencies.
 * Sat Mar 01 2008 - moinakg@gmail.com
 - Add dependency on SUNWgnome-camera.
 * Sun Feb 24 2008 - moinakg@gmail.com

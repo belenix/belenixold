@@ -23,6 +23,7 @@ Source:		http://xorg.freedesktop.org/archive/individual/app/compiz-%{version}.ta
 Source1:	http://www.gnome.org/~erwannc/compiz/missing-stuff-%{version}.tar.bz2
 %endif
 Source2:	http://trisk.acm.jhu.edu/compiz/gnome-integration-%{version}.tar.bz2
+Source3:        modify-xorg-conf
 
 Patch1:		compiz-01-solaris-port.diff
 SUNW_BaseDir:   %{_basedir}
@@ -35,6 +36,7 @@ Requires: 	SUNWgnome-base-libs
 #Requires: 	SUNWgnome-wm
 Requires:       SFEdbus-qt3
 Requires:       SFEkdelibs3
+Requires:       SUNWlibwnck
 BuildRequires: 	SUNWpng-devel
 BuildRequires: 	SUNWdbus-devel
 BuildRequires: 	SUNWgnome-base-libs-devel
@@ -43,6 +45,7 @@ BuildRequires: 	SFEsed
 BuildRequires: 	SFEdbus-qt3-devel
 BuildRequires:  SUNWgnome-desktop-prefs-devel
 BuildRequires:  SFEkdelibs3-devel
+BuildRequires:  SUNWlibwnck-devel
 
 %package root
 Summary:         %summary - platform dependent files, / filesystem
@@ -142,6 +145,7 @@ cp start-compiz stop-compiz $RPM_BUILD_ROOT%{_bindir}
 ln -s start-compiz $RPM_BUILD_ROOT%{_bindir}/run-compiz
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps
 cp compiz.png $RPM_BUILD_ROOT%{_datadir}/pixmaps
+cp %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}
 
 %if %option_with_fox
 %else
@@ -214,8 +218,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gnome/wm-properties/compiz.desktop
 %{_datadir}/gnome-control-center/keybindings/*
 %{_datadir}/pixmaps/*
-%dir %attr (0755, root, bin) %{_sessionsdir}
-%{_sessionsdir}/*
 
 %files root
 %defattr (0755, root, sys)
@@ -244,6 +246,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Apr 02 2008 - moinakg@gmail.com
+- Remove unneeded sessionsdir.
+- Add Erwann's xorg configuration script.
+- Add dependency on new libwnck package (we do not want to depend on Gnome Panel!).
 * Mon Mar 31 2008 - moinakg@gmail.com
 - Add /usr/gnu/lib to link path for libiconv/libintl.
 - Add dependency on kdelibs for kde-window-decorator.
