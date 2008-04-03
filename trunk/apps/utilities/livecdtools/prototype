@@ -40,6 +40,7 @@ f none usr/bin/stopgui=stopgui 555 root bin
 f none usr/bin/scanpartitions=scanpartitions 555 root bin
 f none usr/bin/chk_custom.sh=chk_custom.sh 555 root bin
 f none usr/bin/setup.sh=setup.sh 555 root bin
+f none usr/bin/bchat=bchat 555 root bin
 d none usr/sbin 0755 root bin
 f none usr/sbin/startxfce=startxfce 555 root bin
 f none usr/sbin/startkde=startkde 555 root bin
@@ -53,6 +54,7 @@ f none jack/Desktop/hdd_mount.desktop=hdd_mount.desktop 644 jack staff
 f none jack/Desktop/osolinfo.desktop=osolinfo.desktop 644 jack staff
 f none jack/Desktop/belenixinfo.desktop=belenixinfo.desktop 644 jack staff
 f none jack/Desktop/dttdocs.desktop=dttdocs.desktop 644 jack staff
+f none jack/Desktop/bchat.desktop=bchat.desktop 644 jack staff
 d none jack/Documents 755 jack staff
 f none jack/install-icon.png=install-icon.png 644 jack staff
 #f none jack/.bashrc=local.bashrc 755 jack staff
