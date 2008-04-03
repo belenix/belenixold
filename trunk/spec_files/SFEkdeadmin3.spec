@@ -11,6 +11,7 @@ Name:                SFEkdeadmin3
 Summary:             KDE System Administration utilities
 Version:             %{kde_version}
 Source:              http://mirrors.isc.org/pub/kde/stable/%{kde_version}/src/kdeadmin-%{version}.tar.bz2
+Patch1:              kdeadmin-01-globals.diff
 
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
@@ -22,6 +23,7 @@ BuildRequires: SFEkdebase3-devel
 
 %prep
 %setup -q -n kdeadmin-%version
+%patch1 -p1
 
 if [ "x`basename $CC`" != xgcc ]
 then
@@ -49,7 +51,8 @@ export PATH="${PATH}:/usr/openwin/bin"
            --enable-shared=yes \
            --enable-static=no \
            --enable-final \
-           --with-extra-includes="/usr/X11/include:/usr/gnu/include:/usr/gnu/include/sasl:/usr/sfw/include:/usr/include/pcre"
+           --with-extra-includes="/usr/X11/include:/usr/gnu/include:/usr/gnu/include/sasl:/usr/sfw/include:/usr/include/pcre" \
+           --with-hometemplate="/export/home/%U"
 
 
 make -j$CPUS
@@ -95,6 +98,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Wed Apr 02 2008 - moinakg@gmail.com
+- Patch and config parameter to fix Kuser behavior.
 * Tue Jan 22 2008 - moinak.ghosh@sun.com
 - Fixed typo in configure options.
 * Wed Jan 16 2008 - moinak.ghosh@sun.com

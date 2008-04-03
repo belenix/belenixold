@@ -27,15 +27,10 @@
 
 if [ "$1" = "-help" -o "$1" = "--help" ]
 then
-	if [ ! -f /.lg3d ]
-	then
-		echo "Usage: $0 [xfce | xfce-compiz | kde | kde-compiz]"
-	else
-		echo "Usage: $0 [xfce | lg3d]"
-	fi
+	echo "Usage: $0 [xfce | xfce-compiz | kde | kde-compiz]"
 	echo ""
 	exit 0
-fi	
+fi
 
 svcadm disable application/xserver
 
@@ -43,7 +38,6 @@ if [ ! -z "$1" ]
 then
 	name=$1
 	name=`echo $name | tr "[A-Z]" "[a-z]"`
-	rm -f /.desk
 
 	if [ "$name" = "xfce" ]
 	then
@@ -53,28 +47,18 @@ then
 	then
 		echo "2" > /.desk
 
-	elif [ "$name" = "lg3d" ]
-	then
-		echo "2" > /.desk
-
 	elif [ "$name" = "xfce-compiz" ]
 	then
-		echo "4" > /.desk
+		echo "3" > /.desk
 
 	elif [ "$name" = "kde-compiz" ]
 	then
-		echo "5" > /.desk
+		echo "4" > /.desk
 	else
 		echo "The desktop $name is not present in this LiveCD"
 	fi
 fi
 
-if [ ! -f /.desk ]
-then
-	echo "1" > /.desk
-fi
-
-/usr/bin/xautocfg
-
+echo "1" > /.desk
 svcadm enable application/xserver
 

@@ -13,6 +13,7 @@ Summary:             A little GUI for viewing DTraceToolkit documentation
 Version:             1.0
 URL:                 http://www.belenix.org/
 Source:              http://www.belenix.org/binfiles/dttdocviewer-%{version}.tar.gz
+Source1:             dttdocs.desktop
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -36,8 +37,10 @@ make all -j$CPUS
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 make DESTDIR=$RPM_BUILD_ROOT install
+
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
+cp %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/applications
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -47,6 +50,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_bindir}
 %{_bindir}/*
 
+%defattr (-, root, other)
+%dir %attr (0755, root, sys) %{_datadir}
+%{_datadir}/*
+
 %changelog
+* Wed Apr 02 2008 - moinakg@gmail.com
+- Add desktop entry.
 * Mon Feb 04 2008 - moinak.ghosh@sun.com
 - Initial spec.

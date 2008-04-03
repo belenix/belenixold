@@ -57,7 +57,7 @@ then
 fi
 
 export CFLAGS="%optflags -I%{X11_DIR}/include" 
-export LDFLAGS="-L$PROTO_LIB -L%{X11_DIR}/lib -R%{X11_DIR}/lib"
+export LDFLAGS="%_ldflags -L$PROTO_LIB -L%{X11_DIR}/lib -R%{X11_DIR}/lib %{gnu_lib_path}"
 
 ./configure --prefix=%{_prefix}		\
 	    --bindir=%{_bindir}         \
@@ -116,5 +116,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Apr 02 2008 - moinakg@gmail.com
+- Add /usr/gnu to runtime linker search paths.
 * Tue Feb 05 2008 - Moinak Ghosh <moinak.ghosh@sun.com>
 - Initial spec.

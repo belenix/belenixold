@@ -452,7 +452,7 @@ RTC_CONFIG_EOF
 		    rm -rf $pspec
 		elif [ "$typ" = "p" ]
 		then
-		    find * -name "$pspec" | xargs rm -f
+		    find * -name "$pspec" | xargs rm -f 2> /dev/null
 		fi
 	    done)
 

@@ -483,11 +483,24 @@ export SVCCFG_DTD SVCCFG_REPOSITORY
 pkgrm -n -R ${BASEDIR} FSWlivecdtools
 
 #
-# HACK!! Copy default settings to root's home
-# TODO: This needs to go into the Transfer Module
+# Copy over an the xorg.conf, if present in live env.
+#
+[ -f /etc/X11/xorg.conf ] && cp /etc/X11/xorg.conf ${BASEDIR}/etc/X11/xorg.conf
+
+#
+# HACKS!! Copy default settings to root's home
+# Also copy settings into the additional user's home (if any).
+# TODO: These need to go into the Transfer Module
 #
 if [ -d ${BASEDIR}/root ]
 then
 	(cd ${BASEDIR}/etc/skel
 	  find . | cpio -pdum ${BASEDIR}/root)
 fi
+
+(cd ${BASEDIR}/export/home
+  for hd in `find * -type d -prune`
+  do
+    (cd cd ${BASEDIR}/etc/skel
+      find . | cpio -pdum ${BASEDIR}/export/home/${hd})
+  done)

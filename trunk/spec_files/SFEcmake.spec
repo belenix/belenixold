@@ -14,7 +14,11 @@ SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 
 %include default-depend.inc
+%if %cc_is_gcc
+Requires:		SUNWgccruntime
+%else
 Requires:               SUNWlibC
+%endif
 Requires:               SUNWlibmsr
 
 %prep
@@ -59,6 +63,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc
 
 %changelog
+* Tue Apr 01 2008 - moinakg@gmail.com
+- Enable building using gcc.
 * Mon Oct 22 2007 - nonsea@users.sourceforge.net
 - Bump to 2.4.7
 * Mon Mar 19 2007 - dougs@truemail.co.th

@@ -395,3 +395,5 @@ call_pkgtool $_GCC "SFEdialog.spec:SFEzsvcadm.spec:SFElynx.spec:SFEmikmod.spec:S
 
 export QTINC=/usr/include/qt3
 call_pkgtool $_GCC "SFEdbus-qt3:SFEcompiz-bcop.spec:SFEcompiz-fusion-unsup.spec:SFEcompizconfig-python.spec:SFEcompiz-fusion-extra.spec:SFEcompiz.spec:SFEcompiz-fusion-main.spec:SFEcompizconfig-gconf.spec:SFEgetopt.spec:SFEdbus-qt3.spec:SFElibcompizconfig.spec:SFEksplash-moodin.spec"
+
+call_pkgtool $_GCC "SFEgtk-qt3.spec"

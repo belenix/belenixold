@@ -68,67 +68,59 @@ then
 		desk="1"
 	fi
 
-	if [ "$desk" -ne "3" ]
+	echo "Starting X11 (Keeping my fingers crossed!)" > /dev/console
+
+	if [ "$desk" -eq "1" -o "$desk" -eq "3" ]
 	then
-		echo "Starting X11 (Keeping my fingers crossed!)" > /dev/console
-
-		if [ "$desk" -eq "1" -o "$desk" -eq "3" ]
+		# Adjust wallpaper based on RAM size
+		RAM=`/usr/bin/cat /.ram`
+		if [ "$RAM" -le "256" ]
 		then
-			# Adjust wallpaper based on RAM size
-			RAM=`/usr/bin/cat /.ram`
-			if [ "$RAM" -le "256" ]
-			then
-				/usr/bin/cat /${DEFUSER}/.config/xfce4/mcs_settings/desktop.xml | sed s/belenix\-large\.jpg/belenix_wall4\.jpg/ > /${DEFUSER}/.config/xfce4/mcs_settings/desktop1.xml
-				/usr/bin/mv /${DEFUSER}/.config/xfce4/mcs_settings/desktop1.xml /${DEFUSER}/.config/xfce4/mcs_settings/desktop.xml
-			fi
-
-			if [ "$desk" -eq "3" ]
-			then
-				echo "Auto-configuring X11 for Compiz ..." > /dev/console
-				HOME=/root; export HOME
-				/usr/X11/bin/Xorg -configure
-				cp /root/xorg.conf.new /etc/X11/xorg.conf
-				chmod 0666 /etc/X11/xorg.conf
-				/usr/bin/modify-xorg-conf --with-experimental-ati-support
-				if [ $? -eq 0 ]
-				then
-					su - jack -c "/usr/sbin/startxfce compiz" &
-				else
-					echo "Compiz unsupported on this display ..."
-					sleep 3
-					su - jack -c "/usr/sbin/startxfce normal" &
-				fi
-			else
-				su - jack -c "/usr/sbin/startxfce normal" &
-			fi
-
-		elif [ "$desk" -eq "2" -o "$desk" -eq "4" ]
-		then
-			if [ "$desk" -eq "4" ]
-			then
-				echo "Auto-configuring X11 for Compiz ..." > /dev/console
-				HOME=/root; export HOME
-				/usr/X11/bin/Xorg -configure
-				cp /root/xorg.conf.new /etc/X11/xorg.conf
-				chmod 0666 /etc/X11/xorg.conf
-				/usr/bin/modify-xorg-conf --with-experimental-ati-support
-				if [ $? -eq 0 ]
-				then
-					su - jack -c "/usr/sbin/startkde compiz" &
-				else
-					echo "Compiz unsupported on this display ..." > /dev/console
-					sleep 3
-					su - jack -c "/usr/sbin/startkde normal" &
-				fi
-			else
-				su - jack -c "/usr/sbin/startkde normal" &
-			fi
+			/usr/bin/cat /${DEFUSER}/.config/xfce4/mcs_settings/desktop.xml | sed s/belenix\-large\.jpg/belenix_wall4\.jpg/ > /${DEFUSER}/.config/xfce4/mcs_settings/desktop1.xml
+			/usr/bin/mv /${DEFUSER}/.config/xfce4/mcs_settings/desktop1.xml /${DEFUSER}/.config/xfce4/mcs_settings/desktop.xml
 		fi
-	else
-		echo "Dropping to console login. Execute:" > /dev/console
-		echo "/usr/bin/startgui to re-enable GUI desktop" > /dev/console
-		echo "" > /dev/console
-		/usr/sbin/svcadm disable -t application/xserver
+
+		if [ "$desk" -eq "3" ]
+		then
+			echo "Auto-configuring X11 for Compiz ..." > /dev/console
+			HOME=/root; export HOME
+			/usr/X11/bin/Xorg -configure
+			cp /root/xorg.conf.new /etc/X11/xorg.conf
+			chmod 0666 /etc/X11/xorg.conf
+			/usr/bin/modify-xorg-conf --with-experimental-ati-support
+			if [ $? -eq 0 ]
+			then
+				su - ${DEFUSER} -c "/usr/sbin/startxfce compiz" &
+			else
+				echo "Compiz unsupported on this display ..."
+				sleep 3
+				su - ${DEFUSER} -c "/usr/sbin/startxfce normal" &
+			fi
+		else
+			su - ${DEFUSER} -c "/usr/sbin/startxfce normal" &
+		fi
+
+	elif [ "$desk" -eq "2" -o "$desk" -eq "4" ]
+	then
+		if [ "$desk" -eq "4" ]
+		then
+			echo "Auto-configuring X11 for Compiz ..." > /dev/console
+			HOME=/root; export HOME
+			/usr/X11/bin/Xorg -configure
+			cp /root/xorg.conf.new /etc/X11/xorg.conf
+			chmod 0666 /etc/X11/xorg.conf
+			/usr/bin/modify-xorg-conf --with-experimental-ati-support
+			if [ $? -eq 0 ]
+			then
+				su - ${DEFUSER} -c "/usr/sbin/startkde compiz" &
+			else
+				echo "Compiz unsupported on this display ..." > /dev/console
+				sleep 3
+				su - ${DEFUSER} -c "/usr/sbin/startkde normal" &
+			fi
+		else
+			su - ${DEFUSER} -c "/usr/sbin/startkde normal" &
+		fi
 	fi
 else
 	
