@@ -38,6 +38,7 @@ WidthForHeightHint=100
 [General]
 Applets2=Applet_5,ServiceButton_1,ServiceButton_2,Applet_1,Applet_2,Applet_3,Applet_4
 IExist=true
+Locked=true
 UntrustedApplets=
 UntrustedExtensions=
 

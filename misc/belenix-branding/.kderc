@@ -1,14 +1,14 @@
 [General]
-StandardFont=DejaVu Sans,9,-1,5,50,0,0,0,0,0
-activeFont=DejaVu Sans,9,-1,5,75,0,0,0,0,0
+StandardFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
+activeFont=DejaVu Sans,10,-1,5,75,0,0,0,0,0
 background=239,239,239
-fixed=Courier New,9,-1,5,50,0,0,0,0,0
-font=DejaVu Sans,9,-1,5,50,0,0,0,0,0
+fixed=Courier New,10,-1,5,50,0,0,0,0,0
+font=DejaVu Sans,10,-1,5,50,0,0,0,0,0
 foreground=0,0,0
-menuFont=DejaVu Sans,9,-1,5,50,0,0,0,0,0
+menuFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
 selectBackground=103,141,178
 selectForeground=255,255,255
-taskbarFont=DejaVu Sans,9,-1,5,50,0,0,0,0,0
-toolBarFont=DejaVu Sans,9,-1,5,50,0,0,0,0,0
+taskbarFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
+toolBarFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
 windowBackground=255,255,255
 windowForeground=0,0,0

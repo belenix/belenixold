@@ -29,14 +29,14 @@ background=239,239,239
 buttonBackground=221,223,228
 buttonForeground=0,0,0
 fixed=Courier New,9,-1,5,50,0,0,0,0,0
-font=DejaVu Sans,9,-1,5,50,0,0,0,0,0
+font=DejaVu Sans,10,-1,5,50,0,0,0,0,0
 foreground=0,0,0
 linkColor=0,0,238
-menuFont=DejaVu Sans,9,-1,5,50,0,0,0,0,0
+menuFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
 selectBackground=103,141,178
 selectForeground=255,255,255
-taskbarFont=DejaVu Sans,9,-1,5,50,0,0,0,0,0
-toolBarFont=DejaVu Sans,9,-1,5,50,0,0,0,0,0
+taskbarFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
+toolBarFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
 visitedLinkColor=82,24,139
 widgetStyle=Plastik
 windowBackground=255,255,255
@@ -153,7 +153,7 @@ Window to Next Desktop=none
 Window to Previous Desktop=none
 
 [Icons]
-Theme=kids
+Theme=crystalsvg
 
 [KDE]
 ChangeCursor=true
@@ -286,7 +286,7 @@ Size=22
 [WM]
 activeBackground=65,142,220
 activeBlend=107,145,184
-activeFont=DejaVu Sans,9,-1,5,75,0,0,0,0,0
+activeFont=DejaVu Sans,10,-1,5,75,0,0,0,0,0
 activeForeground=255,255,255
 activeTitleBtnBg=220,220,220
 alternateBackground=237,244,249
