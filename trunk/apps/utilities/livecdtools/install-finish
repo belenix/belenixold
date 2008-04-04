@@ -501,6 +501,10 @@ fi
 (cd ${BASEDIR}/export/home
   for hd in `find * -type d -prune`
   do
-    (cd cd ${BASEDIR}/etc/skel
-      find . | cpio -pdum ${BASEDIR}/export/home/${hd})
+    grpid=`grep /etc/passwd | cut -f4 -d":"`
+    grp=`grep ":${grpid}:" | cut -f1 -d":"`
+    (cd ${BASEDIR}/etc/skel
+      find . | cpio -pdum ${BASEDIR}/export/home/${hd}
+    )
+    chown -R ${hd}:${grp} $hd
   done)
