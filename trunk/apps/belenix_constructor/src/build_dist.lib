@@ -242,8 +242,14 @@ create_iso()
 	fi
 
 	echo "Compressing usr filesystem image"
-	echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solaris.zlib"
-	time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solaris.zlib
+	if [ -n "$LOFI_COMPRESS_UTILITY" ]
+	then
+		echo "${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solaris.zlib"
+		time ${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solaris.zlib
+	else
+		echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solaris.zlib"
+		time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solaris.zlib
+	fi
 	if [ $? -ne 0 ] ; then
 		echo "FAILURE: compression of solaris failed"
 		fatal_exit	
@@ -264,8 +270,14 @@ create_iso()
 	rm -rf miscdirs
 
 	echo "Compressing misc filesystem image"
-	echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solarismisc.zlib"
-	time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solarismisc.zlib
+	if [ -n "$LOFI_COMPRESS_UTILITY" ]
+	then
+		echo "${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solarismisc.zlib"
+		time ${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solarismisc.zlib
+	else
+		echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solarismisc.zlib"
+		time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solarismisc.zlib
+	fi
 	if [ $? -ne 0 ] ; then
 		echo "FAILURE: compression of solarismisc failed"
 		fatal_exit	
@@ -631,7 +643,7 @@ copyfiles() {
 		exc=$own
 
 		echo "Copying $f/* ..."
-		BASECMD="cd $SRCDIR ; echo $f ; find $f/* -prune -type f "
+		BASECMD="cd $SRCDIR ; echo $f ; find $f/* -prune \( -type f -o -type l \)"
 		if [[ "$inc" != "-" ]]
 		then
 			BASECMD="$BASECMD | egrep '$inc' "
@@ -721,7 +733,14 @@ apply_config()
 	(cd ${ESKEL}; cat /tmp/cfg3.$$ | cpio -pdumv ${PROTO}/${USER})
 	rm -f /tmp/cfg3.$$
 
-	chroot ${PROTO} chown -R ${USER}:${GROUP} /${USER}
+	echo "chroot ${PROTO} /usr/bin/chown -R ${USER}:${GROUP} /${USER}"
+	chroot ${PROTO} /usr/bin/chown -R ${USER}:${GROUP} /${USER}
+
+	if [ $? -ne 0 ]
+	then
+		echo "CHROOT Failed. Bailing ..."
+		exit 1
+	fi
 
 	#
 	# HACK: Enable KDE delayed check in LiveCD env for

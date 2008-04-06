@@ -335,7 +335,15 @@ Index: SUNWfirefox.spec
 ===================================================================
 --- SUNWfirefox.spec	(revision 13031)
 +++ SUNWfirefox.spec	(working copy)
-@@ -43,7 +43,6 @@
+@@ -28,6 +28,7 @@
+ Source:        %{name}-manpages-0.1.tar.gz
+ Source1:       staroffice-mime.types.in
+ Source2:       staroffice-mailcap.in
++Source4:       http://hedgefighter.dreamhosters.com/partial/KDEwidgets.tar.gz
+ %define so_mimetyp_entry %(cat %SOURCE1)
+ %define so_mailcap_entry %(cat %SOURCE2)
+ SUNW_BaseDir:  %{_basedir}
+@@ -43,7 +44,6 @@
  Requires: SUNWjdsrm
  Requires: SUNWj5rt
  Requires: SUNWgnome-base-libs
@@ -343,7 +351,7 @@ Index: SUNWfirefox.spec
  Requires: SUNWfontconfig
  Requires: SUNWfreetype2
  Requires: SUNWgnome-config
-@@ -64,6 +63,7 @@
+@@ -64,6 +64,7 @@
  Requires: SUNWpostrun
  %if %option_with_sun_branding
  Requires: SUNWsolaris-devel-docs
@@ -351,6 +359,18 @@ Index: SUNWfirefox.spec
  %endif
  %if %option_with_indiana_branding
  Requires: SUNWgetting-started-guide
+@@ -150,6 +151,11 @@
+ 
+ %{?pkgbuild_postprocess: %pkgbuild_postprocess -v -c "%{version}:%{jds_version}:%{name}:$RPM_ARCH:%(date +%%Y-%%m-%%d):%{support_level}" $RPM_BUILD_ROOT}
+ 
++(cd $RPM_BUILD_ROOT%{_libdir}/firefox/res
++  gunzip -c %{SOURCE4} | tar xf -
++  mv KDEwidgets/* .
++  rm -rf KDEwidgets)
++
+ %clean
+ rm -rf $RPM_BUILD_ROOT
+ 
 Index: base-specs/sqlite.spec
 ===================================================================
 --- base-specs/sqlite.spec	(revision 0)
@@ -525,6 +545,29 @@ Index: base-specs/pidgin-otr.spec
  Release:        1
  License:	GPL
  Group:		Applications/Internet
+@@ -22,9 +22,9 @@
+ # owner:rickju date:2007-03-07 type:bug bugster:6524858 state:upstream
+ Patch1:         pidgin-otr-01-gtk-ui.diff
+ # owner:rickju date:2007-04-03 type:bug bugster:6532728 state:upstream
+-Patch2:         pidgin-otr-02-gtk-dialog.diff
++#Patch2:         pidgin-otr-02-gtk-dialog.diff
+ # owner:rickju date:2007-05-27 type:branding
+-Patch3:         pidgin-otr-03-makefile.diff
++#Patch3:         pidgin-otr-03-makefile.diff
+ URL:		http://www.cypherpunks.ca/otr/
+ BuildRoot:	%{_tmppath}/%{name}-%{version}-build
+ Docdir:		%{_defaultdocdir}/pidgin
+@@ -57,8 +57,8 @@
+ #patch for pidgin-otr
+ cd ../pidgin-otr*
+ %patch1 -p1
+-%patch2 -p1
+-%patch3 -p1
++#%patch2 -p1
++#%patch3 -p1
+ 
+ %build
+ %ifos linux
 Index: base-specs/pwlib.spec
 ===================================================================
 --- base-specs/pwlib.spec	(revision 13031)
