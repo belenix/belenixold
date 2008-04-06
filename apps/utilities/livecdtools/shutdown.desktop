@@ -1,0 +1,21 @@
+[Desktop Entry]
+Comment=Shutdown the Computer
+Comment[en_US]=Shutdown the Computer
+Exec=pfexec /usr/sbin/shutdown -i5 -g0 -y
+GenericName=
+GenericName[en_US]=
+Icon=/usr/share/icons/crystalsvg/48x48/actions/exit.png
+MimeType=
+Name=Shutdown
+Name[en_US]=Shutdown
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+TryExec=pfexec /usr/sbin/shutdown -i5 -g0 -y
+Type=Application
+Version=1.0
+X-DCOP-ServiceType=
+X-GNOME-DocPath=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

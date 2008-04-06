@@ -124,7 +124,7 @@ ADMIN_EOF
 		#
 		apply_skeleton $ROOT_DIR
 		$BASECMD -a $ADMIN_FILE FSWlivecdtools
-		apply_config $ROOT_DIR jack
+		apply_config $ROOT_DIR jack staff
 
 		return $?
 	fi

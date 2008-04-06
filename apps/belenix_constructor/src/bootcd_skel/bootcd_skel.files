@@ -9,6 +9,7 @@ f 0644 root:root usr/share/config/kdm/backgroundrc
 f 0444 root:sys var/svc/profile/generic_limited_net.xml
 f 0444 root:sys var/svc/profile/generic_open.xml
 f 0644 root:sys boot/grub/menu.lst
+f 0644 root:sys boot/grub/menu.lst.detailed
 f 0644 root:sys etc/profile
 f 0644 root:sys etc/devlink.tab
 f 0644 root:root etc/vfstab
