@@ -1,7 +1,7 @@
 [Desktop Entry]
-Comment=Shutdown the Computer
-Comment[en_US]=Shutdown the Computer
-Exec=pfexec /usr/sbin/shutdown -i5 -g0 -y
+Comment=Reboot the Computer
+Comment[en_US]=Reboot the Computer
+Exec=pfexec /usr/sbin/reboot
 GenericName=
 GenericName[en_US]=
 Icon=/usr/share/icons/crystalsvg/48x48/actions/exit.png
@@ -12,7 +12,7 @@ Path=
 StartupNotify=true
 Terminal=false
 TerminalOptions=
-TryExec=pfexec /usr/sbin/shutdown -i5 -g0 -y
+TryExec=pfexec /usr/sbin/reboot
 Type=Application
 Version=1.0
 X-DCOP-ServiceType=

@@ -27,6 +27,10 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/usr/gnu/bin
+(cd $RPM_BUILD_ROOT/usr/gnu/bin
+  ln -s ../../sbin/man
+  ln -s ../../sbin/nroff)
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -35,7 +39,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_sbindir}
 %{_sbindir}/*
+%dir %attr (0755, root, bin) /usr/gnu
+%dir %attr (0755, root, bin) /usr/gnu/bin
+/usr/gnu/bin/*
 
 %changelog
+* Mon Apr 07 2008 - moinakg@gmail.com
+- Add links in /usr/gnu/bin since that is first in PATH.
 * Sat Mar 01 2008 - moinakg@gmail.com
 - Initial spec.
