@@ -66,11 +66,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/*
 
 %files root
-%defattr (-, root, sys)
+%defattr (-, root, root)
 %dir %attr (0755, root, sys) %{_sysconfdir}
 %{_sysconfdir}/sudoers
 
 %changelog
+* Mon Apr 07 2008 - moinakg@gmail.com
+- Fix perms for /etc/sudoers.
 * Wed Feb 06 2008 - Ananth Shrinivas <ananth@sun.com>
 - updated to sudo 1.6.9p12
 * Sat Dec 15 2007 - Ananth Shrinivas <ananth@sun.com>

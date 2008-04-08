@@ -59,6 +59,5 @@ then
 	fi
 fi
 
-echo "1" > /.desk
 svcadm enable application/xserver
 
