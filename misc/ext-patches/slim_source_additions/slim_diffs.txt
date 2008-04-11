@@ -1,6 +1,6 @@
 diff -r 5a210c479218 usr/src/Makefile.master
 --- a/usr/src/Makefile.master	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/Makefile.master	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/Makefile.master	Thu Apr 10 21:16:42 2008 +0530
 @@ -40,10 +40,10 @@ SFWREF_PROTO=$(SFWREF_GATE:%=%/proto/roo
  SFWREF_PROTO=$(SFWREF_GATE:%=%/proto/root_$(MACH))
  
@@ -16,7 +16,7 @@ diff -r 5a210c479218 usr/src/Makefile.master
  CC=			$(SPRO_VROOT)/bin/cc
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/data/INSTALL_DISK_PANEL.txt
 --- a/usr/src/cmd/inst/gui-install/data/INSTALL_DISK_PANEL.txt	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/data/INSTALL_DISK_PANEL.txt	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/data/INSTALL_DISK_PANEL.txt	Thu Apr 10 21:16:42 2008 +0530
 @@ -8,11 +8,11 @@ Note: In order to be recognized by the i
  
  Guidelines
@@ -57,7 +57,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/data/INSTALL_DISK_PANEL.txt
  
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/data/INSTALL_FAILURE_PANEL.txt
 --- a/usr/src/cmd/inst/gui-install/data/INSTALL_FAILURE_PANEL.txt	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/data/INSTALL_FAILURE_PANEL.txt	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/data/INSTALL_FAILURE_PANEL.txt	Thu Apr 10 21:16:42 2008 +0530
 @@ -1,7 +1,7 @@ Installation Failed
  Installation Failed
  
@@ -69,7 +69,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/data/INSTALL_FAILURE_PANEL.txt
  Procedures
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/data/INSTALL_PROGRESS_PANEL.txt
 --- a/usr/src/cmd/inst/gui-install/data/INSTALL_PROGRESS_PANEL.txt	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/data/INSTALL_PROGRESS_PANEL.txt	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/data/INSTALL_PROGRESS_PANEL.txt	Thu Apr 10 21:16:42 2008 +0530
 @@ -1,7 +1,7 @@ Installing
  Installing
  
@@ -81,7 +81,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/data/INSTALL_PROGRESS_PANEL.tx
  WARNING: Terminating the installation leaves the disk in an indeterminate state.
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/data/WELCOME_PANEL.txt
 --- a/usr/src/cmd/inst/gui-install/data/WELCOME_PANEL.txt	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/data/WELCOME_PANEL.txt	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/data/WELCOME_PANEL.txt	Thu Apr 10 21:16:42 2008 +0530
 @@ -1,12 +1,12 @@ Welcome to the Slim Installer
  Welcome to the Slim Installer
  
@@ -101,7 +101,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/pixmaps/solaris_logo.png
 Binary file usr/src/cmd/inst/gui-install/pixmaps/solaris_logo.png has changed
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/callbacks.c
 --- a/usr/src/cmd/inst/gui-install/src/callbacks.c	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/callbacks.c	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/callbacks.c	Thu Apr 10 21:16:42 2008 +0530
 @@ -907,7 +907,7 @@ would_you_like_to_install_instead(void)
  
  	retval = gui_install_prompt_dialog(TRUE, FALSE, FALSE,
@@ -113,8 +113,8 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/callbacks.c
  }
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/confirmation-screen.c
 --- a/usr/src/cmd/inst/gui-install/src/confirmation-screen.c	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/confirmation-screen.c	Fri Apr 04 00:19:34 2008 +0530
-@@ -413,7 +413,7 @@ confirmation_screen_set_contents(void)
++++ b/usr/src/cmd/inst/gui-install/src/confirmation-screen.c	Thu Apr 10 21:16:42 2008 +0530
+@@ -413,13 +413,13 @@ confirmation_screen_set_contents(void)
  			add_detail_hbox(
  				MainWindow.ConfirmationWindow.softwarevbox,
  				FALSE, FALSE,
@@ -123,7 +123,14 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/confirmation-screen.c
  				NULL);
  
  			add_detail_hbox(
-@@ -569,7 +569,7 @@ confirmation_screen_set_contents(void)
+ 				MainWindow.ConfirmationWindow.softwarevbox,
+ 				FALSE, FALSE,
+-				_("Desktop (GNOME 2.20)"),
++				_("Desktop (KDE 3.5.8)"),
+ 				NULL);
+ 
+ 			/* Timezone Information */
+@@ -569,13 +569,13 @@ confirmation_screen_set_contents(void)
  			add_detail_hbox(
  				MainWindow.ConfirmationWindow.softwarevbox,
  				FALSE, FALSE,
@@ -132,9 +139,16 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/confirmation-screen.c
  				NULL);
  
  			add_detail_hbox(
+ 				MainWindow.ConfirmationWindow.softwarevbox,
+ 				FALSE, FALSE,
+-				_("Desktop (GNOME 2.20)"),
++				_("Desktop (KDE 3.5.8)"),
+ 				NULL);
+ 
+ 			/* Timezone Information */
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/diskbutton.glade
 --- a/usr/src/cmd/inst/gui-install/src/diskbutton.glade	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/diskbutton.glade	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/diskbutton.glade	Thu Apr 10 21:16:42 2008 +0530
 @@ -130,7 +130,7 @@
                                <widget class="GtkLabel" id="disking_label">
                                  <property name="visible">True</property>
@@ -146,7 +160,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/diskbutton.glade
                                </widget>
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/failure-screen.c
 --- a/usr/src/cmd/inst/gui-install/src/failure-screen.c	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/failure-screen.c	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/failure-screen.c	Thu Apr 10 21:16:42 2008 +0530
 @@ -179,17 +179,17 @@ failure_screen_set_contents(void)
  	switch (InstallationProfile.installationtype) {
  		case INSTALLATION_TYPE_INITIAL_INSTALL:
@@ -171,7 +185,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/failure-screen.c
  	gtk_label_set_label(GTK_LABEL(
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/failure.glade
 --- a/usr/src/cmd/inst/gui-install/src/failure.glade	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/failure.glade	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/failure.glade	Thu Apr 10 21:16:42 2008 +0530
 @@ -47,7 +47,7 @@
                  <property name="visible">True</property>
                  <property name="xalign">0</property>
@@ -201,7 +215,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/failure.glade
              <property name="width_chars">70</property>
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/finish-screen.c
 --- a/usr/src/cmd/inst/gui-install/src/finish-screen.c	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/finish-screen.c	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/finish-screen.c	Thu Apr 10 21:16:42 2008 +0530
 @@ -172,18 +172,18 @@ finish_screen_set_contents(void)
  	switch (InstallationProfile.installationtype) {
  		case INSTALLATION_TYPE_INITIAL_INSTALL:
@@ -229,7 +243,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/finish-screen.c
  	gtk_label_set_label(GTK_LABEL(
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/gui-install.glade
 --- a/usr/src/cmd/inst/gui-install/src/gui-install.glade	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/gui-install.glade	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/gui-install.glade	Thu Apr 10 21:16:42 2008 +0530
 @@ -29,7 +29,7 @@
  <glade-interface>
    <widget class="GtkWindow" id="mainwindow">
@@ -313,7 +327,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/gui-install.glade
                </widget>
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/installation-disk-screen.c
 --- a/usr/src/cmd/inst/gui-install/src/installation-disk-screen.c	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/installation-disk-screen.c	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/installation-disk-screen.c	Thu Apr 10 21:16:42 2008 +0530
 @@ -2129,7 +2129,7 @@ installationdisk_validate()
  	/* 1. No disk selected */
  	if (activedisk < 0) {
@@ -343,7 +357,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/installation-disk-screen.c
  					"installer, run fdisk in the terminal window "
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/installation-screen.c
 --- a/usr/src/cmd/inst/gui-install/src/installation-screen.c	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/installation-screen.c	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/installation-screen.c	Thu Apr 10 21:16:42 2008 +0530
 @@ -223,11 +223,11 @@ installation_window_set_contents(void)
  	switch (InstallationProfile.installationtype) {
  		case INSTALLATION_TYPE_INITIAL_INSTALL:
@@ -387,7 +401,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/installation-screen.c
  					 */
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/installationdisk.glade
 --- a/usr/src/cmd/inst/gui-install/src/installationdisk.glade	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/installationdisk.glade	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/installationdisk.glade	Thu Apr 10 21:16:42 2008 +0530
 @@ -156,7 +156,7 @@
                            <widget class="GtkLabel" id="partitioningchoicelabel">
                              <property name="visible">True</property>
@@ -399,7 +413,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/installationdisk.glade
                              <property name="width_chars">70</property>
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/main.c
 --- a/usr/src/cmd/inst/gui-install/src/main.c	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/main.c	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/main.c	Thu Apr 10 21:16:42 2008 +0530
 @@ -98,13 +98,13 @@ mainwindow_xml_screentitles_init(void)
  	MainWindow.ScreenSubTitles = g_new0(gchar*, NUMSCREENS);
  	MainWindow.ScreenSubTitles[WELCOME_SCREEN] =
@@ -428,7 +442,7 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/main.c
  
 diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/upgrade-screen.c
 --- a/usr/src/cmd/inst/gui-install/src/upgrade-screen.c	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/cmd/inst/gui-install/src/upgrade-screen.c	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/cmd/inst/gui-install/src/upgrade-screen.c	Thu Apr 10 21:16:42 2008 +0530
 @@ -92,7 +92,7 @@ validate_upgrade_target()
  		    GTK_MESSAGE_ERROR,
  		    _("Upgrade target validation failed"),
@@ -447,9 +461,21 @@ diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/upgrade-screen.c
  			disk_button_get_upgrade_info(&dinfo, &uinfo);
  			disable_upgrade_target(uinfo,
  			    _("Insufficient free space."));
+diff -r 5a210c479218 usr/src/cmd/inst/gui-install/src/welcome-screen.h
+--- a/usr/src/cmd/inst/gui-install/src/welcome-screen.h	Wed Mar 12 17:38:48 2008 +0100
++++ b/usr/src/cmd/inst/gui-install/src/welcome-screen.h	Thu Apr 10 21:16:42 2008 +0530
+@@ -37,7 +37,7 @@ extern "C" {
+ #endif
+ 
+ /* In future this will be provided via an API */
+-#define	RELEASENOTESURL "http://opensolaris.org/os/project/indiana/resources/rn2"
++#define	RELEASENOTESURL "http://www.genunix.org/distributions/belenix_site/?q=node/67"
+ 
+ typedef struct _WelcomeWindowXML {
+ 	GladeXML *welcomewindowxml;
 diff -r 5a210c479218 usr/src/lib/libtransfer/transfermod.c
 --- a/usr/src/lib/libtransfer/transfermod.c	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/lib/libtransfer/transfermod.c	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/lib/libtransfer/transfermod.c	Thu Apr 10 21:16:42 2008 +0530
 @@ -69,8 +69,9 @@
  #define	KBD_DEVICE	"/dev/kbd"
  #define	CPIO		"/usr/bin/cpio"
@@ -474,7 +500,7 @@ diff -r 5a210c479218 usr/src/lib/libtransfer/transfermod.c
  		Perror("Extracting archive failed ");
 diff -r 5a210c479218 usr/src/opensolaris_build.sh
 --- a/usr/src/opensolaris_build.sh	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/opensolaris_build.sh	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/opensolaris_build.sh	Thu Apr 10 21:16:42 2008 +0530
 @@ -46,6 +46,4 @@ ln -s /usr/snadm/lib/libadmutil.so $ROOT
  ln -s /usr/snadm/lib/libadmutil.so $ROOT/usr/snadm/lib 
  ln -s /usr/snadm/lib/libadmldb.so $ROOT/usr/snadm/lib 
@@ -484,7 +510,7 @@ diff -r 5a210c479218 usr/src/opensolaris_build.sh
 -
 diff -r 5a210c479218 usr/src/pkgdefs/Makefile
 --- a/usr/src/pkgdefs/Makefile	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/pkgdefs/Makefile	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/pkgdefs/Makefile	Thu Apr 10 21:16:42 2008 +0530
 @@ -36,6 +36,8 @@ COMMON_SUBDIRS	= \
  COMMON_SUBDIRS	= \
  	SUNWinstall \
@@ -496,7 +522,7 @@ diff -r 5a210c479218 usr/src/pkgdefs/Makefile
  #
 diff -r 5a210c479218 usr/src/pkgdefs/SUNWpackaging/depend
 --- a/usr/src/pkgdefs/SUNWpackaging/depend	Wed Mar 12 17:38:48 2008 +0100
-+++ b/usr/src/pkgdefs/SUNWpackaging/depend	Fri Apr 04 00:19:34 2008 +0530
++++ b/usr/src/pkgdefs/SUNWpackaging/depend	Thu Apr 10 21:16:42 2008 +0530
 @@ -46,7 +46,6 @@ P SUNWcsr	Core Solaris, (Root)
  P SUNWcsr	Core Solaris, (Root)
  P SUNWcsl	Core Solaris, (Shared Libs)
