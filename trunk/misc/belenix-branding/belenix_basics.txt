@@ -102,15 +102,19 @@ AVAILABLE DISK SELECTIONS:
 Note down the name after "0. ", in this case it it "c1d0". Now press
 CTRL+D to quit out of format.
 
-Now execute /usr/bin/partmgr /dev/rdsk/<devname>p0. So as per our
+Now execute /usr/bin/prtpart /dev/rdsk/<devname>p0. So as per our
 example above the command should look like:
 
-/usr/bin/partmgr /dev/rdsk/c1d0p0
+/usr/bin/prtpart /dev/rdsk/c1d0p0
 
 This will print an indented human readable dump of the entire partition
 table on the harddisk that includes all your extended partitions.
 
-/usr/bin/partmgr /dev/rdsk/c1d0p0 -doslabel
+/usr/bin/prtpart -h /dev/rdsk/c1d0p0
+
+This makes the output more human-readable.
+
+/usr/bin/prtpart /dev/rdsk/c1d0p0 -doslabel
 
 This will print out OpenSolaris device names for all the FAT/FAT32
 partitions on the harddisk, whether on primary or extended partition.
@@ -121,78 +125,53 @@ If you have booted the LiveCD, these should already be mounted on
 # Notes on Installing BeleniX to harddisk
 -----------------------------------------
 
-Execute the  /usr/bin/hdinstaller  utility from and terminal window in a
-GUI desktop to install BeleniX to harddisk. Though the hdinstaller is a
-text mode application you can still use the mouse to navigate if you are
-running the Xfce or KDE desktop.
+BeleniX 0.7 uses a re-branded Caiman Installer from the Indiana Project.
+Clicking the "Install Belenix" icon on the Desktop brings up the Installer.
+Note that you will have to "double-click" when in Xfce and "single-click"
+when in KDE.
 
 * OpenSolaris requires a primary partition. It cannot be installed in an
   extended partition. There is current work going on to fix this.
   For now you need to have a free slot in one of the four primary partitions.
 
-* If there is no Solaris2 partition already present then the installer will
-  run the fdisk utility that will display the existing partitions and allow
-  you to add or removed partitions. To create a partition in which BeleniX
-  can be installed you must select the partition type to be "SOLARIS2" when
-  fdisk displays a list in the create partition menu.
+* The Installs install ZFS as the default filesystem, so there is no need
+  to worry about creating slices.
 
-* OpenSolaris uses it's own subpartitions within a primary partition. These
-  are officially called "slices". You must have a root slice or "/". In
-  addition you can have a slice for "/usr", "/opt", swap and so on.
-  Hdinstaller allows you to create your own slices or put everything in "/".
-
-  This is different from the way Linux handles it's filesystems. Linux uses
-  primary and extended partitions to store the various filesystems including
-  swap. OpenSolaris uses it's own definition of slices stored in a Virtual
-  Table of Conents (VTOC) within one primary partition. The VTOC defines all
-  the individual OpenSolaris filesystems within the OpenSolaris partition.
-
-* At present the hdinstaller will install GRUB as the default bootloader
+* This version of the Caiman installer installs GRUB as the default bootloader
   (in MBR). If you have other Windows and Linux OSes installed on the same
   system then you will need to edit /boot/grub/menu.lst (after installing
   BeleniX) and add entries to boot the other OSes as well. This will change
-  in the next release.
+  in a subsequent release.
 
   It will also be made more flexible by providing an option to install GRUB
   in either the MBR or within the Solaris2 partition.
 
-* Starting Xfce/KDE after harddisk installation: At present a GUI display
-  manager is not yet configured, so to start Xfce/KDE you will need to login
-  from command line and execute "startxfce" or "startkde". This will change
-  in the next release.
+* BeleniX uses the K Display Manager (KDM) which should automatically come
+  up when booting from harddisk. The K Display Manager is themeable and also
+  supports dropping down to Command Line Login (unlike GDM) in a way similar
+  to what the legacy DTlogin provided in SUN Solaris.
 
-* If you already have a Solaris2 partition the hdinstaller will just display
-  and checkbox with the the partition identified as cNdN. You need to mark
-  the checkbox where you wish to install BeleniX and continue.
-
-* Hdinstaller will now ask about manual or auto layout. It is wise to choose
-  auto-layout to let hdinstaller calculate space allocation. You do get an
-  opportunity to modify the space allocation later. You will also need to
-  choose what separate filesystems you want to create. If you are not sure
-  here it is wise to just select "/" and "swap" and continue. Everything
-  else like "/usr", "/opt" etc will be directories in "/" in that case.
+* If you already have a Solaris2 partition the Installer will detect that.
 
 * It takes about 30-40 mins to install BeleniX depending on your CDROM
   speed.
-
-* Hdinstaller also provides an option to install the bundled JDK 1.5. But to
-  complete this install you will need a working internet connection. If you
-  do not have an internet connection then the JDK will be marked for later
-  install. You can execute "/usr/bin/setup_jdk" later after you are booted
-  from harddisk and have an internet connection to install the JDK.
-
-  An internet connection is required to download a SunOS C++ runtime patch
-  to enable executing Java on BeleniX. This download happens without user
-  intervention.
 
 
 # Setting up a persistent IP Address configuration
 --------------------------------------------------
 
+BeleniX enables NWAM (Network Auto-magic) by default so it should auto-detect
+your connected network interfaces and configure via DHCP. If you need to configure
+a static IP then you must first disable NWAM using:
+
+svcadm disable nwam
+
+Then follow these steps to configure static IP. The BeleniX package repository
+will soon include the JDS GUI tools for network configuration.
+
 You can use /sbin/ifconfig in the follwing way:
 
 ifconfig <intferface> <ip address> broadcast <bcast address> netmask <net mask>
-Or you can execute the /usr/bin/inetmenu GUI tool to configure the interface.
 
 In addition you can use /usr/bin/netprof to have network profiles. You'd need
 to create a profile in /etc/netprof/ directory using one of the files as a
@@ -200,39 +179,36 @@ template. It is very easy to do. Subsequently you can run /usr/bin/netprof
 to select and activate the profile.
 
 But if you want your configuration to persist across reboots without having to
-run inetmenu or ifconfig every time you'd need to do the following:
+run netprof or ifconfig every time you'd need to do the following:
 
-1) Disable inetmenu. This interferes with static configuration:
-   svcadm disable network/inetmenu.
-
-2) Select a name for your host and enter it in the /etc/nodename file. This
+1) Select a name for your host and enter it in the /etc/nodename file. This
    file must have exactly one entry, which is the hostname.
 
 Example:
 
  echo belenix-box-1 > /etc/nodename
 
-3) Edit /etc/hosts and add your hostname to ip address mapping. If you are in
+2) Edit /etc/hosts and add your hostname to ip address mapping. If you are in
    a domain, you may want to add another entry with the fully qualified domain
    name as well. Example:
 
  127.0.0.1       localhost
  192.168.0.150   belenix-box-1 belenix-box-1.yourdomain.com loghost
 
-4) Determine which interface will be connected to the network. Lets assume
+3) Determine which interface will be connected to the network. Lets assume
    that your bge0 network interface is connected to the network. Then create a
    file called /etc/hostname.hme0 which contains the hostname as in step (1):
    Example:
 
  echo belenix-box-1 > /etc/hostname.hme0
 
-5) Create or edit the /etc/defaultrouter file and enter the IP Address of the
+4) Create or edit the /etc/defaultrouter file and enter the IP Address of the
    default router. This will have been provided to your by your network admin
    or ISP. Example:
 
  echo 192.168.0.1 > /etc/defaultrouter
 
-6) Now you need to setup name resolution. Typically you'll want to use DNS
+5) Now you need to setup name resolution. Typically you'll want to use DNS
    and the list of nameservers will have been provided to you by your network
    admin or ISP. So you will have to setup /etc/nsswitch.conf and
    /etc/resolv.conf. Example:
@@ -265,7 +241,7 @@ manually do all these things.
 
 Example:
 
-   1. Perform steps 1 - 6
+   1. Perform steps 1 - 5
    2. Execute:
       /sbin/ifconfig hme0 192.168.0.150 broadcast 192.168.0.255 netmask 255.255.255.0
    3. Add default route:
@@ -327,4 +303,4 @@ archives.
 (http://www.genunix.org/wiki/index.php/Belenix_FAQ)
 
 If you're certain that you have uncovered a bug, then head to
-http://sarovar.org/projects/belenix/ and file your bug report.
+http://sourceforge.net/projects/belenix/ and file your bug report.

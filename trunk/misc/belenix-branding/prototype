@@ -107,6 +107,7 @@ f none etc/skel/.kde/share/config/gtkrc=gtkrc 0644 root other
 f none etc/skel/.kde/share/config/gtkrc-2.0=gtkrc-2.0 0644 root other
 
 f none etc/skel/.kderc=.kderc 0644 root other
+f none etc/skel/.vimrc=vimrc 0644 root other
 f none etc/skel/.gtkrc-2.0-kde=gtkrc-2.0-kde 0644 root other
 d none etc/skel/.kde/share/config/session 0755 root other
 d none etc/skel/.kde/env 0755 root other

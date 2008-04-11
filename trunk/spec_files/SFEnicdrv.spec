@@ -26,7 +26,7 @@ Source5:             http://homepage2.nifty.com/mrym3/taiyodo/bfe-2.6.0a.tar.gz
 Source6:             http://homepage2.nifty.com/mrym3/taiyodo/tne-2.4.0a.tar.gz
 Source7:             http://homepage2.nifty.com/mrym3/taiyodo/epfe-2.4.0.tar.gz
 Source8:             http://homepage2.nifty.com/mrym3/taiyodo/mtd-2.4.0.tar.gz
-Source9:             http://homepage2.nifty.com/mrym3/taiyodo/ae-2.6.0a.tar.gz
+Source9:             http://homepage2.nifty.com/mrym3/taiyodo/ae-2.6.1.tar.gz
 Source10:            http://homepage2.nifty.com/mrym3/taiyodo/gani-2.4.4.tar.gz
 Source11:            http://homepage2.nifty.com/mrym3/taiyodo/vel-2.4.0.tar.gz
 Source12:            http://homepage2.nifty.com/mrym3/taiyodo/icpt-2.4.0.tar.gz
@@ -58,6 +58,7 @@ Patch4:              nicdrv-04-gani.diff
 Patch5:              nicdrv-05-myk.diff
 Patch6:              nicdrv-06-ife.diff
 Patch7:              nicdrv-07-tcfe.diff
+Patch8:              nicdrv-08-ae.diff
 
 URL:                 http://homepage2.nifty.com/mrym3/taiyodo/eng/
 SUNW_BaseDir:        /
@@ -292,6 +293,7 @@ Requires: SUNWcnetr
 %patch5 -p0
 %patch6 -p0
 %patch7 -p0
+%patch8 -p0
 
 %build
 
