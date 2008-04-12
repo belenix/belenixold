@@ -9,21 +9,51 @@ Belenix FAQ with lot more supplementary information is available at:
 Contents
 ========
 
+# Introduction
 # Common tasks and commands
 # Starting/Quitting GUI desktops on LiveCD
 # Displaying disk partitioning info
 # Notes on Installing BeleniX to harddisk
-# Setting up a persistent IP Address configuration
+# Setting up a static IP Address configuration
 # Adding and Deleting users
 # How do I submit bug reports ?
 # Where do I get support ?
 # How do I contribute ?
 
 
+# Introduction
+==============
+BeleniX is a *NIX distribution that is built using the OpenSolaris source base.
+It can be used as LiveCD as well as can be installed onto a hard disk.
+
+It is a free and Opensource Community distribution. You are free to try it, 
+modify it, praise it, curse it etc. etc. This is still a very young 
+distribution so there will be rough edges. But hey this is OpenSolaris or 
+rather the true UNIX legacy, the stuff of Big Iron servers, created more than 
+20 years back, booting from a CD on a PC!
+
+You get all the power and features of OpenSolaris packed up in a CD: DTrace 
+(the ultimate debugging tool), Zones (OS virtualization), ZFS (the last word in
+filesystems), SMF, Crypto framework, Modular Kernel, Backward Compatibility and
+Standardization gurantees, CIFS server, Stable Kernel API, Fine grained 
+Privileges and so on ...
+
+BeleniX includes more than 650 software packages which includes: Xorg (6.9), 
+Xfce, Firefox, Thunderbird, Gaim, Imagmagick, SDL, Cairo, Xmms, Tcl/Tk, Python, 
+Vim,  gcc, Perl, Screen, Lynx, Xscreensaver, Midnight Commander, KDE (3.5.8), 
+Koffice, GIMP, Mtools, Samba, BerkeleyDB, PostgreSQL, Xerces, Kdevelop, DTrace
+Toolkit and so on ...
+
+Want to know more: Just reboot your box and adjust your Bios to boot from the 
+CDROM and watch.
+
+You are welcome to participate in this project and help make BeleniX better. 
+
+
 # Common tasks and commands
 ===========================
 
-Some various useful commands are:
+Few useful commands:
 
    Processor info                  : /usr/sbin/psrinfo -pv
    Architecture info               : /usr/bin/isainfo
@@ -161,8 +191,8 @@ when in KDE.
   speed.
 
 
-# Setting up a persistent IP Address configuration
-==================================================
+# Setting up a static IP Address configuration
+==============================================
 
 BeleniX enables NWAM (Network Auto-magic) by default so it should auto-detect
 your connected network interfaces and configure via DHCP. If you need to 
@@ -175,7 +205,7 @@ will soon include the JDS GUI tools for network configuration).
 
 Non-persistant static IP configuration:
 ---------------------------------------
-/sbin/ifconfig may be used in the follwing way:
+/sbin/ifconfig may be used in the following way:
 
 ifconfig <intferface> <ip address> broadcast <bcast address> netmask <net mask>
 
@@ -255,7 +285,7 @@ Example:
    3. Add default route:
       /sbin/route add default 192.168.0.1 <- The gateway ip
    4. If you do not have default gateway info:
-      /sbin/route add default belenix-box-1 -interface
+      /sbin/route add default belenix-box-1
    5. Execute: svcadm enable dns/client
 
 
