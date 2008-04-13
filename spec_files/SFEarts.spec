@@ -38,7 +38,6 @@ Requires: SFEqt3-devel
 Requires: SUNWgnome-audio-devel
 Requires: SUNWgnome-base-libs-devel
 Requires: SUNWogg-vorbis-devel
-Requires: SFElibmad-devel
 Requires: SFEjack-devel
 Requires: SFEnas-devel
 Requires: oss

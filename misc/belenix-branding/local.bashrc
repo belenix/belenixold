@@ -4,7 +4,7 @@
 #
 # Use less(1) as the default pager for the man(1) command.
 #
-export PATH=/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin
+export PATH=/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
 export MANPATH=/usr/gnu/share/man:/usr/share/man:/usr/X11/share/man:/usr/sfw/share/man:/opt/DTraceToolkit/Man
 export PAGER="/usr/bin/less -ins"
 

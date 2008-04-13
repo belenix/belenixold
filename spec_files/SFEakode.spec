@@ -36,8 +36,6 @@ SUNW_BaseDir:            %{_prefix}
 Requires: %name
 Requires: SUNWogg-vorbis-devel
 Requires: SUNWspeex-devel
-Requires: SFEffmpeg-devel
-Requires: SFElibmad-devel
 Requires: oss
 Requires: SFEjack-devel
 
