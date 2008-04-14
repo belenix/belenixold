@@ -1,6 +1,7 @@
 #!/bin/sh
 
 name=`zenity --entry --text="Enter IRC nickname"`
+name=`echo $name | nawk '{ print $NF }'`
 if [ $? -eq 0 ]
 then
 	if [ ! -d ${HOME}/.xchat2 ]
