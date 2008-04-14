@@ -1,0 +1,399 @@
+#!/usr/bin/sh
+
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+#
+# A script to build KDE and dependencies
+#
+# TODO: This script also builds encumbered stuff. Need to make it optional.
+# This requires changes in KDE3 spec files.
+#
+# Changelog
+#
+# 2008-03-01 - Moinak Ghosh <moinakg@gmail.com>
+# Add more packages.
+#
+# 2008-01-30 - Moinak Ghosh <moinakg@gmail.com>
+# Add new packages.
+#
+# 2008-01-28 - Moinak Ghosh <moinakg@gmail.com>
+# Add new packages.
+#
+# 2008-01-26 - Moinak Ghosh <moinakg@gmail.com>
+# Fix another bad mistake in previous commit.
+#
+# 2008-01-26 - Moinak Ghosh <moinakg@gmail.com>
+# Various typo and other fixes.
+# Re-order some specs.
+#
+# 2008-01-26 - Moinak Ghosh <moinakg@gmail.com>
+# Add remaining spec files for KDE3 dependencies and a few additional stuff.
+# TODO: Need review.
+#
+# 2008-01-26 - Moinak Ghosh <moinakg@gmail.com>
+# Initial version.
+#
+
+_GCC=1
+_STUDIO=2
+export _GCC _STUDIO
+
+if [ "x$1" = "x" ]
+then
+	echo "Usage: $0 <path/to/spec/files/directory>"
+	echo ""
+	exit 1
+fi
+
+BUILD_DRIVERS=0
+if [ -n "$2" ]
+then
+	if [ "$2" = "--with-drivers" ]
+	then
+		BUILD_DRIVERS=1
+	fi
+fi
+
+SPEC_PATH=$1
+cd $SPEC_PATH
+
+PKGTOOL_OPTIONS="--halt-on-errors --with-fox --with-gnu-iconv --without-dt --with-l10n --src=/packages/SOURCES:${SPEC_PATH}/include:${SPEC_PATH}/ext-sources"
+export PKGTOOL_OPTIONS
+
+/lib/opengl/ogl_select/mesa_vendor_select
+
+call_pkgtool() {
+	compiler=$1
+	specs=`echo $2 | sed 's/:/ /g'`
+	if [ $compiler -eq $_GCC ]
+	then
+		CC=/usr/sfw/bin/gcc
+		CXX=/usr/sfw/bin/g++
+	else
+		CC=/opt/SUNWspro/bin/cc
+		CXX=/opt/SUNWspro/bin/CC
+	fi
+
+	CC32=$CC
+	CC64=$CC
+	CXX32=$CXX
+	CXX64=$CXX
+	export CC CC32 CC64 CXX CXX32 CXX64
+
+	[ -n "$EXTRA_PKGTOOL_OPTIONS" ] && PKGTOOL_OPTIONS="${PKGTOOL_OPTIONS} ${EXTRA_PKGTOOL_OPTIONS}"
+	echo ""
+	echo "pkgtool build ${PKGTOOL_OPTIONS} --download ${specs}"
+	pkgtool build ${PKGTOOL_OPTIONS} --download ${specs}
+
+	if [ $? -ne 0 ]
+	then
+		echo "ERROR: Pkgtool BUILD failed"
+		exit 1
+	fi
+}
+
+if [ `pkginfo -q SUNWgnu-libiconv` ]
+then
+	if [ `pkginfo -q SFEgettext` ]
+	then
+		call_pkgtool $_GCC "SFEgettext.spec:SFElibiconv.spec"
+
+		pkgrm -n SFEgettext-l10n SFEgettext-devel SFEgettext
+		call_pkgtool $_GCC "SFEgettext.spec"
+	fi
+fi
+
+if [ `pkginfo -q SUNWsqlite` ]
+then
+	if [ ! -f SUNWsqlite.spec ]
+	then
+		echo "The SUNWsqlite package is required. Please copy"
+		echo "SUNWsqlite.spec from JDS spec files repository to"
+		echo "$SPEC_PATH"
+		echo ""
+		exit 1
+	else
+		call_pkgtool $_STUDIO SUNWsqlite.spec
+	fi
+fi
+
+cat > /tmp/default <<_EOF
+mail=
+instance=unique
+partial=ask
+runlevel=ask
+idepend=nocheck
+rdepend=nocheck
+space=ask
+setuid=nocheck
+conflict=ask
+action=ask
+networktimeout=60
+networkretries=3
+authentication=quit
+keystore=/var/sadm/security
+proxy=
+basedir=default
+rscriptalt=noaccess
+_EOF
+
+[ `pkginfo -q SUNWlibsdl` ] && pkgrm -a /tmp/default SUNWlibsdl
+[ `pkginfo -q SUNWsubversion` ] && pkgrm -a /tmp/default SUNWsubversion
+
+rm -f /tmp/default
+
+cp ${SPEC_PATH}/base-specs/libogg.spec /packages/SPECS
+cp ${SPEC_PATH}/base-specs/libvorbis.spec /packages/SPECS
+
+call_pkgtool $_GCC "SFEdoxygen.spec:SFEliberationfonts.spec:SFEogg-vorbis.spec"
+call_pkgtool $_GCC "SFElibsndfile.spec:SFElibsamplerate.spec:SFEportaudio.spec"
+call_pkgtool $_GCC "SFEwxwidgets-gnu.spec:SFEfreetype.spec:SFEjam.spec:SFEfreeglut.spec:SFElibgsm.spec"
+call_pkgtool $_GCC "SFEnasm.spec"
+call_pkgtool $_STUDIO "SFEid3lib.spec:SFEamrwb.spec:SFEncurses.spec"
+
+if [ `pkginfo -q SUNWneon` ]
+then
+	call_pkgtool $_GCC SFEneon.spec
+fi
+
+call_pkgtool $_GCC "SFEid3lib.spec"
+call_pkgtool $_STUDIO "encumbered/SFElibmad.spec:encumbered/SFEfaad2.spec"
+_OPATH=$PATH
+PATH="/usr/ucb:${PATH}"
+export PATH
+call_pkgtool $_GCC "encumbered/SFEgpac.spec"
+PATH=$_OPATH
+export PATH
+
+call_pkgtool $_GCC "SFElibx264.spec:SFEamrwb.spec:SFEncurses.spec:SFEswig.spec:SFElibmng.spec:encumbered/SFElibnjb.spec:SFElibao.spec:SFEliveMedia.spec:SFElibcdio.spec:SFElibfribidi.spec:SFEladspa.spec:SFEopenal.spec:SFEgawk.spec:SFEsdl.spec:SFEsdl-image.spec:SFElibebml.spec:SFElibmatroska.spec:SFElibcddb.spec:SFElibupnp.spec:SFEvcdimager.spec:SFElibtar.spec:SFElibdiscid.spec:SFEjack.spec:SFEfftw.spec"
+
+call_pkgtool $_STUDIO "SFEnetpbm.spec"
+
+call_pkgtool $_GCC "SFEfreealut.spec:SFEsdl-mixer.spec:SFEsdl-net.spec:SFEhtml-tidy.spec"
+
+# Build encumbered stuff
+# TODO: Need a mechanism to make this optional. Needs modifications to KDE spec files as well.
+call_pkgtool $_GCC "encumbered/SFElibdvdcss.spec:encumbered/SFElibdvdread.spec"
+call_pkgtool $_STUDIO "encumbered/SFEdvdauthor.spec:encumbered/SFEliba52.spec:encumbered/SFElibdts.spec"
+call_pkgtool $_GCC "encumbered/SFExvid.spec:encumbered/SFElame.spec"
+call_pkgtool $_STUDIO "encumbered/SFEamrnb.spec:encumbered/SFEffmpeg.spec:encumbered/SFElibdv.spec:encumbered/SFElibdvbpsi.spec"
+call_pkgtool $_STUDIO "encumbered/SFElibdvdnav.spec:encumbered/SFElibdvdplay.spec:encumbered/SFElibfame.spec"
+call_pkgtool $_STUDIO "encumbered/SFElibid3tag-gnu.spec:encumbered/SFElibid3tag.spec"
+call_pkgtool $_STUDIO "encumbered/SFElibmpcdec.spec:encumbered/SFElibmpeg2.spec"
+call_pkgtool $_STUDIO "encumbered/SFElibquicktime.spec:encumbered/SFEmpg321.spec:encumbered/SFEmpgtx.spec"
+call_pkgtool $_STUDIO "encumbered/SFEtwolame.spec"
+
+if [ -f /usr/lib/libfreetype.so.6 ]
+then
+mv /usr/sfw/lib/libfreetype.so /usr/sfw/lib/frt.so
+mv /usr/sfw/lib/libfreetype.so.6 /usr/sfw/lib/frt.so.6
+mv /usr/lib/libfreetype.so /usr/lib/frt.so
+mv /usr/lib/libfreetype.so.6 /usr/lib/frt.so.6
+fi
+
+call_pkgtool $_GCC "encumbered/SFEmplayer.spec"
+
+mv /usr/sfw/lib/frt.so /usr/sfw/lib/libfreetype.so
+mv /usr/sfw/lib/frt.so.6 /usr/sfw/lib/libfreetype.so.6
+mv /usr/lib/frt.so /usr/lib/libfreetype.so
+mv /usr/lib/frt.so.6 /usr/lib/libfreetype.so.6
+
+call_pkgtool $_GCC "encumbered/SFEmplayer-codecs.spec"
+call_pkgtool $_STUDIO "encumbered/SFEmplayer-plugin.spec:encumbered/SFEswfdec.spec"
+call_pkgtool $_GCC "encumbered/SFEvlc.spec:encumbered/SFEvnc2swf.spec"
+
+call_pkgtool $_GCC "SFElibpcap.spec:SFEsed.spec"
+call_pkgtool $_STUDIO "SFEethereal.spec"
+call_pkgtool $_GCC "SFEcmake.spec:SFEphysfs.spec:SFEreadline.spec:SFEcups.spec"
+call_pkgtool $_GCC "SFEqt3.spec:SFElibsndfile.spec:SFEjack.spec:SFEnas.spec:SFEarts.spec:SFEfltk.spec:SFEilmbase.spec:SFEopenexr.spec"
+
+call_pkgtool $_GCC "SFEbdb.spec:SFEgdbm.spec:SFElibntlm.spec:SFEcyrus-sasl.spec"
+call_pkgtool $_GCC "SFEaspell.spec:SFEaspell-en.spec"
+
+if [ `pkginfo -q SFEkdelibs3` -o `pkginfo -q SFEkdebase3` ]
+then
+	# Kdelibs and Kdebase installs a few setuid apps
+	#
+	echo ""
+	echo "Kdelibs and Kdebase installs a few setuid apps, so we need to modify"
+	echo "/var/sadm/install/admin/default temporarily to ignore setuid check to"
+	echo "allow pkgtool to successfully install these packages."
+	echo ""
+
+	tmpf="/tmp/`basename ${0}`.$$"
+
+	cat <<_EOF > $tmpf
+#!/bin/sh
+if [ ! -f /var/sadm/install/admin/default.orig ]
+then
+	cp /var/sadm/install/admin/default /var/sadm/install/admin/default.orig
+fi
+cat > /var/sadm/install/admin/default <<EOF
+mail=
+instance=unique
+partial=ask
+runlevel=ask
+idepend=ask
+rdepend=ask
+space=ask
+setuid=nocheck
+conflict=ask
+action=ask
+networktimeout=60
+networkretries=3
+authentication=quit
+keystore=/var/sadm/security
+proxy=
+basedir=default
+rscriptalt=noaccess
+_EOF
+
+	if [ $? -ne 0 ]
+	then
+		echo "Writing to temp file $tmpf failed"
+		echo ""
+		exit 1
+	fi
+
+	chmod a+x $tmpf
+	echo "Please enter root passwd to continue:"
+	su - root "$tmpf"
+
+	if [ $? -ne 0 ]
+	then
+		echo "Updating admin file failed"
+		echo ""
+		exit 1
+	fi
+
+	call_pkgtool $_GCC "SFEkdelibs3.spec:SFEkdebase3.spec"
+
+cat <<_EOF > $tmpf
+#!/bin/sh
+cp /var/sadm/install/admin/default.orig /var/sadm/install/admin/default 
+rm -f /var/sadm/install/admin/default.orig
+_EOF
+	chmod a+x $tmpf
+	echo "Please enter root passwd to continue:"
+	su - root "$tmpf"
+	rm -f $tmpf
+fi
+
+call_pkgtool $_GCC SFEkdeadmin3.spec:SFEkdeartwork3.spec:SFEsane-backends.spec:SFEsane-frontends.spec:SFExsane.spec:SFEswig.spec:SFEgraphviz.spec:SFEkdegraphics3.spec:SFElibsndfile.spec:SFElibsamplerate.spec:SFEakode.spec:SFEcmake.spec:SFElibdiscid.spec:SFEcppunit.spec:SFElibmusicbrainz3.spec:SFEtaglib.spec:SFElibofa.spec:SFElibtunepimp.spec
+
+call_pkgtool $_GCC "SFElibmikmod.spec:SFExmms1.spec:SFEpth.spec:SFElibassuan.spec:SFElibksba.spec:SFEgnupg2.spec:SFEgnupg.spec:SFEgpgme.spec"
+
+_OPATH=$PATH
+PATH=/usr/ccs/bin:/usr/gnu/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/opt/jdsbld/bin
+export PATH
+call_pkgtool $_GCC "SFElibapr.spec:SFEaprutil.spec:SFEsubversion.spec:SFEgmp.spec"
+PATH=$_OPATH
+export PATH
+
+call_pkgtool $_GCC "SFEkdemultimedia3.spec:SFEkdegames3.spec:SFEkdeaddons3.spec:SFEkdenetwork3.spec:SFElibical.spec:SFElibmal.spec:SFEgnokii.spec:SFEkdeaccessibility3.spec:SFEkdepim3.spec:SFEkdesdk3.spec:SFEkdeutils3.spec:SFEkdewebdev3.spec"
+
+call_pkgtool $_GCC "SFEhtdig.spec:SFEkdevelop3.spec:SFElibvisual.spec:SFElibvisual-plugins.spec:SFExerces-c.spec:SFEmpfr.spec:SFEaalib.spec"
+
+_USE_GCC3_="1"
+export _USE_GCC3_
+call_pkgtool $_GCC "encumbered/SFExine-lib.spec"
+unset _USE_GCC3_
+
+call_pkgtool $_GCC "SFEamarok1.spec:SFEkdeedu3.spec:SFEkdetoys3.spec"
+
+EXTRA_PKGTOOL_OPTIONS="--with-gnu-iconv"
+export EXTRA_PKGTOOL_OPTIONS
+call_pkgtool $_GCC "SFElibgsf.spec"
+call_pkgtool $_GCC "SFEwv2.spec"
+unset EXTRA_PKGTOOL_OPTIONS
+
+call_pkgtool $_GCC "SFEwpd.spec:SFElibpqxx.spec"
+
+# TODO: Need to upgrade SUNW imagick
+# call_pkgtool $_STUDIO "SFEimagemagick.spec"
+call_pkgtool $_STUDIO "SFEgraphicsmagick.spec"
+
+call_pkgtool $_GCC "SFEkoffice3.spec:SFElibkipi.spec:SFEexiv2.spec:SFEdcraw.spec:SFElibkdcraw.spec:SFElibkexiv2.spec:SFEkipi-plugins.spec:SFEjasper.spec:SFEimlib2.spec:SFEdigikam.spec"
+
+call_pkgtool $_GCC "SFEktorrent.spec:SFEctags.spec:SFEcscope.spec:SFEkscope.spec"
+
+if [ $BUILD_DRIVERS -eq 1 ]
+then
+	CC=/opt/SUNWspro/bin/cc pkgtool build-only ${PKGTOOL_OPTIONS} --download SFEnicdrv.spec
+fi
+
+call_pkgtool $_GCC "SFEscreen.spec:SFEsudo.spec:SFEtop.spec:SFEmultitail.spec"
+call_pkgtool $_GCC "SFEheroes.spec:SFEbyacc.spec:SFExcdroast.spec:SFEe2fsprogs.spec"
+call_pkgtool $_GCC "SFEmc.spec:SFEmrxvt.spec:SFElbreakout2.spec:SFEsharutils.spec:SFEcvs.spec"
+call_pkgtool $_GCC "SFEsupertux.spec:SFEdtracetoolkit.spec:SFEdttdocviewer.spec:SFEmtools.spec"
+call_pkgtool $_STUDIO "SFEperl-curses.spec:SFEperl-locale-mt-simple.spec:SFEperl-term-readkey.spec"
+call_pkgtool $_STUDIO "SFEperl-curses-ui.spec:SFEbwidget.spec:SFEprtpci.spec"
+
+
+call_pkgtool $_GCC "SFElibsexy.spec"
+
+XFCE_SPECS="OSOLperl-uri.spec:xfce/OSOLgtk-xfce-engine.spec:xfce/OSOLthunar.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce4-icon-theme.spec:xfce/OSOLlibexo.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfcalendar.spec:xfce/OSOLxfce4-mixer.spec:xfce/OSOLlibnotify.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce-loginmgr.spec:xfce/OSOLxfce4-panel.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLlibxfce4mcs.spec:xfce/OSOLxfce-mcs-manager.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce4-session.spec:xfce/OSOLlibxfce4util.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce-mcs-plugins.spec:xfce/OSOLxfdesktop.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLlibxfcegui4.spec:xfce/OSOLxfce-utils.spec:xfce/OSOLxfprint.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLmousepad.spec:xfce/OSOLxfce4-appfinder.spec:xfce/OSOLxfwm4.spec"
+XFCE_SPECS="${XFCE_SPECS}:xfce/OSOLxfce4-dev-tools.spec"
+
+call_pkgtool $_GCC ${XFCE_SPECS}
+
+XFCE_GOODIES="xfce/thunar-archive-plugin.spec:xfce/thunar-volman.spec:xfce/xfce4-cpugraph-plugin.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-dict-plugin.spec:xfce/xfce4-genmon-plugin.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-mpc-plugin.spec:xfce/xfce4-netload-plugin.spec"
+#XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-notes-plugin.spec:xfce/xfce4-notification-daemon.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-notes-plugin.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-places-plugin.spec:xfce/xfce4-verve-plugin.spec"
+XFCE_GOODIES="${XFCE_GOODIES}:xfce/xfce4-weather-plugin.spec:xfce/xfce4-xfapplet-plugin.spec"
+
+call_pkgtool $_GCC ${XFCE_GOODIES}
+
+call_pkgtool $_GCC SFEntfsprogs.spec
+(cd ../apps; tar cpf - prtpart | gzip -c) > ext-sources/prtpart-0.1.tar.gz
+call_pkgtool $_GCC SFEprtpart.spec
+(cd ../apps; tar cpf - mount_ext2fs | gzip -c) > ext-sources/mount-ext2fs-0.1.tar.gz
+call_pkgtool $_GCC SFEmount-ext2fs.spec
+(cd ../apps; tar cpf - mount_ntfs | gzip -c) > ext-sources/mount-ntfs-0.1.tar.gz
+call_pkgtool $_GCC SFEmount-ntfs.spec
+
+(cd ../apps/utilities; tar cpf - mountgui | gzip -c) > ext-sources/mountgui-0.1.tar.gz
+call_pkgtool $_GCC SFEmountgui.spec
+
+(cd ../apps/utilities; tar cpf - eman | gzip -c) > ext-sources/eman-0.1.tar.gz
+call_pkgtool $_GCC SFEeman.spec
+
+call_pkgtool $_GCC "SFEdialog.spec:SFEzsvcadm.spec:SFElynx.spec:SFEmikmod.spec:SFEhtml-tidy.spec"
+
+export QTINC=/usr/include/qt3
+call_pkgtool $_GCC "SFEdbus-qt3:SFEcompiz-bcop.spec:SFEcompiz-fusion-unsup.spec:SFEcompizconfig-python.spec:SFEcompiz-fusion-extra.spec:SFEcompiz.spec:SFEcompiz-fusion-main.spec:SFEcompizconfig-gconf.spec:SFEgetopt.spec:SFEdbus-qt3.spec:SFElibcompizconfig.spec:SFEksplash-moodin.spec"
+
+call_pkgtool $_GCC "SFEgtk-qt3.spec"

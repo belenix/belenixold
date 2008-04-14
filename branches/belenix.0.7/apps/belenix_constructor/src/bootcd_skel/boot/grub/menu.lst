@@ -1,0 +1,14 @@
+#
+#pragma ident	"@(#)install_menu	1.1	05/04/15 SMI"
+#
+default=0
+timeout=5
+splashimage=/boot/grub/belenixboot.xpm.gz
+foreground=827d7c
+background=2b0712
+title BeleniX (32 bit) 
+	kernel /platform/i86pc/kernel/unix
+	module /boot/x86.microroot
+
+title More Options ...
+	configfile /boot/grub/menu.lst.detailed

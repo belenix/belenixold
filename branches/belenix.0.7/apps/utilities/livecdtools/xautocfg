@@ -1,0 +1,762 @@
+#!/usr/bin/perl -w
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2006 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# Author: Moinak.Ghosh@Sun.COM, Pradhap.Devarajan@Sun.COM
+
+#
+# This script auto-configures Xorg and also allows the user
+# to modify certain configuration elements.
+#
+
+use strict;
+
+#use lib "/usr/lib/site_perl";
+use Curses;
+use Curses::UI;
+
+######################################################
+#set this variable to 1, through environment variable
+#DEBUG (export DEBUG=1) for debug output in /tmp/debug
+######################################################
+my $debug = 0;
+my $selectcomposite = 0;
+my $compizsettings = 0;
+my $res = 1;
+my $driver = 1;
+my $depth = 1;
+my $is_nvidia = 0;
+my $disableprobe = 0;
+my %depthstrings = ( '8' => "8 Bit 256 Colors",
+		'15' => "15 Bit 32K Colors",
+		'16' => "16 Bit 65K Colors",
+		'24' => "24 Bit 16M Colors",
+		'32' => "32 Bit 4Billion Colors"
+);
+
+my $xfcecompiz = 4;
+my $kdecompiz = 5;
+
+my $depthvalues = [];
+my $depthlabels = {};
+
+my $resvalues = [];
+my $reslabels = {};
+
+my $selected_disk = 0;
+
+if ($ENV{DEBUG}) {
+	$debug = 1;
+}
+my $comm = "xautocfg";
+my $count = 0;
+
+my $desk = $ARGV[0];
+
+
+#
+# Quit if an xorg.conf already exists
+#
+my $file = "/etc/X11/xorg.conf";
+if ( -f $file ) {
+	system("rm -f $file");
+}
+
+if ( ! exists $ENV{'HOME'} ) {
+	$ENV{'HOME'} = '/root';
+}
+my $home = $ENV{'HOME'};
+chdir($home);
+my $conffile = "";
+
+#########################
+# Re-direct STDERR to log.
+#########################
+if ($debug == 1) {
+  open STDERR, ">/tmp/debug.log";
+} else {
+  open STDERR, ">/dev/null";
+}
+
+print("Configuring X11 (This may take a while)\n");
+
+#
+# Check for pre-canned custom configs
+#
+system("/bin/ksh /usr/bin/chk_custom.sh");
+if ( -f $file ) {
+	exit(0);
+}
+
+#
+# If we have Nvidia hardware we should use the nvidia
+# accelerated binary driver and disable custom monitor
+# probing.
+#
+if ( -f "/.nvidia" ) {
+	$is_nvidia = 1;
+	$disableprobe = 1;
+	if ($desk == 4 || $desk == 5) {
+		$compizsettings = 1;
+	}
+}
+
+
+#
+# Let Xorg do the initial auto-configuration
+#
+if ( not -f "/etc/X11/xorg.conf" &&
+	not -f "$home/xorg.conf.new" &&
+	not -f "/xorg.conf.new" ) {
+print("Probing video card and monitor\n");
+system("/usr/X11/bin/Xorg -logverbose 10 -probeonly");
+system("/usr/bin/cp /var/log/Xorg.0.log /var/log/XorgProbe.log");
+system("/usr/X11/bin/Xorg -configure > /var/log/XorgConf.log 2>&1");
+}
+
+if ( -f "$home/xorg.conf.new" ) {
+	$conffile = "$home/xorg.conf.new";
+
+} elsif ( -f "/xorg.conf.new" ) {
+	$conffile = "/xorg.conf.new";
+
+} else {
+	print("Xorg failed to auto-configure. /var/log/XorgConf.log\n"
+	. "may have more info\n\n"
+	. "You can try to manually configure X11 and execute\n"
+	. "startgui xfce to get the Xfce desktop.\n\n");
+	exit(1);
+}
+
+print("Checking/Tweaking configuration\n");
+
+open(CNF, ">$file") || die "Unable to open $file for writing";
+
+my $xkblayout = `cat /.xkblayout`;
+chomp($xkblayout);
+
+if ("$xkblayout" eq "") {
+	$xkblayout = "us";
+} 
+
+my $serverlayout = 'Section "ServerLayout"
+	Identifier     "X.org Modified by ' . $comm . '"
+	Screen      0  "Screen0" 0 0
+	#Screen      0  "Screen1" 0 0
+	InputDevice    "Mouse0" "CorePointer"
+	InputDevice    "USBMouse" "CorePointer"
+	#InputDevice    "Keyboard0" "CoreKeyboard"
+	InputDevice    "Keyboard1" "CoreKeyboard"
+EndSection
+';
+my $serverlayoutregex = '^Section\s+"?ServerLayout"?.*?EndSection';
+
+my $config = `cat $conffile`;
+$config =~ s/$serverlayoutregex/$serverlayout/iso;
+
+#
+# Swap 75dpi and 100dpi fonts if 75dpi precedes 100dpi
+#
+my $ind1 = index($config, "75dpi");
+my $ind2 = index($config, "100dpi");
+if ($ind1 < $ind2) {
+	$config =~ s/75dpi/__75dpi__/;
+	$config =~ s/100dpi/75dpi/;
+	$config =~ s/__75dpi__/100dpi/;
+}
+
+#
+# Swap TrueType and 100dpi fonts if TrueType precedes 100dpi
+#
+$ind1 = index($config, "TrueType");
+$ind2 = index($config, "100dpi");
+if ($ind1 < $ind2) {
+	$config =~ s/TrueType/__TrueType__/;
+	$config =~ s/100dpi/TrueType/;
+	$config =~ s/__TrueType__/100dpi/;
+}
+
+#
+# Comment out empty font directories
+#
+ELEM: for my $elem (split(/\n/,$config)) {
+        if ($elem =~ /FontPath*/) {
+                my (@el) = split(/[ ]+/, $elem);
+                $el[1] =~ s/"//g;
+                if (! opendir(DIR, $el[1]) ) {
+                        $config =~ s/$elem/\#$elem/;
+                        next ELEM;
+                }
+                my (@contents) = map("$_", grep !/(^\.\.?$)|(^fonts*)/, readdir(DIR));
+                closedir(DIR);
+                $count = @contents;
+                if ($count eq 0) {
+                        $config =~ s/$elem/\#$elem/;
+                }
+        }
+}
+
+#
+# Parse out various elements from the configuration to
+# allow the user to modify them.
+#
+
+my $getmodes = 0;
+my %modehash;
+my $modes = "";
+
+$modes = `/usr/bin/ddcxinfo-belenix -modes -xorglog /var/log/XorgProbe.log`;
+if ("$modes" eq "") {
+	$getmodes = 1;
+	$modes = "Modes";
+}
+
+my $device_section = 0;
+my $screen_section = 0;
+my $monitor_section = 0;
+my $depthvalue = 0;
+my $driver_name = "vesa";
+my $metamodes = "";
+my $depthcount = 1;
+foreach my $line (split("\n", $config)) {
+	$line =~ s/^[\t ]*//;
+	if ($line =~ /^Section "Device"/) {
+		$device_section = 1;
+
+	} elsif ($line =~ /^Section "Screen"/) {
+		$screen_section = 1;
+
+	} elsif ($line =~ /^Section "Monitor"/) {
+		$monitor_section = 1;
+	}
+	if ($device_section == 1) {
+		if ($line =~ /^EndSection/) {
+			$device_section = 0;
+
+		} elsif ($line =~ /"MetaModes"/ && $line =~/^Option/) {
+			my @elems = split('"',$line);
+			$metamodes = $elems[3];
+
+		} elsif ($line =~ /^Driver/) {
+			my @elems = split(' ',$line);
+			$driver_name = $elems[1];
+		}
+	} elsif ($screen_section == 1) {
+		if ($line =~ /^EndSection/) {
+			$screen_section = 0;
+
+		} elsif ($line =~ /^Depth/) {
+			my @elems = split(' ',$line);
+			if ($elems[1] >= 8) {
+				push(@$depthvalues, $depthcount);
+				if (exists $depthstrings{$elems[1]}) {
+					$depthlabels->{$depthcount} =
+						$depthstrings{$elems[1]};
+				} else {
+					$depthlabels->{$depthcount} =
+						$elems[1];
+				}
+				if ($elems[1] > $depthvalue) {
+					$depthvalue = $elems[1];
+					$depth = $depthcount;
+				}
+				$depthcount++;
+			}
+		}
+	} elsif ($monitor_section == 1 && $getmodes == 1) {
+		if ($line =~ /^ModeLine/) {
+			my $mres = (split(' ', $line))[1];
+			$modehash{$mres} = $mres;
+			$getmodes++;
+		}
+	}
+}
+
+if ($getmodes > 0) {
+	if ($getmodes > 1) {
+		foreach my $mode (sort {$a cmp $b} keys %modehash) {
+			$modes = "$modes \"$mode\"";
+		}
+	} else {
+		# We weren't able to get edid and Xorg did
+		# not generate modeline entries, so use vesa
+		# defaults excluding the really high ones that
+		# can fry monitors.
+		#
+		my $modelines = `/usr/bin/ddcxinfo-belenix -modelines -xorglog /var/log/XorgProbe.log | /usr/bin/egrep -v "1792x|1856x|1920x|1800x"`;
+		foreach my $line (split("\n", $modelines)) {
+			$line =~ s/^[\t ]*//;
+			if ($line =~ /^ModeLine/) {
+				my $mres = (split(' ', $line))[1];
+				$mres =~ s/"//g;
+				my @nums = split('x', $mres);
+				my $num = $nums[0] * $nums[1];
+				if (not exists($modehash{$num})) {
+					$modehash{$num} = $mres;
+				}
+				$getmodes++;
+			}
+		}
+		foreach my $mode
+		(reverse
+		sort {$a <=> $b} keys %modehash) {
+			$modes = "$modes \"$modehash{$mode}\"";
+		}
+	}
+}
+
+my $drivervalues = [1, 2];
+my $driverlabels = {};
+
+if ($is_nvidia == 1) {
+	$drivervalues = [1, 2, 3];
+	$driverlabels = {
+		1 => "Vendor nvidia",
+		2 => "Built-in nv",
+		3 => "Standard VESA"
+	};
+	$selectcomposite = 1;
+	$compizsettings = 1;
+} else {
+	# Paranoid check for nvidia due to a problem with the nvidia driver
+	if ($driver_name eq "nvidia") {
+		$driver_name = "nv";
+	}
+	$driverlabels = {
+		1 => "Built-in $driver_name",
+		2 => "Standard VESA"
+	};
+}
+
+my $rescount = 1;
+if ($metamodes ne "") {
+	foreach my $res (split(' ', $metamodes)) {
+		my @elems = split("-", $res);
+		push(@$resvalues, $rescount);
+		$reslabels->{$rescount} = $elems[0];
+		$rescount++;
+	}
+} else {
+	foreach my $mode (split(' ', $modes)) {
+		if ($mode ne "Modes") {
+			$mode =~ s/"//g;
+			push(@$resvalues, $rescount);
+			$reslabels->{$rescount} = $mode;
+			$rescount++;
+		}
+	}
+}
+
+#
+#####################################################
+# Xorg configuration User Interface
+#####################################################
+#
+# Perl-Curses UI is used to generate a text-mode user
+# interface.
+#
+my $cui = new Curses::UI (-clear_on_exit => 0,
+			  -mouse_support => 1,
+			  -debug => $debug );
+
+$cui->set_binding( sub{ postprocess(); }, "\cQ" );
+$cui->set_binding( sub{ postprocess(); }, KEY_ENTER() );
+$cui->set_binding( sub{ show_help(); }, KEY_F(1) );
+
+my $msg_win = $cui->add(
+	undef, "Window",
+	-border => 1,
+	-y => -1,
+	-height => 3,
+);
+
+$msg_win->add(
+	undef, "Label",
+	-y => -1, -x => 0,
+	-text => "  <ENTER> Continue,   <TAB> move among fields,   <F1> Help",
+);
+
+my $cui_win = $cui->add(
+        'setup_xprops', 'Window',
+        -border => 1,
+        -height => 21,
+        -width => 80,
+        -centered => 1,
+	-ipad => 1,
+        -title => "Review/Modify current Graphics Configuration",
+);
+
+$cui_win->add(
+	undef, "Label",
+	-y => 0, -x => 0,
+	-text => "  < SPACEBAR Changes Checkbox/Listbox selection >"
+);
+
+my $reslist;
+if (not $disableprobe) {
+	$reslist = $cui_win->add(
+		undef, "Listbox",
+		-y => 2, -x => 0,
+		-values => $resvalues,
+		-labels => $reslabels,
+		-width => 15, -height => 6,
+		-border => 1,
+		-title => "Resolution",
+		-vscrollbar => 1,
+		-selected => $res - 1,
+		-radio => 1
+	);
+} else {
+	$reslist = $cui_win->add(
+		undef, "Listbox",
+		-y => 2, -x => 0,
+		-width => 15, -height => 6,
+		-border => 1,
+		-title => "Resolution",
+		-vscrollbar => 1,
+		-radio => 1
+	);
+}
+
+my $displaylist = $cui_win->add(
+	undef, "Listbox",
+	-y => 2, -x => 18,
+	-values => $drivervalues,
+	-labels => $driverlabels,
+	-width => 25, -height => 6,
+	-border => 1,
+	-title => "Display Module",
+	-vscrollbar => 1,
+	-selected => $driver - 1,
+	-radio => 1
+);
+
+my $depthlist = $cui_win->add(
+	undef, "Listbox",
+	-y => 2, -x => 45,
+	-values => $depthvalues,
+	-labels => $depthlabels,
+	-width => 26, -height => 6,
+	-border => 1,
+	-title => "Color Depth",
+	-vscrollbar => 1,
+	-selected => $depth - 1,
+	-radio => 1
+);
+
+my $compositecheck = $cui_win->add(
+	undef, "Checkbox",
+	-y => 9,
+	-checked => $selectcomposite,
+	-label => "Enable Transparency and Shadows",
+);
+
+$cui_win->add(
+	undef, "Label",
+	-y => 10,
+	-text => " (Experimental)"
+);
+
+my $notelabel = $cui_win->add(
+	undef, "Label",
+	-y => 12, -x => 39,
+	-bold => 1
+);
+
+my $defaultcheck = $cui_win->add(
+	undef, "Checkbox",
+	-y => 9, -x => 39,
+	-checked => 0,
+	-label => "Use base Xorg configuration",
+	-onchange => sub {
+		my $cb = shift;
+		if ($cb->get()) {
+			$notelabel->text("NOTE: All other settings ignored");
+		} else {
+			$notelabel->text("");
+		}
+	}
+);
+
+$cui_win->add(
+	undef, "Label",
+	-y => 10, -x => 40,
+	-text => "(If customizations don't work)"
+);
+
+my $monitorcheck = $cui_win->add(
+	undef, "Checkbox",
+	-y => 12, -x => 0,
+	-checked => $disableprobe,
+	-label => "Disable custom Monitor probe",
+	-onchange => sub {
+		my $cb = shift;
+		if ($cb->get()) {
+			if ($metamodes eq "") {
+				$reslist->values([]);
+				$reslist->labels({});
+			}
+		} else {
+			$reslist->values($resvalues);
+			$reslist->labels($reslabels);
+			$reslist->set_selection($res - 1);
+		}
+		$cui->root->draw();
+	}
+);
+
+$cui_win->add(
+	undef, "Label",
+	-y => 13, -x => 0,
+	-text => " (Driver auto-selects display mode)"
+);
+
+my $btns = $cui_win->add(
+	undef, "Buttonbox",
+	-y => -1, -x => 34,
+	-buttons => [
+	{
+		-label => "< OK >",
+		-onpress => sub { postprocess(); }
+	}]
+);
+
+$btns->focus();
+
+MainLoop;
+
+#####################################################
+
+#
+# Post-processing routine that takes the user input and
+# merges it into the generated configuration.
+#
+sub postprocess() {
+
+	if ($defaultcheck->get()) {
+		close(CNF);
+		system("rm -f $file");
+		system("cp $conffile $file");
+		exit(0);
+	}
+
+	my $monitorprobe = not ($monitorcheck->get());
+	my $monitor = "";
+	if ($monitorprobe) {
+		$monitor = `/usr/bin/ddcxinfo-belenix -monitor -xorglog /var/log/XorgProbe.log`;
+	}
+
+	my $modeline = "Modes ";
+	my $metamodeline = "Option \"MetaModes\" \"";
+	if ($monitorprobe) {
+		my $i = $reslist->get();
+
+		for (; $i < $rescount - 1; $i++) {
+			$modeline .= "\"$reslabels->{$i}\" ";
+			$metamodeline .= "$reslabels->{$i}-$reslabels->{$i} ";
+		}
+	}
+	$metamodeline .= "\"";
+
+	$driver = $displaylist->get();
+	my $driver_label = $driverlabels->{$driver};
+	if ($driver_label eq "Standard VESA") {
+		$driver_name = "\"vesa\"";
+
+	} elsif ($driver_label eq "Vendor nvidia") {
+		$driver_name = "\"nvidia\"";
+	}
+	# Otherwise driver_name remains the same
+
+	$depth = $depthlist->get();
+	$depthvalue = (split(' ', $depthlabels->{$depth}))[0];
+
+	$selectcomposite = $compositecheck->get();
+
+	#print CNF $config;
+	my $oline;
+	foreach my $line (split("\n", $config)) {
+		$oline = $line;
+		$line =~ s/^[\t ]*//;
+		if ($line =~ /^Section "Device"/) {
+			$device_section = 1;
+			print CNF "$oline\n";
+			next;
+
+		} elsif ($line =~ /^Section "Screen"/) {
+			$screen_section = 1;
+			print CNF "$oline\n";
+			print CNF "	DefaultDepth     $depthvalue\n";
+			next;
+
+		}
+		if ($device_section == 1) {
+			if ($line =~ /^EndSection/) {
+				$device_section = 0;
+				print CNF "$oline\n";
+
+			} elsif ($line =~ /"MetaModes"/ && $line =~/^Option/) {
+
+				if ($monitorprobe) {
+					print CNF "	$metamodeline\n";
+				} else {
+					print CNF "$oline\n";
+				}
+
+			} elsif ($line =~ /^Driver/) {
+				print CNF "	Driver     $driver_name\n";
+
+			} else {
+				print CNF "$oline\n";
+			}
+		} elsif ($screen_section == 1) {
+			if ($line =~ /^EndSection/) {
+				$screen_section = 0;
+				if ($is_nvidia == 1) {
+					print CNF '    Option "RenderAccel" "True"';
+					print CNF "\n";
+				}
+				if ($compizsettings == 1) {
+					print CNF '    Option "AllowGLXWithComposite" "True"';
+					print CNF "\n";
+					print CNF '    Option "AddARGBGLXVisuals" "True"';
+					print CNF "\n";
+				}
+				print CNF "$oline\n";
+
+			} elsif ($line =~ /^Depth/) {
+				print CNF "$oline\n";
+				if ($monitorprobe) {
+					print CNF "		$modeline\n";
+				}
+
+			} elsif ($line =~ /^Monitor/) {
+				if ($monitorprobe) {
+					print CNF "\tMonitor \"Monitor0\"\n";
+				} else {
+					print CNF "$oline\n";
+				}
+			} else {
+				print CNF "$oline\n";
+			}
+		} else {
+			print CNF "$oline\n";
+		}
+	}
+
+	if ($monitorprobe) {
+		print CNF $monitor;
+	}
+
+	my $input =qq(
+Section "InputDevice"
+    Identifier  "USBMouse"
+    Driver      "mouse"
+    Option      "Protocol"  "VUID"
+    Option      "Device"    "/dev/mouse"
+    Option      "SendCoreEvents"
+EndSection
+
+Section "InputDevice"
+	Identifier  "Keyboard1"
+	Driver      "kbd"
+	Option      "XkbLayout" "$xkblayout"
+EndSection
+);
+
+	print CNF $input;
+
+	if ($selectcomposite) {
+		print CNF '
+Section "Extensions"
+	Option "Composite" "Enabled"
+EndSection
+';
+	}
+
+	close(CNF);
+	exit(0);
+}
+
+sub show_help() {
+	my $id = "__popup_help__";
+	my $helpwin = $cui->root->add(
+		$id, "Window",
+		-border => 1,
+		-x => 4, -y => 2,
+		-height => 21,
+		-width => 72,
+		-title => "Configuration Guidelines"
+	);
+
+	my $hbtns = $helpwin->add(
+		undef, "Buttonbox",
+		-y => -1, -x => 34,
+		-buttons => [
+		{
+			-label => "< OK >",
+			-onpress => sub {
+			$cui->set_binding( sub{ postprocess(); }, KEY_ENTER() );
+			$cui->root->delete("__popup_help__");
+			$cui->root->draw();
+			$btns->focus();
+			}
+		}]
+	);
+
+	my $hlplabel = $helpwin->add(
+		undef, "Label",
+		-y => 0, -x => 1,
+		-text =>
+"
+1. You can tweak the Resolution, Display Module and Depth values to
+   experiment. 'Standard VESA' is a fallback module that can be used
+   if the other modules do not work.
+
+2. Selecting 'Disable custom Monitor probe' clears the 'Resolution'
+   Listbox. This lets the display module to determine the optimum
+   resolution.  This is auto-selected on Nvidia hardware.
+
+3. A high resolution can potentially introduce flicker.
+
+4. You can try using 'base Xorg configuration' if nothing else works
+
+5. 'Enable Transparency and Shadows' enables the experimental
+   Compositing feature in Xorg. This can cause problems with games
+   and video playing using Mplayer.
+"
+	);
+
+	$cui->set_binding( sub {
+		$cui->set_binding( sub{ postprocess(); }, KEY_ENTER() );
+		$cui->root->delete("__popup_help__");
+		$cui->root->draw();
+		$btns->focus();
+	}, KEY_ENTER() );
+	$hbtns->focus();
+}
+
+######################################################
+
+

@@ -1,0 +1,171 @@
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+i pkginfo
+i copyright
+i depend
+!default 0555 root bin
+d none usr/share 0755 root sys
+d none usr/share/pixmaps 0755 root other
+f none usr/share/pixmaps/belenix-large.jpg=belenix-large.jpg 0755 root bin
+f none usr/share/pixmaps/belenix-large.png=belenix-large.png 0755 root bin
+f none usr/share/pixmaps/belenix_wall1_large.jpg=belenix_wall1_large.jpg 0755 root bin
+f none usr/share/pixmaps/belenix_wall2_large.png=belenix_wall2_large.png 0755 root bin
+f none usr/share/pixmaps/belenix_wall4.jpg=belenix_wall4.jpg 0755 root bin
+f none usr/share/pixmaps/belenix_wall4.png=belenix_wall4.png 0755 root bin
+f none usr/share/pixmaps/belenix_logo_small.png=belenix_logo_small.png 0755 root bin
+f none usr/share/pixmaps/worldkdeback.jpg=worldkdeback.jpg 0755 root bin
+f none usr/share/pixmaps/worldxfceback.jpg=worldxfceback.jpg 0755 root bin
+f none usr/share/pixmaps/firefox.png=firefox.png 0755 root bin
+
+d none usr/share/doc 0755 root other
+f none usr/share/doc/belenix_basics.txt 0644 root other
+
+#f none usr/share/misc/xfce4-session.rc.standard 0644 root other
+#f none usr/share/misc/kdecompiz.desktop 0644 root other
+
+d none usr/share/misc 0755 root other
+d none usr/share/misc/xconfigs 0755 root other
+f none usr/share/misc/xconfigs/xorg.conf.f4k=xconfigs/xorg.conf.f4k 0644 root other
+f none usr/share/misc/xconfigs/xorg.conf.virtpc=xconfigs/xorg.conf.virtpc 0644 root other
+s none usr/X=X11
+
+d none usr/share/xsessions 0755 root bin
+f none usr/share/xsessions/kde-compiz.desktop=kde-compiz.desktop 0644 root bin
+f none usr/share/xsessions/xfce-compiz.desktop=xfce-compiz.desktop 0644 root bin
+
+d none usr/bin 0755 root bin
+f none usr/bin/kde-compiz 0755 root bin
+f none usr/bin/kde-compiz.kdewm 0755 root bin
+f none usr/bin/xfce-compiz 0755 root bin
+
+f none AUTORUN.INF 0644 root sys
+f none info/1.gif=info/1.gif 0544 root sys
+f none info/16.gif=info/16.gif 0544 root sys
+f none info/4.gif=info/4.gif 0544 root sys
+f none info/Intro.htm=info/Intro.htm 0544 root sys
+f none info/bg.jpg=info/bg.jpg 0544 root sys
+f none info/bicon.png=info/bicon.png 0544 root sys
+f none info/innov.gif=info/innov.gif 0544 root sys
+
+d none etc 0755 root sys
+d none etc/profile.d 0755 root sys
+f none etc/profile.d/env.sh=profile.d/env.sh 0755 root other
+f none etc/profile.d/kde.compiz.pagein=profile.d/kde.compiz.pagein 0755 root other
+f none etc/profile.d/kde.minimal.pagein=profile.d/kde.minimal.pagein 0755 root other
+f none etc/profile.d/kde.pagein=profile.d/kde.pagein 0755 root other
+f none etc/profile.d/xfce.minimal.pagein=profile.d/xfce.minimal.pagein 0755 root other
+f none etc/profile.d/xfce.pagein=profile.d/xfce.pagein 0755 root other
+
+d none etc/xdg 0755 root sys
+d none etc/xdg/xfce4-session 0755 root sys
+f none etc/xdg/xfce4-session/xfce4-session.rc.compiz=xfce4-session.rc.compiz 0644 root other
+
+#
+# KDE Branding
+#
+d none etc/skel 0755 root sys
+d none etc/skel/.kde 0755 root other
+d none etc/skel/.kde/share 0755 root other
+d none etc/skel/.kde/share/Autostart 0755 root other
+d none etc/skel/.kde/share/config 0755 root other
+f none etc/skel/.kde/share/config/kdeglobals=kdeglobals 0644 root other
+f none etc/skel/.kde/share/config/startupconfig=startupconfig 0644 root other
+f none etc/skel/.kde/share/config/startupconfigkeys=startupconfigkeys 0644 root other
+f none etc/skel/.kde/share/config/khotkeysrc=khotkeysrc 0644 root other
+f none etc/skel/.kde/share/config/kwinrc=kwinrc 0644 root other
+f none etc/skel/.kde/share/config/kpersonalizerrc=kpersonalizerrc 0644 root other
+f none etc/skel/.kde/share/config/kdedrc=kdedrc 0644 root other
+f none etc/skel/.kde/share/config/kdesktoprc=kdesktoprc 0644 root other
+f none etc/skel/.kde/share/config/ksplashrc=ksplashrc 0644 root other
+f none etc/skel/.kde/share/config/ktiprc=ktiprc 0644 root other
+f none etc/skel/.kde/share/config/kcmartsrc=kcmartsrc 0644 root other
+f none etc/skel/.kde/share/config/kickerrc=kickerrc 0644 root other
+f none etc/skel/.kde/share/config/tastymenu_panelapplet_3tvgdzsuzex1fmfn9qga_rc=tastymenu_panelapplet_3tvgdzsuzex1fmfn9qga_rc 0644 root other
+f none etc/skel/.kde/share/config/gtkrc=gtkrc 0644 root other
+f none etc/skel/.kde/share/config/gtkrc-2.0=gtkrc-2.0 0644 root other
+
+f none etc/skel/.kderc=.kderc 0644 root other
+f none etc/skel/.vimrc=vimrc 0644 root other
+f none etc/skel/.gtkrc-2.0-kde=gtkrc-2.0-kde 0644 root other
+d none etc/skel/.kde/share/config/session 0755 root other
+d none etc/skel/.kde/env 0755 root other
+f none etc/skel/.kde/env/gtk-qt-engine.rc.sh=gtk-qt-engine.rc.sh 0644 root other
+
+#
+# Xfce Branding
+#
+d none etc/skel/.config 0755 root other
+d none etc/skel/.config/xfce4 0755 root other
+f none etc/skel/.config/xfce4/helpers.rc=xfce4/helpers.rc 0644 root other
+f none etc/skel/.config/xfce4/Xft.xrdb=xfce4/Xft.xrdb 0644 root other
+d none etc/skel/.config/xfce4/panel 0755 root other
+f none etc/skel/.config/xfce4/panel/clock-14.rc=xfce4/panel/clock-14.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/xfce4-menu-5.rc=xfce4/panel/xfce4-menu-5.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/panels.xml=xfce4/panel/panels.xml 0644 root other
+f none etc/skel/.config/xfce4/panel/launcher-10.rc=xfce4/panel/launcher-10.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/separator-11.rc=xfce4/panel/separator-11.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/systray-4.rc=xfce4/panel/systray-4.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/actions-12.rc=xfce4/panel/actions-12.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/separator-13.rc=xfce4/panel/separator-13.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/pager-2.rc=xfce4/panel/pager-2.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/tasklist-3.rc=xfce4/panel/tasklist-3.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/separator-6.rc=xfce4/panel/separator-6.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/xfce4-mixer-12067931680.rc=xfce4/panel/xfce4-mixer-12067931680.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/launcher-7.rc=xfce4/panel/launcher-7.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/launcher-8.rc=xfce4/panel/launcher-8.rc 0644 root other
+f none etc/skel/.config/xfce4/panel/launcher-9.rc=xfce4/panel/launcher-9.rc 0644 root other
+d none etc/skel/.config/xfce4/mcs_settings 0755 root other
+f none etc/skel/.config/xfce4/mcs_settings/desktop.xml=xfce4/mcs_settings/desktop.xml 0644 root other
+f none etc/skel/.config/xfce4/mcs_settings/gtk.xml=xfce4/mcs_settings/gtk.xml 0644 root other
+f none etc/skel/.config/xfce4/mcs_settings/orage.xml=xfce4/mcs_settings/orage.xml 0644 root other
+f none etc/skel/.config/xfce4/mcs_settings/sound.xml=xfce4/mcs_settings/sound.xml 0644 root other
+f none etc/skel/.config/xfce4/mcs_settings/xfwm4.xml=xfce4/mcs_settings/xfwm4.xml 0644 root other
+d none etc/skel/.config/xfce4/mixer 0755 root other
+f none etc/skel/.config/xfce4/mixer/profiles.xml=xfce4/mixer/profiles.xml 0644 root other
+f none etc/skel/.config/xfce4/mixer/config.xml=xfce4/mixer/config.xml 0644 root other
+d none etc/skel/.config/xfce4/notication-daemon-xfce 0755 root other
+f none etc/skel/.config/xfce4/notication-daemon-xfce/settingsrc=xfce4/notication-daemon-xfce/settingsrc 0644 root other
+d none etc/skel/.config/xfce4-session 0755 root other
+f none etc/skel/.config/xfce4-session/xfce4-session.rc=xfce4-session/xfce4-session.rc 0644 root other
+d none etc/skel/.config/autostart 0755 root other
+f none etc/skel/.config/autostart/xfce4-tips-autostart.desktop=xfce4/autostart/xfce4-tips-autostart.desktop 0644 root other
+
+d none etc/skel/.local 0755 root other
+d none etc/skel/.local/share 0755 root other
+d none etc/skel/.local/share/xfce4 0755 root other
+d none etc/skel/.local/share/xfce4/helpers 0755 root other
+f none etc/skel/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop=xfce4/helpers/custom-TerminalEmulator.desktop 0644 root other
+f none etc/skel/.bashrc=local.bashrc 0644 root other
+f none etc/skel/.bash_profile=local.bashrc 0644 root other
+
+f none etc/shells=shells 0644 root sys
+
+d none boot 0755 root sys
+d none boot/grub 0755 root sys
+f none boot/grub/belenixboot.xpm.gz=belenixboot.xpm.gz 0755 root sys
+
+d none var 0755 root sys
+d none var/adm 0775 root sys
+s none var/adm/utmp=utmpx

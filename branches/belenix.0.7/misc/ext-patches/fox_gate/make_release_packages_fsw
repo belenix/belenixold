@@ -1,0 +1,276 @@
+#! /bin/sh
+#
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, and/or sell copies of the Software, and to permit persons
+# to whom the Software is furnished to do so, provided that the above
+# copyright notice(s) and this permission notice appear in all copies of
+# the Software and that both the above copyright notice(s) and this
+# permission notice appear in supporting documentation.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+# OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL
+# INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING
+# FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+# NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+# WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# Except as contained in this notice, the name of a copyright holder
+# shall not be used in advertising or otherwise to promote the sale, use
+# or other dealings in this Software without prior written authorization
+# of the copyright holder.
+# 
+# @(#)make_release_packages	1.55 07/11/06
+#
+#	Create and fill a package staging area for X
+#
+#	This script should be run from the base of the build tree.
+#	It takes no parameters.
+#
+#	Example:
+#	    cd /export/home/hammer1/WORKSPACES_S493_ALPHA2.1
+#	    ./make_release_packages
+#
+#   To build a subset of packages
+#	env PACKAGE_LIST="packages" ./make_release_packages
+#
+
+#   Make sure that we aren't affected by the personal environment of
+#   whoever is running this script
+PATH=/opt/SUNWspro/bin:/opt/SUNWguide/bin:/usr/bin:/usr/ccs/bin:/usr/sbin:.
+SHELL=/bin/sh
+
+MACH=`uname -p`
+DATE=`date +0.%Y.%m.%d`
+
+# Workaround till we fix app-default-dir setting in libXt
+cp proto-i386-svr4/usr/X11/share/X11/app-defaults/* proto-i386-svr4/usr/X11/lib/X11/app-defaults/
+
+#   List of official (deliverable) X-window packages
+XW_PACKAGE_LIST="SUNWxwcft SUNWxwdem SUNWxwdim SUNWxwfs SUNWxwinc \
+	SUNWxwice SUNWxwopt SUNWxwpmn SUNWxwsrc SUNWxwacx \
+	SUNWxwhl SUNWi1of SUNWxwpft SUNWxwsrv SUNWxwoft \
+	SUNWfontconfig SUNWfontconfig-root SUNWfontconfig-docs SUNWxwsvr \
+	SUNWxscreensaver-hacks SUNWfreetype2 SUNWxwxft \
+	SUNWxorg-clientlibs SUNWxorg-devel-docs SUNWxorg-headers \
+    	SUNWxorg-client-docs SUNWxorg-client-programs SUNWxorg-compatlinks \
+	SUNWxprint-server FSWxorg-client-programs SUNWxcursor-themes SUNWvncviewer"
+
+# L10N packages are normally only built on sparc since they only have text
+# files that are the same for both platforms
+if [ "$MACH" = "sparc" -o "x$BUILD_L10N" = "xyes" ]; then
+    XW_L10N_PACKAGES="SUNW0xacx SUNW0xman SUNW0xpmn SUNW0xwfa SUNW0xwplt \
+	    SUNW0xwopt SUNW0xwsvr"
+else
+    XW_L10N_PACKAGES=" "
+fi
+
+# Which platform name do we use for 64-bit?
+if [ "$MACH" = "sparc" ]; then
+    PLAT_64="sparcv9"
+else 
+    if [ "$MACH" = "i386" ]; then
+	PLAT_64="amd64"
+    else
+	echo "Unknown architecture - not SPARC nor i386."
+	exit 1
+    fi
+fi
+
+#
+# Trusted Extensions packages 
+#
+
+TSOL_PACKAGE="SUNWxorg-tsol-module"
+
+# Packages with platform-specific prototype files, including those with
+# 64-bit libraries
+XW_PLT_PACKAGE="SUNWxwplt SUNWxwplr SUNWxwfnt SUNWxwrtl SUNWxwslb \
+    SUNWxwmod SUNWxscreensaver-hacks-gl SUNWxwman SUNWxwfsw \
+    SUNWxorg-server SUNWxorg-graphics-ddx SUNWxorg-doc SUNWxorg-cfg \
+    SUNWxvnc $TSOL_PACKAGE"
+
+# Some packages are only built for certain platforms currently
+if [ "$MACH" = "sparc" ]; then
+	XW_PLT_PACKAGE="$XW_PLT_PACKAGE SUNWxwpsr"
+else
+	XW_PACKAGE_LIST="$XW_PACKAGE_LIST SUNWxorg-mesa"
+fi
+
+EXTRA_PACKAGES=" "
+
+cp /var/svc/manifest/application/x11/xfs.xml proto-i386-svr4/var/svc/manifest/application/x11
+PACKAGE_LIST="SUNWfontconfig SUNWxorg-clientlibs SUNWxorg-server SUNWfontconfig-docs SUNWxorg-compatlinks SUNWfontconfig-root SUNWxorg-devel-docs FSWxorg-devel-docs SUNWxscreensaver-hacks SUNWfreetype2 SUNWxorg-doc SUNWxscreensaver-hacks-gl SUNWxorg-cfg SUNWxorg-graphics-ddx SUNWxorg-client-docs SUNWxorg-headers SUNWxwsvr SUNWxorg-client-programs SUNWxorg-mesa SUNWxwxft FSWxorg-client-programs FSWxorg-client-docs FSWxorg-clientlibs FSWxwrtl FSWxorg-headers FSWxorg-data FSWxorg-fonts FSWxwpft SUNWxvnc SUNWvncviewer SUNWxwplr"
+
+: ${PACKAGE_DIR:=`pwd`/proto-packages}
+SOURCEDIR=`pwd`
+
+cd $SOURCEDIR/packages
+
+# Get build version from pkgversion
+if [ -f pkgversion ] ; then
+    . pkgversion
+else
+    echo "Error: $SOURCEDIR/packages/pkgversion not found.  Cannot continue."
+    exit 1
+fi
+
+if [ "x${VERSION}" = "x" ] ; then
+    echo "VERSION not set in $SOURCEDIR/packages/pkgversion - run newPkRev"
+    exit 1
+fi
+
+if [ "x${BUILD}" = "x" ] ; then
+    echo "BUILD not set in $SOURCEDIR/packages/pkgversion - run newPkRev"
+    exit 1
+fi
+
+DECIMAL_BUILD=`echo ${BUILD} | awk '{print $1 / 100.0}'`
+echo "Building packages for X11 version ${VERSION} build ${DECIMAL_BUILD}"
+
+#   Next, create the staging area.  Make sure that the logs directory
+#   is writeable by everyone because it is likely that we will need to
+#   write into it as root across an NFS link...
+#
+echo 'Removing old proto-packages and recreating'
+/bin/rm -rf $PACKAGE_DIR
+/bin/mkdir $PACKAGE_DIR
+/bin/mkdir $PACKAGE_DIR/logs
+/bin/chmod a+w $PACKAGE_DIR/logs
+
+
+#  Now copy the package description info
+echo 'Copying package descriptions'
+
+#   We can't just use `sccs get SCCS' because it will punt if it hits
+#   a file which is being edited (writeable).
+#   
+#for F in SCCS/s.*
+#do
+#    /usr/ccs/bin/get -s $F
+#done
+
+/bin/cp copyright depend i.* r.* $PACKAGE_DIR >/dev/null 2>&1
+
+#for package in $PACKAGE_LIST common_files
+for package in $PACKAGE_LIST
+do
+    cd $package
+
+    #   See above about sccs usage
+    #for F in SCCS/s.*
+    #do
+#	/usr/ccs/bin/get $F >/dev/null 2>&1
+#    done
+
+    /bin/mkdir $PACKAGE_DIR/$package
+    /bin/cp p* d* lib* i.* r.* M* $PACKAGE_DIR/$package >/dev/null 2>&1
+
+    # We keep the master copyright in the top-level copyright file
+    # Packages that need additional copyright have copyright.add files
+    # that we then merge here
+    if [ -f copyright.add ] ; then
+	cat ../copyright copyright.add > $PACKAGE_DIR/$package/copyright
+    else
+	cp ../copyright $PACKAGE_DIR/$package/copyright
+    fi
+    cd ..
+done
+
+
+#   Now move into the package staging area and build the packages.
+cd $PACKAGE_DIR
+
+if [ "$MACH" = "sparc" ]; then
+    PROTODIR=$SOURCEDIR/proto-sun4-svr4
+else
+    PROTODIR=$SOURCEDIR/proto-${MACH}-svr4
+fi
+
+for D in etc usr var lib ; do
+    /bin/rm -f $D
+    /bin/ln -s $PROTODIR/$D $D
+done
+
+for D in openwin dt sfw bin ; do
+    /bin/rm -f $D
+    /bin/ln -s $PROTODIR/usr/$D $D
+done
+
+LOGfile=logs/package_build
+
+echo '---Building packages'
+XW_PLT_PAT="`echo $XW_PLT_PACKAGE | tr ' ' '|'`"
+
+# Variables to pass to pkgmk for use in prototype files
+# They must start with lowercase letters to be resolved at pkgmk time
+PKGMK_VARS="plat_64=${PLAT_64} plat=${MACH}"
+
+for package in $PACKAGE_LIST
+do
+	cd $package
+	date
+	echo "******** Making the $package package ********"
+
+	cat pkginfo.tmpl | sed -e '/ARCH/s/ISA/'$MACH'/' -e 's/SUNW_PRODVERS=.*$/SUNW_PRODVERS='${VERSION}/ -e 's/VERSION=.*$/VERSION='${VERSION}.${BUILD},REV=${DATE}/ > pkginfo
+	if [ -f Makefile ]; then
+		echo make all
+		/usr/ccs/bin/make SOURCEDIR=$SOURCEDIR/packages all
+	fi
+
+	eval "case $package in
+	$XW_PLT_PAT)
+		if [ ! -f prototype_$MACH ]; then
+		    ln -s prototype_com prototype_$MACH
+		fi
+		echo /usr/bin/pkgmk -f prototype_$MACH -d $PACKAGE_DIR/$package -o ${PKGMK_VARS}
+		/usr/bin/pkgmk -f prototype_$MACH -d $PACKAGE_DIR/$package -o ${PKGMK_VARS}
+		;;
+	*)
+               if [ `echo $package | grep FSW` ]
+               then
+                       if [ `echo $package | grep FSWxorg-data` ]
+                       then
+                               echo /usr/bin/pkgmk -d $PACKAGE_DIR/$package -o ${PKGMK_VARS}
+                               /usr/bin/pkgmk -d $PACKAGE_DIR/$package -o ${PKGMK_VARS}
+                       else
+                               echo /usr/bin/pkgmk -b $PROTODIR/usr -d $PACKAGE_DIR/$package -o ${PKGMK_VRS}
+                               /usr/bin/pkgmk -b $PROTODIR/usr -d $PACKAGE_DIR/$package -o ${PKGMK_VARS}
+                       fi
+               else
+                       echo /usr/bin/pkgmk -d $PACKAGE_DIR/$package -o ${PKGMK_VARS}
+                       /usr/bin/pkgmk -d $PACKAGE_DIR/$package -o ${PKGMK_VARS}
+               fi
+		;;
+	esac"
+
+	echo "******** Done Making the $package package ********"
+	cd ..
+done >$LOGfile 2>&1
+
+echo result log is in $PACKAGE_DIR/$LOGfile
+
+printf "Packages built:  "
+grep -c "Packaging complete" $PACKAGE_DIR/$LOGfile
+printf "Packages failed: "
+grep -c "Packaging was not successful" $PACKAGE_DIR/$LOGfile
+
+# Create an installdir with symlinks to SUNW* pkgs
+cd $PACKAGE_DIR
+mkdir installdir
+cd installdir
+ln -s ../SUNW*/SUNW* .
+if [ -f $SOURCEDIR/packages/upgrade-X ] ; then
+    cp -p $SOURCEDIR/packages/upgrade-X .
+    chmod a+x upgrade-X
+fi
+
+exit
+

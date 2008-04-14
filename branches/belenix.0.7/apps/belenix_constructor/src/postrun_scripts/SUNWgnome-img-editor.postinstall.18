@@ -1,0 +1,2 @@
+test -x /usr/bin/update-desktop-database || exit 0
+/usr/bin/update-desktop-database

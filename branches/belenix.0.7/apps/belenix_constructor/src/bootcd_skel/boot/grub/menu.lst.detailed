@@ -1,0 +1,44 @@
+#
+#pragma ident	"@(#)install_menu	1.1	05/04/15 SMI"
+#
+default=0
+timeout=30
+splashimage=/boot/grub/belenixboot.xpm.gz
+foreground=827d7c
+background=2b0712
+title BeleniX (32 bit) 
+	kernel /platform/i86pc/kernel/unix
+	module /boot/x86.microroot
+
+title BeleniX (32 bit, No ACPI) 
+	kernel /platform/i86pc/kernel/unix -B acpi-user-options=2
+	module /boot/x86.microroot
+
+title BeleniX (32 bit, No ACPI, Verbose, Debug)
+	kernel /platform/i86pc/kernel/unix -B acpi-user-options=2 -kv -m verbose
+	module /boot/x86.microroot
+
+title BeleniX text console (32 bit)
+	kernel /platform/i86pc/kernel/unix -B livemode=text
+	module /boot/x86.microroot
+
+title BeleniX (32 bit) (Disable net for VMware)
+	kernel /platform/i86pc/kernel/unix -B disable-ae=true
+	module /boot/x86.microroot
+
+title BeleniX (32 bit) I/O tracing
+	kernel /platform/i86pc/kernel/unix -B trace=on
+	module /boot/x86.microroot
+
+title Boot from Hard Disk
+	rootnoverify (hd0)
+	chainloader +1
+
+#title BeleniX (32 bit, Use Linux SWAP - Experimental) 
+#	kernel /boot/platform/i86pc/kernel/unix -m linswap
+#	module /boot/x86.microroot
+
+#title BeleniX (32 bit, No ACPI, Use Linux SWAP - Experimental) 
+#	kernel /boot/platform/i86pc/kernel/unix -B acpi-user-options=2 -m linswap
+#	module /boot/x86.microroot
+

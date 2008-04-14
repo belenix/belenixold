@@ -1,0 +1,112 @@
+#!/usr/bin/ksh
+
+WGET=/usr/sfw/bin/wget
+PKGREPO=http://www.genunix.org/distributions/belenix_site/binfiles/extra_packages
+TMPDIR=/tmp/get-pkg
+ADMIN=${TMPDIR}/XRG.admin.$$
+PKGCACHE=/var/tmp/get-pkg
+SZA=/usr/bin/7za
+
+[ -d ${TMPDIR} ] && rm -rf ${TMPDIR}
+mkdir -p ${TMPDIR}
+
+[ ! -d ${PKGCACHE} ] && mkdir ${PKGCACHE}
+
+echo "** Fetching catalog ..."
+$WGET ${PKGREPO}/catalog -O ${TMPDIR}/catalog
+
+if [ $? -ne 0 ]
+then
+	echo "ERROR: Failed to fetch catalog"
+	exit 1
+fi
+
+usage() {
+	echo "Usage: get-pkg <cluster>"
+	echo ""
+	echo "Where <cluster> can be one of the following: "
+	cat ${TMPDIR}/catalog | nawk 'BEGIN {FS=":"} {
+		printf("%12s - %s\n",$1, $2)}'
+	exit 0
+}
+
+if [ "x$1" = "x" ]
+then
+	usage
+fi
+
+cluster=$1
+egrep "^${cluster}:" ${TMPDIR}/catalog > /dev/null
+if [ $? -ne 0 ]
+then
+	usage
+fi
+
+cat >$ADMIN <<_DONE_
+mail=
+instance=overwrite
+partial=nocheck
+runlevel=ask
+idepend=nocheck
+rdepend=nocheck
+space=nocheck
+setuid=nocheck
+conflict=nocheck
+action=nocheck
+basedir=default
+_DONE_
+
+echo "** Fetching cluster information ..."
+$WGET ${PKGREPO}/$cluster -O ${TMPDIR}/$cluster
+
+if [ $? -ne 0 ]
+then
+	echo "ERROR: Failed to fetch cluster information"
+	exit 1
+fi
+
+if [ -f ${PKGCACHE}/curpkg ]
+then
+	ppkg=`cat ${PKGCACHE}/curpkg`
+	rm -f ${PKGCACHE}/${ppkg}.pkg.7z
+	rm -f ${PKGCACHE}/${ppkg}.pkg
+fi
+
+for pkg in `cat ${TMPDIR}/$cluster`
+do
+	pkginfo -q ${pkg}
+	if [ $? -ne 0 ]
+	then
+		if [ ! -f ${PKGCACHE}/${pkg}.pkg.7z ]
+		then
+			echo "Fetching package $pkg ..."
+			echo "$pkg" > ${PKGCACHE}/curpkg
+			$WGET ${PKGREPO}/${pkg}.pkg.7z -O ${PKGCACHE}/${pkg}.pkg.7z
+			if [ $? -ne 0 ]
+			then
+				echo "ERROR: Failed to fetch package $pkg"
+				exit 1
+			fi
+		fi
+		(cd ${PKGCACHE}; ${SZA} e ${pkg}.pkg.7z)
+		if [ $? -ne 0 ]
+		then
+			echo "ERROR: Failed to extract package $pkg"
+			exit 1
+		fi
+		rm -f ${PKGCACHE}/${pkg}.pkg.7z
+		echo "Installing package ${pkg}"
+		pkgadd -n -a ${ADMIN} -d ${PKGCACHE}/${pkg}.pkg ${pkg}
+		pkginfo -q ${pkg}
+		if [ $? -ne 0 ] ; then
+			echo "ERROR: Failed to install package $pkg"
+			exit 1
+		fi
+		rm -f ${PKGCACHE}/${pkg}.pkg
+	else
+		echo "Skipping already installed package $pkg"
+	fi
+done
+
+rm -rf ${PKGCACHE}
+rm -rf ${TMPDIR}

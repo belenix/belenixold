@@ -1,0 +1,32 @@
+--- nss-3.11.9/mozilla/security/nss/cmd/platlibs.mk.orig	2008-02-20 00:10:35.157954463 +0530
++++ nss-3.11.9/mozilla/security/nss/cmd/platlibs.mk	2008-02-20 00:12:25.832546496 +0530
+@@ -167,7 +167,7 @@
+ 	$(NULL)
+ else
+ EXTRA_SHARED_LIBS += \
+-	-L$(NSPR_LIB_DIR) \
++	-L$(NSPR_LIB_DIR) -R$(NSPR_LIB_DIR) \
+ 	-lplc4 \
+ 	-lplds4 \
+ 	-lnspr4 \
+--- nss-3.11.9/mozilla/security/coreconf/SunOS5.11_i86pc.mk.orig	2008-02-19 23:24:51.073625408 +0530
++++ nss-3.11.9/mozilla/security/coreconf/SunOS5.11_i86pc.mk	2008-02-20 00:21:58.847606116 +0530
+@@ -35,7 +35,7 @@
+ #
+ # ***** END LICENSE BLOCK *****
+ 
+-SOL_CFLAGS	= -D_SVID_GETTOD
++SOL_CFLAGS	= -D_SVID_GETTOD -I/usr/include/mps -I/build/mozilla_gate/nspr-4.7/mozilla/nsprpub/dist/include/nspr
+ 
+ include $(CORE_DEPTH)/coreconf/SunOS5.mk
+ 
+@@ -51,3 +51,9 @@
+ endif
+ 
+ OS_LIBS += -lthread -lnsl -lsocket -lposix4 -ldl -lc
++
++ifeq ($(USE_64),1)
++    DSO_LDOPTS += -L/usr/lib/mps/amd64 -R/usr/lib/mps/amd64
++else
++    DSO_LDOPTS += -L/usr/lib/mps -R/usr/lib/mps
++endif
