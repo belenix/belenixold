@@ -4,9 +4,9 @@
 # package are under the same license as the package itself.
 
 %include Solaris.inc
-%define tarball_version 1.6.9p12
+%define tarball_version 1.6.9p15
 
-Name:                SFEsudo
+Name:                %{pkg_prefix}sudo
 Summary:             Provides limited super user privs to specific users
 Version:             1.6.9
 Source:              http://www.courtesan.com/sudo/dist/sudo-%{tarball_version}.tar.gz
@@ -45,7 +45,7 @@ rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
 
-rm ${RPM_BUILD_ROOT}%{_libdir}/*.la
+rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -71,6 +71,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/sudoers
 
 %changelog
+* Sun Apr 27 2008 - Shivakumar GN <shivakumar.gn@gmail.com>
+- Bumped from 1.6.9p12 to 1.6.9p15
+- 1.6.9p12 had vanished from the hosted location. Time to have our own source hosting!
+- removal of {_libdir}/*.la under %install failed since *.la didn't exist. Fixed it with rm -f option.
 * Mon Apr 07 2008 - moinakg@gmail.com
 - Fix perms for /etc/sudoers.
 * Wed Feb 06 2008 - Ananth Shrinivas <ananth@sun.com>
