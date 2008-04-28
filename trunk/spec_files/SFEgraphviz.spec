@@ -22,7 +22,7 @@ Requires: SUNWgd2
 Requires: SUNWlexpt
 Requires: SUNWfontconfig
 Requires: SUNWlexpt
-%if %SFEfreetype
+%if %{SFEfreetype}
 Requires: SFEfreetype
 %else
 Requires: SUNWfreetype2
@@ -31,7 +31,7 @@ Requires: SUNWgnome-base-libs
 Requires: SUNWjpg
 Requires: SUNWlibC
 Requires: SUNWpng
-%if %SFEfreetype
+%if %{SFEfreetype}
 BuildRequires: SFEfreetype-devel
 %else
 BuildRequires: SUNWfreetype2
@@ -137,6 +137,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/graphviz/*
 
 %changelog
+* Mon Apr 28 2008 - <shivakumar dot gn at gmail dot com>
+- Fixed usage of macro in if condition
 * Thu Jan 24 2008 - nonsea@users.sourceforge.net
 - Replace SFEruby to SUNWruby18u
 * Wed Jan 17 2008 - moinak.ghosh@sun.com
