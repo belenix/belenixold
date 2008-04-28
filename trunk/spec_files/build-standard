@@ -32,6 +32,9 @@
 #
 # Changelog
 #
+# 2008-04-29 - Moinak Ghosh moinakg@gmail.com
+# Add SFElcms to build (needed for Qt).
+#
 # 2008-03-01 - Moinak Ghosh <moinakg@gmail.com>
 # Add more packages.
 #
@@ -189,7 +192,7 @@ export PATH
 
 call_pkgtool $_GCC "SFElibx264.spec:SFEamrwb.spec:SFEncurses.spec:SFEswig.spec:SFElibmng.spec:encumbered/SFElibnjb.spec:SFElibao.spec:SFEliveMedia.spec:SFElibcdio.spec:SFElibfribidi.spec:SFEladspa.spec:SFEopenal.spec:SFEgawk.spec:SFEsdl.spec:SFEsdl-image.spec:SFElibebml.spec:SFElibmatroska.spec:SFElibcddb.spec:SFElibupnp.spec:SFEvcdimager.spec:SFElibtar.spec:SFElibdiscid.spec:SFEjack.spec:SFEfftw.spec"
 
-call_pkgtool $_STUDIO "SFEnetpbm.spec"
+call_pkgtool $_STUDIO "SFEnetpbm.spec:SFElcms.spec"
 
 call_pkgtool $_GCC "SFEfreealut.spec:SFEsdl-mixer.spec:SFEsdl-net.spec:SFEhtml-tidy.spec"
 

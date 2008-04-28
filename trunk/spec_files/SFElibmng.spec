@@ -5,6 +5,12 @@
 #
 %include Solaris.inc
 
+%ifarch amd64
+%include arch64.inc
+%endif
+
+%include base.inc
+
 Name:                    SFElibmng
 Summary:                 libmng  - the MNG reference library
 Version:                 1.0.10
@@ -22,13 +28,28 @@ SUNW_BaseDir:            %{_basedir}
 Requires: %name
 
 %prep
-%setup -q -n libmng-%version
+%setup -q -c -n %name-%version
+
+%ifarch amd64
+cp -rp libmng-%version libmng-%version-64
+%endif
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
 if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
+
+export CFLAGS32="%optflags"
+export CFLAGS64="%optflags64"
+export LDFLAGS32="%_ldflags"
+export LDFLAGS64="%_ldflags64"
+
+%ifarch amd64
+export CFLAGS="$CFLAGS64"
+export LDFLAGS="$LDFLAGS64"
+
+cd libmng-%version-64
 cp makefiles/configure.in .
 cp makefiles/Makefile.am .
 for f in *.[ch]; do dos2unix -ascii $f $f; done
@@ -36,19 +57,51 @@ libtoolize --force
 aclocal $ACLOCAL_FLAGS
 autoconf
 automake -a -c -f
-export CFLAGS="%optflags"
-export LDFLAGS="%_ldflags"
-./configure --prefix=%{_prefix} --mandir=%{_mandir} \
-            --libdir=%{_libdir}              \
+./configure --prefix=%{_prefix}              \
+            --mandir=%{_mandir}              \
+            --libdir=%{_libdir}/%{_arch64}   \
             --libexecdir=%{_libexecdir}      \
             --sysconfdir=%{_sysconfdir}      \
             --enable-shared		     \
 	    --disable-static
 
 make -j$CPUS 
+cd ..
+%endif
+
+export CFLAGS="$CFLAGS32"
+export LDFLAGS="$LDFLAGS43"
+
+cd libmng-%version
+cp makefiles/configure.in .
+cp makefiles/Makefile.am .
+for f in *.[ch]; do dos2unix -ascii $f $f; done
+libtoolize --force
+aclocal $ACLOCAL_FLAGS
+autoconf
+automake -a -c -f
+./configure --prefix=%{_prefix}              \
+            --mandir=%{_mandir}              \
+            --libdir=%{_libdir}              \
+            --libexecdir=%{_libexecdir}      \
+            --sysconfdir=%{_sysconfdir}      \
+            --enable-shared                  \
+            --disable-static
+
+make -j$CPUS
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+%ifarch amd64
+cd libmng-%version-64
+make DESTDIR=$RPM_BUILD_ROOT install
+rm -f $RPM_BUILD_ROOT%{_libdir}/%{_arch64}/lib*a
+cd ..
+%endif
+
+cd libmng-%version
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*a
 
@@ -59,6 +112,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
+
+%ifarch amd64
+%dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
+%{_libdir}/%{_arch64}/lib*.so*
+%endif
+
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_mandir}
 %dir %attr (0755, root, bin) %{_mandir}/man5
@@ -74,6 +133,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Apr 29 2008 - moinakg@gmail.com
+- Enable building 32Bit and 64Bit libraries needed for Qt3.
 * Sun Nov 4 2007 - markwright@internode.on.net
 - Bump to 1.1.10
 * Fri Mar 30 2007 - daymobrew@users.sourceforge.net
