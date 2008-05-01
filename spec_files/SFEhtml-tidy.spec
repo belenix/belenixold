@@ -10,7 +10,7 @@
 %define src_version	051026
 %define pkg_release	1
 
-%define deploy_prefix	/usr/local
+%define deploy_prefix	/usr
 
 
 # %{_topdir} is by default set to RPM_BUILD_ROOT
@@ -38,7 +38,7 @@ Patch:        	tidy-01-051026.diff
 Vendor:       	Dave Raggett
 URL:            http://tidy.sourceforge.net
 Packager:     	Ravi,Saurabh
-BuildRoot:		%{_tmppath}/%{src_name}-%{version}-build
+BuildRoot:	%{_tmppath}/%{src_name}-%{version}-build
 
 
 #Ideally these should be included for requires: glib2, gtk2, pango
@@ -69,6 +69,8 @@ make
 %install
 cd build/gmake
 make install DESTDIR=$RPM_BUILD_ROOT
+mv ${RPM_BUILD_ROOT}/usr/local/* ${RPM_BUILD_ROOT}/usr
+rmdir ${RPM_BUILD_ROOT}/usr/local
 
 echo "_prefix  %{_prefix}"
 echo "RPM   $RPM_BUILD_ROOT"
@@ -91,6 +93,8 @@ rm -rf $RPM_BUILD_ROOT
 %{deploy_prefix}/include/*
 
 %changelog
+* Thu May 01 2008 - moinakg@gmail.com
+- 1955359 SFEtidy should not install into /usr/local.
 * Wed Jan 30 2008 - moinak.ghosh@sun.com
 - Remove architecture from package name.
 * 2007.06.25 - Ravibharadwaj & Saurabh vyas
