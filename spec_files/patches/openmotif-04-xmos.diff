@@ -1,0 +1,13 @@
+--- openmotif-2.3.0-64/lib/Xm/Xmos.c.orig	2008-05-16 14:48:39.929589915 +0530
++++ openmotif-2.3.0-64/lib/Xm/Xmos.c	2008-05-16 14:46:03.493612384 +0530
+@@ -49,6 +49,10 @@
+ /* (c) Copyright 1989, DIGITAL EQUIPMENT CORPORATION, MAYNARD, MASS. */
+ /* (c) Copyright 1987, 1988, 1989, 1990, 1991, 1992 HEWLETT-PACKARD COMPANY */
+ 
++#define POSIX_PTHREAD_SEMANTICS
++#define _POSIX_PTHREAD_SEMANTICS
++#include <sys/types.h>
++#include <dirent.h>
+ #include <stdio.h>
+ 
+ #ifdef __cplusplus
