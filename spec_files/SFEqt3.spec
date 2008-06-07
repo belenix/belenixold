@@ -231,6 +231,7 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 # Developing Qt apps needs a few .a libs
 #
 rm ${RPM_BUILD_ROOT}%{_libdir}/%{_arch64}/*.la
+rm -rf ${RPM_BUILD_ROOT}%{_datadir}
 cd ..
 %endif
 
@@ -356,6 +357,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Sat Jun 07 2008 - moinakg@gmail.com
+- Remove intermediate results from 64Bit install leaving only the binaries.
 * Tue Apr 29 2008 - moinakg@gmail.com
 - Changes to build 32Bit and 64Bit Qt. Derived from Thomas Wagner's changes in SFE gate.
 - Add new doc package.

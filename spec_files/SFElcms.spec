@@ -127,7 +127,7 @@ do
 
     # how many "/" below $RPM_BUILD_ROOT - add "../" to isaexec path depending how many "/" arein $f
     ISAEXECOFFSET=`echo %{_bindir}/ | sed -e 's?/\{0,1\}\w*\(/\)?../?g' | sed -e 's?\(\w*$\)??'`
-    ln -s ${ISAEXECOFFSET}../usr/lib/isaexec $RPM_BUILD_ROOT%{_bindir}/$f
+    ln -s ${ISAEXECOFFSET}usr/lib/isaexec $RPM_BUILD_ROOT%{_bindir}/$f
   fi
 done
 
@@ -180,6 +180,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Jun 07 2008 - moinakg@gmail.com
+- Fix symlink depth.
 * Tue Apr 29 2008 - moinakg@gmail.com
 - Enable building 32Bit and 64Bit libraries needed for Qt3.
 * Sun Sep 16 2007 - dougs@truemail.co.th
