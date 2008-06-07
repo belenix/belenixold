@@ -1,5 +1,5 @@
---- prototype_com.orig	Fri Jun  6 21:36:06 2008
-+++ prototype_com	Fri Jun  6 21:40:38 2008
+--- usr/src/pkgdefs/SUNWfwflash/prototype_com.orig	Fri Jun  6 21:36:06 2008
++++ usr/src/pkgdefs/SUNWfwflash/prototype_com	Fri Jun  6 21:40:38 2008
 @@ -47,11 +47,8 @@
  d none usr/lib/fwflash 0755 root bin
  d none usr/lib/fwflash/identify 0755 root bin
