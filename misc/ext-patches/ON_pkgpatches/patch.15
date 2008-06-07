@@ -1,5 +1,5 @@
---- Makefile.orig	2008-05-22 07:27:08.000000000 +0530
-+++ Makefile	2008-06-06 21:25:41.103768845 +0530
+--- usr/src/pkgdefs/Makefile.orig	2008-05-22 07:27:08.000000000 +0530
++++ usr/src/pkgdefs/Makefile	2008-06-06 21:25:41.103768845 +0530
 @@ -290,10 +290,6 @@
  	SUNWnisu  \
  	SUNWntpr  \
