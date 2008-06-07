@@ -1,6 +1,6 @@
---- usr/src/pkgdefs/Makefile.orig	2008-01-27 04:30:11.000000000 +0530
-+++ usr/src/pkgdefs/Makefile	2008-02-07 08:53:36.462592672 +0530
-@@ -283,16 +283,11 @@
+--- Makefile.orig	2008-05-22 07:27:08.000000000 +0530
++++ Makefile	2008-06-06 21:25:41.103768845 +0530
+@@ -290,10 +290,6 @@
  	SUNWnisu  \
  	SUNWntpr  \
  	SUNWntpu  \
@@ -10,6 +10,8 @@
 -	SUNWocfr \
  	SUNWonfmes \
  	SUNWonzfs \
+ 	SUNWopenssl-man \
+@@ -304,7 +300,6 @@
  	SUNWosdem \
  	SUNWypr \
  	SUNWypu \
@@ -17,7 +19,7 @@
  	SUNWpapi \
  	SUNWpcan \
  	SUNWpcelx \
-@@ -304,9 +299,7 @@
+@@ -316,9 +311,7 @@
  	SUNWpcu	\
  	SUNWpcwl \
  	SUNWpd    \
@@ -27,9 +29,9 @@
  	SUNWperl584core \
  	SUNWperl584usr \
  	SUNWpiclh \
-@@ -446,7 +439,6 @@
- 	SUNWsshdr \
- 	SUNWsshdu \
+@@ -456,7 +449,6 @@
+ 	SUNWkdcr \
+ 	SUNWkdcu \
  	SUNWstatl \
 -	SUNWsvvs \
  	SUNWtavor \
