@@ -1,0 +1,14 @@
+--- prototype_com.orig	Fri Jun  6 21:36:06 2008
++++ prototype_com	Fri Jun  6 21:40:38 2008
+@@ -47,11 +47,8 @@
+ d none usr/lib/fwflash 0755 root bin
+ d none usr/lib/fwflash/identify 0755 root bin
+ d none usr/lib/fwflash/verify 0755 root bin
+-f none usr/lib/fwflash/verify/ses-SUN.so 0644 root bin
+ s none usr/lib/fwflash/verify/ses-LSILOGIC.so=./ses-SUN.so
+-f none usr/lib/fwflash/verify/tavor-MELLANOX.so 644 root bin
+ f none usr/lib/fwflash/identify/ses.so 0644 root bin
+-f none usr/lib/fwflash/identify/tavor.so 0644 root bin
+ d none usr/include 0755 root bin
+ d none usr/include/fwflash 0755 root bin
+ f none usr/include/fwflash/fwflash.h 0644 root bin
