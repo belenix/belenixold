@@ -8,16 +8,16 @@
 
 Name:           doxygen
 License:        GPL
-Version:        1.5.4
+Version:        1.5.6
 URL:            http://ftp.stack.nl/pub/users/dimitri
 Summary:        Doxygen is a documentation system for various programming languages
 Source:         http://ftp.stack.nl/pub/users/dimitri/%{name}-%{version}.src.tar.gz
-Patch2:		doxygen-02-nameconflict.diff
-%ifarch sparc
-Patch3:		doxygen-03-solaris-sparc.diff
-%else
-Patch3:		doxygen-03-solaris-i386.diff
-%endif
+Patch2:		doxygen-05-destdir.diff
+#%ifarch sparc
+#Patch3:		doxygen-03-solaris-sparc.diff
+#%else
+#Patch3:		doxygen-03-solaris-i386.diff
+#%endif
 Patch4:         doxygen-04-tmake-g++.diff
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Docdir:         %{_defaultdocdir}/doc
@@ -30,7 +30,7 @@ Requires:	%{name} = %{version}
 %prep
 %setup -q
 %patch2 -p1
-%patch3 -p1
+#%patch3 -p1
 %patch4 -p1
 
 %build
@@ -70,10 +70,20 @@ make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name "*.a" -exec rm -f {} ';'
 
+mkdir -p $RPM_BUILD_ROOT/%{_prefix}/share
+chmod 0755 $RPM_BUILD_ROOT/%{_prefix}/share
+chown root:sys $RPM_BUILD_ROOT/%{_prefix}/share
+mv $RPM_BUILD_ROOT/%{_prefix}/man $RPM_BUILD_ROOT/%{_prefix}/share/man
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Jun 08 2008 - moinakg@gmail.com
+- Bump version to 1.5.6
+- Remove upstream patch.
+- Add patch for DESTDIR support
+- Workaround to fix man directory path
 * Sun Feb 17 2008 - laca@sun.com
 - build using the C/C++ compiler specified by the CC/CXX env variables
 * Fri Jan 18 2008 - moinak.ghosh@sun.com
