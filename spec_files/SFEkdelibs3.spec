@@ -5,7 +5,7 @@
 
 %include Solaris.inc
 
-%define kde_version 3.5.8
+%define kde_version 3.5.9
 
 %define SUNWaspell      %(/usr/bin/pkginfo -q SUNWaspell && echo 1 || echo 0)
 
@@ -16,7 +16,6 @@ Source:              http://mirrors.isc.org/pub/kde/stable/%{kde_version}/src/kd
 
 Patch1:              kdelibs-01-doxygen.diff
 Patch2:              kdelibs-02-libart.diff
-Patch3:              kdelibs-03-makefile.diff
 Patch4:              kdelibs-04-kmenuapps.diff
 Patch5:              kdelibs-05-kdeinit-wrapper.diff
 Patch6:              kdelibs-06-ktimezones.diff
@@ -111,7 +110,6 @@ Requires: oss
 %setup -q -n kdelibs-%version
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
@@ -225,6 +223,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump to KDE 3.5.9
+- Remove upstream patch.
 * Tue Mar 18 2008 - moinakg@gmail.com
 - Add missing dependency on root package.
 - Update LDFLAGS.
