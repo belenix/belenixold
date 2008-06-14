@@ -9,7 +9,7 @@
 Name:                SFEktorrent
 License:             GPL
 Summary:             A BitTorrent client for KDE
-Version:             2.2.5
+Version:             2.2.7
 URL:                 http://ktorrent.org/
 Source:              http://ktorrent.org/downloads/%{version}/ktorrent-%{version}.tar.bz2
 Patch1:              ktorrent-01-isinf.diff
@@ -123,5 +123,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump version to 2.2.7
 * Sat Feb 02 2008 - moinak.ghosh@sun.com
 - Initial spec.

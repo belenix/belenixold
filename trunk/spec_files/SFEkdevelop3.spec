@@ -5,13 +5,12 @@
 
 %include Solaris.inc
 
-%define kde_version 3.5.8
+%define kde_version 3.5.9
 
 Name:                SFEkdevelop3
 Summary:             KDE Application Development IDE
-Version:             3.5.0
+Version:             3.5.1
 Source:              http://mirrors.isc.org/pub/kde/stable/%{kde_version}/src/kdevelop-%{version}.tar.bz2
-Patch1:              kdevelop-01-getline.diff
 
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
@@ -32,7 +31,6 @@ Requires: SFEhtdig
 
 %prep
 %setup -q -n kdevelop-%version
-%patch1 -p1
 
 if [ "x`basename $CC`" != xgcc ]
 then
@@ -120,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump to KDE 3.5.9.
+- Remove upstream patch.
 * Fri Jan 25 2008 - moinak.ghosh@sun.com
 - Add -zcombreloc and -zdirect linker options.
 - Disable debug. 

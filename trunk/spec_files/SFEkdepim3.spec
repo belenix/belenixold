@@ -5,13 +5,12 @@
 
 %include Solaris.inc
 
-%define kde_version 3.5.8
+%define kde_version 3.5.9
 
 Name:                SFEkdepim3
 Summary:             Personal Imformation Management tool from official KDE release
 Version:             %{kde_version}
 Source:              http://mirrors.isc.org/pub/kde/stable/%{kde_version}/src/kdepim-%{version}.tar.bz2
-Patch1:              kdepim-01-kalarm.diff
 
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
@@ -46,7 +45,6 @@ Requires: SFEkdemultimedia3-devel
 
 %prep
 %setup -q -n kdepim-%version
-%patch1 -p0
 
 if [ "x`basename $CC`" != xgcc ]
 then
@@ -75,7 +73,6 @@ sfw_prefix=`dirname %{sfw_bin}`
            --sysconfdir=%{_sysconfdir} \
            --enable-shared=yes \
            --enable-static=no \
-           --enable-final \
            --with-extra-includes="${extra_inc}" \
            --with-ssl-dir="${sfw_prefix}" \
            --with-gpgsm=no
@@ -140,6 +137,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump to KDE 3.5.9.
+- Remove upstream patch.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Update link flags for Arts.
 - Fix kalarm patch.

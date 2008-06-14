@@ -5,12 +5,12 @@
 
 %include Solaris.inc
 
-%define kde_version 3.5.8
+%define kde_version 3.5.9
 %define ruby_bin /usr/ruby/1.8/bin
 
 Name:                SFEamarok1
 Summary:             A KDE based music player for Linux and Unix
-Version:             1.4.8
+Version:             1.4.9.1
 Source:              http://download.kde.org/stable/amarok/%{version}/src/amarok-%{version}.tar.bz2
 
 SUNW_BaseDir:        %{_basedir}
@@ -183,6 +183,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump version to 1.4.9.1.
 * Sat Mar 22 2008 - moinakg@gmail.com
 - Add dependency to SUNWcurl
 * Sun Feb 24 2008 - moinakg@gmail.com

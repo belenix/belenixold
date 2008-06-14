@@ -5,7 +5,7 @@
 
 %include Solaris.inc
 
-%define kde_version 3.5.8
+%define kde_version 3.5.9
 
 %define broken_netsnmp %([ -f %{sfw_lib}/libnetsnmp.la ] && echo 1 || echo 0)
 Name:                SFEkdeutils3
@@ -144,5 +144,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump to KDE 3.5.9.
 * Thu Jan 24 2008 - moinak.ghosh@sun.com
 - Initial spec.

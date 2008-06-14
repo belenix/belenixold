@@ -5,7 +5,7 @@
 
 %include Solaris.inc
 
-%define kde_version 3.5.8
+%define kde_version 3.5.9
 
 Name:                SFEkdeaccessibility3
 Summary:             Accessibility Aids For KDE in the official release
@@ -101,6 +101,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump to KDE 3.5.9.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Add link flags to properly link with Arts.
 * Tue Jan 22 2008 - moinakg@gmail.com
