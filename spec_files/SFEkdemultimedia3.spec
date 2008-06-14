@@ -5,7 +5,7 @@
 
 %include Solaris.inc
 
-%define kde_version 3.5.8
+%define kde_version 3.5.9
 
 Name:                SFEkdemultimedia3
 Summary:             A collection of audio/video applications for KDE
@@ -244,6 +244,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump to KDE 3.5.9.
 * Tue Mar 18 2008 - moinakg@gmail.com
 - Add missing dependency on root package.
 * Sun Feb 24 2008 - moinakg@gmail.com

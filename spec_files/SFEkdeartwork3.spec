@@ -5,7 +5,7 @@
 
 %include Solaris.inc
 
-%define kde_version 3.5.8
+%define kde_version 3.5.9
 
 Name:                SFEkdeartwork3
 Summary:             Additional Artwork (themes, wallpapers etc.) for KDE
@@ -92,6 +92,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/sounds/*
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump to KDE 3.5.9.
 * Tue Jan 22 2008 - moinak.ghosh@sun.com
 - Fixed typo in configure options.
 * Wed Jan 16 2008 - moinak.ghosh@sun.com

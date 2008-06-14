@@ -5,7 +5,7 @@
 
 %include Solaris.inc
 
-%define kde_version 3.5.8
+%define kde_version 3.5.9
 
 Name:                SFEkdeaddons3
 Summary:             Additional plugins and scripts for some KDE applications.
@@ -101,6 +101,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Jun 14 2008 - moinakg@gmail.com
+- Bump to KDE 3.5.9.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Depend on SFEsdl instead of SUNWlibsdl.
 * Tue Jan 22 2008 - moinakg@gmail.com
