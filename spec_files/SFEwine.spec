@@ -10,7 +10,7 @@
 
 Name:                   SFEwine
 Summary:                Windows Emulator
-Version:                1.0-rc2
+Version:                1.0
 URL:                    http://www.winehq.org/
 Source:                 %{src_url}/%{src_name}-%{version}.tar.bz2
 Patch1:			wine-01-nameconfict.diff
