@@ -1,0 +1,177 @@
+--- mozilla/gfx/cairo/cairo/src/cairo-xlib-surface.c.orig	2008-04-09 04:11:21.000000000 +0800
++++ mozilla/gfx/cairo/cairo/src/cairo-xlib-surface.c	2008-06-12 15:29:21.132393000 +0800
+@@ -1418,6 +1418,9 @@
+     if (!CAIRO_SURFACE_RENDER_HAS_COMPOSITE (src))
+ 	return DO_UNSUPPORTED;
+ 
++    if (!CAIRO_SURFACE_RENDER_HAS_COMPOSITE (dst))
++	return DO_UNSUPPORTED;
++
+     return DO_RENDER;
+ }
+ 
+@@ -1486,9 +1489,6 @@
+ 
+     _cairo_xlib_display_notify (dst->screen_info->display);
+ 
+-    if (!CAIRO_SURFACE_RENDER_HAS_COMPOSITE (dst))
+-	return CAIRO_INT_STATUS_UNSUPPORTED;
+-
+     operation = _categorize_composite_operation (dst, op, src_pattern,
+ 						 mask_pattern != NULL);
+     if (operation == DO_UNSUPPORTED)
+@@ -1626,11 +1626,66 @@
+ }
+ 
+ static cairo_int_status_t
++_cairo_xlib_surface_solid_fill_rectangles (cairo_xlib_surface_t    *surface,
++					   const cairo_color_t     *color,
++					   cairo_rectangle_int_t   *rects,
++					   int			   num_rects)
++{
++    XGCValues gcv;
++    int a_width=0, r_width=0, g_width=0, b_width=0;
++    int a_shift=0, r_shift=0, g_shift=0, b_shift=0;
++    int a = color->alpha_short >> 8;
++    int r = color->red_short >> 8;
++    int g = color->green_short >> 8;
++    int b = color->blue_short >> 8;
++    int i;
++
++    if (surface->visual->class == TrueColor) {
++	_characterize_field (surface->a_mask, &a_width, &a_shift);
++	_characterize_field (surface->r_mask, &r_width, &r_shift);
++	_characterize_field (surface->g_mask, &g_width, &g_shift);
++	_characterize_field (surface->b_mask, &b_width, &b_shift);
++	gcv.foreground = (_field_from_8 (a, a_width, a_shift) |
++			  _field_from_8 (r, r_width, r_shift) |
++			  _field_from_8 (g, g_width, g_shift) |
++			  _field_from_8 (b, b_width, b_shift));
++    } else {
++	cairo_xlib_visual_info_t *visual_info;
++	cairo_int_status_t status;
++
++	status = _cairo_xlib_screen_get_visual_info (surface->screen_info,
++						     surface->visual,
++						     &visual_info);
++	if (status)
++	    return CAIRO_INT_STATUS_UNSUPPORTED;
++
++	gcv.foreground =
++	    visual_info->rgb333_to_pseudocolor[_field_from_8 (r, 3, 6) |
++					       _field_from_8 (g, 3, 3) |
++					       _field_from_8 (b, 3, 0)];
++    }
++
++    GC xgc = XCreateGC (surface->dpy, surface->drawable, GCForeground,
++			&gcv);
++    if (!xgc)
++	return _cairo_error (CAIRO_STATUS_NO_MEMORY);
++
++    for (i = 0; i < num_rects; i++) {
++	XFillRectangle (surface->dpy, surface->drawable, xgc,
++			rects[i].x, rects[i].y,
++			rects[i].width, rects[i].height);
++    }
++    XFreeGC(surface->dpy, xgc);
++
++    return CAIRO_STATUS_SUCCESS;
++}
++
++static cairo_int_status_t
+ _cairo_xlib_surface_fill_rectangles (void		     *abstract_surface,
+ 				     cairo_operator_t	      op,
+ 				     const cairo_color_t     *color,
+ 				     cairo_rectangle_int_t   *rects,
+-				     int			      num_rects)
++				     int		      num_rects)
+ {
+     cairo_xlib_surface_t *surface = abstract_surface;
+     XRenderColor render_color;
+@@ -1640,8 +1695,15 @@
+ 
+     _cairo_xlib_display_notify (surface->screen_info->display);
+ 
+-    if (!CAIRO_SURFACE_RENDER_HAS_FILL_RECTANGLE (surface))
++    if (!CAIRO_SURFACE_RENDER_HAS_FILL_RECTANGLE (surface)) {
++	if (op == CAIRO_OPERATOR_CLEAR ||
++	   ((op == CAIRO_OPERATOR_SOURCE || op == CAIRO_OPERATOR_OVER) &&
++	    CAIRO_COLOR_IS_OPAQUE(color))) {
++	    return _cairo_xlib_surface_solid_fill_rectangles(surface, color,
++							     rects, num_rects);
++	}
+ 	return CAIRO_INT_STATUS_UNSUPPORTED;
++    }
+ 
+     render_color.red   = color->red_short;
+     render_color.green = color->green_short;
+--- mozilla/gfx/thebes/src/gfxPlatformGtk.cpp.orig	2008-06-12 15:32:35.517556000 +0800
++++ mozilla/gfx/thebes/src/gfxPlatformGtk.cpp	2008-06-12 15:32:38.539160000 +0800
+@@ -145,25 +145,7 @@
+         XRenderPictFormat* xrenderFormat =
+             XRenderFindStandardFormat(display, xrenderFormatID);
+ 
+-        if (!xrenderFormat) {
+-            // We don't have Render; see if we can just create a pixmap
+-            // of the requested depth.
+-            GdkVisual* vis;
+-
+-            if (imageFormat == gfxASurface::ImageFormatRGB24) {
+-                vis = gdk_rgb_get_visual();
+-                if (vis->type == GDK_VISUAL_TRUE_COLOR)
+-                    pixmap = gdk_pixmap_new(nsnull, size.width, size.height, vis->depth);
+-            }
+-
+-            if (pixmap) {
+-                gdk_drawable_set_colormap(GDK_DRAWABLE(pixmap), nsnull);
+-                newSurface = new gfxXlibSurface(display,
+-                                                GDK_PIXMAP_XID(GDK_DRAWABLE(pixmap)),
+-                                                GDK_VISUAL_XVISUAL(vis),
+-                                                size);
+-            }
+-        } else {
++        if (xrenderFormat) {
+             pixmap = gdk_pixmap_new(nsnull, size.width, size.height,
+                                     xrenderFormat->depth);
+ 
+@@ -174,25 +156,25 @@
+                                                 xrenderFormat,
+                                                 size);
+             }
+-        }
+ 
+-        if (newSurface && newSurface->CairoStatus() == 0) {
+-            // set up the surface to auto-unref the gdk pixmap when the surface
+-            // is released
+-            newSurface->SetData(&cairo_gdk_pixmap_key,
+-                                pixmap,
+-                                do_gdk_pixmap_unref);
+-        } else {
+-            // something went wrong with the surface creation.  Ignore and let's fall back
+-            // to image surfaces.
+-            if (pixmap)
+-                gdk_pixmap_unref(pixmap);
+-            newSurface = nsnull;
++            if (newSurface && newSurface->CairoStatus() == 0) {
++                // set up the surface to auto-unref the gdk pixmap when
++                // the surface is released
++                newSurface->SetData(&cairo_gdk_pixmap_key,
++                                    pixmap,
++                                    do_gdk_pixmap_unref);
++            } else {
++                // something went wrong with the surface creation.
++                // Ignore and let's fall back to image surfaces.
++                if (pixmap)
++                    gdk_pixmap_unref(pixmap);
++                newSurface = nsnull;
++            }
+         }
+ 
+         if (!newSurface) {
+-            // we couldn't create an xlib surface for whatever reason; fall back to
+-            // image surface for the data.
++            // We don't have Render or we couldn't create an xlib surface for
++            // whatever reason; fall back to image surface for the data.
+             newSurface = new gfxImageSurface(gfxIntSize(size.width, size.height), imageFormat);
+         }
+ 

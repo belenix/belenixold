@@ -40,7 +40,7 @@ Requires: SUNWsmbau
 Requires: SUNWgnome-audio
 Requires: SUNWxorg-clientlibs
 Requires: SUNWfontconfig
-Requires: SFEfreetype
+Requires: SUNWfreetype2
 Requires: SUNWspeex
 Requires: SUNWjpg
 Requires: SUNWpng
@@ -135,7 +135,7 @@ bash ./configure				\
             --enable-largefiles			\
 	    --enable-crash-debug		\
             --disable-directfb			\
-            --with-freetype-config=/usr/gnu/bin/freetype-config \
+            --with-freetype-config=/usr/bin/freetype-config \
 	    $dbgflag
 
 make -j$CPUS 
@@ -178,6 +178,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 
 %changelog
+* Sat Jun 21 2008 - moinakg@gmail.com
+- Remove dependency from SFEfreetype. It is no longer needed since
+- SUNWfreetype is updated to new version.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Link with GNU gettext.
 * Tue Jan 08 2008 - moinakg@gmail.com

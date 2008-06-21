@@ -1,0 +1,16 @@
+NSS_NSPR_DIR/libfreebl3.so
+NSS_NSPR_DIR/libnssdbm3.so
+NSS_NSPR_DIR/libnspr4.so
+NSS_NSPR_DIR/libplc4.so
+NSS_NSPR_DIR/libplds4.so
+NSS_NSPR_DIR/libnss3.so
+NSS_NSPR_DIR/libsmime3.so
+NSS_NSPR_DIR/libsoftokn3.so
+NSS_NSPR_DIR/libssl3.so
+NSS_NSPR_DIR/libnssckbi.so
+FIREFOX_LIB_DIR/libxul.so
+FIREFOX_LIB_DIR/libsqlite3.so
+FIREFOX_LIB_DIR/chrome/classic.jar
+FIREFOX_LIB_DIR/chrome/en-US.jar
+FIREFOX_LIB_DIR/libmozjs.so
+/usr/openwin/lib/libXft.so

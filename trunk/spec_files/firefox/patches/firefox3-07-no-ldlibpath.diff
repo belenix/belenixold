@@ -1,0 +1,49 @@
+--- firefox/build/unix/run-mozilla.sh.ori2	2007-12-26 16:28:30.274762000 +0800
++++ firefox/build/unix/run-mozilla.sh	2007-12-26 16:27:13.686100000 +0800
+@@ -351,22 +351,22 @@
+ ## Note: 
+ ##  We choose libmozjs.so as a representative shared library. If it is 
+ ##  a symbolic link, all other shared libraries are symbolic links also.
+-if [ `uname -s` != "SunOS" -o -h "$MOZ_DIST_BIN/libmozjs.so" ]
+-then
+-	LD_LIBRARY_PATH=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/plugins:${MRE_HOME}${LD_LIBRARY_PATH+":$LD_LIBRARY_PATH"}
+-fi 
++#if [ `uname -s` != "SunOS" -o -h "$MOZ_DIST_BIN/libmozjs.so" ]
++#then
++#	LD_LIBRARY_PATH=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/plugins:${MRE_HOME}${LD_LIBRARY_PATH+":$LD_LIBRARY_PATH"}
++#fi 
+ 
+-if [ -n "$LD_LIBRARYN32_PATH" ]
+-then
+-	LD_LIBRARYN32_PATH=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/plugins:${MRE_HOME}${LD_LIBRARYN32_PATH+":$LD_LIBRARYN32_PATH"}
+-fi
+-if [ -n "$LD_LIBRARYN64_PATH" ]
+-then
+-	LD_LIBRARYN64_PATH=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/plugins:${MRE_HOME}${LD_LIBRARYN64_PATH+":$LD_LIBRARYN64_PATH"}
+-fi
+-if [ -n "$LD_LIBRARY_PATH_64" ]; then
+-	LD_LIBRARY_PATH_64=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/plugins:${MRE_HOME}${LD_LIBRARY_PATH_64+":$LD_LIBRARY_PATH_64"}
+-fi
++#if [ -n "$LD_LIBRARYN32_PATH" ]
++#then
++#	LD_LIBRARYN32_PATH=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/plugins:${MRE_HOME}${LD_LIBRARYN32_PATH+":$LD_LIBRARYN32_PATH"}
++#fi
++#if [ -n "$LD_LIBRARYN64_PATH" ]
++#then
++#	LD_LIBRARYN64_PATH=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/plugins:${MRE_HOME}${LD_LIBRARYN64_PATH+":$LD_LIBRARYN64_PATH"}
++#fi
++#if [ -n "$LD_LIBRARY_PATH_64" ]; then
++#	LD_LIBRARY_PATH_64=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/plugins:${MRE_HOME}${LD_LIBRARY_PATH_64+":$LD_LIBRARY_PATH_64"}
++#fi
+ #
+ #
+ ## Set SHLIB_PATH for HPUX
+@@ -431,7 +431,7 @@
+   echo "     moz_debugger=$moz_debugger"
+ fi
+ #
+-export MOZILLA_FIVE_HOME LD_LIBRARY_PATH
++export MOZILLA_FIVE_HOME
+ export SHLIB_PATH LIBPATH LIBRARY_PATH ADDON_PATH DYLD_LIBRARY_PATH
+ 
+ if [ $moz_debug -eq 1 ]

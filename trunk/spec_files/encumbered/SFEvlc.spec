@@ -45,8 +45,8 @@ Requires:       SUNWxorg-clientlibs
 BuildRequires:  SUNWsmbau
 BuildRequires:  SFElibfribidi-devel
 Requires:       SFElibfribidi
-BuildRequires:  SFEfreetype-devel
-Requires:       SFEfreetype
+BuildRequires:  SUNWfreetype2
+Requires:       SUNWfreetype2
 BuildRequires:  SFEliba52-devel
 Requires:       SFEliba52
 BuildRequires:  SFEffmpeg-devel
@@ -250,6 +250,9 @@ test -x $BASEDIR/lib/postrun || exit 0
 %{_libdir}/lib*.a
 
 %changelog
+* Sat Jun 21 2008 - moinakg@gmail.com
+- Remove dependency from SFEfreetype. It is no longer needed since
+- SUNWfreetype is updated to new version.
 * Fri Aug  3 2007 - dougs@truemail.co.th
 - Added devel and l10n
 - Added options to better find codecs

@@ -26,8 +26,8 @@ BuildRequires: SFElibmad-devel
 Requires: SFElibmad
 BuildRequires: SFEfaad2-devel
 Requires: SFEfaad2
-BuildRequires: SFEfreetype-devel
-Requires: SFEfreetype
+BuildRequires: SUNWfreetype2
+Requires: SUNWfreetype2
 BuildRequires: SFEwxwidgets-gnu-devel
 Requires: SFEwxwidgets-gnu
 
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr (-, root, bin)
 %{_includedir}
 %changelog
+* Sat Jun 21 2008 - moinakg@gmail.com
+- Remove dependency from SFEfreetype. It is no longer needed since
+- SUNWfreetype is updated to new version.
 * Thu Feb 21 2008 - moinak.ghosh@sun.com
 - Add patch to fix silly problem building in Indiana-like environment.
 * Mon Dec 31 6 2007 - markwright@internode.on.net
