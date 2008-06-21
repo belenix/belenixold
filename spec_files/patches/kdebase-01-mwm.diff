@@ -1,0 +1,13 @@
+--- kdebase-3.5.9/kdm/kfrontend/sessions/mwm.desktop.orig	2008-06-21 20:43:59.585022428 +0530
++++ kdebase-3.5.9/kdm/kfrontend/sessions/mwm.desktop	2008-06-21 20:44:16.699102557 +0530
+@@ -1,8 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ Type=XSession
+-Exec=mwm
+-TryExec=mwm
++Exec=/usr/X11/bin/mwm
++TryExec=/usr/X11/bin/mwm
+ Name=MWM
+ Name[eo]=MFA
+ Name[hi]=एमडबल्यूएम

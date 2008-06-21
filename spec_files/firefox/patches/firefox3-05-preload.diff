@@ -1,0 +1,15 @@
+--- firefox/browser/app/mozilla.in.ori3	2007-12-26 15:52:21.578403000 +0800
++++ firefox/browser/app/mozilla.in	2007-12-26 15:54:06.096894000 +0800
+@@ -138,6 +138,12 @@
+   MOZ_PLUGIN_PATH=/usr/lib/firefox/plugins:/usr/sfw/lib/mozilla/plugins
+ export MOZ_PLUGIN_PATH
+ 
++if [ ! -f /tmp/firefox3-preloaded -a -x /usr/lib/gdmprefetch ]
++then
++  /usr/lib/gdmprefetch @${dist_bin}/firefox-preload.list
++  touch /tmp/firefox3-preloaded
++fi
++
+ if [ $debugging = 1 ]
+ then
+   echo $dist_bin/run-mozilla.sh $script_args $dist_bin/$MOZILLA_BIN "$@"

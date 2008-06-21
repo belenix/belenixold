@@ -14,6 +14,7 @@ Version:             %{kde_version}
 Source:              http://mirrors.isc.org/pub/kde/stable/%{kde_version}/src/kdebase-%{version}.tar.bz2
 Source1:             kde.desktop
 Source2:             kdm.xml
+Patch1:              kdebase-01-mwm.diff
 Patch2:              kdebase-02-Xsession.diff
 
 SUNW_BaseDir:        %{_basedir}
@@ -44,6 +45,7 @@ Requires: SFEkdelibs3-devel
 
 %prep
 %setup -q -n kdebase-%version
+%patch1 -p1
 
 if [ "x`basename $CC`" != xgcc ]
 then
@@ -209,6 +211,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Jun 21 2008 - moinakg@gmail.com
+- Add patch to fix mwm path.
 * Sat Jun 14 2008 - moinakg@gmail.com
 - Bump to KDE 3.5.9
 - Remove upstream patch.

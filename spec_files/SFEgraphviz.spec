@@ -7,10 +7,14 @@
 
 %define SFEfreetype %(/usr/bin/pkginfo -q SFEfreetype && echo 1 || echo 0)
 %define tcl_8_3 %(pkgchk -l SUNWTcl 2>/dev/null | grep /usr/sfw/bin/tclsh8.3 >/dev/null && echo 1 || echo 0)
+%define perl_vers 5.8.4
+%define ruby_vers 1.8
+%define python_vers python2.4
+%define tcl_vers tcl8.4
 
 Name:                SFEgraphviz
 Summary:             Graph drawing tools and libraries
-Version:             2.16.1
+Version:             2.18
 Source:              http://www.graphviz.org/pub/graphviz/ARCHIVE/graphviz-%{version}.tar.gz
 URL:                 http://www.graphviz.org
 SUNW_BaseDir:        %{_basedir}
@@ -116,6 +120,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.so*
 %dir %attr (0755, root, bin) %{_libdir}/graphviz
 %{_libdir}/graphviz/*
+%dir %attr (0755, root, bin) %{_prefix}/perl5
+%dir %attr (0755, root, bin) %{_prefix}/perl5/vendor_perl
+%dir %attr (0755, root, bin) %{_prefix}/perl5/vendor_perl/%{perl_vers}
+%dir %attr (0755, root, bin) %{_prefix}/perl5/vendor_perl/%{perl_vers}/i86pc-solaris-64int
+%{_prefix}/perl5/vendor_perl/%{perl_vers}/i86pc-solaris-64int/*
+%dir %attr (0755, root, bin) %{_prefix}/ruby
+%dir %attr (0755, root, bin) %{_prefix}/ruby/%{ruby_vers}
+%dir %attr (0755, root, bin) %{_prefix}/ruby/%{ruby_vers}/lib
+%dir %attr (0755, root, bin) %{_prefix}/ruby/%{ruby_vers}/lib/ruby
+%dir %attr (0755, root, bin) %{_prefix}/ruby/%{ruby_vers}/lib/ruby/site_ruby
+%dir %attr (0755, root, bin) %{_prefix}/ruby/%{ruby_vers}/lib/ruby/site_ruby/%{ruby_vers}
+%dir %attr (0755, root, bin) %{_prefix}/ruby/%{ruby_vers}/lib/ruby/site_ruby/%{ruby_vers}/i386-solaris2.11
+%{_prefix}/ruby/%{ruby_vers}/lib/ruby/site_ruby/%{ruby_vers}/i386-solaris2.11/*
+%dir %attr (0755, root, bin) %{_libdir}/%{python_vers}
+%dir %attr (0755, root, bin) %{_libdir}/%{python_vers}/site-packages
+%{_libdir}/%{python_vers}/site-packages/*
+%dir %attr (0755, root, bin) %{_libdir}/%{tcl_vers}
+%{_libdir}/%{tcl_vers}/*
+
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_mandir}
 %dir %attr (0755, root, bin) %{_mandir}/man1
@@ -137,6 +160,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/graphviz/*
 
 %changelog
+* Sat Jun 21 2008 - moinakg@gmail.com
+- Fix build
+- Add entries for Perl, Tcl and Python plugins.
 * Mon Apr 28 2008 - <shivakumar dot gn at gmail dot com>
 - Fixed usage of macro in if condition
 * Thu Jan 24 2008 - nonsea@users.sourceforge.net
