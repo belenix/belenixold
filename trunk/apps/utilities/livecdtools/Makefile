@@ -75,8 +75,11 @@ clean:
 	@rm -f pagein
 	@rm -f checkcore
 	@rm -f checklkcd
-	@chmod -R 777 FSWlivecdtools
-	@rm -rf FSWlivecdtools
+	@if [ -d FSWlivecdtools ]; \
+	then \
+		chmod -f -R 777 FSWlivecdtools; \
+		rm -rf FSWlivecdtools; \
+	fi
 
 install:
 	@mkdir -p $(DESTDIR)/sbin
