@@ -138,6 +138,9 @@ rm -rf ${RPM_BUILD_ROOT}/%{X11_DIR}/man
 rm ${RPM_BUILD_ROOT}/%{X11_DIR}/lib/*.a
 rm ${RPM_BUILD_ROOT}/%{X11_DIR}/lib/*.la
 
+cp lib/Xm/XmStrDefs21.h ${RPM_BUILD_ROOT}/%{X11_DIR}/include/Xm
+rm -f ${RPM_BUILD_ROOT}/%{X11_DIR}/include/Xm/XmStrDefs21.ht
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -205,6 +208,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{X11_DIR}/share/Xm/wsm/*
 
 %changelog
+* Sun Jun 22 2008 - moinakg@gmail.com
+- Fix copying of XmStrDefs21.h header.
 * Sun May 18 2008 - moinakg@gmail.com
 - Changes to build both 32Bit and 64Bit libraries.
 * Thu Feb 07 2008 - moinak.ghosh@sun.com
