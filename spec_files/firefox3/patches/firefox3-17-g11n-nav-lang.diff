@@ -1,0 +1,8 @@
+--- firefox3/browser/locales/en-US/firefox-l10n.js.orig	2008-04-10 23:29:27.966806000 +0900
++++ firefox3/browser/locales/en-US/firefox-l10n.js	2008-04-10 23:29:58.618222000 +0900
+@@ -36,4 +36,4 @@
+ 
+ #filter substitution
+ 
+-pref("general.useragent.locale", "@AB_CD@");
++pref("general.useragent.locale", "chrome://global/locale/intl.properties");

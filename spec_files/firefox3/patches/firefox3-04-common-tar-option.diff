@@ -1,0 +1,12 @@
+--- firefox/toolkit/mozapps/installer/packager.mk.ori2	2007-12-26 15:47:50.337581000 +0800
++++ firefox/toolkit/mozapps/installer/packager.mk	2007-12-26 15:48:39.004314000 +0800
+@@ -79,8 +79,7 @@
+ 
+ MAKE_PACKAGE	= $(error What is a $(MOZ_PKG_FORMAT) package format?);
+ 
+-CREATE_FINAL_TAR = $(TAR) -c --owner=0 --group=0 --numeric-owner \
+-  --mode="go-w" -f
++CREATE_FINAL_TAR = $(TAR) -cf
+ UNPACK_TAR       = tar -x
+ 
+ ifeq ($(MOZ_PKG_FORMAT),TAR)
