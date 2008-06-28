@@ -9,7 +9,7 @@
 Name:                SUNWman
 Summary:             Solaris manual pages
 Version:             5.11
-%define tarball_version 20080123
+%define tarball_version 20080610
 Source:              http://dlc.sun.com/osol/man/downloads/current/man-sunosman-%{tarball_version}.tar.bz2
 
 URL:                 http://dlc.sun.com/osol/devpro/downloads/current/

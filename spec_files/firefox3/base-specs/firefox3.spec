@@ -11,7 +11,7 @@ Name:        firefox
 %define code_name  none
 Summary:     Mozilla Firefox Web browser
 Version:     3.0
-%define tarball_version 3.0rc3
+%define tarball_version 3.0
 Release:     1
 Copyright:   MPL/LGPL
 Group:       Applications/Internet

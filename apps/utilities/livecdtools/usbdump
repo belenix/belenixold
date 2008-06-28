@@ -179,21 +179,6 @@ mount $s0bdev $mnt
 #copy all the files from usb to cd
 cp -rP@ /.cdrom/* $mnt 2>/dev/null
 
-#modify the miniroot for usb
-
-cp $mnt/boot/x86.microroot /tmp/x86.microroot.gz
-gunzip /tmp/x86.microroot.gz
-
-mkdir $microroot
-mount -F ufs -o nologging `lofiadm -a /tmp/x86.microroot` $microroot
-touch $microroot/.liveusb
-umount $microroot
-lofiadm -d /tmp/x86.microroot
-rmdir $microroot
-
-gzip -9 /tmp/x86.microroot
-mv /tmp/x86.microroot.gz $mnt/boot/x86.microroot
-
 #install grub
 installgrub -mf $mnt/boot/grub/stage1 $mnt/boot/grub/stage2 $s0cdev
 
