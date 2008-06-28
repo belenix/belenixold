@@ -3,9 +3,8 @@
 # CDDL HEADER START
 #
 # The contents of this file are subject to the terms of the
-# Common Development and Distribution License, Version 1.0 only
-# (the "License").  You may not use this file except in compliance
-# with the License.
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
 #
 # You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
 # or http://www.opensolaris.org/os/licensing.
@@ -24,7 +23,6 @@
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)fs-root	1.51	06/01/24 SMI"
 #
 # Copyright (c) 1984, 1986, 1987, 1988, 1989 AT&T.
 # All rights reserved.
@@ -37,9 +35,8 @@ LD_LIBRARY_PATH=/lib; export LD_LIBRARY_PATH
 # Set flag to indicate whether we are in LiveCD environment
 #
 LIVECD=0
-LIVEUSB=0
+MOUNTED=0
 [ -f /.livecd ] && LIVECD=1
-[ -f /.liveusb ] && LIVEUSB=1
 
 libc_mount() {
 	#
@@ -164,75 +161,81 @@ then
         # created till you try to access them.
 	#
 	echo "Probing for device nodes ..." > /dev/msglog
-	ls -lR /devices/pci* > /dev/null 2> /dev/msglog
+
+	ls -lR /devices/* > /dev/null
 
 	volumeid=`cat /.volumeid`
 
 	echo "\rPreparing live image for use" >/dev/msglog
-	if [ $LIVEUSB -eq 1 ]
-	then
-		lcmd="/sbin/listusb"
-	else
-		lcmd="/sbin/listcd"
-	fi
 
-	$lcmd | while read dev rdev
+	# Determine if any of the USB devices contains a UFS filesystem.
+	# For devices that do, attempt to mount them to see if the 
+	# compressed /usr filesystem exists
+
+	/sbin/listusb | while read dev rdev
 	do
-		if [ $LIVEUSB -eq 1 ]; then
-			/usr/lib/fs/ufs/fstyp $rdev 2>&1 | grep "^ufs$"
-		else
-			/usr/lib/fs/hsfs/fstyp -v $rdev 2>&1 | grep "Volume id: $volumeid" > /dev/null
-		fi
-
+		/usr/lib/fs/ufs/fstyp $rdev 2>&1 | grep "^ufs$"
 		if [ $? -eq 0 ]
 		then
-			if [ $LIVEUSB -eq 1 ]
+			/sbin/mount -F ufs -o nologging,noatime $dev /.cdrom || break
+			if [ -f /.cdrom/solaris.zlib ]
 			then
-				echo "\rCurrently mounting ufs dev : $dev"
-				/usr/lib/fs/ufs/mount -o ro $dev /.cdrom 2>/dev/msglog || break
-			else
-				/usr/lib/fs/hsfs/mount -o ro $dev /.cdrom 2>/dev/msglog || break
-			fi
-
-			/usr/sbin/lofiadm -a /.cdrom/solaris.zlib 2>/dev/msglog &
-			wpid=$!
-			cnt=0
-			while [ $cnt -lt 2 ]
-			do
-				/usr/bin/sleep 1
-				/usr/sbin/devfsadm -i lofi 2> /dev/msglog
-
-				if [ -b /devices/pseudo/lofi@0:1 ]
-				then
-					cnt=2
-				else
-					cnt=`expr $cnt + 1`
-				fi
-			done
-
-			if [ ! -b /devices/pseudo/lofi@0:1 ]
-			then
-				echo "** Loopback device not created! **" > /dev/msglog
+				echo "" > /.liveusb
 				break
+			else
+				/sbin/umount -f $dev
+				continue
 			fi
-
-			wait $wpid
-
-			/usr/sbin/lofiadm -a /.cdrom/solarismisc.zlib 2>/dev/msglog || break
-			/sbin/mount -F hsfs -o ro /dev/lofi/1 /usr 2>/dev/msglog || break
-			/sbin/mount -F hsfs -o ro /dev/lofi/2 /mnt/misc 2>/dev/msglog || break
-
-			touch /.mounted
-			break
 		fi
 	done
-	if [ ! -f /.mounted ]
+
+	# ..Else look for CD
+	[ ! -f /.liveusb ] && /sbin/listcd | while read dev rdev
+	do
+		/usr/lib/fs/hsfs/fstyp -v $rdev 2>&1 | grep "Volume id: $volumeid" > /dev/null
+		if [ $? -eq 0 ]
+		then
+			/sbin/mount -F hsfs -o ro $dev /.cdrom || break
+		fi
+	done
+
+	# Check if mount of /.cdrom failed.
+	/sbin/mount | grep "^/.cdrom"
+	if [ $? -ne 0 ]
 	then
-		echo "** FATAL **: Unable to mount Live image!"
+		echo "** FATAL **: Unable to access media"
 		exit $SMF_EXIT_ERR_FATAL
 	fi
 
+	# Explictly create lofi devices for solaris.zlib and 
+	# solarismisc.zlib
+
+	/usr/sbin/lofiadm -a /.cdrom/solaris.zlib /dev/lofi/1 || break
+	/sbin/mount -F hsfs -o ro /dev/lofi/1 /usr 
+	if [ $? -ne 0 ]
+	then
+		echo "/usr MOUNT FAILED!" 
+		exit $SMF_EXIT_ERR_FATAL
+	fi
+
+	/usr/sbin/lofiadm -a /.cdrom/solarismisc.zlib /dev/lofi/2 || break
+
+	/sbin/mount -F hsfs -o ro /dev/lofi/2 /mnt/misc
+
+	if [ $? -ne 0 ]
+	then
+		echo "/mnt/misc MOUNT FAILED!"
+		exit $SMF_EXIT_ERR_FATAL
+	fi
+
+	MOUNTED=1
 	echo "Done mounting Live image" > /dev/msglog
+fi
+
+if [ "$MOUNTED" -ne 1 ]
+then
+    echo "** FATAL **: Unable to mount Live image!" > /dev/msglog
+    exit $SMF_EXIT_ERR_FATAL
 fi
 
 #
@@ -366,9 +369,15 @@ then
 	exec </dev/console >/dev/console 2>&1
 	kbd -s
 
+	#
+	# Ask user to configure Language
+	#
+	#/usr/sbin/set_lang.bash
+
+	# /usr/bin/setup.sh
 	livemode=`prtconf -v /devices|sed -n '/livemode/{;n;p;}'|cut -f 2 -d\'`
 	if [ "$livemode" = "text" ]; then
-		#/usr/sbin/svcadm disable -t application/graphical-login/gdm
+		#svcadm disable -t application/graphical-login/gdm
 		svcadm disable -t application/xserver
 		echo "3" > /.desk
 		chmod 0777 /.desk
