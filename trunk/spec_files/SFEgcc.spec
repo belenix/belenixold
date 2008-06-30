@@ -9,9 +9,12 @@
 
 Name:                SFEgccruntime
 Summary:             GNU gcc runtime libraries required by applications
-Version:             4.2.3
+Version:             4.2.4
 Source:              ftp://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.bz2
 Patch1:              gcc-01-libtool-rpath.diff
+Patch2:		     gcc-02-pragma.diff
+Patch3:		     gcc-03-libunwind.diff
+Patch4:		     gcc-04-unwind2.diff
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -25,7 +28,7 @@ Requires: SUNWpostrun
 
 %package -n SFEgcc
 Summary:                 GNU gcc
-Version:                 4.2.3
+Version:                 4.2.4
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 Requires: %name
@@ -51,6 +54,9 @@ Requires:                %{name}
 mkdir gcc
 cd gcc-%{version}
 %patch1 -p1 -b .patch01
+%patch2 -p1 -b .patch02
+%patch3 -p1 -b .patch03
+%patch4 -p1 -b .patch04
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -71,7 +77,7 @@ nlsopt=-disable-nls
 export CONFIG_SHELL=/usr/bin/bash
 export CFLAGS=""
 export CPP="cc -E -Xs"
-export STAGE1_CFLAGS="$(CFLAGS)"
+export STAGE1_CFLAGS="$(CFLAGS) -DHANDLE_PRAGMA_PACK_PUSH_POP=1"
 export CFLAGS_FOR_TARGET="-g -O3"
 export LDFLAGS="%_ldflags %gnu_lib_path"
 export LD_OPTIONS="%ld_options %gnu_lib_path"
@@ -109,7 +115,7 @@ rm -rf $RPM_BUILD_ROOT
 
 export CONFIG_SHELL=/usr/bin/bash
 export CFLAGS="%optflags"
-export STAGE1_CFLAGS="$(CFLAGS)"
+export STAGE1_CFLAGS="$(CFLAGS) -DHANDLE_PRAGMA_PACK_PUSH_POP=1"
 export CFLAGS_FOR_TARGET="-g -O3"
 export LDFLAGS="%_ldflags %gnu_lib_path"
 export LD_OPTIONS="%ld_options %gnu_lib_path"
@@ -201,6 +207,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jun 26 2008 - russiaen39@gmail.com
+- fixed libunwind bug. See http://gcc.gnu.org/bugzilla/show_bug.cgi?id=27880
+* Mon Jun 23 2008 - russiane39@gmail.com
+- added pragma pack support, bump up gcc to 4.2.4
 * Mon Mar 10 2008 - laca@sun.com
 - add missing defattr
 * Sun Mar  2 2008 - Mark Wright <markwright@internode.on.net>
