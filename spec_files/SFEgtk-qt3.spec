@@ -20,6 +20,7 @@ Requires:            SUNWgnome-base-libs
 Requires:            SFEqt3
 BuildRequires:       SUNWgnome-base-libs-devel
 BuildRequires:       SFEqt3-devel
+BuildRequires:       SFEcmake
 
 %if %build_l10n
 %package l10n
@@ -39,7 +40,8 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
      CPUS=1
 fi
 
-export CFLAGS="%optflags -I%{gnu_inc} -D__C99FEATURES__"
+export CFLAGS="%optflags -I%{gnu_inc} -D__C99FEATURES__ -DUSE_SOLARIS"
+export CXXFLAGS=$CFLAGS
 export LDFLAGS="%_ldflags %{gnu_lib_path}"
 gnu_prefix=`dirname %{gnu_bin}`
 
@@ -95,5 +97,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jun 30 2008 - moinakg@gmail.com
+- Add proper compile flag for Solaris.
+- Add build dep on cmake since it is required to build this package.
 * Wed Apr 02 2008 - moinakg@gmail.com
 - Initial spec.

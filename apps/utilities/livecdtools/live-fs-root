@@ -146,6 +146,27 @@ fi
 . /lib/svc/share/smf_include.sh
 . /lib/svc/share/fs_include.sh
 
+copy()
+{
+	source=$1 ; dest=$2 ;testcase="100"
+	sourcesize=`/usr/bin/ls -l $source | /usr/bin/awk '{print $5}'`
+	destsize=0
+	/usr/bin/cp "$1" "$2" &
+	while [ $sourcesize -ge $destsize ] ;do
+		destsize=`/usr/bin/ls -l $dest | /usr/bin/awk '{print $5}'`
+		pct1=`/usr/bin/expr $destsize \* 100`
+		pct=`/usr/bin/expr $pct1 / $sourcesize`
+		if [ $pct -eq $testcase ] ;then
+			echo "$pct%" >/dev/msglog
+			return
+		else
+			echo "\b\b\b\b$pct% \c" >/dev/msglog
+		fi
+		destsize=`/usr/bin/expr $destsize + 1 `
+		[ $pct -lt 100 ] && sleep 5
+	done
+}
+
 if [ $LIVECD = 1 ]
 then
 
@@ -207,10 +228,58 @@ then
 		exit $SMF_EXIT_ERR_FATAL
 	fi
 
+	solaris_zlib="/.cdrom/solaris.zlib"
+	solarismisc_zlib="/.cdrom/solarismisc.zlib"
+
+	prtconf -v /devices > /.devp
+	toram=`sed -n '/toram/{;n;p;}' /.devp | cut -f 2 -d\'`
+
+	if [  "$toram" = "on" ]; then
+		echo "Trying to mount swap" >/dev/msglog
+		/usr/lib/fs/tmpfs/mount swap /tmp 2>/dev/msglog
+		if [ $? -ne 0 ]
+		then
+			echo "Unable to mount swap" >/dev/msglog
+			exit $SMF_EXIT_ERR_FATAL
+		fi
+		mkdir /tmp/.cdrom
+
+		echo "Copying usr archive to RAM" >/dev/msglog
+		/usr/bin/touch /tmp/.cdrom/solaris.zlib 2>/dev/msglog
+		copy /.cdrom/solaris.zlib /tmp/.cdrom/solaris.zlib 2>/dev/msglog
+		if [ $? -ne 0 ];then
+			echo "Copy unsuccessful. Insufficient RAM ?" >/dev/msglog
+			exit $SMF_EXIT_ERR_FATAL
+		fi
+
+		echo "Copying install archive to RAM" >/dev/msglog
+		/usr/bin/touch /tmp/.cdrom/archive.7z 2>/dev/msglog
+		copy /.cdrom/archive.7z /tmp/.cdrom/archive.7z 2>/dev/msglog
+		if [ $? -ne 0 ];then
+			echo "Copy unsuccessful. Insufficient RAM ?" >/dev/msglog
+			exit $SMF_EXIT_ERR_FATAL
+		fi
+
+		echo "Copying misc archive to RAM" >/dev/msglog
+		/usr/bin/cp /.cdrom/solarismisc.zlib /tmp/.cdrom/ 2>/dev/msglog
+		if [ $? -ne 0 ];then
+			echo "Copy unsuccessful. Insufficient RAM ?" >/dev/msglog
+			exit $SMF_EXIT_ERR_FATAL
+		fi
+
+		echo "Copying misc files ..." >/dev/msglog
+		(cd /.cdrom; /usr/bin/cp -rP bin boot dev devices info jack \
+			mnt noautoshutdown platform reconfigure root \
+			AUTORUN.INF /tmp/.cdrom)
+
+		solaris_zlib="/tmp/.cdrom/solaris.zlib"
+		solarismisc_zlib="/tmp/.cdrom/solarismisc.zlib"
+	fi
+
 	# Explictly create lofi devices for solaris.zlib and 
 	# solarismisc.zlib
 
-	/usr/sbin/lofiadm -a /.cdrom/solaris.zlib /dev/lofi/1 || break
+	/usr/sbin/lofiadm -a $solaris_zlib /dev/lofi/1 || break
 	/sbin/mount -F hsfs -o ro /dev/lofi/1 /usr 
 	if [ $? -ne 0 ]
 	then
@@ -218,16 +287,16 @@ then
 		exit $SMF_EXIT_ERR_FATAL
 	fi
 
-	/usr/sbin/lofiadm -a /.cdrom/solarismisc.zlib /dev/lofi/2 || break
-
+	/usr/sbin/lofiadm -a $solarismisc_zlib /dev/lofi/2 || break
 	/sbin/mount -F hsfs -o ro /dev/lofi/2 /mnt/misc
-
 	if [ $? -ne 0 ]
 	then
 		echo "/mnt/misc MOUNT FAILED!"
 		exit $SMF_EXIT_ERR_FATAL
 	fi
 
+	/sbin/umount /.cdrom
+	/sbin/mount -F lofs /tmp/.cdrom /.cdrom
 	MOUNTED=1
 	echo "Done mounting Live image" > /dev/msglog
 fi
@@ -374,8 +443,7 @@ then
 	#
 	#/usr/sbin/set_lang.bash
 
-	# /usr/bin/setup.sh
-	livemode=`prtconf -v /devices|sed -n '/livemode/{;n;p;}'|cut -f 2 -d\'`
+	livemode=`sed -n '/livemode/{;n;p;}' /.devp | cut -f 2 -d\'`
 	if [ "$livemode" = "text" ]; then
 		#svcadm disable -t application/graphical-login/gdm
 		svcadm disable -t application/xserver

@@ -1,0 +1,11 @@
+--- Makefile.orig	Mon Jun 23 21:43:28 2008
++++ Makefile	Mon Jun 23 21:43:20 2008
+@@ -24,7 +24,7 @@
+ #ident	"@(#)Makefile	1.0	06/03/07	SMI"
+ #
+ 
+-SUBDIRS = auto_ef localeadm mp
++SUBDIRS = auto_ef localeadm mp xuctblgen
+ 
+ all:=		TARGET= all
+ install :=	TARGET= install
