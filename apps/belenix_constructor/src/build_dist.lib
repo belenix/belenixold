@@ -553,6 +553,8 @@ RTC_CONFIG_EOF
         fi
 
         cd $MICROROOT
+	relocatemodules $MICROROOT ${PROTO}/usr ${MICROROOT}/etc/modules_relocate.list
+
         # cpio the microroot image to the ramdisk.
         /bin/find . -depth -print | /bin/cpio -pdmv $MICROROOT2
         # Unmount the smaller microroot lofi device and remove it.
@@ -680,14 +682,8 @@ relocatemodules() {
 	TODIR=$2
 	MODULES=$3
 
-	grep -v "^#" $MODULES | while read mod
-	do
-		fdir=`dirname $TODIR/$mod`
-		mkdir -p $fdir
-
-		cp $FROMDIR/$mod $TODIR/$mod
-		rm -f $FROMDIR/$mod
-	done
+	grep -v "^#" $MODULES | (cd $FROMDIR; cpio -pdumv $TODIR)
+	grep -v "^#" $MODULES | (cd $FROMDIR; xargs rm)
 }
 
 apply_skeleton()

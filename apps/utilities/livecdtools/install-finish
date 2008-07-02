@@ -370,3 +370,22 @@ fi
     )
     chown -R ${hd}:${grp} $hd
   done)
+
+#
+# Relocate a list of modules from one directory to another
+#
+relocatemodules() {
+	FROMDIR=$1
+	TODIR=$2
+	MODULES=$3
+
+	grep -v "^#" $MODULES | (cd $FROMDIR; cpio -pdumv $TODIR)
+	grep -v "^#" $MODULES | (cd $FROMDIR; xargs rm)
+}
+
+if [ -f ${BASEDIR}/etc/modules_relocate.list ]
+then
+	relocatemodules ${BASEDIR}/usr ${BASEDIR} ${BASEDIR}/etc/modules_relocate.list 
+	rm ${BASEDIR}/etc/modules_relocate.list
+fi
+

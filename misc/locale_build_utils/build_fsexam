@@ -1,5 +1,0 @@
-cd fsexam
-CC=/usr/sfw/bin/gcc CPPFLAGS="-Dsun" ./configure --prefix=/usr
-CC=/usr/sfw/bin/gcc CPPFLAGS="-Dsun" gmake
-DESTDIR=$SRC/proto/i386/fileroot/ gmake install
-

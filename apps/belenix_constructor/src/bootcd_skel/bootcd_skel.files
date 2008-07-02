@@ -40,4 +40,5 @@ f 0644 root:other etc/.UNCONFIGURED
 f 0644 root:sys etc/rpc
 f 0644 root:sys etc/services
 f 0644 root:sys etc/user_attr
+f 0644 root:root etc/modules_relocate.list
 d u=rwx,g=rx,o=rx root:root root
