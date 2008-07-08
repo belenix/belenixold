@@ -31,8 +31,30 @@ ZONE_SUBPROC_USAGE=253
 ZONE_SUBPROC_NOTCOMPLETE=254
 ZONE_SUBPROC_FATAL=255
 
-#SYS_RPOOL=rpool/ROOT/preview2
-SYS_RPOOL=`nawk '{ if (match($2, "^\/$") > 0) print $1 }' /etc/mnttab`
+ZONES_SNAP=""
+
+if [ ! -f /etc/bzfscfg.conf ]
+then
+	echo "Config file /etc/bzfscfg.conf not found. Aborting!"
+	exit 1
+fi
+
+. /etc/bzfscfg.conf
+if [ -n "$ZONES_SNAP" ]
+then
+	zfs list $ZONES_SNAP 2>&1 > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "Specified pool $ZONES_SNAP not found."
+		echo "Defaulting to root pool"
+		ZONES_SNAP=""
+	fi
+fi
+
+if [ "$ZONES_SNAP" = "" ]
+then
+	ZONES_SNAP=`nawk '{ if (match($2, "^\/$") > 0) print $1 }' /etc/mnttab`
+fi
 
 f_img=$(gettext "failed to create image")
 
@@ -100,8 +122,8 @@ mkdir -p $zonepath/root
 printf "$m_done\n"
 
 printf "$m_core\n"
-zfs clone ${SYS_RPOOL}@install ${SYS_RPOOL}/${zonename} 
-zfs set mountpoint=$zoneroot ${SYS_RPOOL}/${zonename}
+zfs clone ${ZONES_SNAP} ${ZONES_DATASET}/${zonename} 
+zfs set mountpoint=$zoneroot ${ZONES_DATASET}/${zonename}
 
 printf "$m_smf"
 rm -f $zoneroot/var/svc/profile/name_service.xml
@@ -120,6 +142,7 @@ chmod 0600 $repfile
 chown root:sys $repfile
 
 rm -f $zoneroot/var/svc/manifest/system/sysevent.xml
+rm -f $zoneroot/var/svc/manifest/system/device/devices-fc-fabric.xml
 echo "$zonename" > $zoneroot/etc/nodename
 
 printf "$m_done\n"

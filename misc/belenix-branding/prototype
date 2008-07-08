@@ -69,6 +69,15 @@ f none info/bg.jpg=info/bg.jpg 0544 root sys
 f none info/bicon.png=info/bicon.png 0544 root sys
 f none info/innov.gif=info/innov.gif 0544 root sys
 
+d none usr/share/doc/info 0755 root other
+f none usr/share/doc/info/1.gif=info/1.gif 0544 root other
+f none usr/share/doc/info/16.gif=info/16.gif 0544 root other
+f none usr/share/doc/info/4.gif=info/4.gif 0544 root other
+f none usr/share/doc/info/Intro.htm=info/Intro.htm 0544 root other
+f none usr/share/doc/info/bg.jpg=info/bg.jpg 0544 root other
+f none usr/share/doc/info/bicon.png=info/bicon.png 0544 root other
+f none usr/share/doc/info/innov.gif=info/innov.gif 0544 root other
+
 d none etc 0755 root sys
 d none etc/profile.d 0755 root sys
 f none etc/profile.d/env.sh=profile.d/env.sh 0755 root other

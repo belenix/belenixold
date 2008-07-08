@@ -31,8 +31,6 @@ kernel/misc/mixer
 kernel/misc/kgss/kmech_krb5
 kernel/misc/kgssapi
 kernel/misc/rsmops
-kernel/misc/rpcsec
-kernel/misc/rpcsec_gss
 kernel/drv/audio810
 kernel/drv/audio810.conf
 kernel/drv/audioixp
@@ -50,6 +48,10 @@ kernel/drv/hci1394.conf
 kernel/drv/scsa1394
 kernel/drv/bofi
 kernel/drv/bofi.conf
+kernel/drv/smbsrv
+kernel/drv/smbsrv.conf
+kernel/drv/vnic
+kernel/drv/vnic.conf
 kernel/drv/lx_audio
 kernel/drv/lx_audio.conf
 kernel/drv/lx_ptm
@@ -58,5 +60,7 @@ kernel/drv/lx_systrace
 kernel/drv/lx_systrace.conf
 kernel/misc/s1394
 kernel/misc/nfssrv
+kernel/brand/lx_brand
+kernel/brand/sn1_brand
 kernel/kmdb/s1394
 lib/libmeta.so.1

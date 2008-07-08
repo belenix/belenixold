@@ -173,7 +173,7 @@ echo $s0cdev
 
 
 newfs -m 0 $s0cdev < /dev/null 2> /dev/null
-mkdir $mnt
+mkdir -p $mnt
 mount $s0bdev $mnt
 
 #copy all the files from usb to cd

@@ -1,0 +1,17 @@
+--- Makefile.orig	2008-07-03 23:00:51.272274177 +0530
++++ Makefile	2008-07-03 23:03:29.929336769 +0530
+@@ -306,9 +306,13 @@
+ 
+ # Note on SCO you may have to set LN to "ln".
+ 
+-a32 a41 aix bs3 bsi d-g d54 do4 drs epx ga4 gas gh9 ghp ghs go5 gsc gsg gso gul h11 hpp hpx lnp lyn mct mnt nec nto nxt nx3 osf os4 ptx qnx sc5 sco sgi sg6 shp sl4 sl5 slx snx soc sol sos uw2: an
++a32 a41 aix bs3 bsi d-g d54 do4 drs epx ga4 gas gh9 ghp ghs go5 gsc gsg gso gul h11 hpp hpx lnp lyn mct mnt nec nto nxt nx3 osf os4 ptx qnx sc5 sco sgi sg6 shp sl4 sl5 slx snx sol sos uw2: an
+ 	$(BUILD) BUILDTYPE=$@
+ 
++soc: an
++	$(BUILD) BUILDTYPE=$@ \
++	SPECIALS="SSLDIR=/usr/sfw SSLCERTS=/etc/sfw/openssl/certs SSLKEYS=/etc/sfw/openssl/certs SSLINCLUDE=/usr/sfw/include SSLLIB=/usr/sfw/lib SSLCRYPTO=-lcrypto"
++
+ # If you use sv4, you may find that it works to move it to use the an process.
+ # If so, you probably will want to delete the "-Dconst=" from the sv4 CFLAGS in
+ # the c-client Makefile.

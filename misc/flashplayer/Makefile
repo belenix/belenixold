@@ -18,27 +18,26 @@
 #
 # CDDL HEADER END
 #
+#
 # Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
+# Author: moinakg@gmail.com
+#
 
-i pkginfo
-i copyright
-i depend
-!default 0555 root bin
-d none usr 0755 root sys
-d none usr/lib 0755 root bin
-d none usr/lib/brand 0755 root bin
-d none usr/lib/brand/bzfs 0755 root bin
-f none usr/lib/brand/bzfs/platform.xml=platform.xml 0444 root bin
-f none usr/lib/brand/bzfs/config.xml=config.xml 0444 root bin
-f none usr/lib/brand/bzfs/bzfscreatezone=bzfscreatezone 0555 root bin
-d none etc 0755 root sys
-d none etc/zones 0755 root sys
-f none etc/zones/SUNWbzfs.xml=SUNWbzfs.xml 0444 root bin
-d none var 0755 root sys
-d none var/svc 0755 root sys
-d none var/svc/profile 0755 root sys
-f none var/svc/profile/zones_limited_net.xml=zones_limited_net.xml 0444 root sys
-d none etc 0755 root sys
-e none etc/bzfscfg.conf=bzfscfg.conf
+PKG=FSWflashplayer
+#possible ARCH values are i386, sparc, all
+ARCH=i386
+
+all: pkg
+
+clean:
+	@chmod -R 777 $(PKG)
+	@rm -rf $(PKG)
+
+pkg:
+	pkgmk -o -d ./ -a $(ARCH)
+	chmod -R a+r $(PKG)
+	chmod 555 $(PKG)
+
+	@echo check current directory for .pkg files

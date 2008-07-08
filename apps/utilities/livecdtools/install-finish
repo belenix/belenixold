@@ -262,7 +262,7 @@ fix_failsafe_menu $GRUBMENU
 # Solaris. And, even though /etc/release says OpenSolaris it truncates
 # the 'Open' off. Replace this globally.
 
-/bin/sed -e 's/title Solaris/title OpenSolaris/g' $MENUFILE > $MENUFILE.new
+/bin/sed -e 's/title Solaris/title BeleniX/g' $MENUFILE > $MENUFILE.new
 if [ $? == 0 ]; then
 	cat "${MENUFILE}.new" > "$MENUFILE"
 	rm "${MENUFILE}.new"

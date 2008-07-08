@@ -22,23 +22,21 @@
 # Use is subject to license terms.
 #
 
-i pkginfo
-i copyright
-i depend
-!default 0555 root bin
-d none usr 0755 root sys
-d none usr/lib 0755 root bin
-d none usr/lib/brand 0755 root bin
-d none usr/lib/brand/bzfs 0755 root bin
-f none usr/lib/brand/bzfs/platform.xml=platform.xml 0444 root bin
-f none usr/lib/brand/bzfs/config.xml=config.xml 0444 root bin
-f none usr/lib/brand/bzfs/bzfscreatezone=bzfscreatezone 0555 root bin
-d none etc 0755 root sys
-d none etc/zones 0755 root sys
-f none etc/zones/SUNWbzfs.xml=SUNWbzfs.xml 0444 root bin
-d none var 0755 root sys
-d none var/svc 0755 root sys
-d none var/svc/profile 0755 root sys
-f none var/svc/profile/zones_limited_net.xml=zones_limited_net.xml 0444 root sys
-d none etc 0755 root sys
-e none etc/bzfscfg.conf=bzfscfg.conf
+CLASSES=none
+BASEDIR=/
+TZ=PST
+PATH=/sbin:/usr/sbin:/usr/bin:/usr/sadm/install/bin
+PKG=FSWflashplayer
+NAME=Adobe Flash Player 9
+VERSION=9,REV=9.0.125.0
+CATEGORY=system
+DESC=Adobe Flash Player 9 for OpenSolaris
+VENDOR="Adobe"
+EMAIL=
+PKGSAV=/var/sadm/pkg/FSWflashplayer/save
+MAXINST="1000"
+SUNW_PRODNAME="SunOS"
+SUNW_PRODVERS="5.11"
+SUNW_PKGTYPE="root"
+SUNW_PKGVERS="1.0"
+HOTLINE="Please contact your local service provider"

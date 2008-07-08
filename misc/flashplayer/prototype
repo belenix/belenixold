@@ -28,17 +28,7 @@ i depend
 !default 0555 root bin
 d none usr 0755 root sys
 d none usr/lib 0755 root bin
-d none usr/lib/brand 0755 root bin
-d none usr/lib/brand/bzfs 0755 root bin
-f none usr/lib/brand/bzfs/platform.xml=platform.xml 0444 root bin
-f none usr/lib/brand/bzfs/config.xml=config.xml 0444 root bin
-f none usr/lib/brand/bzfs/bzfscreatezone=bzfscreatezone 0555 root bin
-d none etc 0755 root sys
-d none etc/zones 0755 root sys
-f none etc/zones/SUNWbzfs.xml=SUNWbzfs.xml 0444 root bin
-d none var 0755 root sys
-d none var/svc 0755 root sys
-d none var/svc/profile 0755 root sys
-f none var/svc/profile/zones_limited_net.xml=zones_limited_net.xml 0444 root sys
-d none etc 0755 root sys
-e none etc/bzfscfg.conf=bzfscfg.conf
+d none usr/lib/firefox 0755 root bin
+d none usr/lib/firefox/plugins 0755 root bin
+f none usr/lib/firefox/plugins/flashplayer.xpt=flash_player_9_solaris_r125_x86/flashplayer.xpt 0644 root bin
+f none usr/lib/firefox/plugins/libflashplayer.so=flash_player_9_solaris_r125_x86/libflashplayer.so 0755 root bin

@@ -143,6 +143,34 @@ fi
 fi
 
 #
+# Calculate the image size and write to the .image_info file
+#
+IMAGE_SIZE=`/bin/du -sk $DIST_PROTO | awk '{print $1}'`
+
+echo IMAGE_SIZE=$IMAGE_SIZE > $DIST_PROTO/.image_info
+
+#
+# Pre-configure Gnome databases
+#
+
+echo "Running GNOME postrun scripts"
+if [ "$DIST_PKGS_TYPE" = "IPS" ]
+then
+	echo "Configuring Gnome in PROTO area"
+	cp -r $SRC/postrun_scripts ${PROTO}
+	chroot $PROTO /postrun_scripts/exec_postrun
+	#Remove the scripts after finish executing them so the image is
+	#not polluted with temporary files.
+	/bin/rm -rf ${PROTO}/postrun_scripts
+else
+	mount -F lofs /proc $PROTO/proc
+	[ -x $PROTO/var/lib/postrun/postrun-runq ] && chroot $PROTO /var/lib/postrun/postrun-runq
+	umount $PROTO/proc
+fi
+
+
+
+#
 # Create the boot archive. This is a UFS filesystem image in a file
 # that is loaded into RAM by Grub. A file is created using mkfile
 # and is added as a block device using lofiadm. newfs is then used
