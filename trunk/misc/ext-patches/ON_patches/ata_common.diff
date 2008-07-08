@@ -1,0 +1,11 @@
+--- usr/src/uts/intel/io/dktp/controller/ata/ata_common.c.orig	Sat Jul  5 11:00:26 2008
++++ usr/src/uts/intel/io/dktp/controller/ata/ata_common.c	Sat Jul  5 11:01:34 2008
+@@ -3617,7 +3617,7 @@
+ 		if (ata_save_pci_config)
+ 			(void) pci_restore_config_regs(dip);
+ 		ata_ctlp->ac_pm_level = PM_LEVEL_D0;
+-		cmd = ATC_STANDBY_IM;
++		cmd = ATC_IDLE_IMMED;
+ 		break;
+ 	case PM_LEVEL_D3:
+ 		if (ata_save_pci_config)
