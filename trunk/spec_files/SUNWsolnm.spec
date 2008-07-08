@@ -20,9 +20,9 @@ mkdir %{name}-%{version}-build
 
 %build
 cd %{name}-%{version}-build
-echo "                               BeleniX 0.7 03/08" > release
+echo "                              BeleniX 0.7.1 07/08" > release
 echo "                           Innovating on OpenSolaris" >> release
-echo "                            Assembled 20 March 2008" >> release
+echo "                             Assembled 15 July 2008" >> release
 
 
 %install
@@ -42,5 +42,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/*
 
 %changelog
+* Thu Jul 03 2008 - moinakg@gmail.com
+- Updated release version and tentative dates.
 * Wed Feb 20 2008 - moinak.ghosh@sun.com
 - Initial spec.

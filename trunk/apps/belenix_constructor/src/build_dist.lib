@@ -383,25 +383,6 @@ RTC_CONFIG_EOF
 	# Set nodename to opensolaris
 	#echo "opensolaris" >$MICROROOT/etc/nodename
 
-	#
-	# Pre-configure Gnome databases and SMF repository
-	# 
-
-	echo "Running GNOME postrun scripts"
-	if [ "$DIST_PKGS_TYPE" = "IPS" ]
-	then
-		echo "Configuring Gnome in PROTO area"
-		cp -r $SRC/postrun_scripts ${PROTO}
-		chroot $PROTO /postrun_scripts/exec_postrun
-		#Remove the scripts after finish executing them so the image is
-		#not polluted with temporary files.
-		/bin/rm -rf ${PROTO}/postrun_scripts
-	else
-		mount -F lofs /proc $PROTO/proc
-		[ -x $PROTO/var/lib/postrun/postrun-runq ] && chroot $PROTO /var/lib/postrun/postrun-runq
-		umount $PROTO/proc
-	fi
-
 	# Remove password lock file left around from user actions during
 	# package installation; if left in place it becomes a symlink
 	# into /mnt/misc which will cause the installer's attempt to
