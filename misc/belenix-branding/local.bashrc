@@ -7,7 +7,7 @@
 export PATH=/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
 export MANPATH=/usr/gnu/share/man:/usr/share/man:/usr/X11/share/man:/usr/sfw/share/man:/opt/DTraceToolkit/Man
 export PAGER="/usr/bin/less -ins"
-export MAPAGER="/usr/bin/less -ins"
+export MANPAGER="/usr/bin/less -ins"
 
 #
 # Define default prompt to <username>@<hostname>:<path><"($|#) ">
