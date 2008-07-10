@@ -169,6 +169,12 @@ f none etc/skel/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop=xfce4
 f none etc/skel/.bashrc=local.bashrc 0644 root other
 f none etc/skel/.bash_profile=local.bashrc 0644 root other
 
+#
+# Common Branding - common to the two desktops
+#
+d none etc/skel/Desktop 0755 root other
+f none etc/skel/Desktop/bchat.desktop=bchat.desktop 0644 root other
+
 f none etc/shells=shells 0644 root sys
 
 d none boot 0755 root sys
