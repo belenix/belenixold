@@ -1,13 +1,12 @@
---- usr/src/pkgdefs/SUNWaudd/prototype_i386.orig	2008-02-07 00:03:42.952951900 +0530
-+++ usr/src/pkgdefs/SUNWaudd/prototype_i386	2008-02-07 00:05:57.395486344 +0530
-@@ -53,10 +53,8 @@
+--- usr/src/pkgdefs/SUNWaudd/prototype_i386.orig        2008-07-02 10:58:16.000000000 +0530
++++ usr/src/pkgdefs/SUNWaudd/prototype_i386     2008-07-09 23:16:15.980913864 +0530
+@@ -51,9 +51,7 @@
+ f none kernel/misc/amsrc2 755 root sys
  f none kernel/misc/audiosup 755 root sys
- f none kernel/misc/diaudio 755 root sys
  f none kernel/misc/mixer 755 root sys
 -f none kernel/drv/audioens 755 root sys
  f none kernel/misc/amd64/amsrc1 755 root sys
  f none kernel/misc/amd64/amsrc2 755 root sys
  f none kernel/misc/amd64/audiosup 755 root sys
- f none kernel/misc/amd64/diaudio 755 root sys
  f none kernel/misc/amd64/mixer 755 root sys
 -f none kernel/drv/amd64/audioens 755 root sys

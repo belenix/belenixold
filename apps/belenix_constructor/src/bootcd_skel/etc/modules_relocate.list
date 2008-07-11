@@ -50,6 +50,7 @@ kernel/drv/bofi
 kernel/drv/bofi.conf
 kernel/drv/smbsrv
 kernel/drv/smbsrv.conf
+kernel/drv/usbvc
 kernel/drv/vnic
 kernel/drv/vnic.conf
 kernel/drv/lx_audio
@@ -60,6 +61,14 @@ kernel/drv/lx_systrace
 kernel/drv/lx_systrace.conf
 kernel/misc/s1394
 kernel/misc/nfssrv
+kernel/misc/md_hotspares
+kernel/misc/md_mirror
+kernel/misc/md_notify
+kernel/misc/md_raid
+kernel/misc/md_stripe
+kernel/misc/md_trans
+kernel/misc/sha1
+kernel/misc/des
 kernel/brand/lx_brand
 kernel/brand/sn1_brand
 kernel/kmdb/s1394
