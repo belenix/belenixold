@@ -270,7 +270,7 @@ then
 		echo "Copying misc files ..." >/dev/msglog
 		(cd /.cdrom; /usr/bin/cp -rP bin boot dev devices info jack \
 			mnt noautoshutdown platform reconfigure root \
-			AUTORUN.INF /tmp/.cdrom)
+			AUTORUN.INF .image_info /tmp/.cdrom)
 
 		solaris_zlib="/tmp/.cdrom/solaris.zlib"
 		solarismisc_zlib="/tmp/.cdrom/solarismisc.zlib"

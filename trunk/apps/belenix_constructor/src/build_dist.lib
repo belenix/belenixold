@@ -389,6 +389,9 @@ RTC_CONFIG_EOF
 	# create a user account to fail
 	/bin/rm -f $PROTO/etc/.pwd.lock
 
+	# Set the release tag
+	echo $DIST_ID > $PROTO/etc/release_tag
+
 	# Remove the icon theme caches
 	echo "Cleaning out icon theme cache"
 	(cd $PROTO/usr; find . -name icon-theme.cache -print|xargs rm -f)
