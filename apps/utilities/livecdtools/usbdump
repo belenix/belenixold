@@ -27,7 +27,6 @@
 
 
 #usbcopy
-set -x;
 let i=0
 mnt=/mnt/installusb
 microroot=/mnt/microroot
@@ -166,18 +165,12 @@ y
 EOF
 
 #now format it using ufs
-echo $dev
-echo $s0bdev
-echo $s0cdev
-
-
-
 newfs -m 0 $s0cdev < /dev/null 2> /dev/null
 mkdir -p $mnt
 mount $s0bdev $mnt
 
 #copy all the files from usb to cd
-cp -rP@ /.cdrom/* $mnt 2>/dev/null
+(cd /.cdrom/; find . | cpio -pdum $mnt)
 
 #install grub
 installgrub -mf $mnt/boot/grub/stage1 $mnt/boot/grub/stage2 $s0cdev

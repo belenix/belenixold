@@ -234,12 +234,12 @@ esac
 # The default browser home page on the live CD provides installation
 # information. After installation a different page provides information
 # for what else the user can or should do.
-sed -e 's+browser.startup.homepage=.*$+browser.startup.homepage=file:///usr/share/doc/opensolaris-welcome/html/index.html+' \
-    -e 's+browser.startup.homepage_reset=.*$+browser.startup.homepage_reset=file:///usr/share/doc/opensolaris-welcome/html/index.html+' \
-    ${BASEDIR}/usr/lib/firefox/browserconfig.properties > \
-    /tmp/browserconfig.properties.$$
-mv -f /tmp/browserconfig.properties.$$ \
-    ${BASEDIR}/usr/lib/firefox/browserconfig.properties
+#sed -e 's+browser.startup.homepage=.*$+browser.startup.homepage=file:///usr/share/doc/opensolaris-welcome/html/index.html+' \
+#    -e 's+browser.startup.homepage_reset=.*$+browser.startup.homepage_reset=file:///usr/share/doc/opensolaris-welcome/html/index.html+' \
+#    ${BASEDIR}/usr/lib/firefox/browserconfig.properties > \
+#    /tmp/browserconfig.properties.$$
+#mv -f /tmp/browserconfig.properties.$$ \
+#    ${BASEDIR}/usr/lib/firefox/browserconfig.properties
 
 
 # Remove LiveCD specific coreadm config file. Coreadm will
@@ -341,7 +341,6 @@ export SVCCFG_DTD SVCCFG_REPOSITORY
 /usr/sbin/svccfg apply ${BASEDIR}/var/svc/profile/network_nwam.xml
 
 # Remove install-specific packages
- # Remove install-specific packages
 pkgrm -n -R ${BASEDIR} FSWlivecdtools
 
 #
@@ -371,6 +370,9 @@ fi
     chown -R ${hd}:${grp} $hd
   done)
 
+# Some cleanup
+rm -f ${BASEDIR}/AUTORUN.INF ${BASEDIR}/archive.7z ${BASEDIR}/.image_info ${BASEDIR}/.cdrom ${BASEDIR}/.desk ${BASEDIR}/.livecd 
+
 #
 # Relocate a list of modules from one directory to another
 #
@@ -389,3 +391,12 @@ then
 	rm ${BASEDIR}/etc/modules_relocate.list
 fi
 
+#
+# Limit ZFS ARC usage if we have 1GB RAM or less
+#
+ram=`cat /.ram`
+if [ $ram -lt 1030 ]
+then
+	ram2 = $(($ram / 2 * 1024 * 1024))
+	echo "set zfs:zfs_arc_max = $ram2" >> ${BASEDIR}/etc/system
+fi

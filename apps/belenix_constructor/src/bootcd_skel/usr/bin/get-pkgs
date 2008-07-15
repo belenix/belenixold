@@ -1,7 +1,13 @@
 #!/usr/bin/ksh
 
+RELEASE=belenix_0.7.1
+if [ -f /etc/release_tag ]
+then
+	RELEASE=`cat /etc/release_tag`
+fi
+
 WGET=/usr/sfw/bin/wget
-PKGREPO=http://www.genunix.org/distributions/belenix_site/binfiles/extra_packages
+PKGREPO=http://pkg.belenix.org/${RELEASE}
 TMPDIR=/tmp/get-pkg
 ADMIN=${TMPDIR}/XRG.admin.$$
 PKGCACHE=/var/tmp/get-pkg
