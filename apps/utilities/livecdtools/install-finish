@@ -231,17 +231,6 @@ text|screen)
 	;;
 esac
 
-# The default browser home page on the live CD provides installation
-# information. After installation a different page provides information
-# for what else the user can or should do.
-#sed -e 's+browser.startup.homepage=.*$+browser.startup.homepage=file:///usr/share/doc/opensolaris-welcome/html/index.html+' \
-#    -e 's+browser.startup.homepage_reset=.*$+browser.startup.homepage_reset=file:///usr/share/doc/opensolaris-welcome/html/index.html+' \
-#    ${BASEDIR}/usr/lib/firefox/browserconfig.properties > \
-#    /tmp/browserconfig.properties.$$
-#mv -f /tmp/browserconfig.properties.$$ \
-#    ${BASEDIR}/usr/lib/firefox/browserconfig.properties
-
-
 # Remove LiveCD specific coreadm config file. Coreadm will
 # create its initial configuration on first boot 
 rm -f ${BASEDIR}/etc/coreadm.conf
@@ -299,6 +288,31 @@ sed '/\-B[ 	]*\$ZFS-BOOTFS/ i\
 bootfs '$rootdataset'' $MENUFILE > $MENUFILE.new
 
 mv $MENUFILE.new $MENUFILE
+
+#
+# Add a single-user console boot entry
+#
+cat $MENUFILE | nawk 'BEGIN {sect = 0} {
+	if ($0 ~ /^title BeleniX/) {
+		sect = 1
+		print "title BeleniX (Single-User Console)"
+		continue
+	}
+	if (sect == 1) {
+		if ($0 ~ /^kernel/) {
+			print $0, "-s"
+		} else {
+			print $0
+		}
+	}
+	if ($0 ~ /^module/) {
+		sect = 0
+	}
+}' > ${MENUFILE}.single
+
+echo " " >> $MENUFILE
+cat ${MENUFILE}.single >> $MENUFILE
+rm -f ${MENUFILE}.single
 
 bootadm update-archive -R ${BASEDIR}
 rm -f ${BASEDIR}/boot/solaris/filestat.ramdisk

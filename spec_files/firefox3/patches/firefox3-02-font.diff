@@ -1,0 +1,15 @@
+--- firefox/modules/libpref/src/init/all.js.new1	2008-07-16 20:45:22.163326704 +0530
++++ firefox/modules/libpref/src/init/all.js	2008-07-16 20:46:31.296654463 +0530
+@@ -1200,9 +1200,9 @@
+ pref("font.name.monospace.x-unicode", "Courier New");
+ pref("font.name.cursive.x-unicode", "Comic Sans MS");
+ 
+-pref("font.name.serif.x-western", "Times New Roman");
+-pref("font.name.sans-serif.x-western", "Arial");
+-pref("font.name.monospace.x-western", "Courier New");
++pref("font.name.serif.x-western", "DejaVu Serif");
++pref("font.name.sans-serif.x-western", "DejaVu Sans");
++pref("font.name.monospace.x-western", "DejaVu Sans Mono");
+ pref("font.name.cursive.x-western", "Comic Sans MS");
+ 
+ pref("font.name.serif.zh-CN", "宋体"); //MS Song

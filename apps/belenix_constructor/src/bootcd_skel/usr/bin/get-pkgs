@@ -8,6 +8,7 @@ fi
 
 WGET=/usr/sfw/bin/wget
 PKGREPO=http://pkg.belenix.org/${RELEASE}
+ALTREPO=
 TMPDIR=/tmp/get-pkg
 ADMIN=${TMPDIR}/XRG.admin.$$
 PKGCACHE=/var/tmp/get-pkg
@@ -63,7 +64,7 @@ basedir=default
 _DONE_
 
 echo "** Fetching cluster information ..."
-$WGET ${PKGREPO}/$cluster -O ${TMPDIR}/$cluster
+$WGET ${PKGREPO}/clusters/$cluster -O ${TMPDIR}/$cluster
 
 if [ $? -ne 0 ]
 then
@@ -78,8 +79,41 @@ then
 	rm -f ${PKGCACHE}/${ppkg}.pkg
 fi
 
-for pkg in `cat ${TMPDIR}/$cluster`
+#
+# Check if cluster points to an alternate repository
+#
+ALTREPO=`grep "^REPO:" cat ${TMPDIR}/$cluster | cut -f2 -d":"`
+if [ -n "$ALTREPO" ]
+then
+	PKGREPO=${ALTREPO}/${RELEASE}
+fi
+
+
+
+for pkg in `cat ${TMPDIR}/$cluster | grep -v "^REPO:"`
 do
+	if [ "$pkg" = "NOTICE" ]
+	then
+		$WGET ${PKGREPO}/NOTICE -O ${PKGCACHE}/NOTICE
+		while true;
+		do
+			echo ""
+			cat ${PKGCACHE}/NOTICE | more
+			echo "Do you agree to the terms ?"
+			read -p "(y/n) " yn
+			case $yn in
+			    y* | Y* )
+				break ;;
+			    [nN]* )
+				echo "Installation aborted"
+				exit 0 ;;
+			    * )
+				echo Invalid choice.. Exiting ;exit 0;;
+			esac
+		done
+		continue
+	fi
+
 	pkginfo -q ${pkg}
 	if [ $? -ne 0 ]
 	then
