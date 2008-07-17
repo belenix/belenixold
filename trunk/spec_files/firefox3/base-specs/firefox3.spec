@@ -42,6 +42,10 @@ Patch1:      firefox3-01-change-install-dir.diff
 # change preference to support multi-language
 Patch2:      firefox3-02-locale.diff
 
+# owner:moinakg
+# change western fonts to DejaVu
+Patch2b:     firefox3-02-font.diff
+
 # owner:davelam date:2006-06-12 type:bug
 # bugster:6428445
 Patch3:      firefox3-03-plugins.diff
@@ -168,6 +172,7 @@ rm -rf %{name}.tmp.$$
 cd %{name}
 %patch1 -p1
 %patch2 -p1
+%patch2b -p1
 %patch3 -p1
 %ifos solaris
 %patch4 -p1
