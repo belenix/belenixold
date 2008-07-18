@@ -10,8 +10,8 @@
 Name:        firefox
 %define code_name  none
 Summary:     Mozilla Firefox Web browser
-Version:     3.0
-%define tarball_version 3.0
+Version:     3.0.1
+%define tarball_version 3.0.1
 Release:     1
 Copyright:   MPL/LGPL
 Group:       Applications/Internet
@@ -44,7 +44,7 @@ Patch2:      firefox3-02-locale.diff
 
 # owner:moinakg
 # change western fonts to DejaVu
-Patch2b:     firefox3-02-font.diff
+Patch22:     firefox3-02-font.diff
 
 # owner:davelam date:2006-06-12 type:bug
 # bugster:6428445
@@ -172,7 +172,7 @@ rm -rf %{name}.tmp.$$
 cd %{name}
 %patch1 -p1
 %patch2 -p1
-%patch2b -p1
+%patch22 -p1
 %patch3 -p1
 %ifos solaris
 %patch4 -p1
