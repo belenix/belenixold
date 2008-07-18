@@ -21,8 +21,9 @@ mkdir %{name}-%{version}-build
 %build
 cd %{name}-%{version}-build
 echo "                              BeleniX 0.7.1 07/08" > release
+echo "                         Based on OpenSolaris Build 93" >> release
 echo "                           Innovating on OpenSolaris" >> release
-echo "                             Assembled 15 July 2008" >> release
+echo "                             Assembled 18 July 2008" >> release
 
 
 %install

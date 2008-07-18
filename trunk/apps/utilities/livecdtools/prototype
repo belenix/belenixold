@@ -42,7 +42,6 @@ f none usr/bin/stopgui=stopgui 555 root bin
 f none usr/bin/scanpartitions=scanpartitions 555 root bin
 f none usr/bin/chk_custom.sh=chk_custom.sh 555 root bin
 f none usr/bin/setup.sh=setup.sh 555 root bin
-f none usr/bin/bchat=bchat 555 root bin
 d none usr/sbin 0755 root bin
 f none usr/sbin/startxfce=startxfce 555 root bin
 f none usr/sbin/startkde=startkde 555 root bin
