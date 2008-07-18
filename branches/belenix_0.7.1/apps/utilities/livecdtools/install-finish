@@ -1,0 +1,423 @@
+#!/bin/ksh
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# This script is run by libspmisvc at the completion of
+# install/upgrade. It replaces the original inst9.sh which
+# applied driver updates to the target OS. The syntax is
+#
+#	install-finish <rootdir> <install_type>
+#
+# With multiboot/dboot, we do additional work to create the boot
+# archive and copy the failsafe archive and boot kernels
+#
+
+BASEDIR=$1
+INSTALL_TYPE=$2
+BOOTENVRC=$BASEDIR/boot/solaris/bootenv.rc
+LOCGRUBMENU=/boot/grub/menu.lst
+
+set_boot_active()
+{
+	RAW_SLICE="$1"
+
+	TMP1=/tmp/.set_active.1.$$
+	TMP2=/tmp/.set_active.2.$$
+
+	# RAW_SLICE is a /dev path
+	#
+	echo "$RAW_SLICE" | grep "p0:boot$" > /dev/null 2>&1
+	if [ "$?" -eq 0 ]; then
+		P0=`echo "$RAW_SLICE" | sed 's/p0:boot$/p0/g'`
+	else
+		P0=`echo "$RAW_SLICE" | sed 's/s.$/p0/g'`
+	fi
+
+	fdisk -W "$TMP1" "$P0"
+	grep -v \* "$TMP1" | grep -v '^[	 ]*$' > "$TMP2"
+	rm -f "$TMP1"
+
+	# make sure there is a Solaris partition before doing anything
+	#
+	awk '{
+		if ( $1 == "130" ) exit 10
+		else if ( $1 == "191" ) exit 10
+	    } ' "$TMP2"
+	if [ $? != 10 ] ; then
+		rm -f "$TMP2"
+		return 0
+	fi
+
+	# if there is a Solaris2 partition, set it active, otherwise
+	# set the Solaris (130 aka Linux swap active)
+	#
+	awk '{ print $1 }' "$TMP2" | grep 191 > /dev/null
+	if [ $? = 0 ] ; then
+		awk '{
+			if ( $1 == "191" )
+				printf "%s 128 %s %s %s %s %s %s %s %s\n", $1, \
+				    $3, $4, $5, $6, $7, $8, $9, $10
+				else printf "%s 0 %s %s %s %s %s %s %s %s\n", \
+				    $1, $3, $4, $5, $6, $7, $8, $9, $10
+		    }' "$TMP2" > "$TMP1"
+	else
+		awk '{
+			if ( $1 == "130" )
+				printf "%s 128 %s %s %s %s %s %s %s %s\n", $1, \
+				    $3, $4, $5, $6, $7, $8, $9, $10
+				else printf "%s 0 %s %s %s %s %s %s %s %s\n", \
+				    $1, $3, $4, $5, $6, $7, $8, $9, $10
+		    }' "$TMP2" > "$TMP1"
+	fi
+
+	fdisk -F "$TMP1" "$P0"
+
+	rm -f "$TMP1"
+	rm -f "$TMP2"
+}
+
+add_failsafe_menu()
+{
+	RDSK="$1"
+	echo "editing GRUB menu: bootadm update-menu -R $BASEDIR -Z -o $RDSK"
+	bootadm update-menu -R $BASEDIR -Z -o $RDSK
+}
+
+# fix the failsafe menu to redirect console to tty.
+fix_failsafe_menu()
+{
+	MENUFILE="$1"
+
+	# convert multiboot to dboot
+	grep "/boot/multiboot kernel/unix -s" $MENUFILE > /dev/null 2>&1
+	if [ $? = 0 ]; then
+		sed "s#/boot/multiboot kernel/unix -s#/boot/platform/i86pc/kernel/unix -s#" $MENUFILE > $MENUFILE.new
+		cat $MENUFILE.new > $MENUFILE
+		rm $MENUFILE.new
+	fi
+
+	# set failsafe console
+	grep "/boot/platform/i86pc/kernel/unix -s -B console=" $MENUFILE \
+		> /dev/null 2>&1
+	if [ $? = 0 ]; then
+		case "$osconsole" in
+		tty[ab])
+			sed "s#/boot/platform/i86pc/kernel/unix -s#/boot/platform/i86pc/kernel/unix -s -B console=${osconsole}#" $MENUFILE > $MENUFILE.new
+			cat $MENUFILE.new > $MENUFILE
+			rm $MENUFILE.new
+			;;
+		esac
+	fi
+}
+
+# no bootpath needed for zfs boot.
+# XXX blatant hack:  _setup_bootblock should be fixed
+# in the spmisvc library to not put bootpath in bootenv.rc
+# in the first place for zfs boot
+remove_bootpath()
+{
+	grep "^setprop[	 ]\{1,\}bootpath" $BOOTENVRC > /dev/null
+	if [ $? = 0 ]; then
+		sed '/^setprop[ 	][ 	]*bootpath[ 	]/d' \
+			$BOOTENVRC > $BOOTENVRC.tmp
+		mv $BOOTENVRC.tmp $BOOTENVRC
+	fi
+}
+
+# since the root device might be a metadevice, all the components need to
+# be located so each can be operated upon individually
+#
+get_rootdev_list()
+{
+	cat > /tmp/pooldev.$$ << EOF
+BEGIN {poolstart = 0}
+\$1 == poolname {poolstart = 1}
+/^ / {if (poolstart == 1 && \$1 != "mirror") print "/dev/rdsk/" \$1}
+EOF
+
+	zpool iostat -v $rootpool | \
+	    nawk -f /tmp/pooldev.$$ -v poolname=$rootpool
+	rm -f /tmp/pooldev.$$
+	return
+
+	metadev=$(nawk -v b="$BASEDIR" '$2 == b {print $1}' /etc/mnttab)
+
+	if [[ $metadev = /dev/dsk/* ]] ; then
+		rootdevlist=`echo "$metadev" | sed -e "s#/dev/dsk/##"`
+	elif [[ $metadev = /dev/md/dsk/* ]] ; then
+		metavol=`echo "$metadev" | sed -e "s#/dev/md/dsk/##"`
+		rootdevlist=`metastat -p $metavol |\
+		    grep -v "^$metavol[ 	]" | nawk '{print $4}'`
+	fi
+	for rootdev in $rootdevlist ; do
+		echo /dev/rdsk/$rootdev
+	done
+}
+
+# If not multiboot based, bail now. We can be applying an
+# old flasharchive.
+[ -f $BASEDIR/platform/i86pc/multiboot ] || exit 0
+
+rootpool=`grep "^[^	]*	$BASEDIR	" /etc/mnttab | \
+    nawk '{print $1}' | sed 's,/.*,,'`
+
+GRUBMENU=/${rootpool}/${LOCGRUBMENU}
+
+# Propagate the keyboard layout info to the installed system.
+kbdlayout=`eeprom keyboard-layout | cut -f 2 -d =`
+if [ -n "$kbdlayout" ] ; then
+	grep -v "setprop keyboard-layout" $BOOTENVRC > $BOOTENVRC.new
+	echo "setprop keyboard-layout '$kbdlayout'" >> $BOOTENVRC.new
+	cat $BOOTENVRC.new > $BOOTENVRC
+	rm $BOOTENVRC.new
+fi
+
+# add console device if not already there
+osconsole=`awk '/^setprop output-device/ {print $3}' $BOOTENVRC | tr -d "'\""`
+if [ -z "$osconsole" ]; then
+	osconsole=`awk '/^setprop console/ {print $3}' $BOOTENVRC | tr -d "'\""`
+fi
+
+# If osconsole is not set (initial/flash install), we set it here based on
+# what the current console device is.
+if [ -z "$osconsole" ]; then
+
+	# this following line is different from the ones above in 
+	# that is parses prtconf output and not bootenv.rc the
+	# trailing massage should not match the above lines
+	osconsole=`prtconf -v /devices | sed -n '/console/{n;p;}' | \
+	    cut -f 2 -d \'`
+	if [ -z "$osconsole" ]; then
+		osconsole=`prtconf -v /devices | \
+		    sed -n '/output-device/{n;p;}' | cut -f 2 -d \'`
+		[ "$osconsole" = "screen" ] && osconsole=text
+	fi
+	# default console to text
+	: ${osconsole:=text}
+	# put it in bootenv.rc
+	echo "setprop console '$osconsole'" >> $BOOTENVRC
+fi
+
+# Add splash image reference and timeout
+echo "splashimage /boot/grub/belenixboot.xpm.gz" >>$GRUBMENU
+echo "timeout 30" >>$GRUBMENU
+
+# Now, turn on splashimage if osconsole is "text" or "screen"
+case "$osconsole" in
+text|screen)
+	sed "s/^#[ 	]*splashimage/splashimage/" $GRUBMENU > $GRUBMENU.new
+	cat $GRUBMENU.new > $GRUBMENU
+	rm $GRUBMENU.new
+	;;
+esac
+
+# Remove LiveCD specific coreadm config file. Coreadm will
+# create its initial configuration on first boot 
+rm -f ${BASEDIR}/etc/coreadm.conf
+
+# set the Solaris partition on the just installed drive to active
+#
+get_rootdev_list | while read rootdev ; do
+	set_boot_active $rootdev
+	add_failsafe_menu $rootdev
+done
+
+# remove bootpath from bootenv.rc
+remove_bootpath
+
+fix_failsafe_menu $GRUBMENU
+
+# Fix up the grub entry. This is required because bootadm 'assumes'
+# Solaris. And, even though /etc/release says OpenSolaris it truncates
+# the 'Open' off. Replace this globally.
+
+/bin/sed -e 's/title Solaris/title BeleniX/g' $MENUFILE > $MENUFILE.new
+if [ $? == 0 ]; then
+	cat "${MENUFILE}.new" > "$MENUFILE"
+	rm "${MENUFILE}.new"
+fi
+
+# add entries for other installed OS's to the grub menu
+/sbin/mkmenu $GRUBMENU
+
+rootdataset=`grep -v "^#" $BASEDIR/etc/vfstab | \
+    grep "[ 	]/[ 	]" | nawk '{print $1}'`
+
+# set up the so-called swap partition as the dump device
+# (This is temporary.  Eventually, we will dump directly
+# into the swap zvol in the pool.  But that is not supported
+# yet and we want to make sure we get crash dumps in the
+# meantime
+cp /etc/dumpadm.conf ${BASEDIR}/etc
+
+# Update the dumpadm.conf to reflect the nodename.
+# dumpadm -r option does not work!!
+nodename=`cat ${BASEDIR}/etc/nodename`	
+cat ${BASEDIR}/etc/dumpadm.conf | \
+	sed s/opensolaris/${nodename}/ > /tmp/dumpadm.conf.$$
+mv /tmp/dumpadm.conf.$$ ${BASEDIR}/etc/dumpadm.conf
+
+# For libbe to be able to support the initial boot environment,
+# we need an explicit bootfs value in our menu entry.  Add it
+# to the entry before the ZFS-BOOTFS line.  This, along with the
+# rest of the grub menu entry manipulation code in this file, will
+# eventually need to get ripped out when we have support in libbe
+# to create and activate the grub entry for the initial boot
+# environment.
+sed '/\-B[ 	]*\$ZFS-BOOTFS/ i\
+bootfs '$rootdataset'' $MENUFILE > $MENUFILE.new
+
+mv $MENUFILE.new $MENUFILE
+
+#
+# Add a single-user console boot entry
+#
+cat $MENUFILE | nawk 'BEGIN {sect = 0} {
+	if ($0 ~ /^title BeleniX/) {
+		sect = 1
+		print "title BeleniX (Single-User Console)"
+		continue
+	}
+	if (sect == 1) {
+		if ($0 ~ /^kernel/) {
+			print $0, "-s"
+		} else {
+			print $0
+		}
+	}
+	if ($0 ~ /^module/) {
+		sect = 0
+	}
+}' > ${MENUFILE}.single
+
+echo " " >> $MENUFILE
+cat ${MENUFILE}.single >> $MENUFILE
+rm -f ${MENUFILE}.single
+
+bootadm update-archive -R ${BASEDIR}
+rm -f ${BASEDIR}/boot/solaris/filestat.ramdisk
+
+cp ${BASEDIR}/boot/grub/splash.xpm.gz /$rootpool/boot/grub/splash.xpm.gz
+cp ${BASEDIR}/boot/grub/belenixboot.xpm.gz /$rootpool/boot/grub/belenixboot.xpm.gz
+
+# Point SMF at correct system profile
+rm -f ${BASEDIR}/var/svc/profile/generic.xml \
+    ${BASEDIR}/var/svc/profile/name_service.xml \
+    ${BASEDIR}/var/svc/profile/inetd_generic.xml
+ln -s generic_limited_net.xml ${BASEDIR}/var/svc/profile/generic.xml
+ln -s ns_dns.xml ${BASEDIR}/var/svc/profile/name_service.xml
+ln -s inetd_generic.xml ${BASEDIR}/var/svc/profile/inetd_generic.xml
+
+# HACK!! Create a few needed dirs
+mkdir -p ${BASEDIR}/system/contract
+mkdir -p ${BASEDIR}/system/object
+mkdir -p ${BASEDIR}/proc
+mkdir -p ${BASEDIR}/tmp
+chown root:sys ${BASEDIR}/tmp
+chmod 1777 ${BASEDIR}/tmp
+
+# Add entries for sysidtool and sys-unconfig to run all known external apps.
+cat > ${BASEDIR}/etc/.sysidconfig.apps << EOF
+/lib/svc/method/sshd
+/usr/sbin/sysidkbd
+/usr/lib/cc-ccr/bin/eraseCCRRepository
+/usr/sbin/sysidpm
+/usr/lib/scn/bin/cleanup-scn-base
+/lib/svc/method/net-nwam
+EOF
+touch ${BASEDIR}/etc/.UNCONFIGURED 
+
+# Enable nwam
+SVCCFG_DTD=${BASEDIR}/usr/share/lib/xml/dtd/service_bundle.dtd.1
+SVCCFG_REPOSITORY=${BASEDIR}/etc/svc/repository.db
+export SVCCFG_DTD SVCCFG_REPOSITORY
+
+/usr/sbin/svccfg apply ${BASEDIR}/var/svc/profile/network_nwam.xml
+
+# Remove install-specific packages
+pkgrm -n -R ${BASEDIR} FSWlivecdtools
+
+#
+# Copy over an the xorg.conf, if present in live env.
+#
+[ -f /etc/X11/xorg.conf ] && cp /etc/X11/xorg.conf ${BASEDIR}/etc/X11/xorg.conf
+
+#
+# HACKS!! Copy default settings to root's home
+# Also copy settings into the additional user's home (if any).
+# TODO: These need to go into the Transfer Module
+#
+if [ -d ${BASEDIR}/root ]
+then
+       (cd ${BASEDIR}/etc/skel
+         find . | cpio -pdum ${BASEDIR}/root)
+fi
+
+#
+# Get export/home mounted first
+#
+rpool=`echo $rootdataset | cut -f1 -d"/"`
+mkdir -p /export/home
+zfs mount ${rpool}/export/home
+
+(cd /export/home
+  for hd in `find * -type d -prune`
+  do
+    grpid=`grep /etc/passwd | cut -f4 -d":"`
+    grp=`grep ":${grpid}:" | cut -f1 -d":"`
+    (cd ${BASEDIR}/etc/skel
+      find . | cpio -pdum /export/home/${hd}
+    )
+    chown -R ${hd}:${grp} $hd
+  done)
+
+# Some cleanup
+rm -f ${BASEDIR}/AUTORUN.INF ${BASEDIR}/archive.7z ${BASEDIR}/.image_info ${BASEDIR}/.cdrom ${BASEDIR}/.desk ${BASEDIR}/.livecd 
+
+#
+# Relocate a list of modules from one directory to another
+#
+relocatemodules() {
+	FROMDIR=$1
+	TODIR=$2
+	MODULES=$3
+
+	grep -v "^#" $MODULES | (cd $FROMDIR; cpio -pdumv $TODIR)
+	grep -v "^#" $MODULES | (cd $FROMDIR; xargs rm)
+}
+
+if [ -f ${BASEDIR}/etc/modules_relocate.list ]
+then
+	relocatemodules ${BASEDIR}/usr ${BASEDIR} ${BASEDIR}/etc/modules_relocate.list 
+	rm ${BASEDIR}/etc/modules_relocate.list
+fi
+
+#
+# Limit ZFS ARC usage if we have 1GB RAM or less
+#
+ram=`cat /.ram`
+if [ $ram -lt 1030 ]
+then
+	ram2=$(($ram / 2 * 1024 * 1024))
+	echo "set zfs:zfs_arc_max = $ram2" >> ${BASEDIR}/etc/system
+fi

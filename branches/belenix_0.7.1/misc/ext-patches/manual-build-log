@@ -1,0 +1,320 @@
+mv /usr/bin/make /usr/bin/make.orig
+cd /usr/bin
+ln -s /opt/jdsbld/bin/make
+
+pkgtool build --src=/packages/SOURCES:/space/data/SFE/include --download SFEogg.spec SFElibsndfile.spec SFElibsamplerate.spec SFEportaudio.spec SFEwxwidgets-gnu.spec SFEfreetype.spec SFEjam.spec SFEfreeglut.spec SFEgcc.spec SFEgettext.spec SFElibgsm.spec SFEnasm.spec SFElibx264.spec SFEid3lib.spec SFEamrwb.spec SFEncurses.spec SFEneon.spec SFEswig.spec SFElcms.spec SFElibmng.spec SFElibnjb.spec SFElibao.spec SFEliveMedia.spec SFElibcdio.spec SFElibfribidi.spec SFEladspa.spec SFEopenal.spec SFEgawk.spec SFEsdl-image.spec SFElibebml.spec SFElibmatroska.spec SFElibcddb.spec SFElibupnp.spec SFEvcdimager.spec SFElibtar.spec SFEcurl.spec SFElibdiscid.spec SFEruby.spec SFEsqlite.spec SFEjack.spec SFEfftw.spec encumbered/*.spec
+
+pkgtool build --src=/packages/SOURCES:/space/data/SFE/include --download SFElibpcap.spec SFEsed.spec SFEethereal.spec
+
+pkgtool build --src=/packages/SOURCES:/space/data/SFE/include:/space/data/SFE/ext-sources --download SFEeclipse.spec SFEjakarta-commons-cli.spec SFElogging-log4j.spec SFEjunit.spec SFEazureus.spec
+
+CC=/usr/sfw/bin/gcc CC32=$CC CC64=$CC CXX=/usr/sfw/bin/g++ CXX32=$CC CXX64=$CXX pkgtool build --src=/packages/SOURCES:/space/data/SFE/include:/space/data/SFE/ext-sources --download SFEcmake.spec SFEphysfs.spec SFEsupertux.spec
+
+Manually installed SFExvid
+export CC=gcc; pkgtool prep --download encumbered/SFExvid.spec
+pkgbuild -ba encumbered/SFExvid.spec
+pkgadd -d /packages/PKGS/ SFExvid SFExvid-devel 
+unset CC
+
+Manually installed SFEgpac
+mv /usr/sbin/install /usr/sbin/install.orig
+cd /usr/sbin
+ln -s /usr/ucb/install
+pkgtool prep --download encumbered/SFEgpac.spec
+pkgbuild -ba encumbered/SFEgpac.spec
+pkgadd -d /packages/PKGS/ SFEgpac SFEgpac-devel
+rm /usr/sbin/install
+mv /usr/sbin/install.orig /usr/sbin/install
+
+Manually installed SFElibx264
+export CC=gcc; pkgtool prep --download SFElibx264.spec
+pkgbuild -ba SFElibx264.spec
+pkgadd -d /packages/PKGS/ SFElibx264 SFElibx264-devel
+unset CC
+
+Manually build MPlayer
+mv /usr/sfw/lib/libfreetype.so /usr/sfw/lib/frt.so
+mv /usr/sfw/lib/libfreetype.so.6 /usr/sfw/lib/frt.so.6          
+pkgtool build --src=/packages/SOURCES:/space/data/SFE/include --download encumbered/SFEmplayer.spec
+mv /usr/sfw/lib/frt.so /usr/sfw/lib/libfreetype.so
+mv /usr/sfw/lib/frt.so.6 /usr/sfw/lib/libfreetype.so.6 
+
+-bash-3.2# pkgtool build --src=/packages/SOURCES:/space/data/SFE/include --download encumbered/*.spec 
+INFO: Copying %use'd or %include'd spec files to SPECS directory
+INFO: Processing spec files
+WARNING: skipping package SFEamrnb-6.1.0.4: already installed
+WARNING: skipping package SFElibmad-0.15.1.2: already installed
+WARNING: skipping package SFElibid3tag-gnu-0.15.1.1: already installed
+WARNING: skipping package SFEaudacity: required package SFEgcc not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEaudacity: required package SFEgettext not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEdvdauthor-0.6.11: already installed
+WARNING: skipping package SFEdvdstyler: required package SFEwxwidgets not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEdvdstyler: required package SFEwxSVG not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEmpgtx-1.3: already installed
+WARNING: skipping package SFEdvdstyler: required package SFEnetpbm not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEmjpegtools: required package SFEwxwidgets not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFElibquicktime-1.0.0: already installed
+INFO: Finding sources
+INFO: Running pkgbuild -ba [...] SFElibraw1394.spec (SFElibraw1394)
+ERROR: SFElibraw1394 FAILED
+INFO: Check the build log in /tmp/SFElibraw1394.log for details
+WARNING: skipping package SFElibiec61883: required package SFElibraw1394-devel failed
+WARNING: skipping package SFEdvgrab: required package SFElibraw1394 failed
+WARNING: skipping package SFElibdv-1.0.0: already installed
+WARNING: skipping package SFEdvgrab: required package SFElibiec61883-devel failed
+WARNING: skipping package SFEdvgrab: required package SFElibraw1394-devel failed
+WARNING: skipping package SFEfaad2-2.6.1: already installed
+WARNING: skipping package SFEffmpeg-2007.07.31: already installed
+WARNING: skipping package gnomad2: required package SFElibnjb not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFElibid3tag-0.15.1.1: already installed
+WARNING: skipping package gnomad2: required package SFElibnjb not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEgnome-media-extras: required package SFEneon not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEliba52-0.7.4: already installed
+WARNING: skipping package SFElibmpeg2-0.4.1: already installed
+WARNING: skipping package SFElibmpcdec-1.2.6: already installed
+WARNING: skipping package SFExvid-1.1.3: already installed
+WARNING: skipping package SFElibdvdread-0.9.7: already installed
+WARNING: skipping package SFEgnome-media-extras: required package SFEneon not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEgpac-0.4.4: already installed
+INFO: Finding sources
+INFO: Running pkgbuild -ba [...] SFEgraveman.spec (SFEgraveman)
+ERROR: SFEgraveman FAILED
+INFO: Check the build log in /tmp/SFEgraveman.log for details
+WARNING: skipping package SFEgtkpod: required package SFElibgpod not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEgtkpod: required package SFElibgpod-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEkino: required package SFElibiec61883 failed
+WARNING: skipping package SFEkino: required package SFElibraw1394 failed
+WARNING: skipping package SFEkino: required package SFElibiec61883-devel failed
+WARNING: skipping package SFEkino: required package SFElibraw1394-devel failed
+WARNING: skipping package SFElame-3.97: already installed
+WARNING: skipping package SFElibavc1394: required package SFElibraw1394 failed
+WARNING: skipping package SFElibavc1394: required package SFElibraw1394-devel failed
+WARNING: skipping package SFElibdts-0.0.2: already installed
+WARNING: skipping package SFElibdvbpsi-0.1.5: already installed
+WARNING: skipping package SFElibdvdcss-1.2.9: already installed
+WARNING: skipping package SFElibdvdnav-0.1.10: already installed
+WARNING: skipping package SFElibdvdplay-1.0.1: already installed
+WARNING: skipping package SFElibfame-0.9.1: already installed
+WARNING: skipping package libnjb-2.2.5: already installed
+WARNING: skipping package SFEmpd: required package SFElibshout not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEmpd: required package SFElibshout-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEmpg321-0.2.10: already installed
+WARNING: skipping package SFEmplayer-codecs-2007.10.07: already installed
+WARNING: skipping package SFEmplayer-plugin-3.45: already installed
+WARNING: skipping package SFEmplayer-1.0: already installed
+INFO: Finding sources
+INFO: Running pkgbuild -ba [...] SFEnntpcached.spec (SFEnntpcache)
+INFO: SFEnntpcache PASSED
+INFO: Installing SFEnntpcache
+INFO: Installing SFEnntpcache-root
+ERROR: failed to install package: 
+The following files are already installed on the system and are being
+used by another package:
+  /usr/share <attribute change only>
+This is an open source package.
+Use and redistribution subject to license terms as described in the
+documents included in the sources.
+
+Installation of <SFEnntpcache> was suspended (administration).
+No changes were made to the system.
+WARNING: skipping package SFEogle-0.9.2: already installed
+INFO: Finding sources
+INFO: Running pkgbuild -ba [...] SFEswfdec.spec (SFEswfdec)
+ERROR: SFEswfdec FAILED
+INFO: Check the build log in /tmp/SFEswfdec.log for details
+WARNING: skipping package SFEtwolame-0.3.10: already installed
+WARNING: skipping package SFEvice: required package SFEreadline not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvice: required package SFEreadline-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFEsdl-image not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFElibmatroska not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFElibcddb not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFElibupnp not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFEvcdimager not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFElibtar not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFEsdl-image-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFElibmatroska-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFElibcddb-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFElibupnp-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFEvcdimager-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEvlc: required package SFElibtar-devel not installed
+WARNING: and no spec file specified on the command line provides it
+INFO: Finding sources
+INFO: Downloading source http://www.unixuser.org/~euske/vnc2swf/vnc2swf-0.5.0.tar.gz
+INFO: Running pkgbuild -ba [...] SFEvnc2swf.spec (SFEvnc2swf)
+INFO: SFEvnc2swf PASSED
+INFO: Installing SFEvnc2swf
+WARNING: skipping package SFExine-lib: required package SFEaalib not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFExine-lib: required package SFEgcc not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFExine-lib: required package SFEaalib-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFExine-lib: required package SFEgcc-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFExine-ui: required package SFExine-lib failed
+WARNING: skipping package SFExine-ui: required package SFExine-lib-devel failed
+WARNING: skipping package SFExmms2: required package SFEcurl not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFExmms2: required package SFElibdiscid not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFExmms2: required package SFEruby not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFExmms2: required package SFEcurl-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFExmms2: required package SFElibdiscid-devel not installed
+WARNING: and no spec file specified on the command line provides it
+WARNING: skipping package SFEy4mscaler: required package SFEmjpegtools failed
+WARNING: skipping package SFEy4mscaler: required package SFEmjpegtools-devel failed
+
+Summary:
+
+                         package |      status | details
+---------------------------------+-------------+-------------------------------
+                        SFEamrnb |     SKIPPED | SFEamrnb-6.1.0.4 already installed
+                     SFEaudacity |  DEP_FAILED | Dependency check failed
+                    SFEdvdauthor |     SKIPPED | SFEdvdauthor-0.6.11 already installed
+                    SFEdvdstyler |  DEP_FAILED | Dependency check failed
+                       SFEdvgrab |  DEP_FAILED | Dependency check failed
+                        SFEfaad2 |     SKIPPED | SFEfaad2-2.6.1 already installed
+                       SFEffmpeg |     SKIPPED | SFEffmpeg-2007.07.31 already installed
+                         gnomad2 |  DEP_FAILED | Dependency check failed
+           SFEgnome-media-extras |  DEP_FAILED | Dependency check failed
+                         SFEgpac |     SKIPPED | SFEgpac-0.4.4 already installed
+                     SFEgraveman |      FAILED | pkgbuild build failed
+                       SFEgtkpod |  DEP_FAILED | Dependency check failed
+                         SFEkino |  DEP_FAILED | Dependency check failed
+                         SFElame |     SKIPPED | SFElame-3.97 already installed
+                       SFEliba52 |     SKIPPED | SFEliba52-0.7.4 already installed
+                   SFElibavc1394 |  DEP_FAILED | Dependency check failed
+                       SFElibdts |     SKIPPED | SFElibdts-0.0.2 already installed
+                        SFElibdv |     SKIPPED | SFElibdv-1.0.0 already installed
+                    SFElibdvbpsi |     SKIPPED | SFElibdvbpsi-0.1.5 already installed
+                    SFElibdvdcss |     SKIPPED | SFElibdvdcss-1.2.9 already installed
+                    SFElibdvdnav |     SKIPPED | SFElibdvdnav-0.1.10 already installed
+                   SFElibdvdplay |     SKIPPED | SFElibdvdplay-1.0.1 already installed
+                   SFElibdvdread |     SKIPPED | SFElibdvdread-0.9.7 already installed
+                      SFElibfame |     SKIPPED | SFElibfame-0.9.1 already installed
+                SFElibid3tag-gnu |     SKIPPED | SFElibid3tag-gnu-0.15.1.1 already installed
+                    SFElibid3tag |     SKIPPED | SFElibid3tag-0.15.1.1 already installed
+                  SFElibiec61883 |  DEP_FAILED | Dependency check failed
+                       SFElibmad |     SKIPPED | SFElibmad-0.15.1.2 already installed
+                    SFElibmpcdec |     SKIPPED | SFElibmpcdec-1.2.6 already installed
+                     SFElibmpeg2 |     SKIPPED | SFElibmpeg2-0.4.1 already installed
+                          libnjb |     SKIPPED | libnjb-2.2.5 already installed
+                 SFElibquicktime |     SKIPPED | SFElibquicktime-1.0.0 already installed
+                   SFElibraw1394 |      FAILED | pkgbuild build failed
+                   SFEmjpegtools |  DEP_FAILED | Dependency check failed
+                          SFEmpd |  DEP_FAILED | Dependency check failed
+                       SFEmpg321 |     SKIPPED | SFEmpg321-0.2.10 already installed
+                        SFEmpgtx |     SKIPPED | SFEmpgtx-1.3 already installed
+               SFEmplayer-codecs |     SKIPPED | SFEmplayer-codecs-2007.10.07 already installed
+               SFEmplayer-plugin |     SKIPPED | SFEmplayer-plugin-3.45 already installed
+                      SFEmplayer |     SKIPPED | SFEmplayer-1.0 already installed
+                    SFEnntpcache |      FAILED | 
+The following files are already installed on the system and are being
+used by another package:
+  /usr/share <attribute change only>
+This is an open source package.
+Use and redistribution subject to license terms as described in the
+documents included in the sources.
+
+Installation of <SFEnntpcache> was suspended (administration).
+No changes were made to the system.
+
+                         SFEogle |     SKIPPED | SFEogle-0.9.2 already installed
+                       SFEswfdec |      FAILED | pkgbuild build failed
+                      SFEtwolame |     SKIPPED | SFEtwolame-0.3.10 already installed
+                         SFEvice |  DEP_FAILED | Dependency check failed
+                          SFEvlc |  DEP_FAILED | Dependency check failed
+                      SFEvnc2swf |      PASSED | 
+                     SFExine-lib |  DEP_FAILED | Dependency check failed
+                      SFExine-ui |  DEP_FAILED | Dependency check failed
+                        SFExmms2 |  DEP_FAILED | Dependency check failed
+                         SFExvid |     SKIPPED | SFExvid-1.1.3 already installed
+                    SFEy4mscaler |  DEP_FAILED | Dependency check failed
+-bash-3.2# 
+
+
+pkgtool build --download SFEimlib2.spec SFEmultitail.spec
+CC=/usr/sfw/bin/gcc CXX=/usr/sfw/bin/g++ pkgtool build --download SFExvidcap.spec SFEhercules
+pkgtool build --download SFEnetpbm.spec
+pkgtool build --download SFEsdl-mixer.spec SFEheroes.spec SFEbyacc.spec
+CC=/usr/sfw/bin/gcc CXX=/usr/sfw/bin/g++ pkgtool build --download SFEhercules.spec
+pkgtool build --with-l10n --download SFExcdroast.spec
+pkgtool build --with-l10n --without-dt --download SFEhtml-tidy.spec
+pkgtool build --download --without-dt --with-l10n SFEp7zip.spec
+CC=/usr/sfw/bin/gcc CXX=/usr/sfw/bin/g++ pkgtool build --download --without-dt --with-l10n SFEe2fsprogs.spec
+pkgtool build --download --without-dt --with-l10n SFEmc.spec SFEmrxvt.spec SFEbwidget.spec SFEliberationfonts.spec
+pkgtool build --download --without-dt --with-l10n SFEperl-curses.spec SFEperl-locale-mt-simple.spec:SFEperl-term-readkey.spec:SFEperl-curses-ui.spec
+CC=/usr/sfw/bin/gcc CXX=/usr/sfw/bin/g++ pkgtool build --download --without-dt --with-l10n SFElbreakout.spec
+pkgtool build --download --without-dt --with-l10n SFEsharutils.spec SFEfreealut.spec SFEsdl-net.spec SFEsdl.spec
+
+SFEsdl.spec -> replace SUNWlibsdl
+
+CC=/usr/sfw/bin/gcc CXX=/usr/sfw/bin/g++ pkgtool build --download --without-dt --with-l10n SFEscorched3d.spec
+
+
+
+# CHECK --- SFExcdroast.spec, SFEhercules.spec(Build with Gcc)
+#
+# Add .desktop files
+# xmms
+# xcdroast
+# mrxvt
+# dttdocviewer
+#
+
+Use SFEsubversion instead of SUNWsubversion
+Use SUNWreadline instead of SFEreadline
+Use SFEsdl instead of SUNWlibsdl
+SUNWxwplt, dummy package required.
+Use SFEbdb instead of SUNWbdb
+Use SUNWgnu-iconv & SUNWgnu-gettext instead of SFElibiconv and SFEgettext
+
+SFEbdb:
+  Add link libdb.so.1 -> libdb-4.5.so
+
+#export PATH=/usr/gnu/bin:/usr/ccs/bin:/opt/jdsbld/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin
+
+cp /usr/lib/cpp from SXDE env :(
+cp /usr/ccs/bin/as from SXDE env :(
+
+pkgtool build --with-l10n --with-gnu-iconv --without-dt --without-sun-branding --with-indiana-branding --without-blueprint --with-fox --without-apoc-adapter --halt-on-errors --src=/packages/SOURCES:/build/jds_gate/spec-files/include:/build/jds_gate/spec-files/ext-sources indiana/*.spec
+
+chown root:sys /etc/X11
+pkgtool build --with-l10n --with-gnu-iconv --without-dt --without-sun-branding --with-indiana-branding --without-blueprint --with-fox --without-apoc-adapter --halt-on-errors --src=/packages/SOURCES:/build/jds_gate/spec-files/include:/build/jds_gate/spec-files/ext-sources SUNWlibpopt.spec SUNWgnome-base-libs.spec SUNWgnome-libs.spec SUNWlibrsvg.spec SUNWgnome-dialog.spec SUNWlibcroco.spec SUNWpostrun.spec SUNWgnome-display-mgr.spec SUNWpng.spec SUNWTiff.spec SUNWjpg.spec SUNWPython.spec SUNWgnome-doc-utils.spec SUNWgnome-vfs.spec SUNWgnome-audio.spec SUNWlibexif.spec SUNWlibgcrypt.spec SUNWgnome-component.spec SUNWgnome-config.spec SUNWgnome-xml.spec SUNWgnome-common-devel.spec SUNWperl-xml-parser.spec SUNWopenjade.spec SUNWgnome-doc-utils.spec SUNWopensp.spec SUNWdbus.spec SUNWdbus-bindings.spec SUNWgamin.spec SUNWPython-extra.spec SUNWlibgpg-error.spec SUNWgnome-print.spec
+
+pkgtool build --download --with-l10n --with-gnu-iconv --without-dt --without-sun-branding --without-blueprint --with-fox --without-apoc-adapter --halt-on-errors --with-indiana-branding --src=/packages/SOURCES:/build/jds_gate/spec-files/include:/build/jds_gate/spec-files/ext-sources SUNWfirefox.spec
+
+pkgtool build --with-l10n --with-gnu-iconv --without-dt --without-sun-branding --with-indiana-branding --without-blueprint --with-fox --without-apoc-adapter --halt-on-errors --src=/packages/SOURCES:/build/jds_gate/spec-files/include:/build/jds_gate/spec-files/ext-sources SUNWthunderbird.spec SUNWgnome-panel.spec SUNWgnome-themes.spec SUNWjdsrm.spec SUNWevolution-data-server.spec SUNWiso-codes.spec SUNWevolution-libs.spec SUNWgnutls.spec SUNWogg-vorbis.spec SUNWflac.spec SUNWpcre.spec SUNWgksu.spec SUNWimagick.spec SUNWlibtheora.spec SUNWgnome-file-mgr.spec SUNWgnome-a11y-libs.spec SUNWgnome-gtksourceview.spec SUNWgnome-python-libs.spec SUNWgnome-pdf-viewer.spec SUNWgnome-img-editor.spec SUNWgnome-img-editor-help.spec SUNWspeex.spec SUNWgnome-media.spec SUNWliboil.spec SUNWmusicbrainz.spec SUNWpilot-link.spec SUNWgnome-camera.spec SUNWgnome-keyring-manager.spec SUNWgnome-fonts.spec SUNWlibdaemon.spec SUNWavahi-bridge-dsd.spec SUNWgnome-im-client.spec SUNWgnome-ps-viewer.spec SUNWlibgtop.spec SUNWlibgtop.spec SUNWperl-authen-pam.spec SUNWprint-monitor.spec SUNWgnome-wm.spec SUNWgnome-desktop-prefs.spec SUNWgnome-devhelp.spec SUNWgnome-help-viewer.spec
+
+
+/usr/sfw/bin/cpp -traditional-cpp -U__GNUC__ -U__GNUC_MINOR
+CC=/opt/SS12/SUNWspro/bin/cc pkgtool build SUNWmlib.spec

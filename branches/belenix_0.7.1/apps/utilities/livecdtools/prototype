@@ -1,0 +1,94 @@
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+i pkginfo
+i copyright
+i depend
+!default 0555 root bin
+d none sbin 755 root sys
+f none sbin/listcd=listcd 555 root bin
+f none sbin/listusb=listusb 555 root bin
+f none sbin/usbdump=usbdump 555 root bin
+f none sbin/pagein=pagein 555 root bin
+f none sbin/checkcore=checkcore 555 root bin
+f none sbin/checklkcd=checklkcd 555 root bin
+f none sbin/install-finish=install-finish 0755 root bin
+f none sbin/mkmenu=mkmenu 0755 root bin
+d none usr 0755 root sys
+d none usr/bin 0755 root bin
+f none usr/bin/startgui=startgui 555 root bin
+f none usr/bin/stopgui=stopgui 555 root bin
+f none usr/bin/scanpartitions=scanpartitions 555 root bin
+f none usr/bin/chk_custom.sh=chk_custom.sh 555 root bin
+f none usr/bin/setup.sh=setup.sh 555 root bin
+d none usr/sbin 0755 root bin
+f none usr/sbin/startxfce=startxfce 555 root bin
+f none usr/sbin/startkde=startkde 555 root bin
+d none jack 755 jack staff
+d none jack/.config 755 jack staff
+d none jack/.config/autostart 755 jack staff
+#f none jack/.config/autostart/license.desktop=license.desktop 644 jack staff
+d none jack/Desktop 755 jack staff
+f none jack/Desktop/install_belenix.desktop=install_belenix.desktop 644 jack staff
+f none jack/Desktop/hdd_mount.desktop=hdd_mount.desktop 644 jack staff
+f none jack/Desktop/reboot.desktop=reboot.desktop 644 jack staff
+f none jack/Desktop/belenixinfo.desktop=belenixinfo.desktop 644 jack staff
+f none jack/Desktop/dttdocs.desktop=dttdocs.desktop 644 jack staff
+f none jack/Desktop/bchat.desktop=bchat.desktop 644 jack staff
+d none jack/Documents 755 jack staff
+f none jack/install-icon.png=install-icon.png 644 jack staff
+#f none jack/.bashrc=local.bashrc 755 jack staff
+#f none jack/.profile=local.bashrc 755 jack staff
+f none jack/.xscreensaver=xscreensaver 644 jack staff
+d none lib 755 root bin
+d none lib/svc 755 root bin
+d none lib/svc/method 755 root bin
+f none lib/svc/method/live-devices-local=live-devices-local 555 root bin
+f none lib/svc/method/live-fs-root=live-fs-root 555 root bin
+f none lib/svc/method/live-fs-usr=live-fs-usr 555 root bin
+f none lib/svc/method/live-sysidtool-system=live-sysidtool-system 555 root bin
+f none lib/svc/method/xserver=xserver 555 root bin
+d none var 755 root sys
+d none var/svc 755 root sys
+d none var/svc/manifest 755 root sys
+d none var/svc/manifest/system 755 root sys
+d none var/svc/manifest/system/device 755 root sys
+d none var/svc/manifest/system/filesystem 755 root sys
+f none var/svc/manifest/system/live-sysidtool.xml=live-sysidtool.xml 444 root sys
+f none var/svc/manifest/system/device/live-devices-local.xml=live-devices-local.xml 444 root sys
+f none var/svc/manifest/system/filesystem/live-root-fs.xml=live-root-fs.xml 444 root sys
+f none var/svc/manifest/system/filesystem/live-usr-fs.xml=live-usr-fs.xml 444 root sys
+d none var/svc/manifest/application 755 root sys
+f none var/svc/manifest/application/xserver.xml=xserver.xml 444 root sys
+d none var/svc/profile 755 root sys
+f none var/svc/profile/network_nwam.xml=network_nwam.xml 444 root sys
+f none var/svc/profile/generic_live.xml=generic_live.xml 444 root sys
+d none etc 0755 root sys
+d none boot 0755 root sys
+d none boot/grub 0755 root sys
+f none boot/grub/menu.lst.default=menu.lst.default 0755 root sys
+f none etc/vfstab.default=vfstab.default 0755 root sys
+d none .cdrom 755 root sys
+d none mnt 755 root sys
+d none mnt/misc 755 root sys

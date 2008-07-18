@@ -1,0 +1,43 @@
+--- xfce4-cpugraph-plugin-0.4.0/panel-plugin/cpu_os.c.fixmaxcpu	2007-11-22 20:36:30.796435664 +0100
++++ xfce4-cpugraph-plugin-0.4.0/panel-plugin/cpu_os.c	2007-11-22 20:43:35.953762952 +0100
+@@ -181,13 +181,30 @@
+ 
+ static int last_ncpu=-1;
+ 
++/* Return last active cpu id */
++int cpuLoadMon_lastCpu()
++{
++	int max = (int) sysconf(_SC_CPUID_MAX);
++	int last_active = 0;
++
++	if (kc==(kstat_ctl_t *)NULL){
++		kc = (kstat_ctl_t *)kstat_open();
++	}
++	for (int i=0;i<max;i++) {
++		if (p_online(i, P_STATUS) !=-1) {
++			last_active = i;
++		}
++	}
++	return last_active;
++}
++
+ int cpuLoadMon_init()
+ {
+ 	/* Check if previously initalized */
+ 	if(data != NULL) return(-2);
+ 
+ 	/* Get number of cpu */	
+-	nrCpus =  (int)sysconf(_SC_CPUID_MAX);
++	nrCpus =  cpuLoadMon_lastCpu() + 1;
+ 	
+ 	/* Alloc storage for cpu data stuff */
+ 	data = (cpuLoadData *) calloc(nrCpus, sizeof(cpuLoadData));
+@@ -209,7 +226,7 @@
+ /* Check if number of cpu didn't changed, if yes then reinitialize structures */
+ int cpuLoadMon_check()
+ {
+-	if (nrCpus != (int) sysconf(_SC_CPUID_MAX)) {
++	if (nrCpus != cpuLoadMon_lastCpu() + 1) {
+ 		cpuLoadMon_free();
+ 		cpuLoadMon_init();
+ 	}

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+pkgtool build --halt-on-errors --with-fox --with-ff3 --with-gnu-iconv --without-dt --with-l10n --without-apoc-adapter --with-indiana-branding --src=/packages/SOURCES:/build/sfe_gate/spec_files/include:/build/sfe_gate/spec_files/ext-sources --download $1

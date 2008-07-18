@@ -1,0 +1,14 @@
+--- openmotif-2.3.0-64/lib/Xm/IconFile.c.orig	2008-05-16 14:56:41.783462334 +0530
++++ openmotif-2.3.0-64/lib/Xm/IconFile.c	2008-05-16 14:57:12.582557767 +0530
+@@ -54,7 +54,10 @@
+ #include <config.h>
+ #endif
+ 
+-
++#define POSIX_PTHREAD_SEMANTICS
++#define _POSIX_PTHREAD_SEMANTICS
++#include <sys/types.h>
++#include <dirent.h>
+ #include <stdio.h>
+ #include <X11/Xlocale.h>
+ 

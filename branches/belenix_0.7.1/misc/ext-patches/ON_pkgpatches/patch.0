@@ -1,0 +1,7 @@
+--- usr/src/pkgdefs/SUNWaudh/prototype_i386.orig	2008-02-07 00:03:42.912302383 +0530
++++ usr/src/pkgdefs/SUNWaudh/prototype_i386	2008-02-07 00:05:57.362024230 +0530
+@@ -49,4 +49,3 @@
+ f none usr/include/sys/audio/audio810.h 644 root bin
+ f none usr/include/sys/audio/audiohd.h 644 root bin
+ f none usr/include/sys/audio/audioixp.h 644 root bin
+-f none usr/include/sys/audio/audiovia823x.h 644 root bin

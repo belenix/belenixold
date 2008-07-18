@@ -1,0 +1,30 @@
+--- nspr-4.7/mozilla/nsprpub/pkg/solaris/Makefile.targ.orig	2008-02-19 23:07:34.406161415 +0530
++++ nspr-4.7/mozilla/nsprpub/pkg/solaris/Makefile.targ	2008-02-19 23:48:30.579388467 +0530
+@@ -47,10 +47,10 @@
+ 	$(RM) $@; nawk -f ../awk_pkginfo $< > $@
+ 
+ pkg: $(PKGARCHIVE) prototype_$(MACH)
+-	cp $(srcdir)/prototype_com .
+-	cat $(srcdir)/prototype_$(MACH) | sed $(sed_proto64) > prototype_$(MACH)
+-	cp $(srcdir)/depend .
+-	pkgmk -f prototype_$(MACH) -d $(PKGARCHIVE) -r $(ROOT) -o $(PACKAGE)
++	#cp $(srcdir)/prototype_com .
++	cat $(srcdir)/prototype_$(MACH) | sed $(sed_proto64) > prototype_new_$(MACH)
++	#cp $(srcdir)/depend .
++	pkgmk -f prototype_new_$(MACH) -d $(PKGARCHIVE) -r $(ROOT) -o $(PACKAGE)
+ 
+ $(PKGARCHIVE):
+ 	[ -d $(PKGARCHIVE) ] || mkdir -p $(PKGARCHIVE)
+--- nspr-4.7/mozilla/nsprpub/pkg/solaris/Makefile-devl.targ.orig	2008-02-19 23:07:28.354933550 +0530
++++ nspr-4.7/mozilla/nsprpub/pkg/solaris/Makefile-devl.targ	2008-02-19 23:07:48.283905784 +0530
+@@ -47,8 +47,8 @@
+ 	$(RM) $@; nawk -f ../awk_pkginfo $(srcdir)/$@.tmpl > $@
+ 
+ pkg: $(PKGARCHIVE)
+-	cat $(srcdir)/prototype | sed $(sed_proto64) > prototype
+-	cp $(srcdir)/depend .
++	#cat $(srcdir)/prototype | sed $(sed_proto64) > prototype
++	#cp $(srcdir)/depend .
+ 	pkgmk -f prototype -d $(PKGARCHIVE) -r $(ROOT) -o $(PACKAGE)
+ 
+ $(PKGARCHIVE):

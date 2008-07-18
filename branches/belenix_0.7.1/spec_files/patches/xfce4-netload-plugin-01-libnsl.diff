@@ -1,0 +1,12 @@
+diff -ur xfce4-netload-plugin-0.4.0-orig/configure.ac xfce4-netload-plugin-0.4.0/configure.ac
+--- xfce4-netload-plugin-0.4.0-orig/configure.ac	2005-09-30 14:45:43.000000000 +0700
++++ xfce4-netload-plugin-0.4.0/configure.ac	2007-03-18 10:52:36.685106679 +0700
+@@ -48,7 +48,7 @@
+ AC_TYPE_SIZE_T
+ 
+ AC_CHECK_LIB(kstat, kstat_open, SOLLIBS="-lkstat -lsocket", SOLLIBS="")
+-AC_CHECK_LIB(nsl, kstat_open, SOLLIBS="$SOLLIBS -linet_ntop", SOLLIBS="$SOLLIBS")
++AC_CHECK_LIB(nsl, inet_ntop, SOLLIBS="$SOLLIBS -lnsl", SOLLIBS="$SOLLIBS")
+ AC_SUBST(SOLLIBS)
+ 
+ dnl configure the panel plugin

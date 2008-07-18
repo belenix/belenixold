@@ -1,0 +1,24 @@
+#!/bin/sh
+
+umount /space/zones/native/root/proc
+umount /space/zones/native/root/etc/mnttab
+umount /space/zones/native/root/dev/fd
+umount /space/zones/native/root/dev
+umount /space/zones/native/root/devices
+umount /space/zones/native/root/opt/SUNWspro
+umount /space/zones/native/root/build/sfe_gate
+umount /space/zones/native/root/var/run
+umount /space/zones/native/root/opt/SS12
+
+mount -F lofs /proc /space/zones/native/root/proc
+mount -F lofs /etc/mnttab /space/zones/native/root/etc/mnttab
+mount -F lofs /dev /space/zones/native/root/dev
+mount -F fd -O fd /space/zones/native/root/dev/fd
+mount -F lofs -O /devices /space/zones/native/root/devices/
+mount -F lofs /opt/SUNWspro /space/zones/native/root/opt/SUNWspro
+mount -F lofs /space/belenix/belenix/trunk /space/zones/native/root/build/sfe_gate
+mount -F lofs /var/run /space/zones/native/root/var/run
+mount -F lofs /opt/SS12 /space/zones/native/root/opt/SS12
+
+
+chroot /space/zones/native/root /usr/bin/bash

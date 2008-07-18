@@ -1,0 +1,31 @@
+diff -ur Terminal-0.2.6-orig/terminal/terminal-dialogs.h Terminal-0.2.6/terminal/terminal-dialogs.h
+--- Terminal-0.2.6-orig/terminal/terminal-dialogs.h	2007-01-20 21:30:51.000000000 +0700
++++ Terminal-0.2.6/terminal/terminal-dialogs.h	2007-02-01 15:36:46.112856444 +0700
+@@ -22,19 +22,22 @@
+ 
+ #include <gtk/gtk.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+-void terminal_dialogs_show_about (GtkWindow    *parent) G_GNUC_INTERNAL;
++G_GNUC_INTERNAL
++void terminal_dialogs_show_about (GtkWindow    *parent);
+ 
++G_GNUC_INTERNAL G_GNUC_PRINTF (3, 4)
+ void terminal_dialogs_show_error (gpointer      parent,
+                                   const GError *error,
+                                   const gchar  *format,
+-                                  ...) G_GNUC_INTERNAL G_GNUC_PRINTF (3, 4);
++                                  ...);
+ 
++G_GNUC_INTERNAL
+ void terminal_dialogs_show_help  (gpointer      parent,
+                                   const gchar  *page,
+-                                  const gchar  *offset) G_GNUC_INTERNAL;
++                                  const gchar  *offset);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__TERMINAL_DIALOGS_H__ */

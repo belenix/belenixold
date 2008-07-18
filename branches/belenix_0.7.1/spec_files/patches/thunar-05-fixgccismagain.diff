@@ -1,0 +1,63 @@
+--- Thunar-0.9.0/plugins/thunar-sbr/thunar-sbr-date-renamer.h.fixgccismagain	2007-12-10 11:40:53.917097495 +0100
++++ Thunar-0.9.0/plugins/thunar-sbr/thunar-sbr-date-renamer.h	2007-12-10 11:44:28.705765801 +0100
+@@ -24,7 +24,7 @@
+ 
+ #include <thunar-sbr/thunar-sbr-enum-types.h>
+ 
+-G_BEGIN_DECLS;
++G_BEGIN_DECLS
+ 
+ typedef struct _ThunarSbrDateRenamerClass ThunarSbrDateRenamerClass;
+ typedef struct _ThunarSbrDateRenamer      ThunarSbrDateRenamer;
+@@ -36,28 +36,39 @@
+ #define THUNAR_SBR_IS_DATE_RENAMER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), THUNAR_SBR_TYPE_DATE_RENAMER))
+ #define THUNAR_SBR_DATE_RENAMER_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), THUNAR_SBR_TYPE_DATE_RENAMER, ThunarSbrDateRenamerClass))
+ 
+-GType                 thunar_sbr_date_renamer_get_type        (void) G_GNUC_CONST G_GNUC_INTERNAL;
++G_GNUC_CONST G_GNUC_INTERNAL
++GType                 thunar_sbr_date_renamer_get_type        (void);
+ 
+-void                  thunar_sbr_date_renamer_register_type   (ThunarxProviderPlugin  *plugin) G_GNUC_INTERNAL;
++G_GNUC_INTERNAL
++void                  thunar_sbr_date_renamer_register_type   (ThunarxProviderPlugin  *plugin);
+ 
+-ThunarSbrDateRenamer *thunar_sbr_date_renamer_new             (void) G_GNUC_INTERNAL G_GNUC_MALLOC;
++G_GNUC_INTERNAL G_GNUC_MALLOC
++ThunarSbrDateRenamer *thunar_sbr_date_renamer_new             (void);
+ 
+-ThunarSbrDateMode     thunar_sbr_date_renamer_get_mode        (ThunarSbrDateRenamer *date_renamer) G_GNUC_INTERNAL;
++G_GNUC_INTERNAL
++ThunarSbrDateMode     thunar_sbr_date_renamer_get_mode        (ThunarSbrDateRenamer *date_renamer);
++G_GNUC_INTERNAL
+ void                  thunar_sbr_date_renamer_set_mode        (ThunarSbrDateRenamer *date_renamer,
+-                                                               ThunarSbrDateMode     mode) G_GNUC_INTERNAL;
++                                                               ThunarSbrDateMode     mode);
+ 
+-const gchar          *thunar_sbr_date_renamer_get_format      (ThunarSbrDateRenamer *date_renamer) G_GNUC_INTERNAL;
++G_GNUC_INTERNAL
++const gchar          *thunar_sbr_date_renamer_get_format      (ThunarSbrDateRenamer *date_renamer);
++G_GNUC_INTERNAL
+ void                  thunar_sbr_date_renamer_set_format      (ThunarSbrDateRenamer *date_renamer,
+-                                                               const gchar          *format) G_GNUC_INTERNAL;
++                                                               const gchar          *format);
+ 
+-guint                 thunar_sbr_date_renamer_get_offset      (ThunarSbrDateRenamer *date_renamer) G_GNUC_INTERNAL;
++G_GNUC_INTERNAL
++guint                 thunar_sbr_date_renamer_get_offset      (ThunarSbrDateRenamer *date_renamer);
++G_GNUC_INTERNAL
+ void                  thunar_sbr_date_renamer_set_offset      (ThunarSbrDateRenamer *date_renamer,
+-                                                               guint                 offset) G_GNUC_INTERNAL;
++                                                               guint                 offset);
+ 
+-ThunarSbrOffsetMode   thunar_sbr_date_renamer_get_offset_mode (ThunarSbrDateRenamer *date_renamer) G_GNUC_INTERNAL;
++G_GNUC_INTERNAL
++ThunarSbrOffsetMode   thunar_sbr_date_renamer_get_offset_mode (ThunarSbrDateRenamer *date_renamer);
++G_GNUC_INTERNAL
+ void                  thunar_sbr_date_renamer_set_offset_mode (ThunarSbrDateRenamer *date_renamer,
+-                                                               ThunarSbrOffsetMode   offset_mode) G_GNUC_INTERNAL;
++                                                               ThunarSbrOffsetMode   offset_mode);
+ 
+-G_END_DECLS;
++G_END_DECLS
+ 
+ #endif /* !__THUNAR_SBR_DATE_RENAMER_H__ */

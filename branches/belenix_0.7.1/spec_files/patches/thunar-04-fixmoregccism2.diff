@@ -1,0 +1,46 @@
+--- Thunar-0.9.0/thunar-vfs/thunar-vfs-job-private.h.fixmoregccism2	2007-12-10 10:40:28.618364175 +0100
++++ Thunar-0.9.0/thunar-vfs/thunar-vfs-job-private.h	2007-12-10 10:47:35.449311261 +0100
+@@ -35,7 +35,7 @@
+ void                  _thunar_vfs_job_emit_valist     (ThunarVfsJob        *job,
+                                                        guint                signal_id,
+                                                        GQuark               signal_detail,
+-                                                       va_list              var_args) G_GNUC_INTERNAL;
++                                                       va_list              var_args);
+ void                  _thunar_vfs_job_emit            (ThunarVfsJob        *job,
+                                                        guint                signal_id,
+                                                        GQuark               signal_detail,
+@@ -46,7 +46,7 @@
+ void                  _thunar_vfs_job_notify_valist   (ThunarVfsJob        *job,
+                                                        guint                signal_id,
+                                                        GQuark               signal_detail,
+-                                                       va_list              var_args) G_GNUC_INTERNAL;
++                                                       va_list              var_args);
+ void                  _thunar_vfs_job_notify          (ThunarVfsJob        *job,
+                                                        guint                signal_id,
+                                                        GQuark               signal_detail,
+@@ -58,20 +58,21 @@
+                                                        const gchar         *format,
+                                                        va_list              var_args,
+                                                        const gchar         *question,
+-                                                       ThunarVfsJobResponse choices) G_GNUC_INTERNAL;
++                                                       ThunarVfsJobResponse choices);
+ ThunarVfsJobResponse  _thunar_vfs_job_ask_overwrite   (ThunarVfsJob        *job,
+                                                        const gchar         *format,
+                                                        ...) G_GNUC_PRINTF (2, 3);
+ G_GNUC_INTERNAL
+ ThunarVfsJobResponse  _thunar_vfs_job_ask_replace     (ThunarVfsJob        *job,
+                                                        ThunarVfsPath       *src_path,
+-                                                       ThunarVfsPath       *dst_path) G_GNUC_INTERNAL;
++                                                       ThunarVfsPath       *dst_path);
++G_GNUC_PRINTF (2, 3)
+ ThunarVfsJobResponse  _thunar_vfs_job_ask_skip        (ThunarVfsJob        *job,
+                                                        const gchar         *format,
+-                                                       ...) G_GNUC_PRINTF (2, 3);
++                                                       ...);
+ G_GNUC_INTERNAL
+ void                  _thunar_vfs_job_error           (ThunarVfsJob        *job,
+-                                                       GError              *error) G_GNUC_INTERNAL;
++                                                       GError              *error);
+ void                  _thunar_vfs_job_info_message    (ThunarVfsJob        *job,
+                                                        const gchar         *format);
+ G_GNUC_INTERNAL G_GNUC_WARN_UNUSED_RESULT

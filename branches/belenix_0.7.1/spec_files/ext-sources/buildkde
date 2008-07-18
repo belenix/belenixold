@@ -1,0 +1,273 @@
+#!/usr/bin/sh
+
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+#
+# A script to build KDE and dependencies
+#
+# TODO: This script also builds encumbered stuff. Need to make it optional.
+# This requires changes in KDE3 spec files.
+#
+# Changelog
+#
+# 2008-01-30 - Moinak Ghosh <moinak.ghosh@sun.com>
+# Add new packages.
+#
+# 2008-01-28 - Moinak Ghosh <moinak.ghosh@sun.com>
+# Add new packages.
+#
+# 2008-01-26 - Moinak Ghosh <moinak.ghosh@sun.com>
+# Fix another bad mistake in previous commit.
+#
+# 2008-01-26 - Moinak Ghosh <moinak.ghosh@sun.com>
+# Various typo and other fixes.
+# Re-order some specs.
+#
+# 2008-01-26 - Moinak Ghosh <moinak.ghosh@sun.com>
+# Add remaining spec files for KDE3 dependencies and a few additional stuff.
+# TODO: Need review.
+#
+# 2008-01-26 - Moinak Ghosh <moinak.ghosh@sun.com>
+# Initial version.
+#
+
+_GCC=1
+_STUDIO=2
+export _GCC _STUDIO
+
+if [ "x$1" = "x" ]
+then
+	echo "Usage: $0 <path/to/spec/files/directory>"
+	echo ""
+	exit 1
+fi
+
+SPEC_PATH=$1
+cd $SPEC_PATH
+
+PKGTOOL_OPTIONS="--halt-on-errors --without-dt --with-l10n --src=/packages/SOURCES:/space/data/SFE/include:/space/data/SFE/ext-sources"
+export PKGTOOL_OPTIONS
+
+call_pkgtool() {
+	compiler=$1
+	specs=`echo $2 | sed 's/:/ /g'`
+	if [ $compiler -eq $_GCC ]
+	then
+		CC=/usr/sfw/bin/gcc
+		CXX=/usr/sfw/bin/g++
+	else
+		CC=/opt/SUNWspro/bin/cc
+		CXX=/opt/SUNWspro/bin/CC
+	fi
+
+	CC32=$CC
+	CC64=$CC
+	CXX32=$CXX
+	CXX64=$CXX
+	export CC CC32 CC64 CXX CXX32 CXX64
+
+	[ -n "$EXTRA_PKGTOOL_OPTIONS" ] && PKGTOOL_OPTIONS="${PKGTOOL_OPTIONS} ${EXTRA_PKGTOOL_OPTIONS}"
+	pkgtool build ${PKGTOOL_OPTIONS} --download ${specs}
+
+	if [ $? -ne 0 ]
+	then
+		echo "ERROR: Pkgtool BUILD failed"
+		exit 1
+	fi
+}
+
+if [ `pkginfo -q SUNWgnu-libiconv` ]
+then
+	if [ `pkginfo -q SFEgettext` ]
+	then
+		call_pkgtool $_GCC "SFEgettext.spec:SFElibiconv.spec"
+
+		pkgrm -n SFEgettext-l10n SFEgettext-devel SFEgettext
+		call_pkgtool $_GCC "SFEgettext.spec"
+	fi
+fi
+
+if [ `pkginfo -q SUNWsqlite` ]
+then
+	if [ ! -f SUNWsqlite.spec ]
+	then
+		echo "The SUNWsqlite package is required. Please copy"
+		echo "SUNWsqlite.spec from JDS spec files repository to"
+		echo "$SPEC_PATH"
+		echo ""
+		exit 1
+	else
+		call_pkgtool $_STUDIO SUNWsqlite.spec
+	fi
+fi
+
+call_pkgtool $_STUDIO "SFEogg-vorbis.spec:SFElibsndfile.spec:SFElibsamplerate.spec:SFEportaudio.spec"
+call_pkgtool $_GCC "SFEwxwidgets-gnu.spec"
+call_pkgtool $_STUDIO "SFEfreetype.spec:SFEjam.spec:SFEfreeglut.spec:SFElibgsm.spec"
+call_pkgtool $_GCC "SFEnasm.spec:SFElibx264.spec"
+call_pkgtool $_STUDIO "SFEid3lib.spec:SFEamrwb.spec:SFEncurses.spec"
+
+if [ `pkginfo -q SUNWneon` ]
+then
+	call_pkgtool $_STUDIO SFEneon.spec
+fi
+
+call_pkgtool $_STUDIO "SFEswig.spec:SFElcms.spec:SFElibmng.spec:encumbered/SFElibnjb.spec:SFElibao.spec:SFEliveMedia.spec:SFElibcdio.spec:SFElibfribidi.spec:SFEladspa.spec:SFEopenal.spec:SFEgawk.spec:SFEsdl-image.spec:SFElibebml.spec:SFElibmatroska.spec:SFElibcddb.spec:SFElibupnp.spec:SFEvcdimager.spec:SFElibtar.spec:SFEcurl.spec:SFElibdiscid.spec:SFEruby.spec:SFEjack.spec:SFEfftw.spec"
+
+# Build encumbered stuff
+# TODO: Need a mechanism to make this optional. Needs modifications to KDE spec files as well.
+call_pkgtool $_STUDIO "encumbered/SFElibdvdcss.spec:encumbered/SFElibdvdread.spec"
+call_pkgtool $_STUDIO "encumbered/SFEdvdauthor.spec:encumbered/SFEfaad2.spec"
+call_pkgtool $_STUDIO "encumbered/SFEliba52.spec:encumbered/SFElibdts.spec"
+call_pkgtool $_GCC    "encumbered/SFExvid.spec"
+call_pkgtool $_STUDIO "encumbered/SFElame.spec"
+call_pkgtool $_STUDIO "encumbered/SFEffmpeg.spec:encumbered/SFElibdv.spec:encumbered/SFElibdvbpsi.spec"
+call_pkgtool $_STUDIO "encumbered/SFElibdvdnav.spec:encumbered/SFElibdvdplay.spec:encumbered/SFElibfame.spec"
+call_pkgtool $_STUDIO "encumbered/SFElibid3tag-gnu.spec:encumbered/SFElibid3tag.spec:encumbered/SFElibmad.spec"
+call_pkgtool $_STUDIO "encumbered/SFElibmpcdec.spec:encumbered/SFElibmpeg2.spec:encumbered/SFElibnjb.spec"
+call_pkgtool $_STUDIO "encumbered/SFElibquicktime.spec:encumbered/SFEmpg321.spec:encumbered/SFEmpgtx.spec"
+call_pkgtool $_STUDIO "encumbered/SFEmplayer-codecs.spec:encumbered/SFEtwolame.spec:encumbered/SFEmplayer.spec"
+call_pkgtool $_STUDIO "encumbered/SFEmplayer-plugin.spec:encumbered/SFEogle.spec:encumbered/SFEswfdec.spec:encumbered/SFEvlc.spec"
+call_pkgtool $_STUDIO "encumbered/SFEvnc2swf.spec:encumbered/SFExmms2.spec"
+
+_OPATH=$PATH
+PATH="/usr/ucb:${PATH}"
+export PATH
+call_pkgtool $_STUDIO "encumbered/SFEgpac.spec"
+PATH=$_OPATH
+export PATH
+
+call_pkgtool $_STUDIO "SFElibpcap.spec:SFEsed.spec:SFEethereal.spec"
+call_pkgtool $_STUDIO "SFEcmake.spec:SFEphysfs.spec"
+
+call_pkgtool $_STUDIO "SFEreadline.spec"
+call_pkgtool $_GCC "SFEcups.spec:SFEqt3.spec:SFEcurl.spec:SFElibsndfile.spec:SFEjack.spec:SFEnas.spec:SFEarts.spec:SFEfltk.spec:SFEilmbase.spec:SFEopenexr.spec:SFEfam.spec"
+
+call_pkgtool $_STUDIO "SFEdoxygen.spec:SFEbdb.spec:SFEgdbm.spec:SFElibntlm.spec:SFEcyrus-sasl.spec"
+
+if [ `pkginfo -q SFEkdelibs3` -o `pkginfo -q SFEkdebase3` ]
+then
+	# Kdelibs and Kdebase installs a few setuid apps
+	#
+	echo ""
+	echo "Kdelibs and Kdebase installs a few setuid apps, so we need to modify"
+	echo "/var/sadm/install/admin/default temporarily to ignore setuid check to"
+	echo "allow pkgtool to successfully install these packages."
+	echo ""
+
+	tmpf="/tmp/`basename ${0}`.$$"
+
+	cat <<_EOF > $tmpf
+#!/bin/sh
+cp /var/sadm/install/admin/default /var/sadm/install/admin/default.orig
+cat > /var/sadm/install/admin/default <<EOF
+mail=
+instance=unique
+partial=ask
+runlevel=ask
+idepend=ask
+rdepend=ask
+space=ask
+setuid=nocheck
+conflict=ask
+action=ask
+networktimeout=60
+networkretries=3
+authentication=quit
+keystore=/var/sadm/security
+proxy=
+basedir=default
+rscriptalt=noaccess
+EOF
+_EOF
+
+	if [ $? -ne 0 ]
+	then
+		echo "Writing to temp file $tmpf failed"
+		echo ""
+		exit 1
+	fi
+
+	chmod a+x $tmpf
+	echo "Please enter root passwd to continue:"
+	su - root "$tmpf"
+
+	if [ $? -ne 0 ]
+	then
+		echo "Updating admin file failed"
+		echo ""
+		exit 1
+	fi
+
+	call_pkgtool $_GCC "SFEkdelibs3.spec:SFEkdebase3.spec"
+
+cat <<_EOF > $tmpf
+#!/bin/sh
+cp /var/sadm/install/admin/default.orig /var/sadm/install/admin/default 
+rm -f /var/sadm/install/admin/default.orig
+_EOF
+	chmod a+x $tmpf
+	echo "Please enter root passwd to continue:"
+	su - root "$tmpf"
+	rm -f $tmpf
+fi
+
+call_pkgtool $_GCC SFEkdeadmin3.spec:SFEkdeartwork3.spec:SFEsane-backends.spec:SFEsane-frontends.spec:SFExsane.spec:SFEswig.spec:SFEruby.spec:SFEgraphviz.spec:SFEkdegraphics3.spec:SFElibsndfile.spec:SFElibsamplerate.spec:SFEakode.spec:SFEcmake.spec:SFElibdiscid.spec:SFEdoxygen.spec:SFEcppunit.spec:SFElibmusicbrainz3.spec:SFEtaglib.spec:SFElibofa.spec:SFElibtunepimp.spec
+
+call_pkgtool $_STUDIO "SFElibmikmod.spec:SFExmms1.spec:SFEpth.spec:SFElibassuan.spec:SFElibksba.spec:SFEgnupg2.spec:SFEgnupg.spec:SFEgpgme.spec"
+
+_OPATH=$PATH
+PATH=/usr/ccs/bin:/usr/gnu/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/opt/jdsbld/bin
+export PATH
+call_pkgtool $_STUDIO "SFElibapr.spec:SFEaprutil.spec:SFEsubversion.spec:SFEgmp.spec"
+PATH=$_OPATH
+export PATH
+
+call_pkgtool $_GCC "SFEkdemultimedia3.spec:SFEkdegames3.spec:SFEkdeaddons3.spec:SFEkdenetwork3.spec:SFElibical.spec:SFElibmal.spec:SFEgnokii.spec:SFEkdeaccessibility3.spec:SFEkdepim3.spec:SFEkdesdk3.spec:SFEkdeutils3.spec:SFEkdewebdev3.spec"
+
+call_pkgtool $_GCC "SFEhtdig.spec:SFEkdevelop3.spec:SFElibvisual.spec:SFElibvisual-plugins.spec:SFExerces-c.spec:SFEmpfr.spec"
+
+_USE_GCC3_="1"
+export _USE_GCC3_
+call_pkgtool $_GCC "encumbered/SFExine-lib.spec"
+unset _USE_GCC3_
+
+call_pkgtool $_GCC "SFEamarok1.spec:SFEkdeedu3.spec:SFEkdetoys3.spec"
+
+EXTRA_PKGTOOL_OPTIONS="--with-gnu-iconv"
+export EXTRA_PKGTOOL_OPTIONS
+call_pkgtool $_STUDIO "SFElibgsf.spec"
+call_pkgtool $_GCC "SFEwv2.spec"
+unset EXTRA_PKGTOOL_OPTIONS
+
+call_pkgtool $_GCC "SFEwpd.spec:SFElibpqxx.spec"
+
+# TODO: Need to upgrade SUNW imagick
+# call_pkgtool $_STUDIO "SFEimagemagick.spec"
+call_pkgtool $_STUDIO "SFEgraphicsmagick.spec"
+
+call_pkgtool $_GCC "SFEkoffice3.spec:SFElibkipi.spec:SFEexiv2.spec:SFEdcraw.spec:SFElibkdcraw.spec:SFElibkexiv2.spec:SFEkipi-plugins.spec:SFEjasper.spec:SFEdigikam.spec"
+
+call_pkgtool $_GCC "SFEktorrent.spec:SFEctags.spec:SFEcscope.spec:SFEkscope.spec"

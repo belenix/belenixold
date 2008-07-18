@@ -1,0 +1,177 @@
+#!/bin/ksh -p
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# Derived from pkgcreatezone in IPS.
+#
+
+ZONE_SUBPROC_OK=0
+ZONE_SUBPROC_USAGE=253
+ZONE_SUBPROC_NOTCOMPLETE=254
+ZONE_SUBPROC_FATAL=255
+
+ZONES_SNAP=""
+
+if [ ! -f /etc/bzfscfg.conf ]
+then
+	echo "Config file /etc/bzfscfg.conf not found. Aborting!"
+	exit 1
+fi
+
+. /etc/bzfscfg.conf
+if [ -n "$ZONES_SNAP" ]
+then
+	zfs list $ZONES_SNAP 2>&1 > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "Specified pool $ZONES_SNAP not found."
+		echo "Defaulting to root pool"
+		ZONES_SNAP=""
+	fi
+fi
+
+if [ "$ZONES_SNAP" = "" ]
+then
+	ZONES_SNAP=`nawk '{ if (match($2, "^\/$") > 0) print $1 }' /etc/mnttab`
+fi
+
+f_img=$(gettext "failed to create image")
+
+m_image=$(gettext     "      Image: Preparing at %s ...")
+m_core=$(gettext      " Installing: (output follows)\n")
+m_smf=$(gettext	      "Postinstall: Copying SMF seed repository ...")
+m_complete=$(gettext  "       Done: Installation completed in %s seconds.")
+m_postnote=$(gettext  " Next Steps: Boot the zone, then log into the zone console")
+m_postnote2=$(gettext "             (zlogin -C) to complete the configuration process")
+
+m_done=$(gettext      " done.")
+
+
+fail_incomplete() {
+	print -u2 "$1"
+	exit $ZONE_SUBPROC_NOTCOMPLETE
+}
+
+fail_fatal() {
+	print -u2 "$1"
+	exit $ZONE_SUBPROC_FATAL
+}
+
+
+fail_usage() {
+	print "Usage: $0 [-h]"
+	exit $ZONE_SUBPROC_USAGE
+}
+
+trap_cleanup() {
+	print "$f_interrupted"
+	exit $int_code
+}
+
+int_code=$ZONE_SUBPROC_NOTCOMPLETE
+
+trap trap_cleanup INT
+
+zonename=""
+zonepath=""
+
+# Setup i18n output
+TEXTDOMAIN="SUNW_OST_OSCMD"
+export TEXTDOMAIN
+
+
+while getopts "z:R:h" opt; do
+	case $opt in
+		h)	fail_usage ;;
+		R)	zonepath="$OPTARG" ;;
+		z)	zonename="$OPTARG" ;;
+		*)	fail_usage ;;
+	esac
+done
+shift $((OPTIND-1))
+
+if [[ -z $zonepath || -z $zonename ]]; then
+	print -u2 "Brand error: No zone path or name"
+	exit $ZONE_SUBPROC_USAGE
+fi
+
+printf "\n$m_image" $zoneroot
+zoneroot=$zonepath/root
+mkdir -p $zonepath/root
+printf "$m_done\n"
+
+printf "$m_core\n"
+zfs clone ${ZONES_SNAP} ${ZONES_DATASET}/${zonename} 
+zfs set mountpoint=$zoneroot ${ZONES_DATASET}/${zonename}
+
+printf "$m_smf"
+rm -f $zoneroot/var/svc/profile/name_service.xml
+ln -s ns_files.xml $zoneroot/var/svc/profile/name_service.xml
+rm -f $zoneroot/var/svc/profile/generic.xml
+ln -s zones_limited_net.xml $zoneroot/var/svc/profile/generic.xml
+rm -f $zoneroot/var/svc/profile/inetd_services.xml
+ln -s inetd_generic.xml $zoneroot/var/svc/profile/inetd_services.xml
+rm -f $zoneroot/var/svc/profile/platform.xml
+ln -s platform_none.xml $zoneroot/var/svc/profile/platform.xml
+
+# This was formerly done in i.manifest
+repfile=$zoneroot/etc/svc/repository.db
+cp $zoneroot/lib/svc/seed/nonglobal.db $repfile
+chmod 0600 $repfile
+chown root:sys $repfile
+
+rm -f $zoneroot/var/svc/manifest/system/sysevent.xml
+rm -f $zoneroot/var/svc/manifest/system/device/devices-fc-fabric.xml
+echo "$zonename" > $zoneroot/etc/nodename
+
+printf "$m_done\n"
+
+#
+# Remove "jack" user.
+#
+cat $zoneroot/etc/passwd | grep -v "^jack:" > $zoneroot/etc/passwd.new
+mv $zoneroot/etc/passwd.new $zoneroot/etc/passwd
+chmod u+w $zoneroot/etc/shadow
+
+cat $zoneroot/etc/shadow | grep -v "^jack:" > $zoneroot/etc/shadow.new
+mv $zoneroot/etc/shadow.new $zoneroot/etc/shadow
+chmod u-w $zoneroot/etc/shadow
+
+#
+# Set root from a role back to... not a role.  Grr.
+#
+cat $zoneroot/etc/user_attr | /usr/bin/sed "s/^root::::type=role;/root::::/" > $zoneroot/etc/user_attr.new
+mv $zoneroot/etc/user_attr.new $zoneroot/etc/user_attr
+
+#
+# Make sure sysidtools run; we manually poke in the SSH action
+# so that we get an SSH key.  Yes, this is seriously borken.
+#
+chroot ${zoneroot} /lib/svc/method/sshd -c
+
+printf "$m_complete\n\n" ${SECONDS}
+printf "$m_postnote\n"
+printf "$m_postnote2\n"
+
+exit $ZONE_SUBPROC_OK

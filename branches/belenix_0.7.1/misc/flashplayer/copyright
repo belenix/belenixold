@@ -1,0 +1,482 @@
+ADOBE SYSTEMS INCORPORATED
+
+ADOBE® WARRANTY STATEMENT AND SOFTWARE DISTRIBUTION AGREEMENT ("AGREEMENT")
+
+NOTICE TO USER: THIS DOCUMENT INCLUDES WARRANTY INFORMATION AND A LICENSE
+AGREEMENT GOVERNING DISTRIBUTION OF ADOBE SOFTWARE.
+
+I.  WARRANTY AND LIABILITY LIMITATIONS AND DISCLAIMERS
+
+NO WARRANTY. The Software is made available by Adobe for reproduction and
+distribution "AS IS" and Adobe makes no warranty as to its use or performance.
+ADOBE AND ITS SUPPLIERS DO NOT WARRANT THE PERFORMANCE OR RESULTS OBTAINED BY
+USING THE SOFTWARE, EXCEPT FOR ANY WARRANTY, CONDITION, REPRESENTATION OR TERM
+TO THE EXTENT TO WHICH THE SAME MAY NOT BE EXCLUDED OR LIMITED BY APPLICABLE
+LAW. ADOBE AND ITS SUPPLIERS MAKE NO WARRANTIES, CONDITIONS, REPRESENTATIONS, OR
+TERMS (EXPRESS OR IMPLIED WHETHER BY STATUTE, COMMON LAW, CUSTOM, USAGE OR
+OTHERWISE) AS TO ANY MATTER INCLUDING WITHOUT LIMITATION NONINFRINGEMENT OF ANY
+PARTY?S RIGHTS, MERCHANTABILITY, INTEGRATION, SATISFACTORY QUALITY, OR FITNESS
+FOR ANY PARTICULAR PURPOSE.
+
+LIMITATION OF LIABILITY. IN NO EVENT WILL ADOBE OR ITS SUPPLIERS BE LIABLE TO
+ANY PARTY FOR ANY DAMAGES, CLAIMS OR COSTS WHATSOEVER OR ANY CONSEQUENTIAL,
+INDIRECT, INCIDENTAL DAMAGES, OR ANY LOST PROFITS OR LOST SAVINGS, EVEN IF AN
+ADOBE REPRESENTATIVE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH LOSS, DAMAGES,
+CLAIMS OR COSTS OR FOR ANY CLAIM BY ANY THIRD PARTY. THE FOREGOING LIMITATIONS
+AND EXCLUSIONS APPLY TO THE EXTENT PERMITTED BY APPLICABLE LAW. ADOBE'S
+AGGREGATE LIABILITY AND THAT OF ITS SUPPLIERS UNDER OR IN CONNECTION WITH
+THISAGREEMENT SHALL BE LIMITED TO NO MORE THAN US$50. Adobe is acting on behalf
+of its suppliers for the purpose of disclaiming, excluding and/or limiting
+obligations, warranties and liability as provided in this Agreement, but in no
+other respects and for no other purpose.
+
+II. DISTRIBUTION AGREEMENT
+
+THIS IS A CONTRACT BETWEEN ADOBE SYSTEMS INCORPORATED AND [FIRST NAME], [LAST
+NAME], [COMPANY NAME] LOCATED AT [ADDRESS, CITY, STATE, ZIP, COUNTRY]
+(?Licensee?). LICENSEE HAS INDICATED ACCEPTANCE OF THIS AGREEMENT BY CLICKING
+?ACCEPT? AT http://www.adobe.com/products/acrobat/acrrdistribute.html or
+http://www.adobe.com/licensing/distribution AND THEREFORE HAS AGREED TO AND IS
+BOUND BY THE TERMS AND CONDITIONS OF THE AGREEMENT. IF YOU HAVE FILLED OUT THE
+AGREEMENT IN ERROR, OR DO NOT WISH TO BE BOUND BY THE AGREEMENT FOR ANY REASON,
+YOU MAY RECIND YOUR ACCEPTANCE BY RETURNING THE AGREEMENT, ALONG WITH A SIGNED
+WRITTEN STATEMENT OF YOUR DESIRE TO RECIND THE AGREEMENT, TO: ADOBE SYSTEMS
+INCORPORATED, ATTN: GENERAL COUNSEL, 345 PARK AVENUE, SAN JOSE, CALIFORNIA,
+95110. UPON RECISION OF THE AGREEMENT, LICENSEE MUST IMMEDIATELY CEASE
+DISTRIBUTION OF THE SOFTWARE AND ALL RIGHTS GRANTED UNDER THE AGREEMENT SHALL
+IMMEDIATELY TERMINATE.
+
+1. Definitions. "Adobe" means Adobe Systems Incorporated, a Delaware
+corporation, 345 Park Avenue, San Jose, California 95110, if subsection 10(a) of
+this Agreement applies; otherwise it means Adobe Systems Software Ireland
+Limited, Unit 3100, Lake Drive, City West Campus, Saggart D24, Republic of
+Ireland, a company organized under the laws of Ireland and an affiliate and
+licensee of Adobe Systems Incorporated. "Authorized Operating System(s)" means
+the desktop or standard-laptop version(s) of the operating system(s) set forth
+in Exhibit A which is one of the Authorized Operating Systems listed at: (a) in
+the case of the Adobe Reader Software, http://www.adobe.com/go/reader_os and (b)
+in the case of the Web Players, http://www.adobe.com/products/systemreqs. For
+the avoidance of doubt, "Authorized Operating Systems" does not include embedded
+or device versions of such operating systems, or any operating systems not
+listed at the above websites. "Effective Date" means the date Adobe delivers the
+Software or instructions on how to access such Software to Licensee. "Intranet"
+means a secure internal web site or server system that is accessible only to
+Licensee?s employees, contractors, or other persons granted access to Licensee's
+internal networks in the furtherance of Licensee's normal course of business.
+"Licensee Product" or "Licensee Service" means Licensee product or service
+identified in Exhibit A. "Software" means the most current version(s) of the
+Adobe Reader® software made commercially available by Adobe for download at:
+http://www.adobe.com/products/acrobat/readstep2.html ("Adobe Reader") and Adobe
+Flash® Player and Adobe Shockwave® Player and associated Xtras? and any updated,
+revised, or enhanced versions, or upgrades thereof, if any, provided to Licensee
+by Adobe during the term (collectively, the Flash and Shockwave players are the
+"Web Players"). "Use" or "Using" means to access, install, download, copy or
+otherwise benefit from using the functionality of the Software in accordance
+with the documentation that accompanies the Software.
+
+2. Grant of Rights, Restrictions, New Versions, Modifications, Transfer.
+2.1 License. Subject to the terms of this Agreement, Adobe grants Licensee a
+non-exclusive, non-transferable, worldwide, royalty-free license to reproduce
+and distribute the Software, in all cases solely for the use on the Authorized
+Operating Systems, as set forth below.
+
+2.2 Distribution. Subject to the restrictions and requirements set forth below,
+Licensee may (a) install one copy of the Software on a Licensee computer file
+server for the purpose of downloading and installing the Software onto computers
+within Licensee?s Intranet, for internal use only, (b) bundle the Software in
+physical media (such as CD-ROMs, DVDs, hard disk, etc.) solely as part of, with,
+or in conjunction with Licensee Product, (c) if the Software is a Web Player,
+distribute the Software through the Internet to end users, solely as part of or
+with Licensee Product (such as bundled in Licensee?s installer, which in turn,
+is downloaded through the Internet), and (d) if the Software is Adobe Reader,
+reproduce and distribute the Software solely (i) as bundled with other software
+or content, through electronic means (including, without limitation, electronic
+software download), (ii) as bundled with other software or content, on tangible
+media, or (iii) on a standalone basis solely on tangible media.
+
+2.3 Restrictions.
+
+(a)  Default Settings. Licensee shall not modify the default updater settings of
+any copy of the Software Licensee makes or distributes on any physical media
+(such as CD-ROMs, DVDs, computer hard disks, etc.).
+
+(b)  Adobe Reader Restrictions. If the Software is Adobe Reader, Licensee may
+not bundle or integrate the Software with any:
+
+(i) other software, plug-in or enhancement that uses or relies upon the Software
+when converting or transforming SVG or PDF files into files of other formats
+(e.g., a PDF file into a JPEG, SVG or TIFF file, or an SVG file into a JPEG,
+PDF, PNG or SWF file),
+
+(ii) plug-in software not developed in accordance with the Adobe Integration Key
+License Agreement, or
+
+(iii) other software in order to (A) save data locally (on the same computer),
+(B) create a file that contains data (e.g., an XML or comments file) or (C) save
+modifications to a PDF file, except when such saving or creation is allowed
+through the use of features or functionality enabled by Adobe. Licensee may not
+sell or otherwise directly receive compensation for the Software.
+
+(c) Web Player Restrictions. If the Software is a Web Player, the license
+granted in Section 2.1 and 2.2 above is limited by the following restrictions:
+
+(i) Licensee may not distribute, download or embed the Software on any non-PC
+device or with any embedded or device version of any operating system. For the
+avoidance of doubt, and by example only, Licensee may not distribute the
+Software for use on any (A) mobile devices, set top boxes (STB), handhelds,
+phones, web pads, tablets and Tablet PCs (that are not running Windows XP or
+Windows Vista Tablet PC Edition), game consoles, TVs, DVD players, media centers
+(excluding Windows XP and Windows Vista Media Center Edition and its
+successors), electronic billboards or other digital signage, internet appliances
+or other internet-connected devices, PDAs, medical devices, ATMs, telematic
+devices, gaming machines, home automation systems, kiosks, remote control
+devices, or any other consumer electronics device, (B) operator-based mobile,
+cable, satellite, or television systems, (C) other closed system devices, or (D)
+any operating system that is not an Authorized Operating System.
+
+(ii) Licensee may distribute only the version of the Software (with its
+corresponding installer) provided to Licensee by Adobe upon completion of this
+Agreement on the specific Authorized Operating System listed in Exhibit A.
+Licensee shall not distribute any version of the Software found elsewhere,
+including on www.Adobe.com, www.Macromedia.com, or any other download site on
+the Internet.
+
+(iii) Licensee must use the Software and the corresponding installers provided
+by Adobe AS IS and may not, without express written permission from Adobe,
+modify or alter the manner in which the Software files install. Notwithstanding
+the foregoing, Licensee may repackage the Software installer to the extent
+necessary to distribute the Software through internal systems management and
+configuration management software.
+
+(iv) Licensee may not make the Software available as a stand-alone product on
+the Internet; or use the Software via a server or network storage device by
+which one instance of the Software is replicated to more than one user over the
+Internet, including without limitation through Citrix and Citrix-type
+environments.
+
+(v) Licensee may not combine the Software with Licensee Product in such a way
+that the Licensee Product?s own file format or data type takes over the file
+format or data type for the Software. Flash Player and Shockwave Player must
+always remain the default players for their respective file formats and data
+types.
+
+(vi) THIS PRODUCT IS LICENSED UNDER THE AVC PATENT PORTFOLIO LICENSE FOR THE
+PERSONAL AND NON-COMMERCIAL USE OF A CONSUMER TO (I) ENCODE VIDEO IN COMPLIANCE
+WITH THE AVC STANDARD ("AVC VIDEO") AND/OR (II) DECODE AVC VIDEO THAT WAS
+ENCODED BY A CONSUMER ENGAGED IN A PERSONAL AND NON-COMMERCIAL ACTIVITY AND/OR
+WAS OBTAINED FROM A VIDEO PROVIDER LICENSED TO PROVIDE AVC VIDEO. NO LICENSE IS
+GRANTED OR SHALL BE IMPLIED FOR ANY OTHER USE. ADDITIONAL INFORMATION MAY BE
+OBTAINED FROM MPEG LA, L.L.C. SEE http://www.mpegla.com.
+
+2.4 Web Download.  Licensee may direct end users to obtain the Software through
+electronic download on a standalone basis by linking to the official Adobe web
+site. Permission to use Adobe logo web-buttons may be obtained at
+http://www.adobe.com. Any software distributed with the Software and any web
+site containing a link to an Adobe web site must not contain any (a) Adobe
+logos, product signatures, or trademarks in stylized form unless under separate
+prior written license (except as permitted under Section 3 below), (b) materials
+that are illegal, pornographic, defamatory, infringing, threatening, invasive of
+another's privacy, or racially, ethnically or otherwise objectionable, or (c)
+viruses, Trojan horses, worms, time bombs, cancelbots or other computer
+programming routines which damage, detrimentally interfere with, surreptitiously
+intercept or expropriate any system, data or personal information.
+
+2.5 Licensee will distribute, and will ensure that its distributors and
+resellers distribute, the Software under the Adobe end user license agreement
+accompanying the Software or, if no such license accompanies the Software,
+Licensee's end user license agreement containing the following minimum terms in
+favor of Licensee and its suppliers: (a) prohibition against distribution and
+copying, (b) prohibition against modifications and derivative works, (c)
+prohibition against decompiling, reverse engineering, disassembling, and
+otherwise reducing the software to a human-perceivable form, (d) provision
+indicating ownership of software by Licensee and its suppliers, (e) disclaimer
+of all applicable statutory warranties, to the full extent allowed by law, and
+(f) industry standard limitation of liability, including a disclaimer of
+indirect, special, incidental, punitive, and consequential damages. Licensee
+will not grant any rights in the Software under a license that (g) allows
+modification of the Software, (h) requires the disclosure or distribution of the
+Software in source code form, or (i) allows the distribution of the Software for
+a fee. Licensee shall not make any warranty, express or implied, on behalf of
+Adobe.
+
+2.6 New Versions. Upon release of a new version of the Software by Adobe,
+Licensee will cease all reproduction and distribution of the Software upon the
+earlier of (a) the next release of software, content or other product with which
+Licensee bundles the Software, or (b) six (6) months from the date Adobe makes
+such new version of the Software commercially available. As used in this
+section, "new version" means a major new release of the Software, typically
+designated by a change in the version number of the Software to the left of the
+decimal point (e.g., 7.0.x to 8). Adobe may notify Licensee when new versions
+are released.
+
+2.7 No Modification. Licensee shall not modify, create derivative works, reverse
+engineer, decompile, disassemble or otherwise attempt to discover the source
+code of the Software except to the extent Licensee may be expressly permitted to
+decompile under applicable law, it is essential to do so in order to achieve
+operability of the Software with another software program, and Licensee has
+first requested Adobe to provide the information necessary to achieve such
+operability and Adobe has not made such information available. Adobe has the
+right to impose reasonable conditions and to request a reasonable fee before
+providing such information. Any such information supplied by Adobe and any
+information obtained by Licensee by such permitted decompilation may only be
+used by Licensee for the purpose described herein and may not be disclosed to
+any third party or used to create any software which is substantially similar to
+the expression of the Software. Requests for information should be directed to
+the Adobe Customer Support Department.
+
+2.8 Reader Modification. Notwithstanding the terms of Sections 2.3(a) and 2.7,
+Licensee may customize or extend the functionality of the installer for the
+Adobe Reader as specifically allowed by instructions found at
+http://www.adobe.com/support or http://www.adobe.com/go/reader_developer (e.g.,
+installation of additional plug-in and help files). Licensee may not otherwise
+adapt, translate, alter or modify the Adobe Reader in any way, including without
+limitation, remove the installer program, electronic end user license agreement,
+"About" screen, or any copyright or other proprietary notice that appears in the
+Adobe Reader.
+
+2.9 Transfer. Licensee may not rent, lease, sublicense, assign or transfer its
+rights under this Agreement, or authorize all or any portion of the Software to
+be copied except as may be expressly permitted herein.
+
+3. Trademark Use.
+3.1 Trademark License Grant. Adobe hereby grants to Licensee, and Licensee
+accepts, a worldwide, non-exclusive, non-transferable, personal right to use and
+distribute, under the terms of this Agreement, the "Includes Adobe® Reader®"
+button for print media, the "Flash® Enabled Logo," the "Shockwave® Enabled
+Logo," or such additional or replacement button(s) as Adobe may provide under
+this Agreement (the "Trademarks"). Licensee may use the Trademarks solely in
+conjunction with the permitted forms of distribution of the Software specified
+in Section 2 of this Agreement, so long as such use also complies with the
+"Guidelines for Using the 'Includes Adobe Reader' Button" at
+http://www.adobe.com/products/acrobat/pdfs/Get_AReader_gdlns_11 04.pdf  and/or
+the "Adobe® Flash Enabled Logo Usage Guidelines" at
+http://www.adobe.com/macromedia/style_guide/logos/flash_enabled and/or the
+"Adobe® Shockwave Enabled Logo Usage Guidelines" at
+http://www.adobe.com/macromedia/style_guide/logos/shockwave_enabled
+and the "Guidelines for Third Parties Who Use Adobe Trademarks"
+at http://www.adobe.com/misc/pdfs/TM_GuideforThirdPFina_print.pdf. Use of the
+Trademarks does not give Licensee any right, title or interest in the
+Trademarks, other than the license rights granted herein. Licensee may not
+assign, transfer or sublicense any trademark right granted herein without the
+prior written consent of Adobe. Licensee agrees not to use the Trademarks in any
+way that will disparage Adobe or its products, injure Adobe's reputation for
+high quality or otherwise diminish or damage Adobe's goodwill in the Trademarks
+or infringe Adobe's intellectual property. Licensee acknowledges the validity of
+the Trademarks and Adobe's sole ownership of the Trademarks, and that Adobe
+retains all right, title and interest in and to the Trademarks. Licensee
+recognizes the value of the goodwill associated with the Trademarks, and
+acknowledges that such goodwill inures exclusively to the benefit of and belongs
+to Adobe. Licensee shall employ best efforts to use the Trademarks in a manner
+that does not derogate from Adobe's rights in the Trademarks and will take no
+action that will interfere with or diminish Adobe's rights in the Trademarks.
+Licensee may not use the Trademarks in any way as an endorsement or sponsorship
+by Adobe of any product or service. Licensee agrees not to adopt or use a
+trademark, service mark, or any other designation confusingly similar to the
+Trademarks. Further, Licensee agrees to use the Trademarks only in connection
+with products that: (a) meet or exceed all applicable U.S. and foreign labeling
+and packaging laws and regulations, (b) are advertised in compliance with all
+applicable U.S. and foreign fair advertising laws and regulations, (c) comply
+with all other applicable U.S. and foreign laws and regulations, (d) support
+Adobe products if so indicated on packaging and/or advertising materials for
+Licensee?s products, (e) are of a quality and reputation consistent with the
+high quality of Adobe products and services, and (f) are advertised in a manner
+consistent with industry standards. Upon reasonable request from Adobe, Licensee
+will notify Adobe of the locations of your use of the Trademarks and furnish
+Adobe with suitable specimens of such use. If Adobe so requests, Licensee agrees
+to submit to Adobe any uses of the Trademarks for Adobe's approval prior to the
+dissemination of these materials, such approval not to be unreasonably withheld.
+Licensee agrees to undertake such steps as Adobe may reasonably request to
+assist in monitoring and maintaining the quality and form of use of the
+Trademarks. Adobe may review Licensee?s use of the Trademarks at any time to
+evaluate its compliance with the quality standards described in this Agreement.
+If at any time Adobe determines that Licensee is not maintaining adequate
+quality standards, Licensee shall be considered in breach of this Agreement and
+subject to the termination provisions of Section 11. Licensee must immediately
+remedy any material deficiencies in its use of the Trademarks upon reasonable
+notice from Adobe. Adobe makes no warranties of any kind, either express or
+implied, with respect to the Trademarks. Adobe will not be liable to Licensee
+for any consequential, incidental, or special damages (including loss of
+business profits) arising from or related to Licensee?s use of the Trademarks,
+even if Adobe has been advised of the possibility of such damages. If Adobe
+provides Licensee with a substitute Trademark(s), Licensee shall bear all
+liability for continued use of the previous Trademark(s).
+
+4. Indemnification. Licensee agrees to indemnify, hold harmless and defend Adobe
+from and against any claims, lawsuits, damages, expenses and costs, including
+attorneys' fees, that arise or result from Licensee?s reproduction and/or
+distribution of the Software, or Licensee?s use and/or distribution of the
+Trademark(s), provided, however, that Licensee?s indemnification obligation will
+not apply to claims or lawsuits arising out of a claim that either the Software,
+by itself or in combination with software or hardware not provided by Licensee,
+or the Trademark(s), infringes any third party patent, copyright, trademark or
+other intellectual property right. The foregoing exception will not apply to
+claims arising out of the combination of the Software or Trademark(s) with other
+software provided by Licensee. Adobe will give Licensee prompt written notice of
+any claim or lawsuit to which Licensee?s indemnification obligation applies and
+cooperate with Licensee, at Licensee?s expense, in defending or settling such
+claim or lawsuit.
+
+5. Intellectual Property Ownership, Copyright Protection. The Software and any
+authorized copies that Licensee makes are the intellectual property of and are
+owned by Adobe Systems Incorporated and its suppliers. The structure,
+organization and code of the Software are the valuable trade secrets and
+confidential information of Adobe Systems Incorporated and its suppliers. The
+Software is protected by law, including without limitation the copyright laws of
+the United States and other countries, and by international treaty provisions.
+Except as expressly stated herein, this Agreement does not grant Licensee any
+intellectual property rights in the Software and all rights not expressly
+granted are reserved by Adobe and its suppliers.
+
+6. Consideration. If the Software is a Web Player, during the Term Licensee will
+provide Adobe with marketing consideration as outlined below and in accordance
+with the guidelines provided in Section 3.
+
+   1. Copyright and Trademark Notice Placement.  Licensee will place the
+   copyright and trademark language and, whenever possible, the associated logo(s)
+   in the following areas of Licensee Product or Service: (i) the on-line
+   documentation, (ii) the End User License Agreement and/or Terms of Use
+   Agreement, (iii) the ?About Box? or similar notice page, and (iv) any other
+   documentation of the Licensee Product or Service that contains copyright
+   information. For purposes of this Agreement, copyright and trademark languages
+   shall mean:
+
+   Adobe® Flash® Player. Copyright © 1996 - 2006 Adobe Systems Incorporated. All
+   Rights Reserved. Adobe and Flash are either trademarks or registered trademarks
+   in the United States and/or other countries.
+
+   Adobe® Shockwave® Player. Copyright © 1996 - 2006 Adobe Systems Incorporated.
+   All Rights Reserved. Adobe and Shockwave are either trademarks or registered
+   trademarks in the United States and/or other countries.
+
+      1. Installation and Start-up Attribution. Licensee, at its discretion, may
+      make the applicable Web Player logo(s) visible and readable during the
+      installation and start-up screens of Licensee Product or Service.
+         2. Web Site Promotion. Licensee, at its discretion, may place the appropriate
+         Web Player Enabled logo(s) and/or Web Player Enabled attribution text (or
+         reasonable equivalent) in the top-level ?features? page on Licensee?s website in
+         a manner consistent with the other marketing features of Licensee Product. Logos
+         must link to the URLs provided in the attribution text.
+
+         7. Technical Support. Adobe shall not be obligated to provide any support to
+         Licensee, its distributors, or end-users. For information on technical support
+         for Adobe Reader, see http://www.adobe.com/support/products/acrreader.html. For
+         information on technical support for the Web Players, see
+         http://www.adobe.com/support.
+
+         8. Copies of Product to Adobe. Unless the Software is distributed via an
+         Intranet, at Adobe?s request Licensee will provide Adobe two (2) copies of
+         Licensee Product or one (1) membership to Licensee Service free of charge within
+         seventy-two (72) hours of Adobe?s request. This will facilitate resolving
+         potential quality assurance issues with Licensee?s incorporation of Software. In
+         the event Licensee Product contains Licensee confidential information, Adobe
+         will cooperate with entering into a confidentiality agreement with Licensee.
+
+         9. Export Rules. Licensee agrees, and will ensure that its distributors and
+         resellers agree, that the Software will not be shipped, transferred or exported
+         into any country or used in any manner prohibited by the United States Export
+         Administration Act or any other export laws, restrictions or regulations
+         (collectively the "Export Laws"). In addition, if the Software is identified as
+         export controlled items under the Export Laws, Licensee represents and warrants
+         that Licensee is not a citizen, or otherwise located within, an embargoed nation
+         (including without limitation Iran, Syria, Sudan, Libya, Cuba, and North Korea)
+         and that Licensee is not otherwise prohibited under the Export Laws from
+         distributing the Software. All rights granted under this Agreement are granted
+         on condition that such rights are forfeited if Licensee fails to comply with the
+         terms of this Agreement.
+
+         10. Governing Law. This Agreement will be governed by and construed in
+         accordance with the substantive laws in force: (a) in the State of California,
+         if a license to the Software is obtained when Licensee is in the United States,
+         Canada, or Mexico, or (b) in Japan, if a license to the Software is obtained
+         when Licensee is in Japan, China, Korea, or other Southeast Asian country where
+         all official languages are written in either an ideographic script (e.g., hanzi,
+         kanji, or hanja), and/or other script based upon or similar in structure to an
+         ideographic script, such as hangul or kana, or (c) Ireland, if a license to the
+         Software is purchased when Licensee is in any other jurisdiction not described
+         above. The respective courts of Santa Clara County, California when California
+         law applies, Tokyo District Court in Japan, when Japanese law applies, and the
+         competent courts of Ireland, when the law of Ireland applies, shall each have
+         non-exclusive jurisdiction over all disputes relating to this Agreement. This
+         Agreement will not be governed by the conflict of law rules of any jurisdiction
+         or the United Nations Convention on Contracts for the International Sale of
+         Goods, the application of which is expressly excluded.
+
+         11. Term. The term of this Agreement will be for one (1) year from the Effective
+         Date unless terminated earlier pursuant to this Section 11. Adobe has the right
+         to terminate this Agreement (a) without cause upon ninety (90) days written
+         notice, or (b) immediately if Licensee fails to comply with any term of this
+         Agreement. Upon any such termination, Licensee must cease all reproduction and
+         distribution of the Software, any use of the Trademarks, and, upon request from
+         Adobe, destroy all copies of the Software in Licensee?s possession along with
+         certification of such destruction. However, except in the case of a breach of
+         Section 2 or 5, Licensee will have a reasonable period of time, not to exceed 90
+         days, to sell copies of the Licensee Product then in its inventory and to use
+         the then-current version of the Software to the extent necessary for Licensee to
+         support its end users.
+
+         12. Notice. All requests and notices given under this Agreement will be in
+         writing and will be by personal delivery or by certified or registered mail,
+         return receipt requested (or in the case of notices from Adobe to Licensee, by
+         e-mail) and will be deemed given upon personal delivery, five (5) days after
+         deposit in the mail, or upon sending of electronic transmission. Notices from
+         Licensee to Adobe will be sent to the following address: Adobe Systems
+         Incorporated, 345 Park Avenue, San Jose, California 95110, Attention: General
+         Counsel. Notices from Adobe to Licensee will be sent to the address Licensee
+         provides to Adobe with this Agreement. Licensee warrants that the personal
+         information it provided with this Agreement is accurate and current as of the
+         date Licensee provided such information.
+
+         13. General Provisions. If any part of this Agreement is found void and
+         unenforceable, it will not affect the validity of the balance of this Agreement,
+         which shall remain valid and enforceable according to its terms. This Agreement
+         shall not prejudice the statutory rights of any party dealing as a consumer.
+         This Agreement may only be modified by a writing signed by an authorized officer
+         of Adobe. Updates may be licensed to Licensee by Adobe with additional or
+         different terms. This is the entire agreement between Adobe and Licensee
+         relating to reproduction and distribution of the Software and it supersedes any
+         prior representations, discussions, undertakings, communications or advertising
+         relating to the Software.
+
+         14. Notice to U.S. Government End Users. The Software and the documentation
+         which accompanies the Software are "Commercial Items," as that term is defined
+         at 48 C.F.R. §2.101, consisting of "Commercial Computer Software" and
+         "Commercial Computer Software Documentation," as such terms are used in 48
+         C.F.R. §12.212 or 48 C.F.R. §227.7202, as applicable. Consistent with 48 C.F.R.
+         §12.212 or 48 C.F.R. §§227.7202-1 through 227.7202-4, as applicable, the
+         Commercial Computer Software and Commercial Computer Software Documentation are
+         being licensed to U.S. Government end users (a) only as Commercial Items, and
+         (b) with only those rights as are granted to all other end users pursuant to the
+         terms and conditions herein. Unpublished-rights reserved under the copyright
+         laws of the United States. Adobe Systems Incorporated, 345 Park Avenue, San
+         Jose, CA 95110-2704, USA. For U.S. Government End Users, Adobe agrees to comply
+         with all applicable equal opportunity laws including, if appropriate, the
+         provisions of Executive Order 11246, as amended, Section 402 of the Vietnam Era
+         Veterans Readjustment Assistance Act of 1974 (38 USC 4212), and Section 503 of
+         the Rehabilitation Act of 1973, as amended, and the regulations at 41 CFR Parts
+         60-1 through 60-60, 60-250, and 60-741. The affirmative action clause and
+         regulations contained in the preceding sentence shall be incorporated by
+         reference in this Agreement.
+
+         15. Audit Right. Licensee agrees that upon request from Adobe or Adobe's
+         authorized representative, Licensee will within thirty (30) days fully document
+         and certify that Licensee is in conformity with the terms and conditions of this
+         Agreement. During the term of this Agreement, Licensee will use commercially
+         reasonable efforts to maintain a complete, clear, and accurate record of the
+         number of copies of the Software it distributes during each calendar quarter in
+         a manner sufficient to allow Adobe to verify compliance with the terms and
+         conditions of this Agreement. Adobe shall have the right to inspect and audit
+         all Licensee relevant books and records relating to the reproduction and
+         distribution of the Software. Information obtained in connection with the audit
+         will only be used to enforce Adobe's rights and determine whether Licensee is in
+         compliance with the terms and conditions of this Agreement. Any such audit shall
+         be conducted upon not less than seven (7) days' notice at Licensee?s offices
+         during regular business hours and in such a manner as not to unreasonably
+         interfere with Licensee?s normal business activities.
+
+         If Licensee has any questions regarding this Agreement or if Licensee wishes to
+         request any information from Adobe, please contact Adobe's customer service at
+         http://www.adobe.com.
+
+         Adobe, Flash, Reader, Shockwave, and Xtras are either registered trademarks or
+         trademarks of Adobe Systems Incorporated in the United States and/or other
+         countries.

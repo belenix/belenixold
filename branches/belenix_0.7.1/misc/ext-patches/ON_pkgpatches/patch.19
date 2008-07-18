@@ -1,0 +1,18 @@
+--- usr/src/pkgdefs/SUNWiotu/prototype_com.orig	Fri Jun  6 21:42:19 2008
++++ usr/src/pkgdefs/SUNWiotu/prototype_com	Fri Jun  6 21:42:31 2008
+@@ -47,7 +47,6 @@
+ d none usr/sbin 755 root bin
+ f none usr/sbin/devctl 555 root bin
+ f none usr/sbin/emul64ioctl 555 root bin
+-f none usr/sbin/pcitool 555 root bin
+ d none usr/kernel 755 root sys
+ d none usr/kernel/drv 755 root sys
+ f none usr/kernel/drv/pshot.conf 644 root sys
+@@ -55,7 +54,6 @@
+ d none usr/share 755 root sys
+ d none usr/share/man 755 root bin
+ d none usr/share/man/man1m 755 root bin
+-f none usr/share/man/man1m/pcitool.1m 444 root root
+ d none usr/lib 755 root bin
+ d none usr/lib/scsi 755 root bin
+ f none usr/lib/scsi/sestopo 555 root bin

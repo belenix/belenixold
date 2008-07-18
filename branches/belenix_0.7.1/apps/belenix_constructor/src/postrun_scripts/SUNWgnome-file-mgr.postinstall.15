@@ -1,0 +1,4 @@
+test -x /usr/bin/update-desktop-database || exit 0
+/usr/bin/update-desktop-database
+test -x /usr/bin/update-mime-database || exit 0
+/usr/bin/update-mime-database /usr/share/mime

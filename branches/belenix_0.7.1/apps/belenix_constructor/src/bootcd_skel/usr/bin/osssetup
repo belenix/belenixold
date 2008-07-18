@@ -1,0 +1,39 @@
+#!/bin/sh
+
+#
+# Setup OSS if present
+#
+if [ -x /usr/sbin/ossdetect ]
+then
+	/usr/sbin/ossdetect
+	/usr/sbin/devlinks
+	/usr/sbin/ossdevlinks
+
+	#
+	# Create legacy device links
+	#
+	rm -f /dev/dsp;ln -sf /dev/oss/hdaudio0/pcm0 /dev/dsp
+	rm -f /dev/dsp0;ln -sf /dev/oss/hdaudio0/pcm0 /dev/dsp0
+	rm -f /dev/dsp1;ln -sf /dev/oss/hdaudio0/pcm1 /dev/dsp1
+	rm -f /dev/dsp2;ln -sf /dev/oss/hdaudio0/pcm2 /dev/dsp2
+	rm -f /dev/dsp3;ln -sf /dev/oss/hdaudio0/pcm3 /dev/dsp3
+	rm -f /dev/dsp4;ln -sf /dev/oss/hdaudio0/pcmin0 /dev/dsp4
+	rm -f /dev/dsp5;ln -sf /dev/oss/hdaudio0/pcmin1 /dev/dsp5
+	rm -f /dev/dsp6;ln -sf /dev/oss/hdaudio0/pcmin2 /dev/dsp6
+	rm -f /dev/dsp_multich;ln -sf /dev/oss/hdaudio0/pcm0 /dev/dsp_multich
+	rm -f /dev/mixer;ln -sf /dev/oss/hdaudio0/mix0 /dev/mixer
+	rm -f /dev/mixer0;ln -sf /dev/oss/hdaudio0/mix0 /dev/mixer0
+
+	if [ -h /dev/audio ]
+	then
+        	chmod 0666 /dev/audio
+        	chmod 0666 /dev/audioctl
+        	ossmix connector.green.headphone-sel front
+        	ossmix connector.int-speaker.front 54
+        	ossmix connector.int-mic 0
+        	ossmix misc.int-mic 0
+        	ossmix misc.mic 0
+	fi
+fi
+
+exit 0

@@ -1,0 +1,734 @@
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+
+# Verify the configuration specified in dist.conf
+verify_conf()
+{
+FAIL=0
+# Verify $DIST_PKG_LIST
+# Check that the user has specified a $DIST_PKG_LIST. It must be there.
+	if [ ! "$DIST_PKG_LIST" ] ; then
+		echo You must specify the DIST_PKG_LIST variable.
+		FAIL=1	
+	else
+# Check that the path/file exists
+		if [ ! -e "$DIST_PKG_LIST" ] ; then
+			echo "$DIST_PKG_LIST" does not exist
+			FAIL=1	
+		else	
+# Check that the file is readable
+			if [ ! -r "$DIST_PKG_LIST" ] ; then
+				echo "$DIST_PKG_LIST" is not readable
+				FAIL=1	
+			fi
+#Check that the file isn't empty
+			if [ ! -s "$DIST_PKG_LIST" ] ; then
+				echo "$DIST_PKG_LIST" is empty
+				FAIL=1	
+			fi
+		fi
+	fi
+
+# Verify $DIST_MICROROOT_LIST
+# Check that the user has specified a $DIST_MICROROOT_LIST. It must be there.
+	if [ ! "$DIST_MICROROOT_LIST" ] ; then
+		echo You must specify the DIST_MICROROOT_LIST variable.
+		FAIL=1	
+	else	
+# Check that the path/file exists
+		if [ ! -e "$DIST_MICROROOT_LIST" ] ; then
+			echo "$DIST_MICROROOT_LIST" does not exist
+			FAIL=1	
+		else	
+# Check that the file is readable
+			if [ ! -r "$DIST_MICROROOT_LIST" ] ; then
+				echo "$DIST_MICROROOT_LIST" is not readable
+				FAIL=1	
+			fi	
+#Check that the file isn't empty
+			if [ ! -s "$DIST_MICROROOT_LIST" ] ; then
+				echo "$DIST_MICROROOT_LIST" is empty
+				FAIL=1	
+			fi
+		fi
+	fi
+
+# Verify $DIST_ADDITIONAL_MOD if it is specified, this value is optional
+	if [ "$DIST_ADDITIONAL_MOD" != "" ] ; then
+# Check that the archive exists
+		if [ ! -e "$DIST_ADDITIONAL_MOD" ] ; then
+			echo "$DIST_ADDITIONAL_MOD" does not exist
+			FAIL=1	
+		else
+# Check that the archive is readable
+			if [ ! -r "$DIST_ADDITIONAL_MOD" ] ; then
+				echo "$DIST_ADDITIONAL_MOD" is not readable
+				FAIL=1	
+			fi	
+#Check that the archive isn't empty
+			if [ ! -s "$DIST_ADDITIONAL_MOD" ] ; then
+				echo "$DIST_ADDITIONAL_MOD" is empty
+				FAIL=1	
+			fi
+		fi
+	fi
+
+# Verify $DIST_PROTO
+# Check that the user has specified a $DIST_PROTO. It must be there.
+	if [ ! "$DIST_PROTO" ] ; then
+		echo You must specify the DIST_PROTO variable
+		FAIL=1	
+	else
+# Check to see if the proto area is there, delete, and recreate.
+                if [  -d "$DIST_PROTO" ] ; then
+			echo "Cleaning up existing $DIST_PROTO ..."
+                        rm -rf "$DIST_PROTO"
+                fi
+                mkdir -p "$DIST_PROTO"
+# Check to see if the proto area is writable
+                if [ ! -w "$DIST_PROTO" ] ; then
+                        echo "$DIST_PROTO" is not writable
+                        FAIL=1
+                fi
+        fi
+
+# Verify QUIT_ON_PKG_FAILURES
+# If the variable is specified, make sure it's either yes or no.
+	if [ "$QUIT_ON_PKG_FAILURES" ] ; then
+		if [ "$QUIT_ON_PKG_FAILURES" != yes ] ; then
+			if [ "$QUIT_ON_PKG_FAILURES" != no ] ; then
+				echo "QUIT_ON_PKG_FAILURES value of $QUIT_ON_PKG_FAILURES is invalid"
+				FAIL=1
+			fi
+		fi
+	fi
+ 
+# Verify $DIST_ISO
+# Check that the user has specified a $DIST_ISO. It must be there.
+	if [ ! "$DIST_ISO" ] ; then
+		echo You must specify the DIST_ISO variable
+		FAIL=1	
+	else
+# Check to see if the directory exists. If not, create it.
+		ISO_DIR=`dirname $DIST_ISO`
+		if [ ! -d $ISO_DIR ] ; then
+			mkdir -p $ISO_DIR
+		fi
+# Check to see if we have write permission to the directory.
+		if [ ! -w $ISO_DIR ] ; then
+			echo $ISO_DIR does not have write permissions. 
+		else
+# Check to see if the $DIST_ISO file exists and if so, remove it.
+			if [ -e "$DIST_ISO" ] ; then
+				rm "$DIST_ISO"
+			fi
+		fi
+	fi
+
+# Verify $DIST_USB
+# This variable is optional
+	if [ "$DIST_USB" ] ; then 
+# Check to see if the directory exists. If not, create it.
+		USB_DIR=`dirname $DIST_USB`
+		if [ ! -d $USB_DIR ] ; then
+			mkdir -p $USB_DIR
+		fi
+# Check to see if we have write permission to the directory
+		if [ ! -w $USB_DIR ] ; then
+			echo $USB_DIR does not have write permissions. 
+		else
+# Check to see if the $DIST_USB file exists and if so, remove it. 
+			if [ -e "$DIST_USB" ] ; then
+				rm "$DIST_USB"
+			fi
+		fi
+	fi
+
+	if [ $FAIL -eq 1 ] ; then
+		fatal_exit	
+	fi
+}
+ 
+fatal_exit()
+{
+	cleanup
+	exit 2
+}
+
+cleanup()
+{
+	if [ -d $TMPDIR ] ; then
+		/bin/rm -rf $TMPDIR
+	fi
+}
+
+initialize_root_archive()
+{
+        echo "Initializing Root Archive"
+
+        rm -f ${BOOT_ARCHIVE}
+
+        [ -d $MICROROOT ] || mkdir $MICROROOT
+	if [ $? -ne 0 ] ; then
+		echo "FAILURE: Unable to mkdir $MICROROOT"
+		fatal_exit	
+	fi
+}
+
+populate_root_archive()
+{
+	PROTO=$1
+
+        echo "Adding files to Boot Archive"
+	copyfiles "$PROTO" "$MICROROOT" $DIST_MICROROOT_LIST
+
+	# Add in from usr_microroot_files
+	cat ${SRC}/usr_microroot_files | (cd $PROTO
+		cpio -pdum $MICROROOT)
+
+	echo "$DIST_ID" > $MICROROOT/.volumeid
+	chmod 0444 $MICROROOT/.volumeid
+	chown root:root $MICROROOT/.volumeid
+	touch $MICROROOT/.livecd
+}
+
+create_iso()
+{
+	start_pwd=`pwd`
+
+	cd "$DIST_PROTO"
+
+	echo "Generating usr filesystem image"
+	if [ -f $DIST_ISO_SORT ]; then
+		mkisofs -o solaris.zlib -sort $DIST_ISO_SORT -quiet -N -l -R \
+		    -U -allow-multidot -no-iso-translate -cache-inodes \
+		    -d -D -V "compress" usr
+	else
+		mkisofs -o solaris.zlib -N -l -R -U -allow-multidot \
+		    -quiet -no-iso-translate -cache-inodes -d -D -V \
+		    "compress" usr
+	fi
+	if [ $? -ne 0 ] ; then
+		echo "FAILURE: mkisofs of solaris failed"
+		fatal_exit	
+	fi
+
+	echo "Confirm lofiadm is available."
+	if ! [[ -f ${DIST_PROTO}/usr/sbin/lofiadm ]]; then
+		echo "FAILURE: ${DIST_PROTO}/usr/sbin/lofiadm NOT FOUND"
+		fatal_exit
+	fi
+
+	echo "Compressing usr filesystem image"
+	if [ -n "$LOFI_COMPRESS_UTILITY" ]
+	then
+		echo "${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solaris.zlib"
+		time ${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solaris.zlib
+	else
+		echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solaris.zlib"
+		time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solaris.zlib
+	fi
+	if [ $? -ne 0 ] ; then
+		echo "FAILURE: compression of solaris failed"
+		fatal_exit	
+	fi
+
+	echo "Generating misc filesystem image"
+	mkdir miscdirs
+	mv opt miscdirs
+	mv etc miscdirs
+	mv var miscdirs
+	mkisofs -o solarismisc.zlib -N -l -R -U -allow-multidot \
+	    -no-iso-translate \
+	    -quiet -cache-inodes -d -D -V "compress" miscdirs
+	if [ $? -ne 0 ] ; then
+		echo "FAILURE: mkisofs of solarismisc failed"
+		fatal_exit	
+	fi
+	rm -rf miscdirs
+
+	echo "Compressing misc filesystem image"
+	if [ -n "$LOFI_COMPRESS_UTILITY" ]
+	then
+		echo "${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solarismisc.zlib"
+		time ${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solarismisc.zlib
+	else
+		echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solarismisc.zlib"
+		time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solarismisc.zlib
+	fi
+	if [ $? -ne 0 ] ; then
+		echo "FAILURE: compression of solarismisc failed"
+		fatal_exit	
+	fi
+
+	#
+	# Delay rm of usr because lofiadm is used from usr to compress
+	# solaris and solarismisc
+	#
+	/bin/rm -rf usr
+
+	echo "Making final ISO image"
+	rm -f $DIST_ISO
+
+	mkisofs -o $DIST_ISO -b boot/grub/stage2_eltorito -c .catalog \
+	    -no-emul-boot -boot-load-size 4 -boot-info-table -N -l -R -U \
+	    -allow-multidot -no-iso-translate -cache-inodes -d -D -V \
+	    "$DIST_ID" "$DIST_PROTO"
+	if [ $? -ne 0 ] ; then
+		echo "FAILURE: mkisofs of $DIST_ISO failed"
+		fatal_exit	
+	fi
+
+	echo "ISO creation completed at `date`"
+
+	cd $start_pwd
+}
+
+
+fatal_micro_exit()
+{
+	/usr/sbin/mount | /usr/xpg4/bin/grep -q $MICROROOT2
+	if [ $? -eq 0 ] ; then
+		umount $MICROROOT2
+		lofiadm $BOOT_ARCHIVE2
+		if [ $? -eq 0  ] ; then
+			lofiadm -d $BOOT_ARCHIVE2
+		fi
+	fi
+	exit 2
+}
+
+#
+# Display progress ticker message
+#
+# Args:
+# $1 = Current count
+# $2 = Total count
+# $3 = Update display after every $3 increments
+#
+ticker() {
+	res=$(($1 / $3))
+	C=$((res % 4))
+	rem=$(($1 % $3))
+	if [ $rem -eq 0 ]
+	then
+	       percent=`echo "scale = 1; ($1 / $2) * 100" | bc -l`
+	       echo -e "\r${tick[$C]} ${percent}% Completed...\c"
+	fi
+}
+
+livemedia_processing()
+{
+
+	WORKING_DIR=`pwd`
+
+	if [ $# != "3" ] ; then
+		echo "$0: $0 path_to_proto_area path_to_microroot tmp_dir"
+		exit 1
+	else
+		PROTO=$1
+		MICROROOT=$2
+		TMPDIR=$3
+		echo "Proto Area=$PROTO"
+		echo "Microroot=$MICROROOT"
+		echo "Tmpdir=$TMPDIR"
+	fi
+
+	$MICROROOT/usr/sbin/devfsadm -r $MICROROOT
+
+	# Set up /etc/coreadm.conf
+	chroot $MICROROOT /bin/coreadm -g /tmp/core -G default -i core \
+	    -I default -e process
+
+	# Setup the /etc/rtc_config file, assuming it is GMT.
+	# We couldn't use "/usr/sbin/rtc" command because even doing it
+	# with chroot seem to still affect the host on which chroot is run.
+	cat << \RTC_CONFIG_EOF > $MICROROOT/etc/rtc_config
+#
+#       This file (/etc/rtc_config) contains information used to manage the
+#       x86 real time clock hardware.  The hardware is kept in
+#       the machine's local time for compatibility with other x86
+#       operating systems.  This file is read by the kernel at
+#       boot time.  It is set and updated by the /usr/sbin/rtc
+#       command.  The 'zone_info' field designates the local
+#       time zone.  The 'zone_lag' field indicates the number
+#       of seconds between local time and Greenwich Mean Time.
+#
+zone_info=GMT
+zone_lag=0
+RTC_CONFIG_EOF
+
+	# Set nodename to opensolaris
+	#echo "opensolaris" >$MICROROOT/etc/nodename
+
+	# Remove password lock file left around from user actions during
+	# package installation; if left in place it becomes a symlink
+	# into /mnt/misc which will cause the installer's attempt to
+	# create a user account to fail
+	/bin/rm -f $PROTO/etc/.pwd.lock
+
+	# Set the release tag
+	echo $DIST_ID > $PROTO/etc/release_tag
+
+	# Remove the icon theme caches
+	echo "Cleaning out icon theme cache"
+	(cd $PROTO/usr; find . -name icon-theme.cache -print|xargs rm -f)
+
+	echo "Creating font cache"
+	[ -x ${PROTO}/usr/bin/fc-cache ] && chroot $PROTO /usr/bin/fc-cache --force
+
+	echo "Preloading SMF repository"
+	$SRC/mkrepo $MICROROOT $SRC
+
+	#
+	# /var/log and /var/spool are a little largish and already in microroot
+	#
+	rm -rf $PROTO/var/log
+	rm -rf $PROTO/var/spool
+
+	#
+	# Postrun entries are already processed in proto, so remove
+	# them from microroot.
+	#
+	rm -f $MICROROOT/var/spool/postrun/*
+
+	#
+	# Replace manifest in microroot with a link
+	#
+	rm -rf $MICROROOT/var/svc/manifest
+	#(cd $MICROROOT/var/svc/; ln -sf /mnt/misc/var/svc/manifest)
+
+	echo "Packing unused files into archive"
+	#
+	# Pack up a bunch of extra stuff
+	#
+	(cd $PROTO
+	    (find . -name "llib-"
+	      find kernel lib platform | grep amd64
+	      cat $SRC/archive_paths | while read typ pspec
+	      do
+		if [ "$typ" = "d" ]
+		then
+		    find $pspec
+		elif [ "$typ" = "p" ]
+		then
+		    find * -name "$pspec"
+		fi
+	      done
+	      ) | cpio -oc | 7za a -mx=9 -si archive.7z
+	    find . -name "llib-" | xargs rm -f
+	    rm -rf kernel lib sbin tmp system proc export home
+            find platform | grep amd64 | xargs rm -f
+	    cat $SRC/archive_paths | while read typ pspec
+	    do
+		if [ "$typ" = "d" ]
+		then
+		    rm -rf $pspec
+		elif [ "$typ" = "p" ]
+		then
+		    find * -name "$pspec" | xargs rm -f 2> /dev/null
+		fi
+	    done)
+
+	#
+	# Remove some extra duplicates
+	#
+	(cd $PROTO
+	    for sdir in kernel/dacf kernel/drv kernel/kmdb kernel/mach kernel/misc kernel/tod kernel/cpu kernel/sys
+	    do
+		rm -rf platform/i86pc/${sdir}
+		rm -rf platform/i86xpv/${sdir}
+		rm -rf platform/i86hvm/${sdir}
+	    done)
+
+	#
+	# Additional /var /etc setup. A bunch of files in /var and /etc
+	# are left out of the ramdisk otherwise they will increase ramdisk
+	# size substantially. The code below automatically populates the
+	# ramdisk with symlinks to another mountpoint where the rest of
+	# /var and /etc are mounted from another compressed lofi file.
+	#
+
+	echo "Creating additional symlnks in ramdisk ..."
+	# Create symlinks in ramdisk
+	#
+	cd ${MICROROOT}
+	(cd ${PROTO}; find etc var) > ${TMPDIR}/mlst
+	grep -v "^var\/pkg" ${TMPDIR}/mlst > ${TMPDIR}/mlst.1
+	mv  ${TMPDIR}/mlst.1 ${TMPDIR}/mlst
+
+	find * > ${TMPDIR}/mfiles
+	rm -f ${TMPDIR}/plist
+	touch ${TMPDIR}/plist
+	for f in `cat ${TMPDIR}/mlst`
+	do
+		echo $f | /usr/xpg4/bin/grep -f ${TMPDIR}/plist > /dev/null
+		[ $? -eq 0 ] && continue
+		grep "^${f}$" ${TMPDIR}/mfiles > /dev/null
+		[ $? -eq 0 ] && continue
+		
+		dir=`dirname $f`
+		if [ ! -d $dir ]; then
+			mkdir -p $dir
+			echo $dir >> ${TMPDIR}/mfiles
+		fi
+		p=$f
+		[ -d $PROTO/$p ] && p=$p/
+		ln -sf /mnt/misc/$f $f
+		echo "^$p" >> ${TMPDIR}/plist
+	done
+
+        # Create the boot archive.
+        MICROROOT2=${MICROROOT}2
+        BOOT_FILENAME=x86.microroot
+        BOOT_ARCHIVE2=$TMPDIR/$BOOT_FILENAME
+        rm -f $BOOT_ARCHIVE2
+        /usr/sbin/mkfile ${RAMDISK_SIZE}k $BOOT_ARCHIVE2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to create file for $BOOT_ARCHIVE2"
+                fatal_micro_exit
+        fi
+
+        # loopback mount the boot archive
+        lofidev=`/usr/sbin/lofiadm -a $BOOT_ARCHIVE2`
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to create loopback device for $BOOT_ARCHIVE2"
+                fatal_micro_exit
+        fi
+
+        rlofidev=`echo $lofidev | sed s/lofi/rlofi/`
+        newfs -m 0 $rlofidev < /dev/null 2> /dev/null
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to newfs $rlofidev"
+                fatal_micro_exit
+        fi
+        [ -d $MICROROOT2 ] || mkdir $MICROROOT2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to mkdir $MICROROOT2"
+                fatal_micro_exit
+        fi
+
+        mount -o nologging $lofidev $MICROROOT2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to mount $lofidev on $MICROROOT2"
+                fatal_micro_exit
+        fi
+
+        cd $MICROROOT
+	relocatemodules $MICROROOT ${PROTO}/usr ${MICROROOT}/etc/modules_relocate.list
+
+        # cpio the microroot image to the ramdisk.
+        /bin/find . -depth -print | /bin/cpio -pdmv $MICROROOT2
+        # Unmount the smaller microroot lofi device and remove it.
+        lockfs -f $MICROROOT2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: lockfs of $MICROROOT2 did not complete successfully"
+                fatal_micro_exit
+        fi
+
+        umount $MICROROOT2
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Unable to unmount $MICROROOT2"
+                fatal_micro_exit
+        fi
+
+        rmdir $MICROROOT2
+        lofiadm -d $BOOT_ARCHIVE2;
+        if [ $? -ne 0 ] ; then
+                echo "FAILURE: Failure to perform lofiadm -d $BOOT_ARCHIVE2"
+                fatal_micro_exit
+        fi
+
+	cd $WORKING_DIR
+}
+
+# Copy files from SRCDIR to TARGETDIR. The list of files to
+# be copied are stored in FILELIST in the format:
+#
+# <type(f or d)> <permission> <ownership> <filename>
+#
+copyfiles() {
+    typeset fl=""
+
+    SRCDIR=$1
+    TARGETDIR=$2
+    FILELIST=$3
+
+    cat "$FILELIST" | while read typ perms own f
+    do
+	fl="$f"
+
+	if [[ "$typ" = "d" ]]
+	then
+		mkdir -m $perms -p "$TARGETDIR/$f"
+
+	elif [[ "$typ" = "f" ]]
+	then
+		/usr/bin/cp -f -p "$SRCDIR/$f" "$TARGETDIR/$f"
+
+	elif [[ "$typ" = "s" ]]
+	then
+		fl=`echo $f | sed 's/=/ /' | cut -d" " -f1`
+		trg=`echo $f | sed 's/=/ /' | cut -d" " -f2`
+		ln -sf $trg "$TARGETDIR/$fl"
+
+	elif [[ "$typ" = "l" ]]
+	then
+		fl=`echo $f | sed 's/=/ /' | cut -d" " -f1`
+		trg=`echo $f | sed 's/=/ /' | cut -d" " -f2`
+
+		dir=`pwd`
+		cd `dirname "$TARGETDIR/$fl"`
+		ln -f $trg `basename "$fl"`
+		cd $dir
+
+	elif [[ "$typ" = "id" ]]
+	then
+		inc=$perms
+		exc=$own
+
+		echo "Copying $f ..."
+		BASECMD="cd $SRCDIR ; find $f "
+		if [ "$inc" != "-" ]
+		then
+			BASECMD="$BASECMD | egrep '$inc' "
+		fi
+		if [ "$exc" != "-" ]
+		then
+			BASECMD="$BASECMD | egrep -v '$exc' "
+		fi
+		BASECMD="$BASECMD | cpio -pdum $TARGETDIR"
+		sh -c "$BASECMD"
+		continue
+
+	elif [[ "$typ" = "i" ]]
+	then
+		inc=$perms
+		exc=$own
+
+		echo "Copying $f/* ..."
+		BASECMD="cd $SRCDIR ; echo $f ; find $f/* -prune \( -type f -o -type l \)"
+		if [[ "$inc" != "-" ]]
+		then
+			BASECMD="$BASECMD | egrep '$inc' "
+		fi
+		if [[ "$exc" != "-" ]]
+		then
+			BASECMD="$BASECMD | egrep -v '$exc' "
+		fi
+		BASECMD="$BASECMD | cpio -pdum $TARGETDIR"
+		sh -c "$BASECMD"
+		continue
+	else
+                continue
+	fi
+
+	if [[ "$typ" != "s" ]]
+	then
+	    if [[ "$typ" != "d" ]]
+	    then
+		/usr/bin/chmod $perms "$TARGETDIR/$fl"
+	    fi
+	    /usr/bin/chown $own "$TARGETDIR/$fl"
+	else
+	    /usr/bin/chown -h $own "$TARGETDIR/$fl"
+	fi
+    done
+}
+
+#
+# Relocate a list of modules from one directory to another
+#
+relocatemodules() {
+	FROMDIR=$1
+	TODIR=$2
+	MODULES=$3
+
+	grep -v "^#" $MODULES | (cd $FROMDIR; cpio -pdumv $TODIR)
+	grep -v "^#" $MODULES | (cd $FROMDIR; xargs rm)
+}
+
+apply_skeleton()
+{
+	PROTO=$1
+	SKEL=$SRC/bootcd_skel
+
+	#
+	# Copy all the basic customizations required for the Live DVD to
+	# work. These are called the skeleton customisation files.
+	#
+	## First save the originals for use in installation
+	#echo "Copying skeleton configuration files"
+	#while read t m p f; do
+	#	[ -f $PROTO/$f ] && echo $f
+	#done <$SKEL/bootcd_skel.files | grep -v generic_ | (cd $PROTO; cpio -o -O skeleton.cpio)
+	# Now copy skeleton into place
+	copyfiles "$SKEL" "$PROTO" $SKEL/bootcd_skel.files
+}
+
+apply_config()
+{
+	PROTO=$1
+	USER=$2
+	GROUP=$3
+	ESKEL=${PROTO}/etc/skel
+
+	#
+	# Copy /etc/skel stuff into user's home
+	#
+	(cd ${ESKEL}; find .) > /tmp/cfg.$$
+	(cd ${PROTO}/${USER}; find .) > /tmp/cfg2.$$
+	for p in `cat /tmp/cfg.$$`
+	do
+		egrep "^$p$" /tmp/cfg2.$$ > /dev/null
+		if [ $? -ne 0 ]
+		then
+			echo $p >> /tmp/cfg3.$$
+		fi
+	done
+
+	rm -f /tmp/cfg.$$ /tmp/cfg2.$$
+	(cd ${ESKEL}; cat /tmp/cfg3.$$ | cpio -pdumv ${PROTO}/${USER})
+	rm -f /tmp/cfg3.$$
+
+	echo "chroot ${PROTO} /usr/bin/chown -R ${USER}:${GROUP} /${USER}"
+	chroot ${PROTO} /usr/bin/chown -R ${USER}:${GROUP} /${USER}
+
+	if [ $? -ne 0 ]
+	then
+		echo "CHROOT Failed. Bailing ..."
+		exit 1
+	fi
+
+	#
+	# HACK: Enable KDE delayed check in LiveCD env for
+	# startup performance.
+	# Need to have this code somewhere else. This is not
+	# a good place.
+	#
+	echo "" >> ${PROTO}/${USER}/.kde/share/config/kdedrc
+	echo "[General]" >> ${PROTO}/${USER}/.kde/share/config/kdedrc
+	echo "DelayedCheck=true" >> ${PROTO}/${USER}/.kde/share/config/kdedrc
+}

@@ -1,0 +1,53 @@
+--- gcc-4.2.1-orig/gcc/config/t-libunwind-orig      (revision 114767)
++++ gcc-4.2.1-orig/gcc/config/t-libunwind      (working copy)
+@@ -6,7 +6,8 @@
+ SHLIB_LC = -lunwind -lc
+ LIB2ADDEH = $(srcdir)/unwind-sjlj.c $(srcdir)/unwind-c.c \
+   $(srcdir)/unwind-compat.c $(srcdir)/unwind-dw2-fde-compat.c
+-LIB2ADDEHSTATIC = $(srcdir)/unwind-sjlj.c $(srcdir)/unwind-c.c
++LIB2ADDEHSTATIC = $(srcdir)/unwind-sjlj.c $(srcdir)/unwind-c.c \
++  $(srcdir)/unwind-compat.c
+ 
+ T_CFLAGS += -DUSE_LIBUNWIND_EXCEPTIONS
+ TARGET_LIBGCC2_CFLAGS += -DUSE_GAS_SYMVER
+
+--- gcc-4.2.1-orig/gcc/unwind-compat.orig (revision 114767)
++++ gcc-4.2.1-orig/gcc/unwind-compat.c (working copy)
+@@ -35,6 +35,7 @@
+ #include "unwind-dw2-fde.h"
+ #include "unwind-compat.h"
+ 
++#ifdef SHARED
+ extern _Unwind_Reason_Code __libunwind_Unwind_Backtrace
+   (_Unwind_Trace_Fn, void *);
+ 
+@@ -136,13 +137,6 @@ _Unwind_GetIP (struct _Unwind_Context *c
+ }
+ symver (_Unwind_GetIP, GCC_3.0);
+ 
+-_Unwind_Ptr
+-_Unwind_GetIPInfo (struct _Unwind_Context *context, int *ip_before_insn)
+-{
+-  *ip_before_insn = 0;
+-  return __libunwind_Unwind_GetIP (context);
+-}
+-
+ extern void *__libunwind_Unwind_GetLanguageSpecificData
+   (struct _Unwind_Context *);
+ 
+@@ -212,4 +206,14 @@ _Unwind_SetIP (struct _Unwind_Context *c
+   return __libunwind_Unwind_SetIP (context, val);
+ }
+ symver (_Unwind_SetIP, GCC_3.0);
++#endif /* SHARED */
++
++extern _Unwind_Ptr __libunwind_Unwind_GetIP (struct _Unwind_Context *);
++
++_Unwind_Ptr
++_Unwind_GetIPInfo (struct _Unwind_Context *context, int *ip_before_insn)
++{
++  *ip_before_insn = 0;
++  return __libunwind_Unwind_GetIP (context);
++}
+ #endif
+

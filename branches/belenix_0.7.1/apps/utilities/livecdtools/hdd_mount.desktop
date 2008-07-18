@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=/usr/bin/pfexec /usr/bin/mounts
+TryExec=
+Icon=/usr/share/pixmaps/disk_mounts.png
+X-GNOME-DocPath=
+Terminal=false
+Name=Hard Disk Partitions
+GenericName=
+Comment=Mount/Unmount Hard Disk Partitions

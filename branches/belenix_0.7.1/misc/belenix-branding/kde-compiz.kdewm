@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if [ -x /usr/X/bin/constype -a "`/usr/X/bin/constype`" = "NVDAnvda" ]; then
+	__GL_SYNC_TO_VBLANK=1
+	export __GL_SYNC_TO_VBLANK
+	#unset __GL_YIELD
+	#__GL_YIELD=USLEEP
+	__GL_YIELD=NOTHING
+	export __GL_YIELD
+	OPTIONS="--loose-binding"
+else
+	LIBGL_ALWAYS_INDIRECT=TRUE
+	export LIBGL_ALWAYS_INDIRECT
+	INTEL_BATCH=1
+	export INTEL_BATCH
+	OPTIONS="--fast-filter --indirect-rendering"
+fi
+
+kde-window-decorator --replace &
+compiz --sm-disable --replace $OPTIONS ccp &
+exit
+

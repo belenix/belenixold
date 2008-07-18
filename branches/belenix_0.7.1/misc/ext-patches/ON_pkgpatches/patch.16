@@ -1,0 +1,45 @@
+--- usr/src/pkgdefs/SUNWhea/prototype_com.orig	2008-01-27 04:30:11.000000000 +0530
++++ usr/src/pkgdefs/SUNWhea/prototype_com	2008-02-07 00:05:57.357818706 +0530
+@@ -397,9 +397,6 @@
+ f none usr/include/nfs/auth.h 644 root bin
+ f none usr/include/nfs/export.h 644 root bin
+ f none usr/include/nfs/lm.h 644 root bin
+-f none usr/include/nfs/lm_impl.h 644 root bin
+-f none usr/include/nfs/lm_nlm.h 644 root bin
+-f none usr/include/nfs/lm_server.h 644 root bin
+ f none usr/include/nfs/mapid.h 644 root bin
+ f none usr/include/nfs/mount.h 644 root bin
+ f none usr/include/nfs/nfs.h 644 root bin
+@@ -894,8 +891,6 @@
+ f none usr/include/sys/iapriocntl.h 644 root bin
+ d none usr/include/sys/ib 755 root bin
+ d none usr/include/sys/ib/adapters 755 root bin
+-d none usr/include/sys/ib/adapters/tavor 755 root bin
+-f none usr/include/sys/ib/adapters/tavor/tavor_ioctl.h 644 root bin
+ f none usr/include/sys/ib/ib_pkt_hdrs.h 644 root bin
+ f none usr/include/sys/ib/ib_types.h 644 root bin
+ d none usr/include/sys/ib/ibtl 755 root bin
+@@ -958,7 +953,6 @@
+ f none usr/include/sys/ksyms.h 644 root bin
+ f none usr/include/sys/ksynch.h 644 root bin
+ f none usr/include/sys/ldterm.h 644 root bin
+-f none usr/include/sys/lc_core.h 644 root bin
+ f none usr/include/sys/lgrp.h 644 root bin
+ f none usr/include/sys/lgrp_user.h 644 root bin
+ f none usr/include/sys/link.h 644 root bin
+@@ -966,7 +960,6 @@
+ f none usr/include/sys/list_impl.h 644 root bin
+ f none usr/include/sys/llc1.h 644 root bin
+ f none usr/include/sys/loadavg.h 644 root bin
+-f none usr/include/sys/localedef.h 644 root bin
+ f none usr/include/sys/lock.h 644 root bin
+ f none usr/include/sys/lockfs.h 644 root bin
+ f none usr/include/sys/lofi.h 644 root bin
+@@ -1057,7 +1050,6 @@
+ f none usr/include/sys/pcie.h 644 root bin
+ d none usr/include/sys/pcmcia 755 root bin
+ f none usr/include/sys/pcmcia/pcata.h 644 root bin
+-f none usr/include/sys/pcmcia/pcelx.h 644 root bin
+ f none usr/include/sys/pcmcia/pcgld.h 644 root bin
+ f none usr/include/sys/pcmcia/pcramio.h 644 root bin
+ f none usr/include/sys/pcmcia/pcramvar.h 644 root bin

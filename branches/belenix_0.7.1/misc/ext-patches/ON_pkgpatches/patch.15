@@ -1,0 +1,47 @@
+--- usr/src/pkgdefs/Makefile.orig	Wed Jul  2 10:58:15 2008
++++ usr/src/pkgdefs/Makefile	Thu Jul 10 21:05:19 2008
+@@ -227,7 +227,6 @@
+ 	SUNWftpu  \
+ 	SUNWfwdc  \
+ 	SUNWfwdcu  \
+-	SUNWfwflash  \
+ 	SUNWgssdh  \
+ 	SUNWgssc  \
+ 	SUNWgss	\
+@@ -292,10 +291,6 @@
+ 	SUNWnisu  \
+ 	SUNWntpr  \
+ 	SUNWntpu  \
+-	SUNWocf \
+-	SUNWocfd \
+-	SUNWocfh \
+-	SUNWocfr \
+ 	SUNWonfmes \
+ 	SUNWonzfs \
+ 	SUNWopenssl-man \
+@@ -306,7 +301,6 @@
+ 	SUNWosdem \
+ 	SUNWypr \
+ 	SUNWypu \
+-	SUNWpamsc \
+ 	SUNWpapi \
+ 	SUNWpcan \
+ 	SUNWpcelx \
+@@ -318,9 +312,7 @@
+ 	SUNWpcu	\
+ 	SUNWpcwl \
+ 	SUNWpd    \
+-	SUNWphx \
+ 	SUNWpolkit \
+-	PHXext \
+ 	SUNWperl584core \
+ 	SUNWperl584usr \
+ 	SUNWpiclh \
+@@ -458,7 +450,6 @@
+ 	SUNWkdcr \
+ 	SUNWkdcu \
+ 	SUNWstatl \
+-	SUNWsvvs \
+ 	SUNWtavor \
+ 	SUNWudapltr \
+ 	SUNWudapltu \

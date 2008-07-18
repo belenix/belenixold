@@ -1,0 +1,26 @@
+--- usr/src/pkgdefs/SUNWcsu/prototype_i386.orig	2008-05-22 07:27:09.000000000 +0530
++++ usr/src/pkgdefs/SUNWcsu/prototype_i386	2008-06-07 20:59:04.372565102 +0530
+@@ -53,6 +53,7 @@
+ f none usr/bin/i86/decrypt 555 root bin
+ f none usr/bin/i86/digest 555 root bin
+ l none usr/bin/i86/encrypt=decrypt
++l none usr/bin/i86/ksh=ksh93
+ f none usr/bin/i86/ksh93 555 root bin
+ f none usr/bin/i86/newtask 4555 root sys
+ f none usr/bin/i86/nohup 555 root bin
+@@ -60,6 +61,7 @@
+ f none usr/bin/i86/prctl 555 root bin
+ f none usr/bin/i86/prstat 555 root bin
+ f none usr/bin/i86/ps 555 root bin
++l none usr/bin/i86/rksh=ksh
+ l none usr/bin/i86/rksh93=ksh93
+ f none usr/bin/i86/savecore 555 root bin
+ f none usr/bin/i86/setuname 555 root bin
+@@ -112,6 +114,7 @@
+ f none usr/bin/amd64/decrypt 555 root bin
+ f none usr/bin/amd64/digest 555 root bin
+ l none usr/bin/amd64/encrypt=decrypt
++l none usr/bin/amd64/ksh=ksh93
+ f none usr/bin/amd64/ksh93 555 root bin
+ f none usr/bin/amd64/ls 555 root bin
+ l none usr/bin/amd64/mac=digest
