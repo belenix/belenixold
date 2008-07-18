@@ -160,6 +160,11 @@
     <instance name='default' enabled='true' />
   </service>
 
+  <service name='application/fixperms' version='1'
+    type='service'>
+    <instance name='default' enabled='true' />
+  </service>
+
   <service name='application/x11/xfs' version='1' type='service'>
     <instance name='default' enabled='true'/>
   </service>

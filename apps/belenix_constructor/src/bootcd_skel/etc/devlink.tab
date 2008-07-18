@@ -60,9 +60,12 @@
 #
 # devfs-spec	Dev-Namespec	Extra-Link
 #
-# The following entry is for the SVGA framebuffer driver
-#type=ddi_pseudo;name=aperture	fbs/\M0
+type=ddi_pseudo;name=nskern	\D
+type=ddi_pseudo;name=ncall	\D
+type=ddi_pseudo;name=nsctl	\D
+type=ddi_pseudo;name=sdbc	\D
+type=ddi_pseudo;name=sv	\D
+type=ddi_pseudo;name=ii	\D
 type=pcmcia:event;name=pem	pem
-#START ADD SYMhisl Tue Mar  7 15:49:33 IST 2006
-type=symsl_ctl;minor=symhislctl	symhislctl\N0
-#END ADD SYMhisl Tue Mar  7 15:49:33 IST 2006
+type=ddi_pseudo;name=rdc	\D
+type=ddi_pseudo;name=nsmb	\D

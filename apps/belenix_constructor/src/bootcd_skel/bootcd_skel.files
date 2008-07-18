@@ -8,9 +8,11 @@ f 0555 root:bin lib/svc/method/svc-dlmgmtd
 f 0555 root:bin lib/svc/method/svc-coreadm
 f 0555 root:bin usr/bin/osssetup
 f 0555 root:bin usr/bin/get-pkgs
+f 0555 root:bin usr/bin/fixperms
 f 0644 root:root usr/share/config/kdm/kdmrc
 f 0644 root:root usr/share/config/kdm/backgroundrc
-f 0644 root:sys var/svc/manifest/coreadm.xml
+f 0644 root:sys var/svc/manifest/system/coreadm.xml
+f 0644 root:sys var/svc/manifest/application/fixperms.xml
 f 0444 root:sys var/svc/profile/generic_limited_net.xml
 f 0444 root:sys var/svc/profile/generic_open.xml
 f 0644 root:sys boot/grub/menu.lst

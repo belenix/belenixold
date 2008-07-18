@@ -373,13 +373,20 @@ then
          find . | cpio -pdum ${BASEDIR}/root)
 fi
 
-(cd ${BASEDIR}/export/home
+#
+# Get export/home mounted first
+#
+rpool=`echo $rootdataset | cut -f1 -d"/"`
+mkdir -p /export/home
+zfs mount ${rpool}/export/home
+
+(cd /export/home
   for hd in `find * -type d -prune`
   do
     grpid=`grep /etc/passwd | cut -f4 -d":"`
     grp=`grep ":${grpid}:" | cut -f1 -d":"`
     (cd ${BASEDIR}/etc/skel
-      find . | cpio -pdum ${BASEDIR}/export/home/${hd}
+      find . | cpio -pdum /export/home/${hd}
     )
     chown -R ${hd}:${grp} $hd
   done)
@@ -411,6 +418,6 @@ fi
 ram=`cat /.ram`
 if [ $ram -lt 1030 ]
 then
-	ram2 = $(($ram / 2 * 1024 * 1024))
+	ram2=$(($ram / 2 * 1024 * 1024))
 	echo "set zfs:zfs_arc_max = $ram2" >> ${BASEDIR}/etc/system
 fi

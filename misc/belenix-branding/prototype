@@ -59,6 +59,7 @@ d none usr/bin 0755 root bin
 f none usr/bin/kde-compiz 0755 root bin
 f none usr/bin/kde-compiz.kdewm 0755 root bin
 f none usr/bin/xfce-compiz 0755 root bin
+f none usr/bin/bchat=bchat 555 root bin
 
 f none AUTORUN.INF 0644 root sys
 f none info/1.gif=info/1.gif 0544 root sys

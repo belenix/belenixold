@@ -82,7 +82,7 @@ fi
 #
 # Check if cluster points to an alternate repository
 #
-ALTREPO=`grep "^REPO:" cat ${TMPDIR}/$cluster | cut -f2 -d":"`
+ALTREPO=`grep "^REPO|" ${TMPDIR}/$cluster | cut -f2 -d"|"`
 if [ -n "$ALTREPO" ]
 then
 	PKGREPO=${ALTREPO}/${RELEASE}
@@ -90,17 +90,18 @@ fi
 
 
 
-for pkg in `cat ${TMPDIR}/$cluster | grep -v "^REPO:"`
+for pkg in `cat ${TMPDIR}/$cluster | grep -v "^REPO|"`
 do
 	if [ "$pkg" = "NOTICE" ]
 	then
 		$WGET ${PKGREPO}/NOTICE -O ${PKGCACHE}/NOTICE
 		while true;
 		do
+			clear
 			echo ""
 			cat ${PKGCACHE}/NOTICE | more
-			echo "Do you agree to the terms ?"
-			read -p "(y/n) " yn
+			echo "Do you agree to the terms ? (y/n) \c"
+			read yn
 			case $yn in
 			    y* | Y* )
 				break ;;
