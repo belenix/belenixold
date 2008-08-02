@@ -26,6 +26,7 @@ Patch1:                  %{src_name}-02-compatibility.diff
 Patch2:                  %{src_name}-03-xicproc.diff
 Patch3:                  %{src_name}-04-xmos.diff
 Patch4:                  %{src_name}-05-iconfile.diff
+Patch5:                  %{src_name}-06-xmimgetgeo.diff
 Source1:                 XmStrDefs21.ht
 
 %include default-depend.inc
@@ -56,6 +57,7 @@ cd openmotif-%version
 %patch0 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 cd ..
 
 %ifarch amd64
@@ -208,6 +210,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{X11_DIR}/share/Xm/wsm/*
 
 %changelog
+* Sat Aug 03 2008 - moinakg@gmail.com
+- Add JRE compatibility patch.
 * Sun Jun 22 2008 - moinakg@gmail.com
 - Fix copying of XmStrDefs21.h header.
 * Sun May 18 2008 - moinakg@gmail.com

@@ -1,0 +1,16 @@
+--- openmotif-2.3.0/lib/Xm/XmIm.c.orig	2008-08-02 22:54:39.852899441 +0530
++++ openmotif-2.3.0/lib/Xm/XmIm.c	2008-08-02 23:00:17.571629641 +0530
+@@ -874,6 +874,13 @@
+   *data = NULL;
+ }
+ 
++int
++_XmImGetGeo(
++		Widget vw )
++{
++	return (ImGetGeo(vw, NULL));
++}
++
+ void 
+ _XmImChangeManaged(
+ 		   Widget vw )
