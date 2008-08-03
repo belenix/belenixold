@@ -129,6 +129,14 @@ rm -rf ${RPM_BUILD_ROOT}/%{X11_DIR}/man
 rm ${RPM_BUILD_ROOT}/%{X11_DIR}/lib/%{_arch64}/*.a
 rm ${RPM_BUILD_ROOT}/%{X11_DIR}/lib/%{_arch64}/*.la
 
+#
+# Add a few compatibility symlinks for older Motif software
+#
+(cd ${RPM_BUILD_ROOT}/%{X11_DIR}/lib/%{_arch64}/
+  ln -s libXm.so.4.0.0 libXm.so.3
+  ln -s libMrm.so.4.0.0 libMrm.so.3
+  ln -s libUil.so.4.0.0 libUil.so.3)
+
 cd ..
 %endif
 
@@ -139,6 +147,14 @@ rm -rf ${RPM_BUILD_ROOT}/%{_prefix}/share
 rm -rf ${RPM_BUILD_ROOT}/%{X11_DIR}/man
 rm ${RPM_BUILD_ROOT}/%{X11_DIR}/lib/*.a
 rm ${RPM_BUILD_ROOT}/%{X11_DIR}/lib/*.la
+
+#
+# Add a few compatibility symlinks for older Motif software
+#
+(cd ${RPM_BUILD_ROOT}/%{X11_DIR}/lib/
+  ln -s libXm.so.4.0.0 libXm.so.3
+  ln -s libMrm.so.4.0.0 libMrm.so.3
+  ln -s libUil.so.4.0.0 libUil.so.3)
 
 cp lib/Xm/XmStrDefs21.h ${RPM_BUILD_ROOT}/%{X11_DIR}/include/Xm
 rm -f ${RPM_BUILD_ROOT}/%{X11_DIR}/include/Xm/XmStrDefs21.ht
@@ -210,7 +226,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{X11_DIR}/share/Xm/wsm/*
 
 %changelog
-* Sat Aug 03 2008 - moinakg@gmail.com
+* Sun Aug 03 2008 - moinakg@gmail.com
+- Add a few compatibility symlinks for older software.
+* Sat Aug 02 2008 - moinakg@gmail.com
 - Add JRE compatibility patch.
 * Sun Jun 22 2008 - moinakg@gmail.com
 - Fix copying of XmStrDefs21.h header.

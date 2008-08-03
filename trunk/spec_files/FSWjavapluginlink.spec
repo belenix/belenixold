@@ -12,6 +12,7 @@ Version:             5.11
 
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
+Source1:	     sun_java.desktop
 Requires:            SUNWfirefox
 
 %prep
@@ -27,8 +28,10 @@ cd %{name}-%{version}-build
 rm -rf ${RPM_BUILD_ROOT}
 mkdir ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/firefox/plugins
+mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/applications
 cd ${RPM_BUILD_ROOT}%{_libdir}/firefox/plugins
 ln -sf /usr/jdk/instances/latest/jre/plugin/i386/ns7/libjavaplugin_oji.so
+cp %{SOURCE1} ${RPM_BUILD_ROOT}%{_datadir}/applications
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -40,6 +43,13 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}/firefox/plugins
 %{_libdir}/firefox/plugins/*
 
+%defattr (-, root, other)
+%dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, other) %{_datadir}/applications
+%{_datadir}/applications/*
+
 %changelog
-* Sat Aug 03 2008 - moinakg@gmail.com
+* Sun Aug 03 2008 - moinakg@gmail.com
+- Add desktop entry for Java Plugin Control Panel.
+* Sat Aug 02 2008 - moinakg@gmail.com
 - Initial spec.
