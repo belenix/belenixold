@@ -26,9 +26,11 @@ i pkginfo
 i copyright
 i depend
 !default 0555 root bin
+d none lib 0755 root bin
+f none lib/cpp=cpp 0755 root bin
 d none usr 0755 root sys
 d none usr/lib 0755 root bin
-f none usr/lib/cpp=cpp 0755 root bin
+s none usr/lib/cpp=../../lib/cpp 0755 root bin
 d none usr/ccs 0755 root bin
 d none usr/ccs/lib 0755 root bin
-s none usr/ccs/lib/cpp=../../lib/cpp
+s none usr/ccs/lib/cpp=../../../lib/cpp
