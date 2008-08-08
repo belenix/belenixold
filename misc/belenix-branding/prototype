@@ -55,6 +55,12 @@ d none usr/share/xsessions 0755 root bin
 f none usr/share/xsessions/kde-compiz.desktop=kde-compiz.desktop 0644 root bin
 f none usr/share/xsessions/xfce-compiz.desktop=xfce-compiz.desktop 0644 root bin
 
+d none usr/share/apps 0755 root other
+d none usr/share/apps/kdm 0755 root other
+d none usr/share/apps/kdm/sessions 0755 root other
+f none usr/share/apps/kdm/sessions/kde-compiz.desktop=kde-compiz.desktop 0644 root other
+f none usr/share/apps/kdm/sessions/xfce-compiz.desktop=xfce-compiz.desktop 0644 root other
+
 d none usr/bin 0755 root bin
 f none usr/bin/kde-compiz 0755 root bin
 f none usr/bin/kde-compiz.kdewm 0755 root bin
