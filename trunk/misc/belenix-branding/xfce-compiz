@@ -4,4 +4,4 @@
 XFCE_SESSION_RC="xfce4-session/xfce4-session.rc.compiz"
 export XFCE_SESSION_RC
 
-/usr/bin/startxfce4
+/usr/bin/ctrun -l child -i none /usr/bin/startxfce4

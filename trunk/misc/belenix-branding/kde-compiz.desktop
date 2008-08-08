@@ -1,8 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=XSession
-Exec=/usr/bin/kde-compiz KDM
-TryExec=/usr/bin/kde-compiz KDM
+Exec=/usr/bin/kde-compiz
+TryExec=/usr/bin/kde-compiz
 Name=KDE (Compiz Fusion)
 Name[hi]=केडीई (Compiz Fusion)
 Name[mn]=КДЭ (Compiz Fusion)
