@@ -1,5 +1,11 @@
 #!/bin/sh
 
 chmod a+rw /dev/sound/*
+chmod a+rw /dev/nvidia*
+
+if [ -d /dev/dri ]
+then
+	chmod a+rw /dev/dri/*
+fi
 
 exit 0
