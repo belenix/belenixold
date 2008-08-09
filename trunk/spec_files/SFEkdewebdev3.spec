@@ -20,6 +20,12 @@ BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 Requires: SFEkdebase3
 BuildRequires: SFEkdebase3-devel
 
+%package doc
+Summary:        %{summary} - documentation
+SUNW_BaseDir:   %{_basedir}
+%include default-depend.inc
+Requires: %name
+
 %prep
 %setup -q -n kdewebdev-%version
 
@@ -98,6 +104,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_datadir}/servicetypes
 %{_datadir}/servicetypes/*
 
+%files doc
 %defattr (-, root, bin)
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
@@ -105,6 +112,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Aug 9 2008 - sriramnrn@gmail.com
+- Move kdewebdev3 docs into a separate package
 * Sat Jun 14 2008 - moinakg@gmail.com
 - Bump to KDE 3.5.9.
 * Thu Jan 24 2008 - moinak.ghosh@sun.com
