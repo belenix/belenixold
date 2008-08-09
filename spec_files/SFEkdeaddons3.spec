@@ -23,6 +23,13 @@ BuildRequires: SFEkdegames3-devel
 Requires: SFEsdl
 BuildRequires: SFEsdl-devel
 
+%package doc
+Summary:        %{summary} - documentation
+SUNW_BaseDir:   %{_basedir}
+%include default-depend.inc
+Requires: %name
+
+
 %prep
 %setup -q -n kdeaddons-%version
 
@@ -96,11 +103,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_datadir}/config
 %{_datadir}/config/*
 
+%files doc
 %defattr (-, root, bin)
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
 
 %changelog
+* Sat Aug 9 2008 - sriramnrn@gmail.com
+- Moved kdeaddons3 docs into a new package
 * Sat Jun 14 2008 - moinakg@gmail.com
 - Bump to KDE 3.5.9.
 * Sun Feb 24 2008 - moinakg@gmail.com

@@ -29,6 +29,13 @@ Requires: SUNWflexlex
 BuildRequires: SUNWflexlex
 Requires: SFEhtdig
 
+%package doc
+Summary:        %{summary} - documentation
+SUNW_BaseDir:   %{_basedir}
+%include default-depend.inc
+Requires: %name
+
+
 %prep
 %setup -q -n kdevelop-%version
 
@@ -110,14 +117,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/servicetypes/*
 
 %defattr (-, root, bin)
-%dir %attr (0755, root, other) %{_datadir}/doc
-%{_datadir}/doc/*
 %dir %attr (0755, root, bin) %{_datadir}/desktop-directories
 %{_datadir}/desktop-directories/*
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
 
+%files doc
+%defattr (-, root, bin)
+%dir %attr (0755, root, other) %{_datadir}/doc
+%{_datadir}/doc/*
+
 %changelog
+* Sat Aug 9 2008 - sriramnrn@gmail.com
+- Moved KDevelop docs into a different package
 * Sat Jun 14 2008 - moinakg@gmail.com
 - Bump to KDE 3.5.9.
 - Remove upstream patch.

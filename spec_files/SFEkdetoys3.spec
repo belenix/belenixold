@@ -102,6 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_datadir}/services
 %{_datadir}/services/*
 
+%files doc
 %defattr (-, root, bin)
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
@@ -112,6 +113,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Aug 9 2008 - sriramnrn@gmail.com
+- Moved the kdetoys3 docs into a separate package
 * Sat Jun 14 2008 - moinakg@gmail.com
 - Bump to KDE 3.5.9.
 * Sat Jan 26 2008 - moinak.ghosh@sun.com
