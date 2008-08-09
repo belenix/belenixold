@@ -71,6 +71,12 @@ SUNW_BaseDir:   %{_basedir}
 %include default-depend.inc
 Requires: %name
 
+%package doc
+Summary:        %{summary} - documentation
+SUNW_BaseDir:   %{_basedir}
+%include default-depend.inc
+Requires: %name
+
 %prep
 %setup -q -n kdemultimedia-%version
 %patch1 -p1
@@ -197,11 +203,13 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{_datadir}/autostart
 %{_datadir}/autostart/*
 
+%dir %attr (0755, root, bin) %{_datadir}/desktop-directories
+%{_datadir}/desktop-directories/*
+
+%files doc
 %defattr (-, root, bin)
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
-%dir %attr (0755, root, bin) %{_datadir}/desktop-directories
-%{_datadir}/desktop-directories/*
 
 %files root
 %defattr (-, root, sys)

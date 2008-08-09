@@ -43,6 +43,12 @@ Requires: SFEkdebase3-devel
 Requires: SUNWpilot-link-devel
 Requires: SFEkdemultimedia3-devel
 
+%package doc
+Summary:        %{summary} - documentation
+SUNW_BaseDir:   %{_basedir}
+%include default-depend.inc
+Requires: %name
+
 %prep
 %setup -q -n kdepim-%version
 
@@ -127,6 +133,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{_datadir}/autostart
 %{_datadir}/autostart/*
 
+%files doc
 %defattr (-, root, bin)
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
@@ -137,6 +144,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Aug 09 2008 - moinakg@belenix.org
+- Introduce documentation package.
 * Sat Jun 14 2008 - moinakg@gmail.com
 - Bump to KDE 3.5.9.
 - Remove upstream patch.

@@ -28,6 +28,12 @@ SUNW_BaseDir:   %{_basedir}
 Requires: %name
 Requires: SFEkdebase3-devel
 
+%package doc
+Summary:        %{summary} - documentation
+SUNW_BaseDir:   %{_basedir}
+%include default-depend.inc
+Requires: %name
+
 %prep
 %setup -q -n kdegraphics-%version
 
@@ -104,6 +110,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_datadir}/config
 %{_datadir}/config/*
 
+%files doc
 %defattr (-, root, bin)
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
@@ -114,6 +121,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Aug 09 2008 - moinakg@belenix.org
+- introduce documentation package.
 * Sat Jun 14 2008 - moinakg@gmail.com
 - Bump to KDE 3.5.9.
 * Tue Jan 22 2008 - moinak.ghosh@sun.com
