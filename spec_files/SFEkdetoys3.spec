@@ -32,6 +32,12 @@ Requires: %name
 Requires: SFEkdebase3-devel
 Requires: SFEarts-devel
 
+%package doc
+Summary:        %{summary} - documentation
+SUNW_BaseDir:   %{_basedir}
+%include default-depend.inc
+Requires: %name
+
 %prep
 %setup -q -n kdetoys-%version
 
@@ -113,6 +119,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Aug 9 2008 - moinakg@belenix.org
+- Add doc package spec.
 * Sat Aug 9 2008 - sriramnrn@gmail.com
 - Moved the kdetoys3 docs into a separate package
 * Sat Jun 14 2008 - moinakg@gmail.com

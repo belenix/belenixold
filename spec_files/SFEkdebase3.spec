@@ -14,6 +14,8 @@ Version:             %{kde_version}
 Source:              http://mirrors.isc.org/pub/kde/stable/%{kde_version}/src/kdebase-%{version}.tar.bz2
 Source1:             kde.desktop
 Source2:             kdm.xml
+Source3:             kdmrc
+Source4:             backgroundrc
 Patch1:              kdebase-01-mwm.diff
 Patch2:              kdebase-02-Xsession.diff
 
@@ -122,8 +124,14 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sessionsdir}
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/kapplications-merged
 (cd $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/kapplications-merged; ln -s ../applications-merged/kde-essential.menu)
 
-(cd $RPM_BUILD_ROOT%
-    cat %{PATCH2} | gpatch -p0 --fuzz=0)
+#(cd $RPM_BUILD_ROOT
+#    cat %{PATCH2} | gpatch -p0 --fuzz=0)
+
+#
+# Copy BeleniX specific branding and customizations to override the default ones
+#
+cp %{SOURCE3} ${RPM_BUILD_ROOT}/usr/share/config/kdm/
+cp %{SOURCE4} ${RPM_BUILD_ROOT}/usr/share/config/kdm/
 
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/graphical-login
 cp %{SOURCE2} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/graphical-login
@@ -220,6 +228,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Aug 09 2008 - moinakg@belenix.org
+- Moved custom kdmrc and backgroundrc from belenix_constructor.
 * Sat Aug 09 2008 - moinakg@belenix.org
 - Introduce a documentation package
 * Sat Jun 21 2008 - moinakg@gmail.com

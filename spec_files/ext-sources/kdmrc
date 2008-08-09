@@ -7,7 +7,7 @@ StaticServers=:0_Local
 [Shutdown]
 BootManager=None
 HaltCmd=/usr/sbin/shutdown -i5 -g0 -y
-RebootCmd=/sbin/reboot
+RebootCmd=/usr/sbin/shutdown -i6 -g0 -y
 
 [X-*-Core]
 AllowNullPasswd=false
