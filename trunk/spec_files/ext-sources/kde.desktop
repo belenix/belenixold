@@ -1,8 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=XSession
-Exec=/usr/bin/startkde KDM
-TryExec=/usr/bin/startkde KDM
+Exec=/usr/bin/startkde
+TryExec=/usr/bin/startkde
 Name=KDE
 Name[hi]=केडीई
 Name[mn]=КДЭ

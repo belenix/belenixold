@@ -141,7 +141,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_datadir}/servicetypes
 %{_datadir}/servicetypes/*
 
-$files doc
+%files doc
 %defattr (-, root, bin)
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
@@ -152,6 +152,8 @@ $files doc
 %{_includedir}/*
 
 %changelog
+* Sat Aug 9 2008 - moinakg@belenix.org
+- Fix typo.
 * Sat Aug 9 2008 - sriramnrn@gmail.com
 - Move the kdeutils docs into a separate package
 * Sat Jun 14 2008 - moinakg@gmail.com
