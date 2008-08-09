@@ -28,10 +28,10 @@ Source7:             http://homepage2.nifty.com/mrym3/taiyodo/epfe-2.4.0.tar.gz
 Source8:             http://homepage2.nifty.com/mrym3/taiyodo/mtd-2.4.0.tar.gz
 Source9:             http://homepage2.nifty.com/mrym3/taiyodo/ae-2.6.1.tar.gz
 Source10:            http://homepage2.nifty.com/mrym3/taiyodo/gani-2.4.4.tar.gz
-Source11:            http://homepage2.nifty.com/mrym3/taiyodo/vel-2.4.0.tar.gz
+Source11:            http://homepage2.nifty.com/mrym3/taiyodo/vel-2.6.0.tar.gz
 Source12:            http://homepage2.nifty.com/mrym3/taiyodo/icpt-2.4.0.tar.gz
-Source13:            http://homepage2.nifty.com/mrym3/taiyodo/sige-2.6.0.tar.gz
-Source14:            http://homepage2.nifty.com/mrym3/taiyodo/myk-2.5.0.tar.gz
+Source13:            http://homepage2.nifty.com/mrym3/taiyodo/sige-2.6.2.tar.gz
+Source14:            http://homepage2.nifty.com/mrym3/taiyodo/myk-2.6.1.tar.gz
 Source15:            http://homepage2.nifty.com/mrym3/taiyodo/urf-0.8.2.tar.gz
 Source16:            http://homepage2.nifty.com/mrym3/taiyodo/axf-0.8.2.tar.gz
 Source17:            http://homepage2.nifty.com/mrym3/taiyodo/upf-0.8.2.tar.gz

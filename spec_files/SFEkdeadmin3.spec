@@ -21,6 +21,12 @@ BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 Requires: SFEkdebase3
 BuildRequires: SFEkdebase3-devel
 
+%package doc
+Summary:        %{summary} - documentation
+SUNW_BaseDir:   %{_basedir}
+%include default-depend.inc
+Requires: %name
+
 %prep
 %setup -q -n kdeadmin-%version
 %patch1 -p1
@@ -93,11 +99,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_datadir}/config.kcfg
 %{_datadir}/config.kcfg/*
 
+%files doc
 %defattr (-, root, bin)
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
 
 %changelog
+* Sat Aug 09 2008 - moinakg@belenix.org
+- Introduce documentation package.
 * Sat Jun 14 2008 - moinakg@gmail.com
 - Bump to KDE 3.5.9
 * Wed Apr 02 2008 - moinakg@gmail.com

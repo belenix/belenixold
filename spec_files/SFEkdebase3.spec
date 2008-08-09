@@ -43,6 +43,12 @@ SUNW_BaseDir:   %{_basedir}
 Requires: %name
 Requires: SFEkdelibs3-devel
 
+%package doc
+Summary:        %{summary} - documentation
+SUNW_BaseDir:   %{_basedir}
+%include default-depend.inc
+Requires: %name
+
 %prep
 %setup -q -n kdebase-%version
 %patch1 -p1
@@ -189,8 +195,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/sounds/*
 %dir %attr (0755, root, bin) %{_datadir}/desktop-directories
 %{_datadir}/desktop-directories/*
-%dir %attr (0755, root, other) %{_datadir}/doc
-%{_datadir}/doc/*
 %dir %attr (0755, root, bin) %{_datadir}/xsessions
 %{_datadir}/xsessions/*
 
@@ -210,7 +214,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
 
+%files doc
+%defattr (-, root, bin)
+%dir %attr (0755, root, other) %{_datadir}/doc
+%{_datadir}/doc/*
+
 %changelog
+* Sat Aug 09 2008 - moinakg@belenix.org
+- Introduce a documentation package
 * Sat Jun 21 2008 - moinakg@gmail.com
 - Add patch to fix mwm path.
 * Sat Jun 14 2008 - moinakg@gmail.com
