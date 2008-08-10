@@ -63,7 +63,7 @@ Patch8:              nicdrv-08-ae.diff
 URL:                 http://homepage2.nifty.com/mrym3/taiyodo/eng/
 SUNW_BaseDir:        /
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
-%include default-depend.inc
+%include core-depend.inc
 #
 # This dep ensures that dmfe/mxfe/afe installs first and 
 # tu does not acquire the driver aliases for dmfe/mxfe
