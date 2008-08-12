@@ -13,3 +13,4 @@
 %define _infodir           %{_std_datadir}/info
 %define _std_includedir    %{_basedir}/include
 %define _std_libdir        %{_basedir}/lib
+%define build_gcc_with_gnu_ld 0
