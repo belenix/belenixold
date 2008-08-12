@@ -82,7 +82,6 @@ export CFLAGS_FOR_TARGET="-g -O3"
 export LDFLAGS="%_ldflags %gnu_lib_path"
 export LD_OPTIONS="%ld_options %gnu_lib_path"
 
-%define build_gcc_with_gnu_ld 1
 %if %build_gcc_with_gnu_ld
 export LD="/usr/gnu/bin/ld"
 %endif
@@ -207,6 +206,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Aug 12 2008 - moinakg@belenix.org
+- Change to use Solaris linker by default. GNU linker does not support versioned
+- symbols in shared libraries.
 * Tue Jun 26 2008 - russiaen39@gmail.com
 - fixed libunwind bug. See http://gcc.gnu.org/bugzilla/show_bug.cgi?id=27880
 * Mon Jun 23 2008 - russiane39@gmail.com
