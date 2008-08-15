@@ -1,0 +1,16 @@
+# Sample 'admin' file, to change the behaviour of pkg-get
+# If you copy this file to /var/pkg-get/admin, it will use it
+# to override the system defaults set in /var/sadm/install/admin/default
+# If you use this override file, be 100% sure you trust the source
+# of packages that you point pkg-get to.
+mail=
+instance=overwrite
+partial=nocheck
+runlevel=nocheck
+idepend=nocheck
+rdepend=nocheck
+space=nocheck
+setuid=nocheck
+conflict=nocheck
+action=nocheck
+basedir=default
