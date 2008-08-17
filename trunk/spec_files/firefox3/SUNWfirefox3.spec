@@ -55,7 +55,6 @@ Requires: SUNWlibC
 Requires: SUNWlibms
 Requires: SUNWtls
 Requires: SUNWlibmsr
-Requires: SUNWfirefox
 BuildRequires: SUNWzip
 BuildRequires: SUNWgtar
 BuildRequires: SUNWgnome-config-devel
@@ -212,6 +211,8 @@ exit 0
 %endif
 
 %changelog
+* Sun Aug 17 2008 - moinakg@belenix.org
+- Remove circular dependency on self.
 * Thu May 22 2008 - dave.lin@sun.com
 - change to build pkg only if "--with-ff3" is specified, otherwisze build nothing
 - change to build as "SUNWfirefox" and as default browser

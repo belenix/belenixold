@@ -30,6 +30,7 @@ progname=$0
 # So make sure to use external binary.
 UNAME=/bin/uname
 AWK=nawk
+BAR="############################################################################"
 
 # The difference cases:
 #   pkg-get
@@ -527,28 +528,85 @@ function get_filename {
 # specific ones.
 function upgrade {
 	do_upgrade=1  #global var
-		
+
+	OCATALOGFILE=$CATALOGFILE
+	ODESCFILE=$DESCFILE
+	purl=$url
+	OIFS=$IFS
+
+	CATALOGS=""
+	SITES=""
+	upgradelist=""
+	for site in $pkgsites
+	do
+		SITE=${site##*//}
+		url=${site}/${RELEASE}/${rtype}
+		if [[ -z "$SITES" ]]
+		then
+			SITES=$SITE
+		else
+			SITES="$SITES ${SITE}"
+		fi
+	done
+
 	if [[ "$1" == "" ]] ; then
-		set -- `egrep -v '^#' $CATALOGFILE | $AWK '{print $1}'|sort -u`
-		print note: upgrading ALL INSTALLED PACKAGES
+		print NOTE: Upgrading ALL INSTALLED PACKAGES
 		upgrade_all=1  #global var
 
-		for name in $* ; do
-			pkgname=`$AWK '$1 == "'$name'" {print $3; exit;}' $CATALOGFILE`
-			if [[ -d $CHEATDIR/$pkgname ]] ; then
-				upgradelist="$name $upgradelist"
-			fi
+		for SITE in $SITES
+		do
+			CATALOGFILE=/var/pkg-get/catalog-$SITE
+			DESCFILE=/var/pkg-get/desc-$SITE
+			spkgs=`egrep -v '^#' $CATALOGFILE | $AWK '{printf("%s,%s ", $1, $3);}'|sort -u`
+
+			for nametuple in $spkgs ; do
+				#pkgname=`$AWK '$1 == "'$name'" {print $3; exit;}' $CATALOGFILE`
+				IFS=","
+				set -- $nametuple
+				IFS=$OIFS
+				name=$1
+				pkgname=$2
+				if [[ -d $CHEATDIR/$pkgname ]] ; then
+					upgradelist="${name},${SITE} $upgradelist"
+				fi
+			done
 		done
 		print Installed software packages:
 		print $upgradelist
-		set -- $upgradelist
+	else
+		# Since user specified specific packages, try to
+		# install/upgrade those
+		for name in $*
+		do
+			for SITE in $SITES
+			do
+				CATALOGFILE=/var/pkg-get/catalog-$SITE
+				DESCFILE=/var/pkg-get/desc-$SITE
+				pkgname=`$AWK '$1 == "'$name'" {print $3; exit;}' $CATALOGFILE`
+				if [[ -n "$pkgname" ]]
+				then
+					upgradelist="${name},${SITE} $upgradelist"
+					break
+				fi
+			done
+		done
 	fi
 
-	# Since user specified specific packages, try to
-	# install/upgrade those
-	for name in $* ; do
+	for uentry in $upgradelist ; do
+		IFS=","
+		set -- $uentry
+		name=$1
+		SITE=$2
+		IFS=$OIFS
+		url="http://${SITE}/${RELEASE}/${rtype}"
+		CATALOGFILE=/var/pkg-get/catalog-$SITE
+		DESCFILE=/var/pkg-get/desc-$SITE
 		install_one_software "$name"
 	done
+
+	CATALOGFILE=$OCATALOGFILE
+	DESCFILE=$ODESCFILE
+	url=$purl
 }
 
 # Given a SysV pkg name, look up the software package name for it in
@@ -586,10 +644,10 @@ function find_pkg_name {
 	fi
 
 	if [[ "$pkgname" == "" ]] ; then
-		# try name-version syntax now
-		# assume  XXX-YY-ZZ is XXX, ver YY-ZZ
-		soft=${findname%%-*}
-		find_version=${findname#*-}
+		# try name,version syntax now
+		# assume  XXX:YY-ZZ is XXX, ver YY-ZZ
+		soft=${findname%%:*}
+		find_version=${findname#*:}
 		pkgname=`$AWK '$1 ~ /^#/ {next} $1 == "'$soft'" && $2 == "'$find_version'" { print $3 }' $CATALOGFILE`
 
 	fi
@@ -684,9 +742,9 @@ function install_one_software {
 	i_sftname="$1"
 	i_remversion=""
 	case $i_sftname in
-		*-*)
-		i_remversion=${i_sftname#*-}
-		i_sftname=${i_sftname%%-*}
+		*:*)
+		i_remversion=${i_sftname#*:}
+		i_sftname=${i_sftname%%:*}
 		;;
 	esac
 
@@ -803,8 +861,31 @@ function install_software {
 		upgrade $*
 		return
 	fi
-	
+
 	for name in $* ; do
+		#
+		# Identify site containing packages. First site in list having the
+		# package is used.
+		#
+		pkgn=""
+		for site in $pkgsites
+		do
+			SITE=${site##*//}
+			url=${site}/${RELEASE}/${rtype}
+			CATALOGFILE=/var/pkg-get/catalog-$SITE
+			pkgn=`$AWK '$1 ~ /^#/ {next} $1 == "'$name'" { print $1; }' $CATALOGFILE`
+			if [[ -n "$pkgn" ]]
+			then
+				break
+			fi
+		done
+		if [[ -z "$pkgn" ]]
+		then
+			print ERROR: Package $name not found
+			print Perhaps you need to run pkg-get -U
+			exit 1
+		fi
+
 		install_one_software "$name"
 	done
 }
@@ -828,9 +909,9 @@ function remove_pkg {
 	rm_version=""
 	
 	case $rm_softname in
-		*-*)
-		rm_version=${rm_softname#*-}
-		rm_softname=${rm_softname%%-*}
+		*:*)
+		rm_version=${rm_softname#*:}
+		rm_softname=${rm_softname%%:*}
 		;;
 	esac
 
@@ -1121,7 +1202,7 @@ function install_pkg_file {
 		if [[ $? -ne 0 ]] ; then
 			print ERROR: could not install required dependancies for $pkgname
 			print "Once dependancies are up to date, call"
-			print "        $0 -i ${1%%-*}"
+			print "        $0 -i ${1%%,*}"
 			print "to (re)install"
 			
 			/bin/rm -r $pkgname $tmpfilename
@@ -1356,8 +1437,8 @@ function net_install {
 	# It will be kept around until successful pkgadd only.
 	# remember, if the EXACT filename we need already exists, we should
 	# have already returned, earlier in this function
-	shortname=${net_name%%-*}
-	rm -f -- "$shortname"-*
+	shortname=${net_name%%:*}
+	rm -f -- "$shortname":*
 
 	grabfunc $graburl
 	if [[ $? -ne 0 ]] || [[ ! -s $net_name ]] ; then
@@ -1436,23 +1517,37 @@ function compare_pkg {
 		rem_rev="SAME"
 	fi
 	# match with headers in compare_installed
-	printf "%15s   %25s   %25s\n" 	"$software" "$localrev" "$rem_rev"
+	printf "%31s  %35s  %25s\n" 	"$software" "$localrev" "$rem_rev"
 
 }
 
 # This cross-references all known install packages that match
 # the catalog file, with the installed version, vs the potential version
 function compare_installed {
-	print "# (From site $url )"
+	purl=$url
+	OCATALOGFILE=$CATALOGFILE
+	ODESCFILE=$DESCFILE
+
+	for site in $pkgsites
+	do
+
+	SITE=${site##*//}
+	url=${site}/${RELEASE}/${rtype}
+	CATALOGFILE=/var/pkg-get/catalog-$SITE
+	DESCFILE=/var/pkg-get/desc-$SITE
+
+	print $BAR
+	print "# Comparing from site $site"
+	print $BAR
 
 	# match with output of compare_pkg
-	printf "%15s   %25s   %25s\n" "software" "localrev" "remoterev"
+	printf "%31s  %35s  %25s\n" "Software" "Localrev" "Remoterev"
 
 	if [[ "$1" = "" ]] ; then
 		egrep -v '^#' $CATALOGFILE | while read line ; do
 			compare_pkg $line
 		done
-		return
+		continue
 	fi
 	while [[ "$1" != "" ]] ; do
 		$AWK '$1 == "'$1'" {print}' $CATALOGFILE | read line
@@ -1460,6 +1555,10 @@ function compare_installed {
 		shift
 	done
 
+	done
+	CATALOGFILE=$OCATALOGFILE
+	DESCFILE=$ODESCFILE
+	url=$purl
 }
 
 
@@ -1567,6 +1666,8 @@ function verify_catalog {
 #    rushing out a quick bugfix right now)
 
 function update_catalog {
+	typeset -A failures
+
 	OSREV=$OSREV
 	CPU=$CPU
 
@@ -1580,18 +1681,36 @@ function update_catalog {
 	# note: we first download catalog with name of "catalog".
 	# but then we rename it to the site-specific catalog name
 
+	#
+	# Update catalog for each site
+	#
+	purl=$url
+	OCATALOGFILE=$CATALOGFILE
+	ODESCFILE=$DESCFILE
+	failed_sites=""
+	errored=0
+
+	for site in $pkgsites
+	do
+
+	SITE=${site##*//}
+	url=${site}/${RELEASE}/${rtype}
+	CATALOGFILE=/var/pkg-get/catalog-$SITE
+	DESCFILE=/var/pkg-get/desc-$SITE
 	rm -f catalog
 
 	grabfunc $url/$CPU/$OSREV/catalog
 	if [[ $? -ne 0 ]] ; then
-		print ERROR: could not get catalog file
 		cleanup
-		exit 1
+		failed_sites="$failed_sites $site"
+		failures["$site"]="ERROR: could not get catalog file"
+		errored=1
 	fi
 	if [[ ! -s catalog ]] ; then
-		print ERROR: catalog file is zero length. Removing and quitting.
 		rm catalog
-		return
+		failed_sites="$failed_sites $site"
+		failures["$site"]="ERROR: catalog file is zero length. Removing and quitting."
+		errored=1
 	fi
 
 	grep -l 'BEGIN PGP SIGNED MESSAGE' catalog >/dev/null
@@ -1599,9 +1718,10 @@ function update_catalog {
 		# Has a PGP/GPG signature...
 		verify_catalog
 		if [[ $? -ne 0 ]] ; then
-			print "Catalog failed signature verify. Quitting."
 			cleanup
-			exit 1
+			failed_sites="$failed_sites $site"
+			failures["$site"]="Catalog failed signature verify. Quitting."
+			errored=1
 		fi
 	fi
 
@@ -1616,10 +1736,27 @@ function update_catalog {
 		mv descriptions $DESCFILE
 		print Updated description file
 	else
-		print Failed to get a description file
+		print WARNING: Failed to get a description file for site $site
 	fi
 
+	done
 
+	if [ $errored -ne 0 ]
+	then
+		echo ""
+		echo ""
+		echo "ERROR: Failed to update catalog for some sites. Log follows: "
+		for site in $failed_sites
+		do
+			echo "$site :: "
+			echo "      ${failures[$site]}"
+		done
+		exit 1
+	fi
+
+	url=$purl
+	CATALOGFILE=$OCATALOGFILE
+	DESCFILE=$ODESCFILE
 }
 
 
@@ -1844,6 +1981,7 @@ check_conffile
 
 . $CONFFILE
 
+url=`echo $pkgsites | cut -f1 -d" "`
 if [[ "$url" == "" ]] ; then
 	print ERROR: url variable not set in $CONFFILE
 	exit 1
@@ -1855,8 +1993,7 @@ then
         RELEASE=`cat /etc/release_tag`
 fi
 
-url=${url}/${RELEASE}/${repo}
-
+url=${url}/${RELEASE}/${rtype}
 
 OSREV=`$UNAME -r`
 CPU=`$UNAME -p`
@@ -1886,6 +2023,7 @@ while getopts "dDSs:uUacfhilrv" mode_var ; do
 	;;
 	s)
 		url=$OPTARG
+		pkgsites=$url
 	;;
 	u)
 		mode=upgrade
@@ -2161,9 +2299,25 @@ case "$mode" in
 			cleanup
 			exit 1
 		fi
-		print "#  (From site $url)"
-		$AWK '$1 ~ /^#/ {next}
-			{printf("%20s %15s\n",$1,$2);}' $CATALOGFILE | $PAGER
+		purl=$url
+		OCATALOGFILE=$CATALOGFILE
+		for site in $pkgsites
+		do
+			SITE=${site##*//}
+			url=${site}/${RELEASE}/${rtype}
+			CATALOGFILE=/var/pkg-get/catalog-$SITE
+
+			(print $BAR
+			print "# Showing packages from site $site"
+			print $BAR
+			$AWK '$1 ~ /^#/ {next}
+			{printf("%35s %15s\n",$1,$2);}' $CATALOGFILE
+			print $BAR
+			print "End of package list from site $site"
+			print $BAR) | $PAGER
+		done
+		CATALOGFILE=$OCATALOGFILE
+		url=$purl
 	;;
 	compare)
 		if [[ -d "$1" ]] ; then
