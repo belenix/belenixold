@@ -31,6 +31,7 @@ progname=$0
 UNAME=/bin/uname
 AWK=nawk
 BAR="############################################################################"
+ALTROOT=${PKG_GET_ALTROOT:-}
 
 # The difference cases:
 #   pkg-get
@@ -51,51 +52,6 @@ case $progname in
 		progdir=`/bin/pwd`
 	;;
 esac
-
-# This block attempts to be "intelligent", and keep pkg-get to be
-# distribution-neutral, while still being able to look in distribution-specific
-# locations.
-# IFF it is installed in /opt/csw/bin/pkg-get, for example, it will look first
-# in /opt/csw/etc/pkg-get.conf, then /etc/opt/csw/pkg-get.conf for an
-# override. Only if it cannot find either of them, will it look in
-# /etc/pkg-get.conf
-#
-case $progdir in
-	*/bin)
-		prefix=${progdir%/bin}
-		conffile=$prefix/etc/pkg-get.conf
-		if [[ -f $conffile ]] ; then
-			CONFFILE=$conffile
-		fi
-		shortprefix=${prefix##*/}
-		if [[ -f /etc/opt/$shortprefix/pkg-get.conf ]] ; then
-			CONFFILE=/etc/opt/$shortprefix/pkg-get.conf
-		fi
-		unset conffile
-
-		if [[ "$CONFFILE" = "" ]] && [[ -d /etc/opt/$shortprefix ]] && [[ ! -f /etc/pkg-get.conf ]]
-		then
-			# do this, so that the default conf file will
-			# get created in THIS location, rather than
-			# /etc/pkg-get.conf
-			CONFFILE=/etc/opt/$shortprefix/pkg-get.conf
-		fi
-
-		if [ -f $prefix/etc/release_tag ]
-		then
-			RELEASE=`cat /etc/release_tag`
-		fi
-		;;
-esac
-
-
-
-# last-ditch fallback: look in /etc, if we cant tell a "normal" prefix
-CONFFILE=${CONFFILE:-/etc/pkg-get.conf}
-
-PAGER=${PAGER:-more}
-CHEATDIR=/var/sadm/pkg
-PKGASKDIR=/var/pkg-get/pkgask
 
 
 if [[ "$TMPDIR" != "" ]] ; then
@@ -175,27 +131,35 @@ function usage {
 	print 'pkg-get,   by Philip Brown , phil@bolthole.com'
 	print ' (Internal SCCS code revision 3.11)'
 	print Originally from http://www.bolthole.com/solaris/pkg-get.html
+	print Enhanced for BeleniX by Moinak Ghosh moinakg@belenix.org
 	print ""
 	print "pkg-get is used to install free software packages"
 	print "pkg-get"
 	print "Need one of 'install', 'upgrade', 'available','compare'"
-	print "  '-i|install'   installs a package"
-	print "  '-u|upgrade'   upgrades already installed packages if possible"
-	print "  '-a|available' lists the available packages in the catalog"
-	print "  '-c|compare'   shows installed package versions vs available"
-	print "  '-l|list'      shows installed packages by software name only"
+	print "  '-i|install'    Installs a package"
+	print "  '-u|upgrade'    Upgrades already installed packages if possible"
+	print "  '-a|available'  Lists the available packages in the catalog"
+	print "  '-c|compare'    Shows installed package versions vs available"
+	print "  '-l|list'       Shows installed packages by software name only"
+	print "  '-I|init <dir>' Initialize an Alternate Root image in the given dir"
+	print "                  The dir is created if it does not exist"
 	print ""
 	print "Optional modifiers:"
-	print "  '-d|download'  just download the package, not install"
-	print "  '-D|describe'  describe available packages, or search for one"
-	print "  '-U|updatecatalog'   updates download site inventory"
-	print "  '-S|sync'      Makes update mode sync to version on mirror site"
+	print "  '-d|download'   Just download the package, not install"
+	print "  '-D|describe'   Describe available packages, or search for one"
+	print "  '-U|updatecatalog'   Updates download site inventory"
+	print "  '-S|sync'       Makes update mode sync to version on mirror site"
 	
-	print "  '-f'           dont ask any questions: force default pkgadd behaviour"
-	print "                 Normally used with an override admin file"
-	print "                 See /var/pkg-get/admin-fullauto"
+	print "  '-f'            Dont ask any questions: force default pkgadd behaviour"
+	print "                  Normally used with an override admin file"
+	print "                  See /var/pkg-get/admin-fullauto"
 	print ""
-	print "  '-s ftp://site/dir'  temporarily override site to get from"
+	print "  '-R <dir>'      Perform all operations onto an Alternate Root image in the dir"
+	print "  '-s ftp://site/dir'  Temporarily override site to get from"
+	print ""
+	print "Environment Valriables:"
+	print "  'PKG_GET_ALTROOT' Directory that contains an Alternate root image"
+	print "                    This variable can be used in lieu of -R"
 }
 
 
@@ -411,7 +375,7 @@ function newer_rev {
 # return 1 if not installed, 0 otherwise.
 function get_pkg_versionfield {
 	#pkgname="$1"
-	vtmp=`pkgparam $1 VERSION 2>/dev/null`
+	vtmp=`pkgparam $PKGFLAGS $1 VERSION 2>/dev/null`
 	if [[ "$vtmp" == "" ]] ; then
 		return 1
 	fi
@@ -555,8 +519,8 @@ function upgrade {
 
 		for SITE in $SITES
 		do
-			CATALOGFILE=/var/pkg-get/catalog-$SITE
-			DESCFILE=/var/pkg-get/desc-$SITE
+			CATALOGFILE=${ALTROOT}/var/pkg-get/catalog-$SITE
+			DESCFILE=${ALTROOT}/var/pkg-get/desc-$SITE
 			spkgs=`egrep -v '^#' $CATALOGFILE | $AWK '{printf("%s,%s ", $1, $3);}'|sort -u`
 
 			for nametuple in $spkgs ; do
@@ -580,8 +544,8 @@ function upgrade {
 		do
 			for SITE in $SITES
 			do
-				CATALOGFILE=/var/pkg-get/catalog-$SITE
-				DESCFILE=/var/pkg-get/desc-$SITE
+				CATALOGFILE=${ALTROOT}/var/pkg-get/catalog-$SITE
+				DESCFILE=${ALTROOT}/var/pkg-get/desc-$SITE
 				pkgname=`$AWK '$1 == "'$name'" {print $3; exit;}' $CATALOGFILE`
 				if [[ -n "$pkgname" ]]
 				then
@@ -599,8 +563,8 @@ function upgrade {
 		SITE=$2
 		IFS=$OIFS
 		url="http://${SITE}/${RELEASE}/${rtype}"
-		CATALOGFILE=/var/pkg-get/catalog-$SITE
-		DESCFILE=/var/pkg-get/desc-$SITE
+		CATALOGFILE=${ALTROOT}/var/pkg-get/catalog-$SITE
+		DESCFILE=${ALTROOT}/var/pkg-get/desc-$SITE
 		install_one_software "$name"
 	done
 
@@ -872,7 +836,7 @@ function install_software {
 		do
 			SITE=${site##*//}
 			url=${site}/${RELEASE}/${rtype}
-			CATALOGFILE=/var/pkg-get/catalog-$SITE
+			CATALOGFILE=${ALTROOT}/var/pkg-get/catalog-$SITE
 			pkgn=`$AWK '$1 ~ /^#/ {next} $1 == "'$name'" { print $1; }' $CATALOGFILE`
 			if [[ -n "$pkgn" ]]
 			then
@@ -894,9 +858,9 @@ function install_software {
 # instances of it.
 function remove_sysv_pkg {
 	if [[ -d $CHEATDIR/$1 ]] ; then
-		pkgrm $ADMINFLAG ${1}'.*'
+		pkgrm $PKGFLAGS $ADMINFLAG ${1}'.*'
 	elif [ -d $CHEATDIR/$1.* ] ; then   # MUST use single [] here
-		pkgrm $ADMINFLAG ${1}'.*'
+		pkgrm $PKGFLAGS $ADMINFLAG ${1}'.*'
 	fi
 	
 }
@@ -990,7 +954,7 @@ function handle_dependancies {
 
 	removelist=`$AWK ' $1 == "I" {print $2}' $1`
 	for removepkg in $removelist ; do
-		pkginfo -q $removepkg
+		pkginfo $PKGFLAGS -q $removepkg
 		if (( $? == 0 )) ; then
 			print ""
 			print Removing designated conflict package $removepkg
@@ -1001,7 +965,7 @@ function handle_dependancies {
 
 	dependlist=`$AWK ' $1 == "P" {print $2}' $1`
 	for dependpkg in $dependlist ; do
-		pkginfo -q $dependpkg
+		pkginfo $PKGFLAGS -q $dependpkg
 		if [[ $? -ne 0 ]] ; then
 			# Dependancy not installed. So install it.
 
@@ -1027,7 +991,7 @@ function handle_dependancies {
 			upgrade $dependsoftname
 
 			#did it work?
-			pkginfo -q $dependpkg 2>/dev/null
+			pkginfo $PKGFLAGS -q $dependpkg 2>/dev/null
 			if [[ $? -ne 0 ]] ; then
 				print ERROR: install of $dependpkg failed
 				return 1
@@ -1174,7 +1138,7 @@ function install_pkg_file {
 
 	pkgname=`$AWK 'NR==2 {print $1;exit}' $filename`
 	# Special-case pkg upgrade of 'wget' package. use failsafe version
-	typeset fallbackdir=/var/pkg-get/`$UNAME -p`
+	typeset fallbackdir=${ALTROOT}/var/pkg-get/`$UNAME -p`
 	case $pkgname in
 		*[A-Z]wget)
 			if [[ ! -d $fallbackdir ]] ; then
@@ -1533,8 +1497,8 @@ function compare_installed {
 
 	SITE=${site##*//}
 	url=${site}/${RELEASE}/${rtype}
-	CATALOGFILE=/var/pkg-get/catalog-$SITE
-	DESCFILE=/var/pkg-get/desc-$SITE
+	CATALOGFILE=${ALTROOT}/var/pkg-get/catalog-$SITE
+	DESCFILE=${ALTROOT}/var/pkg-get/desc-$SITE
 
 	print $BAR
 	print "# Comparing from site $site"
@@ -1671,9 +1635,9 @@ function update_catalog {
 	OSREV=$OSREV
 	CPU=$CPU
 
-	if [[ ! -d /var/pkg-get ]] ; then
-		print Warning: making /var/pkg-get
-		mkdir /var/pkg-get
+	if [[ ! -d ${ALTROOT}/var/pkg-get ]] ; then
+		print Warning: making ${ALTROOT}/var/pkg-get
+		mkdir ${ALTROOT}/var/pkg-get
 	fi
 
 
@@ -1695,8 +1659,8 @@ function update_catalog {
 
 	SITE=${site##*//}
 	url=${site}/${RELEASE}/${rtype}
-	CATALOGFILE=/var/pkg-get/catalog-$SITE
-	DESCFILE=/var/pkg-get/desc-$SITE
+	CATALOGFILE=${ALTROOT}/var/pkg-get/catalog-$SITE
+	DESCFILE=${ALTROOT}/var/pkg-get/desc-$SITE
 	rm -f catalog
 
 	grabfunc $url/$CPU/$OSREV/catalog
@@ -1868,7 +1832,7 @@ function dir_compare_one {
 	tmppkg="$2"
 	tmpver=`grep VERSION $tmpdir/$tmppkg/pkginfo`
 	tmpver=${tmpver#VERSION=}
-	tmpoldver=`grep VERSION /var/sadm/pkg/$tmppkg/pkginfo 2>/dev/null`
+	tmpoldver=`grep VERSION ${ALTROOT}/var/sadm/pkg/$tmppkg/pkginfo 2>/dev/null`
 	if (( $? == 0 )) ; then
 		tmpoldver=${tmpoldver#VERSION=}
 		if [[ "$tmpoldver" == "$tmpver" ]] ; then
@@ -1949,13 +1913,13 @@ function dir_install_one {
 	# so that we effectively "upgrade" any pre-existing package
 	if [[ -f /var/sadm/pkg/$tmppkg ]] ; then
 		print "Removing old version of package"
-		pkgrm $ADMINFLAG $tmppkg
+		pkgrm $PKGFLAGS $ADMINFLAG $tmppkg
 	fi
 	for f in /var/sadm/pkg/${tmppkg}.* ; do
 		if [[ -d $f ]] ; then
 			f=${f##*/}
 			print "Removing old instance $f"
-			pkgrm $ADMINFLAG $f
+			pkgrm $PKGFLAGS $ADMINFLAG $f
 		fi
 	done
 
@@ -1969,35 +1933,14 @@ function dir_install_one {
 ###############################################################################
 
 
-###### First, basic config file parsing, and variable setup
-
 if [[ "$1" == "" ]] ; then
 	usage
 	exit 1
 fi
 
-
-check_conffile
-
-. $CONFFILE
-
-url=`echo $pkgsites | cut -f1 -d" "`
-if [[ "$url" == "" ]] ; then
-	print ERROR: url variable not set in $CONFFILE
-	exit 1
-fi
-
-RELEASE=belenix_0.7.1
-if [ -f /etc/release_tag ]
-then
-        RELEASE=`cat /etc/release_tag`
-fi
-
-url=${url}/${RELEASE}/${rtype}
-
 OSREV=`$UNAME -r`
 CPU=`$UNAME -p`
-
+PKGFLAGS=""
 
 ######################################################################
 # Arg parsing time. There's a whole lot of different ways to pass args.
@@ -2008,7 +1951,7 @@ CPU=`$UNAME -p`
 # explicitly defaulting these vars to 0 allows for faster compares
 export debug=0 do_upgrade=0 downloadonly=0 upgrade_all=0
 
-while getopts "dDSs:uUacfhilrv" mode_var ; do
+while getopts "dDSs:R:I:uUacfhilrv" mode_var ; do
 	case $mode_var in
 	d)
 		mode=install
@@ -2052,6 +1995,28 @@ while getopts "dDSs:uUacfhilrv" mode_var ; do
 	S)
 		sync=true
 	;;
+	R)
+		if [ ! -d ${OPTARG}/var/pkg-get ]
+		then
+			print "ERROR: Alternate Root image in dir $OPTARG does not exist"
+			print "       Please run $0 -I ${OPTARG} to initialize the Alternate"
+			print "       Root image."
+			exit 1
+		fi
+		PKGADDFLAGS="-R $OPTARG $PKGADDFLAGS"
+		PKGFLAGS="-R $OPTARG"
+		ALTROOT=$OPTARG
+	;;
+	I)
+		mode=init
+		ALT=$OPTARG
+		if [[ -z "$ALT" ]]
+		then
+			usage
+			exit 1
+		fi
+		do_update=1
+	;;
 	*)
 		usage
 		exit 1
@@ -2060,12 +2025,40 @@ while getopts "dDSs:uUacfhilrv" mode_var ; do
 done
 shift $(($OPTIND - 1 ))
 
+
+
+###### Now, basic config file parsing, and variable setup
+
+CONFFILE=${ALTROOT}/etc/pkg-get.conf
+check_conffile
+
+. $CONFFILE
+
+url=`echo $pkgsites | cut -f1 -d" "`
+if [[ "$url" == "" ]] ; then
+	print ERROR: url variable not set in $CONFFILE
+	exit 1
+fi
+
+RELEASE=belenix_0.7.1
+if [ -f ${ALTROOT}/etc/release_tag ]
+then
+        RELEASE=`cat ${ALTROOT}/etc/release_tag`
+fi
+
+url=${url}/${RELEASE}/${rtype}
+
 # Set these AFTER -s arg has been checked!
 # Precedence for SITE is: commandline, conf file, fallback
 SITE=${url##*//}
 SITE=${SITE%%/*}
-CATALOGFILE=/var/pkg-get/catalog-$SITE
-DESCFILE=/var/pkg-get/desc-$SITE
+CATALOGFILE=${ALTROOT}/var/pkg-get/catalog-$SITE
+DESCFILE=${ALTROOT}/var/pkg-get/desc-$SITE
+
+PAGER=${PAGER:-more}
+CHEATDIR=${ALTROOT}/var/sadm/pkg
+PKGASKDIR=${ALTROOT}/var/pkg-get/pkgask
+
 
 ############################################################
 # This type of arg parsing is to keep some sort of compatibility
@@ -2114,6 +2107,13 @@ case "$1" in
 	sync|--sync)
 		sync=true
 		shift
+	;;
+	init|--init)
+		mode=init
+		shift
+		ALT=$1
+		shift
+		[ -z "$ALT" ] && mode=help
 	;;
 	moo|--moo)
 		mode=moo
@@ -2245,8 +2245,8 @@ fi
 #
 # -n means "ask no questions". If you dont have the fullauto version,
 # perhaps you dont want the -n flag here.
-if [[ -f /var/pkg-get/admin ]] ; then
-	ADMINFLAG="-a /var/pkg-get/admin"
+if [[ -f ${ALTROOT}/var/pkg-get/admin ]] ; then
+	ADMINFLAG="-a ${ALTROOT}/var/pkg-get/admin"
 fi
 if [[ "$force" != "" ]] ; then
 	ADMINFLAG="-n $ADMINFLAG"
@@ -2280,6 +2280,26 @@ EOF
 PATH=$PATH:/usr/sbin
 
 case "$mode" in
+
+	init)
+		if [[ ! -d $ALT ]] || [[ ! -d $ALT/var/pkg-get ]]
+		then
+			mkdir -p $ALT
+			mkdir ${ALT}/etc
+			chmod 0755 ${ALT}/etc
+			chown root:sys ${ALT}/etc
+			mkdir -p ${ALT}/var/pkg-get/downloads
+			chmod 0755 ${ALT}/var ${ALT}/var/pkg-get ${ALT}/var/pkg-get/downloads
+			chown root:sys ${ALT}/var
+			chown root:bin ${ALT}/var/pkg-get
+		fi
+		PKGADDFLAGS="-R $ALT $PKGADDFLAGS"
+		PKGGET_DOWNLOAD_DIR=${ALT}/var/pkg-get/downloads
+		make_download_dir
+		install_software SFEpkgget SUNWsolnm
+		ALTROOT=$ALT
+		update_catalog
+	;;
 	upgrade)
 		if [[ -d "$1" ]] ; then
 			dir_install $*
@@ -2305,7 +2325,7 @@ case "$mode" in
 		do
 			SITE=${site##*//}
 			url=${site}/${RELEASE}/${rtype}
-			CATALOGFILE=/var/pkg-get/catalog-$SITE
+			CATALOGFILE=${ALTROOT}/var/pkg-get/catalog-$SITE
 
 			(print $BAR
 			print "# Showing packages from site $site"

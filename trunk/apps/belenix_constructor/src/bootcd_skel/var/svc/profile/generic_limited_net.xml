@@ -122,7 +122,7 @@
     <instance name='default' enabled='true'/>
   </service>
   <service name='network/smtp' version='1' type='service'>
-    <instance name='sendmail' enabled='true'/>
+    <instance name='sendmail' enabled='false'/>
   </service>
   <service name='network/inetd' version='1' type='restarter'>
     <instance name='default' enabled='true'/>
