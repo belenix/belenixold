@@ -11,6 +11,7 @@ Summary:             SUN Math library and microtasking library
 Version:             1.0
 Source0:             http://dlc.sun.com/osol/devpro/downloads/current/devpro-libm-src-20060131.tar.bz2
 Source1:             http://dlc.sun.com/osol/devpro/downloads/current/devpro-libmtsk-bins-20060228.i386.tar.gz
+Source2:             http://www.belenix.org/binfiles/libm-sun-freebsd-schily-0.3.tar.bz2
 
 URL:                 http://dlc.sun.com/osol/devpro/downloads/current/
 SUNW_BaseDir:        %{_basedir}
