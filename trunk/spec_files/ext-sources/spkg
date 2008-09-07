@@ -1,0 +1,44 @@
+#!/usr/bin/python
+#
+#    Advanced SVR4 package and repository management layer
+#    Copyright (C) 2008  The BeleniX team
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#    Author: Moinak Ghosh
+#
+
+#
+# All the real implementation is in spkg_mod so that we get benefitted
+# by Python bytecode pre-compilation
+#
+from spkg_mod import *
+
+if __name__ == "__main__":
+	try:
+
+		ret = load_config()
+		if (ret == 0):
+			ret = do_main()
+	except SystemExit, e:
+		raise e
+	except KeyboardInterrupt:
+		print "Interrupted"
+		sys.exit(1)
+	except:
+		traceback.print_exc()
+		sys.exit(99)
+	sys.exit(ret)
+
