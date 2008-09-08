@@ -43,6 +43,7 @@ class Cl_pkgentry(object):
 		self.pkgname = entry[2]
 		self.pkgfile = entry[3]
 		self.md5sum = entry[4]
+		self.origvers = entry[5]
 		self.sitevars = sitevars
 		self.refername = ""
 		self.deplist = []
@@ -72,6 +73,7 @@ class Cl_sitevars(object):
 		self.tmeta = "%s/metainfo.tar.7z" % SPKG_VAR_DIR
 		self.tmetadir = "%s/metainfo" % SPKG_VAR_DIR
 		self.tdesc = "%s/descriptions" % SPKG_VAR_DIR 
+		self.catfh = None
 
 		
 class Cl_vars(object):
@@ -99,7 +101,7 @@ class Cl_vars(object):
 		# Fields numbers in a catalog entry for a package
 		self.CNAMEF = 0; self.VERSIONF = 1
 		self.PKGNAMEF = 2; self.PKGFILEF = 3
-		self.MD5SUMF = 4
+		self.MD5SUMF = 4; self.ORIGVERSF = 5
 
 		# Action codes for packages
 		self.INSTALL = 1; self.UPGRADE = 2
@@ -191,9 +193,9 @@ def exec_prog(cmd, outp):
 
 	if rt != 0:
 		err_file.seek(0)
-		print >> sys.stderr, \
-		    "WARNING: " + cmd + " had errors\n" + err_file.read()
-		output = "-EE-"
+		err = PKGError("WARNING: " + cmd + " had errors\n" + err_file.read())
+		err_file.close()
+		raise err
 	err_file.close()
 
 	return string.strip(output)
@@ -202,7 +204,6 @@ def exec_prog(cmd, outp):
 def load_config():
 	"""Load configuration file and also detect environment settings."""
 
-	rt = 0
 	# Hardcoded for now
 	vars.cnffile = "/etc/spkg.conf"
 	com = re.compile("^#")
@@ -244,17 +245,12 @@ def load_config():
 	vars.OSREL = exec_prog("uname -r", 1)
 	vars.ARCH = exec_prog("uname -p", 1)
 
-	if vars.OSREL == "-EE-" or vars.ARCH == "-EE-":
-		rt = 1
-	else:
-		# Initialize site-specific variables
-		#
-		for site in vars.PKGSITES:
-			sitevars = Cl_sitevars(site, \
-			    vars.RELEASE, vars.RTYPE, vars.SPKG_VAR_DIR)
-			vars.PKGSITEVARS.append(sitevars)
-
-	return rt
+	# Initialize site-specific variables
+	#
+	for site in vars.PKGSITES:
+		sitevars = Cl_sitevars(site, \
+		    vars.RELEASE, vars.RTYPE, vars.SPKG_VAR_DIR)
+		vars.PKGSITEVARS.append(sitevars)
 
 #
 # Download from a given URL to a given file. It can also take
@@ -268,25 +264,16 @@ def downloadurl(url, targ):
 	if url[:7] == "file://":
 		fl = url[8:]
 		if not os.path.isfile(fl):
-			print >> sys.stderr, \
-			    "ERROR: file %s does not exist" % fl
-			return 1
+			raise PKGError("ERROR: file %s does not exist" % fl)
 		shutil.copyfile(fl, targ)
 	elif url[:6] == "ftp://":
 		wgetopts = "-O %s --passive-ftp" %targ
 
-	ret = 0
 	out = exec_prog("%s %s %s" % (vars.WGET, wgetopts, url), 0)
-	if out == "-EE-":
-		ret = -1
-	else:
-		sz = 0
-		try:
-			sz = os.path.getsize(targ)
-		except OSError, o:
-			pass
-		ret = sz
-	return ret
+	sz = 0
+	sz = os.path.getsize(targ)
+	if sz == 0:
+		raise PKGError("Catalog file is of zero length")
 
 #
 # Given a package revision string of the form:
@@ -432,15 +419,12 @@ def updatecatalog(vars, pargs):
 		#
 		# Try to fetch the catalog first
 		#
-		ret = downloadurl("%s/%s/%s/catalog" % (sv.fullurl, vars.ARCH, vars.OSREL), 
-		    sv.tcat)
-		if ret <= 0:
-			if ret < 0:
-				failed_sites.append((sv.site, \
-				    _("ERROR: Could retrieve catalog file")))
-			else:
-				failed_sites.append((sv.site, \
-				    _("ERROR: catalog file is zero length.")))
+		try:
+			downloadurl("%s/%s/%s/catalog" % (sv.fullurl, vars.ARCH, vars.OSREL), 
+	 		    sv.tcat)
+		except PKGError, pe:
+			failed_sites.append((sv.site, \
+			    _("ERROR fetching catalog file %s\n" % pe.message)))
 			errored = 1
 			removef(sv.tcat)
 			continue
@@ -453,45 +437,48 @@ def updatecatalog(vars, pargs):
 		#
 		# Try to fetch the metainfo. This is required
 		#
-		ret = downloadurl("%s/trunk/%s/%s/%s/metainfo.tar.7z" % \
-		    (sv.site, vars.RTYPE, vars.ARCH, vars.OSREL), sv.tmeta)
-		if ret <= 0:
-			if ret < 0:
-				failed_sites.append((sv.site, \
-				    _("ERROR: Could not retrieve metainfo")))
-			else:
-				failed_sites.append((sv.site, \
-				    _("ERROR: metainfo is zero length.")))
+		try:
+			downloadurl("%s/trunk/%s/%s/%s/metainfo.tar.7z" % \
+			    (sv.site, vars.RTYPE, vars.ARCH, vars.OSREL), sv.tmeta)
+		except PKGError, pe:
+			failed_sites.append((sv.site, \
+			    _("ERROR fetching metainfo %s\n" % pe.message)))
 			errored = 1
 			removef(sv.tmeta)
 			continue
-		else:
-			## TODO GPG signature checking
-			print "\nUpdating metainfo for site %s\n" % sv.site
+		
+		## TODO GPG signature checking
+		print "\nUpdating metainfo for site %s\n" % sv.site
+		try:
 			out = exec_prog("%s e -so %s | (cd %s; tar xf -)" % \
 			    (vars.SZIP, sv.tmeta, vars.SPKG_VAR_DIR), 0)
-			if out == "-EE-":
-				failed_sites.append((sv.site, \
-				    _("ERROR: Could not extract metainfo")))
-				errored = 1
-				removef(sv.tmeta)
-				shutil.rmtree(sv.tmetadir, True)
-				continue
-			shutil.rmtree(sv.metadir, True)
-			os.rename(sv.tmetadir, sv.metadir)
+		except PKGError, pe:
+			failed_sites.append((sv.site, \
+			    _("ERROR: Could not extract metainfo %s\n" % pe.message)))
+			errored = 1
 			removef(sv.tmeta)
+			shutil.rmtree(sv.tmetadir, True)
+			continue
+
+		shutil.rmtree(sv.metadir, True)
+		os.rename(sv.tmetadir, sv.metadir)
+		removef(sv.tmeta)
 
 		# Now fetch descriptions file if any
 		removef(sv.tdesc)
-		downloadurl("%s/%s/%s/descriptions" % (sv.fullurl, vars.ARCH, vars.OSREL), sv.tdesc)
 		sz = 0
 		try:
+			downloadurl("%s/%s/%s/descriptions" % \
+			    (sv.fullurl, vars.ARCH, vars.OSREL), sv.tdesc)
 			sz = os.path.getsize(sv.tdesc)
 			if sz > 0:
 				shutil.copyfile(sv.tdesc, sv.desc)
 			removef(sv.tdesc)
 		except OSError, o:
 			removef(sv.tdesc)
+		except PKGError, pe:
+			removef(sv.tdesc)
+
 	if errored == 1:
 		print "\n\n"
 		print "ERROR: Failed to update metadata for some sites. Log follows: \n"
@@ -513,7 +500,7 @@ def updatecatalog(vars, pargs):
 # subsequent recursive calls always pass type as 0 since for both upgrade
 # and install dependencies my need to be upgraded or installed.
 #
-def build_pkglist(vars, pkgs, pdict, type):
+def do_build_pkglist(vars, pkgs, pdict, type):
 	"""Build a complete list of packages to be installed/upgraded
 	including resolved dependencies"""
 
@@ -526,7 +513,8 @@ def build_pkglist(vars, pkgs, pdict, type):
 	# package is used.
 	#
 	for sv in vars.PKGSITEVARS:
-		catf = open(sv.catalog, "r")
+		catf = sv.catfh
+		catf.seek(0)
 
 		# All packages already found in an earlier site, so bail
 		if len(pkgs) == 0: break
@@ -536,7 +524,7 @@ def build_pkglist(vars, pkgs, pdict, type):
 		rmlist = []
 		for line in catf:
 			entry = line.split(" ")
-			if len(entry) != 5: continue
+			if len(entry) != 6: continue
 			for name in pkgs:
 				if name == entry[vars.CNAMEF] or name == entry[vars.PKGNAMEF]:
 					nm = entry[vars.PKGNAMEF]
@@ -554,7 +542,6 @@ def build_pkglist(vars, pkgs, pdict, type):
 		#
 		for name in rmlist:
 			pkgs.remove(name)
-	catf.close()
 
 	# Check for packages not found
 	if len(pkgs) > 0:
@@ -625,13 +612,27 @@ def build_pkglist(vars, pkgs, pdict, type):
 		# If we are installing, we only install not upgrade any packages.
 		# TODO: Advanced version based dependency checks will change this
 		#
-		ret = build_pkglist(vars, deplist, pdict, 1)
+		ret = do_build_pkglist(vars, deplist, pdict, 1)
 	else:
 		#
 		# If we are upgrading we can install or upgrade dependencies as
 		# well.
 		#
-		ret = build_pkglist(vars, deplist, pdict, 0)
+		ret = do_build_pkglist(vars, deplist, pdict, 0)
+
+	return ret
+
+def build_pkglist(vars, pkgs, pdict, type):
+	"""Wrapper for do_build_pkglist to open and close catalog file handles."""
+
+	for sv in vars.PKGSITEVARS:
+		sv.catfh = open(sv.catalog, "r")
+
+	ret = do_build_pkglist(vars, pkgs, pdict, type)
+
+	for sv in vars.PKGSITEVARS:
+		sv.catfh.close()
+		sv.catfh = None
 
 	return ret
 
@@ -645,15 +646,19 @@ def install_pkg(vars, ent, pkgfile):
 
 	pkgfileds = pkgfile + ".tmp"
 
-	ret = exec_prog("7za e -so %s > %s" % (pkgfile, pkgfileds), 0)
-	if ret == "-EE-":
+	try:
+		exec_prog("%s e -so %s > %s" % (self.SZIP, pkgfile, pkgfileds), 0)
+	except PKGError, pe:
 		os.unlink(pkgfile);  os.unlink(pkgfileds)
-		raise PKGError("Failed to decompress package %s" % ent.refername)
+		raise PKGError("Failed to decompress package %s\n%s" % \
+		    (ent.refername, pe.message))
 
-	ret = exec_prog("pkgadd %s -d %s %s" % (PKGADDFLAGS, pkgfileds, ent.pkgname), 0)
-	if ret == "-EE-":
+	try:
+		exec_prog("/usr/sbin/pkgadd %s -d %s %s" % (PKGADDFLAGS, pkgfileds, ent.pkgname), 0)
+	except PKGError, pe:
 		os.unlink(pkgfile);  os.unlink(pkgfileds)
-		raise PKGError("Failed to install package %s" % ent.refername)
+		raise PKGError("Failed to install package %s" % \
+		    (ent.refername, pe.message))
 
 	os.unlink(pkgfile);  os.unlink(pkgfileds)
 
@@ -667,6 +672,7 @@ def install(vars, pargs):
 		    "No packages specified to install."
 		return
 
+	print "** Computing dependencies and building package list\n"
 	#########################################
 	# Installation plan creation phase
 	#########################################
@@ -699,6 +705,7 @@ def install(vars, pargs):
 			graphdict[name] = [name]
 
 	sorted_list = tsort.robust_topological_sort(graphdict)
+	print "** Installing packages\n"
 	#########################################
 	# End of Installation plan creation phase
 	#########################################
@@ -709,15 +716,11 @@ def install(vars, pargs):
 			pkgurl = "%s/%s/%s/%s" % \
 			    (ent.sitevars.fullurl, vars.ARCH, vars.OSREL, ent.pkgfile)
 			tfile = "%s/%s" % (vars.SPKG_DWN_DIR, ent.pkgfile)
-			ret = downloadurl(pkgurl, tfile)
-
-			if ret <=0:
-				print >> sys.stderr, \
-				    "FATAL: Download failed for package %s" % \
-				    ent.refername
-				return 1
+			downloadurl(pkgurl, tfile)
 			if ent.action == vars.INSTALL:
 				install_pkg(vars, ent, tfile)
+
+	print "\n** Installation Complete\n"
 
 	return ret
 
@@ -725,6 +728,34 @@ def upgrade(vars, pargs):
 	return 0
 
 def available(vars, pargs):
+	"""List all available packages in all catalogs."""
+
+	pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
+	out = pipe.stdin
+	for sv in vars.PKGSITEVARS:
+		catf = open(sv.catalog, "r")
+		print >> out, "############################################################################"
+		print >> out, "# Showing packages from site %s" % sv.site
+		print >> out, "############################################################################"
+
+		try:
+			for line in catf:
+				line = line.strip()
+				entry = line.split(" ")
+				if len(entry) != 6: continue
+
+				print >> out, "%34s %15s" % (entry[vars.CNAMEF], entry[vars.ORIGVERSF])
+		except IOError, ie:
+			pass
+		catf.close()
+
+		print >> out, "############################################################################"
+		print >> out, "# End of packages from site %s" % sv.site
+		print >> out, "############################################################################"
+
+	pipe.stdin.close()
+	pipe.wait()
+
 	return 0
 
 def compare(vars, pargs):

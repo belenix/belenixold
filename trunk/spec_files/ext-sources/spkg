@@ -29,9 +29,8 @@ from spkg_mod import *
 if __name__ == "__main__":
 	try:
 
-		ret = load_config()
-		if (ret == 0):
-			ret = do_main()
+		load_config()
+		ret = do_main()
 	except SystemExit, e:
 		raise e
 	except KeyboardInterrupt:
