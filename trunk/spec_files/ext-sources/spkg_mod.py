@@ -29,6 +29,7 @@ import gettext
 import string
 import tsort
 import time
+import sha
 from stat import *
 from subprocess import *
 from urlparse import urlparse
@@ -42,19 +43,20 @@ class Cl_pkgentry(object):
 		self.version = entry[1]
 		self.pkgname = entry[2]
 		self.pkgfile = entry[3]
-		self.md5sum = entry[4]
+		self.sha1sum = entry[4]
 		self.origvers = entry[5]
 		self.sitevars = sitevars
 		self.refername = ""
 		self.deplist = []
 		self.action = 0
+		self.dwn_pkgfile = ""
 
 	def update(self, entry, sitevars):
 		self.cname = entry[0]
 		self.version = entry[1]
 		self.pkgname = entry[2]
 		self.pkgfile = entry[3]
-		self.md5sum = entry[4]
+		self.sha1sum = entry[4]
 		self.sitevars = sitevars
 		
 
@@ -105,6 +107,7 @@ class Cl_vars(object):
 
 		# Action codes for packages
 		self.INSTALL = 1; self.UPGRADE = 2
+		self.REMOVE = 3
 
 	def set_altroot(self, apath):
 		if self.ALTROOT == "":
@@ -120,6 +123,14 @@ class Cl_vars(object):
 			self.ADMINFILE = self.ADMINFILE.replace(self.ALTROOT, apath)
 			self.ALTROOT = apath
 
+class TransformPlan:
+	"""Holds a set of packages and actions to perform on those packages
+	for a given filesystem image"""
+
+	def __init__(self, vars, pdict, sorted_list):
+		self.vars = vars
+		self.pdict = pdict
+		self.sorted_list = sorted_list
 
 class PKGVersError(Exception):
 	"""Invalid version exception"""
@@ -129,6 +140,18 @@ class PKGVersError(Exception):
 
 class PKGError(Exception):
 	"""General packaging error"""
+
+	def __init__(self, message):
+		self.message = message
+
+class PKGCksumError(Exception):
+	"""Package checksum verification error"""
+
+	def __init__(self, message):
+		self.message = message
+
+class PKGMetaError(Exception):
+	"""Metainfo processing error"""
 
 	def __init__(self, message):
 		self.message = message
@@ -155,7 +178,6 @@ Subcommands:
 	spkg init <dir>      Initialize an Alternate Root image in the fiven dir
 			     The dir is created if it does not exist
 	spkg download	     Just download the package, do not install
-	spkg describe        List one line descriptions for all available packages
 
 Options:
 	-R <dir>             Perform all operations onto an Alternate Root image in the dir
@@ -252,6 +274,22 @@ def load_config():
 		    vars.RELEASE, vars.RTYPE, vars.SPKG_VAR_DIR)
 		vars.PKGSITEVARS.append(sitevars)
 
+def verify_sha1sum(ent, dfile):
+	"""Verify the SHA1 checksum for the downloaded package file"""
+
+	shash = sha.new()
+	fh = open(dfile, "rb")
+	while 1:
+		buf = fh.read(16 * 1024)
+		if not buf:
+			break
+		shash.update(buf)
+	fh.close()
+	dig = shash.hexdigest()
+
+	if not dig == ent.sha1sum:
+		raise PKGCksumError("Failed to verify Checksum for package %s" % ent.refername)
+
 #
 # Download from a given URL to a given file. It can also take
 # a file:// url in which case it copies the given file.
@@ -299,6 +337,9 @@ def compute_version(verstr):
 	cnv1 = Decimal(535680);  cnv2 = Decimal(44640)
 	cnv3 = Decimal(1440);    cnv4 = Decimal(60)
 
+	#
+	# Process revision strings of various known formats
+	#
 	if ln == 8:
 		pkgrev = Decimal(rv[3]) * cnv1 + Decimal(rv[4]) * cnv2 + \
 		    Decimal(rv[5]) * cnv3 + Decimal(rv[6]) * cnv4 + Decimal(rv[7])
@@ -316,7 +357,35 @@ def compute_version(verstr):
 		    Decimal(rv[2]) * cnv3 + Decimal(rv[3]) * cnv4 + Decimal(rv[4])
 
 
-	version = version.replace(".", "").ljust(8, "0")
+	version = version.replace(".", "")
+	#
+	# Handle alphanumeric chars in version string. The alpha chars are stripped
+	# and their ASCII values added up. The sum is then added to the 8-digit
+	# version number.
+	#
+	tot = len(version)
+	cnt = 0
+	alphasum = 0
+	vstr = []
+	while cnt < tot:
+		dig = version[cnt]
+		try:
+			n = int(dig)
+			vstr.append(dig)
+		except ValueError:
+			alphasum = alphasum + ord(dig)
+		cnt = cnt + 1
+
+	if alphasum > 0:
+		ver = Decimal(''.join(vstr))
+		ver = Decimal(str(ver).ljust(8, "0")) + Decimal(cnt)
+		version = str(ver)
+	else:
+		version = version.ljust(8, "0")
+
+	#
+	# Now prepare a version string with a dot after every 4 digits
+	#
 	revline = version + str(pkgrev)
 	tot = len(revline)
 	cnt = 0
@@ -374,20 +443,51 @@ def compare_vers(vstr1, vstr2):
 	"""Compare the complete version string"""
 
 	ver1 = Decimal(vstr1.replace(".", ""))
-	ver1 = Decimal(vstr2.replace(".", ""))
+	ver2 = Decimal(vstr2.replace(".", ""))
 
-	return str(ver1.compare(ver1))
+	return cmp(ver1, ver2)
 
 def fetch_local_version(vars, pkgname):
 	"""Return the installed package version in uniform version format"""
 
-	vf = open("%/%s/pkginfo" % (vars.INSTPKGDIR, pkgname))
+	vf = open("%s/%s/pkginfo" % (vars.INSTPKGDIR, pkgname), "r")
 	for line in vf:
 		if line[0:4] == "VERS":
 			vf.close()
-			return (compute_version(line.strip()))
+			ver = line.strip()
+			cver = compute_version(ver)
+			return (cver, ver)
+	vf.close()
 
 	raise PKGVersError("FATAL: VERSION field not found for package %s" % pkgname)
+
+def fetch_metainfo_fields(site, pkgname, version, fnames):
+	"""Fetch one or more pkginfo fields(given by fnames list) from the site's metainfo dir"""
+
+	pkginf = "%s/%s/%s/pkginfo" % (site.metadir, pkgname, version)
+	pf = open(pkginf, "r")
+	nmdict = {}
+	for fname in fnames:
+		nmdict[fname] = ""
+
+	for line in pf:
+		fentry = line.split("=")
+		fname = fentry[0].strip()
+		if nmdict.has_key(fname):
+			if len(fentry) > 2:
+				fvalue = '='.join(fentry[1:])
+			else:
+				fvalue = fentry[1]
+			nmdict[fname] = fvalue.strip()
+	pf.close()
+
+	fvalues = []
+	for fname in fnames:
+		if not nmdict.has_key(fname):
+			raise PKGMetaError("FATAL: %s field not found for package %s" % (fname, pkgname))
+		fvalues.append(nmdict[fname])
+
+	return fvalues
 
 #
 # Generic catalog search routine to support spkg search
@@ -565,7 +665,7 @@ def do_build_pkglist(vars, pkgs, pdict, type):
 				return 1
 			elif type == 2 or type == 0:
 				localver = fetch_local_version(vars, pkgname)
-				if compare_vers(localver, pdict[pkgname].version) > 0:
+				if compare_vers(localver[0], pdict[pkgname].version) > 0:
 					pdict[pkgnamne].action = vars.UPGRADE
 				else:
 					print >> sys.stderr, \
@@ -580,6 +680,7 @@ def do_build_pkglist(vars, pkgs, pdict, type):
 				    "Package %s is not installed" % name
 				return 1
 
+		# TODO: Handle incompatibles
 		depends = "%s/%s/%s/depend" % (pdict[pkgname].sitevars.metadir, \
 		    pkgname, pdict[pkgname].version)
 		depf = open(depends, "r")
@@ -647,7 +748,7 @@ def install_pkg(vars, ent, pkgfile):
 	pkgfileds = pkgfile + ".tmp"
 
 	try:
-		exec_prog("%s e -so %s > %s" % (self.SZIP, pkgfile, pkgfileds), 0)
+		exec_prog("%s e -so %s > %s" % (vars.SZIP, pkgfile, pkgfileds), 0)
 	except PKGError, pe:
 		os.unlink(pkgfile);  os.unlink(pkgfileds)
 		raise PKGError("Failed to decompress package %s\n%s" % \
@@ -662,26 +763,14 @@ def install_pkg(vars, ent, pkgfile):
 
 	os.unlink(pkgfile);  os.unlink(pkgfileds)
 
-#
-# Main package installation routine
-#
-def install(vars, pargs):
-	"""Install one or more packages listed on the command line"""
-	if len(pargs) == 0:
-		print >> sys.stderr, \
-		    "No packages specified to install."
-		return
+def create_plan(vars, pargs, action):
+	"""Create a TransformPlan that contains a set of package transforms for the given action"""
 
-	print "** Computing dependencies and building package list\n"
-	#########################################
-	# Installation plan creation phase
-	#########################################
-	ret = 0
 	pdict = {}
-	ret = build_pkglist(vars, pargs, pdict, 1)
+	ret = build_pkglist(vars, pargs, pdict, action)
 
 	if ret != 0:
-		return ret
+		return None
 
 	#
 	# We now have a dictionary of the full list of package objects to be installed
@@ -705,20 +794,92 @@ def install(vars, pargs):
 			graphdict[name] = [name]
 
 	sorted_list = tsort.robust_topological_sort(graphdict)
-	print "** Installing packages\n"
+	tplan = TransformPlan(vars, pdict, sorted_list)
+
+	return tplan
+
+def download_packages(tplan):
+	"""Download all packages in mentioned in the transform plan"""
+
+	vars = tplan.vars
+	for titem in tplan.sorted_list:
+		for pkgname in titem:
+			ent = tplan.pdict[pkgname]
+			if ent.action != vars.INSTALL and ent.action != vars.UPGRADE:
+				continue
+			pkgurl = "%s/%s/%s/%s" % \
+			    (ent.sitevars.fullurl, vars.ARCH, vars.OSREL, ent.pkgfile)
+			tfile = "%s/%s" % (vars.SPKG_DWN_DIR, ent.pkgfile)
+			ent.dwn_pkgfile = tfile
+
+			#
+			# If the file is already downloaded then check the sha1sum
+			#
+			verify = 1
+			if os.path.isfile(tfile):
+				try:
+					print "*** Package %s already downloaded\n" % ent.cname
+					print "*** Verifying SHA1 Checksum\n"
+					verify_sha1sum(ent, tfile)
+					verify = 0
+				except:
+					print "*** Checksum does not match re-downloading"
+					removef(tfile)
+					downloadurl(pkgurl, tfile)
+			else:
+				downloadurl(pkgurl, tfile)
+
+			if verify == 1:
+				print "*** Verifying SHA1 Checksum for package %s\n" % ent.cname
+				try:
+					verify_sha1sum(ent, tfile)
+				except:
+					print "*** Checksum verification failed. Retrying download"
+					removef(tfile)
+					downloadurl(pkgurl, tfile)
+					verify_sha1sum(ent, tfile)
+
+#
+# Main package installation routine
+#
+def install(vars, pargs, downloadonly):
+	"""Install one or more packages listed on the command line"""
+
+	if len(pargs) == 0:
+		print >> sys.stderr, \
+		    "No packages specified to install."
+		return
+
+	print "** Computing dependencies and building package list\n"
+	#########################################
+	# Installation plan creation phase
+	#########################################
+	ret = 0
+	tplan = create_plan(vars, pargs, vars.INSTALL)
+	if not tplan:
+		return 1
 	#########################################
 	# End of Installation plan creation phase
 	#########################################
 
-	for titem in sorted_list:
+	print "** Downloading packages\n"
+	#
+	# First download all the files and verify checksums. verify_sha1sum raises
+	# and exception if checksum verification fails.
+	#
+	download_packages(tplan)
+
+	if downloadonly == 1:
+		print "** Download complete\n"
+		return ret
+
+	print "** Installing packages\n"
+	# Now perform all the install actions
+	for titem in tplan.sorted_list:
 		for pkgname in titem:
-			ent = pdict[pkgname]
-			pkgurl = "%s/%s/%s/%s" % \
-			    (ent.sitevars.fullurl, vars.ARCH, vars.OSREL, ent.pkgfile)
-			tfile = "%s/%s" % (vars.SPKG_DWN_DIR, ent.pkgfile)
-			downloadurl(pkgurl, tfile)
+			ent = tplan.pdict[pkgname]
 			if ent.action == vars.INSTALL:
-				install_pkg(vars, ent, tfile)
+				install_pkg(vars, ent, ent.dwn_pkgfile)
 
 	print "\n** Installation Complete\n"
 
@@ -728,30 +889,66 @@ def upgrade(vars, pargs):
 	return 0
 
 def available(vars, pargs):
-	"""List all available packages in all catalogs."""
+	"""List latest versions and descriptions of available packages in all catalogs."""
 
+	pdict = {}
 	pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
 	out = pipe.stdin
 	for sv in vars.PKGSITEVARS:
 		catf = open(sv.catalog, "r")
+
 		print >> out, "############################################################################"
 		print >> out, "# Showing packages from site %s" % sv.site
 		print >> out, "############################################################################"
 
+		# depends = "%s/%s/%s/depend" % (pdict[pkgname].sitevars.metadir, \
+		#    pkgname, pdict[pkgname].version)
+
+		ioerr = 0
 		try:
+			nm1 = ""
+			version = ""
+			pkgname = ""
+			origversion = ""
+
 			for line in catf:
 				line = line.strip()
 				entry = line.split(" ")
 				if len(entry) != 6: continue
 
-				print >> out, "%34s %15s" % (entry[vars.CNAMEF], entry[vars.ORIGVERSF])
+				nm = entry[vars.CNAMEF]
+				if len(nm1) == 0:
+					nm1 = nm
+					version = entry[vars.VERSIONF]
+					origvers = entry[vars.ORIGVERSF]
+					pkgname = entry[vars.PKGNAMEF]
+
+				elif nm != nm1:
+					# Extract description from pkginfo
+					desc = fetch_metainfo_fields(sv, pkgname, version, ["DESC"])
+
+					print >> out, "%33s: %s\n%33s  %s\n" % \
+					    (nm1, desc[0], " ", origvers)
+					nm1 = nm
+					version = entry[vars.VERSIONF]
+					origvers = entry[vars.ORIGVERSF]
+					pkgname = entry[vars.PKGNAMEF]
+
+				elif compare_vers(entry[vars.VERSIONF], version) > 0:
+					version = entry[vars.VERSIONF]
+					origvers = entry[vars.ORIGVERSF]
 		except IOError, ie:
-			pass
+			ioerr = 1
+			if ie.errno == 32:
+				pass
+			else:
+				raise ie
 		catf.close()
 
-		print >> out, "############################################################################"
-		print >> out, "# End of packages from site %s" % sv.site
-		print >> out, "############################################################################"
+		if ioerr == 0:
+			print >> out, "############################################################################"
+			print >> out, "# End of packages from site %s" % sv.site
+			print >> out, "############################################################################"
 
 	pipe.stdin.close()
 	pipe.wait()
@@ -759,16 +956,102 @@ def available(vars, pargs):
 	return 0
 
 def compare(vars, pargs):
+	"""Compare installed packages with ones in the preferred catalogs"""
+
+	bold = "\033[1m"
+	reset = "\033[0;0m"
+
+	pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
+	out = pipe.stdin
+	for sv in vars.PKGSITEVARS:
+		catf = open(sv.catalog, "r")
+
+		print >> out, "############################################################################"
+		print >> out, "# Processing packages from site %s" % sv.site
+		print >> out, "############################################################################"
+		print >> out, "%33s %35s %s\n" % ("Package Name", "Local Vers", "Avail Vers")
+		ioerr = 0
+		pdict = {}
+		try:
+			for line in catf:
+				line = line.strip()
+				entry = line.split(" ")
+				if len(entry) != 6: continue
+
+				#
+				# Skip if this entry was already compared earlier
+				#
+				nm = entry[vars.CNAMEF]
+				if pdict.has_key(nm):
+					continue
+
+				pdict[nm] = ""
+				pkgname = entry[vars.PKGNAMEF]
+
+				#
+				# We want the latest pkg revision here.
+				# Current symlink in the pkg's metainfo dir always points to the
+				# latest version, so we cheat via readlink.
+				#
+				curr = "%s/%s/current" % (sv.metadir, pkgname)
+				version = os.readlink(curr).strip()
+				fields = fetch_metainfo_fields(sv, pkgname, version, ["VERSION", "DESC"])
+				verstr = fields[0].replace(",REV=", "(") + ")"
+				desc = fields[1]
+
+				if os.path.exists("%s/%s" % (vars.INSTPKGDIR, pkgname)):
+					localver = fetch_local_version(vars, pkgname)
+					lv = localver[1].replace("VERSION=", "").replace(",REV=", "(") + ")"
+
+					try:
+						cmp = compare_vers(version, localver[0])
+					except InvalidOperation, inv:
+						print >> out, traceback.format_exc()
+						print >> out, "%s, %s" % (version, localver[0])
+						ioerr = 1
+
+					if cmp <= 0:
+						print >> out, "%34s: %s\n%34s: %s\n" % \
+						    (nm, desc, lv, verstr)
+
+					elif cmp > 0:
+						print >> out, "%34s: %s\n%34s: %s\n" % \
+						    ("*" + nm, desc, lv, verstr)
+				else:
+					print >> out, "%34s: %s\n%34s: %s\n" % \
+					    (nm, desc, "(Not Installed)", verstr)
+
+		except IOError, ie:
+			ioerr = 1
+			if ie.errno == 32:
+				pass
+			else:
+				raise ie
+		except:
+			print >> out, traceback.format_exc()
+			ioerr = 1
+
+		if ioerr == 0:
+			print >> out, "############################################################################"
+			print >> out, "# End of packages from site %s" % sv.site
+			print >> out, "############################################################################"
+
+	pipe.stdin.close()
+	pipe.wait()
 	return 0
 
 def list(vars, pargs):
 	return 0
 
 def download(vars, pargs):
-	return 0
+	"""Only download packages do not install."""
 
-def describe(vars, pargs):
-	return 0
+	#
+	# Call install with the download flag set. It will cause the package tree
+	# to be resolved and downloaded but not installed.
+	#
+	ret = install(vars, pargs, 1)
+	return ret
 
 def info(vars, pargs):
 	return 0
@@ -821,7 +1104,7 @@ def do_main():
 	if subcommand == "updatecatalog":
 		ret = updatecatalog(vars, pargs)
 	elif subcommand == "install":
-		ret = install(vars, pargs)
+		ret = install(vars, pargs, 0)
 	elif subcommand == "upgrade":
 		ret = upgrade(vars, pargs)
 	elif subcommand == "available":
