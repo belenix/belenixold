@@ -67,14 +67,14 @@ class Cl_sitevars(object):
 		so = urlparse(site)
 		self.site = site
 		self.psite = so
-                self.fullurl = "%s/%s/%s" % (site, RELEASE, RTYPE)
-                self.catalog = "%s/catalog-%s" % (SPKG_VAR_DIR, so[1])
-                self.desc = "%s/desc-%s" % (SPKG_VAR_DIR, so[1])
-                self.metadir = "%s/metainfo-%s" % (SPKG_VAR_DIR, so[1])
+		self.fullurl = "%s/%s/%s" % (site, RELEASE, RTYPE)
+		self.trunkurl = "%s/trunk/%s" % (site, RTYPE)
+		self.catalog = "%s/catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
+		self.metadir = "%s/metainfo-%s" % (SPKG_VAR_DIR, so[1])
+		self.base_cluster = {}
 		self.tcat = "%s/catalog" % SPKG_VAR_DIR
 		self.tmeta = "%s/metainfo.tar.7z" % SPKG_VAR_DIR
 		self.tmetadir = "%s/metainfo" % SPKG_VAR_DIR
-		self.tdesc = "%s/descriptions" % SPKG_VAR_DIR 
 		self.catfh = None
 
 		
@@ -95,10 +95,11 @@ class Cl_vars(object):
 		self.CPU = "i386"
 		self.SPKG_VAR_DIR = "/var/spkg"
 		self.SPKG_DWN_DIR = "/var/spkg/downloads"
-		self.RELEASE = "belenix_0.7.1"
+		self.RELEASE = "trunk"
 		self.PKGSITEVARS = []
 		self.INSTPKGDIR = "/var/sadm/pkg"
 		self.ADMINFILE = self.SPKG_VAR_DIR + "/admin"
+		self.RELEASES_LIST = "%s/releases" % self.SPKG_VAR_DIR
 
 		# Fields numbers in a catalog entry for a package
 		self.CNAMEF = 0; self.VERSIONF = 1
@@ -107,30 +108,36 @@ class Cl_vars(object):
 
 		# Action codes for packages
 		self.INSTALL = 1; self.UPGRADE = 2
-		self.REMOVE = 3
+		self.UPGRADE_BASE = 3; self.UPGRADE_ALL = 4
+		self.REMOVE = 5
 
 	def set_altroot(self, apath):
 		if self.ALTROOT == "":
-			self.ALTROOT = ""
-			self.SPKG_VAR_DIR = apath + self.SPKG_VAR_DIR
-        		self.SPKG_DWN_DIR = apath + self.SPKG_DWN_DIR
-        		self.INSTPKGDIR = apath + self.INSTPKGDIR
-        		self.ADMINFILE = apath + self.ADMINFILE
+			if apath[-1] == "/":
+				apath = apath.rstrip('/')
+			self.ALTROOT = apath
+			self.SPKG_VAR_DIR = os.path.join(apath, self.SPKG_VAR_DIR)
+        		self.SPKG_DWN_DIR = os.path.join(apath, self.SPKG_DWN_DIR)
+        		self.INSTPKGDIR = os.path.join(apath, self.INSTPKGDIR)
+        		self.ADMINFILE = os.path.join(apath, self.ADMINFILE)
+			self.RELEASES_LIST = os.path.join(apath, self.RELEASES_LIST)
 		else:
 			self.SPKG_VAR_DIR = self.SPKG_VAR_DIR.replace(self.ALTROOT, apath)
 			self.SPKG_DWN_DIR = self.SPKG_DWN_DIR.replace(self.ALTROOT, apath)
 			self.INSTPKGDIR = self.INSTPKGDIR.replace(self.ALTROOT, apath)
 			self.ADMINFILE = self.ADMINFILE.replace(self.ALTROOT, apath)
+			self.RELEASES_LIST = self.RELEASES_LIST.replace(self.ALTROOT, apath)
 			self.ALTROOT = apath
 
 class TransformPlan:
 	"""Holds a set of packages and actions to perform on those packages
 	for a given filesystem image"""
 
-	def __init__(self, vars, pdict, sorted_list):
+	def __init__(self, vars, pdict, sorted_list, action):
 		self.vars = vars
 		self.pdict = pdict
 		self.sorted_list = sorted_list
+		self.action = action
 
 class PKGVersError(Exception):
 	"""Invalid version exception"""
@@ -165,14 +172,20 @@ Usage:
 
 Subcommands:
 	spkg updatecatalog   Updates download site metadata
-	spkg install [-nvq]  <package names>
+	spkg install         <package names>
 			     Install one or more packages/package clusters
-	spkg upgrade <Upgrade Type>|<package list>
+
+	spkg upgrade [<Upgrade Type> <release tag>]|[<package list>]
 			Upgrades already installed packages if possible
 			Upgrade type can be one of:
 			core - Upgrade the core distro (Kernel, core libs etc.)
 			all - Upgrade the entire distribution.
-	spkg available       Lists the available packages in all catalogs
+
+			release tag - The distro release to upgrade to for core or all.
+
+	spkg available [-r]  Lists the available packages in all sites
+                             With '-r' flag lists all the current distro releases
+                             available.
 	spkg compare         Shows installed package versions vs available
 	spkg list            List all installed packages by name
 	spkg init <dir>      Initialize an Alternate Root image in the fiven dir
@@ -182,10 +195,19 @@ Subcommands:
 Options:
 	-R <dir>             Perform all operations onto an Alternate Root image in the dir
 	-s http://site/dir   Temporarily override site to get from
+	-r <release tag>     Use packages from the given release tag overriding configuration
+	                     and environment settings. Specify 'trunk' to see latest packages.
 
 Environment Valriables:
 	ALTROOT		     Directory that contains an Alternate root image
 			     This variable can be used in lieu of -R
+	USE_RELEASE_TAG      Use the specified release tag for checking for packages.
+	                     This can be "trunk" to indicate use latest head packages.
+	                     The behavior is same as that of using 'spkg -l'
+	                     Alternatively this can mention a specific release like
+	                     belenix_0.7.1. Use spkg available -r to see list of possible
+	                     release tags.
+
 	http_proxy	     Http proxy server
 	ftp_proxy	     Ftp proxy server""")
 	sys.exit(2)
@@ -223,7 +245,7 @@ def exec_prog(cmd, outp):
 	return string.strip(output)
 
 
-def load_config():
+def load_config(use_site):
 	"""Load configuration file and also detect environment settings."""
 
 	# Hardcoded for now
@@ -240,8 +262,16 @@ def load_config():
 		if len(fields) < 2:
 			continue
 
+		if os.environ.has_key("USE_RELEASE_TAG"):
+			use_release = os.environ["USE_RELEASE_TAG"]
+		else:
+			use_release = ""
+
 		if fields[0] == "RTYPE":
 			vars.RTYPE = fields[1]
+		elif fields[0] == "USE_RELEASE_TAG":
+			if not os.environ.has_key("USE_RELEASE_TAG"):
+				use_release = fields[1].split(" ")
 		elif fields[0] == "PKGSITES":
 			vars.PKGSITES = fields[1].split(" ")
 		elif fields[0] == "FTP_PROXY":
@@ -267,12 +297,29 @@ def load_config():
 	vars.OSREL = exec_prog("uname -r", 1)
 	vars.ARCH = exec_prog("uname -p", 1)
 
+	#
+	# Use only package updates from release-specific repository if latest
+	# bleeding edge packages are not desired.
+	#
+	if len(use_release) == 0:
+		relfile = "%s/etc/release_tag" % vars.ALTROOT
+		if os.path.isfile(relfile):
+			rf = open(relfile, "r")
+			vars.RELEASE = string.strip(rf.readline())
+			rf.close()
+	else:
+		vars.RELEASE = use_release
+
 	# Initialize site-specific variables
 	#
+	if len(use_site) > 0:
+		vars.PKGSITES=[use_site]
+
 	for site in vars.PKGSITES:
 		sitevars = Cl_sitevars(site, \
-		    vars.RELEASE, vars.RTYPE, vars.SPKG_VAR_DIR)
+	    	vars.RELEASE, vars.RTYPE, vars.SPKG_VAR_DIR)
 		vars.PKGSITEVARS.append(sitevars)
+		
 
 def verify_sha1sum(ent, dfile):
 	"""Verify the SHA1 checksum for the downloaded package file"""
@@ -311,7 +358,7 @@ def downloadurl(url, targ):
 	sz = 0
 	sz = os.path.getsize(targ)
 	if sz == 0:
-		raise PKGError("Catalog file is of zero length")
+		raise PKGError("Downloaded file is of zero length")
 
 #
 # Given a package revision string of the form:
@@ -512,6 +559,7 @@ def updatecatalog(vars, pargs):
 
 	failed_sites = []
 	errored = 0
+	releases_found = 0
 
 	for sv in vars.PKGSITEVARS:
 		removef(sv.tcat)
@@ -524,7 +572,7 @@ def updatecatalog(vars, pargs):
 	 		    sv.tcat)
 		except PKGError, pe:
 			failed_sites.append((sv.site, \
-			    _("ERROR fetching catalog file %s\n" % pe.message)))
+			    _("ERROR fetching catalogs file %s\n" % pe.message)))
 			errored = 1
 			removef(sv.tcat)
 			continue
@@ -564,20 +612,21 @@ def updatecatalog(vars, pargs):
 		os.rename(sv.tmetadir, sv.metadir)
 		removef(sv.tmeta)
 
-		# Now fetch descriptions file if any
-		removef(sv.tdesc)
+		#
+		# The releases file provides a list of distro releases. A valid releases
+		# file found in the first site is used.
+		#
+		if releases_found == 1:
+			continue
+
+		# Now try to fetch the releases file
+		removef(vars.RELEASES_LIST)
 		sz = 0
 		try:
-			downloadurl("%s/%s/%s/descriptions" % \
-			    (sv.fullurl, vars.ARCH, vars.OSREL), sv.tdesc)
-			sz = os.path.getsize(sv.tdesc)
-			if sz > 0:
-				shutil.copyfile(sv.tdesc, sv.desc)
-			removef(sv.tdesc)
-		except OSError, o:
-			removef(sv.tdesc)
+			downloadurl("%s/trunk/releases" % sv.site, vars.RELEASES_LIST)
+			releases_found = 1
 		except PKGError, pe:
-			removef(sv.tdesc)
+			removef(vars.RELEASES_LIST)
 
 	if errored == 1:
 		print "\n\n"
@@ -586,6 +635,12 @@ def updatecatalog(vars, pargs):
 			print "%s :: \n" % stuple[0]
 			print "              %s\n" % stuple[1]
 		return 1
+
+	if releases_found == 0:
+		print "\n\n"
+		print "ERROR: The mandatory releases list not found in any site!\n"
+		return 1
+
 	return 0
 
 #
@@ -593,21 +648,21 @@ def updatecatalog(vars, pargs):
 # build a dependency sorted list. Rather it returns the fully resolved package
 # hash with all dependencies.
 # type == 1   Install packages
-# type == 2   Upgrade packages
-# type == 0   Do both
+# type == 2   Upgrade specified packages
+# type == 3   Upgrade base OS packages
+# type == 4   Upgrade all packages
 #
-# type is either 1 or 2 only at the top level invocation of this function.
-# subsequent recursive calls always pass type as 0 since for both upgrade
-# and install dependencies my need to be upgraded or installed.
+# A level argument is used to identify recursive calls for dependency handling.
+# This is needed since during dependency handling for either Install or Upgrade
+# dependencies my need to be upgraded or installed.
 #
-def do_build_pkglist(vars, pkgs, pdict, type):
+def build_pkglist(vars, pkgs, pdict, type, level):
 	"""Build a complete list of packages to be installed/upgraded
 	including resolved dependencies"""
 
 	if len(pkgs) == 0:
-		return 0
+		raise PKGError(_("No packages specified"))
 
-	ret = 0
 	#
 	# Identify site containing packages. First site in list having the
 	# package is used.
@@ -624,10 +679,20 @@ def do_build_pkglist(vars, pkgs, pdict, type):
 		rmlist = []
 		for line in catf:
 			entry = line.split(" ")
+
+			# Ignore invalid entry format
 			if len(entry) != 6: continue
 			for name in pkgs:
 				if name == entry[vars.CNAMEF] or name == entry[vars.PKGNAMEF]:
 					nm = entry[vars.PKGNAMEF]
+
+					# If we are requesting upgrade and package is in
+					# base cluster then reset upgrade type to all since
+					# we need to create a new boot environment.
+					#
+					if type == vars.UPGRADE and level == 0 and \
+					    sv.base_cluster.has_key(nm):
+						type = vars.UPGRADE_ALL
 					if pdict.has_key(nm):
 						if compare_vers(entry[vars.VERSIONF], \
 						    pdict[nm].version) > 0:
@@ -643,13 +708,19 @@ def do_build_pkglist(vars, pkgs, pdict, type):
 		for name in rmlist:
 			pkgs.remove(name)
 
-	# Check for packages not found
-	if len(pkgs) > 0:
-		print >> sys.stderr, \
-		    _("ERROR: The following packages not found in any catalog")
-		for name in pkgs:
-			print "%s " % name
-		return 1
+	if type == vars.UPGRADE_BASE:
+		# Check for installed base packages
+		for nm in pdict.keys():
+			if not os.path.isfile("%s/%s/pkginfo" % (vars.INSTPKGDIR, nm)):
+				del pdict[nm]
+
+	elif len(pkgs) > 0 and type != vars.UPGRADE_ALL:
+		# Check for packages not found. We ignore this check in upgrade all/base mode
+		# since there might be packages in the system that are not from our repo.
+		# Those are just retained as-is.
+		#
+		raise PKGError(_("ERROR: The following packages not found in any catalog\n" + \
+		    ' '.join(pkgs)))
 
 	deplist = []
 	for pkgname in pdict.keys():
@@ -659,11 +730,22 @@ def do_build_pkglist(vars, pkgs, pdict, type):
 		# and versions.
 		#
 		if os.path.exists("%s/%s" % (vars.INSTPKGDIR, pkgname)):
-			if type == 1:
-				print >> sys.stderr, \
-				    "Package %s already installed" % name
-				return 1
-			elif type == 2 or type == 0:
+			# Package exists
+			if type == vars.INSTALL:
+				if level == 0:
+					# Package specified by user is installed. Crib!
+					raise PKGError(_("Package %s already installed" % name))
+				else:
+					# We are in dependency handling. Ignore installed
+					# uptodate packages otherwise upgrade.
+					localver = fetch_local_version(vars, pkgname)
+					if compare_vers(localver[0], pdict[pkgname].version) > 0:
+						pdict[pkgnamne].action = vars.UPGRADE
+					else:
+						del pdict[pkgname]
+
+			elif type == vars.UPGRADE or type == vars.UPGRADE_BASE or \
+			    type == vars.UPGRADE_ALL:
 				localver = fetch_local_version(vars, pkgname)
 				if compare_vers(localver[0], pdict[pkgname].version) > 0:
 					pdict[pkgnamne].action = vars.UPGRADE
@@ -672,13 +754,15 @@ def do_build_pkglist(vars, pkgs, pdict, type):
 					    "Package %s is up to date\n", pkgname
 					del pdict[pkgname]
 		else:
-			if type == 1 or type == 0:
+			if type == vars.INSTALL:
 				pdict[pkgname].action = vars.INSTALL
 
-			elif type == 2:
-				print >> sys.stderr, \
-				    "Package %s is not installed" % name
-				return 1
+			elif type == vars.UPGRADE or type == vars.UPGRADE_BASE or \
+			    type == vars.UPGRADE_ALL:
+				if level == 0:
+					raise PKGError(_("Package %s is not installed" % name))
+				else:
+					pdict[pkgname].action = vars.INSTALL
 
 		# TODO: Handle incompatibles
 		depends = "%s/%s/%s/depend" % (pdict[pkgname].sitevars.metadir, \
@@ -691,51 +775,35 @@ def do_build_pkglist(vars, pkgs, pdict, type):
 				de = line.split(" ")
 
 				#
-				# Ignore already installed dependencies when installing.
+				# Ignore already installed dependencies in base_cluster when
+				# installing or when upgrading non-base packages.
 				#
-				if type == 1:
+				if type == vars.INSTALL or type == vars.UPGRADE:
 					if os.path.exists("%s/%s" % (vars.INSTPKGDIR, de[1])):
-						continue
+						isbase = 0
+						for sv in vars.PKGSITEVARS:
+							if sv.base_cluster.has_key(\
+							    pdict[pkgname].cname):
+								isbase = 1
+								break
+						if isbase == 1:
+							continue
+
+				pdict[pkgname].deplist.append(de[1])
 				try:
 					i = deplist.index(de[1])
 				except ValueError:
 					if not pdict.has_key(de[1]):
 						deplist.append(de[1])
-					pdict[pkgname].deplist.append(de[1])
 		depf.close()
 
 	#
 	# Recursion to scan the dependency list. Circular dependencies
 	# are taken care of by the pdict check above.
 	#
-	if type == 1:
-		#
-		# If we are installing, we only install not upgrade any packages.
-		# TODO: Advanced version based dependency checks will change this
-		#
-		ret = do_build_pkglist(vars, deplist, pdict, 1)
-	else:
-		#
-		# If we are upgrading we can install or upgrade dependencies as
-		# well.
-		#
-		ret = do_build_pkglist(vars, deplist, pdict, 0)
+	build_pkglist(vars, deplist, pdict, type, level + 1)
 
-	return ret
-
-def build_pkglist(vars, pkgs, pdict, type):
-	"""Wrapper for do_build_pkglist to open and close catalog file handles."""
-
-	for sv in vars.PKGSITEVARS:
-		sv.catfh = open(sv.catalog, "r")
-
-	ret = do_build_pkglist(vars, pkgs, pdict, type)
-
-	for sv in vars.PKGSITEVARS:
-		sv.catfh.close()
-		sv.catfh = None
-
-	return ret
+	return type
 
 def install_pkg(vars, ent, pkgfile):
 	"""Install the given package. pkgfile is a compressed 7Zip datastream package"""
@@ -767,10 +835,37 @@ def create_plan(vars, pargs, action):
 	"""Create a TransformPlan that contains a set of package transforms for the given action"""
 
 	pdict = {}
-	ret = build_pkglist(vars, pargs, pdict, action)
+	pkgs = []
 
-	if ret != 0:
-		return None
+	for sv in vars.PKGSITEVARS:
+		sv.catfh = open(sv.catalog, "r")
+		base_cluster = "%s/clusters/base_cluster" % sv.metadir
+		if os.path.isfile(base_cluster):
+			bfh = open(base_cluster, "r")
+			for line in bfh:
+				sv.base_cluster[line.strip()] = ""
+			bfh.close()
+
+	if action == vars.UPGRADE_ALL:
+		# Get list of packages installed in system.
+		pkgs = os.listdir(vars.INSTPKGDIR)
+
+	elif action == vars.UPGRADE_BASE:
+		# Build full list of base packages. Stripping out uninstalled base pkgs
+		# is handled in build_pkglist.
+		#
+		bset = set([])
+		for sv in vars.PKGSITEVARS:
+			bset = bset.union(sv.base_cluster.keys())
+		pkgs = list(bset)
+	else:
+		pkgs = pargs
+
+	action = build_pkglist(vars, pkgs, pdict, action)
+
+	for sv in vars.PKGSITEVARS:
+		sv.catfh.close()
+		sv.catfh = None
 
 	#
 	# We now have a dictionary of the full list of package objects to be installed
@@ -794,7 +889,7 @@ def create_plan(vars, pargs, action):
 			graphdict[name] = [name]
 
 	sorted_list = tsort.robust_topological_sort(graphdict)
-	tplan = TransformPlan(vars, pdict, sorted_list)
+	tplan = TransformPlan(vars, pdict, sorted_list, action)
 
 	return tplan
 
@@ -886,10 +981,41 @@ def install(vars, pargs, downloadonly):
 	return ret
 
 def upgrade(vars, pargs):
+	"""Upgrade specified packages or upgrade entire system"""
+
+	if len(pargs) == 0:
+		print >> sys.stderr, \
+		    "No packages specified to upgrade."
+		return
+
+	if pargs[0] == "base":
+		tplan = create_plan(vars, pargs, vars.UPGRADE_BASE)
+
+	elif pargs[0] == "all":
+		tplan = create_plan(vars, pargs, vars.UPGRADE_ALL)
+
+	else:
+		tplan = create_plan(vars, pargs, vars.UPGRADE)
+
 	return 0
 
 def available(vars, pargs):
 	"""List latest versions and descriptions of available packages in all catalogs."""
+
+	if pargs[0] == "-r":
+		# List all releases
+		relf = open(vars.RELEASES_LIST, "r")
+
+		print ""
+		print "######################################################"
+		print "# Listing current distro releases in descending order"
+		print "######################################################"
+		print "> trunk (Latest Head)"
+		for line in relf:
+			print "> %s" % line.strip()
+		print "######################################################\n"
+		relf.close()
+		return 0
 
 	pdict = {}
 	pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
@@ -897,15 +1023,15 @@ def available(vars, pargs):
 	for sv in vars.PKGSITEVARS:
 		catf = open(sv.catalog, "r")
 
-		print >> out, "############################################################################"
-		print >> out, "# Showing packages from site %s" % sv.site
-		print >> out, "############################################################################"
-
 		# depends = "%s/%s/%s/depend" % (pdict[pkgname].sitevars.metadir, \
 		#    pkgname, pdict[pkgname].version)
 
 		ioerr = 0
 		try:
+			print >> out, "############################################################################"
+			print >> out, "# Showing packages from site %s" % sv.site
+			print >> out, "############################################################################"
+
 			nm1 = ""
 			version = ""
 			pkgname = ""
@@ -1061,8 +1187,10 @@ def do_main():
 	gettext.install("spkg", "/usr/lib/locale");
 
 	ret = 0
+	use_site = ""
+
 	try:
-		opts, pargs = getopt.getopt(sys.argv[1:], "s:R:")
+		opts, pargs = getopt.getopt(sys.argv[1:], "s:R:r:")
 	except getopt.GetoptError, e:
 		print >> sys.stderr, \
 		    _("spkg: illegal global option -- %s") % e.opt
@@ -1083,6 +1211,10 @@ def do_main():
 	for opt, arg in opts:
 		if opt == "-R":
 			ALTROOT = arg
+		elif opt == "-r":
+			os.environ["USE_RELEASE_TAG"] = arg
+		elif opt == "-s":
+			use_site = arg
 
 	if os.environ.has_key("ALTROOT"):
 		ALTROOT = os.environ["ALTROOT"]
@@ -1095,11 +1227,7 @@ def do_main():
 			return 1
 		vars.set_altroot(ALTROOT)
 
-	relfile = "%s/etc/release_tag" % vars.ALTROOT
-	if os.path.isfile(relfile):
-		rf = open(relfile, "r")
-		vars.RELEASE = string.strip(rf.readline())
-		rf.close()
+	load_config(use_site)
 
 	if subcommand == "updatecatalog":
 		ret = updatecatalog(vars, pargs)
