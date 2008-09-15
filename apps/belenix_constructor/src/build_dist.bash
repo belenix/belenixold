@@ -30,6 +30,9 @@
 # onto the CDROM to get a bootable BeleniX Live CD/DVD.
 #
 
+PATH=/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin:/usr/gnu/bin
+export PATH
+
 id | grep "uid=[0-9](" >/dev/null
 if [ $? -ne 0 ] ; then
 	echo "You must run this script as root"
@@ -71,6 +74,7 @@ ADMIN_FILE=$TMPDIR/admin
 BOOT_ARCHIVE=$DIST_PROTO/boot/x86.microroot
 MICROROOT=$DIST_PROTO/bootcd_microroot
 RAMDISK_SIZE=88700
+#RAMDISK_SIZE=110000
 DIST_MICROROOT_LIST=$SRC/microroot_list
 
 # Set up root of the proto area
