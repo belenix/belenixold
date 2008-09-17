@@ -369,7 +369,13 @@ def downloadurl(url, targ):
 def compute_version(verstr):
 	"""Compute an uniform version string given a package revision string"""
 
-	_version, _revision = verstr.split(",")
+	verlst = verstr.split(",")
+	if len(verlst) > 1:
+		_version, _revision = verlst
+	else:
+		_version = verstr
+		_revision = "REV=1"
+
 	_revision.replace(".0", ".")
 	_revision.replace("..", ".0.")
 
@@ -399,9 +405,10 @@ def compute_version(verstr):
 	elif ln == 3:
 		pkgrev = Decimal(rv[0]) * cnv1 + Decimal(rv[1]) * cnv2 + Decimal(rv[2]) * cnv3
 	else:
-		rv = time.strftime("%Y.%m.%d.%H.%M")
-		pkgrev = Decimal(rv[0])  * cnv1 + Decimal(rv[1]) * cnv2 + \
-		    Decimal(rv[2]) * cnv3 + Decimal(rv[3]) * cnv4 + Decimal(rv[4])
+		#rv = time.strftime("%Y.%m.%d.%H.%M")
+		#pkgrev = Decimal(rv[0])  * cnv1 + Decimal(rv[1]) * cnv2 + \
+		#    Decimal(rv[2]) * cnv3 + Decimal(rv[3]) * cnv4 + Decimal(rv[4])
+		pkgrev= Decimal(1)
 
 
 	version = version.replace(".", "")
@@ -719,8 +726,8 @@ def build_pkglist(vars, pkgs, pdict, type, level):
 		# since there might be packages in the system that are not from our repo.
 		# Those are just retained as-is.
 		#
-		raise PKGError(_("ERROR: The following packages not found in any catalog\n" + \
-		    ' '.join(pkgs)))
+		raise PKGError("ERROR: The following packages not found in any catalog\n" + \
+		    ' '.join(pkgs))
 
 	deplist = []
 	for pkgname in pdict.keys():
@@ -748,11 +755,12 @@ def build_pkglist(vars, pkgs, pdict, type, level):
 			    type == vars.UPGRADE_ALL:
 				localver = fetch_local_version(vars, pkgname)
 				if compare_vers(localver[0], pdict[pkgname].version) > 0:
-					pdict[pkgnamne].action = vars.UPGRADE
+					pdict[pkgname].action = vars.UPGRADE
 				else:
-					print >> sys.stderr, \
-					    "Package %s is up to date\n", pkgname
+					#print >> sys.stderr, \
+					#    "Package %s is up to date\n" % pkgname
 					del pdict[pkgname]
+					continue
 		else:
 			if type == vars.INSTALL:
 				pdict[pkgname].action = vars.INSTALL
@@ -861,7 +869,7 @@ def create_plan(vars, pargs, action):
 	else:
 		pkgs = pargs
 
-	action = build_pkglist(vars, pkgs, pdict, action)
+	action = build_pkglist(vars, pkgs, pdict, action, 0)
 
 	for sv in vars.PKGSITEVARS:
 		sv.catfh.close()

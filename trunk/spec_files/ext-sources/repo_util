@@ -1,0 +1,604 @@
+#!/usr/bin/perl -w
+
+use strict;
+use Data::Dumper;
+use File::Path;
+use File::Copy;
+use Cwd;
+use Digest::MD5 qw/md5_hex/;
+#use Compress::Zlib;
+
+my ($collections, $arch, $basedir, $verbose, $release, $release_given);
+my ($rebuildtrunk, $addmode);
+my ($opt, $srcdir, $version);
+
+sub relative_path;
+
+$verbose = 0;
+$release = "";
+$release_given = 0;
+$rebuildtrunk = 0;
+$addmode = 0;
+
+# Default Base dir for OpenSolaris packages
+$basedir = "/tanku/belipsds";
+
+while ( $opt = shift @ARGV ) {
+	if ( $opt eq "-v" ) {
+		$verbose = 1;
+
+	} if ( $opt eq "-t" ) {
+		$rebuildtrunk = 1;
+
+	} if ( $opt eq "-a" ) {
+		$addmode = 1;
+		$srcdir = $ARGV[0];
+		$release = $ARGV[1];
+		$version = $ARGV[2];
+		last;
+
+	} if ( $opt eq "-R" ) {
+		$basedir = $ARGV[0];
+
+	} else {
+		$release = $opt;
+		$release_given = 1;
+	}
+}
+
+# Release list
+#$releases = "/tanku/belipsds/releases";
+
+# Different repos
+$collections = {
+				'unstable'	=>	[ 'trunk/unstable' ],
+				};
+
+# Welche Architektur interessiert uns?
+$arch = "i386";
+
+if ($addmode == 1) {
+	print "####################################################\n";
+	print "Adding packages from $srcdir\n";
+	print "####################################################\n";
+	add_pkg($srcdir, $arch, $release, $version);
+	print "####################################################\n";
+	print "Done.\n";
+	print "####################################################\n";
+	exit 0;
+}
+
+foreach (keys %{$collections}) {
+	if ($release_given == 1) {
+		mkpath("$basedir/$release/$_/$arch", {verbose => 1});
+	}
+
+	mix_sources ($basedir, $arch, "$release/$_", @{$collections->{$_}});
+}
+
+print "Done!\n" if $verbose;
+
+exit 0;
+
+#########################################################
+
+sub add_pkg {
+	my $srcdir = shift;
+	my $arch = shift;
+	my $release = shift;
+	my $version = shift;
+
+	my ($dir) = "$basedir/$release/unstable/$arch/$version";
+	my ($cat, $desc, $cath, $desch, $fh, @fields);
+	my ($ver, $pwd);
+
+	if ( not -f "$dir/catalog" ) {
+		open($cath, ">$dir/catalog") or die "Can't create $dir/catalog: $!";
+		close($cath);
+		open($desch, ">$dir/descriptions") or die "Can't create $dir/descriptions: $!";
+		close($desch);
+	}
+
+	open ($cath, "<$dir/catalog") or die "Can't open $dir/catalog: $!";
+	while (<$cath>) {
+		next if /^-----/;
+		next if /^[a-z0-9]: /;
+		next if /^$/;
+		next if /^#/;
+
+		@fields = split;
+		$cat->{$fields[0]}->{$fields[1]} = $fields[2];
+	}
+	close($cath);
+
+	open ($desch, "<$dir/descriptions") or die "Can't open $dir/descriptions: $!";
+	while (<$desch>) {
+		next if /^-----/;
+		next if /^$/;
+		next if /^#/;
+		$desc->{$_} = 1;
+	}
+	close($desch);
+
+	if ( ! -d "$dir/metainfo" ) {
+		mkdir("$dir/metainfo");
+	}
+	if ( ! -f "$srcdir/catalog" ) {
+		generate_catalog($srcdir);
+	}
+
+	copy("$dir/catalog", "$dir/catalog.1") or die "Copy failed: $!";
+	copy("$dir/descriptions", "$dir/descriptions.1") or die "Copy failed: $!";
+	open ($cath, "<$srcdir/catalog") or die "Can't open $srcdir/catalog: $!";
+	open($fh, ">>$dir/catalog");
+
+	while (<$cath>) {
+		next if /^-----/;
+		next if /^[a-z0-9]: /;
+		next if /^$/;
+		next if /^#/;
+
+		@fields = split;
+		if ( @fields == 6 ) {
+			if (not $cat->{$fields[0]}->{$fields[1]}) {
+				copy("$srcdir/$fields[3]", "$dir/$fields[0]:$fields[1]:i386.pkg.7z") or die "Copy failed: $!";
+				if (not -d "$dir/metainfo/$fields[2]") {
+					mkdir("$dir/metainfo/$fields[2]");
+
+				} else {
+					if ( -d "$srcdir/metainfo/$fields[2]/$fields[1]" ) {
+						if ( -d "$dir/metainfo/$fields[2]/$fields[1]" ) {
+							rmtree("$dir/metainfo/$fields[2]/$fields[1]", 0, 1);
+						}
+					}
+				}
+				system("cp -r $srcdir/metainfo/$fields[2]/$fields[1] $dir/metainfo/$fields[2]/$fields[1]");
+				$fields[3] = "$fields[0]:$fields[1]:i386.pkg.7z";
+				print $fh "$fields[0] $fields[1] $fields[2] $fields[3] $fields[4] $fields[5]\n";
+				print "Added package: $fields[2] ($fields[0]:$fields[1]:i386.pkg.7z)", "\n";
+
+				if ( -l "$dir/metainfo/$fields[2]/current" ) {
+					$ver=readlink("$dir/metainfo/$fields[2]/current");
+					if (newer_rev($fields[1], $ver) == 0) {
+						$pwd = Cwd::cwd();
+						chdir("$dir/metainfo/$fields[2]");
+						symlink("$fields[1]", "new");
+						rename("new", "current");
+						chdir($pwd);
+					}
+				} else {
+					$pwd = Cwd::cwd();
+					chdir("$dir/metainfo/$fields[2]");
+					symlink("$fields[1]", "current");
+					chdir($pwd);
+				}
+			}
+		}
+	}
+	close($cath);
+	close($fh);
+
+	open ($desch, "<$srcdir/descriptions");
+	open($fh, ">>$dir/descriptions");
+	while (<$desch>) {
+		next if /^-----/;
+		next if /^$/;
+		next if /^#/;
+		if (not $desc->{$_}) {
+			print $fh $_;
+		}
+	}
+	close($desch);
+	close($fh);
+
+	if ( -f "$dir/metainfo.tar.7z" ) {
+		copy("$dir/metainfo.tar.7z", "$dir/metainfo.tar.7z.1");
+	}
+	chdir("$dir");
+	system("tar cpf - metainfo > metainfo.tar");
+	system("7za a metainfo.tar.7z.new metainfo.tar");
+	rename("$dir/metainfo.tar.7z.new", "$dir/metainfo.tar.7z");
+	chmod 0644,  "$dir/metainfo.tar.7z";
+	unlink("metainfo.tar");
+}
+
+sub newer_rev {
+	my $rev1 = shift;
+	my $rev2 = shift;
+
+	if (length($rev1) > length($rev2)) {
+		return 0;
+	}
+	if (length($rev1) < length($rev2)) {
+		return 1;
+	}
+
+	my @fields1 = split($rev1);
+	my @fields2 = split($rev2);
+
+	if (@fields1 > @fields2) {
+		return 0;
+	}
+	if (@fields1 < @fields2) {
+		return 1;
+	}
+
+	my $i = 0;
+	my $num2 = 0;
+	foreach my $num1 (@fields1) {
+		$num2 = $fields2[$i];
+
+		if (int($num1) > int($num2)) {
+			return 0;
+		}
+		$i = $i + 1;
+	}
+
+	return 1;
+}
+
+sub mix_sources {
+	my $basedir = shift;
+	my $arch = shift;
+	my $targetdir = shift;
+	my @sourcedirs = @_;
+
+	my ($version);
+	my ($srcdir, $srcdirh, $youngest, $age, $dir_age);
+	my ($cath, $cat, @fields);
+	my ($dsth, $dsch, $desc);
+	my $destdir = "$basedir/$targetdir/$arch";
+
+	print "Building $targetdir from " . (join ", ", @sourcedirs) . "\n";
+
+	foreach $srcdir (@sourcedirs) {
+		opendir ($srcdirh, "$basedir/$srcdir/$arch") or die "Can't open $basedir/$srcdir/$arch: $!";
+		while ($version = readdir ($srcdirh)) {
+			next if $version eq ".";
+			next if $version eq "..";		
+			next unless $version =~ /^\d+\.\d+$/;
+
+			print "Examining $srcdir $version...\n" if $verbose;
+
+			# Gibts die Solaris-Version schon in unserer Collection?
+			unless ( -d "$destdir/$version" ) {
+				mkdir "$destdir/$version";
+				print "New version $version\n";
+			}
+
+			# Neue Pakete verlinken
+
+			print "  Searching for new packages for $version\n" if $verbose;
+			$youngest = link_new_packages ("$basedir/$srcdir/$arch/$version", "$basedir/$targetdir/$arch/$version");
+			#$youngest = 360;
+			
+			# Auch nach dem Alter des Verzeichnisses schauen
+			$dir_age = -M "$basedir/$srcdir/$arch/$version";
+			
+			if ( $dir_age < $youngest ) {
+				$youngest = $dir_age;
+			}
+			
+			if ( ! -f "$basedir/$srcdir/$arch/$version/catalog" or $rebuildtrunk == 1 ) {
+				print "  Generating catalog for $srcdir $version\n" if $verbose;
+				generate_catalog ("$basedir/$srcdir/$arch/$version");
+			}
+
+			print "  Reading catalog for $version\n" if $verbose;
+
+			# Catalog und Description files einlesen
+			open ($cath, "$basedir/$srcdir/$arch/$version/catalog") or die "Can't open $basedir/$srcdir/$arch/$version/catalog: $!";
+			while (<$cath>) {
+				next if /^-----/;
+				next if /^[a-z0-9]: /;
+				next if /^$/;
+				next if /^#/;
+
+				# Zeilen einlesen
+				@fields = split;
+				if ( @fields == 6 ) {
+					$cat->{$version}->{$fields[0]} = $_;
+				}
+			}
+			close ($cath);
+
+			open ($dsch, "$basedir/$srcdir/$arch/$version/descriptions") or die "Can't open $basedir/$srcdir/$arch/$version/descriptions: $!";
+			while (<$dsch>) {
+				if ( /(.+) - / ) {
+					$desc->{$version}->{$1} = $_;
+				}
+			}
+			close ($dsch);
+		}
+	}
+
+
+
+	# Catalog und Description files in collection erzeugen
+
+	opendir ($dsth, $destdir) or die "Can't open $destdir: $!";
+	while ($version = readdir ($dsth)) {
+		next if $version eq ".";
+		next if $version eq "..";
+		
+		print "  Searching for non-existing packages for $version\n" if $verbose;
+		remove_dangling_symlinks ("$destdir/$version");
+		
+		print "Generating catalog for $version...\n" if $verbose;
+
+		open ($cath, "> $destdir/$version/catalog") or die "Can't write $destdir/$version/catalog: $!";
+		foreach (sort keys %{$cat->{$version}}) {
+			print $cath $cat->{$version}->{$_};
+		}
+		close ($cath);
+
+		print "Generating descriptions for $version...\n" if $verbose;
+
+		open ($dsch, "> $destdir/$version/descriptions") or die "Can't write $destdir/$version/descriptions: $!";
+		foreach (sort keys %{$desc->{$version}}) {
+			print $dsch $desc->{$version}{$_};
+		}
+		close ($dsch);
+	}
+	closedir ($dsth);
+}
+
+sub generate_catalog {
+	my $dir = shift;
+
+	my ($file, $gz, $sha1sum, $line, $pkg, $version, $vers, $summary, $name, $tfile);
+	my ($names, $cnh);
+
+	open (NEWCAT, "> $dir/catalog.new") or die "Can't write $dir/catalog.new: $!";
+	open (NEWDESC, "> $dir/descriptions.new") or die "Can't write $dir/descriptions.new: $!";
+
+	if ( not -d "$dir/metainfo" ) {
+		mkdir("$dir/metainfo");
+	}
+
+	opendir (CDIR, $dir) or die "Can't open $dir: $!";
+	while ($file = readdir CDIR) {
+		next unless $file =~ /\.pkg/;
+
+		print "      Reading $file...\n" if $verbose;
+
+		chomp ($sha1sum = `sha1sum $dir/$file | cut -d' ' -f1`);
+
+		$tfile = "/var/tmp/$file";
+		system ("/usr/bin/7za e -so $dir/$file > $tfile");
+		#$gz = gzopen("$dir/$file", 'rb') or die "Can't open $dir/$file: $!";
+		open($gz, "<$tfile");
+		$line = <$gz>;
+
+		# package header
+		#$gz->gzreadline($line);
+		die "No package!\n" unless $line =~ /^# PaCkAgE DaTaStReAm/;
+
+		# package name
+		#$gz->gzreadline($line);
+		$line = <$gz>;
+		($pkg) = $line =~ m/^(\S+)/;
+
+		$name = $version = $summary = "";
+
+		if ( -f "$dir/$pkg.version" ) {
+			if (open($cnh, "<$dir/$pkg.version")) {
+				$vers = <$cnh>;
+				chomp($vers);
+				close($cnh);
+				$version = `/usr/bin/genver $vers`;
+				chomp($version);
+			}
+		}
+
+		# other fields
+		while (<$gz>) {
+			if ( /^VERSION=(.*)/ and not $version ) {
+				$vers = $_;
+				$version = `/usr/bin/genver $vers`;
+				chomp($version);
+				next;
+			} elsif ( /^NAME=(.*?) - (.*)/ and not $name ) {
+				$name = $1;
+				$summary = $2;
+				next;
+			} elsif ( /^NAME=(.*)/ and not $name ) {
+				$name = $1;
+			} elsif ( /^DESC=(.*)/ and not $summary ) {
+				$summary = $1;
+			}
+
+			if ( $version and $summary and $name ) {
+				last;
+			}
+		}
+		#$gz->gzclose();
+		close($gz);
+
+		#
+		# Extract package to grab full metadata
+		#
+		print "##### Extracting full package metadata #####\n";
+		system("pkgtrans /var/tmp/$file /var/tmp $pkg");
+		if ( ! -d "/var/tmp/$pkg" ) {
+			die "Pkgtrans of $pkg failed";
+		}
+		unlink($tfile);
+		if ( -d "$dir/metainfo/$pkg/$version" ) {
+			rmtree("$dir/metainfo/$pkg/$version", 0, 1);
+		}
+		if ( not -d "$dir/metainfo/$pkg" ) {
+			mkdir("$dir/metainfo/$pkg");
+		}
+		mkdir("$dir/metainfo/$pkg/$version");
+
+		copy("/var/tmp/$pkg/pkginfo", "$dir/metainfo/$pkg/$version");
+		copy("/var/tmp/$pkg/pkgmap", "$dir/metainfo/$pkg/$version");
+		if ( -f "/var/tmp/$pkg/install/copyright" ) {
+			copy("/var/tmp/$pkg/install/copyright", "$dir/metainfo/$pkg/$version");
+		}
+		if ( -f "/var/tmp/$pkg/install/depend" ) {
+			copy("/var/tmp/$pkg/install/depend", "$dir/metainfo/$pkg/$version");
+		}
+		rmtree("/var/tmp/$pkg", 0, 1);
+
+		#
+		# Use package name for NAME if NAME has multiple words
+		# Or name is same as summary.
+		#
+		my(@c) = split / /, $name;
+		if ($name eq $summary or $#c > 1) {
+			$name = $pkg;
+		}
+
+		#
+		# If pkgname has -devel but name does not then append -devel to name
+		#
+		if ($pkg =~ /\-devel/ and not $name =~ /\-devel/) {
+			$name = "$name-devel";
+		}
+		if (not $names->{$name}) {
+			$names->{$name} = 1;
+		} else {
+			$name = $pkg;
+		}
+
+		#
+		# After all this check if we have a common name file.
+		# that overrides all else.
+		#
+		if ( -f "$dir/$pkg.cname" ) {
+			if (open($cnh, "<$dir/$pkg.cname")) {
+				$name = <$cnh>;
+				chomp($name);
+				close($cnh);
+			}
+		}
+
+		chomp($vers);
+		print NEWCAT "$name $version $pkg $file $sha1sum $vers\n";
+		print NEWDESC "$name - $summary\n";
+	}
+	closedir (CDIR);
+
+	close (NEWCAT);
+	close (NEWDESC);
+
+	if ( -f "$dir/catalog" ) {
+		copy("$dir/catalog", "$dir/catalog.1") or die "Copy failed: $!";
+		copy("$dir/descriptions", "$dir/descriptions.1");
+	}
+	rename("$dir/catalog.new", "$dir/catalog");
+	rename("$dir/descriptions.new", "$dir/descriptions");
+}
+
+
+sub link_new_packages {
+	my $srcdir = shift;
+	my $targetdir = shift;
+
+	my ($file, $dir, $clink, $pwd, $youngest, $age);
+
+	my ($srch, $mdirh);
+
+	undef $youngest;
+
+	if ( not -d "$targetdir/metainfo" ) {
+		mkdir("$targetdir/metainfo");
+	}
+
+	# Nach neuen Paketen suchen
+	opendir ($srch, $srcdir) or die "Can't open $srcdir: $!";
+	while ($file = readdir ($srch)) {
+		next if $file eq ".";
+		next if $file eq "..";
+
+		# Nur Pakete
+		next unless $file =~ /\.pkg/;
+
+		$age = -M "$srcdir/$file";
+		if ( ! defined $youngest or $age < $youngest) {
+			$youngest = $age;
+		}
+
+		unless ( -l "$targetdir/$file") {
+			print "New package in $targetdir: $file\n";
+			symlink relative_path ($targetdir, $srcdir) . $file, "$targetdir/$file";
+		}
+	}
+	closedir ($srch);
+
+	opendir ($srch, "$srcdir/metainfo") or die "Can't open $srcdir/metainfo: $!";
+	while ($dir = readdir ($srch)) {
+		next if $dir eq ".";
+		next if $dir eq "..";
+		next unless -d "$srcdir/metainfo/$dir";
+
+		mkdir("$targetdir/metainfo/$dir");
+		opendir ($mdirh, "$srcdir/metainfo/$dir") or die "Can't open $srcdir/metainfo/$dir: $!";
+		while ($file = readdir ($mdirh)) {
+			next if $file eq ".";
+			next if $file eq "..";
+
+			if ($file eq "current") {
+				$clink = readlink("$srcdir/metainfo/$dir/current");
+				next;
+			}
+
+			symlink relative_path ("$targetdir/metainfo/$dir", "$srcdir/metainfo/$dir") . $file, "$targetdir/metainfo/$dir/$file";
+		}
+		$pwd = Cwd::cwd();
+		chdir("$targetdir/metainfo/$dir");
+		symlink("$clink", "current");
+		chdir($pwd);
+	}
+	return $youngest;
+}
+
+sub relative_path {
+	my $from = shift;
+	my $to = shift;
+	
+	my ($dots, $rel);
+	my (@f, @t, $i);
+	
+	@f = split /\//, $from;
+	@t = split /\//, $to;
+	
+	$i = 0;
+	while ( $i < @f and $i < @t and ($f[$i] eq $t[$i]) ) {
+		$i++;
+	}
+	
+	# Ab $i sind die Pfade unterschiedlich
+	
+	$dots = "../" x (@f - $i);
+
+	$rel = "";
+	while ( $i < @t ) {
+		$rel .= $t[$i] . "/";
+		$i++;
+	}
+	
+	return $dots . $rel;
+}
+
+sub remove_dangling_symlinks {
+	my $dir = shift;
+	
+	my ($dirh, $file);
+	
+	# Nach geloeschten Paketen suchen
+	opendir ($dirh, $dir) or die "Can't open $dir: $!";
+	while ($file = readdir ($dirh)) {
+		next if $file eq ".";
+		next if $file eq "..";
+
+		if ( -l "$dir/$file" && ! -e "$dir/$file" ) {
+			print "    Deleting dangling symbolic link to package: $file\n";
+			unlink "$dir/$file";
+		}
+	}
+	closedir ($dirh);
+}
+
