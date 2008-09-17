@@ -1,0 +1,118 @@
+#!/usr/bin/python
+
+#
+#    Advanced SVR4 package and repository management layer
+#    Copyright (C) 2008  The BeleniX team
+#
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+#    Author: Moinak Ghosh
+#
+
+import sys
+import os
+import traceback
+import string
+import time
+from decimal import *
+
+#
+# Given a package revision string of the form:
+# VERSION=11.11,REV=2008.07.10.02.06
+# it can compute a an uniform numeric version sting of the form:
+# 1111.0000.1075.9724.46
+#
+def compute_version(verstr):
+	"""Compute an uniform version string given a package revision string"""
+
+	verlst = verstr.split(",")
+	if len(verlst) > 1:
+		_version, _revision = verstr.split(",")
+	else:
+		_version = verstr
+		_revision = "REV=1"
+
+	_revision.replace(".0", ".")
+	_revision.replace("..", ".0.")
+
+	version = _version.split("=")[1]
+	if len(version) == 0:
+		version = "1"
+
+	revision = _revision.split("=")[1]
+	rv = revision.split(".")
+	ln = len(rv)
+
+	cnv1 = Decimal(535680);  cnv2 = Decimal(44640)
+	cnv3 = Decimal(1440);    cnv4 = Decimal(60)
+
+	if ln == 8:
+		pkgrev = Decimal(rv[3]) * cnv1 + Decimal(rv[4]) * cnv2 + \
+		    Decimal(rv[5]) * cnv3 + Decimal(rv[6]) * cnv4 + Decimal(rv[7])
+	elif ln == 5:
+		pkgrev = Decimal(rv[0])  * cnv1 + Decimal(rv[1]) * cnv2 + \
+		    Decimal(rv[2]) * cnv3 + Decimal(rv[3]) * cnv4 + Decimal(rv[4])
+	elif ln == 4:
+		pkgrev = Decimal(rv[0]) + Decimal(rv[1]) * cnv1 + Decimal(rv[2]) * cnv2 + \
+		    Decimal(rv[3]) * cnv3
+	elif ln == 3:
+		pkgrev = Decimal(rv[0]) * cnv1 + Decimal(rv[1]) * cnv2 + Decimal(rv[2]) * cnv3
+	else:
+		#rv = time.strftime("%Y.%m.%d.%H.%M")
+		#pkgrev = Decimal(rv[0])  * cnv1 + Decimal(rv[1]) * cnv2 + \
+		#    Decimal(rv[2]) * cnv3 + Decimal(rv[3]) * cnv4 + Decimal(rv[4])
+		pkgrev = Decimal(1)
+
+
+	version = version.replace(".", "") #.ljust(8, "0")
+	#
+	# Handle alphanumeric chars in version string
+	#
+	tot = len(version)
+	cnt = 0
+	alphasum = 0
+	vstr = []
+	while cnt < tot:
+		dig = version[cnt]
+		try:
+			n = int(dig)
+			vstr.append(dig)
+		except ValueError:
+			alphasum = alphasum + ord(dig)
+		cnt = cnt + 1
+
+	if alphasum > 0:
+		ver = Decimal(''.join(vstr))
+		ver = Decimal(str(ver).ljust(8, "0")) + Decimal(cnt)
+		version = str(ver)
+	else:
+		version = version.ljust(8, "0")
+
+	revline = version + str(pkgrev)
+	tot = len(revline)
+	cnt = 0
+	num = 1
+	vstr = []
+	while cnt < tot:
+		dig = revline[cnt]
+		vstr.append(dig)
+		cnt = cnt + 1
+		if num % 4 == 0 and cnt < tot:
+			vstr.append('.')
+        	num = num + 1
+
+	return ''.join(vstr)
+
+print compute_version(sys.argv[1])

@@ -14,6 +14,8 @@ Source2:             spkg_mod.py
 Source3:             tsort.py
 Source4:             spkg.conf
 Source5:             admin
+Source6:             repo_util
+Source7:             genver
 
 SUNW_BaseDir:        /
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
@@ -36,6 +38,8 @@ mkdir -p ${RPM_BUILD_ROOT}%{_localstatedir}/spkg/downloads
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
 
 cp %{SOURCE1} ${RPM_BUILD_ROOT}%{_bindir}
+cp %{SOURCE6} ${RPM_BUILD_ROOT}%{_bindir}
+cp %{SOURCE7} ${RPM_BUILD_ROOT}%{_bindir}
 cp %{SOURCE2} ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
 cp %{SOURCE3} ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
 cp %{SOURCE4} ${RPM_BUILD_ROOT}%{_sysconfdir}
@@ -65,5 +69,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.4/site-packages/*
 
 %changelog
+* Wed Sep 17 2008 - moinakg@belenix.org
+- Add a couple of repository management tools.
 * Sun Sep 07 2008 - moinakg@belenix.org
 - Initial spec.
