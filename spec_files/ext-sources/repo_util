@@ -423,6 +423,14 @@ sub generate_catalog {
 		if ( ! -d "/var/tmp/$pkg" ) {
 			die "Pkgtrans of $pkg failed";
 		}
+
+		# Strip trailing .i from package dir name. It generally confuses spkg.
+		my $pkgi = $pkg;
+		if ( $pkg =~ /\.i$/ ) {
+			$pkg =~ s/\.i$//;
+			system("mv /var/tmp/$pkgi /var/tmp/$pkg")
+		}
+
 		unlink($tfile);
 		if ( -d "$dir/metainfo/$pkg/$version" ) {
 			rmtree("$dir/metainfo/$pkg/$version", 0, 1);
@@ -476,6 +484,7 @@ sub generate_catalog {
 		}
 
 		chomp($vers);
+
 		print NEWCAT "$name $version $pkg $file $sha1sum $vers\n";
 		print NEWDESC "$name - $summary\n";
 	}

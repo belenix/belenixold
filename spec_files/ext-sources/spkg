@@ -29,7 +29,6 @@ from spkg_mod import *
 if __name__ == "__main__":
 	try:
 
-		load_config()
 		ret = do_main()
 	except SystemExit, e:
 		raise e

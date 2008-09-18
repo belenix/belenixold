@@ -70,6 +70,7 @@ class Cl_sitevars(object):
 		self.fullurl = "%s/%s/%s" % (site, RELEASE, RTYPE)
 		self.trunkurl = "%s/trunk/%s" % (site, RTYPE)
 		self.catalog = "%s/catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
+		self.mirrors = "%s/mirrors-%s" % (SPKG_VAR_DIR, so[1])
 		self.metadir = "%s/metainfo-%s" % (SPKG_VAR_DIR, so[1])
 		self.base_cluster = {}
 		self.tcat = "%s/catalog" % SPKG_VAR_DIR
@@ -107,9 +108,10 @@ class Cl_vars(object):
 		self.MD5SUMF = 4; self.ORIGVERSF = 5
 
 		# Action codes for packages
+		self.NONE = 0
 		self.INSTALL = 1; self.UPGRADE = 2
 		self.UPGRADE_BASE = 3; self.UPGRADE_ALL = 4
-		self.REMOVE = 5
+		self.REMOVE = 5; self.LIST_ONLY = 6
 
 	def set_altroot(self, apath):
 		if self.ALTROOT == "":
@@ -139,14 +141,17 @@ class TransformPlan:
 		self.sorted_list = sorted_list
 		self.action = action
 
-class PKGVersError(Exception):
-	"""Invalid version exception"""
+class PKGError(Exception):
+	"""General packaging error"""
 
 	def __init__(self, message):
 		self.message = message
 
-class PKGError(Exception):
-	"""General packaging error"""
+	def __str__(self):
+		return repr(self.message)
+
+class PKGVersError(PKGError):
+	"""Invalid version exception"""
 
 	def __init__(self, message):
 		self.message = message
@@ -171,11 +176,11 @@ Usage:
 	spkg [options] subcommand [cmd_options] [operands]
 
 Subcommands:
-	spkg updatecatalog   Updates download site metadata
-	spkg install         <package names>
-			     Install one or more packages/package clusters
+	updatecatalog   Updates download site metadata
+	install         <package names>
+			Install one or more packages/package clusters
 
-	spkg upgrade [<Upgrade Type> <release tag>]|[<package list>]
+	upgrade [<Upgrade Type> <release tag>]|[<package list>]
 			Upgrades already installed packages if possible
 			Upgrade type can be one of:
 			core - Upgrade the core distro (Kernel, core libs etc.)
@@ -183,14 +188,17 @@ Subcommands:
 
 			release tag - The distro release to upgrade to for core or all.
 
-	spkg available [-r]  Lists the available packages in all sites
-                             With '-r' flag lists all the current distro releases
-                             available.
-	spkg compare         Shows installed package versions vs available
-	spkg list            List all installed packages by name
-	spkg init <dir>      Initialize an Alternate Root image in the fiven dir
-			     The dir is created if it does not exist
-	spkg download	     Just download the package, do not install
+	available [-r]  Lists the available packages in all sites
+                        With '-r' flag lists all the current distro releases
+                        available.
+	compare         Shows installed package versions vs available
+	info [-s] [<pkg list>]
+			List information about packages whether installed or not
+			With '-s' display a short listing of only package descriptions
+
+	init <dir>      Initialize an Alternate Root image in the fiven dir
+			The dir is created if it does not exist
+	download	Just download the package, do not install
 
 Options:
 	-R <dir>             Perform all operations onto an Alternate Root image in the dir
@@ -431,7 +439,10 @@ def compute_version(verstr):
 		cnt = cnt + 1
 
 	if alphasum > 0:
-		ver = Decimal(''.join(vstr))
+		if len(vstr) > 0:
+			ver = Decimal(''.join(vstr))
+		else:
+			ver = Decimal(0)
 		ver = Decimal(str(ver).ljust(8, "0")) + Decimal(cnt)
 		version = str(ver)
 	else:
@@ -504,7 +515,12 @@ def compare_vers(vstr1, vstr2):
 def fetch_local_version(vars, pkgname):
 	"""Return the installed package version in uniform version format"""
 
-	vf = open("%s/%s/pkginfo" % (vars.INSTPKGDIR, pkgname), "r")
+	try:
+		vf = open("%s/%s/pkginfo" % (vars.INSTPKGDIR, pkgname), "r")
+	except:
+		pkg = pkgname + ".i"
+		vf = open("%s/%s/pkginfo" % (vars.INSTPKGDIR, pkg), "r")
+
 	for line in vf:
 		if line[0:4] == "VERS":
 			vf.close()
@@ -620,6 +636,14 @@ def updatecatalog(vars, pargs):
 		removef(sv.tmeta)
 
 		#
+		# Try to fetch mirrors list for site, if any
+		#
+		try:
+			downloadurl("%s/mirrors" % sv.site, sv.mirrors)
+		except PKGError:
+			removef(sv.mirrors)
+
+		#
 		# The releases file provides a list of distro releases. A valid releases
 		# file found in the first site is used.
 		#
@@ -658,17 +682,22 @@ def updatecatalog(vars, pargs):
 # type == 2   Upgrade specified packages
 # type == 3   Upgrade base OS packages
 # type == 4   Upgrade all packages
+# type == 5   Remove packages
+# type == 6   Just prepare catalog entries for the given packages
 #
 # A level argument is used to identify recursive calls for dependency handling.
 # This is needed since during dependency handling for either Install or Upgrade
 # dependencies my need to be upgraded or installed.
 #
-def build_pkglist(vars, pkgs, pdict, type, level):
+def do_build_pkglist(vars, pkgs, pdict, type, level):
 	"""Build a complete list of packages to be installed/upgraded
 	including resolved dependencies"""
 
 	if len(pkgs) == 0:
-		raise PKGError(_("No packages specified"))
+		if level == 0:
+			raise PKGError(_("No packages specified"))
+		else:
+			return type
 
 	#
 	# Identify site containing packages. First site in list having the
@@ -722,12 +751,20 @@ def build_pkglist(vars, pkgs, pdict, type, level):
 				del pdict[nm]
 
 	elif len(pkgs) > 0 and type != vars.UPGRADE_ALL:
-		# Check for packages not found. We ignore this check in upgrade all/base mode
-		# since there might be packages in the system that are not from our repo.
-		# Those are just retained as-is.
-		#
-		raise PKGError("ERROR: The following packages not found in any catalog\n" + \
-		    ' '.join(pkgs))
+		if type == vars.LIST_ONLY:
+			for pkgn in pkgs:
+				pdict[pkgn] = None
+		else:
+			# Check for packages not found. We ignore this check in upgrade
+			# all/base mode since there might be packages in the system that
+			# are not from our repo. Those are just retained as-is.
+			#
+			raise PKGError("ERROR: The following packages not found in any catalog: " + \
+		    	' '.join(pkgs))
+
+	# Return if we are only asked to prepare a catalog entry list
+	if type == vars.LIST_ONLY:
+		return type
 
 	deplist = []
 	for pkgname in pdict.keys():
@@ -747,9 +784,9 @@ def build_pkglist(vars, pkgs, pdict, type, level):
 					# uptodate packages otherwise upgrade.
 					localver = fetch_local_version(vars, pkgname)
 					if compare_vers(localver[0], pdict[pkgname].version) > 0:
-						pdict[pkgnamne].action = vars.UPGRADE
+						pdict[pkgname].action = vars.UPGRADE
 					else:
-						del pdict[pkgname]
+						pdict[pkgname].action = vars.NONE
 
 			elif type == vars.UPGRADE or type == vars.UPGRADE_BASE or \
 			    type == vars.UPGRADE_ALL:
@@ -759,7 +796,7 @@ def build_pkglist(vars, pkgs, pdict, type, level):
 				else:
 					#print >> sys.stderr, \
 					#    "Package %s is up to date\n" % pkgname
-					del pdict[pkgname]
+					pdict[pkgname].action = vars.NONE
 					continue
 		else:
 			if type == vars.INSTALL:
@@ -809,7 +846,23 @@ def build_pkglist(vars, pkgs, pdict, type, level):
 	# Recursion to scan the dependency list. Circular dependencies
 	# are taken care of by the pdict check above.
 	#
-	build_pkglist(vars, deplist, pdict, type, level + 1)
+	do_build_pkglist(vars, deplist, pdict, type, level + 1)
+
+	return type
+
+def build_pkglist(vars, pkgs, pdict, type, level):
+	"""Wrapper for main do_build_pkglist routine"""
+
+	type = do_build_pkglist(vars, pkgs, pdict, type, level)
+
+	# Return if we are only asked to prepare a catalog entry list
+	if type == vars.LIST_ONLY:
+		return type
+
+	for pkgname in pdict.keys():
+		if not pdict[pkgname]: continue
+		if pdict[pkgname].action == vars.NONE:
+			del pdict[pkgname]
 
 	return type
 
@@ -837,7 +890,21 @@ def install_pkg(vars, ent, pkgfile):
 		raise PKGError("Failed to install package %s" % \
 		    (ent.refername, pe.message))
 
-	os.unlink(pkgfile);  os.unlink(pkgfileds)
+	os.unlink(pkgfileds)
+
+def uninstall_pkg(vars, ent):
+	"""Remove the given package."""
+
+	if vars.ALTROOT != "":
+		PKGRMFLAGS = "-R %s -n -a %s" % (vars.ALTROOT, vars.ADMINFILE)
+	else:
+		PKGRMFLAGS = "-n -a %s" % vars.ADMINFILE
+
+	try:
+		exec_prog("/usr/sbin/pkgrm %s %s" % (PKGRMFLAGS, ent.pkgname), 0)
+	except PKGError, pe:
+		raise PKGError("Failed to uninstall package %s" % \
+		    (ent.refername, pe.message))
 
 def create_plan(vars, pargs, action):
 	"""Create a TransformPlan that contains a set of package transforms for the given action"""
@@ -846,6 +913,8 @@ def create_plan(vars, pargs, action):
 	pkgs = []
 
 	for sv in vars.PKGSITEVARS:
+		if not os.path.isfile(sv.catalog):
+			updatecatalog(vars, [])
 		sv.catfh = open(sv.catalog, "r")
 		base_cluster = "%s/clusters/base_cluster" % sv.metadir
 		if os.path.isfile(base_cluster):
@@ -856,7 +925,7 @@ def create_plan(vars, pargs, action):
 
 	if action == vars.UPGRADE_ALL:
 		# Get list of packages installed in system.
-		pkgs = os.listdir(vars.INSTPKGDIR)
+		pkgs = map(lambda pkg: pkg.replace(".i", ""), os.listdir(vars.INSTPKGDIR))
 
 	elif action == vars.UPGRADE_BASE:
 		# Build full list of base packages. Stripping out uninstalled base pkgs
@@ -883,6 +952,8 @@ def create_plan(vars, pargs, action):
 	graphdict = {}
 	for name, entry in pdict.iteritems():
 		for dep in entry.deplist:
+			if not pdict.has_key(dep):
+				continue
 			if graphdict.has_key(dep):
 				graphdict[dep].append(name)
 			else:
@@ -900,6 +971,34 @@ def create_plan(vars, pargs, action):
 	tplan = TransformPlan(vars, pdict, sorted_list, action)
 
 	return tplan
+
+def execute_plan(tplan, downloadonly):
+	"""Perform package actions as per the given Transform Plan"""
+
+	print "** Downloading packages\n"
+	#
+	# First download all the files and verify checksums. verify_sha1sum raises
+	# and exception if checksum verification fails.
+	#
+	download_packages(tplan)
+
+	if downloadonly == 1:
+		print "** Download complete\n"
+		return ret
+
+	print "** Installing/Upgrading packages\n"
+	# Now perform all the install actions
+	for titem in tplan.sorted_list:
+		for pkgname in titem:
+			ent = tplan.pdict[pkgname]
+			if ent.action == vars.INSTALL:
+				install_pkg(vars, ent, ent.dwn_pkgfile)
+				os.unlink(pkgfile)
+			elif ent.action == vars.UPGRADE:
+				uninstall_pkg(vars, ent)
+				install_pkg(vars, ent, ent.dwn_pkgfile)
+
+	print "\n** Installation/Upgrade Complete\n"
 
 def download_packages(tplan):
 	"""Download all packages in mentioned in the transform plan"""
@@ -957,7 +1056,6 @@ def install(vars, pargs, downloadonly):
 	#########################################
 	# Installation plan creation phase
 	#########################################
-	ret = 0
 	tplan = create_plan(vars, pargs, vars.INSTALL)
 	if not tplan:
 		return 1
@@ -965,28 +1063,9 @@ def install(vars, pargs, downloadonly):
 	# End of Installation plan creation phase
 	#########################################
 
-	print "** Downloading packages\n"
-	#
-	# First download all the files and verify checksums. verify_sha1sum raises
-	# and exception if checksum verification fails.
-	#
-	download_packages(tplan)
+	execute_plan(tplan, downloadonly)
 
-	if downloadonly == 1:
-		print "** Download complete\n"
-		return ret
-
-	print "** Installing packages\n"
-	# Now perform all the install actions
-	for titem in tplan.sorted_list:
-		for pkgname in titem:
-			ent = tplan.pdict[pkgname]
-			if ent.action == vars.INSTALL:
-				install_pkg(vars, ent, ent.dwn_pkgfile)
-
-	print "\n** Installation Complete\n"
-
-	return ret
+	return 0
 
 def upgrade(vars, pargs):
 	"""Upgrade specified packages or upgrade entire system"""
@@ -1001,9 +1080,10 @@ def upgrade(vars, pargs):
 
 	elif pargs[0] == "all":
 		tplan = create_plan(vars, pargs, vars.UPGRADE_ALL)
-
 	else:
 		tplan = create_plan(vars, pargs, vars.UPGRADE)
+
+	execute_plan(tplan, downloadonly)
 
 	return 0
 
@@ -1018,9 +1098,12 @@ def available(vars, pargs):
 		print "######################################################"
 		print "# Listing current distro releases in descending order"
 		print "######################################################"
-		print "> trunk (Latest Head)"
+		print "%20s   %20s" % ("Release Name", "Tag")
+		print "------------------------------------------------------"
+		print "%20s   %20s" % ("Latest Head", "trunk")
 		for line in relf:
-			print "> %s" % line.strip()
+			name, tag = line.strip().split(":")
+			print "%20s   %20s" % (name, tag)
 		print "######################################################\n"
 		relf.close()
 		return 0
@@ -1174,9 +1257,6 @@ def compare(vars, pargs):
 	pipe.wait()
 	return 0
 
-def list(vars, pargs):
-	return 0
-
 def download(vars, pargs):
 	"""Only download packages do not install."""
 
@@ -1187,7 +1267,98 @@ def download(vars, pargs):
 	ret = install(vars, pargs, 1)
 	return ret
 
+def dump_pkginfo(vars, pkg, pkginfile, out, installed, short):
+	"""Dump package info for the given package."""
+
+	vf = open(pkginfile, "r")
+	cont = {}
+	for line in vf:
+		ent = line.strip().split("=")
+		if ent[0] == "VERSION":
+			ent[1] = "=".join(ent[1:])
+		cont[ent[0]] = ent[1]
+	vf.close()
+
+	if pkg:
+		cname = pkg.cname
+		pkgname = pkg.pkgname
+	else:
+		cname = cont["PKG"]
+		pkgname = cname
+
+	if short:
+		print >> out, " %20s : %s" % ("Common Name", cname)
+		print >> out, " %20s : %s" % ("Description", cont["DESC"])
+	else:
+		print >> out, " %20s : %s" % ("Common Name", cname)
+		print >> out, " %20s : %s" % ("Package Name", pkgname)
+		print >> out, " %20s : %s" % ("Description", cont["DESC"])
+		print >> out, " %20s : %s" % ("Version", cont["VERSION"])
+		if installed:
+			print >> out, " %20s : %s" % ("Installed", "Yes")
+			print >> out, " %20s : %s" % ("Install Date", cont["INSTDATE"])
+		else:
+			print >> out, " %20s : %s" % ("Installed", "No")
+		print >> out, " %20s : %s" % ("Category", cont["CATEGORY"])
+		print >> out, " %20s : %s" % ("Vendor", cont["VENDOR"])
+	print >> out, ""
+
 def info(vars, pargs):
+	"""Display package information. Works for both installed and not-installed packages."""
+
+	allinst = 0
+	short = False
+
+	if len(pargs) > 0:
+		if pargs[0] == '-s':
+			short = True
+			del pargs[0]
+
+	if len(pargs) == 0:
+		# Get list of packages installed in system.
+		pkgs = map(lambda pkg: pkg.replace(".i", ""), os.listdir(vars.INSTPKGDIR))
+		allinst = 1
+	else:
+		pkgs = pargs
+
+	for sv in vars.PKGSITEVARS:
+		if not os.path.isfile(sv.catalog):
+			updatecatalog(vars, [])
+		sv.catfh = open(sv.catalog, "r")
+
+	pdict = {}
+	build_pkglist(vars, pkgs, pdict, vars.LIST_ONLY, 0)
+
+	for sv in vars.PKGSITEVARS:
+		sv.catfh.close()
+		sv.catfh = None
+
+	pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
+	out = pipe.stdin
+	print >> out, "############################################################################"
+	if allinst == 1:
+		print >> out, "# Listing all installed packages"
+		print >> out, "############################################################################"
+
+	for pn in pdict.keys():
+		pkg = pdict[pn]
+		if pkg:
+			pkginfile = "%s/%s/pkginfo" % (vars.INSTPKGDIR, pkg.pkgname)
+		else:
+			pkginfile = "%s/%s/pkginfo" % (vars.INSTPKGDIR, pn)
+
+		if allinst == 1:
+			dump_pkginfo(vars, pkg, pkginfile, out, True, short)
+		else:
+			if os.path.exists(pkginfile):
+				dump_pkginfo(vars, pkg, pkginfile, out, True, short)
+			else:
+				pkginfile = "%s/%s/%s/pkginfo" % \
+				    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+				dump_pkginfo(vars, pkg, pkginfile, out, False, short)
+
+	pipe.stdin.close()
+	pipe.wait()
 	return 0
 
 def do_main():
@@ -1235,6 +1406,14 @@ def do_main():
 			return 1
 		vars.set_altroot(ALTROOT)
 
+	#
+	# For certain upgrade options we need to set the release_tag to the one
+	# we are upgrading to prior to load_config
+	#
+	if subcommand == "upgrade":
+		if pargs[0] == "core" or pargs[0] == "all":
+			os.environ["USE_RELEASE_TAG"] = pargs[1]
+
 	load_config(use_site)
 
 	if subcommand == "updatecatalog":
@@ -1247,8 +1426,6 @@ def do_main():
 		ret = available(vars, pargs)
 	elif subcommand == "compare":
 		ret = compare(vars, pargs)
-	elif subcommand == "list":
-		ret = list(vars, pargs)
 	elif subcommand == "download":
 		ret = download(vars, pargs)
 	elif subcommand == "describe":
