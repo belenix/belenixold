@@ -94,7 +94,10 @@ def compute_version(verstr):
 		cnt = cnt + 1
 
 	if alphasum > 0:
-		ver = Decimal(''.join(vstr))
+		if len(vstr) > 0:
+			ver = Decimal(''.join(vstr))
+		else:
+			ver = Decimal(0)
 		ver = Decimal(str(ver).ljust(8, "0")) + Decimal(cnt)
 		version = str(ver)
 	else:
