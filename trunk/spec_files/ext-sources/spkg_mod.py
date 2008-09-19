@@ -101,6 +101,7 @@ class Cl_vars(object):
 		self.INSTPKGDIR = "/var/sadm/pkg"
 		self.ADMINFILE = self.SPKG_VAR_DIR + "/admin"
 		self.RELEASES_LIST = "%s/releases" % self.SPKG_VAR_DIR
+		self.bename = ""
 
 		# Fields numbers in a catalog entry for a package
 		self.CNAMEF = 0; self.VERSIONF = 1
@@ -118,11 +119,11 @@ class Cl_vars(object):
 			if apath[-1] == "/":
 				apath = apath.rstrip('/')
 			self.ALTROOT = apath
-			self.SPKG_VAR_DIR = os.path.join(apath, self.SPKG_VAR_DIR)
-        		self.SPKG_DWN_DIR = os.path.join(apath, self.SPKG_DWN_DIR)
-        		self.INSTPKGDIR = os.path.join(apath, self.INSTPKGDIR)
-        		self.ADMINFILE = os.path.join(apath, self.ADMINFILE)
-			self.RELEASES_LIST = os.path.join(apath, self.RELEASES_LIST)
+			self.SPKG_VAR_DIR = apath + self.SPKG_VAR_DIR
+        		self.SPKG_DWN_DIR = apath + self.SPKG_DWN_DIR
+        		self.INSTPKGDIR = apath + self.INSTPKGDIR
+        		self.ADMINFILE = apath + self.ADMINFILE
+			self.RELEASES_LIST = apath + self.RELEASES_LIST
 		else:
 			self.SPKG_VAR_DIR = self.SPKG_VAR_DIR.replace(self.ALTROOT, apath)
 			self.SPKG_DWN_DIR = self.SPKG_DWN_DIR.replace(self.ALTROOT, apath)
@@ -260,6 +261,11 @@ def load_config(use_site):
 	vars.cnffile = "/etc/spkg.conf"
 	com = re.compile("^#")
 
+	if os.environ.has_key("USE_RELEASE_TAG"):
+		use_release = os.environ["USE_RELEASE_TAG"]
+	else:
+		use_release = ""
+
 	fl = open(vars.cnffile, "r")
 	for line in fl:
 		if com.match(line):
@@ -270,16 +276,11 @@ def load_config(use_site):
 		if len(fields) < 2:
 			continue
 
-		if os.environ.has_key("USE_RELEASE_TAG"):
-			use_release = os.environ["USE_RELEASE_TAG"]
-		else:
-			use_release = ""
-
 		if fields[0] == "RTYPE":
 			vars.RTYPE = fields[1]
 		elif fields[0] == "USE_RELEASE_TAG":
 			if not os.environ.has_key("USE_RELEASE_TAG"):
-				use_release = fields[1].split(" ")
+				use_release = fields[1]
 		elif fields[0] == "PKGSITES":
 			vars.PKGSITES = fields[1].split(" ")
 		elif fields[0] == "FTP_PROXY":
@@ -892,6 +893,47 @@ def install_pkg(vars, ent, pkgfile):
 
 	os.unlink(pkgfileds)
 
+def create_bootenv(vars):
+	"""Create a new boot environment using SNAP BE management. vars is modified to point to it."""
+
+	num = 0
+	out = exec_prog("beadm list -H", 1)
+	for line in out.split("\n"):
+		nm = line.split(":")[0]
+		nmlst = nm.split("-")
+		if len(nmlst) > 1:
+			try:
+				num = int(nmlst[1])
+			except:
+				pass
+
+	num = num + 1
+	newbe = "opensolaris-%s" % num
+	altroot = "/var/tmp/spkg/%s" % newbe
+	if not os.path.exists(altroot):
+		os.makedirs(altroot)
+	try:
+		exec_prog("beadm create %s" % newbe, 0)
+		exec_prog("beadm mount %s %s" % (newbe, altroot), 0)
+	except PKGError, pe:
+		raise PKGError("Failed to create a new boot environment. Cannot upgrade!\n" + pe.message)
+
+	vars.bename = newbe
+	vars.set_altroot(altroot)
+
+def activate_bootenv(vars):
+	"""Unmount and activate a bootenv."""
+
+	if vars.bename == "":
+		raise PKGError("No bootenv exists!")
+
+	try:
+		exec_prog("beadm unmount %s" % vars.bename, 0)
+		exec_prog("beadm activate %s" % vars.bename, 0)
+	except PKGerror, pe:
+		raise PKGerror("Failed to activate new boot environment " + bars.bename + \
+		    ". Use beadm to fix.\n " + pe.message)
+
 def uninstall_pkg(vars, ent):
 	"""Remove the given package."""
 
@@ -974,6 +1016,22 @@ def create_plan(vars, pargs, action):
 
 def execute_plan(tplan, downloadonly):
 	"""Perform package actions as per the given Transform Plan"""
+
+	num = len(tplan.pdict.keys())
+	vars = tplan.vars
+
+	if downloadonly != 1:
+		if tplan.action == vars.INSTALL:
+			print "------------------------------------------------"
+			print "Will be installing %d packages" % num
+			print "------------------------------------------------"
+			print ""
+		elif tplan.action == vars.UPGRADE or tplan.action == vars.UPGRADE_BASE or \
+		    tplan.action == vars.UPGRADE_ALL:
+			print "------------------------------------------------"
+			print "Will be upgrading %d packages" % num
+			print "------------------------------------------------"
+			print ""
 
 	print "** Downloading packages\n"
 	#
@@ -1083,7 +1141,31 @@ def upgrade(vars, pargs):
 	else:
 		tplan = create_plan(vars, pargs, vars.UPGRADE)
 
-	execute_plan(tplan, downloadonly)
+	if tplan.action == vars.UPGRADE_BASE or tplan.action == vars.UPGRADE_ALL:
+		create_bootenv(vars)
+
+	execute_plan(tplan, 0)
+
+	if tplan.action == vars.UPGRADE_BASE or tplan.action == vars.UPGRADE_ALL:
+		# Update release tag on boot environment
+		rel = os.environ["USE_RELEASE_TAG"]
+		try:
+			tf = open("%s/etc/release_tag", "w")
+			print >> tf, rel
+			tf.close()
+		except:
+			traceback.print_exc()
+			print ""
+			print "WARNING: Unable to update /etc/release_tag in new boot env."
+			print "         Please put '%s' into that file after reboot" % rel
+			print "         or set this value for USE_RELEASE_TAG in /etc/spkg.conf"
+			print ""
+		activate_bootenv(vars)
+		print "Upgrade SUCCESSFUL. Upgraded system will be available on next reboot"
+		print ""
+	else:
+		print "Upgrade SUCCESSFUL."
+		print ""
 
 	return 0
 
@@ -1411,6 +1493,10 @@ def do_main():
 	# we are upgrading to prior to load_config
 	#
 	if subcommand == "upgrade":
+		if len(pargs) != 2:
+			usage()
+			sys.exit(1)
+
 		if pargs[0] == "core" or pargs[0] == "all":
 			os.environ["USE_RELEASE_TAG"] = pargs[1]
 
