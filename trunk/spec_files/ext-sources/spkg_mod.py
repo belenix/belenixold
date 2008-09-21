@@ -38,29 +38,29 @@ from decimal import Decimal
 class Cl_pkgentry(object):
 	"""Class that holds all fields of a package entry in the catalog including site related entries."""
 
-	def __init__(self, entry, siteimg):
+	def __init__(self, entry, sitevars):
 		self.cname = entry[0]
 		self.version = entry[1]
 		self.pkgname = entry[2]
 		self.pkgfile = entry[3]
 		self.sha1sum = entry[4]
 		self.origvers = entry[5]
-		self.siteimg = siteimg
+		self.sitevars = sitevars
 		self.refername = ""
 		self.deplist = []
 		self.action = 0
 		self.dwn_pkgfile = ""
 
-	def update(self, entry, siteimg):
+	def update(self, entry, sitevars):
 		self.cname = entry[0]
 		self.version = entry[1]
 		self.pkgname = entry[2]
 		self.pkgfile = entry[3]
 		self.sha1sum = entry[4]
-		self.siteimg = siteimg
+		self.sitevars = sitevars
 		
 
-class Cl_siteimg(object):
+class Cl_sitevars(object):
 	"""Class that holds site - specific variables."""
 
 	def __init__(self, site, RELEASE, RTYPE, SPKG_VAR_DIR):
@@ -179,13 +179,13 @@ class PKGVersError(PKGError):
 	def __init__(self, message):
 		self.message = message
 
-class PKGCksumError(Exception):
+class PKGCksumError(PKGError):
 	"""Package checksum verification error"""
 
 	def __init__(self, message):
 		self.message = message
 
-class PKGMetaError(Exception):
+class PKGMetaError(PKGError):
 	"""Metainfo processing error"""
 
 	def __init__(self, message):
@@ -201,28 +201,33 @@ Usage:
 Subcommands:
 	updatecatalog   Updates download site metadata
 	install         <package names>
-			Install one or more packages/package clusters
+	                Install one or more packages/package clusters
 
 	upgrade [<Upgrade Type> <release tag>]|[<package list>]
-			Upgrades already installed packages if possible
-			Upgrade type can be one of:
-			core - Upgrade the core distro (Kernel, core libs etc.)
-			all - Upgrade the entire distribution.
+	                Upgrades already installed packages if possible
+	                Upgrade type can be one of:
+	                core - Upgrade the core distro (Kernel, core libs etc.)
+	                all - Upgrade the entire distribution.
 
-			release tag - The distro release to upgrade to for core or all.
+	                release tag - The distro release to upgrade to for core or all.
 
 	available [-r]  Lists the available packages in all sites
-                        With '-r' flag lists all the current distro releases
-                        available.
+                        With '-r' flag lists all the current distro releases available.
 	compare         Shows installed package versions vs available
 	info [-s] [<pkg list>]
-			List information about packages whether installed or not
-			With '-s' display a short listing of only package descriptions
-	contents        List all pathnames delivered by the package
+	                List information about packages whether installed or not
+	                With '-s' display a short listing of only package descriptions.
 
-	init <dir>      Initialize an Alternate Root image in the given dir
-			The dir is created if it does not exist
-	download	Just download the package, do not install
+	contents [-l]   List all pathnames delivered by the package. With '-l' show a long
+	                listing that shows pathname type, ownership and permission.
+	search [-F] <pattern>
+	                Search for the given pattern in the catalogs. With '-F' perform a
+	                full-text search in all the package contents.
+	                <pattern> can be simple string/pathname or a regular expression.
+
+	init <dir>      Initialize an Alternate Root image in the given dir. The dir is
+	                created if it does not exist
+	download        Just download the package, do not install
 
 Options:
 	-R <dir>             Perform all operations onto an Alternate Root image in the dir
@@ -346,9 +351,9 @@ def load_config(use_site):
 		img.PKGSITES=[use_site]
 
 	for site in img.PKGSITES:
-		siteimg = Cl_siteimg(site, \
+		sitevars = Cl_sitevars(site, \
 	    	img.RELEASE, img.RTYPE, img.SPKG_VAR_DIR)
-		img.PKGSITEVARS.append(siteimg)
+		img.PKGSITEVARS.append(sitevars)
 		
 
 def verify_sha1sum(ent, dfile):
@@ -578,7 +583,8 @@ def fetch_metainfo_fields(site, pkgname, version, fnames):
 	fvalues = []
 	for fname in fnames:
 		if not nmdict.has_key(fname):
-			raise PKGMetaError("FATAL: %s field not found for package %s" % (fname, pkgname))
+			raise PKGMetaError("FATAL: %s field not found for package %s" % \
+			    (fname, pkgname))
 		fvalues.append(nmdict[fname])
 
 	return fvalues
@@ -586,15 +592,23 @@ def fetch_metainfo_fields(site, pkgname, version, fnames):
 #
 # Generic catalog search routine to support spkg search
 #
-def searchcatalog(siteimg, srchre, fieldnum):
+def searchcatalog(sitevars, srchre, fieldnum):
 	"""Search the site's catalog for the given regexp in the given field."""
 
-	catf = open(siteimg.catalog, "r")
+	catf = open(sitevars.catalog, "r")
 	matches = []
-	for line in catf:
-		entry = line.split(" ")
-		if srchre.match(entry[fieldnum]):
-			matches.append(Cl_pkgentry(entry, siteimg))
+
+	if fieldnum == -1:
+		matches = [Cl_pkgentry(line.split(" "), sitevars) for line in catf \
+		    if srchre.search(line)]
+	else:
+		matches = [Cl_pkgentry(entry, sitevars) for entry in \
+		    [line.split(" ") for line in catf] \
+		    if srchre.search(entry[fieldnum])]
+		#for line in catf:
+		#	entry = line.split(" ")
+		#	if srchre.match(entry[fieldnum]):
+		#		matches.append(Cl_pkgentry(entry, sitevars))
 
 	return matches
 
@@ -842,7 +856,7 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 					pdict[pkgname].action = INSTALL
 
 		# TODO: Handle incompatibles
-		depends = "%s/%s/%s/depend" % (pdict[pkgname].siteimg.metadir, \
+		depends = "%s/%s/%s/depend" % (pdict[pkgname].sitevars.metadir, \
 		    pkgname, pdict[pkgname].version)
 		depf = open(depends, "r")
 		for line in depf:
@@ -885,7 +899,16 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 def build_pkglist(img, pkgs, pdict, type, level):
 	"""Wrapper for main do_build_pkglist routine"""
 
+	for sv in img.PKGSITEVARS:
+		if not os.path.isfile(sv.catalog):
+			updatecatalog(img, [])
+		sv.catfh = open(sv.catalog, "r")
+
 	type = do_build_pkglist(img, pkgs, pdict, type, level)
+
+	for sv in img.PKGSITEVARS:
+		sv.catfh.close()
+		sv.catfh = None
 
 	# Return if we are only asked to prepare a catalog entry list
 	if type == img.LIST_ONLY:
@@ -928,7 +951,7 @@ def create_bootenv(img):
 	"""Create a new boot environment using SNAP BE management. img is modified to point to it."""
 
 	num = 0
-	out = exec_prog("beadm list -H", 1)
+	out = exec_prog("/usr/sbin/beadm list -H", 1)
 	for line in out.split("\n"):
 		nm = line.split(":")[0]
 		nmlst = nm.split("-")
@@ -944,8 +967,8 @@ def create_bootenv(img):
 	if not os.path.exists(altroot):
 		os.makedirs(altroot)
 	try:
-		exec_prog("beadm create %s" % newbe, 0)
-		exec_prog("beadm mount %s %s" % (newbe, altroot), 0)
+		exec_prog("/usr/sbin/beadm create %s" % newbe, 0)
+		exec_prog("/usr/sbin/beadm mount %s %s" % (newbe, altroot), 0)
 	except PKGError, pe:
 		raise PKGError("Failed to create a new boot environment. Cannot upgrade!\n" + pe.message)
 
@@ -959,11 +982,11 @@ def activate_bootenv(img):
 		raise PKGError("No bootenv exists!")
 
 	try:
-		exec_prog("beadm unmount %s" % img.bename, 0)
-		exec_prog("beadm activate %s" % img.bename, 0)
+		exec_prog("/usr/sbin/beadm unmount %s" % img.bename, 0)
+		exec_prog("/usr/sbin/beadm activate %s" % img.bename, 0)
 	except PKGerror, pe:
 		raise PKGerror("Failed to activate new boot environment " + bars.bename + \
-		    ". Use beadm to fix.\n " + pe.message)
+		    ". Use /usr/sbin/beadm to fix.\n " + pe.message)
 
 def uninstall_pkg(img, ent):
 	"""Remove the given package."""
@@ -986,9 +1009,6 @@ def create_plan(img, pargs, action):
 	pkgs = []
 
 	for sv in img.PKGSITEVARS:
-		if not os.path.isfile(sv.catalog):
-			updatecatalog(img, [])
-		sv.catfh = open(sv.catalog, "r")
 		base_cluster = "%s/clusters/base_cluster" % sv.metadir
 		if os.path.isfile(base_cluster):
 			bfh = open(base_cluster, "r")
@@ -1012,10 +1032,6 @@ def create_plan(img, pargs, action):
 		pkgs = pargs
 
 	action = build_pkglist(img, pkgs, pdict, action, 0)
-
-	for sv in img.PKGSITEVARS:
-		sv.catfh.close()
-		sv.catfh = None
 
 	#
 	# We now have a dictionary of the full list of package objects to be installed
@@ -1099,7 +1115,7 @@ def download_packages(tplan):
 			if ent.action != img.INSTALL and ent.action != img.UPGRADE:
 				continue
 			pkgurl = "%s/%s/%s/%s" % \
-			    (ent.siteimg.fullurl, img.ARCH, img.OSREL, ent.pkgfile)
+			    (ent.sitevars.fullurl, img.ARCH, img.OSREL, ent.pkgfile)
 			tfile = "%s/%s" % (img.SPKG_DWN_DIR, ent.pkgfile)
 			ent.dwn_pkgfile = tfile
 
@@ -1227,7 +1243,7 @@ def available(img, pargs):
 	for sv in img.PKGSITEVARS:
 		catf = open(sv.catalog, "r")
 
-		# depends = "%s/%s/%s/depend" % (pdict[pkgname].siteimg.metadir, \
+		# depends = "%s/%s/%s/depend" % (pdict[pkgname].sitevars.metadir, \
 		#    pkgname, pdict[pkgname].version)
 
 		ioerr = 0
@@ -1434,20 +1450,16 @@ def info(img, pargs):
 	else:
 		pkgs = pargs
 
-	for sv in img.PKGSITEVARS:
-		if not os.path.isfile(sv.catalog):
-			updatecatalog(img, [])
-		sv.catfh = open(sv.catalog, "r")
-
 	pdict = {}
 	build_pkglist(img, pkgs, pdict, img.LIST_ONLY, 0)
 
-	for sv in img.PKGSITEVARS:
-		sv.catfh.close()
-		sv.catfh = None
+	if sys.stdout.isatty():
+		pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
+		out = pipe.stdin
+	else:
+		pipe = None
+		out = sys.stdout
 
-	pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
-	out = pipe.stdin
 	print >> out, "############################################################################"
 	if allinst == 1:
 		print >> out, "# Listing all installed packages"
@@ -1474,7 +1486,7 @@ def info(img, pargs):
 					dump_pkginfo(pkg, pkginfile, out, True, short)
 				else:
 					pkginfile = "%s/%s/%s/pkginfo" % \
-				    	(pkg.siteimg.metadir, pkg.pkgname, pkg.version)
+				    	(pkg.sitevars.metadir, pkg.pkgname, pkg.version)
 					dump_pkginfo(pkg, pkginfile, out, False, short)
 	except IOError, ie:
 		if ie.errno == 32:
@@ -1482,8 +1494,9 @@ def info(img, pargs):
 		else:
 			raise ie
 
-	pipe.stdin.close()
-	pipe.wait()
+	if pipe:
+		pipe.stdin.close()
+		pipe.wait()
 	return 0
 
 def init(img, pargs):
@@ -1496,9 +1509,12 @@ def init(img, pargs):
 	img.init(altroot)
 	updatecatalog(img, [])
 
-def dump_pkgcontents(out, name, pkgmapfile):
+def dump_pkgcontents(out, name, pkgmapfile, long_listing):
 	"""Dump the package pathnames for the given package."""
 
+	#
+	# Contents of the pkgmap file are dumped
+	#
 	try:
 		pmf = open(pkgmapfile, "r")
 	except:
@@ -1518,42 +1534,60 @@ def dump_pkgcontents(out, name, pkgmapfile):
 
 		if entry[1] == "s":
 			fl = entry[3].replace("=", " -> ")
-			print >> out, "type = %s" % types[entry[1]]
+			if long_listing:
+				print >> out, "type = %s" % types[entry[1]]
 			print >> out, fl
 		else:
-			print >> out, "type = %s, perms = %s, owner = %s, group = %s" % \
-			    (types[entry[1]], entry[4], entry[5], entry[6])
+			if long_listing:
+				print >> out, \
+				    "type = %s, perms = %s, owner = %s, group = %s" % \
+				    (types[entry[1]], entry[4], entry[5], entry[6])
 			print >> out, entry[3]
-		print >> out, ""
+		if long_listing:
+			print >> out, ""
 	pmf.close()
 
 
 def contents(img, pargs):
 	"""List all pathnames from the given package[s]."""
 
+	long_listing = False
+	pl = len(pargs)
+
+	if pl > 0:
+		if pargs[0] == "-l":
+			long_listing = True
+			del pargs[0]
+
 	if len(pargs) < 1:
 		raise PKGError(_("No packages provided to show contents"))
-
-	for sv in img.PKGSITEVARS:
-		if not os.path.isfile(sv.catalog):
-			updatecatalog(img, [])
-		sv.catfh = open(sv.catalog, "r")
 
 	pkgs = pargs
 	pdict = {}
 	build_pkglist(img, pkgs, pdict, img.LIST_ONLY, 0)
 
-	for sv in img.PKGSITEVARS:
-		sv.catfh.close()
-		sv.catfh = None
-
-	pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
-	out = pipe.stdin
+	if sys.stdout.isatty():
+		pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
+		out = pipe.stdin
+	else:
+		pipe = None
+		out = sys.stdout
 
 	try:
 		for pn in pdict.keys():
 			pkg = pdict[pn]
 			name = ""
+
+			#
+			# First check for the pkgmap file in pspool area. This area
+			# is set up to support Zones in SVR4 packaging. This allows
+			# showing contents for third-party packages not in our catalogs.
+			# If the package is not installed then the pkgmap is fetched
+			# from /var/spkg/metadir...
+			# However if the package is not in our catalogs and not installed
+			# then of course we have to dump a not found message for that
+			# package.
+			#
 			if pkg:
 				pkgmapfile = "%s/%s/save/pspool/%s/pkgmap" % \
 				    (img.INSTPKGDIR, pkg.pkgname, pkg.pkgname)
@@ -1572,7 +1606,7 @@ def contents(img, pargs):
 					continue
 				name = pn
 
-			dump_pkgcontents(out, name, pkgmapfile)
+			dump_pkgcontents(out, name, pkgmapfile, long_listing)
 
 	except IOError, ie:
 		if ie.errno == 32:
@@ -1580,8 +1614,34 @@ def contents(img, pargs):
 		else:
 			raise ie
 
-	pipe.stdin.close()
-	pipe.wait()
+	if pipe:
+		pipe.stdin.close()
+		pipe.wait()
+
+def search(img, pargs):
+	"""Perform content or catalog searches"""
+
+	if len(pargs) < 1:
+		raise PKGError(_("No arguments to search!"))
+
+	ignorecase = False
+	for arg in pargs:
+		if arg == "-i":
+			ignorecase = True
+			pargs.remove(arg)
+
+	if ignorecase:
+		mtch = re.compile(pargs[0], re.IGNORECASE)
+	else:
+		mtch = re.compile(pargs[0])
+	out = sys.stdout
+	for sv in img.PKGSITEVARS:
+		if not os.path.isfile(sv.catalog):
+			updatecatalog(img, [])
+		for pkg in searchcatalog(sv, mtch, -1):
+			pkginfile = "%s/%s/%s/pkginfo" % \
+			    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+			dump_pkginfo(pkg, pkginfile, out, False, False)
 
 def do_main():
 	"""Main entry point."""
@@ -1660,6 +1720,8 @@ def do_main():
 		ret = info(img, pargs)
 	elif subcommand == "contents":
 		ret = contents(img, pargs)
+	elif subcommand == "search":
+		ret = search(img, pargs)
 	else:
 		print >> sys.stderr, \
 		    "spkg: unknown subcommand '%s'" % subcommand
