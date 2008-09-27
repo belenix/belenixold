@@ -19,7 +19,7 @@ Source7:             genver
 
 SUNW_BaseDir:        /
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
-Requires:            SUNWcsr
+Requires:            SFEaxel
 
 %prep
 rm -rf %{name}-%{version}-build
@@ -58,7 +58,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_localstatedir}/spkg
-%{_localstatedir}/spkg/*
+%{_localstatedir}/spkg/admin
+%{_localstatedir}/spkg/spkg.conf
 %dir %attr (0755, root, bin) %{_localstatedir}/spkg/downloads
 %dir %attr (0755, root, sys) %{_libdir}
 %dir %attr (0755, root, sys) %{_libdir}/python2.4
@@ -68,6 +69,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Sat Sep 27 2008 - moinakg@belenix.org
 - Move spkg.conf from /etc to allow preserving user configuration.
+- Add dependency on axel, remove dependency on core package.
 * Wed Sep 17 2008 - moinakg@belenix.org
 - Add a couple of repository management tools.
 * Sun Sep 07 2008 - moinakg@belenix.org
