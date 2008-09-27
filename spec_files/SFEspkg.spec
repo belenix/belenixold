@@ -33,7 +33,6 @@ cd %{name}-%{version}-build
 rm -rf ${RPM_BUILD_ROOT}
 mkdir ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
-mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}
 mkdir -p ${RPM_BUILD_ROOT}%{_localstatedir}/spkg/downloads
 mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
 
@@ -42,7 +41,7 @@ cp %{SOURCE6} ${RPM_BUILD_ROOT}%{_bindir}
 cp %{SOURCE7} ${RPM_BUILD_ROOT}%{_bindir}
 cp %{SOURCE2} ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
 cp %{SOURCE3} ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
-cp %{SOURCE4} ${RPM_BUILD_ROOT}%{_sysconfdir}
+cp %{SOURCE4} ${RPM_BUILD_ROOT}%{_localstatedir}/spkg
 cp %{SOURCE5} ${RPM_BUILD_ROOT}%{_localstatedir}/spkg
 
 python -m compileall -l ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
@@ -52,8 +51,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr (-, root, sys)
-%dir %attr (0755, root, sys) %{_sysconfdir}
-%{_sysconfdir}/*
 %dir %attr (0755, root, sys) %{_localstatedir}
 %dir %attr (0755, root, sys) %{_prefix}
 %dir %attr (0755, root, sys) %{_bindir}
@@ -61,7 +58,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_localstatedir}/spkg
-%{_localstatedir}/spkg/admin
+%{_localstatedir}/spkg/*
 %dir %attr (0755, root, bin) %{_localstatedir}/spkg/downloads
 %dir %attr (0755, root, sys) %{_libdir}
 %dir %attr (0755, root, sys) %{_libdir}/python2.4
@@ -69,6 +66,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.4/site-packages/*
 
 %changelog
+* Sat Sep 27 2008 - moinakg@belenix.org
+- Move spkg.conf from /etc to allow preserving user configuration.
 * Wed Sep 17 2008 - moinakg@belenix.org
 - Add a couple of repository management tools.
 * Sun Sep 07 2008 - moinakg@belenix.org
