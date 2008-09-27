@@ -1,0 +1,29 @@
+#!/bin/sh
+
+
+PACKAGES_DIR=packages
+if [ ! -d build ]
+then
+	mkdir build
+fi
+
+REV=`/usr/bin/date +%Y.%M.%d.%H.%M`
+
+for pkgd in $PACKAGES_DIR/*
+do
+	pkgn=`basename $pkgd`
+	if [ ! -d build/$pkgn ]
+	then
+		mkdir build/$pkgn
+	fi
+	cat $pkgd/pkginfo | /usr/bin/sed "s/^VERSION=\(.*\)/VERSION=\1,REV=$REV/" > build/$pkgn/pkginfo
+	cp $pkgd/depend build/$pkgn/depend
+
+	(cd build/; tar cf $pkgn.group $pkgn)
+	[ $? -ne 0 ] && exit 1
+
+	(cd build/; 7za a $pkgn.group.7z $pkgn.group)
+	[ $? -ne 0 ] && exit 1
+
+	rm -f build/$pkgn.group
+done
