@@ -51,6 +51,7 @@ class Cl_pkgentry(object):
 		self.deplist = []
 		self.action = 0
 		self.dwn_pkgfile = ""
+		self.version_given = False
 
 	def update(self, entry, sitevars):
 		self.cname = entry[0]
@@ -85,6 +86,7 @@ class Cl_img(object):
 	def __init__(self):
 		# Hardcoded for now
 		self.cnffile = "/etc/spkg.conf"
+		self.cnffile_master = "/var/spkg/spkg.conf"
 
 		self.ALTROOT = ""
 		self.RTYPE = "unstable"
@@ -163,11 +165,12 @@ class TransformPlan:
 	"""Holds a set of packages and actions to perform on those packages
 	for a given filesystem image"""
 
-	def __init__(self, img, pdict, sorted_list, action):
+	def __init__(self, img, pdict, sorted_list, action, num):
 		self.img = img
 		self.pdict = pdict
 		self.sorted_list = sorted_list
 		self.action = action
+		self.num = num
 
 class PKGError(Exception):
 	"""General packaging error"""
@@ -216,8 +219,10 @@ Subcommands:
 
 	                release tag - The distro release to upgrade to for core or all.
 
-	available [-r]  Lists the available packages in all sites
+	available [-r|-g]  Lists the available packages in all sites
                         With '-r' flag lists all the current distro releases available.
+                        With '-g' flag lists all group packages available.
+
 	compare         Shows installed package versions vs available
 	info [-s] [<pkg list>]
 	                List information about packages whether installed or not
@@ -296,6 +301,14 @@ def load_config(use_site):
 		use_release = os.environ["USE_RELEASE_TAG"]
 	else:
 		use_release = ""
+
+	#
+	# /etc/spkg.conf is not delivered by the package to avoid overwriting modifications
+	# when the package is upgraded/reinstalled. It is created from a default config
+	# for the first time.
+	#
+	if not os.path.exists(img.cnffile):
+		shutil.copyfile(img.cnffile_master, img.cnffile)
 
 	fl = open(img.cnffile, "r")
 	for line in fl:
@@ -501,6 +514,30 @@ def compute_version(verstr):
 	return ''.join(vstr)
 
 #
+# Check for package names having versions of the form <package name>@<version string>
+# <version string> must be of the folowing form: <version number>(<revision string>)
+# Ths version string is converted into the normalized form using compute_version
+# The regular expression below allows empty revision strings.
+#
+vre = re.compile("([^\( ]+)\({0,1}([^\( ]*)\){0,1}")
+
+def normalize_versions(pkgs):
+	"""Normalize user-speficied package version strings"""
+
+	npkgs = []
+	for pn in pkgs:
+		if pn.find('@') > -1:
+			pkgn, vers = pn.split("@", 1)
+			vl = vre.findall(vers)
+			if len(vl) < 1 or len(vl[0]) < 1:
+				raise PKGError(_("Invalid package version string " + pn))
+			vers = compute_version("VERSION=" + vl[0][0] + ",REV=" + vl[0][1])
+			npkgs.append([pkgn, vers, pn])
+		else:
+			npkgs.append(pn)
+	return npkgs
+
+#
 # Compare the version part or first 2 components of the version string
 # ver1 > ver2:  return 1
 # ver1 == ver2:  return 0
@@ -600,6 +637,13 @@ def fetch_metainfo_fields(site, pkgname, version, type, fnames):
 		fvalues.append(nmdict[fname])
 
 	return fvalues
+
+def pkg_is_installed(pkgname, img):
+	"""Return True if the given package is installed in the given image.
+	   The pkgname parameter is the package name, Not common name."""
+
+	return os.path.exists("%s/%s" % (img.INSTPKGDIR, pkgname)) or \
+	    os.path.exists("%s/%s" % (img.SPKG_GRP_DIR, pkgname))
 
 #
 # Generic catalog search routine to support spkg search
@@ -775,7 +819,13 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 
 			# Ignore invalid entry format
 			if len(entry) != 7: continue
-			for name in pkgs:
+			for pkgn in pkgs:
+				vers = ""
+				if isinstance(pkgn , list):
+					name, vers, givenname = pkgn
+				else:
+					name = pkgn
+
 				if name == entry[CNAMEF] or name == entry[PKGNAMEF]:
 					nm = entry[PKGNAMEF]
 
@@ -786,6 +836,19 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 					if type == UPGRADE and level == 0 and \
 					    sv.base_cluster.has_key(nm):
 						type = UPGRADE_ALL
+
+					#
+					# If the user provided a specific version string we
+					# do an exact match with that version string.
+					#
+					if vers != "":
+						if compare_vers(entry[VERSIONF], vers) == 0:
+							pdict[nm] = Cl_pkgentry(entry, sv)
+							pdict[nm].refername = givenname
+							pdict[nm].version_given = True
+							rmlist.append(pkgn)
+						continue
+
 					if pdict.has_key(nm):
 						if compare_vers(entry[VERSIONF], \
 						    pdict[nm].version) > 0:
@@ -801,23 +864,19 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 		for name in rmlist:
 			pkgs.remove(name)
 
-	if type == UPGRADE_BASE:
-		# Check for installed base packages
-		for nm in pdict.keys():
-			if not os.path.isfile("%s/%s/pkginfo" % (img.INSTPKGDIR, nm)):
-				del pdict[nm]
-
-	elif len(pkgs) > 0 and type != UPGRADE_ALL:
+	# Check for packages not found. We ignore this check in upgrade
+	# all/base mode since there might be packages in the system that
+	# are not from our repo. Those are just retained as-is.
+	#
+	if len(pkgs) > 0 and type != UPGRADE_ALL and type != UPGRADE_BASE:
 		if type == img.LIST_ONLY:
 			for pkgn in pkgs:
 				pdict[pkgn] = None
 		else:
-			# Check for packages not found. We ignore this check in upgrade
-			# all/base mode since there might be packages in the system that
-			# are not from our repo. Those are just retained as-is.
-			#
+			pkgl1 = [ent[2] for ent in pkgs if isinstance(ent, list)]
+			pkgl2 = [ent for ent in pkgs if not isinstance(ent, list)]
 			raise PKGError("ERROR: The following packages not found in any catalog: " + \
-		    	' '.join(pkgs))
+		    	' '.join(pkgl1) + ' ' + ' '.join(pkgl2))
 
 	# Return if we are only asked to prepare a catalog entry list
 	if type == img.LIST_ONLY:
@@ -832,16 +891,18 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 		#
 		pkg = pdict[pkgname]
 
-		if os.path.exists("%s/%s" % (img.INSTPKGDIR, pkgname)) or \
-		    os.path.exists("%s/%s" % (img.SPKG_GRP_DIR, pkgname)):
+		if pkg_is_installed(pkgname, img):
 			# Package exists
 			if type == INSTALL:
-				if level == 0:
+				if level == 0 and not pkg.version_given:
 					# Package specified by user is installed. Crib!
 					raise PKGError(_("Package %s already installed" % name))
 				else:
-					# We are in dependency handling. Ignore installed
-					# uptodate packages otherwise upgrade.
+					#
+					# We are either in dependency handling or user provided
+					# a version string. Ignore installed uptodate packages
+					# otherwise upgrade.
+					#
 					localver = fetch_local_version(img, pkg)
 					if compare_vers(localver[0], pkg.version) > 0:
 						pdict[pkgname].action = UPGRADE
@@ -854,8 +915,6 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 				if compare_vers(localver[0], pkg.version) > 0:
 					pdict[pkgname].action = UPGRADE
 				else:
-					#print >> sys.stderr, \
-					#    "Package %s is up to date\n" % pkgname
 					pdict[pkgname].action = img.NONE
 					continue
 		else:
@@ -883,7 +942,8 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 
 		depf = open(depends, "r")
 		for line in depf:
-			if line[0] == "P":
+			line = line.strip()
+			if line != "" and line[0] == "P":
 				# Get rid of TABs
 				line = line.replace("	", " ")
 				de = line.split(" ")
@@ -893,7 +953,7 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 				# installing or when upgrading non-base packages.
 				#
 				if type == INSTALL or type == UPGRADE:
-					if os.path.exists("%s/%s" % (img.INSTPKGDIR, de[1])):
+					if pkg_is_installed(de[1], img):
 						isbase = 0
 						for sv in img.PKGSITEVARS:
 							if sv.base_cluster.has_key(\
@@ -927,6 +987,7 @@ def build_pkglist(img, pkgs, pdict, type, level):
 			updatecatalog(img, [])
 		sv.catfh = open(sv.catalog, "r")
 
+	pkgs = normalize_versions(pkgs)
 	type = do_build_pkglist(img, pkgs, pdict, type, level)
 
 	for sv in img.PKGSITEVARS:
@@ -1079,13 +1140,21 @@ def create_plan(img, pargs, action):
 		pkgs = map(lambda pkg: pkg.replace(".i", ""), os.listdir(img.INSTPKGDIR))
 
 	elif action == img.UPGRADE_BASE:
-		# Build full list of base packages. Stripping out uninstalled base pkgs
-		# is handled in build_pkglist.
+		#
+		# Build full list of base packages stripping out uninstalled base pkgs.
+		# Some additional base packages might be brought in as part of upgrade
+		# via new dependencies.
 		#
 		bset = set([])
 		for sv in img.PKGSITEVARS:
 			bset = bset.union(sv.base_cluster.keys())
-		pkgs = list(bset)
+
+		#
+		# Check for base packages not installed. We do not want to bring in
+		# not installed base packages as part of the upgrade process unless
+		# they are new deps found in build_pkglist.
+		#
+		pkgs = [nm for nm in bset if pkg_is_installed(nm, img)]
 	else:
 		pkgs = pargs
 
@@ -1110,12 +1179,14 @@ def create_plan(img, pargs, action):
 	# Add circular self depdencies for packages with no deps listed otherwise the
 	# topo sort complains. These circular deps are properly handled.
 	#
-	for name in pdict.keys():
+	pkgs = pdict.keys()
+	num = len(pkgs)
+	for name in pkgs:
 		if not graphdict.has_key(name):
 			graphdict[name] = [name]
 
 	sorted_list = tsort.robust_topological_sort(graphdict)
-	tplan = TransformPlan(img, pdict, sorted_list, action)
+	tplan = TransformPlan(img, pdict, sorted_list, action, num)
 
 	return tplan
 
@@ -1150,7 +1221,6 @@ def execute_plan(tplan, downloadonly):
 		return ret
 
 	print "** Installing/Upgrading packages\n"
-	print tplan.sorted_list
 
 	# Now perform all the install actions
 	for titem in tplan.sorted_list:
@@ -1174,8 +1244,14 @@ def download_packages(tplan):
 			ent = tplan.pdict[pkgname]
 			if ent.action != img.INSTALL and ent.action != img.UPGRADE:
 				continue
-			pkgurl = "%s/%s/%s/%s" % \
-			    (ent.sitevars.fullurl, img.ARCH, img.OSREL, ent.pkgfile)
+			if ent.type == "P":
+				fc = ent.pkgfile[0:1]
+				pkgurl = "%s/%s/%s/%s/%s" % \
+				    (ent.sitevars.fullurl, img.ARCH, img.OSREL, fc, ent.pkgfile)
+			else:
+				pkgurl = "%s/%s/%s/groups/%s" % \
+				    (ent.sitevars.fullurl, img.ARCH, img.OSREL, ent.pkgfile)
+
 			tfile = "%s/%s" % (img.SPKG_DWN_DIR, ent.pkgfile)
 			ent.dwn_pkgfile = tfile
 
@@ -1228,6 +1304,13 @@ def install(img, pargs, downloadonly):
 	# End of Installation plan creation phase
 	#########################################
 
+	if tplan.num == 0:
+		print "------------------------------------------------"
+		print "All packages are up to date. Nothing to do"
+		print "------------------------------------------------"
+		print ""
+		return
+
 	execute_plan(tplan, downloadonly)
 
 	return 0
@@ -1247,6 +1330,13 @@ def upgrade(img, pargs):
 		tplan = create_plan(img, pargs, img.UPGRADE_ALL)
 	else:
 		tplan = create_plan(img, pargs, img.UPGRADE)
+
+	if tplan.num == 0:
+		print "------------------------------------------------"
+		print "All packages are up to date. Nothing to do"
+		print "------------------------------------------------"
+		print ""
+		return
 
 	if tplan.action == img.UPGRADE_BASE or tplan.action == img.UPGRADE_ALL:
 		create_bootenv(img)
@@ -1279,23 +1369,27 @@ def upgrade(img, pargs):
 def available(img, pargs):
 	"""List latest versions and descriptions of available packages in all catalogs."""
 
-	if len(pargs) > 0 and pargs[0] == "-r":
-		# List all releases
-		relf = open(img.RELEASES_LIST, "r")
+	group = False
+	if len(pargs) > 0:
+		if pargs[0] == "-r":
+			# List all releases
+			relf = open(img.RELEASES_LIST, "r")
 
-		print ""
-		print "######################################################"
-		print "# Listing current distro releases in descending order"
-		print "######################################################"
-		print "%20s   %20s" % ("Release Name", "Tag")
-		print "------------------------------------------------------"
-		print "%20s   %20s" % ("Latest Head", "trunk")
-		for line in relf:
-			name, tag = line.strip().split(":")
-			print "%20s   %20s" % (name, tag)
-		print "######################################################\n"
-		relf.close()
-		return 0
+			print ""
+			print "######################################################"
+			print "# Listing current distro releases in descending order"
+			print "######################################################"
+			print "%20s   %20s" % ("Release Name", "Tag")
+			print "------------------------------------------------------"
+			print "%20s   %20s" % ("Latest Head", "trunk")
+			for line in relf:
+				name, tag = line.strip().split(":")
+				print "%20s   %20s" % (name, tag)
+			print "######################################################\n"
+			relf.close()
+			return 0
+		elif pargs[0] == "-g":
+			group = True
 
 	pdict = {}
 	pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
@@ -1303,49 +1397,45 @@ def available(img, pargs):
 	for sv in img.PKGSITEVARS:
 		catf = open(sv.catalog, "r")
 
-		# depends = "%s/%s/%s/depend" % (pdict[pkgname].sitevars.metadir, \
-		#    pkgname, pdict[pkgname].version)
-
 		ioerr = 0
 		try:
 			print >> out, "############################################################################"
-			print >> out, "# Showing packages from site %s" % sv.site
+			if group:
+				print >> out, "# Showing Group packages from site %s" % sv.site
+			else:
+				print >> out, "# Showing packages from site %s" % sv.site
 			print >> out, "############################################################################"
-
-			nm1 = ""
-			version = ""
-			pkgname = ""
-			type = "P"
-			origversion = ""
-
 			for line in catf:
 				line = line.strip()
 				entry = line.split(" ")
 				if len(entry) != 7: continue
 
+				#
+				# Skip if this entry was already compared earlier
+				#
 				nm = entry[img.CNAMEF]
-				if len(nm1) == 0:
-					nm1 = nm
-					version = entry[img.VERSIONF]
-					origvers = entry[img.ORIGVERSF]
-					pkgname = entry[img.PKGNAMEF]
-					type = entry[img.TYPEF]
+				pkgname = entry[img.PKGNAMEF]
+				type = entry[img.TYPEF]
+				if group and type != "G":
+					continue
 
-				elif nm != nm1:
-					# Extract description from pkginfo
-					desc = fetch_metainfo_fields(sv, pkgname, \
-					    version, type, ["DESC"])
+				#
+				# We want the latest pkg revision here.
+				# Current symlink in the pkg's metainfo dir always points to the
+				# latest version, so we cheat via readlink.
+				#
+				if type == "P":
+					curr = "%s/%s/current" % (sv.metadir, pkgname)
+				else:
+					curr = "%s/groups/%s/current" % (sv.metadir, pkgname)
+				version = os.readlink(curr).strip()
+				fields = fetch_metainfo_fields(sv, pkgname, version, \
+				    type, ["VERSION", "DESC"])
+				verstr = fields[0].replace(",REV=", "(") + ")"
+				desc = fields[1]
 
-					print >> out, "%33s: %s\n%33s  %s\n" % \
-					    (nm1, desc[0], " ", origver)
-					nm1 = nm
-					version = entry[img.VERSIONF]
-					origvers = entry[img.ORIGVERSF]
-					pkgname = entry[img.PKGNAMEF]
-
-				elif compare_vers(entry[img.VERSIONF], version) > 0:
-					version = entry[img.VERSIONF]
-					origvers = entry[img.ORIGVERSF]
+				print >> out, "%33s: %s\n%33s  %s\n" % \
+				    (nm, desc, " ", verstr)
 		except IOError, ie:
 			ioerr = 1
 			if ie.errno == 32:
@@ -1403,7 +1493,10 @@ def compare(img, pargs):
 				# Current symlink in the pkg's metainfo dir always points to the
 				# latest version, so we cheat via readlink.
 				#
-				curr = "%s/%s/current" % (sv.metadir, pkgname)
+				if type == "P":
+					curr = "%s/%s/current" % (sv.metadir, pkgname)
+				else:
+					curr = "%s/groups/%s/current" % (sv.metadir, pkgname)
 				version = os.readlink(curr).strip()
 				fields = fetch_metainfo_fields(sv, pkgname, version, \
 				    type, ["VERSION", "DESC"])
@@ -1489,12 +1582,21 @@ def dump_pkginfo(pkg, pkginfile, out, installed, short):
 		print >> out, " %20s : %s" % ("Common Name", cname)
 		print >> out, " %20s : %s" % ("Package Name", pkgname)
 		print >> out, " %20s : %s" % ("Description", cont["DESC"])
-		print >> out, " %20s : %s" % ("Version", cont["VERSION"])
+		if cont["VERSION"].find(",REV=") > -1:
+			print >> out, " %20s : %s" % ("Version", \
+			    cont["VERSION"].replace(",REV=", "(") + ")")
+		else:
+			print >> out, " %20s : %s" % ("Version", cont["VERSION"] + "()")
 		if installed:
 			print >> out, " %20s : %s" % ("Installed", "Yes")
 			print >> out, " %20s : %s" % ("Install Date", cont["INSTDATE"])
 		else:
 			print >> out, " %20s : %s" % ("Installed", "No")
+
+		if pkg.type == "P":
+			print >> out, " %20s : %s" % ("Type", "Standard Package")
+		else:
+			print >> out, " %20s : %s" % ("Type", "Group Package")
 		print >> out, " %20s : %s" % ("Category", cont["CATEGORY"])
 		print >> out, " %20s : %s" % ("Vendor", cont["VENDOR"])
 	print >> out, ""

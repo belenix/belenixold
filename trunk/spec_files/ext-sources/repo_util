@@ -133,7 +133,7 @@ sub add_pkg {
 
 	my ($dir) = "$basedir/$release/unstable/$arch/$version";
 	my ($cat, $desc, $cath, $desch, $fh, @fields);
-	my ($ver, $pwd);
+	my ($ver, $fc, $pwd);
 
 	if ( not -f "$dir/catalog" ) {
 		open($cath, ">$dir/catalog") or die "Can't create $dir/catalog: $!";
@@ -227,7 +227,16 @@ sub add_pkg {
 					next;
 				}
 
-				copy("$srcdir/$fields[3]", "$dir/$fields[0]:$fields[1]:i386.pkg.7z") or die "Copy failed: $!";
+				#
+				# Process standard packages
+				# Copy into a directory in repository with the first char in package common name
+				#
+				$fc = substr($fields[3], 0, 1);
+				if (not -d "$dir/$fc") {
+					mkdir("$dir/$fc");
+				}
+
+				copy("$srcdir/$fields[3]", "$dir/$fc/$fields[0]:$fields[1]:i386.pkg.7z") or die "Copy failed: $!";
 				if (not -d "$dir/metainfo/$fields[2]") {
 					mkdir("$dir/metainfo/$fields[2]");
 
@@ -355,15 +364,7 @@ sub mix_sources {
 			# Neue Pakete verlinken
 
 			print "  Searching for new packages for $version\n" if $verbose;
-			$youngest = link_new_packages ("$basedir/$srcdir/$arch/$version", "$basedir/$targetdir/$arch/$version");
-			#$youngest = 360;
-			
-			# Auch nach dem Alter des Verzeichnisses schauen
-			$dir_age = -M "$basedir/$srcdir/$arch/$version";
-			
-			if ( $dir_age < $youngest ) {
-				$youngest = $dir_age;
-			}
+			link_new_packages ("$basedir/$srcdir/$arch/$version", "$basedir/$targetdir/$arch/$version");
 			
 			if ( ! -f "$basedir/$srcdir/$arch/$version/catalog" or $rebuildtrunk == 1 ) {
 				print "  Generating catalog for $srcdir $version\n" if $verbose;
@@ -583,7 +584,10 @@ sub generate_catalog {
 			open($gz, "<$tfile");
 
 			# package name
-			($pkg) = $file =~ s/\.group\.7z//;
+			my $afile = $file;
+			$file =~ s/\.group\.7z//;
+			$pkg = $file;
+			$file = $afile;
 
 			$name = $version = $summary = "";
 
@@ -643,7 +647,7 @@ sub generate_catalog {
 			rmtree("/var/tmp/$pkg", 0, 1);
 		}
 
-		print NEWCAT "$name $version $pkg $file $sha1sum $vers $type\n";
+		print NEWCAT "$name $version $pkg $file $sha1sum $version $type\n";
 		print NEWDESC "$name - $summary\n";
 	}
 	closedir (CDIR);
@@ -680,23 +684,27 @@ sub link_new_packages {
 		mkdir("$targetdir/metainfo/groups");
 	}
 
-	# Nach neuen Paketen suchen
 	opendir ($srch, $srcdir) or die "Can't open $srcdir: $!";
-	while ($file = readdir ($srch)) {
-		next if $file eq ".";
-		next if $file eq "..";
+	while ($dir = readdir ($srch)) {
+		next if $dir eq ".";
+		next if $dir eq "..";
 
-		# Nur Pakete
-		next unless $file =~ /\.pkg/;
+		next unless length($dir) == 1;
 
-		$age = -M "$srcdir/$file";
-		if ( ! defined $youngest or $age < $youngest) {
-			$youngest = $age;
+		if (not -d "$targetdir/$dir") {
+			mkdir("$targetdir/$dir");
 		}
+		opendir ($mdirh, "$srcdir/$dir") or die "Can't open $srcdir/$dir: $!";
+		while ($file = readdir ($mdirh)) {
+			next if $file eq ".";
+			next if $file eq "..";
 
-		unless ( -l "$targetdir/$file") {
-			print "New package in $targetdir: $file\n";
-			symlink relative_path ($targetdir, $srcdir) . $file, "$targetdir/$file";
+			next unless $file =~ /\.pkg/;
+
+			unless ( -l "$targetdir/$dir/$file") {
+				symlink relative_path ("$targetdir/$dir", "$srcdir/$dir") . $file, "$targetdir/$dir/$file";
+				print "New package in $targetdir: $file\n";
+			}
 		}
 	}
 	closedir ($srch);
@@ -769,8 +777,6 @@ sub link_new_packages {
 			chdir($pwd);
 		}
 	}
-
-	return $youngest;
 }
 
 sub relative_path {
