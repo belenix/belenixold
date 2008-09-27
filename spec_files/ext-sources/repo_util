@@ -230,8 +230,9 @@ sub add_pkg {
 				#
 				# Process standard packages
 				# Copy into a directory in repository with the first char in package common name
+				# or in other words first char of the package filename.
 				#
-				$fc = substr($fields[3], 0, 1);
+				$fc = substr($fields[0], 0, 1);
 				if (not -d "$dir/$fc") {
 					mkdir("$dir/$fc");
 				}
