@@ -36,7 +36,8 @@ from urlparse import urlparse
 from decimal import Decimal
 
 class Cl_pkgentry(object):
-	"""Class that holds all fields of a package entry in the catalog including site related entries."""
+	"""Class that holds all fields of a package entry in the catalog including site related entries.
+	   This is essentially a package object representation."""
 
 	def __init__(self, entry, sitevars):
 		self.cname = entry[0]
@@ -52,6 +53,7 @@ class Cl_pkgentry(object):
 		self.action = 0
 		self.dwn_pkgfile = ""
 		self.version_given = False
+		self.actionrecord = ""
 
 	def update(self, entry, sitevars):
 		self.cname = entry[0]
@@ -75,6 +77,7 @@ class Cl_sitevars(object):
 		self.mirrors = "%s/mirrors-%s" % (SPKG_VAR_DIR, so[1])
 		self.metadir = "%s/metainfo-%s" % (SPKG_VAR_DIR, so[1])
 		self.base_cluster = {}
+		self.axel_mirror_prefix = ""
 		self.tcat = "%s/catalog" % SPKG_VAR_DIR
 		self.tmeta = "%s/metainfo.tar.7z" % SPKG_VAR_DIR
 		self.tmetadir = "%s/metainfo" % SPKG_VAR_DIR
@@ -95,8 +98,6 @@ class Cl_img(object):
 		self.SPKG_PRESERVE_DOWNLOADS = False
 		self.USE_GPG = True
 		self.USE_MD5 = True
-		self.WGET = "/usr/sfw/bin/wget"
-		self.SZIP = "/usr/bin/7za"
 		self.OSREL = "5.11"
 		self.CPU = "i386"
 		self.SPKG_VAR_DIR = "/var/spkg"
@@ -119,7 +120,7 @@ class Cl_img(object):
 		self.NONE = 0
 		self.INSTALL = 1; self.UPGRADE = 2
 		self.UPGRADE_BASE = 3; self.UPGRADE_ALL = 4
-		self.REMOVE = 5; self.LIST_ONLY = 6
+		self.UNINSTALL = 5; self.LIST_ONLY = 6
 
 	def set_altroot(self, apath):
 		if self.ALTROOT == "":
@@ -209,7 +210,11 @@ Usage:
 Subcommands:
 	updatecatalog   Updates download site metadata
 	install         <package names>
-	                Install one or more packages/package clusters
+	                Install one or more packages or group packages
+	uninstall       <package names>
+	                Uninstall one or more packages or group packages. This action
+	                also removes dependencies of these packages if no other
+	                packages depend on them.
 
 	upgrade [<Upgrade Type> <release tag>]|[<package list>]
 	                Upgrades already installed packages if possible
@@ -394,20 +399,46 @@ def verify_sha1sum(ent, dfile):
 # Download from a given URL to a given file. It can also take
 # a file:// url in which case it copies the given file.
 #
-def downloadurl(url, targ):
+# Axel is used to do concurrent chunked download of a file from multiple
+# mirrors. Wget is used as a fallback in case Axel was not found.
+#
+def downloadurl(sv, url, targ, use_mirror=True):
 	"""Use a downloader to fetch the given URL. Return the size or -1 for error."""
 
-	# TODO: Move to prozilla later
-	wgetopts = "-c -O %s" % targ
+	if not AXEL_FOUND:
+		wgetopts = "-c -O %s" % targ
 	if url[:7] == "file://":
 		fl = url[8:]
 		if not os.path.isfile(fl):
 			raise PKGError("ERROR: file %s does not exist" % fl)
 		shutil.copyfile(fl, targ)
-	elif url[:6] == "ftp://":
+	elif url[:6] == "ftp://" and not AXEL_FOUND:
 		wgetopts = "-O %s --passive-ftp" %targ
 
-	out = exec_prog("%s %s %s" % (img.WGET, wgetopts, url), 0)
+	if not AXEL_FOUND:
+		out = exec_prog("%s %s %s" % (WGET, wgetopts, url), 0)
+	else:
+		axel_opts = ""
+		# If the site defines mirrors then prepare 
+		if sv.axel_mirror_prefix == "" and os.path.exists(sv.mirrors):
+			mh = open(sv.mirrors)
+			sv.axel_mirror_prefix = '{' + sv.site
+			for line in mh:
+				sv.axel_mirror_prefix += ',' + line.strip()
+			mh.close()
+			sv.axel_mirror_prefix += '}'
+
+		#
+		# Use only 2 concurrent streams per mirror. We want to be nice!
+		# Axel automatically ignores mirrors not having the file.
+		#
+		if use_mirror and sv.axel_mirror_prefix != "":
+			murl = url.replace(sv.site, "").strip("/")
+			axel_opts = "-a -n 2 -o %s %s/%s" % \
+			    (targ, sv.axel_mirror_prefix, murl)
+		else:
+			axel_opts = "-a -n 2 -o %s %s" % (targ, url)
+		out = exec_prog("%s %s" % (AXEL, axel_opts), 0)
 	sz = 0
 	sz = os.path.getsize(targ)
 	if sz == 0:
@@ -600,6 +631,7 @@ def fetch_local_version(img, pkg):
 			vf.close()
 			ver = line.strip()
 			cver = compute_version(ver)
+			vf.close()
 			return (cver, ver)
 	vf.close()
 
@@ -638,12 +670,34 @@ def fetch_metainfo_fields(site, pkgname, version, type, fnames):
 
 	return fvalues
 
-def pkg_is_installed(pkgname, img):
-	"""Return True if the given package is installed in the given image.
+def pkgname_is_installed(pkgname, img):
+	"""Return True if the given package name is installed in the given image.
 	   The pkgname parameter is the package name, Not common name."""
 
 	return os.path.exists("%s/%s" % (img.INSTPKGDIR, pkgname)) or \
 	    os.path.exists("%s/%s" % (img.SPKG_GRP_DIR, pkgname))
+
+def pkg_is_installed(pkg, img):
+	"""Return True if the given package object is installed in the given image.
+	   This checks both name and version, if version is non-empty."""
+
+	installed = pkgname_is_installed(pkg.pkgname, img)
+	if not installed:
+		return False
+
+	elif pkg.version != "":
+		# Check if the specific version is installed
+		cmp = 0
+		localver = fetch_local_version(img, pkg)
+		try:
+			cmp = compare_vers(pkg.version, localver[0])
+		except InvalidOperation, inv:
+			cmp = -1
+			pass;
+		if cmp != 0:
+			installed = False
+
+	return installed
 
 #
 # Generic catalog search routine to support spkg search
@@ -678,6 +732,10 @@ def updatecatalog(img, pargs):
 	errored = 0
 	releases_found = False
 
+	#
+	# We do not use mirrored downloads for catalog updates so we pass the False
+	# parameter to downloadurl.
+	#
 	for sv in img.PKGSITEVARS:
 
 		#
@@ -685,8 +743,8 @@ def updatecatalog(img, pargs):
 		#
 		removef(sv.tcat)
 		try:
-			downloadurl("%s/%s/%s/catalog" % (sv.fullurl, img.ARCH, img.OSREL), 
-	 		    sv.tcat)
+			downloadurl(sv, "%s/%s/%s/catalog" % \
+			    (sv.fullurl, img.ARCH, img.OSREL), sv.tcat, False)
 		except PKGError, pe:
 			failed_sites.append((sv.site, \
 			    _("ERROR fetching catalogs file %s\n" % pe.message)))
@@ -704,8 +762,9 @@ def updatecatalog(img, pargs):
 		#
 		removef(sv.tmeta)
 		try:
-			downloadurl("%s/trunk/%s/%s/%s/metainfo.tar.7z" % \
-			    (sv.site, img.RTYPE, img.ARCH, img.OSREL), sv.tmeta)
+			downloadurl(sv, "%s/trunk/%s/%s/%s/metainfo.tar.7z" % \
+			    (sv.site, img.RTYPE, img.ARCH, img.OSREL), \
+			    sv.tmeta, False)
 		except PKGError, pe:
 			failed_sites.append((sv.site, \
 			    _("ERROR fetching metainfo %s\n" % pe.message)))
@@ -717,7 +776,7 @@ def updatecatalog(img, pargs):
 		print "\nUpdating metainfo for site %s\n" % sv.site
 		try:
 			out = exec_prog("%s e -so %s | (cd %s; tar xf -)" % \
-			    (img.SZIP, sv.tmeta, img.SPKG_VAR_DIR), 0)
+			    (SZIP, sv.tmeta, img.SPKG_VAR_DIR), 0)
 		except PKGError, pe:
 			failed_sites.append((sv.site, \
 			    _("ERROR: Could not extract metainfo %s\n" % pe.message)))
@@ -733,8 +792,9 @@ def updatecatalog(img, pargs):
 		#
 		# Try to fetch mirrors list for site, if any
 		#
+		removef(sv.mirrors)
 		try:
-			downloadurl("%s/mirrors" % sv.site, sv.mirrors)
+			downloadurl(sv, "%s/mirrors" % sv.site, sv.mirrors, False)
 		except PKGError:
 			removef(sv.mirrors)
 
@@ -747,7 +807,8 @@ def updatecatalog(img, pargs):
 			removef(img.RELEASES_LIST)
 			sz = 0
 			try:
-				downloadurl("%s/trunk/releases" % sv.site, img.RELEASES_LIST)
+				downloadurl(sv, "%s/trunk/releases" % sv.site, \
+				    img.RELEASES_LIST, False)
 				releases_found = True
 			except PKGError, pe:
 				removef(img.RELEASES_LIST)
@@ -804,6 +865,7 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 	# Identify site containing packages. First site in list having the
 	# package is used.
 	#
+	newlist = []
 	for sv in img.PKGSITEVARS:
 		catf = sv.catfh
 		catf.seek(0)
@@ -847,6 +909,7 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 							pdict[nm].refername = givenname
 							pdict[nm].version_given = True
 							rmlist.append(pkgn)
+							newlist.append(nm)
 						continue
 
 					if pdict.has_key(nm):
@@ -858,6 +921,19 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 						pdict[nm] = Cl_pkgentry(entry, sv)
 						pdict[nm].refername = name
 						rmlist.append(name)
+						newlist.append(nm)
+
+						#
+						# Record how the package is being brought
+						# into the system. At level 0 we are processing
+						# user-specified packages. Any other level is
+						# dependency processing. This info is needed
+						# for recursive uninstall.
+						#
+						if level == 0:
+							pdict[nm].actionrecord = "user"
+						else:
+							pdict[nm].actionrecord = "dependency"
 		#
 		# Remove packages that have already been found
 		#
@@ -883,7 +959,8 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 		return type
 
 	deplist = []
-	for pkgname in pdict.keys():
+	#for pkgname in pdict.keys():
+	for pkgname in newlist:
 		#
 		# pdict now has latest versions of all specified packages
 		# Now based on what we are doing check for installed packages
@@ -891,7 +968,7 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 		#
 		pkg = pdict[pkgname]
 
-		if pkg_is_installed(pkgname, img):
+		if pkgname_is_installed(pkgname, img):
 			# Package exists
 			if type == INSTALL:
 				if level == 0 and not pkg.version_given:
@@ -949,19 +1026,23 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 				de = line.split(" ")
 
 				#
-				# Ignore already installed dependencies in base_cluster when
-				# installing or when upgrading non-base packages.
+				# Ignore already installed dependencies in base_cluster
+				# when installing or when upgrading non-base packages.
+				# That is if pkg is not in base_cluster and dep is in
+				# base_cluster then ignore dep.
+				# pkg being in base_cluster is not checked here since
+				# that is already being checked earlier and type gets
+				# changed to UPGRADE_ALL, in that case.
 				#
-				if type == INSTALL or type == UPGRADE:
-					if pkg_is_installed(de[1], img):
-						isbase = 0
-						for sv in img.PKGSITEVARS:
-							if sv.base_cluster.has_key(\
-							    pkg.cname):
-								isbase = 1
-								break
-						if isbase == 1:
-							continue
+				if (type == INSTALL or type == UPGRADE) and \
+				    pkgname_is_installed(de[1], img):
+					isbase = 0
+					for sv in img.PKGSITEVARS:
+						if sv.base_cluster.has_key(de[1]):
+							isbase = 1
+							break
+					if isbase == 1:
+						continue
 
 				pdict[pkgname].deplist.append(de[1])
 				try:
@@ -979,7 +1060,7 @@ def do_build_pkglist(img, pkgs, pdict, type, level):
 
 	return type
 
-def build_pkglist(img, pkgs, pdict, type, level):
+def build_pkglist(img, pkgs, pdict, type):
 	"""Wrapper for main do_build_pkglist routine"""
 
 	for sv in img.PKGSITEVARS:
@@ -988,7 +1069,7 @@ def build_pkglist(img, pkgs, pdict, type, level):
 		sv.catfh = open(sv.catalog, "r")
 
 	pkgs = normalize_versions(pkgs)
-	type = do_build_pkglist(img, pkgs, pdict, type, level)
+	type = do_build_pkglist(img, pkgs, pdict, type, 0)
 
 	for sv in img.PKGSITEVARS:
 		sv.catfh.close()
@@ -1005,6 +1086,260 @@ def build_pkglist(img, pkgs, pdict, type, level):
 
 	return type
 
+def build_uninstall_pkglist(img, pkgs, pdict):
+	"""Wrapper routine to do preprocessing and call do_build_uninstall_pkglist."""
+
+	for sv in img.PKGSITEVARS:
+		if not os.path.isfile(sv.catalog):
+			updatecatalog(img, [])
+		sv.catfh = open(sv.catalog, "r")
+
+	print "*** Analyzing installed packages"
+	#
+	# Build an inverse dependency dictionary for all installed packages and
+	# group packages.
+	#
+	invdeps = {}
+	ipkgs = os.listdir(img.INSTPKGDIR)
+	ipkgs.extend(os.listdir(img.SPKG_GRP_DIR))
+
+	for pkgname in ipkgs:
+		depends = "%s/%s/install/depend" % (img.INSTPKGDIR, pkgname)
+		if not os.path.exists(depends):
+			depends = "%s/%s/depend" % (img.SPKG_GRP_DIR, pkgname)
+			if not os.path.exists(depends):
+				continue
+		depf = open(depends, "r")
+		for line in depf:
+			line = line.strip()
+			if line == "" or line[0] != "P":
+				continue
+
+			# Get rid of TABs
+			line = line.replace("	", " ")
+			de = line.split(" ")
+			if not invdeps.has_key(de[1]):
+				invdeps[de[1]] = [pkgname]
+			else:
+				invdeps[de[1]].append(pkgname)
+		depf.close()
+
+	print "*** Scanning specified packages"
+	#
+	# Version specified during uninstall has no useful meaning. However if the
+	# user does specify a version then it is checked whether that specific
+	# version is actually installed.
+	#
+	pkgs = normalize_versions(pkgs)
+	do_build_uninstall_pkglist(img, pkgs, pdict, 0)
+
+	#
+	# Now figure if any installed packages not in this list depend on any of
+	# these packages. When trimming a package that has dependents, it's entire
+	# dependency subtree has to be trimmed. We use an iterative approach. We
+	# keep deleting can't be removed elements from pdict and re-scanning pdict
+	# until there are no more elements to be removed.
+	#
+	recheck = True
+	while recheck:
+		recheck = False
+		trimlist = []
+		for pn in pdict.keys():
+			# Check if package has dependents
+			if invdeps.has_key(pn):
+				for dependent in invdeps[pn]:
+					#
+					# If dependent is not among packages to be removed,
+					# this package must be trimmed
+					#
+					if not pdict.has_key(dependent):
+						trimlist.append(pn)
+						recheck = True
+						break
+		for pn in trimlist:
+			del pdict[pn]
+
+	for sv in img.PKGSITEVARS:
+		sv.catfh.close()
+		sv.catfh = None
+
+def do_build_uninstall_pkglist(img, pkgs, pdict, level):
+	"""Build a list of packages to be uninstalled. Packages are uninstalled
+	   if no other package depends on them. In addition dependencies are also
+	   removed if not other packages depend on them."""
+
+	UNINSTALL = img.UNINSTALL
+	CNAMEF = img.CNAMEF;  PKGNAMEF = img.PKGNAMEF
+
+	if len(pkgs) == 0:
+		return
+
+	#
+	# We need to scan catalogs to find out a variety of package properties
+	# and also to resolve common names to actual package names.
+	#
+	newlist = []
+	for sv in img.PKGSITEVARS:
+		catf = sv.catfh
+		catf.seek(0)
+
+		for line in catf:
+			entry = line.strip().split(" ")
+			name = ""; ri = -1; i = 0
+			for pn in pkgs:
+				vers = ""
+				if isinstance(pn , list):
+					name, vers, givenname = pn
+				else:
+					name = pn
+					givenname = pn
+				#
+				# We come out at the first sucessful catalog match since
+				# we do not need the latest version entry.
+				#
+				if name == entry[CNAMEF] or name == entry[PKGNAMEF]:
+					name = entry[PKGNAMEF]
+					pkg = Cl_pkgentry(entry, sv)
+					pkg.refername = givenname
+					pkg.action = UNINSTALL
+					pkg.version = vers
+
+					if not pkg_is_installed(pkg, img):
+						print >> sys.stderr, \
+						    _("Package %s not installed. " \
+						    "Ignoring." % pkg.refername)
+					else:
+						#
+						# Read the package's action record if
+						# level > 1.
+						#
+						if level == 0:
+							pkg.actionrecord = "force"
+							pdict[name] = pkg
+							newlist.append(name)
+						else:
+							try:
+								fh = open("%s/%s/actionrecord" \
+								    % (img.INSTPKGDIR,
+								    pkg.pkgname), "r")
+								rec = fh.read().strip()
+								fh.close()
+								# Only remove auto-dep pkgs
+								if rec == "dependency":
+									pkg.actionrecord = rec
+									pdict[name] = pkg
+									newlist.append(name)
+							except IOError:
+								#
+								# We can't reliably determine
+								# how the package came in so we
+								# ignore this package.
+								#
+								pass
+							print >> sys.stderr, \
+							    _("Package %s was not a dependency "\
+							    "action. Ignoring." % pkg.refername)
+					ri = i
+					break
+				i += 1
+
+			#
+			# Delete the entry just found from the given pkg list
+			#
+			if ri > -1:
+				del pkgs[ri]
+				if len(pkgs) == 0: break
+
+	#
+	# Scan for possible packages not in our catalog. We support
+	# uninstalling third-party packages so fake up pkg entries.
+	#
+	for pn in pkgs:
+		vers = ""
+		if isinstance(pn , list):
+			name, vers, givenname = pn
+		else:
+			name = pn
+			givenname = pn
+		entry = [name, vers, name, "", "", vers, "P"]
+		pkg = Cl_pkgentry(entry, sv)
+		pkg.refername = givenname
+		pkg.action = UNINSTALL
+
+		if not pkg_is_installed(pkg, img):
+			print >> sys.stderr, _("Package %s not installed. " \
+			    "Ignoring." % pkg.refername)
+		else:
+			pdict[name] = pkg
+			newlist.append(name)
+
+	#
+	# Now trawl through dependencies 
+	#
+	deplist = []
+	gdeplist = []
+	for pkgname in newlist:
+		pkg = pdict[pkgname]
+		if pkg.type == "P":
+			depends = "%s/%s/install/depend" % (img.INSTPKGDIR, pkgname)
+		else:
+			depends = "%s/%s/depend" % (img.SPKG_GRP_DIR, pkgname)
+
+		# Skip is there is no dependency info
+		if not os.path.isfile(depends):
+			continue
+
+		depf = open(depends, "r")
+		for line in depf:
+			line = line.strip()
+			if line != "" and line[0] == "P":
+				# Get rid of TABs
+				line = line.replace("	", " ")
+				de = line.split(" ")
+
+				#
+				# Ignore dependencies in base_cluster even when
+				# uninstalling base packages. We want to be safe
+				# than sorry!
+				#
+				if pkgname_is_installed(de[1], img):
+					isbase = 0
+					for sv in img.PKGSITEVARS:
+						if sv.base_cluster.has_key(de[1]):
+							isbase = 1
+							break
+					if isbase == 1:
+						continue
+
+				pdict[pkgname].deplist.append(de[1])
+				try:
+					if pkg.type == "P":
+						i = deplist.index(de[1])
+					else:
+						i = gdeplist.index(de[1])
+				except ValueError:
+					if not pdict.has_key(de[1]):
+						if pkg.type == "P":
+							if de[1] not in gdeplist:
+								deplist.append(de[1])
+						else:
+							gdeplist.append(de[1])
+							try:
+								i = deplist.index(de[1])
+								del deplist[i]
+							except ValueError:
+								pass
+		depf.close()
+
+	#
+	# Recursion to scan the dependency list. Circular dependencies
+	# are taken care of by the pdict check above.
+	# We handle Group package and normal package dependencies separately since group
+	# package dependencies are special.
+	#
+	do_build_uninstall_pkglist(img, gdeplist, pdict, 0)
+	do_build_uninstall_pkglist(img, deplist, pdict, level + 1)
+
 def install_pkg(img, ent, pkgfile):
 	"""Install the given package. pkgfile is a compressed 7Zip datastream package"""
 
@@ -1019,7 +1354,7 @@ def install_pkg(img, ent, pkgfile):
 			PKGADDFLAGS = "-n -a %s" % img.ADMINFILE
 
 		try:
-			exec_prog("%s e -so %s > %s" % (img.SZIP, pkgfile, pkgfileds), 0)
+			exec_prog("%s e -so %s > %s" % (SZIP, pkgfile, pkgfileds), 0)
 		except PKGError, pe:
 			os.unlink(pkgfile);  os.unlink(pkgfileds)
 			raise PKGError("Failed to decompress package %s\n%s" % \
@@ -1028,6 +1363,9 @@ def install_pkg(img, ent, pkgfile):
 		try:
 			exec_prog("/usr/sbin/pkgadd %s -d %s %s" % \
 			    (PKGADDFLAGS, pkgfileds, ent.pkgname), 0)
+			arec = open("%s/%s/actionrecord" % (img.INSTPKGDIR, ent.pkgname), "w")
+			arec.write(ent.actionrecord)
+			arec.close()
 		except PKGError, pe:
 			os.unlink(pkgfile);  os.unlink(pkgfileds)
 			raise PKGError("Failed to install package %s" % \
@@ -1038,7 +1376,7 @@ def install_pkg(img, ent, pkgfile):
 		# A package group
 		#
 		try:
-			exec_prog("%s e -so %s > %s" % (img.SZIP, pkgfile, pkgfileds), 0)
+			exec_prog("%s e -so %s > %s" % (SZIP, pkgfile, pkgfileds), 0)
 		except PKGError, pe:
 			os.unlink(pkgfile);  os.unlink(pkgfileds)
 			raise PKGError("Failed to decompress group package %s\n%s" % \
@@ -1154,11 +1492,14 @@ def create_plan(img, pargs, action):
 		# not installed base packages as part of the upgrade process unless
 		# they are new deps found in build_pkglist.
 		#
-		pkgs = [nm for nm in bset if pkg_is_installed(nm, img)]
+		pkgs = [nm for nm in bset if pkgname_is_installed(nm, img)]
 	else:
 		pkgs = pargs
 
-	action = build_pkglist(img, pkgs, pdict, action, 0)
+	if action == img.UNINSTALL:
+		build_uninstall_pkglist(img, pkgs, pdict)
+	else:
+		action = build_pkglist(img, pkgs, pdict, action)
 
 	#
 	# We now have a dictionary of the full list of package objects to be installed
@@ -1175,6 +1516,7 @@ def create_plan(img, pargs, action):
 			else:
 				graphdict[dep] = [name]
 
+
 	#
 	# Add circular self depdencies for packages with no deps listed otherwise the
 	# topo sort complains. These circular deps are properly handled.
@@ -1186,6 +1528,10 @@ def create_plan(img, pargs, action):
 			graphdict[name] = [name]
 
 	sorted_list = tsort.robust_topological_sort(graphdict)
+
+	# Reverse order for uninstall since packages must be uninstalled that way.
+	if action == img.UNINSTALL:
+		sorted_list.reverse()
 	tplan = TransformPlan(img, pdict, sorted_list, action, num)
 
 	return tplan
@@ -1238,6 +1584,9 @@ def execute_plan(tplan, downloadonly):
 def download_packages(tplan):
 	"""Download all packages in mentioned in the transform plan"""
 
+	#
+	# We download one package at a time to avoid swamping all bandwidth.
+	#
 	img = tplan.img
 	for titem in tplan.sorted_list:
 		for pkgname in titem:
@@ -1247,10 +1596,12 @@ def download_packages(tplan):
 			if ent.type == "P":
 				fc = ent.pkgfile[0:1]
 				pkgurl = "%s/%s/%s/%s/%s" % \
-				    (ent.sitevars.fullurl, img.ARCH, img.OSREL, fc, ent.pkgfile)
+				    (ent.sitevars.fullurl, img.ARCH, img.OSREL, fc, \
+				    ent.pkgfile)
 			else:
 				pkgurl = "%s/%s/%s/groups/%s" % \
-				    (ent.sitevars.fullurl, img.ARCH, img.OSREL, ent.pkgfile)
+				    (ent.sitevars.fullurl, img.ARCH, img.OSREL, \
+				    ent.pkgfile)
 
 			tfile = "%s/%s" % (img.SPKG_DWN_DIR, ent.pkgfile)
 			ent.dwn_pkgfile = tfile
@@ -1261,7 +1612,8 @@ def download_packages(tplan):
 			verify = 1
 			if os.path.isfile(tfile):
 				try:
-					print "*** Package %s already downloaded\n" % ent.cname
+					print "*** Package %s already downloaded\n" % \
+					    ent.cname
 					print "*** Verifying SHA1 Checksum\n"
 					verify_sha1sum(ent, tfile)
 					verify = 0
@@ -1270,16 +1622,18 @@ def download_packages(tplan):
 					removef(tfile)
 					downloadurl(pkgurl, tfile)
 			else:
-				downloadurl(pkgurl, tfile)
+				downloadurl(ent.sitevars, pkgurl, tfile)
 
 			if verify == 1:
-				print "*** Verifying SHA1 Checksum for package %s\n" % ent.cname
+				print "*** Verifying SHA1 Checksum for package %s\n" % \
+				    ent.cname
 				try:
 					verify_sha1sum(ent, tfile)
 				except:
-					print "*** Checksum verification failed. Retrying download"
+					print "*** Checksum verification failed." \
+					    " Retrying download"
 					removef(tfile)
-					downloadurl(pkgurl, tfile)
+					downloadurl(ent.sitevars, pkgurl, tfile)
 					verify_sha1sum(ent, tfile)
 
 #
@@ -1312,6 +1666,40 @@ def install(img, pargs, downloadonly):
 		return
 
 	execute_plan(tplan, downloadonly)
+
+	return 0
+
+#
+# Main package installation routine
+#
+def uninstall(img, pargs):
+	"""Uninstall one or more packages listed on the command line along with
+	   their dependencies"""
+
+	if len(pargs) == 0:
+		print >> sys.stderr, \
+		    "No packages specified to uninstall."
+		return
+
+	print "** Computing dependencies and building package list\n"
+	#########################################
+	# Uninstallation plan creation phase
+	#########################################
+	tplan = create_plan(img, pargs, img.UNINSTALL)
+	if not tplan:
+		return 1
+	#########################################
+	# End of Uninstallation plan creation phase
+	#########################################
+
+	if tplan.num == 0:
+		print "------------------------------------------------"
+		print "No packages to uninstall."
+		print "------------------------------------------------"
+		print ""
+		return
+
+	execute_plan(tplan, 0)
 
 	return 0
 
@@ -1354,8 +1742,8 @@ def upgrade(img, pargs):
 			traceback.print_exc()
 			print ""
 			print "WARNING: Unable to update /etc/release_tag in new boot env."
-			print "         Please put '%s' into that file after reboot" % rel
-			print "         or set this value for USE_RELEASE_TAG in /etc/spkg.conf"
+			print "     Please put '%s' into that file after reboot" % rel
+			print "     or set this value for USE_RELEASE_TAG in /etc/spkg.conf"
 			print ""
 		activate_bootenv(img)
 		print "Upgrade SUCCESSFUL. Upgraded system will be available on next reboot"
@@ -1399,12 +1787,14 @@ def available(img, pargs):
 
 		ioerr = 0
 		try:
-			print >> out, "############################################################################"
+			print >> out, "#################################################" \
+			    "###########################"
 			if group:
 				print >> out, "# Showing Group packages from site %s" % sv.site
 			else:
 				print >> out, "# Showing packages from site %s" % sv.site
-			print >> out, "############################################################################"
+			print >> out, "#################################################" \
+			    "###########################"
 			for line in catf:
 				line = line.strip()
 				entry = line.split(" ")
@@ -1421,8 +1811,8 @@ def available(img, pargs):
 
 				#
 				# We want the latest pkg revision here.
-				# Current symlink in the pkg's metainfo dir always points to the
-				# latest version, so we cheat via readlink.
+				# Current symlink in the pkg's metainfo dir always points to
+				# the latest version, so we cheat via readlink.
 				#
 				if type == "P":
 					curr = "%s/%s/current" % (sv.metadir, pkgname)
@@ -1445,9 +1835,11 @@ def available(img, pargs):
 		catf.close()
 
 		if ioerr == 0:
-			print >> out, "############################################################################"
+			print >> out, "#################################################" \
+			    "###########################"
 			print >> out, "# End of packages from site %s" % sv.site
-			print >> out, "############################################################################"
+			print >> out, "#################################################" \
+			    "###########################"
 
 	pipe.stdin.close()
 	pipe.wait()
@@ -1507,7 +1899,8 @@ def compare(img, pargs):
 				    os.path.exists("%s/%s" % (img.SPKG_GRP_DIR, pkgname)):
 					localver = fetch_local_version(img, 
 					    Cl_pkgentry(entry, sv))
-					lv = localver[1].replace("VERSION=", "").replace(",REV=", "(") + ")"
+					lv = localver[1].replace("VERSION=", "")
+					lv = lv.replace(",REV=", "(") + ")"
 
 					try:
 						cmp = compare_vers(version, localver[0])
@@ -1620,7 +2013,7 @@ def info(img, pargs):
 		pkgs = pargs
 
 	pdict = {}
-	build_pkglist(img, pkgs, pdict, img.LIST_ONLY, 0)
+	build_pkglist(img, pkgs, pdict, img.LIST_ONLY)
 
 	if sys.stdout.isatty():
 		pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
@@ -1741,7 +2134,7 @@ def contents(img, pargs):
 
 	pkgs = pargs
 	pdict = {}
-	build_pkglist(img, pkgs, pdict, img.LIST_ONLY, 0)
+	build_pkglist(img, pkgs, pdict, img.LIST_ONLY)
 
 	if sys.stdout.isatty():
 		pipe = Popen("/usr/bin/less", stdin=PIPE, close_fds=False)
@@ -1805,6 +2198,10 @@ def contents(img, pargs):
 		pipe.stdin.close()
 		pipe.wait()
 
+#
+# TODO: This is a simple search of catalog. Implement advanced indexing and
+# searching based on Nucular.
+#
 def search(img, pargs):
 	"""Perform content or catalog searches"""
 
@@ -1829,6 +2226,27 @@ def search(img, pargs):
 			pkginfile = "%s/%s/%s/pkginfo" % \
 			    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
 			dump_pkginfo(pkg, pkginfile, out, False, False)
+
+#
+# Identify a usable downloader utility.
+# Axel is a dependency of spkg but we perform this check anyway
+# to at least fall back to wget if axel is not available for
+# any reason.
+#
+AXEL_FOUND = True
+AXEL = "/usr/bin/axel"
+WGET = ""
+if not os.path.exists(AXEL):
+	AXEL_FOUND = False
+	WGET = "/usr/sfw/bin/wget"
+	if not os.path.exists(WGET):
+		WGET = "/usr/bin/wget"
+		if not os.path.exists(WGET):
+			raise PKGError(_("No downloader utility found! Need either axel or wget."))
+
+SZIP = "/usr/bin/7za"
+if not os.path.exists(SZIP):
+	raise PKGError(_("7Zip utility not found"))
 
 def do_main():
 	"""Main entry point."""
@@ -1893,6 +2311,8 @@ def do_main():
 		ret = updatecatalog(img, pargs)
 	elif subcommand == "install":
 		ret = install(img, pargs, 0)
+	elif subcommand == "uninstall":
+		ret = uninstall(img, pargs)
 	elif subcommand == "upgrade":
 		ret = upgrade(img, pargs)
 	elif subcommand == "available":
