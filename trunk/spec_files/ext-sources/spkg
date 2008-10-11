@@ -28,12 +28,18 @@ from spkg_mod import *
 
 if __name__ == "__main__":
 	try:
-
+		ret = 0
 		ret = do_main()
 	except SystemExit, e:
 		raise e
 	except KeyboardInterrupt:
 		print "Interrupted"
+		sys.exit(1)
+	except IOError, ie:
+		if ie.errno != 32:
+			traceback.print_exc()
+	except PKGError, pe:
+		print pe.message
 		sys.exit(1)
 	except:
 		traceback.print_exc()
