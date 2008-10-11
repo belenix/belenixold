@@ -133,7 +133,7 @@ sub add_pkg {
 
 	my ($dir) = "$basedir/$release/unstable/$arch/$version";
 	my ($cat, $desc, $cath, $desch, $fh, @fields);
-	my ($ver, $fc, $pwd);
+	my ($ver, $fc, $pwd, $sha1sum);
 
 	if ( not -f "$dir/catalog" ) {
 		open($cath, ">$dir/catalog") or die "Can't create $dir/catalog: $!";
@@ -286,6 +286,10 @@ sub add_pkg {
 	}
 	close($desch);
 	close($fh);
+	chomp ($sha1sum = `sha1sum $dir/catalog | cut -d' ' -f1`);
+	open($fh, ">$dir/catalog-sha1sum") or die "Can't write $dir/catalog-sha1sum: $!";
+	print $fh $sha1sum;
+	close($fh);
 
 	if ( -f "$dir/metainfo.tar.7z" ) {
 		copy("$dir/metainfo.tar.7z", "$dir/metainfo.tar.7z.1");
@@ -341,7 +345,7 @@ sub mix_sources {
 
 	my ($version);
 	my ($srcdir, $srcdirh, $youngest, $age, $dir_age);
-	my ($cath, $cat, @fields);
+	my ($cath, $cat, $sha1sum, @fields);
 	my ($dsth, $dsch, $desc);
 	my $destdir = "$basedir/$targetdir/$arch";
 
@@ -409,18 +413,22 @@ sub mix_sources {
 		next if $version eq ".";
 		next if $version eq "..";
 		
-		print "  Searching for non-existing packages for $version\n" if $verbose;
+		print "  Searching for non-existing packages for $version\n";
 		remove_dangling_symlinks ("$destdir/$version");
 		
-		print "Generating catalog for $version...\n" if $verbose;
+		print "Generating catalog for $version...\n";
 
 		open ($cath, "> $destdir/$version/catalog") or die "Can't write $destdir/$version/catalog: $!";
 		foreach (sort keys %{$cat->{$version}}) {
 			print $cath $cat->{$version}->{$_};
 		}
 		close ($cath);
+		chomp ($sha1sum = `sha1sum $destdir/$version/catalog | cut -d' ' -f1`);
+		open($cath, ">$destdir/$version/catalog-sha1sum") or die "Can't write $destdir/$version/catalog-sha1sum: $!";
+		print $cath $sha1sum;
+		close($cath);
 
-		print "Generating descriptions for $version...\n" if $verbose;
+		print "Generating descriptions for $version...\n";
 
 		open ($dsch, "> $destdir/$version/descriptions") or die "Can't write $destdir/$version/descriptions: $!";
 		foreach (sort keys %{$desc->{$version}}) {
@@ -648,7 +656,8 @@ sub generate_catalog {
 			rmtree("/var/tmp/$pkg", 0, 1);
 		}
 
-		print NEWCAT "$name $version $pkg $file $sha1sum $version $type\n";
+		chomp($vers);
+		print NEWCAT "$name $version $pkg $file $sha1sum $vers $type\n";
 		print NEWDESC "$name - $summary\n";
 	}
 	closedir (CDIR);
