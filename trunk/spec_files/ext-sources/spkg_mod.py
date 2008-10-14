@@ -252,6 +252,15 @@ Subcommands:
 	init <dir>      Initialize an Alternate Root image in the given dir. The dir is
 	                created if it does not exist
 	download        Just download the package, do not install
+	mirror <pkg site> <dir> <full|incremental>
+	                Create a mirror of the given site in the given local directory.
+	                The mirror can be a full mirror in which case the complete site
+	                is mirrored using rsync. The rsync package must be installed for
+	                this to work. Running the same command again on the same directory
+	                later serves to update the mirror thanks to rsync.
+	                Incremental mirrors just download the metadata and then download
+	                packages from the remote site to the local copy as and when they
+	                are accessed.
 
 Options:
 	-R <dir>             Perform all operations onto an Alternate Root image in the dir
@@ -406,9 +415,14 @@ def load_config(use_site):
 
 	logv(_("Loading common names"))
 	# Load the package name to common name mappings
-	cf = open("%s/cnames.pickle" % img.SPKG_VAR_DIR)
-	img.cnames = cPickle.load(cf)
-	cf.close()
+	cnamef = "%s/cnames.pickle" % img.SPKG_VAR_DIR
+	if os.path.exists(cnamef):
+		cf = open(cnamef)
+		img.cnames = cPickle.load(cf)
+		cf.close()
+		return 0
+	else:
+		return 1
 
 def verify_sha1sum(ent, dfile):
 	"""Verify the SHA1 checksum for the downloaded package file"""
@@ -1468,7 +1482,7 @@ def do_build_uninstall_pkglist(img, pkgs, pdict, level):
 			continue
 
 		depf = open(depends, "r")
-		for de in depend_entries(depf):
+		for de in depend_entries(depf, ["P", "I"]):
 			if de[0] == "P":
 				#
 				# Ignore dependencies in base_cluster even when
@@ -1774,7 +1788,7 @@ def execute_plan(tplan, downloadonly):
 		print "\n*** Installation/Upgrade Complete\n"
 
 def download_packages(tplan):
-	"""Download all packages in mentioned in the transform plan"""
+	"""Download all packages mentioned in the transform plan"""
 
 	#
 	# We download one package at a time to avoid swamping all bandwidth.
@@ -1892,7 +1906,7 @@ def install(img, pargs, downloadonly):
 	return 0
 
 #
-# Main package installation routine
+# Main package un-installation routine
 #
 def uninstall(img, pargs):
 	"""Uninstall one or more packages listed on the command line along with
@@ -2298,6 +2312,8 @@ def info(img, pargs):
 				pkg.pkginfile = pkginfile
 				pkg.dependfile = dependfile
 				dump_pkginfo(pkg, False, short, depmode, invdeps)
+	print ""
+	print "############################################################################"
 	return 0
 
 def init(img, pargs):
@@ -2439,6 +2455,12 @@ def search(img, pargs):
 			pkg.pkginfile = pkginfile
 			dump_pkginfo(pkg, False, False, 0, None)
 
+def mirror(img, pargs):
+	"""Create a mirror of a repository site either incremental or full."""
+
+	if len(pargs) < 3:
+		raise PKGError(_("Mirror requires at least 3 arguments."))
+
 #
 # Identify a usable downloader utility.
 # Axel is a dependency of spkg but we perform this check anyway
@@ -2527,12 +2549,22 @@ def do_main():
 		if pargs[0] == "core" or pargs[0] == "all":
 			os.environ["USE_RELEASE_TAG"] = pargs[1]
 
-	load_config(use_site)
+	#
+	# load_config will return 1 if it does not file the common name
+	# mappings file. That forces an updatecatalog.
+	#
+	cret = load_config(use_site)
 
 	if subcommand == "updatecatalog":
 		ret = updatecatalog(img, pargs)
 	else:
-		check_catalog(img)
+		if cret == 1:
+			ret = updatecatalog(img, pargs)
+		else:
+			check_catalog(img)
+
+	if ret != 0:
+		return ret
 
 	if subcommand == "install":
 		ret = install(img, pargs, 0)
@@ -2554,6 +2586,8 @@ def do_main():
 		ret = contents(img, pargs)
 	elif subcommand == "search":
 		ret = search(img, pargs)
+	elif subcommand == "mirror":
+		ret = mirror(img, pargs)
 	elif subcommand != "updatecatalog":
 		print >> sys.stderr, \
 		    "spkg: unknown subcommand '%s'" % subcommand
