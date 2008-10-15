@@ -417,10 +417,14 @@ def load_config(use_site):
 	# Load the package name to common name mappings
 	cnamef = "%s/cnames.pickle" % img.SPKG_VAR_DIR
 	if os.path.exists(cnamef):
-		cf = open(cnamef)
-		img.cnames = cPickle.load(cf)
-		cf.close()
-		return 0
+		try:
+			cf = open(cnamef)
+			img.cnames = cPickle.load(cf)
+			cf.close()
+			return 0
+		except:
+			removef(cnamef)
+			return 1
 	else:
 		return 1
 
@@ -468,22 +472,21 @@ def downloadurl(sv, url, targ, use_mirror=True):
 	else:
 		axel_opts = ""
 		# If the site defines mirrors then prepare 
-		if sv.axel_mirror_prefix == "" and os.path.exists(sv.mirrors):
+		if use_mirror and sv.axel_mirror_prefix == "" and os.path.exists(sv.mirrors):
 			mh = open(sv.mirrors)
-			sv.axel_mirror_prefix = '{' + sv.site
+			murl = url.replace(sv.site, "").strip("/")
+			sv.axel_mirror_prefix = "%s/%s " % (sv.site, murl)
 			for line in mh:
-				sv.axel_mirror_prefix += ',' + line.strip()
+				sv.axel_mirror_prefix += "%s/%s " % (line.strip(), murl)
 			mh.close()
-			sv.axel_mirror_prefix += '}'
 
 		#
 		# Use only 2 concurrent streams per mirror. We want to be nice!
 		# Axel automatically ignores mirrors not having the file.
 		#
 		if use_mirror and sv.axel_mirror_prefix != "":
-			murl = url.replace(sv.site, "").strip("/")
-			axel_opts = "-a -n 2 -o %s %s/%s" % \
-			    (targ, sv.axel_mirror_prefix, murl)
+			axel_opts = "-a -n 2 -o %s %s" % \
+			    (targ, sv.axel_mirror_prefix)
 		else:
 			axel_opts = "-a -n 2 -o %s %s" % (targ, url)
 		if not S__NOEXEC:
@@ -764,11 +767,11 @@ def searchcatalog(sitevars, srchre, fieldnum):
 	matches = []
 
 	if fieldnum == -1:
-		matches = [Cl_pkgentry(line.split(" "), sitevars) for line in catf \
+		matches = [Cl_pkgentry(line.strip().split(" "), sitevars) for line in catf \
 		    if srchre.search(line)]
 	else:
 		matches = [Cl_pkgentry(entry, sitevars) for entry in \
-		    [line.split(" ") for line in catf] \
+		    [line.strip().split(" ") for line in catf] \
 		    if srchre.search(entry[fieldnum])]
 	return matches
 
@@ -2153,7 +2156,7 @@ def download(img, pargs):
 	ret = install(img, pargs, 1)
 	return ret
 
-def dump_pkginfo(pkg, installed, short, depmode, invdeps):
+def dump_pkginfo(pkg, short, depmode, invdeps):
 	"""Dump package info for the given package."""
 
 	vf = open(pkg.pkginfile, "r")
@@ -2168,21 +2171,23 @@ def dump_pkginfo(pkg, installed, short, depmode, invdeps):
 		cont[ent[0]] = ent[1]
 	vf.close()
 
-	if pkg:
-		cname = pkg.cname
-		pkgname = pkg.pkgname
-	else:
-		cname = cont["PKG"]
-		pkgname = cname
-
+	installed = pkg_is_installed(pkg, img)
+	cname = pkg.cname
+	pkgname = pkg.pkgname
 	print ""
+	if cont.has_key("DESC"):
+		desc = cont["DESC"]
+	else:
+		desc = cont["NAME"]
+
 	if short:
 		print " %20s : %s" % ("Common Name", cname)
-		print " %20s : %s" % ("Description", cont["DESC"])
+		print " %20s : %s" % ("Description", desc)
 	else:
 		print " %20s : %s" % ("Common Name", cname)
 		print " %20s : %s" % ("Package Name", pkgname)
-		print " %20s : %s" % ("Description", cont["DESC"])
+		print " %20s : %s" % ("Description", desc)
+
 		if cont["VERSION"].find(",REV=") > -1:
 			print " %20s : %s" % ("Version", \
 			    cont["VERSION"].replace(",REV=", "(") + ")")
@@ -2190,7 +2195,12 @@ def dump_pkginfo(pkg, installed, short, depmode, invdeps):
 			print " %20s : %s" % ("Version", cont["VERSION"] + "()")
 		if installed:
 			print " %20s : %s" % ("Installed", "Yes")
-			print " %20s : %s" % ("Install Date", cont["INSTDATE"])
+			if cont.has_key("INSTDATE"):
+				print " %20s : %s" % ("Install Date", cont["INSTDATE"])
+			else:
+				pm = os.path.getmtime(pkg.pkginfile)
+				print " %20s : %s" % ("Install Date", \
+				    time.strftime("%b %d %Y %H:%M", time.localtime(pm)))
 		else:
 			print " %20s : %s" % ("Installed", "No")
 
@@ -2294,10 +2304,10 @@ def info(img, pargs):
 		pkg.dependfile = dependfile
 
 		if allinst == 1:
-			dump_pkginfo(pkg, True, short, depmode, invdeps)
+			dump_pkginfo(pkg, short, depmode, invdeps)
 		else:
 			if os.path.exists(pkginfile):
-				dump_pkginfo(pkg, True, short, depmode, invdeps)
+				dump_pkginfo(pkg, short, depmode, invdeps)
 			else:
 				if pkg.type == "P":
 					pkginfile = "%s/%s/%s/pkginfo" % \
@@ -2311,7 +2321,7 @@ def info(img, pargs):
 			    		    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
 				pkg.pkginfile = pkginfile
 				pkg.dependfile = dependfile
-				dump_pkginfo(pkg, False, short, depmode, invdeps)
+				dump_pkginfo(pkg, short, depmode, invdeps)
 	print ""
 	print "############################################################################"
 	return 0
@@ -2450,10 +2460,14 @@ def search(img, pargs):
 		if not os.path.isfile(sv.catalog):
 			updatecatalog(img, [])
 		for pkg in searchcatalog(sv, mtch, -1):
-			pkginfile = "%s/%s/%s/pkginfo" % \
-			    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+			if pkg.type == "P":
+				pkginfile = "%s/%s/%s/pkginfo" % \
+				    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+			else:
+				pkginfile = "%s/groups/%s/%s/pkginfo" % \
+				    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
 			pkg.pkginfile = pkginfile
-			dump_pkginfo(pkg, False, False, 0, None)
+			dump_pkginfo(pkg, False, 0, None)
 
 def mirror(img, pargs):
 	"""Create a mirror of a repository site either incremental or full."""
