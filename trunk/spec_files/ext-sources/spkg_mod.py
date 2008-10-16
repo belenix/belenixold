@@ -472,7 +472,7 @@ def downloadurl(sv, url, targ, use_mirror=True):
 	else:
 		axel_opts = ""
 		# If the site defines mirrors then prepare 
-		if use_mirror and sv.axel_mirror_prefix == "" and os.path.exists(sv.mirrors):
+		if use_mirror and os.path.exists(sv.mirrors):
 			mh = open(sv.mirrors)
 			murl = url.replace(sv.site, "").strip("/")
 			sv.axel_mirror_prefix = "%s/%s " % (sv.site, murl)
@@ -2490,12 +2490,12 @@ if not os.path.exists(AXEL):
 	if not os.path.exists(WGET):
 		WGET = "/usr/bin/wget"
 		if not os.path.exists(WGET):
-			raise PKGError(_("No downloader utility found! Need either axel or wget."))
-	logv(_("Axel not found using wget"))
+			raise PKGError("No downloader utility found! Need either axel or wget.")
+	logv("Axel not found using wget")
 
 SZIP = "/usr/bin/7za"
 if not os.path.exists(SZIP):
-	raise PKGError(_("7Zip utility not found"))
+	raise PKGError("7Zip utility not found")
 
 S__VERBOSE = False
 S__NOEXEC = False
