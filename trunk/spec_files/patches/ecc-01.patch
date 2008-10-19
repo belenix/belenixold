@@ -1,0 +1,222 @@
+--- ecc-0.9/src/ecc.py.orig	2008-10-17 23:30:10.115804734 +0530
++++ ecc-0.9/src/ecc.py	2008-10-19 15:40:06.562016173 +0530
+@@ -38,6 +38,12 @@
+ #====================================================================
+ 
+ from elliptic import *
++import cPickle
++import base64
++from aes.aes import aes
++import random
++import md5
++import sha
+ 
+ # Initialize global components only once
+ init()
+@@ -45,6 +51,94 @@
+ makeBaseCurve(base)
+ 
+ 
++def load(fname, key=""):
++	"""
++	Load Public and Private keypair from the given file and initialize
++	the ecc object.
++	"""
++	fh = open(fname, "r")
++	inkeys = False
++	strkeys = ""
++	algo = "";  mode = "";  iv = ""
++	for line in fh:
++		ln = line.strip()
++		if ln == "": continue
++		if ln == "==== BEGIN ECC KEYPAIR ====":
++			inkeys = True
++			continue
++		elif ln == "==== END ECC KEYPAIR ====":
++			inkeys = False
++			break
++		if inkeys:
++			if len(ln) > 10 and ln[:10] == "Encrypted:":
++				lst = ln.split(" ")
++				algo = lst[1]
++				mode = lst[2]
++				if mode == "CBC":
++					iv = lst[3]
++			else:
++				strkeys += ln
++	fh.close()
++
++	if algo != "" and key == "":
++		raise RuntimeError("Encrypted Keypair.")
++
++	# Make a 128 Bit hash of the key
++	key = md5.new(key).digest()
++
++	if algo == "aes":
++		if mode == "CBC":
++			a = aes(key, "CBC", iv)
++		else:
++			a = aes(key, mode)
++		keys = cPickle.loads(a.decrypt(base64.b64decode(strkeys)))
++
++	elif algo == "":
++		keys = cPickle.loads(base64.b64decode(strkeys))
++	else:
++		raise RuntimeError("Unsupported encryption algorithm: " + algo)
++
++	mode = keys[1]
++	if mode != 'DH' and mode != 'ECKGP':
++		raise TypeError("Unsupported mode %s" % mode)
++
++	ec = ecc(1, mode)
++	ec.keypair.pblc_key.x = bin2field(keys[0][0])
++	ec.keypair.pblc_key.y = bin2field(keys[0][1])
++	ec.keypair.prvt_key = bin2field(keys[0][2])
++
++	return ec
++
++def loadPublic(fname):
++	"""
++	Read Public key from the given file and return an ecc object containing the key.
++	"""
++	fh = open(fname, "r")
++	inkeys = False
++	strkeys = ""
++	for line in fh:
++		ln = line.strip()
++		if ln == "": continue
++		if ln == "==== BEGIN ECC PUBLIC KEY ====":
++			inkeys = True
++			continue
++		elif ln == "==== END ECC PUBLIC KEY ====":
++			inkeys = False
++			break
++		if inkeys:
++			strkeys += ln
++	fh.close()
++	keys = cPickle.loads(base64.b64decode(strkeys))
++
++	mode = keys[1]
++	if mode != 'DH' and mode != 'ECKGP':
++		raise TypeError("Unsupported mode %s" % mode)
++
++	ec = ecc(1, mode)
++	ec.keypair.pblc_key.x = bin2field(keys[0][0])
++	ec.keypair.pblc_key.y = bin2field(keys[0][1])
++	return ec
++
+ class ecc:
+ 	"""
+ 	This is the Elliptic Curve Cryptography base class.
+@@ -139,6 +233,91 @@
+ 		else:
+ 			raise RuntimeError("No keypair has yet been created.")
+ 
++	def write(self, fname):
++		"""
++		Write Public and Private keypair to the given file.
++		"""
++		keys = ((field2bin(self.keypair.pblc_key.x),
++		    field2bin(self.keypair.pblc_key.y), field2bin(self.keypair.prvt_key)),
++		    self.mode)
++		strkeys = base64.b64encode(cPickle.dumps(keys, 2))
++		fh = open(fname, "w")
++		print >> fh, "==== BEGIN ECC KEYPAIR ===="
++		ln = len(strkeys);  j = 1
++		for i in range(ln):
++			if j == 65:
++				fh.write("\n")
++			fh.write(strkeys[i])
++			j += 1
++		print >> fh, "\n==== END ECC KEYPAIR ===="
++		fh.close()
++
++	def writeEncrypted(self, fname, key, algo="aes"):
++		"""
++		Write Encrypted Public and Private keypair to the given file.
++		We use 128 Bit AES in CBC mode by default.
++		"""
++		if algo != "aes":
++			raise RuntimeError("Unsupported encryption algorithm: " + algo)
++
++		keys = ((field2bin(self.keypair.pblc_key.x),
++		    field2bin(self.keypair.pblc_key.y), field2bin(self.keypair.prvt_key)),
++		    self.mode)
++		pkeys = cPickle.dumps(keys, 2)
++
++		# Pseudorandom IV
++		iv = str(random.random())
++
++		# Make a 128 Bit hash of the key
++		key = md5.new(key).digest()
++
++		a = aes(key, "CBC", iv)
++		strkeys = base64.b64encode(a.encrypt(cPickle.dumps(keys, 2)))
++		fh = open(fname, "w")
++		print >> fh, "==== BEGIN ECC KEYPAIR ===="
++		print >> fh, "Encrypted: " + algo + " CBC " + iv
++		ln = len(strkeys);  j = 1
++		for i in range(ln):
++			if j == 65:
++				fh.write("\n")
++			fh.write(strkeys[i])
++			j += 1
++		print >> fh, "\n==== END ECC KEYPAIR ===="
++		fh.close()
++
++	def writePublic(self, fname):
++		"""
++		Write Public key to the given file.
++		"""
++		key = ((field2bin(self.keypair.pblc_key.x),
++		    field2bin(self.keypair.pblc_key.y)), self.mode)
++		strkeys = base64.b64encode(cPickle.dumps(key, 2))
++		fh = open(fname, "w")
++		print >> fh, "==== BEGIN ECC PUBLIC KEY ===="
++		ln = len(strkeys);  j = 1
++		for i in range(ln):
++			if j == 65:
++				fh.write("\n")
++			fh.write(strkeys[i])
++			j += 1
++		print >> fh, "\n==== END ECC PUBLIC KEY ===="
++		fh.close()
++
++	def publicKeyFingerprint(self, pkey):
++		"""
++		Compute the Fingerprint of the given Public Key.
++		"""
++		pikey = cPickle.dumps(pkey, 2)
++		hsh = sha.new()
++		hsh.update(pikey)
++		dig = hsh.hexdigest()
++
++		fp = ""
++		for i in range(len(dig)):
++			fp += dig[i]
++			if i % 2 > 0:
++				fp += ":"
++		return fp.rstrip(":")
+ 
+ 	def DH_recv(self,inVal):
+ 		"""
+@@ -174,6 +353,10 @@
+ 		else:
+ 			raise TypeError("message must be a non-zero length string")
+ 
++	def signex(self, message):
++		sig = self.sign(message)
++		return base64.b64encode(cPickle.dumps(sig, 2))
++
+ 
+ 	def verify(self,message,public_key,signature):
+ 		"""
+@@ -195,6 +378,8 @@
+ 		else:
+ 			raise TypeError("message must be a non-zero length string")
+ 
++	def verifyex(self, message, public_key, signature):
++		return self.verify(message, public_key, cPickle.loads(base64.b64decode(signature)))
+ 
+ 
+ 

@@ -31,10 +31,12 @@ import tsort
 import time
 import sha
 import cPickle
-#from stat import *
+import getpass
 from subprocess import Popen, PIPE, STDOUT
 from urlparse import urlparse
 from decimal import Decimal
+from random import SystemRandom
+from  ecc import ecc
 
 class Cl_pkgentry(object):
 	"""Class that holds all fields of a package entry in the catalog including site related entries.
@@ -79,6 +81,7 @@ class Cl_sitevars(object):
 		self.catalog = "%s/catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
 		self.catalog_tm = "%s/.catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
 		self.mirrors = "%s/mirrors-%s" % (SPKG_VAR_DIR, so[1])
+		self.pkey = "%s/pkey-%s" % (SPKG_VAR_DIR, so[1])
 		self.metadir = "%s/metainfo-%s" % (SPKG_VAR_DIR, so[1])
 		self.base_cluster = None
 		self.axel_mirror_prefix = ""
@@ -206,14 +209,28 @@ class PKGMetaError(PKGError):
 		self.message = message
 
 img = Cl_img()
+S__VERBOSE = False
+S__NOEXEC = False
+
 
 def usage():
 	print >> sys.stderr, _("""\
 Usage:
 	spkg [options] subcommand [cmd_options] [operands]
 
-Subcommands:
-	updatecatalog   Updates download site metadata
+Client-side Subcommands:
+	updatecatalog [-f]
+	                Updates download site metadata. This does not refresh the package
+	                signing public keys. Use updatekeys for that purpose.
+	                With '-f' updates are forced even in catalogs have not changed.
+	updatekeys [-c <site>]|[-l]
+	                Refresh the package signing public keys for each site.
+	                WARNING: Use this option with care and please verify the public
+	                key fingerprints.
+			With '-c <site>' option cleanup the site's public key. Use this
+	                only if the displayed fingerprint is incorrect.
+			With '-l' list fingerprints for all sites.
+
 	install         <package names>
 	                Install one or more packages or group packages
 	uninstall [-d]  <package names>
@@ -261,6 +278,15 @@ Subcommands:
 	                Incremental mirrors just download the metadata and then download
 	                packages from the remote site to the local copy as and when they
 	                are accessed.
+
+Server-side Subcommands:
+	genkey <file>   Generate a new ECC Public/Private Keypair used for catalog signing.
+	                This is typically used rarely: Once when setting up a new repository
+	                and then at long intervals. The Keypair is stored in the given file.
+	                A password queried from the user is used to encrypt the Keypair.
+	sign [-p password] <file1> <file2>
+	                Sign <file1> using the ECC Keypair stored in <file2> and store the
+	                signature in <file1>.sig.
 
 Options:
 	-R <dir>             Perform all operations onto an Alternate Root image in the dir
@@ -795,6 +821,64 @@ def put_timestamp(fl):
 	fh.write(str(time.time()))
 	fh.close()
 
+def updatekeys(img, pargs):
+	"""
+	Refresh Public Keys for all the sites or remove public key for a given
+	site.
+	"""
+
+	site = ""
+	cleanup = False
+	listfp = False
+	if len(pargs) > 1:
+		if pargs[0] == "-c":
+			site = pargs[1]
+			cleanup = True
+	elif len(pargs) > 0:
+		if pargs[0] == "-l":
+			listfp = True
+
+	for sv in img.PKGSITEVARS:
+		if listfp:
+			if not os.path.exists(sv.pkey):
+				print "*** No Public Key for site %s" % sv.site
+				continue
+
+			ec = ecc.loadPublic(sv.pkey)
+			fp = ec.publicKeyFingerprint(ec.publicKey())
+			print "*** Site: %s" % sv.site
+			print "*** Public Key Fingerprint: %s" % fp
+			print ""
+			continue
+
+		if cleanup and site == sv.site:
+			removef(sv.pkey)
+			continue
+
+		removef(sv.tcat)
+		try:
+			downloadurl(sv, "%s/trunk/site.pkey" % sv.site, \
+			    sv.tcat, False)
+			shutil.copyfile(sv.tcat, sv.pkey)
+			ec = ecc.loadPublic(sv.tcat)
+			fp = ec.publicKeyFingerprint(ec.publicKey())
+			print "*** Fetched Public Key for site %s\n" % sv.site
+			print "*** Fingerprint: %s" % fp
+			print ""
+		except PKGError, pe:
+			pass
+		removef(sv.tcat)
+
+	if listfp or cleanup:
+		return 0
+	print "WARNING: Please review the fingerprints for correctness. If you see"
+	print "         error in a fingerprint then there might be spoofing going"
+	print "         going on. Please remove the site's fingerprint using:"
+	print "         spkg updatekeys -c <site>"
+	print "         and re-try later."
+	print ""
+	return 0
+
 #
 # Download catalogs and package metadata for all configured sites
 #
@@ -805,7 +889,13 @@ def updatecatalog(img, pargs, ignore_errors=False):
 	errored = 0
 	releases_found = False
 	cnames = {}
+	force = False
 
+	if len(pargs) > 0:
+		if pargs[0] == "-f":
+			force = True
+		else:
+			raise PKGError(_("Unrecognized option %s" % pargs[0]))
 	#
 	# We do not use mirrored downloads for catalog updates so we pass the False
 	# parameter to downloadurl.
@@ -843,7 +933,7 @@ def updatecatalog(img, pargs, ignore_errors=False):
 				lsum = sf.read().strip();  sf.close()
 			else:
 				lsum = ""
-			if lsum != rsum:
+			if lsum != rsum or force:
 				downloadurl(sv, "%s/%s/%s/catalog" % \
 				    (sv.fullurl, img.ARCH, img.OSREL), sv.tcat, False)
 			else:
@@ -859,7 +949,43 @@ def updatecatalog(img, pargs, ignore_errors=False):
 			removef(sv.tcat)
 			continue
 
-		## TODO GPG signature checking
+		if os.path.exists(sv.pkey):
+			sigf = "%s/%s/%s/catalog.sig" % \
+			    (sv.fullurl, img.ARCH, img.OSREL)
+			ver = False
+			try:
+				downloadurl(sv, sigf, sv.tmeta, False)
+				ver = True
+			except:
+				pass
+			try:
+				if ver:
+					sigfh = open(sv.tmeta, "r")
+					sig = sigfh.read().strip()
+					sigfh.close()
+					catfh = open(sv.tcat, "r")
+					cat = catfh.read()
+					catfh.close()
+					ec = ecc.loadPublic(sv.pkey)
+					pk = ec.publicKey()
+					ret = ec.verifyex(cat, pk, sig)
+					if ret == 0:
+						failed_sites.append((sv.site, \
+						    _("** ERROR ** failed to verify catalog" \
+						    "signature! Possible Spoofing!")))
+						removef(sv.tcat)
+						removef(sv.tmeta)
+						errored = 1
+						continue
+			except:
+				failed_sites.append((sv.site, \
+				    _("ERROR verifying catalog %s\n" % \
+				    sys.exc_info()[1])))
+				removef(sv.tcat)
+				removef(sv.tmeta)
+				errored = 1
+				continue
+
 		print "Updating Catalog for site %s\n" % sv.site
 		shutil.copyfile(sv.tcat, sv.catalog)
 		removef(sv.tcat)
@@ -883,7 +1009,6 @@ def updatecatalog(img, pargs, ignore_errors=False):
 			removef(sv.tmeta)
 			continue
 		
-		## TODO GPG signature checking
 		print "\nUpdating metainfo for site %s\n" % sv.site
 		try:
 			out = exec_prog("%s e -so %s | (cd %s; tar xf -)" % \
@@ -2475,6 +2600,73 @@ def mirror(img, pargs):
 	if len(pargs) < 3:
 		raise PKGError(_("Mirror requires at least 3 arguments."))
 
+#################################################################
+# Server side subcommands
+#################################################################
+def genkey(pargs):
+	"""
+	Generate an ECC Keypair to be used for signing catalogs.
+	"""
+	if len(pargs) == 0:
+		raise PKGError(_("Need a file to write the Keypair"))
+
+	fl = pargs[0]
+	print "Generating ECC Keypair ...\n"
+	sr = SystemRandom()
+	kp = ecc.ecc(int(sr.random() * 1000000000))
+	kpass1 = "a";  kpass2 = "b"
+
+	while kpass1 != kpass2:
+		kpass1 = getpass.getpass("Please enter encryption password: ")
+		kpass2 = getpass.getpass("Please re-enter encryption password: ")
+		if kpass1 != kpass2:
+			print "Passwords do not match!\n"
+
+	kp.writeEncrypted(fl, kpass1)
+	print "Keypair written to %s\n" % fl
+
+	names = fl.split(".")
+	pub = "%s.pkey" % names[0]
+	kp.writePublic(pub)
+	print "Public Key written to %s\n" % pub
+
+def sign(pargs):
+	"""
+	Sign the given file with the given Keypair. This typically to sign the
+	site's catalog file.
+	"""
+	if len(pargs) < 2:
+		raise PKGError(_("Usage: sign <file to sign> <ecc keypair file>"))
+
+	kpass = ""
+	if pargs[0] == "-p":
+		kpass = pargs[1]
+		del pargs[0]
+		del pargs[0]
+
+	fl = pargs[0]
+	kp = pargs[1]
+
+	encrypted = False
+	kpf = open(kp, "r")
+	for line in kpf:
+		if len(line) > 10 and line[:10] == "Encrypted:":
+			encrypted = True
+	kpf.close()
+	flh = open(fl, "r")
+
+	if encrypted and kpass == "":
+		kpass = getpass.getpass("Please enter password: ")
+		ec = ecc.load(kp, kpass)
+	else:
+		ec = ecc.load(kp)
+	kpass = ""
+	sig = ec.signex(flh.read())
+
+	sigf = open("%s.sig" % fl, "w")
+	print >> sigf, sig
+	sigf.close()
+
 #
 # Identify a usable downloader utility.
 # Axel is a dependency of spkg but we perform this check anyway
@@ -2496,9 +2688,6 @@ if not os.path.exists(AXEL):
 SZIP = "/usr/bin/7za"
 if not os.path.exists(SZIP):
 	raise PKGError("7Zip utility not found")
-
-S__VERBOSE = False
-S__NOEXEC = False
 
 def do_main():
 	"""Main entry point."""
@@ -2523,9 +2712,20 @@ def do_main():
 	subcommand = pargs[0]
 	del pargs[0]
 
+	#
+	# Server side subcommands and init are processed here
+	#
 	if subcommand == "init":
 		ret = init(img, pargs)
 		return ret
+
+	elif subcommand == "genkey":
+		genkey(pargs)
+		return 0
+
+	elif subcommand == "sign":
+		sign(pargs)
+		return 0
 
 	ALTROOT = ""
 	for opt, arg in opts:
@@ -2573,7 +2773,7 @@ def do_main():
 		ret = updatecatalog(img, pargs)
 	else:
 		if cret == 1:
-			ret = updatecatalog(img, pargs)
+			ret = updatecatalog(img, [])
 		else:
 			check_catalog(img)
 
@@ -2602,6 +2802,8 @@ def do_main():
 		ret = search(img, pargs)
 	elif subcommand == "mirror":
 		ret = mirror(img, pargs)
+	elif subcommand == "updatekeys":
+		ret = updatekeys(img, pargs)
 	elif subcommand != "updatecatalog":
 		print >> sys.stderr, \
 		    "spkg: unknown subcommand '%s'" % subcommand
