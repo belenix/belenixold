@@ -9,7 +9,7 @@ use Digest::MD5 qw/md5_hex/;
 #use Compress::Zlib;
 
 my ($collections, $arch, $basedir, $verbose, $release, $release_given);
-my ($rebuildtrunk, $addmode, $cluster, $srcclust);
+my ($rebuildtrunk, $addmode, $cluster, $srcclust, $sign, $priv);
 my ($opt, $srcdir, $version);
 
 sub relative_path;
@@ -21,9 +21,11 @@ $release_given = 0;
 $rebuildtrunk = 0;
 $addmode = 0;
 $cluster = 0;
+$sign = 0;
 
 # Default Base dir for OpenSolaris packages
 $basedir = "/tanku/belipsds";
+$priv = "$ENV{'HOME'}/.ecc/site.ecc";
 
 while ( $opt = shift @ARGV ) {
 	if ( $opt eq "-v" ) {
@@ -43,6 +45,9 @@ while ( $opt = shift @ARGV ) {
 		$cluster = 1;
 		$srcclust = $ARGV[0];
 		$version = $ARGV[1];
+
+	} elsif ( $opt eq "-s" ) {
+		$sign = 1;
 
 	} elsif ( $opt eq "-R" ) {
 		$basedir = $ARGV[0];
@@ -78,6 +83,10 @@ if ($addmode == 1) {
 	print "Done.\n";
 	print "####################################################\n";
 	exit 0;
+
+} elsif ($sign == 1) {
+	sign_catalogs($priv);
+	exit 0;
 }
 
 if ($release_given == 0) {
@@ -99,6 +108,31 @@ sub usage() {
 	print "repo_util [-v] [-R <dir>] [-a <dir> <release> <os version> | -c <cluster file> <os version>\n";
 	print "\n";
 	exit 0;
+}
+
+sub sign_one_catalog {
+	my ($cat) = shift;
+	my ($priv) = shift;
+
+	system("/usr/bin/spkg sign $cat $priv");
+}
+
+sub sign_catalogs {
+	my $priv = shift;
+
+	my ($releases) = "$basedir/trunk/releases";
+	my ($relh, $line, @rlist);
+
+	print "Signing catalog $basedir/trunk/unstable/i386/5.11/catalog\n";
+	sign_one_catalog("$basedir/trunk/unstable/i386/5.11/catalog", $priv);
+
+	open($relh, "<$releases") || die "Cannot open releases file $releases: $!";
+	while ($line = <$relh>) {
+		chomp($line);
+		@rlist = split(/:/, $line);
+		print "Signing catalog $basedir/$rlist[1]/unstable/i386/5.11/catalog\n";
+		sign_one_catalog("$basedir/$rlist[1]/unstable/i386/5.11/catalog", $priv);
+	}
 }
 
 sub add_cluster {
@@ -291,6 +325,7 @@ sub add_pkg {
 	print $fh $sha1sum;
 	close($fh);
 
+	sign_one_catalog("$dir/catalog", $priv);
 	if ( -f "$dir/metainfo.tar.7z" ) {
 		copy("$dir/metainfo.tar.7z", "$dir/metainfo.tar.7z.1");
 	}
@@ -427,6 +462,7 @@ sub mix_sources {
 		open($cath, ">$destdir/$version/catalog-sha1sum") or die "Can't write $destdir/$version/catalog-sha1sum: $!";
 		print $cath $sha1sum;
 		close($cath);
+		sign_one_catalog("$destdir/$version/catalog", $priv);
 
 		print "Generating descriptions for $version...\n";
 

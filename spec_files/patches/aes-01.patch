@@ -1,0 +1,38 @@
+--- aes-1.1/src/aes.py.orig	2008-10-19 10:44:05.945028766 +0530
++++ aes-1.1/src/aes.py	2008-10-19 10:44:21.210464099 +0530
+@@ -189,7 +189,7 @@
+     The encrypted string (with NULL bytes) is returned.
+     """
+ 
+-    if str(type(data)) != "<type 'string'>":
++    if str(type(data)) != "<type 'str'>":
+       raise TypeError('Data to encrypt must be a string')
+ 
+     if not self.keyMaterial:
+@@ -210,7 +210,7 @@
+         you, check the key you're using!
+     """
+ 
+-    if str(type(data)) != "<type 'string'>":
++    if str(type(data)) != "<type 'str'>":
+       raise TypeError('Data to decrypt must be a string')
+ 
+     if not self.keyMaterial:
+@@ -236,7 +236,7 @@
+     if noSHA256:
+       raise RuntimeError("Need sha256 module to lazyEncrypt")
+ 
+-    if str(type(data)) != "<type 'string'>":
++    if str(type(data)) != "<type 'str'>":
+       raise TypeError('Data to encrypt must be a string')
+ 
+     hasher = sha256()
+@@ -266,7 +266,7 @@
+     if noSHA256:
+       raise RuntimeError("Need sha256 module to lazyDecrypt")
+ 
+-    if str(type(data)) != "<type 'string'>":
++    if str(type(data)) != "<type 'str'>":
+       raise TypeError('Data to decrypt must be a string')
+ 
+     hasher = sha256()
