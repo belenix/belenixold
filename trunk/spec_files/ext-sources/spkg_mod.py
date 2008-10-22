@@ -2168,6 +2168,8 @@ def available(img, pargs):
 			# Skip if this entry was already compared earlier
 			#
 			nm = entry[img.CNAMEF]
+			if pdict.has_key(nm): continue
+			pdict[nm] = "nm"
 			pkgname = entry[img.PKGNAMEF]
 			type = entry[img.TYPEF]
 			if group and type != "G":
@@ -2667,6 +2669,202 @@ def sign(pargs):
 	print >> sigf, sig
 	sigf.close()
 
+def appendFile(fname, txt):
+	"""
+	Helper to append text into a file.
+	"""
+	fh = open(fname, "a+")
+	fh.write(txt)
+	fh.close()
+
+def html_pkginfo(pkg, pkgfile):
+	"""
+	Dump HTML format package info for the given package.
+	"""
+
+	vf = open(pkg.pkginfile, "r")
+	cont = {}
+	for line in vf:
+		line = line.strip()
+		if line == "" or line[0] == "#":
+			continue
+		ent = line.split("=")
+		if ent[0] == "VERSION":
+			ent[1] = "=".join(ent[1:])
+		cont[ent[0]] = ent[1]
+	vf.close()
+
+	cname = pkg.cname
+	pkgname = pkg.pkgname
+	if cont.has_key("DESC"):
+		desc = cont["DESC"]
+	else:
+		desc = cont["NAME"]
+
+	if cont["VERSION"].find(",REV=") > -1:
+		vers = cont["VERSION"].replace(",REV=", "(") + ")"
+	else:
+		vers = cont["VERSION"] + "()"
+
+	if pkg.type == "P":
+		type = "Standard Package"
+	else:
+		type = "Group Package"
+
+	txt = '<DIV><DIV align="left" style="background-color: #3EF179; ' + \
+	    'width: 19.5%; float: left; font-size: 12pt; border: 1px solid; ' + \
+		'height: 30px; line-height: 20pt;">' + "\n"
+	txt += '&nbsp;Common Name</DIV><DIV align="left" style="background-color: ' + \
+	    '#3EF179; width: 80%; font-size: 12pt; float: right; border: 1px solid; ' + \
+		'height: 30px; line-height: 20pt;">' + "\n"
+	txt += '<b>&nbsp;<a href="' + pkgfile + '">' + cname + '</a></b></DIV></DIV>' + "\n"
+	#txt += '<DIV align="left" style="position: relative; left: 10px; ' + \
+	#    'background-color: #c0f3fd; border: 2px solid;">' + "\n"
+
+	txt += '<DIV align="left" style="width: 20%; position: relative; ' + \
+	    'left: 10px; background-color: #c0f3fd; float: left;">' + "\n"
+	txt += 'Package Name<br>Description<br>Version<br>Type<br>Category<br>Vendor</DIV>' + "\n"
+	txt += '<DIV align="left" style="width: 80%; position: relative; ' + \
+	    'left: 10px; background-color: #c0f3fd; float: right;">' + "\n"
+	txt += pkgname + "<br>" + desc + "<br>" + vers + "<br>" + type + "<br>" + \
+	    cont["CATEGORY"] + "<br>" + cont["VENDOR"]
+	txt += "</DIV>\n"
+	return txt
+
+def genhtml(pargs):
+	"""
+	Generate basic html pages containing package information in the given repo.
+	"""
+
+	repo = ""
+	if len(pargs) < 2 or pargs[0] != "-r":
+		raise PKGError("Invalid arguments to genhtml")
+
+	repo = pargs[1]
+	htmldir = "%s/html" % repo
+	alphas = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', \
+	    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'z')
+	hdr = '<html><body>'
+	if not os.path.exists(htmldir):
+		os.mkdir(htmldir)
+
+	rels = [["Current Mainline", "trunk"]]
+	relf = open("%s/trunk/releases" % repo, "r")
+	for rline in relf:
+		rel = rline.strip().split(":")
+		rels.append(rel)
+
+	rhtml = "<html><body>\n"
+	rhtml += '<div id = "nifty" style = "background-color: #A0FFBF; width: 100%; height: 96%; ' + \
+	    'font-size: 12px; text-align: center; border: 2px solid;">' + "\n"
+	rhtml += '<h2><u>Releases</u></h2><ul style = "text-align: left;">' + "\n"
+	for rel in rels:
+		pdict = {}
+		palphas = []
+		reldir = "%s/%s" % (htmldir, rel[1])
+		if not os.path.exists(reldir):
+			os.mkdir(reldir)
+
+		dir = "%s/%s/unstable/i386/5.11" % (repo, rel[1])
+		rdir = "../../%s/unstable/i386/5.11" % rel[1]
+		catalog = "%s/catalog" % dir
+		metainfo = "%s/metainfo" % dir
+		catf = open(catalog, "r")
+
+		rhtml += '<li><A href="html/' + rel[1] + '/index.html" target="rdetail">' \
+		    + rel[0] + '</A></li>'
+		rhtml += "\n"
+		modtimes = []
+		for line in catf:
+			line = line.strip()
+			entry = line.split(" ")
+			if len(entry) != 7: continue
+
+			#
+			# Skip if this entry was already compared earlier
+			#
+			nm = entry[0]
+			if pdict.has_key(nm): continue
+			pdict[nm] = "nm"
+			pkg = Cl_pkgentry(entry, None)
+
+			#
+			# We want the latest pkg revision here.
+			# Current symlink in the pkg's metainfo dir always points to
+			# the latest version, so we cheat via readlink.
+			#
+			alpha = pkg.cname[:1]
+			if pkg.type == "P":
+				pkg.pkginfile = "%s/%s/current/pkginfo" % (metainfo, pkg.pkgname)
+				pkgfile = "%s/%s/%s" % (rdir, alpha, pkg.pkgfile)
+			else:
+				pkg.pkginfile = "%s/groups/%s/current/pkginfo" % (metainfo, pkg.pkgname)
+				pkgfile = "%s/groups/%s" % (rdir, pkg.pkgfile)
+
+			alphadir = "%s/%s" % (reldir, alpha)
+			alphaindx = "%s/%s/%s.html" % (reldir, alpha, alpha)
+
+			if alpha not in palphas:
+				print "Creating " + alphaindx
+				if not os.path.exists(alphadir):
+					os.mkdir(alphadir)
+				open(alphaindx, "w").close()
+				appendFile(alphaindx, hdr)
+				palphas.append(alpha)
+
+			hpkginf = html_pkginfo(pkg, pkgfile)
+			appendFile(alphaindx, hpkginf)
+			modtimes.append((hpkginf, os.path.getmtime(pkg.pkginfile)))
+		catf.close()
+
+		rlst = ""
+		for alpha in alphas:
+			if alpha in palphas:
+				alphaindx = "%s/%s/%s.html" % (reldir, alpha, alpha)
+				appendFile(alphaindx, '</html></body>')
+				rlst += '<A href="" onclick="frames[\'rcontent\'].location.href = \'' \
+				    + alpha + '/' + alpha + '.html\'; return false">' + alpha + \
+					'</A>&nbsp;&nbsp;&nbsp;' + "\n"
+
+		modtimes.sort(lambda x, y: x[1] - y[1], reverse=True)
+		relindx = "%s/index.html" % reldir
+		open(relindx, "w").close()
+		relnew = "%s/new.html" % reldir
+		open(relnew, "w").close()
+		reltop = "%s/top.html" % reldir
+		open(reltop, "w").close()
+		appendFile(relnew, '<html><body><h2><u>Newest Additions</u></h2>')
+		for i in range(10):
+			appendFile(relnew, modtimes[i][0])
+		appendFile(relnew, '</html></body>')
+
+		rtxt = '<html><body><DIV align="center" style="width: 99%; height: 8%; '
+		rtxt += 'background-color: #A0FFBF; border: 2px solid;">' + "\n"
+		rtxt += '<u>Package Index</u><br/>' + "\n"
+		rtxt += rlst + '</DIV>' + "\n"
+		rtxt += '<DIV style="width: 100%; height: 92%">'
+		rtxt += '<iframe name="rcontent" height=97% width=100% frameborder=no src=new.html></iframe></DIV></body></html>'
+		appendFile(relindx, rtxt)
+
+	rhtml += '</ul></div></body></html>'
+	mainrls = "%s/rel.html" % repo
+	open(mainrls, "w").close()
+	appendFile(mainrls, rhtml)
+
+	mhtml = '<html><head>' + "\n"
+	mhtml += '<title>The BeleniX Package Repository</title>' + "\n"
+	mhtml += '</head>' + "\n"
+	mhtml += '<frameset cols="15%, *">' + "\n"
+	mhtml += '<frame src="rel.html" name="rel" noresize frameborder=0>' + "\n"
+	mhtml += '<frame src="html/trunk/index.html" name="rdetail" noresize frameborder=0 scrolling=no>' + "\n"
+	mhtml += '</frameset></html>'
+
+	mainindx = "%s/index.html" % repo
+	open(mainindx, "w").close()
+	appendFile(mainindx, mhtml)
+
+	return 0
+
 #
 # Identify a usable downloader utility.
 # Axel is a dependency of spkg but we perform this check anyway
@@ -2725,6 +2923,10 @@ def do_main():
 
 	elif subcommand == "sign":
 		sign(pargs)
+		return 0
+
+	elif subcommand == "genhtml":
+		genhtml(pargs)
 		return 0
 
 	ALTROOT = ""
