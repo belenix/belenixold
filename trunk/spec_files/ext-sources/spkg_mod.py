@@ -214,7 +214,7 @@ S__NOEXEC = False
 
 
 def usage():
-	print >> sys.stderr, _("""\
+	print >> sys.stdout, _("""\
 Usage:
 	spkg [options] subcommand [cmd_options] [operands]
 
