@@ -1,0 +1,222 @@
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Little Python script to massage OpenSolaris package prototype
+# definitions to remove references to closed non-redistributable
+# objects not present in a fully built OpenSolaris workspace.
+#
+# Author: Moinak Ghosh
+#
+# Copyright: The BeleniX Team
+#
+
+import sys
+import os
+import platform
+import shutil
+
+omits = []
+if len(sys.argv) < 2:
+	print "process_pkgdefs <path/to/osol/workspace>\n"
+	sys.exit(1)
+
+plat = platform.uname()
+arch = plat[5]
+wksp = sys.argv[1]
+dr = os.path.join(wksp, "usr/src/pkgdefs")
+if not os.path.isdir(dr):
+	print "ERROR: " + wksp + " is not a valid OpenSolaris workspace.\n"
+	sys.exit(1)
+proto = os.path.join(wksp, "proto/root_" + arch)
+if not os.path.isdir(proto):
+	print "ERROR: The OpenSolaris workspace appears not to be built.\n"
+	sys.exit(1)
+
+omitsf = open("omitted_paths.txt", "w")
+omitsp = open("omitted_pkgs.txt", "w")
+
+for sd in os.listdir(dr):
+	if len(sd) < 4 or (sd[:4] != "BRCM" and sd[:3] != "PHX" and sd[:4] != "SUNW"):
+		continue
+
+	pkgdir = os.path.join(dr, sd)
+	pkginfo = os.path.join(pkgdir, "pkginfo")
+	if not os.path.exists(pkginfo): continue
+
+	paths = 0
+	dpaths = 0
+	dir_only = True
+	nexist = []
+	noproto = 0
+
+	# Fetch the BASEDIR (/ is default)
+	basedir = ""
+	pkginf = open(pkginfo, "r")
+	for line in pkginf:
+		line = line.strip()
+		if line[:4] == "BASE":
+			key, val = line.split("=")
+			basedir = val
+	pkginf.close()
+
+	proto_com = os.path.join(pkgdir, "prototype_com")
+	proto_arch = os.path.join(pkgdir, "prototype_" + arch)
+
+	if basedir == "/":
+		basedir = ""
+	elif basedir[:1] == "/":
+		basedir = basedir[1:]
+
+	for protofile in (proto_com, proto_arch):
+		if not os.path.exists(protofile):
+			noproto += 1
+			continue
+		protoorig = protofile + ".orig"
+		if not os.path.exists(protoorig):
+			shutil.copyfile(protofile, protoorig)
+
+		pf = open(protoorig, "r")
+		pfo = open(protofile, "w")
+		for line in pf:
+			ln = line.strip()
+			if ln == "":
+				pfo.write(line)
+				continue
+
+			pentry = ln.split()
+			if pentry[0] == 'f' or pentry[0] == 'e' or pentry[0] == 'v':
+				#
+				# If it is a file, check if it exists in the proto.
+				# However device entries are preserved as is.
+				#
+				pfile = os.path.normpath(os.path.join(proto, basedir, pentry[2]))
+				if os.path.exists(pfile) or \
+				    (len(pentry[2]) > 3 and pentry[2][:3] == "dev"):
+					pfo.write(line)
+					paths += 1
+				else:
+					print >> omitsf, "Omitting: " + ln
+					nexist.append(pentry[2])
+				dir_only = False
+
+			elif pentry[0] == 's':
+				#
+				# If it is a symlink check if the link target was
+				# omitted earlier or not preset in proto.
+				# However device links are preserved as is.
+				#
+				src, tgt = pentry[2].split("=")
+				srcdir = os.path.dirname(src)
+				tgtf = os.path.normpath(os.path.join(proto, srcdir, tgt))
+				if tgtf not in nexist:
+					if os.path.exists(tgtf) or \
+					    (len(pentry[2]) > 3 and pentry[2][:3] == "dev"):
+						pfo.write(line)
+						paths += 1
+					else:
+						print >> omitsf, "Omitting: " + ln
+				else:
+					print "Omitting: " + ln
+				dir_only = False
+
+			elif pentry[0] == 'd':
+				pfo.write(line)
+				dpaths += 1
+
+			else:
+				pfo.write(line)
+		pf.close()
+		pfo.close()
+
+	if dir_only:
+		paths += dpaths
+
+	if (paths == 0 and len(nexist) > 0) or noproto == 2:
+		print "Omitting pkg " + sd
+		print >> omitsp, "Omitting pkg " + sd
+		omits.append(sd)
+
+#
+# Check for dependencies and omit packages whose dependencies are
+# not satisfied.
+#
+print "Verifying dependencies ..."
+for sd in os.listdir(dr):
+	if sd in omits:
+		continue
+
+	if len(sd) < 4 or (sd[:4] != "BRCM" and sd[:3] != "PHX" and sd[:4] != "SUNW"):
+		continue
+
+	pkgdir = os.path.join(dr, sd)
+	dependf = os.path.join(pkgdir, "depend")
+	if not os.path.exists(dependf):
+		continue
+
+	df = open(dependf, "r")
+	for line in df:
+		line = line.strip()
+		if line == "": continue
+
+		ln = line.split()
+		if ln[0] == "P":
+			if ln[1] in omits:
+				print "Broken dep: " + sd + " -> " + ln[1]
+				print "            Omitting " + sd
+				print >> omitsp, "Broken dep: " + sd + " -> " + ln[1]
+				print >> omitsp, "            Omitting " + sd
+				omits.append(sd)
+
+	df.close()
+
+omitsf.close()
+omitsp.close()
+
+#
+# Now we have the list of packages to be omitted. Patch the toplevel
+# Makefile to remove those package references.
+#
+mkorig = os.path.join(dr, "Makefile.orig")
+mkfile = os.path.join(dr, "Makefile")
+if not os.path.exists(mkorig):
+	shutil.copyfile(mkfile, mkorig)
+
+mknew = os.path.join(dr, "Makefile.new")
+mkfi = open(mkorig, "r")
+mkfo = open(mknew, "w")
+
+for line in mkfi:
+	ln = line.strip().split()
+	if line == "":
+		continue
+	skip = False
+	for item in ln:
+		if item in omits:
+			skip = True
+			break
+	if skip: continue
+	mkfo.write(line)
+
+mkfi.close()
+mkfo.close()
+
+shutil.copyfile(mknew, mkfile)
+
+
