@@ -1,0 +1,160 @@
+--- usr/src/uts/common/sys/lofi.h.orig	Mon Oct 27 18:30:45 2008
++++ usr/src/uts/common/sys/lofi.h	Mon Oct 27 18:56:15 2008
+@@ -156,6 +156,12 @@
+ #define	V_ISLOFIABLE(vtype) \
+ 	((vtype == VREG) || (vtype == VBLK) || (vtype == VCHR))
+ 
++struct membufs {
++	void		*buf;
++	uint32_t	bufsiz;
++	int		inuse;
++};
++
+ struct lofi_state {
+ 	char		*ls_filename;	/* filename to open */
+ 	size_t		ls_filename_sz;
+@@ -189,6 +195,10 @@
+ 	caddr_t		ls_comp_index_data; /* index pages loaded from file */
+ 	uint32_t	ls_comp_index_data_sz;
+ 	u_offset_t	ls_vp_comp_size; /* actual compressed file size */
++
++	kmutex_t	ls_membufs_lock;
++	struct membufs	*ls_uncomp_segs;
++	struct membufs	*ls_comp_segs;
+ };
+ 
+ #endif	/* _KERNEL */
+--- usr/src/uts/common/io/lofi.c.orig	Mon Oct 27 19:25:11 2008
++++ usr/src/uts/common/io/lofi.c	Mon Oct 27 19:35:27 2008
+@@ -230,6 +230,7 @@
+ {
+ 	dev_t	newdev;
+ 	char	namebuf[50];
++	int	i;
+ 
+ 	if (lsp->ls_vp) {
+ 		(void) VOP_CLOSE(lsp->ls_vp, lsp->ls_openflag,
+@@ -258,6 +259,21 @@
+ 		kmem_free(lsp->ls_comp_index_data, lsp->ls_comp_index_data_sz);
+ 		lsp->ls_uncomp_seg_sz = 0;
+ 	}
++
++	if (lsp->ls_uncomp_segs != NULL) {
++		for (i = 0; i < lofi_taskq_nthreads; i++) {
++			kmem_free(lsp->ls_uncomp_segs[i].buf,
++				    lsp->ls_uncomp_segs[i].bufsiz);
++			if (lsp->ls_comp_segs[i].bufsiz > 0)
++				kmem_free(lsp->ls_comp_segs[i].buf,
++				    lsp->ls_comp_segs[i].bufsiz);
++		}
++		kmem_free(lsp->ls_uncomp_segs, sizeof (struct membufs) *
++		    lofi_taskq_nthreads);
++		kmem_free(lsp->ls_comp_segs, sizeof (struct membufs) *
++		    lofi_taskq_nthreads);
++		mutex_destroy(&lsp->ls_membufs_lock);
++	}
+ 	ddi_soft_state_free(lofi_statep, minor);
+ }
+ 
+@@ -456,6 +472,7 @@
+ 	lofi_compress_info_t *li;
+ 	size_t oblkcount, xfersize;
+ 	unsigned long seglen;
++	int i, j;
+ 
+ 	lsp = ddi_get_soft_state(lofi_statep, getminor(bp->b_edev));
+ 	if (lsp->ls_kstat) {
+@@ -551,8 +568,33 @@
+ 		 * segments and one uncompressed segment since we
+ 		 * uncompress segments one at a time
+ 		 */
++		/*
+ 		compressed_seg = kmem_alloc(bp->b_bcount, KM_SLEEP);
+ 		uncompressed_seg = kmem_alloc(lsp->ls_uncomp_seg_sz, KM_SLEEP);
++		*/
++
++		mutex_enter(&lsp->ls_membufs_lock);
++		for (i = 0; i < lofi_taskq_nthreads; i++) {
++			if (lsp->ls_uncomp_segs[i].inuse == 0) {
++				lsp->ls_uncomp_segs[i].inuse = 1;
++				lsp->ls_comp_segs[i].inuse = 1;
++				uncompressed_seg = lsp->ls_uncomp_segs[i].buf;
++				j = i;
++				break;
++			}
++		}
++		mutex_exit(&lsp->ls_membufs_lock);
++		ASSERT(uncompressed_seg != NULL);
++
++		if (bp->b_bcount > lsp->ls_comp_segs[i].bufsiz) {
++			if (lsp->ls_comp_segs[j].bufsiz > 0)
++				kmem_free(lsp->ls_comp_segs[j].buf,
++						    lsp->ls_comp_segs[j].bufsiz);
++			lsp->ls_comp_segs[j].buf = kmem_alloc(bp->b_bcount, KM_SLEEP);
++			lsp->ls_comp_segs[j].bufsiz = bp->b_bcount;
++		}
++		compressed_seg = lsp->ls_comp_segs[j].buf;
++					
+ 		/*
+ 		 * Map in the calculated number of blocks
+ 		 */
+@@ -644,10 +686,12 @@
+ 	}
+ 
+ done:
+-	if (compressed_seg != NULL)
+-		kmem_free(compressed_seg, comp_data_sz);
+-	if (uncompressed_seg != NULL)
+-		kmem_free(uncompressed_seg, lsp->ls_uncomp_seg_sz);
++	if (uncompressed_seg != NULL) {
++		mutex_enter(&lsp->ls_membufs_lock);
++		lsp->ls_uncomp_segs[j].inuse = 0;
++		lsp->ls_comp_segs[j].inuse = 0;
++		mutex_exit(&lsp->ls_membufs_lock);
++	}
+ 
+ 	if (lsp->ls_kstat) {
+ 		size_t n_done = bp->b_bcount - bp->b_resid;
+@@ -1327,6 +1371,8 @@
+ 		goto propout;
+ 
+ 	tbuf = buf;
++	lsp->ls_uncomp_segs = NULL;
++	lsp->ls_comp_segs = NULL;
+ 	lsp->ls_uncomp_seg_sz = 0;
+ 	lsp->ls_vp_comp_size = lsp->ls_vp_size;
+ 	lsp->ls_comp_algorithm[0] = '\0';
+@@ -1333,6 +1379,8 @@
+ 
+ 	compress_index = lofi_compress_select(tbuf);
+ 	if (compress_index != -1) {
++		int i;
++
+ 		lsp->ls_comp_algorithm_index = compress_index;
+ 		(void) strlcpy(lsp->ls_comp_algorithm,
+ 		    lofi_compress_table[compress_index].l_name,
+@@ -1355,6 +1403,24 @@
+ 			error = EINVAL;
+ 			goto propout;
+ 		}
++
++		/*
++		 * Setup per-thread membufs to avoid allocation overhead.
++		 */
++		lsp->ls_uncomp_segs = kmem_alloc(lofi_taskq_nthreads * 
++		    sizeof (struct membufs), KM_SLEEP);
++		lsp->ls_comp_segs = kmem_alloc(lofi_taskq_nthreads * 
++		    sizeof (struct membufs), KM_SLEEP);
++		for (i = 0; i < lofi_taskq_nthreads; i++) {
++			lsp->ls_uncomp_segs[i].buf = kmem_alloc(lsp->ls_uncomp_seg_sz,
++			    KM_SLEEP);
++			lsp->ls_uncomp_segs[i].bufsiz = lsp->ls_uncomp_seg_sz;
++			lsp->ls_uncomp_segs[i].inuse = 0;
++			lsp->ls_comp_segs[i].buf = NULL;
++			lsp->ls_comp_segs[i].bufsiz = 0;
++			lsp->ls_comp_segs[i].inuse = 0;
++		}
++		mutex_init(&lsp->ls_membufs_lock, NULL, MUTEX_DRIVER, NULL);
+ 	}
+ 
+ 	fake_disk_geometry(lsp);
