@@ -6,7 +6,7 @@
 %include Solaris.inc
 
 Name:                    SFEreadline
-Summary:                 GNU readline - library for editing typed command lines
+Summary:                 readline - library for editing typed command lines
 Version:                 5.2
 Source:			 http://ftp.gnu.org/gnu/readline/readline-%{version}.tar.gz
 SUNW_BaseDir:            %{_basedir}
@@ -16,7 +16,7 @@ Requires: SUNWpostrun
 Requires: SUNWtexi
 
 %package devel
-Summary:                 %{summary} - development files
+Summary:                 readline-devel - development headers for GNU readline
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 Requires: %name
@@ -142,6 +142,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Tue Oct 28 2008 - moinakg@belenix.org
+- Fix package summary lines to include proper common names.
 * Sun feb 24 2008 - moinakg@gmail.com
 - Fix 64bit build.
 * Mon May 14 2007 - dougs@truemail.co.th

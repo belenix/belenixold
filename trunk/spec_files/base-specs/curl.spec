@@ -5,9 +5,10 @@
 #
 Name:                    SFEcurl
 Summary:                 curl - Get a file from FTP or HTTP server.
-Version:                 7.17.1
+Version:                 7.19.0
 URL:                     http://curl.haxx.se/
 Source:                  http://curl.haxx.se/download/curl-%{version}.tar.bz2
+Patch0:                  curl-01-Makefile.in.diff
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -18,6 +19,7 @@ Requires: SUNWzlib
 %prep
 rm -rf %name-%version
 %setup -q -n curl-%version
+%patch0 -p1
 
 %build
 
@@ -27,9 +29,9 @@ rm -rf %name-%version
 	    --mandir=%{_mandir}			\
             --libdir=%{_libdir}                 \
             --enable-rpath			\
-            %{?configure_options}
+	    --with-ssl=%{_prefix}/sfw           
 
-make -j$CPUS all
+make -j $CPUS all
 
 %install
 make DESTDIR=${RPM_BUILD_ROOT} install
@@ -38,6 +40,8 @@ make DESTDIR=${RPM_BUILD_ROOT} install
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Oct 28 2008 - moinakg@belenix.org
+- Bump version, pull in patch from SFW gate and fix make invocation.
 * Wed Dec 12 2997   Michal Bielicki
 - split into base and non base spec to be able to do the 64bit stuff righ
 * Mon Nov 26 2007 - Thomas Wagner

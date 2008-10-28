@@ -9,8 +9,8 @@
 %define src_url		http://download.savannah.nongnu.org/releases/openexr
 
 Name:                   SFEopenexr
-Summary:                high dynamic-range (HDR) image file format
-Version:                1.5.0
+Summary:                openexr - high dynamic-range (HDR) image file format
+Version:                1.6.1
 Source:                 %{src_url}/%{src_name}-%{version}.tar.gz
 SUNW_BaseDir:           %{_basedir}
 BuildRoot:              %{_tmppath}/%{name}-%{version}-build
@@ -19,7 +19,7 @@ BuildRequires: SFEilmbase-devel
 Requires: SFEilmbase
 
 %package devel
-Summary:                 %{summary} - development files
+Summary:                 openexr-devel - high dynamic-range (HDR) image file format development files
 SUNW_BaseDir:            %{_prefix}
 %include default-depend.inc
 
@@ -56,7 +56,7 @@ bash ./bootstrap
             --disable-rpath		\
             --enable-shared		\
 	    --disable-static
-make -j$CPUS 
+make -j $CPUS 
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -85,5 +85,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Tue Oct 28 2008 - moinakg@belenix.org
+- Bump version to 1.6.1
+- Fix summary to have proper common names.
 * Mon May  7 2007 - dougs@truemail.co.th
 - Initial version
