@@ -9,15 +9,15 @@
 %define src_url		http://download.savannah.nongnu.org/releases/openexr
 
 Name:                   SFEilmbase
-Summary:                base library for openexr
-Version:                0.9.0
+Summary:                ilmbase - base library for openexr
+Version:                1.0.1
 Source:                 %{src_url}/%{src_name}-%{version}.tar.gz
 SUNW_BaseDir:           %{_basedir}
 BuildRoot:              %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 
 %package devel
-Summary:                 %{summary} - development files
+Summary:                 ilmbase-devel - base library for openexr (development files)
 SUNW_BaseDir:            %{_prefix}
 %include default-depend.inc
 
@@ -54,7 +54,7 @@ bash ./bootstrap
             --disable-rpath		\
             --enable-shared		\
 	    --disable-static
-make -j$CPUS 
+make -j $CPUS 
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -77,5 +77,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Tue Oct 28 2008 - moinakg@belenix.org
+- Bump version to 1.0.1
 * Mon May  7 2007 - dougs@truemail.co.th
 - Initial version

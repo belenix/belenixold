@@ -9,7 +9,7 @@
 
 Name:                    SFEcurl
 Summary:                 curl - Get a file from FTP or HTTP server.
-Version:                 7.17.1
+Version:                 7.19.0
 URL:                     http://curl.haxx.se/
 Source:                  http://curl.haxx.se/download/curl-%{version}.tar.bz2
 SUNW_BaseDir:            %{_basedir}
@@ -31,7 +31,7 @@ BuildRequires:          SUNWopenssl-include
 %use curl = curl.spec
 
 %package devel
-Summary:		 %{summary} - development files
+Summary:		 curl-devel - Curl library development files.
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 Requires:		 %name
@@ -126,6 +126,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Oct 28 2008 - moinakg@belenix.org
+- Bump version and fix common names in summary lines.
 * Thu Feb 21 2008 - moinak.ghosh@sun.com
 - Fix 64Bit build flags to properly build with Gcc.
 * Sun Jan 06 2008 - moinak.ghosh@sun.com

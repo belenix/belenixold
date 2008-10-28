@@ -1,0 +1,46 @@
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# ident	"@(#)Makefile.in.1.diff	1.1	08/09/22 SMI"
+#
+--- curl-7.19.0.orig/lib/Makefile.in	Mon Sep  1 07:26:22 2008
++++ curl-7.19.0/lib/Makefile.in	Sat Sep  6 19:43:35 2008
+@@ -297,7 +297,7 @@
+            -I$(top_builddir)/lib     \
+            -I$(top_srcdir)/lib
+ 
+-@SONAME_BUMP_FALSE@VERSIONINFO = -version-info 5:0:1
++@SONAME_BUMP_FALSE@VERSIONINFO = -version-info 3:0:0
+ 
+ #
+ # Bumping of SONAME conditionally may seem like a weird thing to do, and yeah
+@@ -308,7 +308,7 @@
+ #
+ # This conditional soname bump SHOULD be removed at next "proper" bump.
+ #
+-@SONAME_BUMP_TRUE@VERSIONINFO = -version-info 6:0:1
++@SONAME_BUMP_TRUE@VERSIONINFO = -version-info 3:0:0
+ 
+ # This flag accepts an argument of the form current[:revision[:age]]. So,
+ # passing -version-info 3:12:1 sets current to 3, revision to 12, and age to
