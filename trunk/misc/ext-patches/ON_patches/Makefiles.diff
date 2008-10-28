@@ -1,0 +1,69 @@
+--- usr/src/cmd/Makefile.orig	2008-10-25 12:15:25.187535369 +0530
++++ usr/src/cmd/Makefile	2008-10-25 12:15:40.167404162 +0530
+@@ -417,7 +417,6 @@
+ 	vscan		\
+ 	w		\
+ 	wall		\
+-	wbem		\
+ 	wc		\
+ 	which		\
+ 	who		\
+--- usr/src/cmd/cmd-inet/Makefile.orig	2008-10-25 17:24:32.652364980 +0530
++++ usr/src/cmd/cmd-inet/Makefile	2008-10-25 17:24:46.905873642 +0530
+@@ -29,8 +29,7 @@
+ 
+ SUBDIRS=	etc lib sbin usr.bin usr.sbin usr.lib usr.sadm
+ MSGSUBDIRS=	lib usr.bin usr.sbin usr.lib usr.sadm
+-POFILES=	lib/lib.po usr.bin/usr.bin.po usr.sbin/usr.sbin.po \
+-		usr.sadm/usr.sadm.po
++POFILES=	lib/lib.po usr.bin/usr.bin.po usr.sbin/usr.sbin.po
+ POFILE=		cmd-inet.po
+ 
+ all:=		TARGET= all
+--- usr/src/cmd/cmd-inet/usr.sadm/Makefile.orig	2008-10-25 12:22:38.669225162 +0530
++++ usr/src/cmd/cmd-inet/usr.sadm/Makefile	2008-10-25 15:00:25.372265748 +0530
+@@ -27,15 +27,9 @@
+ #
+ # cmd/cmd-inet/usr.sadm/Makefile
+ 
+-SUBDIRS1=	dhcpmgr
+-SUBDIRS2=	scripts
++SUBDIRS1=	scripts
+ 
+ include ../../Makefile.cmd
+-#
+-# Message catalog
+-#
+-POFILES= dhcpmgr/lib/dhcpmgr.po
+-POFILE= usr.sadm.po
+ 
+ all:=		TARGET= all
+ install:=	TARGET= install
+@@ -46,22 +40,14 @@
+ 
+ .KEEP_STATE:
+ 
+-.PARALLEL: $(SUBDIRS1) $(SUBDIRS2)
+-
+-all clean clobber lint: $(SUBDIRS1)
++.PARALLEL: $(SUBDIRS1)
+ 
+-install: $(SUBDIRS1) $(SUBDIRS2)
+-
+-#
+-# message catalog
+-#
+-_msg: $(SUBDIRS1) .WAIT $(POFILE)
++all clean clobber lint:
+ 
+-$(POFILE): $(POFILES)
+-	$(RM) $@
+-	cat $(POFILES) > $@
++install: $(SUBDIRS1)
++_msg:
+ 
+-$(SUBDIRS1) $(SUBDIRS2): FRC
++$(SUBDIRS1): FRC
+ 	@cd $@; pwd; $(MAKE) $(TARGET)
+ 
+ FRC:
