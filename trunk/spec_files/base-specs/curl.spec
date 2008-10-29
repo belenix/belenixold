@@ -23,13 +23,24 @@ rm -rf %name-%version
 
 %build
 
+#
+# Patch -lgssapi to -lgss in configure
+#
+if [ ! -f configure.orig ]
+then
+	cp configure configure.orig
+fi
+cat configure.orig | sed 's/-lgssapi/-lgss/' > configure
+
 ./configure --prefix=%{_prefix}			\
 	    --bindir=%{_bindir}			\
 	    --includedir=%{_includedir}		\
 	    --mandir=%{_mandir}			\
             --libdir=%{_libdir}                 \
             --enable-rpath			\
-	    --with-ssl=%{_prefix}/sfw           
+	    --with-ssl=%{_prefix}/sfw           \
+	    --with-gssapi-includes=%{_prefix}/include/gssapi \
+	    --with-gssapi-libs=%{_prefix}/lib
 
 make -j $CPUS all
 

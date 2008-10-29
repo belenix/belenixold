@@ -2755,7 +2755,7 @@ def genhtml(pargs):
 		rels.append(rel)
 
 	rhtml = "<html><body>\n"
-	rhtml += '<div id = "nifty" style = "background-color: #A0FFBF; width: 100%; height: 96%; ' + \
+	rhtml += '<div id = "nifty" style = "background-color: #A0FFBF; width: 100%; height: 76%; ' + \
 	    'font-size: 12px; text-align: center; border: 2px solid;">' + "\n"
 	rhtml += '<h2><u>Releases</u></h2><ul style = "text-align: left;">' + "\n"
 	for rel in rels:
@@ -2846,7 +2846,15 @@ def genhtml(pargs):
 		rtxt += '<iframe name="rcontent" height=97% width=100% frameborder=no src=new.html></iframe></DIV></body></html>'
 		appendFile(relindx, rtxt)
 
-	rhtml += '</ul></div></body></html>'
+	rhtml += '</ul></div>' + "\n"
+	rhtml += '<div style = "background-color: #A0FFBF; width: 100%; ' + \
+		'height: 20%; font-size: 12px; text-align: center; ' + \
+		'border-left: 2px solid; border-right: 2px solid; ' + \
+		'border-bottom: 2px solid; float: bottom;"><br>' + "\n"
+	rhtml += '<img src="http://www.belenix.org/files/hostedatisc.png" /><br><br>' + "\n"
+	rhtml += '<strong>Infrastructure on<A href="http://www.genunix.org/">GENUNIX.ORG</A><br>' + "\n"
+	rhtml += 'Running on <A href="http://www.opensolaris.org/">OpenSolaris</A> Zones</strong>' + "\n"
+	rhtml += '</div></body></html>' + "\n"
 	mainrls = "%s/rel.html" % repo
 	open(mainrls, "w").close()
 	appendFile(mainrls, rhtml)
