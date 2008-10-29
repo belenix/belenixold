@@ -7,7 +7,7 @@
 
 %include Solaris.inc
 
-Name:                    SFEcurl
+Name:                    SUNWcurl
 Summary:                 curl - Get a file from FTP or HTTP server.
 Version:                 7.19.0
 URL:                     http://curl.haxx.se/
@@ -20,8 +20,6 @@ Requires:               SUNWzlib
 Requires:               SUNWgnu-idn
 Requires:               SUNWopenssl-libraries
 BuildRequires:          SUNWopenssl-include
-
-%include usr-gnu.inc
 
 %ifarch amd64 sparcv9
 %include arch64.inc
@@ -71,6 +69,7 @@ export RPM_OPT_FLAGS="$CFLAGS"
 %curl.build -d %name-%version/%{base_arch}
 
 %install
+rm -rf ${RPM_BUILD_ROOT}
 %ifarch amd64 sparcv9
 %curl64.install -d %name-%version/%_arch64
 %endif
@@ -87,8 +86,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
 %dir %attr(0755, root, sys) %{_datadir}
-%dir %attr(0755, root, sys) %{_datadir}/curl
-%{_datadir}/curl/*
 %dir %attr(0755, root, bin) %{_mandir}
 %dir %attr(0755, root, bin) %{_mandir}/man1
 %{_mandir}/man1/curl.1
@@ -109,8 +106,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*
 %dir %attr(0755, root, sys) %{_datadir}
-%dir %attr(0755, root, sys) %{_datadir}/curl
-%{_datadir}/curl/*
 %dir %attr(0755, root, bin) %{_mandir}
 %dir %attr(0755, root, bin) %{_mandir}/man1
 %{_mandir}/man1/curl-config.1
@@ -126,8 +121,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Tue Oct 28 2008 - moinakg@belenix.org
-- Bump version and fix common names in summary lines.
+* Wed Oct 29 2008 - moinakg@belenix.org
+- Rename to SUNWcurl and add merge modified build recipe from SFW gate.
 * Thu Feb 21 2008 - moinak.ghosh@sun.com
 - Fix 64Bit build flags to properly build with Gcc.
 * Sun Jan 06 2008 - moinak.ghosh@sun.com
@@ -156,4 +151,3 @@ rm -rf $RPM_BUILD_ROOT
 - Delete *.la.
 * Mon Apr  3 2006 - mike kiedrowski (lakeside-AT-cybrzn-DOT-com)
 - Initial spec
-
