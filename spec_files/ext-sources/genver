@@ -76,34 +76,44 @@ def compute_version(verstr):
 		pkgrev = Decimal(1)
 
 
-	version = version.replace(".", "") #.ljust(8, "0")
+	#version = version.replace(".", "")
 	#
 	# Handle alphanumeric chars in version string
 	#
 	tot = len(version)
 	cnt = 0
 	alphasum = 0
-	vstr = []
+	vstr = ""
 	while cnt < tot:
 		dig = version[cnt]
+		if dig == ".":
+			cnt = cnt + 1
+			vstr += dig
+			continue
 		try:
 			n = int(dig)
-			vstr.append(dig)
+			vstr += dig
 		except ValueError:
 			alphasum = alphasum + ord(dig)
 		cnt = cnt + 1
 
-	if alphasum > 0:
-		if len(vstr) > 0:
-			ver = Decimal(''.join(vstr))
-		else:
-			ver = Decimal(0)
-		ver = Decimal(str(ver).ljust(8, "0")) + Decimal(cnt)
+	if vstr == "":
+		ver = Decimal('0'.ljust(8, "0")) + Decimal(alphasum)
 		version = str(ver)
 	else:
-		version = version.ljust(8, "0")
+		vlist = vstr.split(".")
+		tot = Decimal(0)
+		mult = Decimal(10)
+		for ve in vlist:
+			mult *= Decimal(10)
 
-	revline = version + str(pkgrev)
+		for ve in vlist:
+			tot += Decimal(ve) * mult
+			mult /= Decimal(10)
+		ver = Decimal(str(tot).ljust(8, "0")) + Decimal(alphasum)
+		version = str(ver)
+
+	revline = str(pkgrev) + version
 	tot = len(revline)
 	cnt = 0
 	num = 1

@@ -50,6 +50,7 @@ class Cl_pkgentry(object):
 		self.sha1sum = entry[4]
 		self.origvers = entry[5]
 		self.type = entry[6]
+		self.size = entry[7]
 		self.sitevars = sitevars
 		self.refername = ""
 		self.deplist = []
@@ -570,10 +571,9 @@ def compute_version(verstr):
 	elif ln == 3:
 		pkgrev = Decimal(rv[0]) * cnv1 + Decimal(rv[1]) * cnv2 + Decimal(rv[2]) * cnv3
 	else:
-		pkgrev= Decimal(1)
+		pkgrev = Decimal(1)
 
 
-	version = version.replace(".", "")
 	#
 	# Handle alphanumeric chars in version string. The alpha chars are stripped
 	# and their ASCII values added up. The sum is then added to the 8-digit
@@ -582,31 +582,37 @@ def compute_version(verstr):
 	tot = len(version)
 	cnt = 0
 	alphasum = 0
-	vstr = []
-	append = vstr.append
+	vstr = ""
 	while cnt < tot:
 		dig = version[cnt]
+		if dig == ".":
+			cnt = cnt + 1
+			vstr += dig
+			continue
 		try:
 			n = int(dig)
-			append(dig)
+			vstr += dig
 		except ValueError:
 			alphasum = alphasum + ord(dig)
 		cnt = cnt + 1
 
-	if alphasum > 0:
-		if len(vstr) > 0:
-			ver = Decimal(''.join(vstr))
-		else:
-			ver = Decimal(0)
-		ver = Decimal(str(ver).ljust(8, "0")) + Decimal(cnt)
+	if vstr == "":
+		ver = Decimal('0'.ljust(8, "0")) + Decimal(alphasum)
 		version = str(ver)
 	else:
-		version = version.ljust(8, "0")
+		vlist = vstr.split(".")
+		tot = Decimal(0)
+		mult = Decimal(10)
+		for ve in vlist:
+			mult *= Decimal(10)
 
-	#
-	# Now prepare a version string with a dot after every 4 digits
-	#
-	revline = version + str(pkgrev)
+		for ve in vlist:
+			tot += Decimal(ve) * mult
+			mult /= Decimal(10)
+		ver = Decimal(str(tot).ljust(8, "0")) + Decimal(alphasum)
+		version = str(ver)
+
+	revline = str(pkgrev) + version
 	tot = len(revline)
 	cnt = 0
 	num = 1
@@ -811,7 +817,7 @@ def update_cname_mappings(catfile, cnames):
 		entry = line.strip().split(" ")
 
 		# Ignore invalid entry format
-		if len(entry) != 7: continue
+		if len(entry) != 8: continue
 		cnames[entry[PKGNAMEF]] = entry[CNAMEF]
 	catf.close()
 
@@ -1182,7 +1188,7 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 			entry = line.strip().split(" ")
 
 			# Ignore invalid entry format
-			if len(entry) != 7: continue
+			if len(entry) != 8: continue
 			for pkgn in pkgs:
 				vers = ""
 				if isinstance(pkgn , list):
@@ -1572,7 +1578,7 @@ def do_build_uninstall_pkglist(img, pkgs, pdict, level):
 		else:
 			name = pn
 			givenname = pn
-		entry = [name, vers, name, "", "", vers, "P"]
+		entry = [name, vers, name, "", "", vers, "P", "0"]
 		pkg = Cl_pkgentry(entry, sv)
 		pkg.refername = givenname
 		pkg.action = UNINSTALL
@@ -2162,7 +2168,7 @@ def available(img, pargs):
 		for line in catf:
 			line = line.strip()
 			entry = line.split(" ")
-			if len(entry) != 7: continue
+			if len(entry) != 8: continue
 
 			#
 			# Skip if this entry was already compared earlier
@@ -2219,7 +2225,7 @@ def compare(img, pargs):
 		for line in catf:
 			line = line.strip()
 			entry = line.split(" ")
-			if len(entry) != 7: continue
+			if len(entry) != 8: continue
 
 			#
 			# Skip if this entry was already compared earlier
@@ -2336,7 +2342,8 @@ def dump_pkginfo(pkg, short, depmode, invdeps):
 		else:
 			print " %20s : %s" % ("Type", "Group Package")
 		print " %20s : %s" % ("Category", cont["CATEGORY"])
-		print " %20s : %s" % ("Vendor", cont["VENDOR"])
+		if cont.has_key("VENDOR"):
+			print " %20s : %s" % ("Vendor", cont["VENDOR"])
 
 	# List package dependencies
 	if depmode == 1:
@@ -2424,7 +2431,7 @@ def info(img, pargs):
 				print ""
 				continue
 			# Fake up a pkg object
-			entry = [pn, "", pn, "", "", "", "P"]
+			entry = [pn, "", pn, "", "", "", "P", "0"]
 			pkg = Cl_pkgentry(entry, None)
 
 		pkg.pkginfile = pkginfile
@@ -2696,6 +2703,7 @@ def html_pkginfo(pkg, pkgfile):
 
 	cname = pkg.cname
 	pkgname = pkg.pkgname
+	size = pkg.size
 	if cont.has_key("DESC"):
 		desc = cont["DESC"]
 	else:
@@ -2723,11 +2731,11 @@ def html_pkginfo(pkg, pkgfile):
 
 	txt += '<DIV align="left" style="width: 20%; position: relative; ' + \
 	    'left: 10px; background-color: #c0f3fd; float: left;">' + "\n"
-	txt += 'Package Name<br>Description<br>Version<br>Type<br>Category<br>Vendor</DIV>' + "\n"
+	txt += 'Package Name<br>Description<br>Version<br>Type<br>Category<br>Vendor<br>Size<br></DIV>' + "\n"
 	txt += '<DIV align="left" style="width: 80%; position: relative; ' + \
 	    'left: 10px; background-color: #c0f3fd; float: right;">' + "\n"
 	txt += pkgname + "<br>" + desc + "<br>" + vers + "<br>" + type + "<br>" + \
-	    cont["CATEGORY"] + "<br>" + cont["VENDOR"]
+	    cont["CATEGORY"] + "<br>" + cont["VENDOR"] + "<br>" + size
 	txt += "</DIV>\n"
 	return txt
 
@@ -2778,7 +2786,7 @@ def genhtml(pargs):
 		for line in catf:
 			line = line.strip()
 			entry = line.split(" ")
-			if len(entry) != 7: continue
+			if len(entry) != 8: continue
 
 			#
 			# Skip if this entry was already compared earlier
@@ -3019,3 +3027,4 @@ def do_main():
 		    "spkg: unknown subcommand '%s'" % subcommand
 
 	return ret
+

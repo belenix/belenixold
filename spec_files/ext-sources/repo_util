@@ -223,7 +223,7 @@ sub add_pkg {
 		next if /^#/;
 
 		@fields = split;
-		if ( @fields == 7 ) {
+		if ( @fields == 8 ) {
 			if (not $cat->{$fields[0]}->{$fields[1]}) {
 
 				# Process group package if type is G
@@ -240,7 +240,7 @@ sub add_pkg {
 					}
 					system("cp -r $srcdir/metainfo/groups/$fields[2]/$fields[1] $dir/metainfo/groups/$fields[2]/$fields[1]");
 					$fields[3] = "$fields[0]:$fields[1]:generic.group.7z";
-					print $fh "$fields[0] $fields[1] $fields[2] $fields[3] $fields[4] $fields[5] $fields[6]\n";
+					print $fh "$fields[0] $fields[1] $fields[2] $fields[3] $fields[4] $fields[5] $fields[6] $fields[7]\n";
 					print "Added Group package $fields[2] ($fields[0]:$fields[1]:generic.group.7z)", "\n";
 
 					if ( -l "$dir/metainfo/groups/$fields[2]/current" ) {
@@ -284,7 +284,7 @@ sub add_pkg {
 				}
 				system("cp -r $srcdir/metainfo/$fields[2]/$fields[1] $dir/metainfo/$fields[2]/$fields[1]");
 				$fields[3] = "$fields[0]:$fields[1]:i386.pkg.7z";
-				print $fh "$fields[0] $fields[1] $fields[2] $fields[3] $fields[4] $fields[5] $fields[6]\n";
+				print $fh "$fields[0] $fields[1] $fields[2] $fields[3] $fields[4] $fields[5] $fields[6] $fields[7]\n";
 				print "Added package: $fields[2] ($fields[0]:$fields[1]:i386.pkg.7z)", "\n";
 
 				if ( -l "$dir/metainfo/$fields[2]/current" ) {
@@ -423,7 +423,7 @@ sub mix_sources {
 
 				# Zeilen einlesen
 				@fields = split;
-				if ( @fields == 7 ) {
+				if ( @fields == 8 ) {
 					$cat->{$version}->{$fields[0]} = $_;
 				}
 			}
@@ -479,7 +479,7 @@ sub generate_catalog {
 	my $dir = shift;
 
 	my ($file, $gz, $sha1sum, $line, $pkg, $version, $vers, $summary, $name, $tfile);
-	my ($names, $type, $cnh);
+	my ($names, $type, $sz, $cnh);
 
 	open (NEWCAT, "> $dir/catalog.new") or die "Can't write $dir/catalog.new: $!";
 	open (NEWDESC, "> $dir/descriptions.new") or die "Can't write $dir/descriptions.new: $!";
@@ -507,6 +507,7 @@ sub generate_catalog {
 
 		$tfile = "/var/tmp/$file";
 		system ("/usr/bin/7za e -so $dir/$file > $tfile");
+		$sz = -s "$tfile";
 
 		if ($type eq "P") {
 			open($gz, "<$tfile");
@@ -621,6 +622,14 @@ sub generate_catalog {
 					chomp($name);
 					close($cnh);
 				}
+				copy("$dir/$pkg.cname", "$basedir/trunk/common_names/$pkg.cname");
+
+			} elsif ( -f "$basedir/trunk/common_names/$pkg.cname" ) {
+				if (open($cnh, "<$basedir/trunk/common_names/$pkg.cname")) {
+					$name = <$cnh>;
+					chomp($name);
+					close($cnh);
+				}
 			}
 
 			chomp($vers);
@@ -693,7 +702,7 @@ sub generate_catalog {
 		}
 
 		chomp($vers);
-		print NEWCAT "$name $version $pkg $file $sha1sum $vers $type\n";
+		print NEWCAT "$name $version $pkg $file $sha1sum $vers $type $sz\n";
 		print NEWDESC "$name - $summary\n";
 	}
 	closedir (CDIR);
