@@ -8,7 +8,7 @@
 
 Name:                SFEspkg
 Summary:             spkg - Package and repository management toolkit
-Version:             0.1
+Version:             0.2
 Source1:             spkg
 Source2:             spkg_mod.py
 Source3:             tsort.py
@@ -99,6 +99,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.4/site-packages/*
 
 %changelog
+* Thu Oct 30 2008 - moinakg@belenix.org
+- Bump version for several changes.
+- Re-whack version number normalization.
+- Add slightly better common name handling in repo_util.
+- Add package size to catalog file.
 * Sun Oct 19 2008 - moinakg@belenix.org
 - Add in Python crypto modules for ECC and AES support.
 - Add current public keys for BeleniX package sites.

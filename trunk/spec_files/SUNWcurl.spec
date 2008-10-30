@@ -57,14 +57,14 @@ export CPPFLAGS="-I/usr/sfw/include"
 export MSGFMT="/usr/bin/msgfmt"
 
 %ifarch amd64 sparcv9
-export CFLAGS="%optflags64 -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib/%_arch64"
+export CFLAGS="%optflags64 -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib/%_arch64 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 export RPM_OPT_FLAGS="$CFLAGS"
 export LDFLAGS="-m64 -L/usr/sfw/lib/%_arch64 -R/usr/sfw/lib/%_arch64"
 %curl64.build -d %name-%version/%_arch64
 %endif
 
 export LDFLAGS="-L/usr/sfw/lib -R/usr/sfw/lib"
-export CFLAGS="%optflags -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib"
+export CFLAGS="%optflags -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 export RPM_OPT_FLAGS="$CFLAGS"
 %curl.build -d %name-%version/%{base_arch}
 
@@ -121,6 +121,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Oct 30 2008 - moinakg@belenix.org
+- Add largefile support flags.
 * Wed Oct 29 2008 - moinakg@belenix.org
 - Rename to SUNWcurl and add merge modified build recipe from SFW gate.
 * Thu Feb 21 2008 - moinak.ghosh@sun.com
