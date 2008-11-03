@@ -189,6 +189,43 @@ class Cl_img(object):
 		print >> lf, msg
 		lf.close()
 
+	def set_reconfigure(self):
+		if self.ALTROOT == "":
+			rt = "/"
+		else:
+			rt = self.ALTROOT
+		reconf = os.path.join(rt, "reconfigure")
+		open(reconf, "w").close()
+
+	def clear_reconfigure(self):
+		if self.ALTROOT == "":
+			rt = "/"
+		else:
+			rt = self.ALTROOT
+		try:
+			os.unlink(os.path.join(rt, "reconfigure"))
+		except:
+			pass
+
+	def tmp_cleanup(self):
+		"""
+		Cleanup spkg temporary files (downloads and transaction logs).
+		"""
+		if self.ALTROOT == "":
+			rt = "/"
+		else:
+			rt = self.ALTROOT
+		lst = [os.path.join(self.SPKG_DWN_DIR, pth) \
+		    for pth in os.listdir(self.SPKG_DWN_DIR)]
+		logdir = os.path.join(rt, self.SPKG_VAR_DIR, "log")
+		lst.extend([os.path.join(logdir, pth) for pth in os.listdir(logdir)])
+
+		for fpath in lst:
+			if os.path.isdir(fpath):
+				shutil.rmtree(fpath)
+			else:
+				os.unlink(fpath)
+
 	def init(self, altroot):
 		dwn_dir = altroot + self.SPKG_DWN_DIR
 		try:
@@ -2133,6 +2170,11 @@ def execute_plan(tplan, downloadonly, resume_mode=False):
 					print "*** Will install %s" % ent.cname
 
 			elif ent.action == img.UPGRADE:
+				#
+				# Upgrade is just install pkg overwriting earlier one.
+				# That is upgrade in place and files marked with preserve
+				# attribute are handled properly by packaging.
+				#
 				if not S__NOEXEC:
 					if resume_mode and not os.path.exists(ent.dwn_pkgfile):
 						continue
@@ -2141,10 +2183,6 @@ def execute_plan(tplan, downloadonly, resume_mode=False):
 					sys.stdout.flush()
 					if tplan.action == img.UPGRADE_BASE or \
 					    tplan.action == img.UPGRADE_ALL:
-						try:
-							uninstall_pkg(img, ent, logfile)
-						except:
-							pass
 						try:
 							install_pkg(img, ent, ent.dwn_pkgfile, \
 							    logfile)
@@ -2157,7 +2195,6 @@ def execute_plan(tplan, downloadonly, resume_mode=False):
 						except PKGError, pe:
 							pass
 					else:
-						uninstall_pkg(img, ent, logfile)
 						install_pkg(img, ent, ent.dwn_pkgfile, logfile)
 					removef(ent.dwn_pkgfile)
 					print " OK (%d/%d)" % (i, num)
@@ -2406,6 +2443,8 @@ def upgrade(img, pargs, trans=None):
 	if (tplan.action == img.UPGRADE_BASE or tplan.action == img.UPGRADE_ALL) \
 	    and not ALTROOT_PROVIDED:
 		create_bootenv(img, tplan, resume_mode)
+		img.tmp_cleanup()
+		img.set_reconfigure()
 
 	if not resume_mode:
 		tplan.trans.put_data("*" + os.environ["USE_RELEASE_TAG"])
