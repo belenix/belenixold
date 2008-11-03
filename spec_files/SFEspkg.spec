@@ -20,6 +20,7 @@ Source8:             http://downloads.sourceforge.net/cryptkit/ecc-0.9.tar.gz
 Source9:             http://downloads.sourceforge.net/cryptkit/aes-1.1.tar.gz
 Source10:            pkey-pkg.belenix.org
 Source11:            pkey-belenix.v12.su
+Source12:            spkg_trans.py
 
 Patch1:              ecc-01.patch
 Patch2:              aes-01.patch
@@ -99,6 +100,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.4/site-packages/*
 
 %changelog
+* Mon Nov 03 2008 - moinakg@belenix.org
+- Support transactional upgrades.
+- Cleanup progress reporting.
+- Enable logging of package operations into /var/sadm/install/logs
+- Numerous fixes.
 * Thu Oct 30 2008 - moinakg@belenix.org
 - Bump version for several changes.
 - Re-whack version number normalization.

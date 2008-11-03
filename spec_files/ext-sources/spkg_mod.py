@@ -32,34 +32,48 @@ import time
 import sha
 import cPickle
 import getpass
+import spkg_trans
 from subprocess import Popen, PIPE, STDOUT
 from urlparse import urlparse
 from decimal import Decimal
 from random import SystemRandom
-from  ecc import ecc
+from ecc import ecc
 
 class Cl_pkgentry(object):
 	"""Class that holds all fields of a package entry in the catalog including site related entries.
 	   This is essentially a package object representation."""
 
-	def __init__(self, entry, sitevars):
-		self.cname = entry[0]
-		self.version = entry[1]
-		self.pkgname = entry[2]
-		self.pkgfile = entry[3]
-		self.sha1sum = entry[4]
-		self.origvers = entry[5]
-		self.type = entry[6]
-		self.size = entry[7]
-		self.sitevars = sitevars
-		self.refername = ""
-		self.deplist = []
-		self.action = 0
-		self.dwn_pkgfile = ""
-		self.version_given = False
-		self.actionrecord = ""
-		self.dependfile = ""
-		self.pkginfile = ""
+	def __init__(self, entry, sitevars, lst=None):
+		if not lst:
+			self.cname = entry[0]
+			self.version = entry[1]
+			self.pkgname = entry[2]
+			self.pkgfile = entry[3]
+			self.sha1sum = entry[4]
+			self.origvers = entry[5]
+			self.type = entry[6]
+			self.size = entry[7]
+			self.sitevars = sitevars
+			self.refername = ""
+			self.deplist = []
+			self.action = 0
+			self.dwn_pkgfile = ""
+			self.version_given = False
+			self.actionrecord = ""
+			self.dependfile = ""
+			self.pkginfile = ""
+		else:
+			self.cname = lst[0]; self.version = lst[1]
+			self.pkgname = lst[2]; self.pkgfile = lst[3]
+			self.sha1sum = lst[4]; self.origvers = lst[5]
+			self.type = lst[6]; self.size = lst[7]
+			#self.sitevars = lst[8]
+			self.refername = lst[9]; self.deplist = lst[10]
+			self.action = lst[11]; self.dwn_pkgfile = lst[12]
+			self.version_given = lst[13]
+			self.actionrecord = lst[14]
+			self.dependfile = lst[15]; self.pkginfile = lst[16]
+
 
 	def update(self, entry, sitevars):
 		self.cname = entry[0]
@@ -68,7 +82,15 @@ class Cl_pkgentry(object):
 		self.pkgfile = entry[3]
 		self.sha1sum = entry[4]
 		self.sitevars = sitevars
-		
+
+	def tolist(self):
+		lst = [self.cname, self.version, self.pkgname, self.pkgfile, self.sha1sum, \
+		    self.origvers, self.type, self.size, self.sitevars.site, self.refername, \
+		    self.deplist, self.action, self.dwn_pkgfile, self.version_given, \
+		    self.actionrecord, self.dependfile, self.pkginfile]
+		sl = self.sitevars.tolist()
+		return (lst, sl)
+
 
 class Cl_sitevars(object):
 	"""Class that holds site - specific variables."""
@@ -76,6 +98,8 @@ class Cl_sitevars(object):
 	def __init__(self, site, RELEASE, RTYPE, SPKG_VAR_DIR):
 		so = urlparse(site)
 		self.site = site
+		self.release = RELEASE; self.rtype = RTYPE
+		self.spkg_var_dir = SPKG_VAR_DIR
 		self.psite = so
 		self.fullurl = "%s/%s/%s" % (site, RELEASE, RTYPE)
 		self.trunkurl = "%s/trunk/%s" % (site, RTYPE)
@@ -90,6 +114,9 @@ class Cl_sitevars(object):
 		self.tmeta = "%s/metainfo.tar.7z" % SPKG_VAR_DIR
 		self.tmetadir = "%s/metainfo" % SPKG_VAR_DIR
 		self.catfh = None
+
+	def tolist(self):
+		return [self.site, self.release, self.rtype, self.spkg_var_dir]
 
 class Cl_img(object):
 	"""Class that holds some globally used values."""
@@ -118,6 +145,8 @@ class Cl_img(object):
 		self.bename = ""
 		self.uninst_type = 0  # 0 - simple, 1 - recursive
 		self.cnames = {}
+		self.upgrade_log = "/var/sadm/install/logs/upgrade_log"
+		self.install_log = "/var/sadm/install/logs/install_log"
 
 		# Fields numbers in a catalog entry for a package
 		self.CNAMEF = 0; self.VERSIONF = 1
@@ -142,6 +171,8 @@ class Cl_img(object):
         		self.INSTPKGDIR = apath + self.INSTPKGDIR
         		self.ADMINFILE = apath + self.ADMINFILE
 			self.RELEASES_LIST = apath + self.RELEASES_LIST
+			self.upgrade_log = apath + self.upgrade_log
+			self.install_log = apath + self.install_log
 		else:
 			self.SPKG_VAR_DIR = self.SPKG_VAR_DIR.replace(self.ALTROOT, apath)
 			self.SPKG_DWN_DIR = self.SPKG_DWN_DIR.replace(self.ALTROOT, apath)
@@ -149,7 +180,14 @@ class Cl_img(object):
 			self.INSTPKGDIR = self.INSTPKGDIR.replace(self.ALTROOT, apath)
 			self.ADMINFILE = self.ADMINFILE.replace(self.ALTROOT, apath)
 			self.RELEASES_LIST = self.RELEASES_LIST.replace(self.ALTROOT, apath)
+			self.upgrade_log = self.upgrade_log.replace(self.ALTROOT, apath)
+			self.install_log = self.install_log.replace(self.ALTROOT, apath)
 			self.ALTROOT = apath
+
+	def log_msg(self, logfile, msg):
+		lf = open(logfile, "a+")
+		print >> lf, msg
+		lf.close()
 
 	def init(self, altroot):
 		dwn_dir = altroot + self.SPKG_DWN_DIR
@@ -181,6 +219,7 @@ class TransformPlan:
 		self.sorted_list = sorted_list
 		self.action = action
 		self.num = num
+		self.trans = None
 
 class PKGError(Exception):
 	"""General packaging error"""
@@ -190,6 +229,12 @@ class PKGError(Exception):
 
 	def __str__(self):
 		return repr(self.message)
+
+class PKGUncompressError(PKGError):
+	"""Failure to decompress a pkg using 7Zip"""
+
+	def __init__(self, message):
+		self.message = message
 
 class PKGVersError(PKGError):
 	"""Invalid version exception"""
@@ -212,6 +257,8 @@ class PKGMetaError(PKGError):
 img = Cl_img()
 S__VERBOSE = False
 S__NOEXEC = False
+LOGDIR = "/var/spkg/log"
+ALTROOT_PROVIDED = False
 
 
 def usage():
@@ -243,7 +290,7 @@ Client-side Subcommands:
 	upgrade [<Upgrade Type> <release tag>]|[<package list>]
 	                Upgrades already installed packages if possible
 	                Upgrade type can be one of:
-	                core - Upgrade the core distro (Kernel, core libs etc.)
+	                base - Upgrade the core distro (Kernel, core libs etc.)
 	                all - Upgrade the entire distribution.
 
 	                release tag - The distro release to upgrade to for core or all.
@@ -279,6 +326,14 @@ Client-side Subcommands:
 	                Incremental mirrors just download the metadata and then download
 	                packages from the remote site to the local copy as and when they
 	                are accessed.
+
+Transaction related commands:
+	resume [Trans ID]
+	                Resume a previously interrupted upgrade transaction. If there is
+	                only one transaction then 'Trans ID' need not be specified.
+	cancel <Trans ID>|all
+	                Either discard the given transaction or all transactions.
+	showtrans       List all pending transactions, if any.
 
 Server-side Subcommands:
 	genkey <file>   Generate a new ECC Public/Private Keypair used for catalog signing.
@@ -322,19 +377,33 @@ def removef(path):
 	except:
 		pass
 
-def exec_prog(cmd, outp):
+def exec_prog(cmd, outp, logfile=None, outfile=None):
 	"""Execute an external program and return stdout if needed."""
 
 	err_file = os.tmpfile()
 
 	logv(_("Executing " + cmd))
 	output = ""
+	logf = None
 	if outp == 1:
-		pipe = Popen(cmd, shell=True, stdout=PIPE, stderr=err_file, close_fds=True)
+		pipe = Popen(cmd, shell=True, stdout=PIPE, stderr=err_file, \
+		    close_fds=True)
 		output = pipe.stdout.read()
+	elif outp == 2:
+		logf = open(logfile, "a+")
+		pipe = Popen(cmd.split(" "), shell=False, stdin=None, stdout=logf, \
+		    stderr=logf, close_fds=True)
+	elif outp == 3:
+		logf = open(logfile, "a+")
+		outf = open(outfile, "w")
+		pipe = Popen(cmd.split(" "), shell=False, stdin=None, stdout=outf, \
+		    stderr=logf, close_fds=True)
+		outf.close()
 	else:
 		pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
 	rt = pipe.wait()
+	if logf:
+		logf.close()
 
 	if rt != 0:
 		err_file.seek(0)
@@ -699,15 +768,54 @@ def compare_vers(vstr1, vstr2):
 
 	return cmp(ver1, ver2)
 
+def get_pkgpath(img, pkgname):
+	"""
+	Return the /var/sadm/pkg/pkgname dir in the given image taking care of
+	different instances. Only the first matching instance is returned.
+	We just look for 5 instances to be practical. In any case we do not
+	officially support multiple package instances.
+	"""
+
+	normpath = "%s/%s" % (img.INSTPKGDIR, pkgname)
+	if os.path.exists(normpath):
+		return normpath
+	i = 1
+	while i < 5:
+		normpath = "%s/%s.%d" % (img.INSTPKGDIR, pkgname, i)
+		if os.path.exists(normpath):
+			return normpath
+		i += 1
+	return None
+
+def get_pkginstances(img, pkgname):
+	"""
+	Return a list containing all the pkg instance names.
+	We just look for 5 instances to be practical. In any case we do not
+	officially support multiple package instances.
+	"""
+
+	insts = []
+	normpath = "%s/%s" % (img.INSTPKGDIR, pkgname)
+	if os.path.exists(normpath):
+		insts.append(pkgname)
+
+	i = 1
+	while i < 5:
+		normpath = "%s/%s.%d" % (img.INSTPKGDIR, pkgname, i)
+		if os.path.exists(normpath):
+			insts.append(pkgname)
+		i += 1
+	return insts
+
 def fetch_local_version(img, pkg):
 	"""Return the installed package version in uniform version format"""
 
 	if pkg.type == "P":
 		try:
-			vf = open("%s/%s/pkginfo" % (img.INSTPKGDIR, pkg.pkgname), "r")
+			vf = open("%s/pkginfo" % get_pkgpath(img, pkg.pkgname), "r")
 		except:
-			pkgnamei = pkgname + ".i"
-			vf = open("%s/%s/pkginfo" % (img.INSTPKGDIR, pkgnamei), "r")
+			pkgnamei = pkg.pkgname + ".i"
+			vf = open("%s/pkginfo" % get_pkgpath(img, pkgnamei), "r")
 	else:
 		vf = open("%s/%s/pkginfo" % (img.SPKG_GRP_DIR, pkg.pkgname), "r")
 
@@ -759,7 +867,7 @@ def pkgname_is_installed(pkgname, img):
 	"""Return True if the given package name is installed in the given image.
 	   The pkgname parameter is the package name, Not common name."""
 
-	return os.path.exists("%s/%s" % (img.INSTPKGDIR, pkgname)) or \
+	return get_pkgpath(img, pkgname) != None or \
 	    os.path.exists("%s/%s" % (img.SPKG_GRP_DIR, pkgname))
 
 def pkg_is_installed(pkg, img):
@@ -1290,7 +1398,7 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 					# otherwise upgrade.
 					#
 					localver = fetch_local_version(img, pkg)
-					if compare_vers(localver[0], pkg.version) > 0:
+					if compare_vers(pkg.version, localver[0]) > 0:
 						pdict[pkgname].action = UPGRADE
 					else:
 						pdict[pkgname].action = img.NONE
@@ -1298,17 +1406,17 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 			elif type == UPGRADE or type == UPGRADE_BASE or \
 			    type == UPGRADE_ALL:
 				localver = fetch_local_version(img, pkg)
-				if compare_vers(localver[0], pkg.version) > 0:
+				if compare_vers(pkg.version, localver[0]) > 0:
 					pdict[pkgname].action = UPGRADE
 				else:
 					pdict[pkgname].action = img.NONE
 					continue
 		else:
-			if type == INSTALL:
+			if type == INSTALL or type == UPGRADE_BASE or \
+			    type == UPGRADE_ALL:
 				pdict[pkgname].action = INSTALL
 
-			elif type == UPGRADE or type == UPGRADE_BASE or \
-			    type == UPGRADE_ALL:
+			elif type == UPGRADE:
 				if level == 0:
 					raise PKGError(_("Package %s is not installed" % name))
 				else:
@@ -1661,7 +1769,7 @@ def do_build_uninstall_pkglist(img, pkgs, pdict, level):
 	do_build_uninstall_pkglist(img, gdeplist, pdict, 0)
 	do_build_uninstall_pkglist(img, deplist, pdict, level + 1)
 
-def install_pkg(img, ent, pkgfile):
+def install_pkg(img, ent, pkgfile, logfile):
 	"""Install the given package. pkgfile is a compressed 7Zip datastream package"""
 
 	pkgfileds = pkgfile + ".tmp"
@@ -1675,21 +1783,22 @@ def install_pkg(img, ent, pkgfile):
 			PKGADDFLAGS = "-n -a %s" % img.ADMINFILE
 
 		try:
-			exec_prog("%s e -so %s > %s" % (SZIP, pkgfile, pkgfileds), 0)
+			exec_prog("%s e -so %s" % (SZIP, pkgfile), 3, logfile, pkgfileds)
 		except PKGError, pe:
-			os.unlink(pkgfile);  os.unlink(pkgfileds)
-			raise PKGError("Failed to decompress package %s\n%s" % \
+			removef(pkgfileds)
+			raise PKGUncompressError("Failed to decompress package %s\n%s" % \
 			    (ent.refername, pe.message))
 
 		try:
 			exec_prog("/usr/sbin/pkgadd %s -d %s %s" % \
-			    (PKGADDFLAGS, pkgfileds, ent.pkgname), 0)
-			arec = open("%s/%s/actionrecord" % (img.INSTPKGDIR, ent.pkgname), "w")
+			    (PKGADDFLAGS, pkgfileds, ent.pkgname), 2, logfile)
+			pkgpath = get_pkgpath(img, ent.pkgname)
+			arec = open("%s/actionrecord" % pkgpath, "w")
 			arec.write(ent.actionrecord)
 			arec.close()
 		except PKGError, pe:
-			os.unlink(pkgfile);  os.unlink(pkgfileds)
-			raise PKGError("Failed to install package %s" % \
+			removef(pkgfileds)
+			raise PKGError("Failed to install package %s\n%s" % \
 			    (ent.refername, pe.message))
 
 	elif ent.type == "G":
@@ -1697,10 +1806,10 @@ def install_pkg(img, ent, pkgfile):
 		# A package group
 		#
 		try:
-			exec_prog("%s e -so %s > %s" % (SZIP, pkgfile, pkgfileds), 0)
+			exec_prog("%s e -so %s > %s" % (SZIP, pkgfile, pkgfileds), 2, logfile)
 		except PKGError, pe:
 			os.unlink(pkgfile);  os.unlink(pkgfileds)
-			raise PKGError("Failed to decompress group package %s\n%s" % \
+			raise PKGUncompressError("Failed to decompress group package %s\n%s" % \
 			    (ent.refername, pe.message))
 
 		
@@ -1709,7 +1818,7 @@ def install_pkg(img, ent, pkgfile):
 
 		try:
 			exec_prog("cd %s; /usr/bin/tar xf %s" % \
-			    (img.SPKG_GRP_DIR, pkgfileds), 0)
+			    (img.SPKG_GRP_DIR, pkgfileds), 2, logfile)
 		except PKGError, pe:
 			os.unlink(pkgfile);  os.unlink(pkgfileds)
 			raise PKGError("Failed to install Group package %s" % \
@@ -1718,32 +1827,97 @@ def install_pkg(img, ent, pkgfile):
 	os.unlink(pkgfileds)
 
 
-def create_bootenv(img):
-	"""Create a new boot environment using SNAP BE management. img is modified to point to it."""
+def destroy_bootenv(bename, altroot):
+	"""
+	Destroy the Boot environment having the given name. It's mountpoint is also
+	removed if provided.
+	"""
 
-	num = 0
-	out = exec_prog("/usr/sbin/beadm list -H", 1)
-	for line in out.split("\n"):
-		nm = line.split(":")[0]
-		nmlst = nm.split("-")
-		if len(nmlst) > 1:
+	if altroot != "" and os.path.exists(altroot):
+		found = False
+		ar = ""
+		out = exec_prog("/usr/sbin/beadm list -H", 1)
+		for line in out.split("\n"):
+			entries = line.split(";")
+			for entry in entries:
+				ent = entry.split(":")
+				if bename == ent[0]:
+					ar = ent[3]
+					found = True
+		if not found:
+			print "WARNING: The given boot env %s does not exist." % bename
+			return 0
+		if ar != "-" and ar == altroot:
 			try:
-				num = int(nmlst[1])
+				exec_prog("/usr/sbin/beadm unmount %s" % bename, 0)
 			except:
-				pass
+				print "ERROR: Failed to unmount the boot env: %s" + \
+				    ", error follows:" % bename
+				traceback.print_exc()
+				return 1
+		if ar != "-":
+			os.rmdir(altroot)
+		try:
+			exec_prog("/usr/sbin/beadm destroy -F %s" % bename, 0)
+		except:
+			print "ERROR: Failed to destroy the boot env: %s," + \
+			    " error follows:" % bename
+			traceback.print_exc()
+			return 1
+	return 0
 
-	num = num + 1
-	newbe = "opensolaris-%s" % num
-	altroot = "/var/tmp/spkg/%s" % newbe
+def create_bootenv(img, tplan, resume_mode):
+	"""
+	Create a new boot environment using SNAP BE management. img is modified to point to it.
+	"""
+
+	state = ""
+	if not resume_mode:
+		num = 0
+		out = exec_prog("/usr/sbin/beadm list -H", 1)
+		for line in out.split("\n"):
+			nm = line.split(":")[0]
+			nmlst = nm.split("-")
+			if len(nmlst) > 1:
+				try:
+					num = int(nmlst[1])
+				except:
+					pass
+
+		num = num + 1
+		newbe = "opensolaris-%s" % num
+		altroot = "/var/tmp/spkg/%s" % newbe
+		if S__NOEXEC:
+			print "*** Will create new boot environment %s" % newbe
+			return
+	else:
+		newbe = img.bename
+		altroot = tplan.trans.altroot
+		state = tplan.trans.get_state()
+		if S__NOEXEC:
+			print "*** Will resume transaction for boot env %s" % newbe
+			return
+
 	if not os.path.exists(altroot):
 		os.makedirs(altroot)
-	try:
-		exec_prog("/usr/sbin/beadm create %s" % newbe, 0)
-		exec_prog("/usr/sbin/beadm mount %s %s" % (newbe, altroot), 0)
-	except PKGError, pe:
-		raise PKGError("Failed to create a new boot environment. Cannot upgrade!\n" + pe.message)
 
-	img.bename = newbe
+	if not resume_mode:
+		tplan.trans.put_data("%s*%s" % (newbe, altroot))
+	try:
+		if not resume_mode or (resume_mode and state == "BEGIN"):
+			exec_prog("/usr/sbin/beadm create %s" % newbe, 0)
+			tplan.trans.put_state("BECREATE")
+		if not resume_mode or (resume_mode and not os.path.ismount(altroot)):
+			print "Mounting be at %s" % altroot
+			exec_prog("/usr/sbin/beadm mount %s %s" % (newbe, altroot), 0)
+			if tplan.trans.get_state() == "BECREATE":
+				tplan.trans.put_state("BEMOUNT")
+	except PKGError, pe:
+		raise PKGError("Failed to create a new boot environment. " + \
+			    "Cannot upgrade!\n" + pe.message)
+
+	if not resume_mode:
+		img.bename = newbe
 	img.set_altroot(altroot)
 
 def activate_bootenv(img):
@@ -1752,14 +1926,29 @@ def activate_bootenv(img):
 	if img.bename == "":
 		raise PKGError("No bootenv exists!")
 
+	#
+	# Temporary HACK to work around a libbe issue in 0.7.1
+	#
+	rtf = open("/etc/release_tag", "r")
+	rtag = rtf.read().strip()
+	rtf.close()
+
 	try:
-		exec_prog("/usr/sbin/beadm unmount %s" % img.bename, 0)
+		print "*** Updating boot archive on %s" % img.ALTROOT
+		exec_prog(os.path.join("%s/usr/sbin/bootadm update-archive -R %s" % \
+		    (img.ALTROOT, img.ALTROOT)), 2, img.upgrade_log)
+		print "*** Updating Grub"
+		if rtag == "belenix_0.7.1":
+			exec_prog(os.path.join("%s/boot/solaris/bin/update_grub -R %s" % \
+			    (img.ALTROOT, img.ALTROOT)), 2, img.upgrade_log)
+		print "*** Activating new Boot Environment: %s" % img.bename
+		exec_prog("/usr/sbin/beadm unmount -f %s" % img.bename, 2, img.upgrade_log)
 		exec_prog("/usr/sbin/beadm activate %s" % img.bename, 0)
-	except PKGerror, pe:
-		raise PKGerror("Failed to activate new boot environment " + bars.bename + \
+	except PKGError, pe:
+		raise PKGError("Failed to activate new boot environment " + img.bename + \
 		    ". Use /usr/sbin/beadm to fix.\n " + pe.message)
 
-def uninstall_pkg(img, ent):
+def uninstall_pkg(img, ent, logfile):
 	"""Remove the given package."""
 
 	if ent.type == "P":
@@ -1769,15 +1958,19 @@ def uninstall_pkg(img, ent):
 			PKGRMFLAGS = "-n -a %s" % img.ADMINFILE
 
 		try:
-			exec_prog("/usr/sbin/pkgrm %s %s" % (PKGRMFLAGS, ent.pkgname), 0)
+			insts = get_pkginstances(img, ent.pkgname)
+			for pn in insts:
+				exec_prog("/usr/sbin/pkgrm %s %s" % (PKGRMFLAGS, pn), \
+				    2, logfile)
 		except PKGError, pe:
-			raise PKGError("Failed to uninstall package %s" % \
+			raise PKGError("Failed to uninstall package %s, %s" % \
 			    (ent.refername, pe.message))
 	else:
 		try:
-			exec_prog("rm -rf %s/%s" % (img.SPKG_GRP_DIR, ent.pkgname), 0)
+			exec_prog("rm -rf %s/%s" % (img.SPKG_GRP_DIR, ent.pkgname), \
+			    2, logfile)
 		except PKGError, pe:
-			raise PKGError("Failed to uninstall Group package %s" % \
+			raise PKGError("Failed to uninstall Group package %s, %s" % \
 			    (ent.refername, pe.message))
 
 def create_plan(img, pargs, incompats, action):
@@ -1798,9 +1991,19 @@ def create_plan(img, pargs, incompats, action):
 
 	if action == img.UPGRADE_ALL:
 		# Get list of packages installed in system.
+		print "Scanning installed packages."
 		pkgs = map(lambda pkg: pkg.replace(".i", ""), os.listdir(img.INSTPKGDIR))
 
+		#
+		# Now add in missing package from base cluster
+		#
+		for sv in img.PKGSITEVARS:
+			for nm in sv.base_cluster.keys():
+				if nm not in pkgs:
+					pkgs.append(nm)
+
 	elif action == img.UPGRADE_BASE:
+		print "Scanning packages in base cluster."
 		#
 		# Build full list of base packages stripping out uninstalled base pkgs.
 		# Some additional base packages might be brought in as part of upgrade
@@ -1811,14 +2014,14 @@ def create_plan(img, pargs, incompats, action):
 			bset = bset.union(sv.base_cluster.keys())
 
 		#
-		# Check for base packages not installed. We do not want to bring in
-		# not installed base packages as part of the upgrade process unless
-		# they are new deps found in build_pkglist.
+		# Include all base packages since it is possible that new OS builds
+		# can introduce newer needed packages.
 		#
-		pkgs = [nm for nm in bset if pkgname_is_installed(nm, img)]
+		pkgs = [nm for nm in bset]
 	else:
 		pkgs = pargs
 
+	print "Computing package dependencies."
 	if action == img.UNINSTALL:
 		build_uninstall_pkglist(img, pkgs, pdict)
 	else:
@@ -1858,11 +2061,12 @@ def create_plan(img, pargs, incompats, action):
 
 	return tplan
 
-def execute_plan(tplan, downloadonly):
+def execute_plan(tplan, downloadonly, resume_mode=False):
 	"""Perform package actions as per the given Transform Plan"""
 
 	num = len(tplan.pdict.keys())
 	img = tplan.img
+	i = 1
 
 	if downloadonly != 1:
 		if tplan.action == img.INSTALL:
@@ -1873,48 +2077,105 @@ def execute_plan(tplan, downloadonly):
 		elif tplan.action == img.UPGRADE or tplan.action == img.UPGRADE_BASE or \
 		    tplan.action == img.UPGRADE_ALL:
 			print "------------------------------------------------"
-			print "Will be upgrading %d packages" % num
+			print "Will be upgrading/installing %d packages" % num
 			print "------------------------------------------------"
 			print ""
+
+	if tplan.action == img.UPGRADE_BASE or tplan.action == img.UPGRADE_ALL:
+		logfile = img.upgrade_log
+	else:
+		logfile = img.install_log
 
 	#
 	# First download all the files and verify checksums. verify_sha1sum raises
 	# and exception if checksum verification fails.
 	#
 	if not tplan.action == img.UNINSTALL:
-		print "*** Downloading packages\n"
-		download_packages(tplan)
+		state = tplan.trans.get_state()
+		if state == "EXECUTE":
+			print "*** Downloading packages\n"
+			download_packages(tplan)
+			img.log_msg(logfile, "*** Downloaded packages\n")
+			if downloadonly == 1:
+				print "** Download complete\n"
+				return ret
 
-		if downloadonly == 1:
-			print "** Download complete\n"
-			return ret
+	if tplan.trans:
+		if tplan.trans.get_state() == "CLEANUP":
+			return
+		tplan.trans.put_state("INSTALL")
 
 	if tplan.action == img.UNINSTALL:
 		print "*** Uninstalling packages\n"
+		img.log_msg(logfile, "*** Uninstalling packages\n")
 	else:
 		print "*** Installing/Upgrading packages\n"
+		img.log_msg(logfile, "*** Installing/Upgrading packages\n")
 
 	# Now perform all the install actions
 	for titem in tplan.sorted_list:
 		for pkgname in titem:
 			ent = tplan.pdict[pkgname]
+			if resume_mode:
+				ent.dwn_pkgfile = "%s/%s" % (img.SPKG_DWN_DIR, ent.pkgfile)
 			if ent.action == img.INSTALL:
 				if not S__NOEXEC:
-					install_pkg(img, ent, ent.dwn_pkgfile)
-					os.unlink(ent.dwn_pkgfile)
+					if resume_mode and not os.path.exists(ent.dwn_pkgfile):
+						continue
+					sys.stdout.write("Installing %s(%s) ..." % \
+					(ent.cname, ent.pkgname))
+					sys.stdout.flush()
+					install_pkg(img, ent, ent.dwn_pkgfile, logfile)
+					removef(ent.dwn_pkgfile)
+					print " OK (%d/%d)" % (i, num)
+					sys.stdout.flush()
 				else:
 					print "*** Will install %s" % ent.cname
+
 			elif ent.action == img.UPGRADE:
 				if not S__NOEXEC:
-					uninstall_pkg(img, ent)
-					install_pkg(img, ent, ent.dwn_pkgfile)
+					if resume_mode and not os.path.exists(ent.dwn_pkgfile):
+						continue
+					sys.stdout.write("Upgrading %s(%s) ..." % \
+					    (ent.cname, ent.pkgname))
+					sys.stdout.flush()
+					if tplan.action == img.UPGRADE_BASE or \
+					    tplan.action == img.UPGRADE_ALL:
+						try:
+							uninstall_pkg(img, ent, logfile)
+						except:
+							pass
+						try:
+							install_pkg(img, ent, ent.dwn_pkgfile, \
+							    logfile)
+						except PKGUncompressError, pu:
+							msg = "ERROR: Package extraction " + \
+							    "failed for " + ent.cname + ": " + \
+							    pu.message + "\n"
+							img.log_msg(logfile, msg)
+							raise PKGError(msg)
+						except PKGError, pe:
+							pass
+					else:
+						uninstall_pkg(img, ent, logfile)
+						install_pkg(img, ent, ent.dwn_pkgfile, logfile)
+					removef(ent.dwn_pkgfile)
+					print " OK (%d/%d)" % (i, num)
+					sys.stdout.flush()
 				else:
 					print "*** Will upgrade %s" % ent.cname
+
 			elif ent.action == img.UNINSTALL:
 				if not S__NOEXEC:
-					uninstall_pkg(img, ent)
+					sys.stdout.write("Uninstalling %s(%s) ..." % \
+					    (ent.cname, ent.pkgname))
+					sys.stdout.flush()
+					uninstall_pkg(img, ent, logfile)
+					print " OK (%d/%d)" % (i, num)
+					sys.stdout.flush()
 				else:
 					print "*** Will uninstall %s" % ent.cname
+			i += 1
 
 	if tplan.action == img.UNINSTALL:
 		print "\n*** Uninstallation Complete\n"
@@ -2077,39 +2338,97 @@ def uninstall(img, pargs):
 
 	return 0
 
-def upgrade(img, pargs):
+def upgrade(img, pargs, trans=None):
 	"""Upgrade specified packages or upgrade entire system"""
+	global LOGDIR, ALTROOT_PROVIDED
 
 	if len(pargs) == 0:
 		print >> sys.stderr, \
 		    "No packages specified to upgrade."
 		return
 
-	if pargs[0] == "base":
-		tplan = create_plan(img, pargs, img.UPGRADE_BASE)
+	resume_mode = False
+	if trans:
+		resume_mode = True
+	#
+	# We need to compute the plan whether we are resuming a pending
+	# transaction or starting a new one.
+	#
+	if not resume_mode:
+		tlist = spkg_trans.check_pending_trans(LOGDIR)
+		for ent in tlist:
+			entl = ent.split("*")
+			typ = entl[1]
+			if (typ == "UPGRADE_BASE" or typ == "UPGRADE_ALL") and \
+			    (pargs[0] == "base" or pargs[0] == "all"):
+				raise PKGError(_("There is a pending transaction " + \
+				    "of type %s, ID %s. Please resume or cancel that." \
+				    % (typ, entl[0])))
 
-	elif pargs[0] == "all":
-		tplan = create_plan(img, pargs, img.UPGRADE_ALL)
+		print "Computing upgrade plan."
+		if pargs[0] == "base":
+			tplan = create_plan(img, pargs, None, img.UPGRADE_BASE)
+
+		elif pargs[0] == "all":
+			tplan = create_plan(img, pargs, None, img.UPGRADE_ALL)
+		else:
+			tplan = create_plan(img, pargs, None, img.UPGRADE)
+
+		if tplan.num == 0:
+			print "------------------------------------------------"
+			print "All packages are up to date. Nothing to do"
+			print "------------------------------------------------"
+			print ""
+
+			# This check is not logically necessary. Just being paranoid.
+			if trans:
+				trans.done()
+			return
+
+		if pargs[0] == "base":
+			tplan.trans = spkg_trans.transaction_log(LOGDIR, "UPGRADE_BASE")
+
+		elif pargs[0] == "all":
+			tplan.trans = spkg_trans.transaction_log(LOGDIR, "UPGRADE_ALL")
+
+		print "Storing plan to transaction ..."
+		tplan.trans.put_plan(tplan)
 	else:
-		tplan = create_plan(img, pargs, img.UPGRADE)
+		print "Loading plan from transaction ..."
+		tplan = TransformPlan(img, {}, [], None, None)
+		tplan.trans = trans
+		tplan = trans.get_plan(tplan, Cl_pkgentry, Cl_sitevars)
 
-	if tplan.num == 0:
-		print "------------------------------------------------"
-		print "All packages are up to date. Nothing to do"
-		print "------------------------------------------------"
-		print ""
-		return
+	#
+	# System upgrades create a new boot environment only if we are
+	# not already upgrading an alternate root image.
+	#
+	if (tplan.action == img.UPGRADE_BASE or tplan.action == img.UPGRADE_ALL) \
+	    and not ALTROOT_PROVIDED:
+		create_bootenv(img, tplan, resume_mode)
 
-	if tplan.action == img.UPGRADE_BASE or tplan.action == img.UPGRADE_ALL:
-		create_bootenv(img)
+	if not resume_mode:
+		tplan.trans.put_data("*" + os.environ["USE_RELEASE_TAG"])
 
-	execute_plan(tplan, 0)
+	if tplan.trans:
+		state = tplan.trans.get_state()
+		if state == "BEMOUNT":
+			tplan.trans.put_state("EXECUTE")
+	execute_plan(tplan, 0, resume_mode)
+
+	if tplan.trans:
+		if tplan.trans.get_state() == "INSTALL":
+			tplan.trans.put_state("CLEANUP")
+
+	if S__NOEXEC:
+		print "*** Will update release tag in new boot env."
+		return 0
 
 	if tplan.action == img.UPGRADE_BASE or tplan.action == img.UPGRADE_ALL:
 		# Update release tag on boot environment
 		rel = os.environ["USE_RELEASE_TAG"]
 		try:
-			tf = open("%s/etc/release_tag", "w")
+			tf = open("%s/etc/release_tag" % img.ALTROOT, "w")
 			tf.write(rel)
 			tf.close()
 		except:
@@ -2120,6 +2439,7 @@ def upgrade(img, pargs):
 			print "     or set this value for USE_RELEASE_TAG in /etc/spkg.conf"
 			print ""
 		activate_bootenv(img)
+		tplan.trans.done()
 		print "Upgrade SUCCESSFUL. Upgraded system will be available on next reboot"
 		print ""
 	else:
@@ -2604,10 +2924,72 @@ def search(img, pargs):
 			dump_pkginfo(pkg, False, 0, None)
 
 def mirror(img, pargs):
-	"""Create a mirror of a repository site either incremental or full."""
+	"""
+	Create a mirror of a repository site either incremental or full.
+	"""
 
 	if len(pargs) < 3:
 		raise PKGError(_("Mirror requires at least 3 arguments."))
+
+	raise PKGError("Not yet implemented.")
+
+def resume(img, tlist):
+	"""
+	Resume the given pending transaction.
+	"""
+	global LOGDIR
+
+	ret = 0
+	if tlist[1] == "UPGRADE_BASE" or tlist[1] == "UPGRADE_ALL":
+		trans = spkg_trans.transaction_log(LOGDIR, tlist[1], tlist[0])
+
+		#
+		# For upgrades data will contain the Boot Env name and mount
+		# point. However new Boot Env was not created if we were
+		# upgrading an Alternate Root image. So verify that.
+		#
+		data = trans.get_data()
+		if img.ALTROOT == "":
+			newbe, altroot, rel = data.split("*")
+			trans.altroot = altroot
+			img.bename = newbe
+			os.environ["USE_RELEASE_TAG"] = rel
+		else:
+			dl = data.split("*")
+			if len(dl) > 2:
+				raise PKGError(_("This transaction does not apply to" + \
+				    " the given alternate root image."))
+			os.environ["USE_RELEASE_TAG"] = dl[1]
+
+		if tlist[1] == "UPGRADE_BASE":
+			ret = upgrade(img, ["base"], trans)
+		elif tlist[1] == "UPGRADE_ALL":
+			ret = upgrade(img, ["all"], trans)
+	else:
+		raise PKGError(_("Unknown transaction type: %s" % tlist[1]))
+
+	return ret
+
+def cancel(img, tlist):
+	"""
+	Discard the given pending transaction.
+	"""
+	global LOGDIR
+
+	trans = spkg_trans.transaction_log(LOGDIR, tlist[1], tlist[0])
+
+	if tlist[1] == "UPGRADE_BASE" or tlist[1] == "UPGRADE_ALL":
+		# Cleanup boot environment
+		data = trans.get_data()
+		if data != "":
+			if img.ALTROOT == "":
+				newbe, altroot, rel = data.split("*")
+			else:
+				newbe, altroot = data.split("*")
+			destroy_bootenv(newbe, altroot)
+		
+	trans.done()
+	print "Transaction ID: %s discarded." % tlist[0]
 
 #################################################################
 # Server side subcommands
@@ -2881,6 +3263,42 @@ def genhtml(pargs):
 
 	return 0
 
+def check_pending_trans(logdir, tid):
+	"""
+	Check if there are any pending transactions and whether a trans id was provided
+	and if yes whether the trans id is actually present.
+	"""
+	global LOGDIR
+
+	tlist = spkg_trans.check_pending_trans(LOGDIR)
+	if len(tlist) > 1:
+		if tid != "":
+			for t in tlist:
+				tr = t.split("*")
+				if tr[0] == tid:
+					return tr
+			print _("No such pending transaction.")
+			return None
+
+		print _("The following transactions are pending:")
+		for t in tlist:
+			tr = t.split("*")
+			print "Trans ID: %s, Type: %s" % (tr[0], tr[1])
+		print _("\nPlease resume one using:")
+		print _("spkg resume <trans id>")
+		return None
+	else:
+		if len(tlist) == 0 and tid != "":
+			print _("No such pending transaction.")
+			return None
+		return tlist[0].split("*")
+
+def showtrans(img, logdir):
+	"""
+	Display all pending transactions.
+	"""
+	spkg_trans.list_pending_trans(logdir)
+
 #
 # Identify a usable downloader utility.
 # Axel is a dependency of spkg but we perform this check anyway
@@ -2905,7 +3323,7 @@ if not os.path.exists(SZIP):
 
 def do_main():
 	"""Main entry point."""
-	global S__VERBOSE, S__NOEXEC
+	global S__VERBOSE, S__NOEXEC, LOGDIR
 
 	gettext.install("spkg", "/usr/lib/locale");
 
@@ -2946,9 +3364,13 @@ def do_main():
 		return 0
 
 	ALTROOT = ""
+	if os.environ.has_key("ALTROOT"):
+		ALTROOT = os.environ["ALTROOT"]
+
 	for opt, arg in opts:
 		if opt == "-R":
 			ALTROOT = arg
+			ALTROOT_PROVIDED = True
 		elif opt == "-r":
 			os.environ["USE_RELEASE_TAG"] = arg
 		elif opt == "-s":
@@ -2958,9 +3380,6 @@ def do_main():
 		elif opt == "-n":
 			S__NOEXEC = True
 
-	if os.environ.has_key("ALTROOT"):
-		ALTROOT = os.environ["ALTROOT"]
-
 	if ALTROOT != "":
 		if not os.path.isfile(ALTROOT + '/etc/spkg.conf') or \
 		    not os.path.isfile(ALTROOT + '/var/spkg/admin'):
@@ -2968,17 +3387,26 @@ def do_main():
 			    _("'%s' is not a valid Alternate Root image") % img.ALTROOT
 			return 1
 		img.set_altroot(ALTROOT)
+		LOGDIR = "%s/var/spkg/log" % ALTROOT
+		if not os.path.exists(LOGDIR):
+			os.makedirs(LOGDIR)
+
 
 	#
 	# For certain upgrade options we need to set the release_tag to the one
 	# we are upgrading to prior to load_config
 	#
 	if subcommand == "upgrade":
-		if len(pargs) != 2:
+		if len(pargs) == 0:
 			usage()
 			sys.exit(1)
 
-		if pargs[0] == "core" or pargs[0] == "all":
+		if pargs[0] == "base" or pargs[0] == "all":
+			if len(pargs) == 1:
+				print "ERROR: Release tag not provided for upgrade"
+				print "       spkg upgrade %s <release tag|trunk>" % \
+				   pargs[0]
+				return 1
 			os.environ["USE_RELEASE_TAG"] = pargs[1]
 
 	#
@@ -3022,6 +3450,33 @@ def do_main():
 		ret = mirror(img, pargs)
 	elif subcommand == "updatekeys":
 		ret = updatekeys(img, pargs)
+	elif subcommand == "resume":
+		tid = ""
+		if len(pargs) > 0:
+			tid = pargs[0]
+		tlist = check_pending_trans(LOGDIR, tid)
+		if not tlist:
+			return 1
+
+		ret = resume(img, tlist)
+	elif subcommand == "cancel":
+		tid = ""
+		if len(pargs) > 0:
+			tid = pargs[0]
+		else:
+			print "Cancel needs the transaction ID:"
+			print "spkg cancel <ID>|all"
+			print ""
+			return 1
+		if tid == "all":
+			for tid in os.listdir(LOGDIR):
+				tlist = check_pending_trans(LOGDIR, tid)
+				cancel(img, tlist)
+		else:
+			tlist = check_pending_trans(LOGDIR, tid)
+			cancel(img, tlist)
+	elif subcommand == "showtrans":
+		showtrans(img, LOGDIR)
 	elif subcommand != "updatecatalog":
 		print >> sys.stderr, \
 		    "spkg: unknown subcommand '%s'" % subcommand
