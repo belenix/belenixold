@@ -71,6 +71,7 @@ cp %{SOURCE7} ${RPM_BUILD_ROOT}%{_bindir}
 chmod a+x ${RPM_BUILD_ROOT}%{_bindir}/*
 cp %{SOURCE2} ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
 cp %{SOURCE3} ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
+cp %{SOURCE12} ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
 cp %{SOURCE4} ${RPM_BUILD_ROOT}%{_localstatedir}/spkg
 cp %{SOURCE5} ${RPM_BUILD_ROOT}%{_localstatedir}/spkg
 cp %{SOURCE10} ${RPM_BUILD_ROOT}%{_localstatedir}/spkg
@@ -100,6 +101,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.4/site-packages/*
 
 %changelog
+* Mon Nov 03 2008 - moinakg@belenix.org
+- Add copying of spkg_trans.py missed out in previous commit.
 * Mon Nov 03 2008 - moinakg@belenix.org
 - Support transactional upgrades.
 - Cleanup progress reporting.
