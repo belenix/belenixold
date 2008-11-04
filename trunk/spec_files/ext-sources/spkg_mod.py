@@ -1843,9 +1843,9 @@ def install_pkg(img, ent, pkgfile, logfile):
 		# A package group
 		#
 		try:
-			exec_prog("%s e -so %s > %s" % (SZIP, pkgfile, pkgfileds), 2, logfile)
+			exec_prog("%s e -so %s" % (SZIP, pkgfile), 3, logfile, pkgfileds)
 		except PKGError, pe:
-			os.unlink(pkgfile);  os.unlink(pkgfileds)
+			removef(pkgfileds)
 			raise PKGUncompressError("Failed to decompress group package %s\n%s" % \
 			    (ent.refername, pe.message))
 
@@ -1854,11 +1854,14 @@ def install_pkg(img, ent, pkgfile, logfile):
 			os.makedirs(img.SPKG_GRP_DIR)
 
 		try:
-			exec_prog("cd %s; /usr/bin/tar xf %s" % \
-			    (img.SPKG_GRP_DIR, pkgfileds), 2, logfile)
+			pwd = os.getcwd()
+			os.chdir(img.SPKG_GRP_DIR)
+			exec_prog("/usr/bin/tar xf %s" % pkgfileds, 2, logfile)
+			os.chdir(pwd)
 		except PKGError, pe:
-			os.unlink(pkgfile);  os.unlink(pkgfileds)
-			raise PKGError("Failed to install Group package %s" % \
+			os.chdir(pwd)
+			removef(pkgfileds)
+			raise PKGError("Failed to install Group package %s, %s" % \
 			    (ent.refername, pe.message))
 
 	os.unlink(pkgfileds)
@@ -2128,7 +2131,10 @@ def execute_plan(tplan, downloadonly, resume_mode=False):
 	# and exception if checksum verification fails.
 	#
 	if not tplan.action == img.UNINSTALL:
-		state = tplan.trans.get_state()
+		if tplan.trans:
+			state = tplan.trans.get_state()
+		else:
+			state = "EXECUTE"
 		if state == "EXECUTE":
 			print "*** Downloading packages\n"
 			download_packages(tplan)
