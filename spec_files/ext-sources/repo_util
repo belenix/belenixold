@@ -147,12 +147,12 @@ sub add_cluster {
 	}
 	copy("$srcclust", "$dir/metainfo/clusters") or die "Can't copy $srcclust to $dir: $!";
 
-	if ( -f "$dir/metainfo.tar.7z" ) {
-		copy("$dir/metainfo.tar.7z", "$dir/metainfo.tar.7z.1");
-	}
 	chdir("$dir");
-	system("tar cpf - metainfo > metainfo.tar");
+	system("/usr/sfw/bin/gtar cpf - metainfo > metainfo.tar");
 	system("7za a metainfo.tar.7z.new metainfo.tar");
+	if ( -f "$dir/metainfo.tar.7z" ) {
+		rename("$dir/metainfo.tar.7z", "$dir/metainfo.tar.7z.1");
+	}
 	rename("$dir/metainfo.tar.7z.new", "$dir/metainfo.tar.7z");
 	chmod 0644,  "$dir/metainfo.tar.7z";
 	unlink("metainfo.tar");
@@ -326,12 +326,12 @@ sub add_pkg {
 	close($fh);
 
 	sign_one_catalog("$dir/catalog", $priv);
-	if ( -f "$dir/metainfo.tar.7z" ) {
-		copy("$dir/metainfo.tar.7z", "$dir/metainfo.tar.7z.1");
-	}
 	chdir("$dir");
-	system("tar cpf - metainfo > metainfo.tar");
+	system("/usr/sfw/bin/gtar cpf - metainfo > metainfo.tar");
 	system("7za a metainfo.tar.7z.new metainfo.tar");
+	if ( -f "$dir/metainfo.tar.7z" ) {
+		rename("$dir/metainfo.tar.7z", "$dir/metainfo.tar.7z.1");
+	}
 	rename("$dir/metainfo.tar.7z.new", "$dir/metainfo.tar.7z");
 	chmod 0644,  "$dir/metainfo.tar.7z";
 	unlink("metainfo.tar");

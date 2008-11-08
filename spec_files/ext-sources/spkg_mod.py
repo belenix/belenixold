@@ -95,19 +95,31 @@ class Cl_pkgentry(object):
 class Cl_sitevars(object):
 	"""Class that holds site - specific variables."""
 
-	def __init__(self, site, RELEASE, RTYPE, SPKG_VAR_DIR):
+	def __init__(self, site, RELEASE, RTYPE, SPKG_VAR_DIR, ignore_err=False):
 		so = urlparse(site)
-		self.site = site
-		self.release = RELEASE; self.rtype = RTYPE
+		self.site = site; self.rtype = RTYPE
+		self.catalog = "%s/catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
+
+		if not os.path.exists(self.catalog):
+			if RELEASE == "trunk" and not ignore_err:
+				raise PKGError(_("Catalog not found for site %s" % site))
+			RELEASE = "trunk"
+			self.catalog = "%s/catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
+
+		self.release = RELEASE
 		self.spkg_var_dir = SPKG_VAR_DIR
 		self.psite = so
 		self.fullurl = "%s/%s/%s" % (site, RELEASE, RTYPE)
 		self.trunkurl = "%s/trunk/%s" % (site, RTYPE)
-		self.catalog = "%s/catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
 		self.catalog_tm = "%s/.catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
 		self.mirrors = "%s/mirrors-%s" % (SPKG_VAR_DIR, so[1])
 		self.pkey = "%s/pkey-%s" % (SPKG_VAR_DIR, so[1])
 		self.metadir = "%s/metainfo-%s" % (SPKG_VAR_DIR, so[1])
+		self.rmetadir = "%s/metainfo-%s-%s" % (SPKG_VAR_DIR, so[1], RELEASE)
+		if os.path.exists(self.rmetadir):
+			self.metainfo = self.rmetadir
+		else:
+			self.metainfo = self.metadir
 		self.base_cluster = None
 		self.axel_mirror_prefix = ""
 		self.tcat = "%s/catalog" % SPKG_VAR_DIR
@@ -225,6 +237,35 @@ class Cl_img(object):
 				shutil.rmtree(fpath)
 			else:
 				os.unlink(fpath)
+
+	def update_release_tag(self):
+		rel = os.environ["USE_RELEASE_TAG"]
+		try:
+			tf = open("%s/etc/release_tag" % self.ALTROOT, "w")
+			tf.write(rel)
+			tf.close()
+			cf = open("%s/etc/spkg.conf" % self.ALTROOT, "r")
+			lines = []
+			for line in cf:
+				line1 = string.strip(line)
+				fields = line1.split("=")
+				if len(fields) < 2:
+					lines.append(line)
+					continue
+				if fields[0] == "USE_RELEASE_TAG":
+					line = "USE_RELEASE_TAG=%s\n" % rel
+				lines.append(line)
+			cf.close()
+			cf = open("%s/etc/spkg.conf" % self.ALTROOT, "w")
+			cf.writelines(lines)
+			cf.close()
+		except:
+			traceback.print_exc()
+			print ""
+			print "WARNING: Unable to update /etc/release_tag in new boot env."
+			print "     Please put '%s' into that file after reboot" % rel
+			print "     and set this value for USE_RELEASE_TAG in /etc/spkg.conf"
+			print ""
 
 	def init(self, altroot):
 		dwn_dir = altroot + self.SPKG_DWN_DIR
@@ -464,7 +505,7 @@ def depend_entries(depfile, types):
 		line = line.replace("	", " ")
 		yield line.split(" ")
 
-def load_config(use_site):
+def load_config(use_site, ign_err=False):
 	"""Load configuration file and also detect environment settings."""
 
 	com = re.compile("^#")
@@ -543,7 +584,7 @@ def load_config(use_site):
 
 	for site in img.PKGSITES:
 		sitevars = Cl_sitevars(site, \
-	    	img.RELEASE, img.RTYPE, img.SPKG_VAR_DIR)
+	    	img.RELEASE, img.RTYPE, img.SPKG_VAR_DIR, ign_err)
 		img.PKGSITEVARS.append(sitevars)
 
 	logv(_("Loading common names"))
@@ -871,9 +912,9 @@ def fetch_metainfo_fields(site, pkgname, version, type, fnames):
 	"""Fetch one or more pkginfo fields(given by fnames list) from the site's metainfo dir"""
 
 	if type == "P":
-		pkginf = "%s/%s/%s/pkginfo" % (site.metadir, pkgname, version)
+		pkginf = "%s/%s/%s/pkginfo" % (site.metainfo, pkgname, version)
 	else:
-		pkginf = "%s/groups/%s/%s/pkginfo" % (site.metadir, pkgname, version)
+		pkginf = "%s/groups/%s/%s/pkginfo" % (site.metainfo, pkgname, version)
 
 	pf = open(pkginf, "r")
 	nmdict = {}
@@ -1030,11 +1071,30 @@ def updatekeys(img, pargs):
 	print ""
 	return 0
 
-#
-# Download catalogs and package metadata for all configured sites
-#
+def fix_symlinks(rmeta, meta):
+	""""
+	Fix symlinks in release-specific metainfo dir to point to valid metainfo
+	stuff in /var/spkg.
+	"""
+
+	bmeta = os.path.basename(meta)
+	for pkg in os.listdir(rmeta):
+		pkgdir = os.path.join(rmeta, pkg)
+		for entry in os.listdir(pkgdir):
+			fentry = os.path.join(pkgdir, entry)
+			if os.path.islink(fentry):
+				lnk = os.readlink(fentry)
+				if lnk.find("..") > -1:
+					blnk = os.path.basename(lnk)
+					os.unlink(fentry)
+					os.symlink(os.path.join("..", "..", bmeta, pkg, entry),
+					    fentry)
+				
+
 def updatecatalog(img, pargs, ignore_errors=False):
-	"""Refresh catalogs and other metadata for all sites."""
+	"""
+	Refresh catalogs and other metadata for all sites.
+	"""
 
 	failed_sites = []
 	errored = 0
@@ -1159,10 +1219,10 @@ def updatecatalog(img, pargs, ignore_errors=False):
 			errored = 1
 			removef(sv.tmeta)
 			continue
-		
+
 		print "\nUpdating metainfo for site %s\n" % sv.site
 		try:
-			out = exec_prog("%s e -so %s | (cd %s; tar xf -)" % \
+			out = exec_prog("%s e -so %s | (cd %s; /usr/sfw/bin/gtar xf -)" % \
 			    (SZIP, sv.tmeta, img.SPKG_VAR_DIR), 0)
 		except PKGError, pe:
 			failed_sites.append((sv.site, \
@@ -1177,6 +1237,21 @@ def updatecatalog(img, pargs, ignore_errors=False):
 		removef(sv.tmeta)
 		put_timestamp(sv.catalog_tm)
 
+		# Try to fetch release-specific metainfo if any
+		if img.RELEASE != "trunk":
+			try:
+				downloadurl(sv, "%s/%s/%s/%s/%s/metainfo.tar.7z" % \
+				    (sv.site, img.RELEASE, img.RTYPE, img.ARCH, img.OSREL), \
+				    sv.tmeta, False)
+				out = exec_prog("%s e -so %s | (cd %s; /usr/sfw/bin/gtar xf -)" % \
+				    (SZIP, sv.tmeta, img.SPKG_VAR_DIR), 0)
+				fix_symlinks(sv.tmetadir, sv.metadir)
+				shutil.rmtree(sv.rmetadir, True)
+				os.rename(sv.tmetadir, sv.rmetadir)
+			except:
+				shutil.rmtree(sv.tmetadir, True)
+				pass
+			removef(sv.tmeta)
 		#
 		# Try to fetch mirrors list for site, if any
 		#
@@ -1216,14 +1291,20 @@ def check_catalog(img):
 	update_needed = False
 	for sv in img.PKGSITEVARS:
 		curtime = time.time()
-		fh = open(sv.catalog_tm, "r")
-		mtime = float(fh.read().strip())
-		fh.close()
+		mtime = curtime
+		try:
+			fh = open(sv.catalog_tm, "r")
+			mtime = float(fh.read().strip())
+			fh.close()
 
-		# Older than 15 days ?
-		if curtime - mtime > 1296000:
+			# Older than 15 days ?
+			if curtime - mtime > 1296000:
+				update_needed = True
+				break
+		except:
 			update_needed = True
 			break
+
 	if update_needed:
 		ret = 1
 		try:
@@ -1461,10 +1542,10 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 
 		# TODO: Handle incompatibles
 		if pkg.type == "P":
-			depends = "%s/%s/%s/depend" % (pkg.sitevars.metadir, pkgname, \
+			depends = "%s/%s/%s/depend" % (pkg.sitevars.metainfo, pkgname, \
 			    pkg.version)
 		else:
-			depends = "%s/groups/%s/%s/depend" % (pkg.sitevars.metadir, pkgname, \
+			depends = "%s/groups/%s/%s/depend" % (pkg.sitevars.metainfo, pkgname, \
 			    pkg.version)
 
 		# Skip is there is no dependency info
@@ -1827,8 +1908,8 @@ def install_pkg(img, ent, pkgfile, logfile):
 			    (ent.refername, pe.message))
 
 		try:
-			exec_prog("/usr/sbin/pkgadd %s -d %s %s" % \
-			    (PKGADDFLAGS, pkgfileds, ent.pkgname), 2, logfile)
+			exec_prog("/usr/sbin/pkgadd %s -d %s all" % \
+			    (PKGADDFLAGS, pkgfileds), 2, logfile)
 			pkgpath = get_pkgpath(img, ent.pkgname)
 			arec = open("%s/actionrecord" % pkgpath, "w")
 			arec.write(ent.actionrecord)
@@ -2022,7 +2103,7 @@ def create_plan(img, pargs, incompats, action):
 	for sv in img.PKGSITEVARS:
 		if not sv.base_cluster:
 			sv.base_cluster = {}
-			base_cluster = "%s/clusters/base_cluster" % sv.metadir
+			base_cluster = "%s/clusters/base_cluster" % sv.metainfo
 			if os.path.isfile(base_cluster):
 				bfh = open(base_cluster, "r")
 				for line in bfh:
@@ -2393,6 +2474,13 @@ def upgrade(img, pargs, trans=None):
 	resume_mode = False
 	if trans:
 		resume_mode = True
+	else:
+		#
+		# Force updatecatalog to encure that the release_tag's catalog
+		# has been properly fetched.
+		#
+		updatecatalog(img, [])
+
 	#
 	# We need to compute the plan whether we are resuming a pending
 	# transaction or starting a new one.
@@ -2470,19 +2558,8 @@ def upgrade(img, pargs, trans=None):
 		return 0
 
 	if tplan.action == img.UPGRADE_BASE or tplan.action == img.UPGRADE_ALL:
-		# Update release tag on boot environment
-		rel = os.environ["USE_RELEASE_TAG"]
-		try:
-			tf = open("%s/etc/release_tag" % img.ALTROOT, "w")
-			tf.write(rel)
-			tf.close()
-		except:
-			traceback.print_exc()
-			print ""
-			print "WARNING: Unable to update /etc/release_tag in new boot env."
-			print "     Please put '%s' into that file after reboot" % rel
-			print "     or set this value for USE_RELEASE_TAG in /etc/spkg.conf"
-			print ""
+		# Update release tag in boot environment
+		img.update_release_tag()
 		activate_bootenv(img)
 		tplan.trans.done()
 		print "Upgrade SUCCESSFUL. Upgraded system will be available on next reboot"
@@ -2552,9 +2629,9 @@ def available(img, pargs):
 			# the latest version, so we cheat via readlink.
 			#
 			if type == "P":
-				curr = "%s/%s/current" % (sv.metadir, pkgname)
+				curr = "%s/%s/current" % (sv.metainfo, pkgname)
 			else:
-				curr = "%s/groups/%s/current" % (sv.metadir, pkgname)
+				curr = "%s/groups/%s/current" % (sv.metainfo, pkgname)
 			version = os.readlink(curr).strip()
 			fields = fetch_metainfo_fields(sv, pkgname, version, \
 			    type, ["VERSION", "DESC"])
@@ -2609,9 +2686,9 @@ def compare(img, pargs):
 			# latest version, so we cheat via readlink.
 			#
 			if type == "P":
-				curr = "%s/%s/current" % (sv.metadir, pkgname)
+				curr = "%s/%s/current" % (sv.metainfo, pkgname)
 			else:
-				curr = "%s/groups/%s/current" % (sv.metadir, pkgname)
+				curr = "%s/groups/%s/current" % (sv.metainfo, pkgname)
 			version = os.readlink(curr).strip()
 			fields = fetch_metainfo_fields(sv, pkgname, version, \
 			    type, ["VERSION", "DESC"])
@@ -2810,14 +2887,14 @@ def info(img, pargs):
 			else:
 				if pkg.type == "P":
 					pkginfile = "%s/%s/%s/pkginfo" % \
-			    		    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+			    		    (pkg.sitevars.metainfo, pkg.pkgname, pkg.version)
 					dependfile = "%s/%s/%s/depend" % \
-			    		    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+			    		    (pkg.sitevars.metainfo, pkg.pkgname, pkg.version)
 				else:
 					pkginfile = "%s/groups/%s/%s/pkginfo" % \
-			    		    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+			    		    (pkg.sitevars.metainfo, pkg.pkgname, pkg.version)
 					dependfile = "%s/groups/%s/%s/depend" % \
-			    		    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+			    		    (pkg.sitevars.metainfo, pkg.pkgname, pkg.version)
 				pkg.pkginfile = pkginfile
 				pkg.dependfile = dependfile
 				dump_pkginfo(pkg, short, depmode, invdeps)
@@ -2920,7 +2997,7 @@ def contents(img, pargs):
 			    (img.INSTPKGDIR, pkg.pkgname, pkg.pkgname)
 			if not os.path.exists(pkgmapfile):
 				pkgmapfile = "%s/%s/%s/pkgmap" % \
-			    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+			    (pkg.sitevars.metainfo, pkg.pkgname, pkg.version)
 			name = pkg.cname
 		else:
 			pkgmapfile = "%s/%s/save/pspool/%s/pkgmap" % \
@@ -2961,10 +3038,10 @@ def search(img, pargs):
 		for pkg in searchcatalog(sv, mtch, -1):
 			if pkg.type == "P":
 				pkginfile = "%s/%s/%s/pkginfo" % \
-				    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+				    (pkg.sitevars.metainfo, pkg.pkgname, pkg.version)
 			else:
 				pkginfile = "%s/groups/%s/%s/pkginfo" % \
-				    (pkg.sitevars.metadir, pkg.pkgname, pkg.version)
+				    (pkg.sitevars.metainfo, pkg.pkgname, pkg.version)
 			pkg.pkginfile = pkginfile
 			dump_pkginfo(pkg, False, 0, None)
 
@@ -3454,11 +3531,15 @@ def do_main():
 				return 1
 			os.environ["USE_RELEASE_TAG"] = pargs[1]
 
+	ign_err = False
+	if subcommand == "updatecatalog":
+		ign_err = True
+
 	#
 	# load_config will return 1 if it does not file the common name
 	# mappings file. That forces an updatecatalog.
 	#
-	cret = load_config(use_site)
+	cret = load_config(use_site, ign_err)
 
 	if subcommand == "updatecatalog":
 		ret = updatecatalog(img, pargs)
