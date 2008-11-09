@@ -3227,7 +3227,7 @@ def html_pkginfo(pkg, pkgfile):
 	    'width: 19.5%; float: left; font-size: 12pt; border: 1px solid; ' + \
 		'height: 30px; line-height: 20pt;">' + "\n"
 	txt += '&nbsp;Common Name</DIV><DIV align="left" style="background-color: ' + \
-	    '#3EF179; width: 80%; font-size: 12pt; float: right; border: 1px solid; ' + \
+	    '#ADF4C5; width: 80%; font-size: 12pt; float: right; border: 1px solid; ' + \
 		'height: 30px; line-height: 20pt;">' + "\n"
 	txt += '<b>&nbsp;<a href="' + pkgfile + '">' + cname + '</a></b></DIV></DIV>' + "\n"
 	#txt += '<DIV align="left" style="position: relative; left: 10px; ' + \
@@ -3351,7 +3351,7 @@ def genhtml(pargs):
 		appendFile(relnew, '</html></body>')
 
 		rtxt = '<html><body><DIV align="center" style="width: 99%; height: 8%; '
-		rtxt += 'background-color: #A0FFBF; border: 2px solid;">' + "\n"
+		rtxt += 'background-color: #C7FDD9; border: 2px solid;">' + "\n"
 		rtxt += '<u>Package Index</u><br/>' + "\n"
 		rtxt += rlst + '</DIV>' + "\n"
 		rtxt += '<DIV style="width: 100%; height: 92%">'
