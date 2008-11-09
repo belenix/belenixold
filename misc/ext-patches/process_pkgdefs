@@ -49,6 +49,8 @@ if not os.path.isdir(proto):
 	print "ERROR: The OpenSolaris workspace appears not to be built.\n"
 	sys.exit(1)
 
+ign_list = ["usr/lib/font/devpost/charlib/~=usr/lib/font/devpost/charlib/~="]
+
 omitsf = open("omitted_paths.txt", "w")
 omitsp = open("omitted_pkgs.txt", "w")
 
@@ -101,6 +103,10 @@ for sd in os.listdir(dr):
 				continue
 
 			pentry = ln.split()
+			if pentry[2] in ign_list:
+				pfo.write(line)
+				continue
+
 			if pentry[0] == 'f' or pentry[0] == 'e' or pentry[0] == 'v':
 				#
 				# If it is a file, check if it exists in the proto.
