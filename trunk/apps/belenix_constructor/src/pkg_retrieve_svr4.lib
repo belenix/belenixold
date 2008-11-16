@@ -69,7 +69,6 @@ ADMIN_EOF
 	$BASECMD -a $ADMIN_FILE SUNWpostrun-root || return $?
 	$BASECMD -a $ADMIN_FILE SUNWpostrun || return $?
 
-
 	echo "Generating ordered package list from $PKG_DIR and installing to $ROOT_DIR"
 
 	rm -f $TMPDIR/.pkg_failed
@@ -120,6 +119,8 @@ ADMIN_EOF
 		rm -f $TMPDIR/.pkg_failed
 		return 1
 	else
+	pkgadd -R $ROOT_DIR -a $ADMIN_FILE -d $PKGS_DIR SUNWmpapir SUNWmpapi SUNWmpsvplr SUNWimar SUNWima SUNWimacr SUNWimac SUNEfchbar SUNWfchba
+
 		# Add Skeleton and livecd tools
 		#
 		apply_skeleton $ROOT_DIR
