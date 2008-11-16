@@ -1,0 +1,23 @@
+Alternate OS scanner utility for BeleniX. This utility scans the partiton
+table for other OSes in other partitions in a multiboot configuration. It
+then tries to probe for supported OSes and filesystems and auto-generates
+GRUB menu.lst entries so that one can easily boot them after installing
+BeleniX. BeleniX GRUB goes into the MBR.
+
+This utility uses filesystem support code from GRUB with a couple of GRUB
+headers and implements enough of the basic GRUB Api to enable those GRUB
+filesystem modules to read data from partitions and allow accessing those
+filesystems.
+
+The code attempts to scan through all supported filesystems and "mount"
+them in a certain order as is done by GRUB. The filesystem contents are
+analysed after a successful mount to determine various characteristics.
+For eg. for Windows existence of certain directories like WINDOWS/System
+indicates C: drive. For Linux presence of /lib/modules indicates the root
+("/") partition. These partitions are bootable so menu.lst boot entries
+are generated for these. For Linux, additional processing is needed to
+determine the boot entries. Linux's own menu.lst is read to extract those
+entries, failing which, a simple chainload entry is generated. In additon
+certain Linux files are analysed like /etc/redhat_release to determine the
+distribution.
+
