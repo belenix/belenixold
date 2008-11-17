@@ -164,6 +164,15 @@ int iso9660_dir (char *dirname);
 #define BLK_BLKLIST_INC_VAL  8
 #endif /* NO_BLOCK_FILES */
 
+typedef enum _ostype {
+  OS_GENERIC = 0,
+  OS_LINUX,
+  OS_WINDOWS,
+  OS_MINIX,
+  OS_BSD,
+  OS_SOLARIS
+} ostype;
+
 /* this next part is pretty ugly, but it keeps it in one place! */
 
 struct fsys_entry
@@ -174,6 +183,7 @@ struct fsys_entry
   int (*dir_func) (char *dirname);
   void (*close_func) (void);
   int (*embed_func) (int *start_sector, int needed_sectors);
+  ostype os_plat;
 };
 
 #ifdef STAGE1_5

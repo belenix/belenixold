@@ -1,3 +1,25 @@
+/* pscan.c - Main partition scanner program */
+/*
+ * Alternate OS Scanner utility for BeleniX. Scan other OSes in other
+ * partitions and generate boot entries suitable for adding into GRUB's
+ * menu.lst.
+ */
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -25,6 +47,8 @@ static uint64_t GB = 1073741824L;
 static uint64_t capacity;
 static char *dev;
 static int do_completion = 0;
+static int do_print = 0;
+static int entry_found = 0;
 static int unique = 0;
 static char unique_string[UNIQUE_BUFLEN];
 
@@ -53,58 +77,47 @@ int fsmax = MAXINT;
 void (*disk_read_hook) (unsigned int, int, int) = NULL;
 void (*disk_read_func) (unsigned int, int, int) = NULL;
 
-# ifdef FSYS_EXT2FS
-extern int ext2fs_mount(void);
-extern int ext2fs_read (char *buf, int len);
-extern int ext2fs_dir (char *dirname);
-# endif
-
 struct fsys_entry fsys_table[NUM_FSYS + 1] =
 {
-  /* TFTP should come first because others don't handle net device.  */
-# ifdef FSYS_TFTP
-  {"tftp", tftp_mount, tftp_read, tftp_dir, tftp_close, 0},
-# endif
 # ifdef FSYS_FAT
-  {"fat", fat_mount, fat_read, fat_dir, 0, 0},
+  {"fat", fat_mount, fat_read, fat_dir, 0, 0, OS_WINDOWS},
 # endif
 # ifdef FSYS_EXT2FS
-  {"ext2fs", ext2fs_mount, ext2fs_read, ext2fs_dir, 0, 0},
+  {"ext2fs", ext2fs_mount, ext2fs_read, ext2fs_dir, 0, 0, OS_LINUX},
 # endif
 # ifdef FSYS_MINIX
-  {"minix", minix_mount, minix_read, minix_dir, 0, 0},
+  {"minix", minix_mount, minix_read, minix_dir, 0, 0, OS_MINIX},
 # endif
 # ifdef FSYS_REISERFS
-  {"reiserfs", reiserfs_mount, reiserfs_read, reiserfs_dir, 0, reiserfs_embed},
-# endif
-# ifdef FSYS_VSTAFS
-  {"vstafs", vstafs_mount, vstafs_read, vstafs_dir, 0, 0},
+  {"reiserfs", reiserfs_mount, reiserfs_read, reiserfs_dir, 0, reiserfs_embed, OS_LINUX},
 # endif
 # ifdef FSYS_JFS
-  {"jfs", jfs_mount, jfs_read, jfs_dir, 0, jfs_embed},
+  {"jfs", jfs_mount, jfs_read, jfs_dir, 0, jfs_embed, OS_LINUX},
 # endif
 # ifdef FSYS_XFS
-  {"xfs", xfs_mount, xfs_read, xfs_dir, 0, 0},
+  {"xfs", xfs_mount, xfs_read, xfs_dir, 0, 0, OS_LINUX},
 # endif
 # ifdef FSYS_UFS
-  {"ufs", ufs_mount, ufs_read, ufs_dir, 0, ufs_embed},
+  {"ufs", ufs_mount, ufs_read, ufs_dir, 0, ufs_embed, OS_SOLARIS},
 # endif
 # ifdef FSYS_UFS2
-  {"ufs2", ufs2_mount, ufs2_read, ufs2_dir, 0, ufs2_embed},
+  {"ufs2", ufs2_mount, ufs2_read, ufs2_dir, 0, ufs2_embed, OS_BSD},
 # endif
 # ifdef FSYS_ZFS
-  {"zfs", zfs_mount, zfs_read, zfs_open, 0, zfs_embed},
+  {"zfs", zfs_mount, zfs_read, zfs_open, 0, zfs_embed, OS_SOLARIS},
 # endif
 # ifdef FSYS_ISO9660
-  {"iso9660", iso9660_mount, iso9660_read, iso9660_dir, 0, 0},
+  {"iso9660", iso9660_mount, iso9660_read, iso9660_dir, 0, 0, OS_GENERIC},
 # endif
   /* XX FFS should come last as it's superblock is commonly crossing tracks
      on floppies from track 1 to 2, while others only use 1.  */
 # ifdef FSYS_FFS
-  {"ffs", ffs_mount, ffs_read, ffs_dir, 0, ffs_embed},
+  {"ffs", ffs_mount, ffs_read, ffs_dir, 0, ffs_embed, OS_LINUX},
 # endif
   {0, 0, 0, 0, 0, 0}
 };
+
+void probe_linux(struct fsys_entry *fsys_ent, int partno);
 
 int
 devread(unsigned int sector, int byte_offset, int byte_len, char *buf)
@@ -123,10 +136,7 @@ devread(unsigned int sector, int byte_offset, int byte_len, char *buf)
 
 	/*
 	 *  Get the read to the beginning of a partition.
-	sector += byte_offset >> SECTOR_BITS;
-	byte_offset &= SECTOR_SIZE - 1;
 	 */
-
 	start_pos = (off_t)(part_start + sector) * (off_t)SECTOR_SIZE + byte_offset;
 	actual_pos = lseek(cur_fd, start_pos, SEEK_SET);
 	if (actual_pos != start_pos) {
@@ -134,7 +144,9 @@ devread(unsigned int sector, int byte_offset, int byte_len, char *buf)
 		errnum = ERR_READ;
 		return (0);
 	}
+
 	if (read(cur_fd, buf, byte_len) < byte_len) {
+		fprintf(stderr, "start_pos = %llu, byte_len = %d, cur_fd = %d\n", start_pos, byte_len, cur_fd);
 		perror("(devread)Read failed");
 		errnum = ERR_READ;
 		return (0);
@@ -166,6 +178,30 @@ grub_read (char *buf, int len)
 	return (*(fsys_table[fsys_type].read_func)) (buf, len);
 }
 
+int
+grub_open (char *filename)
+{
+  /* if any "dir" function uses/sets filepos, it must
+     set it to zero before returning if opening a file! */
+  filepos = 0;
+
+  /* This accounts for partial filesystem implementations. */
+  fsmax = MAXINT;
+  if (!errnum && fsys_type == NUM_FSYS)
+    errnum = ERR_FSYS_MOUNT;
+
+  /* set "dir" function to open a file */
+  print_possibilities = 0;
+
+  if (!errnum && (*(fsys_table[fsys_type].dir_func)) (filename))
+    {
+      return 1;
+    }
+
+  return 0;
+}
+
+
 void
 print_fsys_type (void)
 {
@@ -185,7 +221,7 @@ print_fsys_type (void)
     }
 }
 
-/* If DO_COMPLETION is true, just print NAME. Otherwise save the unique
+/* If DO_COMPLETION is false, just print NAME. Otherwise save the unique
    part into UNIQUE_STRING.  */
 void
 print_a_completion (char *name)
@@ -213,7 +249,17 @@ print_a_completion (char *name)
         }
     }
   else
-    printf (" %s", name);
+    {
+      if (do_print)
+        {
+          printf (" %s", name);
+        }
+      else
+        {
+          printf (" %s\n", name);
+          entry_found++;
+        }
+    }
 
   unique++;
 }
@@ -244,12 +290,41 @@ grub_memmove (void *to, const void *from, int len)
 }
 
 void
-scan_parts(char *sec, int fd, int nest_level, off_t pext_part_pos, off_t this_ext_start) {
+scan_fsys(void)
+{
+	int i;
+	unsigned long o_part_start;
+	unsigned long o_part_length;
+	unsigned long o_current_partition;
+
+	o_part_start = part_start;
+	o_part_length = part_length;
+	o_current_partition = current_partition;
+
+	for (i=0; i < NUM_FSYS; i++) {
+		if ((*(fsys_table[i].mount_func))()) {
+			fprintf(stderr, "Partition: %ld, Filesystem %s mounted successfully.\n",
+			    current_partition, fsys_table[i].name);
+			fsys_type = i;
+
+			if (fsys_table[i].os_plat == OS_LINUX) {
+				probe_linux(&fsys_table[i], current_partition);
+			}
+			return;
+		}
+		part_start = o_part_start;
+		part_length = o_part_length;
+		current_partition = o_current_partition;
+	}
+}
+
+void
+scan_parts(char *sec, int fd, int nest_level, off_t pext_part_pos, off_t this_ext_start)
+{
 	int partno;
 	off_t ext_start, actual_start;
 	char *embr[SECTOR_SIZE];
 	unsigned long part_off;
-	char dir[PATH_MAX];
 	int ret;
 
 	for (partno = 0; partno < FD_NUMPART; partno++) {
@@ -264,7 +339,8 @@ scan_parts(char *sec, int fd, int nest_level, off_t pext_part_pos, off_t this_ex
 		if (IS_PC_SLICE_TYPE_EXTENDED(current_slice)) {
 			this_ext_start = PC_SLICE_START(sec, partno) + (pext_part_pos / SECTOR_SIZE);
 			ext_start = (off_t)PC_SLICE_START(sec, partno) * (off_t)SECTOR_SIZE + pext_part_pos;
-			if (ext_start > capacity) {
+			if (ext_start > capacity)
+			{
 				fprintf(stderr, "WARNING: Extended partition beyond device size!\n");
 				continue;
 			}
@@ -285,21 +361,16 @@ scan_parts(char *sec, int fd, int nest_level, off_t pext_part_pos, off_t this_ex
 				scan_parts((char *)embr, fd, nest_level + 1, pext_part_pos, this_ext_start);
 			}
 		} else {
-			
 			part_start = PC_SLICE_START(sec, partno) + this_ext_start;
 			part_length = PC_SLICE_LENGTH(sec, partno);
-			cur_fd = fd;
+
 			if (nest_level > 0) {
 				current_partition = partno + 4;
 			} else {
 				current_partition = partno;
 			}
-			if (ext2fs_mount()) {
-				printf("Ext2fs mounted successfully.\n");
-				strcpy(dir, "/lib/modules/");
-				ret = ext2fs_dir(dir);
-				printf("\n ret = %d\n", ret);
-			}
+
+			scan_fsys();
 		}
 	}
 }
@@ -309,17 +380,22 @@ main(int argc, char *argv[]) {
 	int fd, len;
 	struct dk_minfo dkmi;
 	char *pos, mbr[SECTOR_SIZE];
+	char *bdev;
 
 	if (argc < 2) {
-		fprintf(stderr, "pscan: /dev/rdsk/c...p0\n\n");
+		fprintf(stderr, "pscan: /dev/rdsk/c...p0 /dev/dsk/c...p0\n\n");
 		exit(1);
 	}
 
 	dev = strdup(argv[1]);
+	bdev = strdup(argv[2]);
 	pos = strstr(dev, "rdsk");
 	if (pos == NULL) {
-		fprintf(stderr, "Please specify a raw disk device.\n");
-		exit(1);
+		pos = strstr(dev, "raw");
+		if (pos == NULL) {
+			fprintf(stderr, "Please specify a raw disk device.\n");
+			exit(1);
+		}
 	}
 
 	len = strlen(dev);
@@ -329,7 +405,19 @@ main(int argc, char *argv[]) {
 		exit(1);
 	}
 
+	/*
+	 * Open Raw Device for ioctls and partition table reading.
+	 */
 	fd = open(dev, O_RDONLY);
+	if (fd < 0) {
+		perror("Cannot open device");
+		exit(1);
+	}
+
+	/*
+	 * Open Block Device for general filesystem access.
+	 */
+	cur_fd = open(bdev, O_RDONLY);
 	if (fd < 0) {
 		perror("Cannot open device");
 		exit(1);
@@ -341,6 +429,7 @@ main(int argc, char *argv[]) {
 	if (ioctl(fd, DKIOCGMEDIAINFO, &dkmi) < 0) {
 		perror("DKIOCGMEDIAINFO failed on device");
 		close(fd);
+		close(cur_fd);
 		exit(1);
 	}
 
@@ -348,18 +437,71 @@ main(int argc, char *argv[]) {
 	if (read(fd, mbr, SECTOR_SIZE) != SECTOR_SIZE) {
 		perror("Error reading MBR");
 		close(fd);
+		close(cur_fd);
 		exit(1);
 	}
 
 	if (!PC_MBR_CHECK_SIG(mbr)) {
 		fprintf(stderr, "Invalid MBR/Fdisk table.\n");
 		close(fd);
+		close(cur_fd);
 		exit(1);
 	}
 
 	FSYS_BUF = (char *)malloc(FSYS_BUFLEN);
 	scan_parts((char *)mbr, fd, 1, 0, 0);
 	free(FSYS_BUF);
+	close(fd);
+	close(cur_fd);
 	return (0);
+}
+
+
+int
+read_line(char *buf, int len)
+{
+	char c;
+	int i;
+
+	len--;
+	c = 0;
+	i = 0;
+	while (grub_read(&c, 1) && c != '\n' && i < len) {
+		buf[i++] = c;
+	}
+	buf[i+1] = '\0';
+
+	return (i);
+}
+
+/*
+ * Start OS heuristics functions. These try to detect a bootable OS
+ * slice for the given OS type.
+ */
+void
+probe_linux(struct fsys_entry *fsys_ent, int partno)
+{
+	char dir[PATH_MAX];
+	char fbuf[1024];
+
+	/*
+         * Check if we have /lib/modules.
+         */
+	entry_found = 0;
+	strcpy(dir, "/lib/modules/");
+	(fsys_ent->dir_func)(dir);
+
+	if (entry_found > 0) {
+		/*
+		 * This is a Linux root. Try to fetch the menu.lst
+		 */
+		strcpy(dir, "/boot/grub/menu.lst");
+		/*(fsys_ent->dir_func)(dir);*/
+		if (grub_open(dir)) {
+			while (read_line(fbuf, 1024) > 0) {
+				printf("%s\n", fbuf);
+			}
+		}
+	}
 }
 
