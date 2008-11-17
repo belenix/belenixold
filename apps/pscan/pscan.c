@@ -1,25 +1,3 @@
-/* pscan.c - Main partition scanner program */
-/*
- * Alternate OS Scanner utility for BeleniX. Scan other OSes in other
- * partitions and generate boot entries suitable for adding into GRUB's
- * menu.lst.
- */
-/*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -257,6 +235,12 @@ substring (const char *s1, const char *s2)
 
   /* S1 isn't a substring. */
   return 1;
+}
+
+void *
+grub_memmove (void *to, const void *from, int len)
+{
+  return (memmove(to, from, len));
 }
 
 void
