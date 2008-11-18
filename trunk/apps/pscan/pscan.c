@@ -117,42 +117,44 @@ struct fsys_entry fsys_table[NUM_FSYS + 1] =
   {0, 0, 0, 0, 0, 0}
 };
 
-void probe_linux(struct fsys_entry *fsys_ent, int partno);
+static void probe_linux(int partno);
+static void probe_windows(int partno);
 
 int
 devread(unsigned int sector, int byte_offset, int byte_len, char *buf)
 {
-	off_t start_pos;
-	off_t actual_pos;
+  off_t start_pos;
+  off_t actual_pos;
 
-	/*
-	 *  Check partition boundaries
-	 */
-	if ((sector + ((byte_offset + byte_len - 1) >> SECTOR_BITS)) >= part_length)
-	{
-		errnum = ERR_OUTSIDE_PART;
-		return 0;
-	}
+  /*
+   *  Check partition boundaries
+   */
+  if ((sector + ((byte_offset + byte_len - 1) >> SECTOR_BITS)) >= part_length)
+    {
+      errnum = ERR_OUTSIDE_PART;
+      return 0;
+    }
 
-	/*
-	 *  Get the read to the beginning of a partition.
-	 */
-	start_pos = (off_t)(part_start + sector) * (off_t)SECTOR_SIZE + byte_offset;
-	actual_pos = lseek(cur_fd, start_pos, SEEK_SET);
-	if (actual_pos != start_pos) {
-		perror("(devread)Seek failed");
-		errnum = ERR_READ;
-		return (0);
-	}
+  /*
+   *  Get the read to the beginning of a partition.
+   */
+  start_pos = (off_t)(part_start + sector) * (off_t)SECTOR_SIZE + byte_offset;
+  actual_pos = lseek(cur_fd, start_pos, SEEK_SET);
+  if (actual_pos != start_pos)
+    {
+      perror("(devread)Seek failed");
+      errnum = ERR_READ;
+      return (0);
+    }
 
-	if (read(cur_fd, buf, byte_len) < byte_len) {
-		fprintf(stderr, "start_pos = %llu, byte_len = %d, cur_fd = %d\n", start_pos, byte_len, cur_fd);
-		perror("(devread)Read failed");
-		errnum = ERR_READ;
-		return (0);
-	}
+  if (read(cur_fd, buf, byte_len) < byte_len)
+    {
+      perror("(devread)Read failed");
+      errnum = ERR_READ;
+      return (0);
+    }
 
-	return (1);
+  return (1);
 }
 
 int
@@ -179,7 +181,7 @@ grub_read (char *buf, int len)
 }
 
 int
-grub_open (char *filename)
+grub_open(char *filename)
 {
   /* if any "dir" function uses/sets filepos, it must
      set it to zero before returning if opening a file! */
@@ -199,6 +201,24 @@ grub_open (char *filename)
     }
 
   return 0;
+}
+
+int
+dir(char *dirname)
+{
+  if (*dirname != '/')
+    errnum = ERR_BAD_FILENAME;
+
+  if (fsys_type == NUM_FSYS)
+    errnum = ERR_FSYS_MOUNT;
+
+  if (errnum)
+    return 0;
+
+  /* set "dir" function to list completions */
+  print_possibilities = 1;
+
+  return (*(fsys_table[fsys_type].dir_func))(dirname);
 }
 
 
@@ -256,7 +276,6 @@ print_a_completion (char *name)
         }
       else
         {
-          printf (" %s\n", name);
           entry_found++;
         }
     }
@@ -306,9 +325,13 @@ scan_fsys(void)
 			fprintf(stderr, "Partition: %ld, Filesystem %s mounted successfully.\n",
 			    current_partition, fsys_table[i].name);
 			fsys_type = i;
+			errnum = 0;
 
 			if (fsys_table[i].os_plat == OS_LINUX) {
-				probe_linux(&fsys_table[i], current_partition);
+				probe_linux(current_partition);
+
+			} else if (fsys_table[i].os_plat == OS_WINDOWS) {
+				probe_windows(current_partition);
 			}
 			return;
 		}
@@ -319,7 +342,8 @@ scan_fsys(void)
 }
 
 void
-scan_parts(char *sec, int fd, int nest_level, off_t pext_part_pos, off_t this_ext_start)
+scan_parts(char *sec, int fd, int nest_level, off_t pext_part_pos,
+    off_t this_ext_start, int partn)
 {
 	int partno;
 	off_t ext_start, actual_start;
@@ -356,18 +380,20 @@ scan_parts(char *sec, int fd, int nest_level, off_t pext_part_pos, off_t this_ex
 				continue;
 			}
 			if (pext_part_pos == 0) {
-				scan_parts((char *)embr, fd, nest_level + 1, ext_start, this_ext_start);
+				scan_parts((char *)embr, fd, nest_level + 1, ext_start,
+				    this_ext_start, 0);
 			} else {
-				scan_parts((char *)embr, fd, nest_level + 1, pext_part_pos, this_ext_start);
+				scan_parts((char *)embr, fd, nest_level + 1, pext_part_pos,
+				    this_ext_start, partn+1);
 			}
 		} else {
 			part_start = PC_SLICE_START(sec, partno) + this_ext_start;
 			part_length = PC_SLICE_LENGTH(sec, partno);
 
-			if (nest_level > 0) {
-				current_partition = partno + 4;
-			} else {
+			if (pext_part_pos == 0) {
 				current_partition = partno;
+			} else {
+				current_partition = partn + 4;
 			}
 
 			scan_fsys();
@@ -449,7 +475,7 @@ main(int argc, char *argv[]) {
 	}
 
 	FSYS_BUF = (char *)malloc(FSYS_BUFLEN);
-	scan_parts((char *)mbr, fd, 1, 0, 0);
+	scan_parts((char *)mbr, fd, 1, 0, 0, 0);
 	free(FSYS_BUF);
 	close(fd);
 	close(cur_fd);
@@ -461,43 +487,47 @@ int
 read_line(char *buf, int len)
 {
 	char c;
-	int i;
+	int i, cnt;
 
 	len--;
-	c = 0;
-	i = 0;
-	while (grub_read(&c, 1) && c != '\n' && i < len) {
-		buf[i++] = c;
+	c = 0; i = 0;
+	cnt = 0;
+	while (grub_read(&c, 1) && i < len) {
+		cnt++;
+		if (c != '\n')
+			buf[i++] = c;
+		else
+			break;
 	}
-	buf[i+1] = '\0';
+	buf[i] = '\0';
 
-	return (i);
+	return (cnt);
 }
 
 /*
  * Start OS heuristics functions. These try to detect a bootable OS
  * slice for the given OS type.
  */
+
 void
-probe_linux(struct fsys_entry *fsys_ent, int partno)
+probe_linux(int partno)
 {
-	char dir[PATH_MAX];
+	char path[PATH_MAX];
 	char fbuf[1024];
 
 	/*
          * Check if we have /lib/modules.
          */
 	entry_found = 0;
-	strcpy(dir, "/lib/modules/");
-	(fsys_ent->dir_func)(dir);
+	strcpy(path, "/lib/modules/");
+	dir(path);
 
 	if (entry_found > 0) {
 		/*
 		 * This is a Linux root. Try to fetch the menu.lst
 		 */
-		strcpy(dir, "/boot/grub/menu.lst");
-		/*(fsys_ent->dir_func)(dir);*/
-		if (grub_open(dir)) {
+		strcpy(path, "/boot/grub/menu.lst");
+		if (grub_open(path)) {
 			while (read_line(fbuf, 1024) > 0) {
 				printf("%s\n", fbuf);
 			}
@@ -505,3 +535,15 @@ probe_linux(struct fsys_entry *fsys_ent, int partno)
 	}
 }
 
+void
+probe_windows(int partno)
+{
+	char path[PATH_MAX];
+
+	/*
+	 * Check if there is WINDOWS
+         */
+	entry_found = 0;
+	strcpy(path, "/WINDOWS/");
+	dir(path);
+}

@@ -199,6 +199,7 @@ extern grub_error_t errnum;
 
 /* misc */
 extern int devread(unsigned int sector, int byte_offset, int byte_len, char *buf);
+extern int grub_open(char *filename);
 extern int grub_read(char *buf, int len);
 extern int substring (const char *s1, const char *s2);
 extern void print_fsys_type (void);
