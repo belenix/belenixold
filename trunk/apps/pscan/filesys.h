@@ -69,6 +69,15 @@ int fat_dir (char *dirname);
 #define FSYS_FAT_NUM 0
 #endif
 
+#ifdef FSYS_NTFS
+#define FSYS_NTFS_NUM 1
+int ntfs_mount(void);
+int ntfs_read(char *buf, int len);
+int ntfs_dir(char *dirname);
+#else
+#define FSYS_NTFS_NUM 0
+#endif
+
 #ifdef FSYS_EXT2FS
 #define FSYS_EXT2FS_NUM 1
 int ext2fs_mount (void);
@@ -146,7 +155,7 @@ int iso9660_dir (char *dirname);
 
 #ifndef NUM_FSYS
 #define NUM_FSYS	\
-  (FSYS_FFS_NUM + FSYS_FAT_NUM + FSYS_EXT2FS_NUM + FSYS_MINIX_NUM	\
+  (FSYS_FFS_NUM + FSYS_FAT_NUM + FSYS_NTFS_NUM + FSYS_EXT2FS_NUM + FSYS_MINIX_NUM \
    + FSYS_REISERFS_NUM + FSYS_VSTAFS_NUM + FSYS_JFS_NUM + FSYS_XFS_NUM	\
    + FSYS_TFTP_NUM + FSYS_ISO9660_NUM + FSYS_UFS_NUM + FSYS_UFS2_NUM \
    + FSYS_ZFS_NUM)
