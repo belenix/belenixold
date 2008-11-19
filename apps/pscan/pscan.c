@@ -79,6 +79,9 @@ void (*disk_read_func) (unsigned int, int, int) = NULL;
 
 struct fsys_entry fsys_table[NUM_FSYS + 1] =
 {
+# ifdef FSYS_NTFS
+  {"ntfs", ntfs_mount, ntfs_read, ntfs_dir, 0, 0, OS_WINDOWS},
+# endif
 # ifdef FSYS_FAT
   {"fat", fat_mount, fat_read, fat_dir, 0, 0, OS_WINDOWS},
 # endif
@@ -276,6 +279,7 @@ print_a_completion (char *name)
         }
       else
         {
+          printf (" %s\n", name);
           entry_found++;
         }
     }
@@ -539,11 +543,16 @@ void
 probe_windows(int partno)
 {
 	char path[PATH_MAX];
+	char fbuf[1024];
 
 	/*
 	 * Check if there is WINDOWS
          */
 	entry_found = 0;
-	strcpy(path, "/WINDOWS/");
-	dir(path);
+	strcpy(path, "/WINDOWS/tsoc.log");
+	if (grub_open(path)) {
+		while (read_line(fbuf, 1024) > 0) {
+			printf("%s\n", fbuf);
+		}
+	}
 }
