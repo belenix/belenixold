@@ -205,6 +205,7 @@ extern int substring (const char *s1, const char *s2);
 extern void print_fsys_type (void);
 extern void print_a_completion (char *name);
 extern void *grub_memmove (void *to, const void *from, int len);
+void *grub_memset (void *start, int c, int len);
 
 /* instrumentation variables */
 extern void (*disk_read_hook) (unsigned int, int, int);

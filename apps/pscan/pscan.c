@@ -312,6 +312,12 @@ grub_memmove (void *to, const void *from, int len)
   return (memmove(to, from, len));
 }
 
+void *
+grub_memset (void *start, int c, int len)
+{
+  return (memset(start, c, len));
+}
+
 void
 scan_fsys(void)
 {
