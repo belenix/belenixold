@@ -1,73 +1,73 @@
-SUNWj5dev
-SUNWj5dmo
-SUNWhea
-SUNWgdb
-SUNWgm4
-SUNWgmake
-SUNWbinutils
-SUNWgcc
-SUNW1394h
-SUNWagph
-SUNWaconf
-SUNWpiclh
-SUNWprd
-SFEcurl-devel
-SUNWsvn
-SUNWsqlite3-devel
-SUNWsfwhea
-SUNWopenssl-include
-SUNWTiff-devel
-SUNWlxsl-devel
-SUNWlxml-devel
-SUNWjpg-devel
-SUNWpng-devel
-SFEqt3-devel
-SUNWmercurial
-SUNWmdbdm
-SUNWtcpdS
-SUNWpppgS
-SUNWgrubS
-SFEswig
-SUNWdfbh
-SUNWbcc
-SUNWmlibh
-SUNWosdem
-SUNWsfinf
-SFEcmake
-SUNWgnu-automake-19
-SUNWgnu-automake-110
-SUNWipfh
-SUNWsrh
-FSWxorg-headers
-SUNWxorg-headers
-SUNWaudh
-SUNWlibwnck-devel
-SUNWiso-codes-devel
-SUNWgnu-libiconv-devel
-SUNWgnu-gettext-devel
-SUNWdbus-devel
-SUNWdbus-bindings-devel
-SUNWPython-devel
-SFExerces-c-devel
-SFEreadline-devel
-SFEopenmotif-devel
-SFEkdewebdev3
-SUNWflac-devel
-SUNWlibtheora-devel
-SFEdbus-qt3-devel
-SUNWxorg-devel-docs
-FSWxorg-devel-docs
-SUNWuiu8
-SUNWtlsd
-SUNWsmagt
-SUNWgnome-audio-devel
-SUNWgnome-base-libs-devel
-SUNWgnome-common-devel
-SUNWgnome-component-devel
-SUNWgnome-config-devel
-SUNWgnome-gtksourceview-devel
-SUNWgnome-libs-devel
-SUNWgnome-media-devel
-SUNWgnome-print-devel
-SUNWgnome-python-libs-devel
-SUNWgnome-vfs-devel
+P SUNWj5dev
+P SUNWj5dmo
+P SUNWhea
+P SUNWgdb
+P SUNWgm4
+P SUNWgmake
+P SUNWbinutils
+P SUNWgcc
+P SUNW1394h
+P SUNWagph
+P SUNWaconf
+P SUNWpiclh
+P SUNWprd
+P SFEcurl-devel
+P SUNWsvn
+P SUNWsqlite3-devel
+P SUNWsfwhea
+P SUNWopenssl-include
+P SUNWTiff-devel
+P SUNWlxsl-devel
+P SUNWlxml-devel
+P SUNWjpg-devel
+P SUNWpng-devel
+P SFEqt3-devel
+P SUNWmercurial
+P SUNWmdbdm
+P SUNWtcpdS
+P SUNWpppgS
+P SUNWgrubS
+P SFEswig
+P SUNWdfbh
+P SUNWbcc
+P SUNWmlibh
+P SUNWosdem
+P SUNWsfinf
+P SFEcmake
+P SUNWgnu-automake-19
+P SUNWgnu-automake-110
+P SUNWipfh
+P SUNWsrh
+P FSWxorg-headers
+P SUNWxorg-headers
+P SUNWaudh
+P SUNWlibwnck-devel
+P SUNWiso-codes-devel
+P SUNWgnu-libiconv-devel
+P SUNWgnu-gettext-devel
+P SUNWdbus-devel
+P SUNWdbus-bindings-devel
+P SUNWPython-devel
+P SFExerces-c-devel
+P SFEreadline-devel
+P SFEopenmotif-devel
+P SFEkdewebdev3
+P SUNWflac-devel
+P SUNWlibtheora-devel
+P SFEdbus-qt3-devel
+P SUNWxorg-devel-docs
+P FSWxorg-devel-docs
+P SUNWuiu8
+P SUNWtlsd
+P SUNWsmagt
+P SUNWgnome-audio-devel
+P SUNWgnome-base-libs-devel
+P SUNWgnome-common-devel
+P SUNWgnome-component-devel
+P SUNWgnome-config-devel
+P SUNWgnome-gtksourceview-devel
+P SUNWgnome-libs-devel
+P SUNWgnome-media-devel
+P SUNWgnome-print-devel
+P SUNWgnome-python-libs-devel
+P SUNWgnome-vfs-devel
