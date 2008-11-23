@@ -1,7 +1,28 @@
 # Copyright (c) 2006 by Martin Rosenau
 
-objs = pscan.o fsys_ext2fs.o fsys_reiserfs.o fsys_xfs.o fsys_fat.o fsys_jfs.o fsys_ntfs.o namecomp.o
-CFLAGS = -D_FILE_OFFSET_BITS=64 -std=c99 -D__EXTENSIONS__ -DFSYS_EXT2FS -DFSYS_REISERFS -DFSYS_XFS -DFSYS_FAT -DFSYS_JFS -DFSYS_NTFS
+objs = pscan.o \
+	fsys_ext2fs.o \
+	fsys_reiserfs.o  \
+	fsys_xfs.o  \
+	fsys_fat.o  \
+	fsys_jfs.o  \
+	fsys_ntfs.o  \
+	namecomp.o  \
+	fsys_minix.o \
+	fsys_ufs.o \
+	fsys_ufs2.o
+
+CFLAGS = -D_FILE_OFFSET_BITS=64 -std=c99 -D__EXTENSIONS__ \
+	-DFSYS_EXT2FS \
+	-DFSYS_REISERFS \
+	-DFSYS_XFS \
+	-DFSYS_FAT \
+	-DFSYS_JFS \
+	-DFSYS_NTFS \
+	-DFSYS_MINIX \
+	-DFSYS_UFS \
+	-DFSYS_UFS2
+
 INC = 
 
 # Uncomment this for debugging information in the files
