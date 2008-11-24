@@ -10,7 +10,8 @@ objs = pscan.o \
 	namecomp.o  \
 	fsys_minix.o \
 	fsys_ufs.o \
-	fsys_ufs2.o
+	fsys_ufs2.o \
+	fsys_ffs.o
 
 CFLAGS = -D_FILE_OFFSET_BITS=64 -std=c99 -D__EXTENSIONS__ \
 	-DFSYS_EXT2FS \
@@ -21,7 +22,9 @@ CFLAGS = -D_FILE_OFFSET_BITS=64 -std=c99 -D__EXTENSIONS__ \
 	-DFSYS_NTFS \
 	-DFSYS_MINIX \
 	-DFSYS_UFS \
-	-DFSYS_UFS2
+	-DFSYS_UFS2 \
+	-DFSYS_FFS \
+	-DGRUB_UTIL
 
 INC = 
 
