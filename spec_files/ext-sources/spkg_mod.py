@@ -100,8 +100,14 @@ class Cl_sitevars(object):
 		self.site = site; self.rtype = RTYPE
 		self.catalog = "%s/catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
 
-		if not os.path.exists(self.catalog):
-			if RELEASE == "trunk" and not ignore_err:
+		#
+		# We ignore this check only when doing an updatecatalog or during
+		# upgrade base/all since that also involved a call to updatecatalog
+		# This is needed to avoig cribbing for non-existent catalogs as we
+		# are about to fetch those anyway!
+		#
+		if not os.path.exists(self.catalog) and not ignore_err:
+			if RELEASE == "trunk":
 				raise PKGError(_("Catalog not found for site %s" % site))
 			RELEASE = "trunk"
 			self.catalog = "%s/catalog-%s-%s" % (SPKG_VAR_DIR, RELEASE, so[1])
@@ -266,6 +272,35 @@ class Cl_img(object):
 			print "     Please put '%s' into that file after reboot" % rel
 			print "     and set this value for USE_RELEASE_TAG in /etc/spkg.conf"
 			print ""
+
+	def update_hostid(self):
+		if os.path.exists("/etc/hostid"):
+			shutil.copyfile("/etc/hostid", "%s/etc/hostid" % self.ALTROOT)
+			return 
+
+		hid = exec_prog("/usr/bin/hostid", 1)
+		hostid = "0x" + hid
+		tr_hostid = ''.join(map(self.hostid_trans, hostid))
+		try:
+			hf = open("%s/etc/hostid" % self.ALTROOT, "w")
+			hf.write("# DO NOT EDIT\n")
+			hf.write("\"%s\"\n" % tr_hostid)
+			hf.close()
+		except:
+			traceback.print_exc()
+			print ""
+			print "WARNING: Unable to update /etc/hostid in new boot env."
+			print "     You may not be able to boot back into the current"
+			print "     once you reboot into the new boot env."
+			print ""
+
+	def hostid_trans(self, ch):
+		asc = ord(ch)
+		if asc > 32 and asc < 80:
+			asc += 47
+		elif asc > 79 and asc < 127:
+			asc -= 47
+		return chr(asc)
 
 	def init(self, altroot):
 		dwn_dir = altroot + self.SPKG_DWN_DIR
@@ -1111,8 +1146,11 @@ def updatecatalog(img, pargs, ignore_errors=False):
 	# We do not use mirrored downloads for catalog updates so we pass the False
 	# parameter to downloadurl.
 	#
-	for sv in img.PKGSITEVARS:
+	svars = img.PKGSITEVARS
+	i = -1
+	for sv in svars:
 
+		i += 1
 		#
 		# The releases file provides a list of distro releases. A valid releases
 		# file found in the first site is used.
@@ -1133,8 +1171,24 @@ def updatecatalog(img, pargs, ignore_errors=False):
 		#
 		removef(sv.tcat)
 		try:
-			downloadurl(sv, "%s/%s/%s/catalog-sha1sum" % \
-			    (sv.fullurl, img.ARCH, img.OSREL), sv.tcat, False)
+			if sv.release != "trunk":
+				#
+				# If we are using a non-trunk release tag and that is not
+				# provided by the site, we retry with trunk.
+				#
+				try:
+					downloadurl(sv, "%s/%s/%s/catalog-sha1sum" % \
+					    (sv.fullurl, img.ARCH, img.OSREL), sv.tcat, False)
+				except PKGError:
+					sv = Cl_sitevars(sv.site, "trunk", sv.rtype, \
+					    sv.spkg_var_dir, True)
+					downloadurl(sv, "%s/%s/%s/catalog-sha1sum" % \
+					    (sv.fullurl, img.ARCH, img.OSREL), sv.tcat, False)
+					img.PKGSITEVARS[i] = sv
+			else:
+				downloadurl(sv, "%s/%s/%s/catalog-sha1sum" % \
+				    (sv.fullurl, img.ARCH, img.OSREL), sv.tcat, False)
+
 			sf = open(sv.tcat, "r")
 			rsum = sf.read().strip();  sf.close()
 			removef(sv.tcat)
@@ -1158,6 +1212,7 @@ def updatecatalog(img, pargs, ignore_errors=False):
 			    _("ERROR fetching catalogs file %s\n" % pe.message)))
 			errored = 1
 			removef(sv.tcat)
+			i += 1
 			continue
 
 		if os.path.exists(sv.pkey):
@@ -2560,6 +2615,8 @@ def upgrade(img, pargs, trans=None):
 	if tplan.action == img.UPGRADE_BASE or tplan.action == img.UPGRADE_ALL:
 		# Update release tag in boot environment
 		img.update_release_tag()
+		# Propagate hostid from current boot env
+		img.update_hostid()
 		activate_bootenv(img)
 		tplan.trans.done()
 		print "Upgrade SUCCESSFUL. Upgraded system will be available on next reboot"
@@ -3227,7 +3284,7 @@ def html_pkginfo(pkg, pkgfile):
 	    'width: 19.5%; float: left; font-size: 12pt; border: 1px solid; ' + \
 		'height: 30px; line-height: 20pt;">' + "\n"
 	txt += '&nbsp;Common Name</DIV><DIV align="left" style="background-color: ' + \
-	    '#ADF4C5; width: 80%; font-size: 12pt; float: right; border: 1px solid; ' + \
+	    '#3EF179; width: 80%; font-size: 12pt; float: right; border: 1px solid; ' + \
 		'height: 30px; line-height: 20pt;">' + "\n"
 	txt += '<b>&nbsp;<a href="' + pkgfile + '">' + cname + '</a></b></DIV></DIV>' + "\n"
 	#txt += '<DIV align="left" style="position: relative; left: 10px; ' + \
@@ -3351,7 +3408,7 @@ def genhtml(pargs):
 		appendFile(relnew, '</html></body>')
 
 		rtxt = '<html><body><DIV align="center" style="width: 99%; height: 8%; '
-		rtxt += 'background-color: #C7FDD9; border: 2px solid;">' + "\n"
+		rtxt += 'background-color: #A0FFBF; border: 2px solid;">' + "\n"
 		rtxt += '<u>Package Index</u><br/>' + "\n"
 		rtxt += rlst + '</DIV>' + "\n"
 		rtxt += '<DIV style="width: 100%; height: 92%">'
@@ -3518,6 +3575,7 @@ def do_main():
 	# For certain upgrade options we need to set the release_tag to the one
 	# we are upgrading to prior to load_config
 	#
+	ign_err = False
 	if subcommand == "upgrade":
 		if len(pargs) == 0:
 			usage()
@@ -3529,9 +3587,9 @@ def do_main():
 				print "       spkg upgrade %s <release tag|trunk>" % \
 				   pargs[0]
 				return 1
+			ign_err = True
 			os.environ["USE_RELEASE_TAG"] = pargs[1]
 
-	ign_err = False
 	if subcommand == "updatecatalog":
 		ign_err = True
 
