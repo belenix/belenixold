@@ -10,7 +10,7 @@ use Digest::MD5 qw/md5_hex/;
 
 my ($collections, $arch, $basedir, $verbose, $release, $release_given);
 my ($rebuildtrunk, $addmode, $cluster, $srcclust, $sign, $priv);
-my ($opt, $srcdir, $version);
+my ($opt, $srcdir, $version, @more_releases, @packages);
 
 sub relative_path;
 sub usage;
@@ -26,6 +26,7 @@ $sign = 0;
 # Default Base dir for OpenSolaris packages
 $basedir = "/tanku/belipsds";
 $priv = "$ENV{'HOME'}/.ecc/site.ecc";
+@packages = ();
 
 while ( $opt = shift @ARGV ) {
 	if ( $opt eq "-v" ) {
@@ -52,11 +53,19 @@ while ( $opt = shift @ARGV ) {
 	} elsif ( $opt eq "-R" ) {
 		$basedir = $ARGV[0];
 
-	} else {
-		$release = $opt;
-		$release_given = 1;
+	} elsif ( $addmode == 0 ) {
+		if ( $release_given == 0 ) {
+			$release = $opt;
+			$release_given = 1;
+
+		} else {
+			push(@packages, $opt);
+		}
+	} elsif ( $addmode == 1 ) {
+		push(@more_releases, $opt);
 	}
 }
+
 
 # Release list
 #$releases = "/tanku/belipsds/releases";
@@ -66,7 +75,6 @@ $collections = {
 				'unstable'	=>	[ 'trunk/unstable' ],
 				};
 
-# Welche Architektur interessiert uns?
 $arch = "i386";
 
 if ($cluster == 1) {
@@ -82,6 +90,16 @@ if ($addmode == 1) {
 	print "####################################################\n";
 	print "Done.\n";
 	print "####################################################\n";
+	if ( $#more_releases >= 0 ) {
+		foreach (@more_releases) {
+			$release = $_;
+			foreach (keys %{$collections}) {
+				mkpath("$basedir/$release/$_/$arch", {verbose => 1});
+				mix_sources ($basedir, $arch, "$release/$_", \@{$collections->{$_}}, \@packages);
+			}
+		}
+	}
+
 	exit 0;
 
 } elsif ($sign == 1) {
@@ -95,7 +113,7 @@ if ($release_given == 0) {
 
 foreach (keys %{$collections}) {
 	mkpath("$basedir/$release/$_/$arch", {verbose => 1});
-	mix_sources ($basedir, $arch, "$release/$_", @{$collections->{$_}});
+	mix_sources ($basedir, $arch, "$release/$_", \@{$collections->{$_}}, \@packages);
 }
 
 print "Done!\n" if $verbose;
@@ -226,6 +244,7 @@ sub add_pkg {
 		if ( @fields == 8 ) {
 			if (not $cat->{$fields[0]}->{$fields[1]}) {
 
+				push(@packages, $fields[0]);
 				# Process group package if type is G
 				if ($fields[6] eq "G") {
 					copy("$srcdir/$fields[3]", "$dir/groups/$fields[0]:$fields[1]:generic.group.7z") or die "Copy failed: $!";
@@ -376,15 +395,21 @@ sub mix_sources {
 	my $basedir = shift;
 	my $arch = shift;
 	my $targetdir = shift;
-	my @sourcedirs = @_;
+	my $srcdirs = shift;
+	my $pl = shift;
+
+	my (@sourcedirs) = @$srcdirs;
+	my (@pkgs) = @$pl;
 
 	my ($version);
 	my ($srcdir, $srcdirh, $youngest, $age, $dir_age);
 	my ($cath, $cat, $sha1sum, @fields);
-	my ($dsth, $dsch, $desc);
+	my ($dsth, $dsch, $desc, $count, @pkglst, @newpklst);
 	my $destdir = "$basedir/$targetdir/$arch";
 
 	print "Building $targetdir from " . (join ", ", @sourcedirs) . "\n";
+	@pkglst = ();
+	$count = 0;
 
 	foreach $srcdir (@sourcedirs) {
 		opendir ($srcdirh, "$basedir/$srcdir/$arch") or die "Can't open $basedir/$srcdir/$arch: $!";
@@ -395,17 +420,18 @@ sub mix_sources {
 
 			print "Examining $srcdir $version...\n" if $verbose;
 
-			# Gibts die Solaris-Version schon in unserer Collection?
 			unless ( -d "$destdir/$version" ) {
 				mkdir "$destdir/$version";
 				print "New version $version\n";
 			}
 
-			# Neue Pakete verlinken
+			if ($#pkgs < 0) {
+				print "  Searching for new packages for $version\n" if $verbose;
 
-			print "  Searching for new packages for $version\n" if $verbose;
-			link_new_packages ("$basedir/$srcdir/$arch/$version", "$basedir/$targetdir/$arch/$version");
-			
+				my($nl) = link_new_packages ("$basedir/$srcdir/$arch/$version", "$basedir/$targetdir/$arch/$version", ());
+				@newpklst = @$nl;
+			}
+
 			if ( ! -f "$basedir/$srcdir/$arch/$version/catalog" or $rebuildtrunk == 1 ) {
 				print "  Generating catalog for $srcdir $version\n" if $verbose;
 				generate_catalog ("$basedir/$srcdir/$arch/$version");
@@ -413,7 +439,6 @@ sub mix_sources {
 
 			print "  Reading catalog for $version\n" if $verbose;
 
-			# Catalog und Description files einlesen
 			open ($cath, "$basedir/$srcdir/$arch/$version/catalog") or die "Can't open $basedir/$srcdir/$arch/$version/catalog: $!";
 			while (<$cath>) {
 				next if /^-----/;
@@ -421,13 +446,32 @@ sub mix_sources {
 				next if /^$/;
 				next if /^#/;
 
-				# Zeilen einlesen
 				@fields = split;
+				my($line) = $_;
 				if ( @fields == 8 ) {
-					$cat->{$version}->{$fields[0]} = $_;
+					if ($#pkgs < 0) {
+						$cat->{$version}->{$fields[0]}->{$fields[1]} = $line;
+						$count = $count + 1;
+						next;
+					}
+
+					foreach (@pkgs) {
+						if ($_ eq $fields[0] or $_ eq $fields[2]) {
+							push(@pkglst, $fields[0] . ":" . $fields[2]);
+							$cat->{$version}->{$fields[0]}->{$fields[1]} = $line;
+							$count = $count + 1;
+						}
+					}
 				}
 			}
 			close ($cath);
+
+			if ($#pkgs >= 0) {
+				print "  Searching for new packages for $version\n" if $verbose;
+
+				my($nl) = link_new_packages ("$basedir/$srcdir/$arch/$version", "$basedir/$targetdir/$arch/$version", @pkglst);
+				@newpklst = @$nl;
+			}
 
 			open ($dsch, "$basedir/$srcdir/$arch/$version/descriptions") or die "Can't open $basedir/$srcdir/$arch/$version/descriptions: $!";
 			while (<$dsch>) {
@@ -440,8 +484,10 @@ sub mix_sources {
 	}
 
 
-
-	# Catalog und Description files in collection erzeugen
+	if ($count == 0) {
+		print "Nothing to do.\n";
+		exit 0;
+	}
 
 	opendir ($dsth, $destdir) or die "Can't open $destdir: $!";
 	while ($version = readdir ($dsth)) {
@@ -453,9 +499,14 @@ sub mix_sources {
 		
 		print "Generating catalog for $version...\n";
 
-		open ($cath, "> $destdir/$version/catalog") or die "Can't write $destdir/$version/catalog: $!";
-		foreach (sort keys %{$cat->{$version}}) {
-			print $cath $cat->{$version}->{$_};
+		open ($cath, ">>$destdir/$version/catalog") or die "Can't write $destdir/$version/catalog: $!";
+		foreach (@newpklst) {
+			my (@nm) = split(/:/);
+			if (exists $cat->{$version}->{$nm[0]}->{$nm[1]}) {
+				print $cath $cat->{$version}->{$nm[0]}->{$nm[1]};
+			} else {
+				print "Entry " . $_ . " not in catalog!\n";
+			}
 		}
 		close ($cath);
 		chomp ($sha1sum = `sha1sum $destdir/$version/catalog | cut -d' ' -f1`);
@@ -466,7 +517,7 @@ sub mix_sources {
 
 		print "Generating descriptions for $version...\n";
 
-		open ($dsch, "> $destdir/$version/descriptions") or die "Can't write $destdir/$version/descriptions: $!";
+		open ($dsch, ">$destdir/$version/descriptions") or die "Can't write $destdir/$version/descriptions: $!";
 		foreach (sort keys %{$desc->{$version}}) {
 			print $dsch $desc->{$version}{$_};
 		}
@@ -722,12 +773,13 @@ sub generate_catalog {
 sub link_new_packages {
 	my $srcdir = shift;
 	my $targetdir = shift;
+	my @pklst = @_;
 
 	my ($file, $dir, $clink, $pwd, $youngest, $age);
-
-	my ($srch, $mdirh);
+	my ($srch, $mdirh, $found, @ff, @nm, @newpklst);
 
 	undef $youngest;
+	@newpklst = ();
 
 	if ( not -d "$targetdir/groups" ) {
 		mkdir("$targetdir/groups");
@@ -756,7 +808,21 @@ sub link_new_packages {
 
 			next unless $file =~ /\.pkg/;
 
+			# Check whether package is a part of the given pkg list to expose into this release.
+			@ff = split(/:/, $file);
+			$found = 0;
+			foreach (@pklst) {
+				@nm = split(/:/);
+				if ( $ff[0] eq $nm[0] ) {
+					$found = 1;
+					last;
+				}
+			}
+			next unless $found == 1 or $#pklst < 0;
+
 			unless ( -l "$targetdir/$dir/$file") {
+				my($key) = $ff[0] . ":" . $ff[1];
+				push(@newpklst, $key);
 				symlink relative_path ("$targetdir/$dir", "$srcdir/$dir") . $file, "$targetdir/$dir/$file";
 				print "New package in $targetdir: $file\n";
 			}
@@ -770,8 +836,18 @@ sub link_new_packages {
 			next if $file eq ".";
 			next if $file eq "..";
 
-			# Nur Pakete
 			next unless $file =~ /\.group/;
+			# Check whether package is a part of the given pkg list to expose into this release.
+			@ff = split(/:/, $file);
+			$found = 0;
+			foreach (@pklst) {
+				@nm = split(/:/);
+				if ( $ff[0] eq $nm[0] ) {
+					$found = 1;
+					last;
+				}
+			}
+			next unless $found == 1 or $#pklst < 0;
 
 			unless ( -l "$targetdir/groups/$file") {
 				print "New Group package in $targetdir: $file\n";
@@ -786,6 +862,17 @@ sub link_new_packages {
 		next if $dir eq ".";
 		next if $dir eq "..";
 		next unless -d "$srcdir/metainfo/$dir";
+
+		# Check whether package is a part of the given pkg list to expose into this release.
+		$found = 0;
+		foreach (@pklst) {
+			@nm = split(/:/);
+			if ( $dir eq $nm[1] ) {
+				$found = 1;
+				last;
+			}
+		}
+		next unless $found == 1 or $#pklst < 0;
 
 		mkdir("$targetdir/metainfo/$dir");
 		opendir ($mdirh, "$srcdir/metainfo/$dir") or die "Can't open $srcdir/metainfo/$dir: $!";
@@ -813,6 +900,17 @@ sub link_new_packages {
 			next if $dir eq "..";
 			next unless -d "$srcdir/metainfo/groups/$dir";
 
+			# Check whether package is a part of the given pkg list to expose into this release.
+			$found = 0;
+			foreach (@pklst) {
+				@nm = split(/:/);
+				if ( $dir eq $nm[1] ) {
+					$found = 1;
+					last;
+				}
+			}
+			next unless $found == 1 or $#pklst < 0;
+
 			mkdir("$targetdir/metainfo/groups/$dir");
 			opendir ($mdirh, "$srcdir/metainfo/groups/$dir") or die "Can't open $srcdir/metainfo/groups/$dir: $!";
 			while ($file = readdir ($mdirh)) {
@@ -832,6 +930,7 @@ sub link_new_packages {
 			chdir($pwd);
 		}
 	}
+	return \@newpklst;
 }
 
 sub relative_path {
