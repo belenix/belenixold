@@ -3295,6 +3295,8 @@ def html_pkginfo(pkg, pkgfile):
 	txt += 'Package Name<br>Description<br>Version<br>Type<br>Category<br>Vendor<br>Size<br></DIV>' + "\n"
 	txt += '<DIV align="left" style="width: 80%; position: relative; ' + \
 	    'left: 10px; background-color: #c0f3fd; float: right;">' + "\n"
+	if not cont.has_key("VENDOR"):
+		cont["VENDOR"] = "N/A"
 	txt += pkgname + "<br>" + desc + "<br>" + vers + "<br>" + type + "<br>" + \
 	    cont["CATEGORY"] + "<br>" + cont["VENDOR"] + "<br>" + size
 	txt += "</DIV>\n"
@@ -3335,7 +3337,7 @@ def genhtml(pargs):
 			os.mkdir(reldir)
 
 		dir = "%s/%s/unstable/i386/5.11" % (repo, rel[1])
-		rdir = "../../%s/unstable/i386/5.11" % rel[1]
+		rdir = "../../../%s/unstable/i386/5.11" % rel[1]
 		catalog = "%s/catalog" % dir
 		metainfo = "%s/metainfo" % dir
 		catf = open(catalog, "r")

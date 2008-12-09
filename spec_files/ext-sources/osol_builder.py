@@ -66,6 +66,7 @@ class Workspace(object):
 		self.env_file = os.path.join(self.on_ws, "opensolaris.sh")
 		self.incremental = incremental
 		self.nightly_attrs = []
+		self.patchdir = "/var/osol_builder/ON_patches"
 
 	def check(self):
 		print "*** Checking workspace\n"
@@ -222,8 +223,13 @@ merge=/opt/onbld/bin/hgmerge"""
 		ksh93_attr = (["ON_BUILD_KSH93_AS_BINKSH", "1"])
 		self.replace_keys(self.on_ws + "/usr/src/Makefile.ksh93switch", ksh93_attr)
 
+		#
+		# Copy must-needed patches
+		#
 		if not os.path.isdir(self.on_patches):
-			return
+			os.makedirs(self.on_patches)
+		shutil.copyfile(os.path.join(self.patchdir, "Makefiles.diff"), self.on_patches)
+			
 		pwd = os.getcwd()
 		os.chdir(self.on_ws)
 		patches = os.listdir(self.on_patches)
@@ -263,6 +269,9 @@ merge=/opt/onbld/bin/hgmerge"""
 		"""
 		Prepare the workspace to make it ready for a build. All patches are applied here.
 		"""
+
+		if not os.path.exists(os.path.join(self.patchdir, "Makefiles.diff")):
+			raise BLDError("Must-needed patches not found. Please run osol_builder prereq.")
 
 		#
 		# Extract ON source

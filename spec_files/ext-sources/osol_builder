@@ -11,6 +11,7 @@ fi
 PATH=/opt/onbld/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
 export PATH
 PKGSRV=http://pkg.opensolaris.org/dev
+ON_PATCH_URL=http://belenix.svn.sourceforge.net/viewvc/belenix/trunk/misc/ext-patches/ON_patches.tar.gz?view=tar
 unalias ls
 unset LS_COLORS
 rm -f /tmp/catalog
@@ -140,7 +141,7 @@ then
 		printf "found\n"
 	fi
 
-	printf "*** Ensure development packages are in place"
+	printf "*** Ensure development packages are in place\n"
 	if [ -n "$is_belenix" ]
 	then
 		spkg install devel
@@ -150,6 +151,15 @@ then
 	fi
 	rm -f /tmp/catalog
 	rm -rf /tmp/pkglocal
+
+	printf "*** Fetching necessary patches\n"
+	if [ ! -d /var/osol_builder ]
+	then
+		mkdir /var/osol_builder
+	fi
+	wget $ON_PATCH_URL -O /var/osol_builder/ON_Patches.tar.gz
+	(cd /var/osol_builder/
+	 gunzip -c ON_Patches.tar.gz | tar xf -)
 	exit 0
 fi
 
