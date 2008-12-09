@@ -153,5 +153,13 @@ then
 	exit 0
 fi
 
-exec /usr/bin/build_on.py "$@"
+if [ "$1" = "build" ]
+then
+	shift
+	exec /usr/bin/osol_builder.py "$@"
+fi
 
+if [ "x$1" = "x" ]
+then
+	exec /usr/bin/osol_builder.py
+fi
