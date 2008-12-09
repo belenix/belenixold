@@ -639,7 +639,12 @@ def usage():
 	"""
 	
 	print >> sys.stdout, _("""\
-build_on prereq | -R <base dir> [-d <distro name tag>] [-i] [-b]
+
+osol_builder prereq 
+	Check system for presence of prerequsities for building ON. This can automatically
+	fetch necessary packages and files except for SUN Studio 12 compiler.
+
+osol_builder build -R <base dir> [-d <distro name tag>] [-i] [-b]
 	-R <base dir> - Directory containing downloaded ON and XVM source 
 	tarballs and patches.
 	Structure of this directory is as follows:
@@ -659,11 +664,7 @@ build_on prereq | -R <base dir> [-d <distro name tag>] [-i] [-b]
 	-b
 	Just run the build and skip the initial preparation steps. This is useful
 	to rerun build full or incremental when the workspace is already properly
-	setup.
-
-	prereq
-	Check system for presence of prerequsities for building ON. This can automatically
-	fetch necessary packages and files except for SUN Studio 12 compiler.""")
+	setup.""")
 
 
 def do_main():
@@ -687,7 +688,11 @@ def do_main():
 		print >> sys.stderr, \
 		    _("build_on: illegal global option -- %s") % e.opt
 		usage()
-		
+
+	if len(opts) == 0:
+		usage()
+		sys.exit(1)
+
 	for opt, arg in opts:
 		if opt == "-R":
 			basedir = arg
@@ -700,7 +705,10 @@ def do_main():
 
 	if basedir == "":
 		print >> sys.stderr, \
-		    _("build_on: -R <basedir> not specified")
+		    _("osol_builder build: -R <basedir> not specified")
+		usage()
+		sys.exit(1)
+		
 
 	wksp = Workspace(basedir, distroname, arch, incremental)
 	if not build_only:
