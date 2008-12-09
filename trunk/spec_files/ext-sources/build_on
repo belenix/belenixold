@@ -1,0 +1,157 @@
+#!/usr/bin/ksh93
+
+id | egrep "^uid=0" > /dev/null
+if [ $? -ne 0 ]
+then
+	echo "NOTICE: You need to be root to build ON."
+	echo ""
+	exit 1
+fi
+
+PATH=/opt/onbld/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
+export PATH
+PKGSRV=http://pkg.opensolaris.org/dev
+unalias ls
+unset LS_COLORS
+rm -f /tmp/catalog
+rm -rf /tmp/pkglocal
+
+get_file() {
+	pkg=$1
+	file=$2
+
+	mkdir -p /tmp/pkglocal
+	pkgdir=/tmp/pkglocal/$pkg
+	if [ ! -f /tmp/catalog ]
+	then
+		echo "*** Fetching catalog from $PKGSRV"
+		pkgrecv -s $PKGSRV -n > /tmp/catalog
+		if [ $? -ne 0 ]
+		then
+			echo "ERROR: Failed to fetch catalog!"
+			exit 1
+		fi
+	fi
+
+	if [ ! -d /tmp/pkglocal/$pkg ]
+	then
+		pkgfmri=`grep $pkg /tmp/catalog`
+		echo "*** Fetching $pkgfmri from $PKGSRV"
+		pkgrecv -s $PKGSRV -d /tmp/pkglocal $pkgfmri
+		if [ $? -ne 0 ]
+		then
+			echo "ERROR: Failed to fetch $pkgfmri!"
+			exit 1
+		fi
+	fi
+
+	IFS="
+"
+	for line in `cat $pkgdir/manifest`
+	do
+		echo $line | grep "^file" > /dev/null
+		[ $? -ne 0 ] && continue
+
+		found=0
+		IFS=" "
+		set -- $line
+		fhash=$2
+		for piece in $line
+		do
+			echo $piece | grep "path=" > /dev/null
+			[ $? -ne 0 ] && continue
+			IFS="="
+			set -- $piece
+			path=`echo $2 | grep $file`
+			if [ $? -eq 0 ]
+			then
+				cp $pkgdir/$fhash /$path
+				found=1
+			fi
+			if [ "$1" = "mode" ]
+			then
+				chmod $2 $path
+			fi
+		done
+		[ $found -eq 1 ] && break
+	done
+	if [ $found -eq 0 ]
+	then
+		echo "ERROR: Cannot find $file in $pkg"
+		exit 1
+	fi
+}
+
+if [ "$1" = "prereq" ]
+then
+	#
+	# Check for prerequisites for building
+	#
+	is_belenix=`uname -a | grep BeleniX`
+	echo "*** Checking for SUN Studio 12"
+	if [ ! -d /opt/SUNWspro ]
+	then
+		echo ""
+		echo "SUN Studio 12 compiler not detected. Please download and install"
+		echo "the latest version of SUN Studio 12 install image from this URL:"
+		echo ""
+		echo "http://www.opensolaris.org/os/community/tools/sun_studio_tools/sun_studio_12_tools/"
+		echo ""
+		exit 1
+	else
+		vers=`/opt/SUNWspro/bin/cc -V 2>&1`
+		echo $vers | grep "124868-07 2008/10/07" > /dev/null
+		if [ $? -ne 0 ]
+		then
+			echo ""
+			echo "WARNING: Possibly unsupported SUN Studio version detected:"
+			echo $vers
+			echo ""
+		fi
+	fi
+
+	printf "*** Checking for assembler .. "
+	if [ ! -f /usr/bin/as ]
+	then
+		printf "not found\n"
+		if [ -n "$is_belenix" ]
+		then
+			get_file SUNWsprot usr/bin/as
+			[ -e /usr/ccs/bin/as ] && rm -f /usr/ccs/bin/as
+			(cd /usr/ccs/bin; ln -s ../../bin/as)
+		else
+			# Assume OpenSolaris
+			pkg install SUNWsprot
+		fi
+	else
+		printf "found\n"
+	fi
+
+	printf "*** Checking for locale files .. "
+	if [ ! -f /usr/include/sys/localedef.h ]
+	then
+		printf "not found\n"
+		if [ -n "$is_belenix" ]
+		then
+			get_file SUNWhea usr/include/sys/localedef.h
+			get_file SUNWhea usr/include/sys/lc_core.h
+		fi
+	else
+		printf "found\n"
+	fi
+
+	printf "*** Ensure development packages are in place"
+	if [ -n "$is_belenix" ]
+	then
+		spkg install devel
+		spkg install SUNWuiu8
+	else
+		pkg install SUNWsvn SUNWbtool SUNWj6cfg SUNWgnu-automake-19 SUNWj6rt SUNWaconf SUNWmercurial SUNWlibtool SUNWgnu-automake-110 SUNWj6rtx SUNWgmake SUNWj6dvx SUNWsprot SUNWbison SUNWj6dev SUNWflexlex SUNWcvs
+	fi
+	rm -f /tmp/catalog
+	rm -rf /tmp/pkglocal
+	exit 0
+fi
+
+exec /usr/bin/build_on.py "$@"
+
