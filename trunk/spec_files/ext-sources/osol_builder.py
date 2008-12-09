@@ -224,11 +224,12 @@ merge=/opt/onbld/bin/hgmerge"""
 		self.replace_keys(self.on_ws + "/usr/src/Makefile.ksh93switch", ksh93_attr)
 
 		#
-		# Copy must-needed patches
+		# Copy must-needed patches and the nightly options file
 		#
 		if not os.path.isdir(self.on_patches):
 			os.makedirs(self.on_patches)
 		shutil.copyfile(os.path.join(self.patchdir, "Makefiles.diff"), self.on_patches)
+		shutil.copyfile(os.path.join(self.patchdir, "nightly.options"), self.patches)
 			
 		pwd = os.getcwd()
 		os.chdir(self.on_ws)
