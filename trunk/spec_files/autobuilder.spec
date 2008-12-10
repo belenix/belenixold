@@ -8,7 +8,7 @@
 
 Name:                autobuilder
 Summary:             Utility to automate building OpenSolaris and XVM from source
-Version:             0.2
+Version:             0.4
 Source1:             osol_builder
 Source2:             osol_builder.py
 

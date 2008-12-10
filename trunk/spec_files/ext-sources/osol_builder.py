@@ -409,6 +409,20 @@ merge=/opt/onbld/bin/hgmerge"""
 		shutil.copyfile(ksh93, sbin_sh)
 
 		#
+		# Now replace some files in the proto dir for a properly functional distro
+		#
+		proto_replace = os.path.join(self.patchdir, "proto_replace")
+		if os.path.isdir(proto_replace):
+			lf = open(os.path.join(proto_replace, "proto_replace.files"), "r")
+			for line in lf:
+				print line
+				path = line.strip()
+				src_path = os.path.join(proto_replace, path)
+				proto_path = os.path.join(proto, path)
+				shutil.copyfile(src_path, proto_path)
+			lf.close()
+
+		#
 		# Build ON packages
 		#
 		cmd = "bldenv ./opensolaris.sh 'cd usr/src/pkgdefs; make install'"
