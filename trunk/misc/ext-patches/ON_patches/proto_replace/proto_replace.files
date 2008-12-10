@@ -7,7 +7,6 @@ etc/mpapi.conf
 etc/vfstab
 etc/services
 etc/nsswitch.nis
-etc/X11/gdm/custom.conf
 etc/hba.conf
 etc/security/device_policy
 etc/security/prof_attr
