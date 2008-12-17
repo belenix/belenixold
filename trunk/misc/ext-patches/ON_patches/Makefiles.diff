@@ -1,13 +1,3 @@
---- usr/src/cmd/Makefile.orig	2008-10-25 12:15:25.187535369 +0530
-+++ usr/src/cmd/Makefile	2008-10-25 12:15:40.167404162 +0530
-@@ -417,7 +417,6 @@
- 	vscan		\
- 	w		\
- 	wall		\
--	wbem		\
- 	wc		\
- 	which		\
- 	who		\
 --- usr/src/cmd/cmd-inet/Makefile.orig	2008-10-25 17:24:32.652364980 +0530
 +++ usr/src/cmd/cmd-inet/Makefile	2008-10-25 17:24:46.905873642 +0530
 @@ -29,8 +29,7 @@

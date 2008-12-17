@@ -1,0 +1,10 @@
+
+ws_dir="$1"
+mkf=${ws_dir}/usr/src/cmd/Makefile
+
+if [ ! -f ${mkf}.orig ]
+then
+	cp $mkf ${mkf}.orig
+fi
+
+cat ${mkf}.orig | sed 's/	wbem		\\//' > ${mkf}
