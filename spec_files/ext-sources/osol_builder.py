@@ -228,14 +228,28 @@ merge=/opt/onbld/bin/hgmerge"""
 		#
 		if not os.path.isdir(self.on_patches):
 			os.makedirs(self.on_patches)
-		shutil.copyfile(os.path.join(self.patchdir, "Makefiles.diff"), self.on_patches)
-		shutil.copyfile(os.path.join(self.patchdir, "nightly.options"), self.patches)
-			
+		shutil.copyfile(os.path.join(self.patchdir, "Makefiles.diff"), \
+		    os.path.join(self.on_patches, "Makefiles.diff"))
+		shutil.copyfile(os.path.join(self.patchdir, "nightly.options"), \
+		    os.path.join(self.patches, "nightly.options"))
+
 		pwd = os.getcwd()
 		os.chdir(self.on_ws)
 		patches = os.listdir(self.on_patches)
 		patches.sort()
 		for patch in patches:
+			if patch.endswith(".script"):
+				#
+				# This is a patch script, execute it giving the ON workspace
+				# directory as the argument.
+				#
+				cmd = "sh %s %s" % (os.path.join(self.on_patches, patch), self.on_ws)
+				pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
+				rt = pipe.wait()
+				if rt != 0:
+					raise BLDError("%s failed." % cmd)
+				continue
+
 			cmd = "cat %s | gpatch --fuzz=0 -p0" % os.path.join(self.on_patches, patch)
 			pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
 			rt = pipe.wait()
