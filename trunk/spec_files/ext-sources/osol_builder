@@ -118,6 +118,7 @@ then
 		if [ -n "$is_belenix" ]
 		then
 			get_file SUNWsprot usr/bin/as
+			chmod a+x /usr/bin/as
 			[ -e /usr/ccs/bin/as ] && rm -f /usr/ccs/bin/as
 			(cd /usr/ccs/bin; ln -s ../../bin/as)
 		else
