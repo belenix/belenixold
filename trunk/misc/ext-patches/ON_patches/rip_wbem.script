@@ -7,4 +7,4 @@ then
 	cp $mkf ${mkf}.orig
 fi
 
-cat ${mkf}.orig | sed 's/	wbem		\\//' > ${mkf}
+cat ${mkf}.orig | grep -v '	wbem		\\' > ${mkf}
