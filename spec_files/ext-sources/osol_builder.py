@@ -552,11 +552,24 @@ merge=/opt/onbld/bin/hgmerge"""
 					    pentry[0] == 'v':
 						#
 						# If it is a file, check if it exists in the proto.
+						# Alternatively it can be file pulled in via a given
+						# path. Check for that as well.
 						# However device entries are preserved as is.
 						#
+						dfile="__junk__"
+						dl = pentry[2].split("=")
+						if len(dl) > 1:
+							if dl[1][:2] == "..":
+								dfile = os.path.normpath(\
+								    os.path.join(proto, dl[1]))
+							else:
+								dfile = os.path.normpath(\
+								    os.path.join(proto, basedir,
+								    dl[1]))
 						pfile = os.path.normpath(os.path.join(proto, \
 						    basedir, pentry[2]))
 						if os.path.exists(pfile) or \
+						   os.path.exists(dfile) or \
 						    (len(pentry[2]) > 3 and pentry[2][:3] == "dev"):
 							pfo.write(line)
 							paths += 1
