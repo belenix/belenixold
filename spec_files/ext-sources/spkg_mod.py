@@ -1137,6 +1137,10 @@ def updatecatalog(img, pargs, ignore_errors=False):
 	cnames = {}
 	force = False
 
+	if S__NOEXEC:
+		print "*** Will check for catalog update"
+		return
+
 	if len(pargs) > 0:
 		if pargs[0] == "-f":
 			force = True
@@ -2573,12 +2577,14 @@ def upgrade(img, pargs, trans=None):
 
 		if pargs[0] == "base":
 			tplan.trans = spkg_trans.transaction_log(LOGDIR, "UPGRADE_BASE")
+			print "Storing plan to transaction ..."
+			tplan.trans.put_plan(tplan)
 
 		elif pargs[0] == "all":
 			tplan.trans = spkg_trans.transaction_log(LOGDIR, "UPGRADE_ALL")
+			print "Storing plan to transaction ..."
+			tplan.trans.put_plan(tplan)
 
-		print "Storing plan to transaction ..."
-		tplan.trans.put_plan(tplan)
 	else:
 		print "Loading plan from transaction ..."
 		tplan = TransformPlan(img, {}, [], None, None)
@@ -2596,7 +2602,8 @@ def upgrade(img, pargs, trans=None):
 		img.set_reconfigure()
 
 	if not resume_mode:
-		tplan.trans.put_data("*" + os.environ["USE_RELEASE_TAG"])
+		if tplan.trans:
+			tplan.trans.put_data("*" + os.environ["USE_RELEASE_TAG"])
 
 	if tplan.trans:
 		state = tplan.trans.get_state()
@@ -2618,7 +2625,8 @@ def upgrade(img, pargs, trans=None):
 		# Propagate hostid from current boot env
 		img.update_hostid()
 		activate_bootenv(img)
-		tplan.trans.done()
+		if tplan.trans:
+			tplan.trans.done()
 		print "Upgrade SUCCESSFUL. Upgraded system will be available on next reboot"
 		print ""
 	else:

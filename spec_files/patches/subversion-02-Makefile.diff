@@ -1,0 +1,22 @@
+--- subversion-1.5.0/Makefile.in.orig	2009-01-09 18:29:14.494270961 +0530
++++ subversion-1.5.0/Makefile.in	2009-01-09 18:32:14.095702159 +0530
+@@ -39,7 +39,7 @@
+ 
+ NEON_LIBS = @NEON_LIBS@
+ SVN_APR_LIBS = @SVN_APR_LIBS@
+-SVN_APRUTIL_LIBS = @SVN_APRUTIL_LIBS@
++SVN_APRUTIL_LIBS = @SVN_APRUTIL_LIBS@ -L/usr/sfw/lib -R/usr/sfw/lib
+ SVN_DB_LIBS =
+ SVN_SERF_LIBS = @SVN_SERF_LIBS@
+ SVN_SASL_LIBS = @SVN_SASL_LIBS@
+@@ -68,8 +68,8 @@
+ swig_rb_libdir = @libdir@
+ 
+ ### these possibly need further discussion
+-swig_pydir = @libdir@/svn-python/libsvn
+-swig_pydir_extra = @libdir@/svn-python/svn
++swig_pydir = /usr/lib/python2.4/vendor-packages/libsvn
++swig_pydir_extra = /usr/lib/python2.4/vendor-packages/svn
+ swig_pldir = @libdir@/svn-perl
+ swig_rbdir = $(SWIG_RB_SITE_ARCH_DIR)/svn/ext
+ contribdir = @bindir@/svn-contrib
