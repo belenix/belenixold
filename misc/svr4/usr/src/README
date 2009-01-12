@@ -1,0 +1,31 @@
+Welcome to the mercurial source repository for Slim Install and Dwarf Caiman.
+
+This source includes the SVR4 packaging tools, libraries needed for Caiman,
+Dwarf Caiman, and the Slim install code. 
+
+To build this source use the following steps:
+
+ 1. cd usr/src
+
+ 2. cp ../tools/env/developer.sh .; chmod +w developer.sh
+    Change GATE and/or CODEMGR_WS as appropriate.
+    You also need to set the paths for your build tools.
+
+ 4. run: . developer.sh
+    To setup your environment
+
+ 5. run: ./opensolaris_build.sh
+    To build the source in the repository.
+
+
+Notes:
+
+ 1. Currently we are not able to build packages from this source.  
+
+ 2. The developer.sh file is used to build the current internal slim gate.
+    Some of the variables defined in it are not relevant in the context of this
+    repository.  Cleanup is needed to improve the  build process for the code in
+    this repo.
+
+
+Questions, comments, contributions to caiman-discuss (a] opensolaris.org
