@@ -1,0 +1,586 @@
+--- usr/src/uts/common/krtld/bootrd.c.orig	Thu Jan  8 22:33:17 2009
++++ usr/src/uts/common/krtld/bootrd.c	Thu Jan  8 22:35:15 2009
+@@ -30,9 +30,10 @@
+ #include <sys/bootconf.h>
+ #include <sys/bootvfs.h>
+ #include <sys/filep.h>
+-#include <sys/kobj.h>
+ #include <sys/varargs.h>
+ #include <sys/reboot.h>
++#include <sys/sysmacros.h>
++#include <zmod/zlib.h>
+ 
+ extern void (*_kobj_printf)(void *, const char *fmt, ...);
+ extern int get_weakish_int(int *);
+@@ -40,21 +41,547 @@
+ extern struct boot_fs_ops bufs_ops, bhsfs_ops;
+ extern int kmem_ready;
+ 
++/*
++ * These are from sys/kobj.h. We can't include that header since both kobj.h
++ * and zlib.h define a typedef called Byte causing a conflict. We must include
++ * zlib.h and these below are the only prototypes from kobj.h that we need.
++ */
++extern void *kobj_alloc(size_t, int);
++extern void kobj_free(void *, size_t);
++
+ static uint64_t rd_start, rd_end;
+ struct boot_fs_ops *bfs_ops;
+ struct boot_fs_ops *bfs_tab[] = {&bufs_ops, &bhsfs_ops, NULL};
+ 
+-static uintptr_t scratch_max;
++static uintptr_t scratch_max = 0;
+ 
++/* The following fields are required for compression support */
++static uint32_t rd_uncomp_seg_sz = 0; /* size of uncompressed segment */
++static uint32_t rd_comp_index_sz; /* number of index entries */
++static uint32_t rd_comp_seg_shift; /* exponent for byte shift */
++static uint32_t rd_uncomp_last_seg_sz; /* sz of last uncomp segment */
++static uint64_t rd_comp_offbase; /* offset of actual compressed data */
++static uint64_t *rd_comp_seg_index; /* array of index entries */
++static u_offset_t rd_comp_size; /* actual compressed file size */
++static uint64_t rd_size;
++
+ #define	_kmem_ready	get_weakish_int(&kmem_ready)
++#define SEGHDR          1
++#define COMPRESSED      1
++#define UNCOMPRESSED    0
++#define MAXALGLEN       36
++#define	MAX_DECOMP_BUFS	8
++#define	FILEP_DECOMP_BUFSIZE	256 * 1024
++#define	CACHE_BUFSIZE	1536 * 1024
+ 
++static caddr_t rd_scratch_bufs[MAX_DECOMP_BUFS];	/* array of free scratch mem bufs */
++static int rd_free_dcomp_bufs = 0;		/* no. of free decomp bufs */
++static int rd_decomp_bufcnt = 0;		/* no. of free decomp bufs */
++static caddr_t cache_lst;
++static int cache_lst_nitems;
++static uint64_t last_count = 0;
++
++static int real_diskread(fileid_t *filep);
++static void *rd_alloc_buf(void);
++static void rd_free_buf(void *buf);
++
++void bkmem_free(void *p, size_t size);
++void *bkmem_alloc(size_t size);
++
+ /*
++ * Buffer structure used to allocate linked chains of scratch buffers to
++ * support so called cached reads from a compressed ramdisk. Cached reads
++ * return direct pointers into the ramdisk area which does not make sense
++ * in case of compressed ramdisk. So decompressed data is put in a scratch
++ * buffer and a pointer to that is returned.
++ * These scratch buffer chains are freed when the file pointer is freed.
++ */
++struct rd_buflist {
++	struct rd_buflist *next;
++	size_t sz;
++	int    type;
++	char data[1];
++};
++
++struct alloc_info {
++	fileid_t *filep;
++	int type;
++};
++
++#define	CACHE_ENTRY_SZ ((sizeof (uint64_t)) * 3 + rd_uncomp_seg_sz)
++#define	BUF_HEADER (sizeof (struct rd_buflist *))
++#define	BUFLIST_HEAD(bufptr) *((struct rd_buflist **)(bufptr))
++
++#define UNCOMP_SEGNO(bufptr) *((uint64_t *)(bufptr))
++#define LAST_USED(bufptr) *((uint64_t *)(bufptr + sizeof (uint64_t)))
++#define	SEG_VALID(bufptr) *((uint64_t *)(bufptr + (sizeof (uint64_t)) * 2))
++#define	UNCOMP_BUF(bufptr) ((caddr_t)(bufptr + (sizeof (uint64_t)) * 3))
++
++/*
++ * Custom allocator that allocates from scratch buffer if possible otherwise
++ * from boot allocator.
++ */
++static void *
++rd_alloc(void *opaque, unsigned int items, unsigned int size)
++{
++	fileid_t *filep;
++	struct alloc_info *ainfo;
++	unsigned int nbytes;
++	caddr_t ptr;
++
++	ainfo = (struct alloc_info *)opaque;
++	filep = ainfo->filep;
++	nbytes = roundup(items * size, sizeof (long));
++	if (nbytes > (FILEP_DECOMP_BUFSIZE - filep->fi_dcscrused)) {
++		ptr = bkmem_alloc(nbytes);
++		ainfo->type = 1;
++	} else {
++		ptr = &filep->fi_dcscrbuf[filep->fi_dcscrused];
++		filep->fi_dcscrused += nbytes;
++		ainfo->type = 0;
++	}
++	bzero(ptr, nbytes);
++	return (ptr);
++}
++
++/*
++ * Decompression scratch memory free routine, does nothing since we free
++ * the entire scratch area all at once on file close.
++ */
++/* ARGSUSED */
++static void
++rd_free(void *opaque, void *addr)
++{
++}
++
++/*
++ * Free up compression scratch memory associated with the file pointer.
++ */
++void
++rd_free_scratch(fileid_t *filep)
++{
++	struct rd_buflist *bf, *bfn;
++
++	if (rd_uncomp_seg_sz == 0)
++		return;
++	if (filep->fi_dcscrbuf) {
++		bf = *((struct rd_buflist **)(filep->fi_dcscrbuf));
++		while (bf) {
++			bfn = bf->next;
++
++			/*
++			 * The type field indicates whether this block is from
++			 * scratch buffer or boot allocator.
++			 */
++			if (bf->type == 1)
++				bkmem_free(bf, bf->sz);
++			bf = bfn;
++		}
++		rd_free_buf(filep->fi_dcscrbuf);
++	}
++}
++
++void
++rd_init_scratch(fileid_t *filep)
++{
++	filep->fi_dcscrbuf = NULL;
++}
++
++static void *
++rd_alloc_buf(void)
++{
++	void *ptr;
++
++	if (rd_free_dcomp_bufs) {
++		ptr = rd_scratch_bufs[--rd_free_dcomp_bufs];
++	} else {
++		ptr = bkmem_alloc(FILEP_DECOMP_BUFSIZE);
++		rd_decomp_bufcnt++;
++	}
++	return (ptr);
++}
++
++static void
++rd_free_buf(void *buf)
++{
++	if (rd_free_dcomp_bufs == MAX_DECOMP_BUFS) {
++		bkmem_free(buf, FILEP_DECOMP_BUFSIZE);
++	} else {
++		rd_scratch_bufs[rd_free_dcomp_bufs++] = buf;
++	}
++}
++
++/*
++ * Replacement routine for z_uncompress. We need this since we use a custom
++ * allocator function.
++ */
++static int
++rd_uncompress(fileid_t *filep, const void *src, size_t srclen, void *dst, size_t *dstlen)
++{
++	z_stream zs;
++	int err;
++	size_t fi_dcscrused;
++	struct alloc_info ainfo;
++
++	/*
++	 * Note down the current buffer usage for freeing later.
++	 */
++	fi_dcscrused = filep->fi_dcscrused;
++	ainfo.filep = filep;
++	bzero(&zs, sizeof (zs));
++	zs.next_in = (uchar_t *)src;
++	zs.avail_in = srclen;
++	zs.next_out = dst;
++	zs.avail_out = *dstlen;
++	zs.zalloc = rd_alloc;
++	zs.zfree = rd_free;
++	zs.opaque = &ainfo;
++
++	if ((err = inflateInit2(&zs, MAX_WBITS)) != Z_OK) {
++		_kobj_printf(ops, "inflateInit2 failed: %d\n", err);
++		return (err);
++	}
++
++	if ((err = inflate(&zs, Z_FINISH)) != Z_STREAM_END) {
++		_kobj_printf(ops, "inflate failed: %d\n", err);
++		(void) inflateEnd(&zs);
++		return (err == Z_OK ? Z_BUF_ERROR : err);
++	}
++
++	*dstlen = zs.total_out;
++	err = inflateEnd(&zs);
++	if (err != Z_OK)
++		_kobj_printf(ops, "inflateEnd failed: %d\n", err);
++
++	/*
++	 * Free up any memory allocated during inflate.
++	 */
++	filep->fi_dcscrused = fi_dcscrused;
++
++	return (err);
++}
++
++/*
++ * Check for a compressed ramdisk and perform necessary initialization. The header
++ * components are read into static variables. The index is a direct pointer into
++ * the ramdisk since it is in physically contiguous memory.
++ */
++static int
++boot_rd_init_compressed(void)
++{
++	char		*iobuf;
++	int		compress_index, error;
++	uint32_t	index_sz, header_len, i;;
++	fileid_t	filep;
++	caddr_t		cache_entry;
++
++	/*
++	 * First check for compression signature.
++	 */
++	filep.fi_blocknum = 0;
++	filep.fi_count = DEV_BSIZE;
++	filep.fi_memp = NULL;
++	real_diskread(&filep);
++	iobuf = filep.fi_memp;
++
++	rd_uncomp_seg_sz = 0;
++	rd_comp_size = rd_end - rd_start + 1;
++	if (strncmp(iobuf, "gzip", 4) != 0) {
++		return (0);
++	}
++
++	iobuf += MAXALGLEN;
++	bcopy(iobuf, &rd_uncomp_seg_sz, sizeof (rd_uncomp_seg_sz));
++	rd_uncomp_seg_sz = ntohl(rd_uncomp_seg_sz);
++
++	/*
++	 * The compression segment size must be a power of 2
++	 */
++	if (rd_uncomp_seg_sz % 2) {
++		_kobj_printf(ops, "Segment size: %u not a power of 2",
++		    rd_uncomp_seg_sz);
++		return (1);
++	}
++	for (i = 0; !((rd_uncomp_seg_sz >> i) & 1); i++)
++		;
++
++	rd_comp_seg_shift = i;
++	iobuf += sizeof (rd_uncomp_seg_sz);
++	bcopy(iobuf, &rd_comp_index_sz, sizeof (rd_comp_index_sz));
++	rd_comp_index_sz = ntohl(rd_comp_index_sz);
++
++	iobuf += sizeof (rd_comp_index_sz);
++	bcopy(iobuf, &rd_uncomp_last_seg_sz, sizeof (rd_uncomp_last_seg_sz));
++	rd_uncomp_last_seg_sz = ntohl(rd_uncomp_last_seg_sz);
++
++	/*
++	 * Compute the total size of the uncompressed data
++	 */
++	rd_size = (rd_comp_index_sz - 2) * rd_uncomp_seg_sz
++	    + rd_uncomp_last_seg_sz;
++
++	/*
++	 * Index size is rounded up to a 512 byte boundary for ease
++	 * of segmapping
++	 */
++	index_sz = sizeof (uint64_t) * rd_comp_index_sz;
++	header_len = MAXALGLEN + sizeof (rd_uncomp_seg_sz) +
++	    sizeof (rd_comp_index_sz) +
++	    sizeof (rd_uncomp_last_seg_sz);
++	rd_comp_offbase = header_len + index_sz;
++
++	index_sz += header_len;
++	index_sz = roundup(index_sz, DEV_BSIZE);
++
++	/*
++	 * Read in the index -- this has a side-effect
++	 * of reading in the header as well.
++	 *
++	 * Instead of a memory copy from the ramdisk we do a so called cached
++	 * read which essentially means we get a pointer directly into the
++	 * ramdisk. Since our ramdisk is fully mapped into contiguous physical
++	 * memory, we can directly reference it as an array.
++	 */
++	filep.fi_blocknum = 0;
++	filep.fi_count = index_sz;
++	filep.fi_memp = NULL;
++	real_diskread(&filep);
++
++	/* Skip the header, this is where the index really begins */
++	rd_comp_seg_index = (uint64_t *)(filep.fi_memp + header_len);
++
++	/*
++	 * Now recompute offsets in the index to account for
++	 * the header length. We are modifying the ramdisk contents here
++	 * and this will be properly handled later when the ramdisk module
++	 * is loaded.
++	 */
++	for (i = 0; i < rd_comp_index_sz; i++) {
++		rd_comp_seg_index[i] = rd_comp_offbase +
++		    BE_64(rd_comp_seg_index[i]);
++        }
++
++	/*
++	 * Allocate a cache for uncompressed segments.
++	 */
++	cache_lst = bkmem_alloc(CACHE_BUFSIZE);
++	cache_lst_nitems = CACHE_BUFSIZE / CACHE_ENTRY_SZ;
++	cache_entry = cache_lst;
++	for (i = 0; i < cache_lst_nitems; i++) {
++		UNCOMP_SEGNO(cache_entry) = rd_comp_index_sz + 1;
++		LAST_USED(cache_entry) = 0;
++		SEG_VALID(cache_entry) = 0;
++		cache_entry += CACHE_ENTRY_SZ;
++	}
++
++	return (0);
++}
++
++caddr_t
++get_cache_entry(uint64_t segno, uint64_t last_used) {
++	int i;
++	caddr_t	cache_entry;
++	caddr_t lru_entry;
++	uint64_t used, lru;
++
++	cache_entry = cache_lst;
++	used = 0;
++	lru = 0;
++	for (i = 0; i < cache_lst_nitems; i++) {
++		if (LAST_USED(cache_entry) == 0) {
++			lru_entry = cache_entry;
++			break;
++		} else if (UNCOMP_SEGNO(cache_entry) == segno) {
++			LAST_USED(cache_entry) = last_used;
++			SEG_VALID(cache_entry) = 1;
++			return (cache_entry);
++		}
++		used = last_used - LAST_USED(cache_entry);
++		if (used > lru) {
++			lru = used;
++			lru_entry = cache_entry;
++		} 
++		cache_entry += CACHE_ENTRY_SZ;
++	}
++	UNCOMP_SEGNO(lru_entry) = segno;
++	LAST_USED(lru_entry) = last_used;
++	SEG_VALID(lru_entry) = 0;
++	return (lru_entry);
++}
++
++/*
++ * Check if we are using a compressed ramdisk and perform necessary processing.
++ */
++int
++diskread(fileid_t *filep)
++{
++	offset_t offset;
++	uint64_t sblkno, eblkno, cmpbytes, i;
++ 	offset_t sblkoff, eblkoff;
++ 	u_offset_t salign, ealign;
++ 	u_offset_t sdiff;
++	uint32_t comp_data_sz;
++	char *uncompressed_seg = NULL, *cache_entry, *cmpbuf;
++	fileid_t my_filep;
++	caddr_t bufaddr;
++	struct rd_buflist *bfhd, *bfnew;
++	uint_t b_resid;
++	size_t xfersize;
++	unsigned long seglen;
++	struct alloc_info ainfo;
++
++	if (rd_uncomp_seg_sz == 0) {
++		return (real_diskread(filep));
++	}
++	last_count++;
++
++	/*
++	 * Compute starting and ending compressed segment numbers
++	 * We use only bitwise operations avoiding division and
++	 * modulus because we enforce the compression segment size
++	 * to a power of 2
++	 */
++	offset = ldbtob(filep->fi_blocknum);
++	sblkno = offset >> rd_comp_seg_shift;
++	sblkoff = offset & (rd_uncomp_seg_sz - 1);
++	eblkno = (offset + filep->fi_count) >> rd_comp_seg_shift;
++	eblkoff = (offset + filep->fi_count) & (rd_uncomp_seg_sz - 1);
++	salign = rd_comp_seg_index[sblkno];
++
++	/*
++	 * Align start to the block boundary to ensure aligned pointer into
++	 * ramdisk.
++	 */
++	sdiff = salign & (DEV_BSIZE - 1);
++	salign -= sdiff;
++	if (eblkno >= (rd_comp_index_sz - 1)) {
++		/*
++		 * We're dealing with the last segment of the compressed ramdisk
++		 * -- the size of this segment *may not* be the same as the
++		 * segment size for the ramdisk.
++		 */
++		eblkoff = (offset + filep->fi_count) &(rd_uncomp_last_seg_sz - 1);
++		ealign = rd_comp_size;
++	} else {
++		ealign = rd_comp_seg_index[eblkno + 1];
++	}
++ 
++	/*
++	 * Assign the calculated parameters
++	 */
++	comp_data_sz = ealign - salign;
++	my_filep.fi_blocknum = lbtodb(salign);
++	my_filep.fi_count = comp_data_sz;
++	my_filep.fi_memp = NULL;
++
++	/*
++	 * Allocate file data buffer to support "cached" reads.
++	 */
++	if (filep->fi_dcscrbuf == NULL) {
++		filep->fi_dcscrbuf = rd_alloc_buf();
++		filep->fi_dcscrused = BUF_HEADER;
++		bzero(filep->fi_dcscrbuf, BUF_HEADER);
++	}
++
++	if (filep->fi_memp == NULL) {
++		ainfo.filep = filep;
++		bfnew = rd_alloc(&ainfo, 1, sizeof (struct rd_buflist) + filep->fi_count);
++		bfnew->type = ainfo.type;
++		bfnew->sz = sizeof (struct rd_buflist) + filep->fi_count;
++		bfhd = BUFLIST_HEAD(filep->fi_dcscrbuf);
++		if (bfhd) {
++			bfnew->next = bfhd;
++		} else {
++			bfnew->next = NULL;
++		}
++		BUFLIST_HEAD(filep->fi_dcscrbuf) = bfnew;
++		bufaddr = &bfnew->data[0];
++		filep->fi_memp = bufaddr;
++	} else {
++		bufaddr = filep->fi_memp;
++	}
++
++	/*
++	 * Do a "cached" ramdisk read to get a pointer to the compressed
++	 * segment.
++	 */
++	real_diskread(&my_filep);
++	cmpbuf = my_filep.fi_memp + sdiff;
++
++	/*
++	 * We have the compressed blocks, now process them
++	 */
++	b_resid = filep->fi_count;
++	for (i = sblkno; i < (eblkno + 1) && i < rd_comp_index_sz; i++) {
++		/*
++		 * Each of the segment index entries contains
++		 * the starting block number for that segment.
++		 * The number of compressed bytes in a segment
++		 * is thus the difference between the starting
++		 * block number of this segment and the starting
++		 * block number of the next segment.
++		 */
++		if ((i == eblkno) &&
++		    (i == rd_comp_index_sz - 1)) {
++			cmpbytes = rd_comp_size - rd_comp_seg_index[i];
++		} else {
++			cmpbytes = rd_comp_seg_index[i + 1] -
++			    rd_comp_seg_index[i];
++		}
++
++		/*
++		 * The first byte in a compressed segment is a flag
++		 * that indicates whether this segment is compressed
++		 * at all
++		 */
++		if (*cmpbuf == UNCOMPRESSED) {
++			uncompressed_seg = cmpbuf + SEGHDR;
++		} else {
++			cache_entry = get_cache_entry(i, last_count);
++			uncompressed_seg = UNCOMP_BUF(cache_entry);
++			if (!SEG_VALID(cache_entry)) {
++				seglen = rd_uncomp_seg_sz;
++				if (rd_uncompress(filep, (cmpbuf + SEGHDR),
++				    (cmpbytes - SEGHDR), uncompressed_seg,
++				    &seglen) != 0) {
++					return (-1);
++				}
++			}
++		}
++
++		/*
++		 * Determine how much uncompressed data we
++		 * have to copy and copy it
++		 */
++		xfersize = rd_uncomp_seg_sz - sblkoff;
++		if (i == eblkno) {
++			if (i == (rd_comp_index_sz - 1))
++				xfersize -= (rd_uncomp_last_seg_sz
++				    - eblkoff);
++			else
++				xfersize -=
++				    (rd_uncomp_seg_sz - eblkoff);
++		}
++
++		bcopy((uncompressed_seg + sblkoff), bufaddr, xfersize);
++		cmpbuf += cmpbytes;
++		bufaddr += xfersize;
++		b_resid -= xfersize;
++		sblkoff = 0;
++
++		if (b_resid == 0)
++			break;
++	}
++	return (0);
++}
++
++/*
+  * This one reads the ramdisk. If fi_memp is set, we copy the
+  * ramdisk content to the designated buffer. Otherwise, we
+  * do a "cached" read (set fi_memp to the actual ramdisk buffer).
+  */
+ int
+-diskread(fileid_t *filep)
++real_diskread(fileid_t *filep)
+ {
+ 	uint_t blocknum;
+ 	caddr_t diskloc;
+@@ -98,6 +625,13 @@
+ 	    "ramdisk range: 0x%llx-%llx\n", rd_start, rd_end);
+ #endif
+ 
++	/*
++	 * Initialize compression parameters if ramdisk is compressed.
++	 */
++	if (boot_rd_init_compressed() != 0) {
++		return (-1);
++	}
++
+ 	for (i = 0; bfs_tab[i] != NULL; i++) {
+ 		bfs_ops = bfs_tab[i];
+ 		if (BRD_MOUNTROOT(bfs_ops, "dummy") == 0)
+@@ -115,6 +649,7 @@
+ 		_kobj_printf(ops, "boot scratch memory used: 0x%lx\n",
+ 		    scratch_max);
+ #endif
++
+ 	(void) BRD_UNMOUNTROOT(bfs_ops);
+ }
+ 

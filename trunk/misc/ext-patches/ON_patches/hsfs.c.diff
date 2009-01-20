@@ -1,0 +1,44 @@
+--- usr/src/common/fs/hsfs.c.orig	Thu Jan  8 09:06:39 2009
++++ usr/src/common/fs/hsfs.c	Thu Jan  8 09:06:39 2009
+@@ -89,6 +89,9 @@
+ extern void cf_seek(fileid_t *, off_t, int);
+ extern int cf_read(fileid_t *, caddr_t, size_t);
+ 
++extern void rd_free_scratch(fileid_t *filep);
++extern void rd_init_scratch(fileid_t *filep);
++
+ struct dirstuff {
+ 	int loc;
+ 	fileid_t *filep;
+@@ -412,6 +415,7 @@
+ 	bzero(hsfsp, sizeof (*hsfsp));
+ 	head = bkmem_alloc(sizeof (*head));
+ 	bzero(head, sizeof (*head));
++	rd_init_scratch(head);
+ 	head->fi_back = head->fi_forw = head;
+ 
+ 	/* now read the superblock. */
+@@ -480,6 +484,7 @@
+ 
+ 	dprintf("open %s\n", str);
+ 	filep = (fileid_t *)bkmem_alloc(sizeof (fileid_t));
++	rd_init_scratch(filep);
+ 	filep->fi_back = head->fi_back;
+ 	filep->fi_forw = head;
+ 	head->fi_back->fi_forw = filep;
+@@ -525,6 +530,7 @@
+ 	}
+ 
+ 	cf_close(filep);
++	rd_free_scratch(filep);
+ 	/* unlink and deallocate node */
+ 	filep->fi_forw->fi_back = filep->fi_back;
+ 	filep->fi_back->fi_forw = filep->fi_forw;
+@@ -546,6 +552,7 @@
+ 			printf("Filesystem may be inconsistent.\n");
+ 
+ 	bkmem_free(hsfsp, sizeof (*hsfsp));
++	rd_free_scratch(head);
+ 	bkmem_free(head, sizeof (fileid_t));
+ 	hsfsp = NULL;
+ 	head = NULL;
