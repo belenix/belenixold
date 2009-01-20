@@ -1,0 +1,44 @@
+--- usr/src/common/fs/ufsops.c.orig	Sat Jul 26 08:25:53 2008
++++ usr/src/common/fs/ufsops.c	Thu Jan  8 09:06:39 2009
+@@ -48,6 +48,9 @@
+ extern void cf_seek(fileid_t *, off_t, int);
+ extern int cf_read(fileid_t *, caddr_t, size_t);
+ 
++extern void rd_free_scratch(fileid_t *filep);
++extern void rd_init_scratch(fileid_t *filep);
++
+ int bootrd_debug;
+ #ifdef _BOOT
+ #define	dprintf	if (bootrd_debug) printf
+@@ -559,6 +562,7 @@
+ 	(void) strcpy(ufs_devp->di_desc, str);
+ 	bzero(ufs_devp->un_fs.dummy, SBSIZE);
+ 	head = (fileid_t *)bkmem_alloc(sizeof (fileid_t));
++	rd_init_scratch(head);
+ 	head->fi_back = head->fi_forw = head;
+ 	head->fi_filedes = 0;
+ 	head->fi_taken = 0;
+@@ -619,6 +623,7 @@
+ 
+ 	/* build and link a new file descriptor */
+ 	filep = (fileid_t *)bkmem_alloc(sizeof (fileid_t));
++	rd_init_scratch(filep);
+ 	filep->fi_back = head->fi_back;
+ 	filep->fi_forw = head;
+ 	head->fi_back->fi_forw = filep;
+@@ -755,6 +760,7 @@
+ 		filep->fi_forw->fi_back = filep->fi_back;
+ 		filep->fi_back->fi_forw = filep->fi_forw;
+ 		cf_close(filep);
++		rd_free_scratch(filep);
+ 		bkmem_free((char *)filep, sizeof (fileid_t));
+ 
+ 		return (0);
+@@ -778,6 +784,7 @@
+ 
+ 	ufs_devp->di_taken = 0;
+ 	bkmem_free((char *)ufs_devp, sizeof (devid_t));
++	rd_free_scratch(head);
+ 	bkmem_free((char *)head, sizeof (fileid_t));
+ 	ufs_devp = (devid_t *)NULL;
+ 	head = (fileid_t *)NULL;

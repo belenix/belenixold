@@ -1,0 +1,45 @@
+--- usr/src/uts/common/sys/ramdisk.h.orig	Thu Jan  8 09:06:39 2009
++++ usr/src/uts/common/sys/ramdisk.h	Thu Jan  8 22:21:09 2009
+@@ -51,6 +51,11 @@
+ #define	RD_CTL_NODE		"ctl"
+ #define	RD_CTL_NAME		RD_DRIVER_NAME RD_CTL_NODE
+ 
++#define SEGHDR          1
++#define COMPRESSED      1
++#define UNCOMPRESSED    0
++#define MAXALGLEN       36
++
+ /*
+  * Minor number 0 is reserved for the controlling device.  All other ramdisks
+  * are assigned minor numbers 1..rd_max_disks.  The minor number is used as
+@@ -123,6 +128,7 @@
+ 
+ #define	RD_CREATE_DISK		(RD_IOC_BASE | 0x01)
+ #define	RD_DELETE_DISK		(RD_IOC_BASE | 0x02)
++#define	RD_RESCAN		(RD_IOC_BASE | 0x03)
+ 
+ #define	RD_NAME_LEN		32	/* Max length of ramdisk name */
+ #define	RD_NAME_PAD		7	/* Pad ri_name to 8-bytes */
+@@ -223,6 +229,22 @@
+ 	 */
+ 	kmutex_t	rd_kstat_lock;
+ 	kstat_t		*rd_kstat;
++
++	/* the following fields are required for compression support */
++	int		do_comp_check;
++	uint32_t	rs_uncomp_seg_sz; /* sz of uncompressed segment */
++	uint32_t	rs_comp_index_sz; /* number of index entries */
++	uint32_t	rs_comp_seg_shift; /* exponent for byte shift */
++	uint32_t	rs_uncomp_last_seg_sz; /* sz of last uncomp segment */
++	uint64_t	rs_comp_offbase; /* offset of actual compressed data */
++	caddr_t		rs_comp_index_data; /* index pages loaded from device */
++	uint32_t	rs_comp_index_data_sz;
++	u_offset_t	rs_comp_size; /* actual compressed file size */
++	u_offset_t	rs_actual_size; /* actual size in memory */
++	uint64_t 	*rs_comp_seg_index; /* array of index entries */
++	unsigned char 	**rs_uncomp_seg_index; /* array of cow-ed segments */
++	uint32_t	rs_uncomp_index_sz;
++	kmutex_t	rd_cow_lock; /* Lock for syncing COW operations */
+ } rd_devstate_t;
+ 
+ extern int	is_pseudo_device(dev_info_t *);

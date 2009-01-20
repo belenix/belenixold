@@ -1,0 +1,44 @@
+--- usr/src/common/fs/pcfs.c.orig	Thu Jan  8 09:06:39 2009
++++ usr/src/common/fs/pcfs.c	Thu Jan  8 09:06:39 2009
+@@ -76,6 +76,9 @@
+ extern void *bkmem_alloc(size_t);
+ extern void bkmem_free(void *, size_t);
+ 
++extern void rd_free_scratch(fileid_t *filep);
++extern void rd_init_scratch(fileid_t *filep);
++
+ /*
+  * NOTE: The fileread_callback is set by the calling program
+  * during a file read. diskread_callback is set to fileread_callback
+@@ -121,6 +124,7 @@
+ 
+ 	pcfsp = bkmem_alloc(sizeof (_fat_controller_t));
+ 	head = (fileid_t *)bkmem_alloc(sizeof (fileid_t));
++	rd_init_scratch(head);
+ 	head->fi_back = head->fi_forw = head;
+ 	head->fi_filedes = 0;
+ 	head->fi_taken = 0;
+@@ -213,6 +217,7 @@
+ 
+ 	dprintf("open %s\n", str);
+ 	filep = (fileid_t *)bkmem_alloc(sizeof (fileid_t));
++	rd_init_scratch(filep);
+ 	filep->fi_back = head->fi_back;
+ 	filep->fi_forw = head;
+ 	head->fi_back->fi_forw = filep;
+@@ -251,6 +256,7 @@
+ 	/* unlink and deallocate node */
+ 	filep->fi_forw->fi_back = filep->fi_back;
+ 	filep->fi_back->fi_forw = filep->fi_forw;
++	rd_free_scratch(filep);
+ 	bkmem_free(filep->fi_path, strlen(filep->fi_path) + 1);
+ 	bkmem_free((char *)filep, sizeof (fileid_t));
+ 	dprintf("close done\n");
+@@ -267,6 +273,7 @@
+ 			printf("Filesystem may be inconsistent.\n");
+ 
+ 	bkmem_free(pcfsp, sizeof (*pcfsp));
++	rd_free_scratch(head);
+ 	bkmem_free(head, sizeof (fileid_t));
+ 	pcfsp = NULL;
+ 	head = NULL;
