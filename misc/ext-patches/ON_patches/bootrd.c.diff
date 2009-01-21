@@ -1,6 +1,6 @@
---- usr/src/uts/common/krtld/bootrd.c.orig	Thu Jan  8 22:33:17 2009
-+++ usr/src/uts/common/krtld/bootrd.c	Thu Jan  8 22:35:15 2009
-@@ -30,9 +30,10 @@
+--- usr/src/uts/common/krtld/bootrd.c.orig	2009-01-22 17:11:08.068729774 +0300
++++ usr/src/uts/common/krtld/bootrd.c	2009-01-22 17:10:26.677403769 +0300
+@@ -29,9 +29,10 @@
  #include <sys/bootconf.h>
  #include <sys/bootvfs.h>
  #include <sys/filep.h>
@@ -12,7 +12,7 @@
  
  extern void (*_kobj_printf)(void *, const char *fmt, ...);
  extern int get_weakish_int(int *);
-@@ -40,21 +41,547 @@
+@@ -39,13 +40,539 @@
  extern struct boot_fs_ops bufs_ops, bhsfs_ops;
  extern int kmem_ready;
  
@@ -28,8 +28,7 @@
  struct boot_fs_ops *bfs_ops;
  struct boot_fs_ops *bfs_tab[] = {&bufs_ops, &bhsfs_ops, NULL};
  
--static uintptr_t scratch_max;
-+static uintptr_t scratch_max = 0;
+ static uintptr_t scratch_max = 0;
  
 +/* The following fields are required for compression support */
 +static uint32_t rd_uncomp_seg_sz = 0; /* size of uncompressed segment */
@@ -49,7 +48,7 @@
 +#define	MAX_DECOMP_BUFS	8
 +#define	FILEP_DECOMP_BUFSIZE	256 * 1024
 +#define	CACHE_BUFSIZE	1536 * 1024
- 
++
 +static caddr_t rd_scratch_bufs[MAX_DECOMP_BUFS];	/* array of free scratch mem bufs */
 +static int rd_free_dcomp_bufs = 0;		/* no. of free decomp bufs */
 +static int rd_decomp_bufcnt = 0;		/* no. of free decomp bufs */
@@ -64,7 +63,7 @@
 +void bkmem_free(void *p, size_t size);
 +void *bkmem_alloc(size_t size);
 +
- /*
++/*
 + * Buffer structure used to allocate linked chains of scratch buffers to
 + * support so called cached reads from a compressed ramdisk. Cached reads
 + * return direct pointers into the ramdisk area which does not make sense
@@ -550,10 +549,10 @@
 +	}
 +	return (0);
 +}
-+
-+/*
+ 
+ /*
   * This one reads the ramdisk. If fi_memp is set, we copy the
-  * ramdisk content to the designated buffer. Otherwise, we
+@@ -53,7 +580,7 @@
   * do a "cached" read (set fi_memp to the actual ramdisk buffer).
   */
  int
@@ -562,7 +561,7 @@
  {
  	uint_t blocknum;
  	caddr_t diskloc;
-@@ -98,6 +625,13 @@
+@@ -97,6 +624,13 @@
  	    "ramdisk range: 0x%llx-%llx\n", rd_start, rd_end);
  #endif
  
@@ -576,7 +575,7 @@
  	for (i = 0; bfs_tab[i] != NULL; i++) {
  		bfs_ops = bfs_tab[i];
  		if (BRD_MOUNTROOT(bfs_ops, "dummy") == 0)
-@@ -115,6 +649,7 @@
+@@ -114,6 +648,7 @@
  		_kobj_printf(ops, "boot scratch memory used: 0x%lx\n",
  		    scratch_max);
  #endif
