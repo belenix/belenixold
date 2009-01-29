@@ -1,0 +1,29 @@
+--- net-snmp/snmplib/pkcs.c	Tue Jul  3 12:35:36 2007
++++ net-snmp.mod/snmplib/pkcs.c	Fri Aug 29 13:56:33 2008
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright Copyright 2007 Sun Microsystems, Inc. All rights reserved.
++ * Copyright Copyright 2008 Sun Microsystems, Inc. All rights reserved.
+  * Use is subject to license terms specified in the COPYING file
+  * distributed with the Net-SNMP package.
+  */
+@@ -105,17 +105,11 @@
+ static int
+ free_slots(int majorID, int minorID, void *serverarg, void *clientarg)
+ {
+-    int            slotcount, i;
+-
+     (void) C_Finalize(NULL);
+ 
+     if (pSlot != NULL) {
+-        slotcount = pSlot->count;
+-        for (i = 0; i < slotcount; i++) {
+-            if (pSlot->pSession != NULL) {
+-                free(pSlot->pSession);
+-            }
+-        }
++	if (pSlot->pSession != NULL)
++		SNMP_FREE(pSlot->pSession);
+         free(pSlot);
+     }
+ 

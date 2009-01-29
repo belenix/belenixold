@@ -1,0 +1,122 @@
+#!/bin/sh
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+#ident	"@(#)run-tests	1.5	08/10/13 SMI"
+#
+# *
+# * U.S. Government Rights - Commercial software. Government users are subject
+# * to the Sun Microsystems, Inc. standard license agreement and applicable
+# * provisions of the FAR and its supplements.
+#
+# Use is subject to license terms.
+#
+# This distribution may include materials developed by third parties. Sun,
+# Sun Microsystems, the Sun logo and Solaris are trademarks or registered
+#  trademarks of Sun Microsystems, Inc. in the U.S. and other countries.
+#
+#
+
+# BUILD-SMA
+# Script to build the SMA (net-snmp) specific part of the
+# SMA project
+
+# get the arch that we are building on
+arch=`uname -p`
+
+# Set up the tools for the SFW build
+SPRO_ROOT=/ws/on10-tools/SUNWspro/SOS8/bin
+
+#save the direcoty for later
+dir=`pwd`
+
+cd net-snmp
+ROOT=$1
+
+# need to setup the path so that snmpd and
+# snmpnnn utilities are run from the proto direcotry
+#
+
+PATH=$ROOT/usr/sbin:$ROOT/usr/bin:$SPRO_ROOT:/usr/ccs/bin:/usr/bin:/usr/sbin:/sbin:/usr/bin:/usr/etc:/usr/sbin:/etc:.:/usr/dt/bin:/usr/openwin/bin
+
+
+
+L64FLAGS='-R../lib/sparcv9:-xarch=v9'
+
+export PERLPROG
+export PATH
+export LD_LIBRARY_PATH
+
+#dryrun=echo
+#shdebug='sh -x '
+
+#default compiler
+compiler="cc"
+
+
+for compiler in cc ; do
+
+  arch=`uname -p`
+  if [ "$arch" = "i386" ]; then 
+    isa_list=32
+  else
+    isa_list="32 64"
+  fi
+
+  for isa in $isa_list ; do
+
+curdir=`pwd`
+
+	target=`./config.guess`
+	tag="${isa}"
+
+	testdir=${target}_${tag}
+
+	cd targets/$testdir/testing
+
+
+echo "=================================================================="
+echo "===================== Running Make for $isa ======================"
+echo "=================================================================="
+echo ""
+echo ""
+
+
+	./RUNTESTS -a > test.out 2>&1
+	if [ $? -ne 0 ]; then
+		echo ""
+		echo "=================================================================="
+	    	echo "=======      Tests failed for $isa architecture ===================="
+	   	echo "=======          see test.out in $testdir ================="
+		echo "=================================================================="
+		echo ""
+#		exit 1
+	fi
+
+    cd $curdir
+
+
+    done
+
+  done

@@ -1,0 +1,61 @@
+--- net-snmp/agent/mibgroup/kernel_sunos5.c	Fri Nov  2 04:58:55 2007
++++ net-snmp.mod/agent/mibgroup/kernel_sunos5.c	Mon Jul 21 12:10:05 2008
+@@ -4,7 +4,7 @@
+  */
+ /*
+  * Portions of this file are copyrighted by:
+- * Copyright 2007 Sun Microsystems, Inc. All rights reserved.
++ * Copyright 2008 Sun Microsystems, Inc. All rights reserved.
+  * Use is subject to license terms specified in the COPYING file
+  * distributed with the Net-SNMP package.
+  */
+@@ -57,6 +57,7 @@
+ #include <inet/ip.h>
+ #include <net/if.h>
+ #include <netinet/in.h>
++#include <libdlpi.h>
+ 
+ /*-
+  * Includes of local application header files 
+@@ -898,6 +899,7 @@
+     kstat_t *ksp1;
+     kstat_named_t *knp;
+     unsigned long int link = 0;
++    char tmp_ifname[DLPI_LINKNAME_MAX] = NULL;
+ 
+     if ((ifsd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+ 	return -1;
+@@ -959,19 +961,25 @@
+ 	ifp->ifType = 6;
+ 	ifp->ifSpeed = 0;
+ 
+-	if ((getKstatInt(NULL,ifrp->ifr_name, "ifspeed", &ifp->ifSpeed) == 0) &&
+-	    (ifp->ifSpeed != 0)) {
+-	    /*
+-	     * check for SunOS patch with half implemented ifSpeed 
+-	     */
+-	    if (ifp->ifSpeed < 10000) {
+-                    ifp->ifSpeed *= 1000000;
+-	    }
++	if (strchr(ifrp->ifr_name,':') != NULL) {
++		strcpy(tmp_ifname,ifrp->ifr_name);
++		strtok(tmp_ifname,":");
++		getKstatInt(NULL,tmp_ifname,"ifspeed", &ifp->ifSpeed);
++	} else {
++		if ((getKstatInt(NULL,ifrp->ifr_name, "ifspeed", &ifp->ifSpeed) == 0) &&
++	    		(ifp->ifSpeed != 0)) {
++	    		/*
++			 * check for SunOS patch with half implemented ifSpeed 
++	     		 */
++	    		if (ifp->ifSpeed < 10000) {
++                    		ifp->ifSpeed *= 1000000;
++	    		}
+ 	} else if (getKstatInt(NULL,ifrp->ifr_name, "ifSpeed", &ifp->ifSpeed) == 0) {
+ 	    /*
+ 	     * this is good 
+ 	     */
+ 	}
++	}
+ 
+ 	for (pm = lmatch_if; pm->mi_name; pm++) {
+ 	  len = strlen(pm->mi_name);
