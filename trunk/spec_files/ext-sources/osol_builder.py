@@ -544,6 +544,9 @@ merge=/opt/onbld/bin/hgmerge"""
 						continue
 		
 					pentry = ln.split()
+					if pentry[2].find("usr/openwin") > -1:
+						continue
+
 					if len(pentry) >= 3 and pentry[2] in ign_list:
 						pfo.write(line)
 						continue

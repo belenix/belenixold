@@ -1,0 +1,11 @@
+--- sun/agent/modules/seaExtensions/sunHostPerf.c	Thu Jun 12 23:17:19 2008
++++ sun.mod/agent/modules/seaExtensions/sunHostPerf.c	Thu Jun 12 23:15:15 2008
+@@ -25,7 +25,7 @@
+ 
+ #include "sunHostPerf.h"
+ 
+-int hp_cache_lifetime = 45;
++int hp_cache_lifetime = 5;
+ time_t rs_cache_time = 0;
+ time_t hp_cache_now = 0;
+ static struct statstime sts;

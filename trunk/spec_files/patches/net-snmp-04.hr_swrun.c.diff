@@ -1,0 +1,24 @@
+--- net-snmp/agent/mibgroup/host/hr_swrun.c	Wed Oct 24 11:32:31 2007
++++ net-snmp.mod/agent/mibgroup/host/hr_swrun.c	Wed Nov 26 15:35:25 2008
+@@ -4,7 +4,7 @@
+  */
+ /*
+  * Portions of this file are copyrighted by:
+- * Copyright 2007 Sun Microsystems, Inc. All rights reserved.
++ * Copyright 2008 Sun Microsystems, Inc. All rights reserved.
+  * Use is subject to license terms specified in the COPYING file
+  * distributed with the Net-SNMP package.
+  */
+@@ -1263,6 +1263,12 @@
+         while ((dp = readdir(f)) != NULL && current_proc_entry < nproc)
+             if (dp->d_name[0] != '.')
+                 proc_table[current_proc_entry++] = atoi(dp->d_name);
++        /*
++         * if we are in a Solaris zone, nproc > current_proc_entry !
++         * but we only want the processes from the local zone
++         */
++        if (current_proc_entry != nproc)
++            nproc = current_proc_entry;
+         closedir(f);
+     }
+ #elif HAVE_KVM_GETPROCS

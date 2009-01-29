@@ -1,0 +1,878 @@
+--- sun/Makefile	Wed Jan 21 10:09:28 2004
++++ sun/Makefile	Wed Oct 29 23:23:21 2008
+@@ -1,5 +1,6 @@
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -63,7 +64,7 @@
+ 	$(CC) $< -o $@
+ 
+ misc_install: buildrevs
+-	cp $(BUILDREV_PROGS) $(SCRIPT_PROG) $(ROOT)/usr/sfw/lib/sma_snmp
++	cp $(BUILDREV_PROGS) $(SCRIPT_PROG) $(ROOT)/usr/lib/sma_snmp
+ 
+ subdirs:
+ 	echo "SUBDIRS:  $(MAKE) CC=$(CC) DEBUG=$(DEBUG) ARCH=$(ARCH)" ; 
+--- sun/masfcnv	Fri Jan  9 06:07:55 2004
++++ sun/masfcnv	Tue Oct  7 14:28:18 2008
+@@ -395,7 +395,7 @@
+ # location where template files, etc. are stored.
+ *LOG_FILE = \"/tmp/sma_migration.log";
+ *INTERNET_OID = \".1.3.6.1";
+-*DATA_DIR = \"/usr/sfw/lib/sma_snmp";
++*DATA_DIR = \"/usr/lib/sma_snmp";
+ *FILTER_TYPE_INCLUDED = \1;
+ *FILTER_TYPE_EXCLUDED = \2;
+ *ENTITY_MIB_OID = \".1.3.6.1.2.1.47";
+@@ -3267,7 +3267,7 @@
+ $::MASF_PERSISTENT_FILE = "/var/opt/SUNWmasf/snmpd.dat";
+ $::MASF_PERSISTENT_DIR = "/var/opt/SUNWmasf";
+ 
+-@::SMA_CONFIG_FILES = ("/usr/sfw/lib/sma_snmp/snmpd.conf");
++@::SMA_CONFIG_FILES = ("/usr/lib/sma_snmp/snmpd.conf");
+ $::SMA_PERSISTENT_FILE = "/var/sma_snmp/snmpd.conf";
+ $::SMA_PERSISTENT_DIR = "/var/sma_snmp";
+ sma_config_sanity_check();
+--- sun/agent/modules/entityMib/Makefile	Tue Jan  3 04:12:11 2006
++++ sun/agent/modules/entityMib/Makefile	Wed Oct 29 23:48:14 2008
+@@ -1,5 +1,5 @@
+ #
+-# Copyright 2006 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc. All rights reserved.
+ # Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+@@ -25,9 +25,9 @@
+ #
+ 
+ MARCH=$(ARCH)
+-LDFLAGS_64=-xarch=v9  -I$(ROOT)/usr/sfw/include -I.
+-LDFLAGS_32=-I$(ROOT)/usr/sfw/include -I.
+-LDFLAGS_amd64=-xarch=amd64 -I$(ROOT)/usr/sfw/include -I.
++LDFLAGS_64=-xarch=v9  -I$(ROOT)/usr/include -I.
++LDFLAGS_32=-I$(ROOT)/usr/include -I.
++LDFLAGS_amd64=-xarch=amd64 -I$(ROOT)/usr/include -I.
+ LDFLAGS=$(LDFLAGS_$(MARCH))
+ 
+ LDLIBS=
+@@ -66,11 +66,11 @@
+ 
+ install:
+ 	if test "$(ARCH)" = "64" ; then \
+-		cp $(PROG) $(ROOT)/usr/sfw/lib/sparcv9; \
++		cp $(PROG) $(ROOT)/usr/lib/sparcv9; \
+ 	elif test "$(ARCH)" = "32" ; then \
+-		cp $(PROG) $(ROOT)/usr/sfw/lib; \
++		cp $(PROG) $(ROOT)/usr/lib; \
+ 	elif test "$(ARCH)" = "amd64" ; then \
+-		cp $(PROG) $(ROOT)/usr/sfw/lib/amd64; \
++		cp $(PROG) $(ROOT)/usr/lib/amd64; \
+ 	fi
+ 
+ #all
+--- sun/agent/modules/healthMonitor/Makefile	Tue Jan  3 04:12:34 2006
++++ sun/agent/modules/healthMonitor/Makefile	Wed Oct 29 23:48:42 2008
+@@ -1,5 +1,5 @@
+ #
+-# Copyright 2006 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc. All rights reserved.
+ # Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+@@ -26,9 +26,9 @@
+ 
+ 
+ MARCH=$(ARCH)
+-LDFLAGS_64=-xarch=v9  -I$(ROOT)/usr/sfw/include -I.
+-LDFLAGS_32=-I$(ROOT)/usr/sfw/include -I.
+-LDFLAGS_amd64=-xarch=amd64 -I$(ROOT)/usr/sfw/include -I.
++LDFLAGS_64=-xarch=v9  -I$(ROOT)/usr/include -I.
++LDFLAGS_32=-I$(ROOT)/usr/include -I.
++LDFLAGS_amd64=-xarch=amd64 -I$(ROOT)/usr/include -I.
+ LDFLAGS=$(LDFLAGS_$(MARCH))
+ 
+ CFLAGS_32=-Kpic
+--- sun/agent/modules/seaExtensions/Makefile	Tue Jan  3 04:13:07 2006
++++ sun/agent/modules/seaExtensions/Makefile	Wed Oct 29 23:49:01 2008
+@@ -1,6 +1,6 @@
+ 
+ #
+-# Copyright 2006 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc. All rights reserved.
+ # Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+@@ -27,9 +27,9 @@
+ 
+ 
+ MARCH=$(ARCH)
+-LDFLAGS_64=-xarch=v9  -I$(ROOT)/usr/sfw/include -I.
+-LDFLAGS_32=-I$(ROOT)/usr/sfw/include -I.
+-LDFLAGS_amd64=-Kpic -xarch=amd64 -I$(ROOT)/usr/sfw/include -I.
++LDFLAGS_64=-xarch=v9  -I$(ROOT)/usr/include -I.
++LDFLAGS_32=-I$(ROOT)/usr/include -I.
++LDFLAGS_amd64=-Kpic -xarch=amd64 -I$(ROOT)/usr/include -I.
+ LDFLAGS=$(LDFLAGS_$(MARCH))
+ 
+ CFLAGS_32=-Kpic
+@@ -58,9 +58,9 @@
+ 
+ install:
+ 	if test "$(ARCH)" = "64" ; then \
+-		cp $(PROG) $(ROOT)/usr/sfw/lib/sparcv9; \
++		cp $(PROG) $(ROOT)/usr/lib/sparcv9; \
+ 	elif test "$(ARCH)" = "32" ; then \
+-		cp $(PROG) $(ROOT)/usr/sfw/lib; \
++		cp $(PROG) $(ROOT)/usr/lib; \
+ 	elif test "$(ARCH)" = "amd64" ; then \
+-		cp $(PROG) $(ROOT)/usr/sfw/lib/amd64; \
++		cp $(PROG) $(ROOT)/usr/lib/amd64; \
+ 	fi
+--- sun/agent/modules/seaProxy/Makefile	Tue Jan  3 04:13:26 2006
++++ sun/agent/modules/seaProxy/Makefile	Wed Oct 29 23:49:32 2008
+@@ -1,6 +1,5 @@
+-
+ #
+-# Copyright 2006 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc. All rights reserved.
+ # Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+@@ -27,9 +26,9 @@
+ 
+ 
+ ARCHT=$(ARCH)
+-LDFLAGS_64=-xarch=v9  -I$(ROOT)/usr/sfw/include -I.
+-LDFLAGS_32=-I$(ROOT)/usr/sfw/include -I.
+-LDFLAGS_amd64=-xarch=amd64 -I$(ROOT)/usr/sfw/include -I.
++LDFLAGS_64=-xarch=v9  -I$(ROOT)/usr/include -I.
++LDFLAGS_32=-I$(ROOT)/usr/include -I.
++LDFLAGS_amd64=-xarch=amd64 -I$(ROOT)/usr/include -I.
+ LDFLAGS=$(LDFLAGS_$(ARCHT))
+ 
+ CFLAGS_32=-Kpic
+@@ -57,10 +56,10 @@
+ 
+ install:
+ 	if test "$(ARCH)" = "64" ; then \
+-		cp $(PROG) $(ROOT)/usr/sfw/lib/sparcv9; \
++		cp $(PROG) $(ROOT)/usr/lib/sparcv9; \
+ 	elif test "$(ARCH)" = "32" ; then \
+-		cp $(PROG) $(ROOT)/usr/sfw/lib; \
++		cp $(PROG) $(ROOT)/usr/lib; \
+ 	elif test "$(ARCH)" = "amd64" ; then \
+-		cp $(PROG) $(ROOT)/usr/sfw/lib/amd64; \
++		cp $(PROG) $(ROOT)/usr/lib/amd64; \
+ 	fi
+ 
+--- sun/sdk/demo/demo_module_1/Makefile	Fri Jan  9 06:08:11 2004
++++ sun/sdk/demo/demo_module_1/Makefile	Wed Oct 29 23:50:25 2008
+@@ -1,5 +1,6 @@
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -25,8 +26,8 @@
+ #
+ 
+ ARCH=64
+-LDFLAGS_64=-g -xarch=v9  -I/usr/sfw/include -I.
+-LDFLAGS_32=-g -I/usr/sfw/include -I.
++LDFLAGS_64=-g -xarch=v9  -I.
++LDFLAGS_32=-g -I.
+ LDFLAGS=$(LDFLAGS_$(ARCH))
+ 
+ LDLIBS=
+--- sun/sdk/demo/demo_module_1/README_demo_module_1	Fri Apr  9 21:09:57 2004
++++ sun/sdk/demo/demo_module_1/README_demo_module_1	Tue Oct  7 14:29:13 2008
+@@ -76,7 +76,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+       
+ 
+ 
+@@ -172,7 +172,7 @@
+    For example:
+    
+     # /etc/init.d/init.sma stop
+-    # /usr/sfw/sbin/snmpd -Ddemo_module_1
++    # /usr/sbin/snmpd -Ddemo_module_1
+     
+     The optional -Ddemo_module_1 argument sends debugging statements 
+     from demo_module_1 to the /var/log/snmpd.log file. 
+--- sun/sdk/demo/demo_module_10/Makefile	Fri Jan  9 06:08:13 2004
++++ sun/sdk/demo/demo_module_10/Makefile	Wed Oct 29 23:50:43 2008
+@@ -1,6 +1,6 @@
+-
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -27,8 +27,8 @@
+ 
+ 
+ ARCH=64
+-LDFLAGS_64=-g -xarch=v9  -I/usr/sfw/include -I.
+-LDFLAGS_32=-g -I/usr/sfw/include -I.
++LDFLAGS_64=-g -xarch=v9  -I.
++LDFLAGS_32=-g -I.
+ LDFLAGS=$(LDFLAGS_$(ARCH))
+ 
+ LDLIBS=
+--- sun/sdk/demo/demo_module_10/README_demo_module_10	Fri Apr  9 21:10:00 2004
++++ sun/sdk/demo/demo_module_10/README_demo_module_10	Tue Oct  7 14:36:14 2008
+@@ -89,7 +89,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+    
+    
+ To build the example:
+@@ -142,7 +142,7 @@
+    For example:
+    
+    # /etc/init.d/init.sma stop
+-   # /usr/sfw/sbin/snmpd -Ddemo_module_10
++   # /usr/sbin/snmpd -Ddemo_module_10
+     
+    The optional -Ddemo_module_10 argument sends debugging statements from 
+    demo_module_10 to the /var/log/snmpd.log file. You can also use the -L 
+--- sun/sdk/demo/demo_module_10/get_data	Fri Jan  9 06:08:15 2004
++++ sun/sdk/demo/demo_module_10/get_data	Tue Oct  7 14:36:35 2008
+@@ -14,4 +14,4 @@
+ #
+ #
+ 
+-/usr/sfw/bin/snmpget -m+SDK-DEMO10-MIB -v 1 -c public localhost .1.3.6.1.4.1.42.2.2.4.4.10.1.1.0
++/usr/bin/snmpget -m+SDK-DEMO10-MIB -v 1 -c public localhost .1.3.6.1.4.1.42.2.2.4.4.10.1.1.0
+--- sun/sdk/demo/demo_module_10/get_refreshtime	Fri Jan  9 06:08:16 2004
++++ sun/sdk/demo/demo_module_10/get_refreshtime	Tue Oct  7 14:37:22 2008
+@@ -14,4 +14,4 @@
+ #
+ #
+ 
+-/usr/sfw/bin/snmpget -m+SDK-DEMO10-MIB -v 1 -c public localhost .1.3.6.1.4.1.42.2.2.4.4.10.1.3.0
++/usr/bin/snmpget -m+SDK-DEMO10-MIB -v 1 -c public localhost .1.3.6.1.4.1.42.2.2.4.4.10.1.3.0
+--- sun/sdk/demo/demo_module_10/get_status	Fri Jan  9 06:08:17 2004
++++ sun/sdk/demo/demo_module_10/get_status	Tue Oct  7 14:36:21 2008
+@@ -14,4 +14,4 @@
+ #
+ #
+ 
+-/usr/sfw/bin/snmpget -m+SDK-DEMO10-MIB -t 10 -v 1 -c public localhost .1.3.6.1.4.1.42.2.2.4.4.10.1.2.0
++/usr/bin/snmpget -m+SDK-DEMO10-MIB -t 10 -v 1 -c public localhost .1.3.6.1.4.1.42.2.2.4.4.10.1.2.0
+--- sun/sdk/demo/demo_module_10/set_status	Fri Jan  9 06:08:18 2004
++++ sun/sdk/demo/demo_module_10/set_status	Tue Oct  7 14:37:34 2008
+@@ -14,5 +14,5 @@
+ #
+ #
+ 
+-/usr/sfw/bin/snmpset -m+SDK-DEMO10-MIB -t 20 -v 1 -c private localhost .1.3.6.1.4.1.42.2.2.4.4.10.1.2.0 i 0
++/usr/bin/snmpset -m+SDK-DEMO10-MIB -t 20 -v 1 -c private localhost .1.3.6.1.4.1.42.2.2.4.4.10.1.2.0 i 0
+ 
+--- sun/sdk/demo/demo_module_10/walk_demo_module_10	Fri Jan  9 06:08:18 2004
++++ sun/sdk/demo/demo_module_10/walk_demo_module_10	Tue Oct  7 14:37:51 2008
+@@ -15,5 +15,5 @@
+ #
+ #command to walk to SYSTEM table
+ 
+-/usr/sfw/bin/snmpwalk -mALL -v 1 -c public localhost system
++/usr/bin/snmpwalk -mALL -v 1 -c public localhost system
+ 
+--- sun/sdk/demo/demo_module_11/Makefile	Fri Jan  9 06:08:20 2004
++++ sun/sdk/demo/demo_module_11/Makefile	Wed Oct 29 23:51:29 2008
+@@ -1,6 +1,6 @@
+-
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -27,12 +27,12 @@
+ #
+ 
+ ARCH=64
+-CFLAGS_64=-g -xarch=v9  -I/usr/sfw/include -I/usr/sfw/include/sma_snmp -I.
+-CFLAGS_32=-g -I/usr/sfw/include -I/usr/sfw/include/sma_snmp -I.
++CFLAGS_64=-g -xarch=v9  -I/usr/include/sma_snmp -I.
++CFLAGS_32=-g -I/usr/include/sma_snmp -I.
+ CFLAGS=$(CFLAGS_$(ARCH))
+ 
+-LDLIBS_64= -B dynamic -L /usr/sfw/lib/sparcv9 -l entity
+-LDLIBS_32= -B dynamic -L /usr/sfw/lib	-l entity
++LDLIBS_64= -B dynamic -L /usr/lib/sparcv9 -l entity
++LDLIBS_32= -B dynamic -l entity
+ LDLIBS=$(LDLIBS_$(ARCH))
+ 
+ PROG= demo_module_11.so
+--- sun/sdk/demo/demo_module_11/README_demo_module_11	Fri Apr  9 21:10:02 2004
++++ sun/sdk/demo/demo_module_11/README_demo_module_11	Tue Oct  7 14:31:16 2008
+@@ -424,7 +424,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+       
+     
+ 
+@@ -462,7 +462,7 @@
+ 1. As root, edit the agent's configuration file /etc/sma/snmp/snmpd.conf.
+    Look for a line similar to the following:
+ 
+-   dlmod entity /usr/sfw/lib/sparcv9/libentity.so
++   dlmod entity /usr/lib/sparcv9/libentity.so
+    
+    This line causes the agent to load the API library that you need to use
+    the Entity MIB functions.  
+@@ -469,7 +469,7 @@
+    
+    If the line is missing, insert it.  Note that if you are using a 32-bit 
+    module, you should load the 32-bit library, located in 
+-   /usr/sfw/lib/libentity.so.
++   /usr/lib/libentity.so.
+    
+    
+ 2. After the dlmod line for the libentity.so, insert a dlmod statement for 
+@@ -484,7 +484,7 @@
+    For example:
+    
+    # /etc/init.d/init.sma stop
+-   # /usr/sfw/sbin/snmpd -Ddemo_module_11
++   # /usr/sbin/snmpd -Ddemo_module_11
+     
+    The optional -Ddemo_module_11 argument sends debugging statements from  
+    demo_module_11 to the /var/log/snmpd.log file. You can also use the -L 
+--- sun/sdk/demo/demo_module_12/README_demo_module_12	Fri Apr  9 21:10:03 2004
++++ sun/sdk/demo/demo_module_12/README_demo_module_12	Tue Oct  7 14:28:35 2008
+@@ -64,7 +64,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+       
+ 
+ 4. Change to the directory where you copied the demo_module_12 files.
+--- sun/sdk/demo/demo_module_12/runmib2c	Fri Jan  9 06:08:23 2004
++++ sun/sdk/demo/demo_module_12/runmib2c	Tue Oct  7 14:28:45 2008
+@@ -1,2 +1,2 @@
+-/usr/sfw/bin/mib2c -c mib2c.scalar.conf scalarTypes
+-/usr/sfw/bin/mib2c -c mib2c.iterate.conf tableType
++/usr/bin/mib2c -c mib2c.scalar.conf scalarTypes
++/usr/bin/mib2c -c mib2c.iterate.conf tableType
+--- sun/sdk/demo/demo_module_2/Makefile	Fri Jan  9 06:08:25 2004
++++ sun/sdk/demo/demo_module_2/Makefile	Wed Oct 29 23:51:54 2008
+@@ -1,5 +1,6 @@
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -25,8 +26,8 @@
+ #
+ 
+ ARCH=64
+-LDFLAGS_64=-g -xarch=v9  -I/usr/sfw/include -I.
+-LDFLAGS_32=-g -I/usr/sfw/include -I.
++LDFLAGS_64=-g -xarch=v9  -I.
++LDFLAGS_32=-g -I.
+ LDFLAGS=$(LDFLAGS_$(ARCH))
+ 
+ LDLIBS=
+--- sun/sdk/demo/demo_module_2/README_demo_module_2	Fri Apr  9 21:10:05 2004
++++ sun/sdk/demo/demo_module_2/README_demo_module_2	Tue Oct  7 14:33:08 2008
+@@ -82,7 +82,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+    
+    
+ 
+@@ -175,7 +175,7 @@
+    For example:
+    
+     # /etc/init.d/init.sma stop
+-    # /usr/sfw/sbin/snmpd -Ddemo_module_2
++    # /usr/sbin/snmpd -Ddemo_module_2
+     
+     The optional -Ddemo_module_2 argument sends debugging statements from 
+     demo_module_2 to the /var/log/snmpd.log file. You can also use 
+--- sun/sdk/demo/demo_module_3/Makefile	Fri Jan  9 06:08:28 2004
++++ sun/sdk/demo/demo_module_3/Makefile	Wed Oct 29 23:52:17 2008
+@@ -1,5 +1,7 @@
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
+ #
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
++#
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+ # provisions of the FAR and its supplements.
+@@ -24,8 +26,8 @@
+ #
+ 
+ ARCH=64
+-LDFLAGS_64=-g -xarch=v9  -I/usr/sfw/include -I.
+-LDFLAGS_32=-g -I/usr/sfw/include -I.
++LDFLAGS_64=-g -xarch=v9  -I.
++LDFLAGS_32=-g -I.
+ LDFLAGS=$(LDFLAGS_$(ARCH))
+ 
+ LDLIBS=
+--- sun/sdk/demo/demo_module_3/README_demo_module_3	Fri Apr  9 21:10:07 2004
++++ sun/sdk/demo/demo_module_3/README_demo_module_3	Tue Oct  7 14:38:31 2008
+@@ -100,7 +100,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+       
+ 
+ 
+@@ -207,7 +207,7 @@
+    For example:
+    
+     # /etc/init.d/init.sma stop
+-    # /usr/sfw/sbin/snmpd -Ddemo_module_3
++    # /usr/sbin/snmpd -Ddemo_module_3
+     
+     The optional -Ddemo_module_3 argument sends debugging statements from 
+     demo_module_3 to the /var/log/snmpd.log file. You can also use 
+--- sun/sdk/demo/demo_module_4/Makefile	Fri Jan  9 06:08:30 2004
++++ sun/sdk/demo/demo_module_4/Makefile	Wed Oct 29 23:40:32 2008
+@@ -1,6 +1,6 @@
+-
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -27,8 +27,8 @@
+ #
+ 
+ ARCH=64
+-CFLAGS_64=-g -xarch=v9  -I/usr/sfw/include -I.
+-CFLAGS_32=-g -I/usr/sfw/include -I.
++CFLAGS_64=-g -xarch=v9  -I.
++CFLAGS_32=-g -I.
+ CFLAGS=$(CFLAGS_$(ARCH))
+ 
+ LDLIBS=
+--- sun/sdk/demo/demo_module_4/README_demo_module_4	Fri Apr  9 21:10:09 2004
++++ sun/sdk/demo/demo_module_4/README_demo_module_4	Tue Oct  7 14:36:05 2008
+@@ -77,7 +77,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+    
+       
+ 
+@@ -140,7 +140,7 @@
+    For example:
+    
+     # /etc/init.d/init.sma stop
+-    # /usr/sfw/sbin/snmpd -Ddemo_module_4
++    # /usr/sbin/snmpd -Ddemo_module_4
+     
+     The optional -Ddemo_module_4 argument sends debugging statements from 
+     demo_module_4 to the /var/log/snmpd.log file. You can also use 
+@@ -187,7 +187,7 @@
+    For example, this command starts snmpdtrapd and specifies the format
+    of the output to stderr:
+    
+-   # /usr/sfw/sbin/snmptrapd -P -F "TRAP from %B on %m/%l/%y at %h:%j:%k \
++   # /usr/sbin/snmptrapd -P -F "TRAP from %B on %m/%l/%y at %h:%j:%k \
+      Enterprise=%N Type=%w SubType=%q \nwith Varbinds: %v \n\n" localhost:162
+    
+    2003-06-20 12:37:53 NET-SNMP version 5.0.8 Started.
+--- sun/sdk/demo/demo_module_5/Makefile	Fri Jan  9 06:08:32 2004
++++ sun/sdk/demo/demo_module_5/Makefile	Wed Oct 29 23:52:42 2008
+@@ -1,5 +1,6 @@
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -26,8 +27,8 @@
+ #
+ 
+ ARCH=64
+-CFLAGS_64=-g -xarch=v9  -I/usr/sfw/include -I.
+-CFLAGS_32=-g -I/usr/sfw/include -I.
++CFLAGS_64=-g -xarch=v9  -I.
++CFLAGS_32=-g -I.
+ CFLAGS=$(CFLAGS_$(ARCH))
+ 
+ LDLIBS=
+--- sun/sdk/demo/demo_module_5/README_demo_module_5	Fri Apr  9 21:10:11 2004
++++ sun/sdk/demo/demo_module_5/README_demo_module_5	Tue Oct  7 14:33:28 2008
+@@ -88,7 +88,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+    
+    
+ To build the example:
+@@ -141,7 +141,7 @@
+    For example:
+    
+    # /etc/init.d/init.sma stop
+-   # /usr/sfw/sbin/snmpd -Ddemo_module_5
++   # /usr/sbin/snmpd -Ddemo_module_5
+     
+    The optional -Ddemo_module_5 argument sends debugging statements from 
+    demo_module_5 to the /var/log/snmpd.log file. You can also use the -L 
+@@ -178,7 +178,7 @@
+    .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.1.2 = Gauge32: 2
+    .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.1.3 = Gauge32: 3
+    .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.1.4 = Gauge32: 4
+-   .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.2.1 = STRING: "/usr/sfw/sbin/snmpd"
++   .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.2.1 = STRING: "/usr/sbin/snmpd"
+    .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.2.2 = STRING: "/tmp/asdf"
+    .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.2.3 = STRING: "/etc/hosts"
+    .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.2.4 = STRING: "/etc/sma/snmp/snmp.conf" 
+@@ -229,7 +229,7 @@
+    For example:
+    
+    # /etc/init.d/init.sma restart
+-   # /usr/sfw/bin/snmpwalk -v1 -c public localhost 1.3.6.1.4.1.42.2.2.4.4.5
++   # /usr/bin/snmpwalk -v1 -c public localhost 1.3.6.1.4.1.42.2.2.4.4.5
+    .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.1.1 = Gauge32: 1
+    .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.1.2 = Gauge32: 2
+    .1.3.6.1.4.1.42.2.2.4.4.5.2.1.1.1.3 = Gauge32: 3
+--- sun/sdk/demo/demo_module_6/Makefile	Fri Jan  9 06:08:34 2004
++++ sun/sdk/demo/demo_module_6/Makefile	Wed Oct 29 23:53:44 2008
+@@ -1,5 +1,6 @@
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -25,21 +26,21 @@
+ #
+ 
+ ARCH=64
+-LIB32=/usr/sfw/lib
+-LIB64=/usr/sfw/lib/sparcv9
++LIB32=/usr/lib
++LIB64=/usr/lib/sparcv9
+ LD=/usr/ccs/bin/ld
+ 
+ OBJS1=demo_module_6.so
+ TARGETS=demo_module_6.so
+ 
+-#CFLAGS_64=-g -I. -Dsolaris_2 -xarch=v9 -I/usr/sfw/include
+-CFLAGS_64=-I. -Dsolaris_2 -xarch=v9 -I/usr/sfw/include
+-#CFLAGS_32=-g -I. -Dsolaris_2 -I/usr/sfw/include
+-CFLAGS_32=-I. -Dsolaris_2 -I/usr/sfw/include
++#CFLAGS_64=-g -I. -Dsolaris_2 -xarch=v9 
++CFLAGS_64=-I. -Dsolaris_2 -xarch=v9 
++#CFLAGS_32=-g -I. -Dsolaris_2 
++CFLAGS_32=-I. -Dsolaris_2 
+ CFLAGS=$(CFLAGS_$(ARCH))
+ 
+-BUILDAGENTLIBS_64=-L/usr/lib -R../lib -L$(LIB64) -lnetsnmpagent -lnetsnmpmibs -l netsnmphelpers -lnetsnmp -ldl -lkvm -lz  -lpkcs11 -lkstat -lelf -lm -ldl -lnsl -lsocket -ladm
+-BUILDAGENTLIBS_32=-L/usr/lib -R../lib -L$(LIB32) -lnetsnmpagent -lnetsnmpmibs -l netsnmphelpers -lnetsnmp  -ldl -lkvm -lz  -lpkcs11 -lkstat -lelf -lm -ldl -lnsl -lsocket -ladm
++BUILDAGENTLIBS_64=-R../lib -L$(LIB64) -lnetsnmpagent -lnetsnmpmibs -l netsnmphelpers -lnetsnmp -ldl -lkvm -lz  -lpkcs11 -lkstat -lelf -lm -ldl -lnsl -lsocket -ladm
++BUILDAGENTLIBS_32=-R../lib -L$(LIB32) -lnetsnmpagent -lnetsnmpmibs -l netsnmphelpers -lnetsnmp  -ldl -lkvm -lz  -lpkcs11 -lkstat -lelf -lm -ldl -lnsl -lsocket -ladm
+ BUILDAGENTLIBS=$(BUILDAGENTLIBS_$(ARCH))
+ 
+ 
+--- sun/sdk/demo/demo_module_6/README_demo_module_6	Fri Apr  9 21:10:15 2004
++++ sun/sdk/demo/demo_module_6/README_demo_module_6	Tue Oct  7 14:31:05 2008
+@@ -88,7 +88,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+    
+ 
+ To build the example:
+@@ -141,7 +141,7 @@
+     Note that you should use "myuser" and "mypassword" -- do not replace with
+     other values because the test script expects these values.
+  
+-    # /usr/sfw/bin/net-snmp-config --create-snmpv3-user myuser
++    # /usr/bin/net-snmp-config --create-snmpv3-user myuser
+  
+     Enter authentication pass-phrase: 
+     mypassword
+@@ -162,7 +162,7 @@
+  4. Start the SMA snmp agent in debug mode.
+     For example:
+    
+-    # /usr/sfw/sbin/snmpd -Ddemo_module_6
++    # /usr/sbin/snmpd -Ddemo_module_6
+     
+     The optional -Ddemo_module_6 argument sends debugging statements from 
+     demo_module_6 to the /var/log/snmpd.log file. You can also use the -L 
+--- sun/sdk/demo/demo_module_6/get_demo_module_6	Fri Jan  9 06:08:37 2004
++++ sun/sdk/demo/demo_module_6/get_demo_module_6	Tue Oct  7 14:30:55 2008
+@@ -14,5 +14,5 @@
+ #
+ #
+ 
+-/usr/sfw/bin/snmpget -mALL -v 3 -u myuser -n "fileX" -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.1.0
+-/usr/sfw/bin/snmpget -mALL -v 3 -u myuser -n "fileY" -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.1.0
++/usr/bin/snmpget -mALL -v 3 -u myuser -n "fileX" -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.1.0
++/usr/bin/snmpget -mALL -v 3 -u myuser -n "fileY" -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.1.0
+--- sun/sdk/demo/demo_module_7/Makefile	Fri Jan  9 06:08:38 2004
++++ sun/sdk/demo/demo_module_7/Makefile	Wed Oct 29 23:54:04 2008
+@@ -1,6 +1,6 @@
+-
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -27,8 +27,8 @@
+ 
+ 
+ ARCH=64
+-LDFLAGS_64=-g -xarch=v9  -I/usr/sfw/include -I.
+-LDFLAGS_32=-g -I/usr/sfw/include -I.
++LDFLAGS_64=-g -xarch=v9  -I.
++LDFLAGS_32=-g -I.
+ LDFLAGS=$(LDFLAGS_$(ARCH))
+ 
+ LDLIBS=
+--- sun/sdk/demo/demo_module_7/README_demo_module_7	Fri Apr  9 21:10:17 2004
++++ sun/sdk/demo/demo_module_7/README_demo_module_7	Tue Oct  7 14:34:49 2008
+@@ -36,7 +36,7 @@
+ the file name to the module by issuing an snmpset command, such as the 
+ following:
+ 
+-	/usr/sfw/bin/snmpset -v 3 -u < user_name >
++	/usr/bin/snmpset -v 3 -u < user_name >
+ 	-l authNoPriv -A " <password >" < agent_host_name > 
+ 	< createContext OID > s <file_name>
+ 
+@@ -48,7 +48,7 @@
+ Subsequent snmpget requests for the size of the file will return its size in
+ blocks:  For example:
+ 
+-	/usr/sfw/bin/snmpget -v 3 -u < user_name >  -n < context_name>
++	/usr/bin/snmpget -v 3 -u < user_name >  -n < context_name>
+ 	-l authNoPriv -A "< password  >" < agent_host_name > < filesize_oid > 
+ 
+ Note that you can use -m MIB[:...] to load given list of MIBs 
+@@ -103,7 +103,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+    
+ 
+ To build the example:
+@@ -156,7 +156,7 @@
+     Note that you should use "myuser" and "mypassword" -- do not replace with
+     other values because the test script expects these values.
+  
+-    # /usr/sfw/bin/net-snmp-config --create-snmpv3-user myuser
++    # /usr/bin/net-snmp-config --create-snmpv3-user myuser
+  
+     Enter authentication pass-phrase: 
+     mypassword
+@@ -178,7 +178,7 @@
+     restart it in debug mode.
+     For example:
+    
+-    # /usr/sfw/sbin/snmpd -Ddemo_module_7
++    # /usr/sbin/snmpd -Ddemo_module_7
+     
+     The optional -Ddemo_module_7 argument sends debugging statements from 
+     demo_module_7 to the /var/log/snmpd.log file. You can also use the -L 
+--- sun/sdk/demo/demo_module_7/get_filesize	Fri Jan  9 06:08:40 2004
++++ sun/sdk/demo/demo_module_7/get_filesize	Tue Oct  7 14:35:35 2008
+@@ -14,4 +14,4 @@
+ #
+ #
+ 
+-/usr/sfw/bin/snmpget -m+SDK-DEMO6-MIB -v 3 -u myuser -n "/usr/sfw/sbin/snmpd" -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.1.0
++/usr/bin/snmpget -m+SDK-DEMO6-MIB -v 3 -u myuser -n "/usr/sbin/snmpd" -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.1.0
+--- sun/sdk/demo/demo_module_7/register_file	Fri Jan  9 06:08:41 2004
++++ sun/sdk/demo/demo_module_7/register_file	Tue Oct  7 14:34:21 2008
+@@ -14,4 +14,4 @@
+ #
+ #
+ 
+-/usr/sfw/bin/snmpset -m+SDK-DEMO6-MIB -v 3 -u myuser -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.2.0 s "/usr/sfw/sbin/snmpd"
++/usr/bin/snmpset -m+SDK-DEMO6-MIB -v 3 -u myuser -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.2.0 s "/usr/sbin/snmpd"
+--- sun/sdk/demo/demo_module_7/unregister_file	Fri Jan  9 06:08:41 2004
++++ sun/sdk/demo/demo_module_7/unregister_file	Tue Oct  7 14:34:28 2008
+@@ -14,4 +14,4 @@
+ #
+ #
+ 
+-/usr/sfw/bin/snmpset -mALL -v 3 -u myuser -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.3.0 s "/usr/sfw/sbin/snmpd"
++/usr/bin/snmpset -mALL -v 3 -u myuser -l authNoPriv -A "mypassword" localhost .1.3.6.1.4.1.42.2.2.4.4.6.1.3.0 s "/usr/sbin/snmpd"
+--- sun/sdk/demo/demo_module_8/Makefile	Fri Jan  9 06:08:43 2004
++++ sun/sdk/demo/demo_module_8/Makefile	Wed Oct 29 23:54:20 2008
+@@ -1,5 +1,6 @@
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -24,7 +25,7 @@
+ # "make clean" : remove *.o , *.so
+ #
+ 
+-INSTALL_PATH=/usr/sfw
++INSTALL_PATH=/usr
+ ARCH=64
+ #LDFLAGS_64=-g -xarch=v9  -I$(INSTALL_PATH)/include -I.
+ #LDFLAGS_32=-g -I$(INSTALL_PATH)/include -I.
+--- sun/sdk/demo/demo_module_8/README_demo_module_8	Fri Apr  9 21:10:18 2004
++++ sun/sdk/demo/demo_module_8/README_demo_module_8	Tue Oct  7 14:32:33 2008
+@@ -67,7 +67,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+       
+     
+ 
+@@ -119,7 +119,7 @@
+    For example:
+    
+     # /etc/init.d/init.sma stop
+-    # /usr/sfw/sbin/snmpd -Dagentx
++    # /usr/sbin/snmpd -Dagentx
+     
+     The optional -Dagentx argument sends debugging statements from agentX to 
+     the /var/log/snmpd.log file. You can also use the -L and -f options to 
+@@ -130,11 +130,11 @@
+    For example, if you are using the C shell:
+     
+    In the 64-bit Solaris kernel:
+-   # LD_LIBRARY_PATH=/home/username/demo/lib:/usr/sfw/lib/sparcv9:/usr/openwin/lib
++   # LD_LIBRARY_PATH=/home/username/demo/lib:/usr/lib/sparcv9:/usr/openwin/lib
+    # export LD_LIBRARY_PATH  
+     
+    In the 32-bit or x86 Solaris kernel:
+-   # LD_LIBRARY_PATH=/home/username/demo/lib:/usr/sfw/lib:/usr/openwin/lib
++   # LD_LIBRARY_PATH=/home/username/demo/lib:/usr/lib:/usr/openwin/lib
+    # export LD_LIBRARY_PATH  
+   
+   
+--- sun/sdk/demo/demo_module_8/getme1LoadGroup	Fri Jan  9 06:08:45 2004
++++ sun/sdk/demo/demo_module_8/getme1LoadGroup	Tue Oct  7 14:31:47 2008
+@@ -14,7 +14,7 @@
+ #
+ #
+ 
+-/usr/sfw/bin/snmpget -m+SDK-DEMO1-MIB -v 2c -c public localhost .1.3.6.1.4.1.42.2.2.4.4.1.1.1.0
+-/usr/sfw/bin/snmpget -m+SDK-DEMO1-MIB -v 2c -c public localhost .1.3.6.1.4.1.42.2.2.4.4.1.1.2.0
+-/usr/sfw/bin/snmpget -m+SDK-DEMO1-MIB -v 2c -c public localhost .1.3.6.1.4.1.42.2.2.4.4.1.1.3.0
++/usr/bin/snmpget -m+SDK-DEMO1-MIB -v 2c -c public localhost .1.3.6.1.4.1.42.2.2.4.4.1.1.1.0
++/usr/bin/snmpget -m+SDK-DEMO1-MIB -v 2c -c public localhost .1.3.6.1.4.1.42.2.2.4.4.1.1.2.0
++/usr/bin/snmpget -m+SDK-DEMO1-MIB -v 2c -c public localhost .1.3.6.1.4.1.42.2.2.4.4.1.1.3.0
+ 
+--- sun/sdk/demo/demo_module_9/Makefile	Fri Jan  9 06:08:46 2004
++++ sun/sdk/demo/demo_module_9/Makefile	Wed Oct 29 23:54:42 2008
+@@ -1,6 +1,6 @@
+-
+ #
+-# Copyright Copyright 2003 Sun Microsystems, Inc. All rights reserved.
++# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
++# Use is subject to license terms.
+ #
+ # U.S. Government Rights - Commercial software. Government users are subject
+ # to the Sun Microsystems, Inc. standard license agreement and applicable
+@@ -27,8 +27,8 @@
+ 
+ 
+ ARCH=64
+-LDFLAGS_64=-g -xarch=v9  -I/usr/sfw/include -I.
+-LDFLAGS_32=-g -I/usr/sfw/include -I.
++LDFLAGS_64=-g -xarch=v9  -I.
++LDFLAGS_32=-g -I.
+ LDFLAGS=$(LDFLAGS_$(ARCH))
+ 
+ LDLIBS=
+--- sun/sdk/demo/demo_module_9/README_demo_module_9	Fri Apr  9 21:10:20 2004
++++ sun/sdk/demo/demo_module_9/README_demo_module_9	Tue Oct  7 14:40:59 2008
+@@ -78,7 +78,7 @@
+    needed binaries can be found during the compilation process. 
+    For example, in the csh: 
+     
+-   % setenv PATH .:/usr/sfw/bin:$PATH
++   % setenv PATH .:/usr/bin:$PATH
+    
+       
+ To build the example:
+@@ -131,7 +131,7 @@
+    For example:
+    
+    # /etc/init.d/init.sma stop
+-   # /usr/sfw/sbin/snmpd -Ddemo_module_9
++   # /usr/sbin/snmpd -Ddemo_module_9
+     
+    The optional -Ddemo_module_9 argument sends debugging statements from 
+    demo_module_9 to the /var/log/snmpd.log file. You can also use the -L 
+--- sun/sdk/demo/demo_module_9/get_demo_module_9	Tue Jan 27 21:08:43 2004
++++ sun/sdk/demo/demo_module_9/get_demo_module_9	Tue Oct  7 14:41:33 2008
+@@ -15,4 +15,4 @@
+ #
+ # command to "get" the delayed_oid value.
+ 
+-/usr/sfw/bin/snmpget -m+SDK-DEMO9-MIB -v 1 -t 15 -c public localhost  .1.3.6.1.4.1.42.2.2.4.4.9.1.1.0
++/usr/bin/snmpget -m+SDK-DEMO9-MIB -v 1 -t 15 -c public localhost  .1.3.6.1.4.1.42.2.2.4.4.9.1.1.0
+--- sun/sdk/demo/demo_module_9/set_demo_module_9	Fri Jan  9 06:08:49 2004
++++ sun/sdk/demo/demo_module_9/set_demo_module_9	Tue Oct  7 14:38:58 2008
+@@ -15,4 +15,4 @@
+ #
+ # command to "set" the delayed_oid value to 10.
+ 
+-/usr/sfw/bin/snmpset -m+SDK-DEMO9-MIB -v 1 -c private -t 3 localhost  .1.3.6.1.4.1.42.2.2.4.4.9.1.1.0 i 10
++/usr/bin/snmpset -m+SDK-DEMO9-MIB -v 1 -c private -t 3 localhost  .1.3.6.1.4.1.42.2.2.4.4.9.1.1.0 i 10
+--- sun/sdk/demo/demo_module_9/walk_demo_module_9	Fri Jan  9 06:08:49 2004
++++ sun/sdk/demo/demo_module_9/walk_demo_module_9	Tue Oct  7 14:39:16 2008
+@@ -15,5 +15,5 @@
+ #
+ #command to walk to SYSTEM table
+ 
+-/usr/sfw/bin/snmpwalk -mALL -v 1 -c public localhost system
++/usr/bin/snmpwalk -mALL -v 1 -c public localhost system
+ 
