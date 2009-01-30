@@ -504,25 +504,29 @@ def exec_prog(cmd, outp, logfile=None, outfile=None):
 		output = pipe.stdout.read()
 	elif outp == 2:
 		logf = open(logfile, "a+")
-		pipe = Popen(cmd.split(" "), shell=False, stdin=None, stdout=logf, \
-		    stderr=logf, close_fds=True)
+		pipe = Popen(cmd.split(" "), shell=False, stdin=None, stdout=err_file, \
+		    stderr=err_file, close_fds=True)
 	elif outp == 3:
 		logf = open(logfile, "a+")
 		outf = open(outfile, "w")
 		pipe = Popen(cmd.split(" "), shell=False, stdin=None, stdout=outf, \
-		    stderr=logf, close_fds=True)
+		    stderr=err_file, close_fds=True)
 		outf.close()
 	else:
 		pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
 	rt = pipe.wait()
-	if logf:
-		logf.close()
-
 	if rt != 0:
 		err_file.seek(0)
-		err = PKGError("WARNING: " + cmd + " had errors\n" + err_file.read())
+		err_msg = err_file.read()
+		err = PKGError("WARNING: " + cmd + " had errors\n" + err_msg)
 		err_file.close()
+		logf.write(err_msg)
+		if logf:
+			logf.close()
 		raise err
+
+	if logf:
+		logf.close()
 	err_file.close()
 
 	return string.strip(output)
@@ -944,7 +948,9 @@ def fetch_local_version(img, pkg):
 	raise PKGVersError("FATAL: VERSION field not found for package %s" % pkgname)
 
 def fetch_metainfo_fields(site, pkgname, version, type, fnames):
-	"""Fetch one or more pkginfo fields(given by fnames list) from the site's metainfo dir"""
+	"""
+	Fetch one or more pkginfo fields(given by fnames list) from the site's metainfo dir
+	"""
 
 	if type == "P":
 		pkginf = "%s/%s/%s/pkginfo" % (site.metainfo, pkgname, version)
@@ -976,16 +982,76 @@ def fetch_metainfo_fields(site, pkgname, version, type, fnames):
 
 	return fvalues
 
+def fetch_pkg_param(img, pkgname, fnames, pkgfileds=None):
+	"""
+	Fetch pkginfo parameters for an installed package or the given datastream
+	package.
+	"""
+	if pkgfileds == None:
+		pkgpath = get_pkgpath(img, pkgname)
+		if pkgpath == None:
+			raise PKGMetaError("FATAL: Package %s is not installed." % pkgname)
+
+		pkginfile = os.path.join(pkgpath, "pkginfo")
+		pf = open(pkginfile, "r")
+	else:
+		pkginfile = pkgfileds
+		pf = open(pkginfile, "r")
+		line = pf.readline()
+		if not line.startswith("# PaCkAgE DaTaStReAm"):
+			raise PKGMetaError("FATAL: File %s is not a datastream package" % \
+			    pkgfileds)
+
+		# Seek to pkginfo section in file
+		found = False
+		for line in pf:
+			fentry = line.split("=")
+			if len(fentry) > 1:
+				found = True
+				break
+		if not found:
+			pf.close()
+			raise PKGMetaError("FATAL: File %s is not a valid datastream package" % \
+			    pkgfileds)
+
+	nmdict = {}
+	for line in pf:
+		fentry = line.split("=")
+		if len(fentry) < 2:
+			break
+ 		fname = fentry[0].strip()
+ 		if fname in fnames:
+ 			if len(fentry) > 2:
+ 				fvalue = '='.join(fentry[1:])
+ 			else:
+ 				fvalue = fentry[1]
+ 			nmdict[fname] = fvalue.strip()
+ 	pf.close()
+ 
+ 	fvalues = []
+ 	for fname in fnames:
+ 		if not nmdict.has_key(fname):
+ 			raise PKGMetaError("FATAL: %s field not found for package %s" % \
+ 			    (fname, pkgname))
+ 		fvalues.append(nmdict[fname])
+ 
+ 	return fvalues
+ 
+
 def pkgname_is_installed(pkgname, img):
-	"""Return True if the given package name is installed in the given image.
-	   The pkgname parameter is the package name, Not common name."""
+	"""
+	Return True if the given package name is installed in the given image.
+	The pkgname parameter is the package name, Not common name.
+	"""
 
 	return get_pkgpath(img, pkgname) != None or \
 	    os.path.exists("%s/%s" % (img.SPKG_GRP_DIR, pkgname))
 
 def pkg_is_installed(pkg, img):
-	"""Return True if the given package object is installed in the given image.
-	   This checks both name and version, if version is non-empty."""
+	"""
+	Return True if the given package object is installed in the given image.
+	This checks both name and version, if version is non-empty.
+	"""
 
 	installed = pkgname_is_installed(pkg.pkgname, img)
 	if not installed:
@@ -1006,7 +1072,9 @@ def pkg_is_installed(pkg, img):
 	return installed
 
 def logv(msg):
-	"""Print messages if verbose output was selected"""
+	"""
+	Print messages if verbose output was selected
+	"""
 	if S__VERBOSE:
 		print msg
 
@@ -1014,7 +1082,9 @@ def logv(msg):
 # Generic catalog search routine to support spkg search
 #
 def searchcatalog(sitevars, srchre, fieldnum):
-	"""Search the site's catalog for the given regexp in the given field."""
+	"""
+	Search the site's catalog for the given regexp in the given field.
+	"""
 
 	catf = open(sitevars.catalog, "r")
 	matches = []
@@ -1946,8 +2016,10 @@ def do_build_uninstall_pkglist(img, pkgs, pdict, level):
 	do_build_uninstall_pkglist(img, gdeplist, pdict, 0)
 	do_build_uninstall_pkglist(img, deplist, pdict, level + 1)
 
-def install_pkg(img, ent, pkgfile, logfile):
-	"""Install the given package. pkgfile is a compressed 7Zip datastream package"""
+def install_pkg(img, ent, pkgfile, logfile, checkBasedir=False):
+	"""
+	Install the given package. pkgfile is a compressed 7Zip datastream package
+	"""
 
 	pkgfileds = pkgfile + ".tmp"
 	if ent.type == "P":
@@ -1965,6 +2037,17 @@ def install_pkg(img, ent, pkgfile, logfile):
 			removef(pkgfileds)
 			raise PKGUncompressError("Failed to decompress package %s\n%s" % \
 			    (ent.refername, pe.message))
+
+		if checkBasedir:
+			#
+			# Handle the case where package BASEDIR changes from
+			# one revision to the next. Simply overwriting the
+			# package where BASEDIR has changed breaks things.
+			#
+			fval1 = fetch_pkg_param(img, ent.pkgname, ["BASEDIR"])
+			fval2 = fetch_pkg_param(img, ent.pkgname, ["BASEDIR"], pkgfileds)
+			if fval1[0] != fval2[0]:
+				uninstall_pkg(img, ent, logfile)
 
 		try:
 			exec_prog("/usr/sbin/pkgadd %s -d %s all" % \
@@ -2331,7 +2414,7 @@ def execute_plan(tplan, downloadonly, resume_mode=False):
 					    tplan.action == img.UPGRADE_ALL:
 						try:
 							install_pkg(img, ent, ent.dwn_pkgfile, \
-							    logfile)
+							    logfile, checkBasedir=True)
 						except PKGUncompressError, pu:
 							msg = "ERROR: Package extraction " + \
 							    "failed for " + ent.cname + ": " + \
@@ -2341,7 +2424,8 @@ def execute_plan(tplan, downloadonly, resume_mode=False):
 						except PKGError, pe:
 							pass
 					else:
-						install_pkg(img, ent, ent.dwn_pkgfile, logfile)
+						install_pkg(img, ent, ent.dwn_pkgfile,
+						    logfile, checkBasedir=True)
 					removef(ent.dwn_pkgfile)
 					print " OK (%d/%d)" % (i, num)
 					sys.stdout.flush()
