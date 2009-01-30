@@ -1,13 +1,13 @@
---- usr/src/uts/common/sys/ramdisk.h.orig	Thu Jan  8 09:06:39 2009
-+++ usr/src/uts/common/sys/ramdisk.h	Thu Jan  8 22:21:09 2009
+--- usr/src/uts/common/sys/ramdisk.h.orig	2009-01-31 18:20:57.766154444 +0300
++++ usr/src/uts/common/sys/ramdisk.h	2009-01-31 18:17:31.377725863 +0300
 @@ -51,6 +51,11 @@
  #define	RD_CTL_NODE		"ctl"
  #define	RD_CTL_NAME		RD_DRIVER_NAME RD_CTL_NODE
  
-+#define SEGHDR          1
-+#define COMPRESSED      1
-+#define UNCOMPRESSED    0
-+#define MAXALGLEN       36
++#define	SEGHDR		1
++#define	COMPRESSED	1
++#define	UNCOMPRESSED	0
++#define	MAXALGLEN	36
 +
  /*
   * Minor number 0 is reserved for the controlling device.  All other ramdisks
