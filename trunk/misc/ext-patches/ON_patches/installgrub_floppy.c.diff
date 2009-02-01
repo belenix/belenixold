@@ -1,0 +1,21 @@
+--- usr/src/cmd/boot/installgrub/floppy.c.orig	2009-02-02 17:44:35.780077720 +0300
++++ usr/src/cmd/boot/installgrub/floppy.c	2009-02-02 17:48:03.760358865 +0300
+@@ -120,6 +120,18 @@
+ 	free(p);
+ }
+ 
++/*ARGSUSED*/
++void
++rd_init_scratch(fileid_t *filep)
++{
++}
++
++/*ARGSUSED*/
++void
++rd_free_scratch(fileid_t *filep)
++{
++}
++
+ static int
+ mountroot(char *name)
+ {
