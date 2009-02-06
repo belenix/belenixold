@@ -1,0 +1,35 @@
+*** a2ps-4.13/configure.orig	Thu Feb 24 09:54:14 2000
+--- a2ps-4.13/configure	Wed Nov  7 18:35:04 2007
+***************
+*** 7650,7658 ****
+--- 7650,7660 ----
+  int
+  main()
+  {
++ #if 0
+  extern int _nl_msg_cat_cntr;
+  			       return _nl_msg_cat_cntr
+    ;
++ #endif
+    return 0;
+  }
+  EOF
+***************
+*** 8404,8410 ****
+  # Try to find some PostScript fonts.
+  # Find out if ghostscript is installed
+  ac_psfont_path=
+! for ac_dir in /usr/local/ghostscript/fonts \
+    /usr/local/share/ghostscript/fonts;
+  do
+    if test "cd $ac_dir 2>/dev/null && echo *.afm"; then
+--- 8406,8414 ----
+  # Try to find some PostScript fonts.
+  # Find out if ghostscript is installed
+  ac_psfont_path=
+! for ac_dir in \
+!   /usr/sfw/share/ghostscript/fonts \
+!   /usr/local/ghostscript/fonts \
+    /usr/local/share/ghostscript/fonts;
+  do
+    if test "cd $ac_dir 2>/dev/null && echo *.afm"; then
