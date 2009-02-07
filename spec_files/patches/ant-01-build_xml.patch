@@ -1,0 +1,13 @@
+Remove of redundant execution dependency.
+
+--- build.xml	2008-06-27 06:05:24.000000000 +0200
++++ build.xml	2008-11-15 21:48:48.125000000 +0100
+@@ -925,7 +925,7 @@
+        ===================================================================
+   -->
+   <target name="dist-lite"
+-    depends="jars,test-jar"
++    depends="jars"
+     description="--> creates a minimum distribution to run Apache Ant">
+ 
+     <mkdir dir="${dist.dir}"/>
