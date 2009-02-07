@@ -237,7 +237,7 @@
  	uint32_t	ls_comp_index_data_sz;
  	u_offset_t	ls_vp_comp_size; /* actual compressed file size */
  
-+	kmutex_t        ls_comp_cache_lock;
++	kmutex_t	ls_comp_cache_lock;
 +	struct lofi_comp_cache *ls_comp_cache;
 +
 +
