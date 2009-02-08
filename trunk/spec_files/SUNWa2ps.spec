@@ -143,6 +143,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_localedir}/*
 
 %changelog
-* Fri Feb 06 2008 - moinakg@gmail.com
+* Fri Feb 06 2009 - moinakg@gmail.com
 - Initial spec (migrated and merged from SFW gate).
 
