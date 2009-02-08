@@ -420,55 +420,55 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_sbindir}
 %dir %attr (0755, root, bin) %{_basedir}/sfw
 %dir %attr (0755, root, bin) %{_basedir}/sfw/sbin
-%{_sbindir}/snmpd
-%{_sbindir}/snmptrapd
-%{_basedir}/sfw/sbin/snmpd
-%{_basedir}/sfw/sbin/snmptrapd
+%dir %attr (0755, root, bin) %{_sbindir}/i86
+%dir %attr (0755, root, bin) %{_basedir}/sfw/sbin/i86
+%attr (0755, root, bin) %{_sbindir}/i86/snmpd
+%attr (0755, root, bin) %{_sbindir}/i86/snmptrapd
+%attr (0755, root, bin) %{_sbindir}/snmpd
+%attr (0755, root, bin) %{_sbindir}/snmptrapd
+%attr (0755, root, bin) %{_basedir}/sfw/sbin/snmpd
+%attr (0755, root, bin) %{_basedir}/sfw/sbin/snmptrapd
+%attr (0755, root, bin) %{_basedir}/sfw/sbin/i86/snmpd
+%attr (0755, root, bin) %{_basedir}/sfw/sbin/i86/snmptrapd
 
 %dir %attr (0755, root, bin) %{_basedir}/lib
-%dir %attr (0755, root, bin) %{_basedir}/lib/%{_arch64}
 %attr (0755, root, bin) %{_basedir}/lib/libnetsnmp.so.5.0.9
 %attr (0755, root, bin) %{_basedir}/lib/libnetsnmpagent.so.5.0.9
 %attr (0755, root, bin) %{_basedir}/lib/libnetsnmphelpers.so.5.0.9
 %attr (0755, root, bin) %{_basedir}/lib/libnetsnmpmibs.so.5.0.9
+%attr (0755, root, bin) %{_basedir}/lib/libnetsnmp.so
+%attr (0755, root, bin) %{_basedir}/lib/libnetsnmp.so.5
+%attr (0755, root, bin) %{_basedir}/lib/libnetsnmpagent.so
+%attr (0755, root, bin) %{_basedir}/lib/libnetsnmpagent.so.5
+%attr (0755, root, bin) %{_basedir}/lib/libnetsnmphelpers.so
+%attr (0755, root, bin) %{_basedir}/lib/libnetsnmphelpers.so.5
+%attr (0755, root, bin) %{_basedir}/lib/libnetsnmpmibs.so
+%attr (0755, root, bin) %{_basedir}/lib/libnetsnmpmibs.so.5
+%attr (0755, root, bin) %{_basedir}/lib/libseaProxy.so
+%attr (0755, root, bin) %{_basedir}/lib/libseaExtensions.so
+
+%ifarch amd64 sparcv9
+%dir %attr (0755, root, bin) %{_basedir}/lib/%{_arch64}
+%dir %attr (0755, root, bin) %{_sbindir}/%{_arch64}
+%dir %attr (0755, root, bin) %{_basedir}/sfw/sbin/%{_arch64}
+%attr (0755, root, bin) %{_sbindir}/%{_arch64}/snmpd
+%attr (0755, root, bin) %{_sbindir}/%{_arch64}/snmptrapd
 %attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmp.so.5.0.9
 %attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmpagent.so.5.0.9
 %attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmphelpers.so.5.0.9
 %attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmpmibs.so.5.0.9
 %attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libseaProxy.so
 %attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libseaExtensions.so
-%{_basedir}/lib/libnetsnmp.so
-%{_basedir}/lib/libnetsnmp.so.5
-%{_basedir}/lib/libnetsnmpagent.so
-%{_basedir}/lib/libnetsnmpagent.so.5
-%{_basedir}/lib/libnetsnmphelpers.so
-%{_basedir}/lib/libnetsnmphelpers.so.5
-%{_basedir}/lib/libnetsnmpmibs.so
-%{_basedir}/lib/libnetsnmpmibs.so.5
-%{_basedir}/lib/%{_arch64}/libnetsnmp.so
-%{_basedir}/lib/%{_arch64}/libnetsnmp.so.5
-%{_basedir}/lib/%{_arch64}/libnetsnmpagent.so
-%{_basedir}/lib/%{_arch64}/libnetsnmpagent.so.5
-%{_basedir}/lib/%{_arch64}/libnetsnmphelpers.so
-%{_basedir}/lib/%{_arch64}/libnetsnmphelpers.so.5
-%{_basedir}/lib/%{_arch64}/libnetsnmpmibs.so
-%{_basedir}/lib/%{_arch64}/libnetsnmpmibs.so.5
-
-%ifarch i386 amd64
-%dir %attr (0755, root, bin) %{_sbindir}/i86
-%dir %attr (0755, root, bin) %{_sbindir}/%{_arch64}
-%dir %attr (0755, root, bin) %{_basedir}/sfw/sbin/i86
-%dir %attr (0755, root, bin) %{_basedir}/sfw/sbin/%{_arch64}
-%attr (0755, root, bin) %{_sbindir}/i86/snmpd
-%attr (0755, root, bin) %{_sbindir}/i86/snmptrapd
-%attr (0755, root, bin) %{_sbindir}/%{_arch64}/snmpd
-%attr (0755, root, bin) %{_sbindir}/%{_arch64}/snmptrapd
-%{_basedir}/sfw/sbin/i86/snmpd
-%{_basedir}/sfw/sbin/i86/snmptrapd
-%{_basedir}/sfw/sbin/%{_arch64}/snmpd
-%{_basedir}/sfw/sbin/%{_arch64}/snmptrapd
-%attr (0755, root, bin) %{_basedir}/lib/libseaProxy.so
-%attr (0755, root, bin) %{_basedir}/lib/libseaExtensions.so
+%attr (0755, root, bin) %{_basedir}/sfw/sbin/%{_arch64}/snmpd
+%attr (0755, root, bin) %{_basedir}/sfw/sbin/%{_arch64}/snmptrapd
+%attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmp.so
+%attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmp.so.5
+%attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmpagent.so
+%attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmpagent.so.5
+%attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmphelpers.so
+%attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmphelpers.so.5
+%attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmpmibs.so
+%attr (0755, root, bin) %{_basedir}/lib/%{_arch64}/libnetsnmpmibs.so.5
 %endif
 
 %files devel
@@ -611,6 +611,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Thu Jan 29 2008 - moinakg@gmail.com
+* Sun Feb 08 2009 - moinakg@gmail.com
+- Fix 64Bit file lists.
+* Thu Jan 29 2009 - moinakg@gmail.com
 - Initial spec (migrated from SFW gate).
 

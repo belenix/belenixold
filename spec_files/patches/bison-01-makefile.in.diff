@@ -1,0 +1,35 @@
+--- bison-2.4.1/lib/Makefile.in.orig	2009-02-08 11:29:59.835240457 +0530
++++ bison-2.4.1/lib/Makefile.in	2009-02-08 11:31:26.455140509 +0530
+@@ -138,6 +138,9 @@
+ liby_a_LIBADD =
+ am_liby_a_OBJECTS = main.$(OBJEXT) yyerror.$(OBJEXT)
+ liby_a_OBJECTS = $(am_liby_a_OBJECTS)
++
++main.o yyerror.o := CFLAGS += -DPIC -KPIC -xregs=no%appl
++
+ LTLIBRARIES = $(noinst_LTLIBRARIES)
+ DEFAULT_INCLUDES = -I.@am__isrc@
+ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
+@@ -675,10 +678,10 @@
+ 
+ distclean-hdr:
+ 	-rm -f config.h stamp-h1
+-install-libLIBRARIES: $(lib_LIBRARIES)
++install-libLIBRARIES: $(lib_LIBRARIES) liby.so.1
+ 	@$(NORMAL_INSTALL)
+ 	test -z "$(libdir)" || $(MKDIR_P) "$(DESTDIR)$(libdir)"
+-	@list='$(lib_LIBRARIES)'; for p in $$list; do \
++	@list='$(lib_LIBRARIES) liby.so.1'; for p in $$list; do \
+ 	  if test -f $$p; then \
+ 	    f=$(am__strip_dir) \
+ 	    echo " $(libLIBRARIES_INSTALL) '$$p' '$(DESTDIR)$(libdir)/$$f'"; \
+@@ -723,6 +726,9 @@
+ 	-rm -f liby.a
+ 	$(liby_a_AR) liby.a $(liby_a_OBJECTS) $(liby_a_LIBADD)
+ 	$(RANLIB) liby.a
++liby.so.1:    $(liby_a_OBJECTS) $(liby_a_DEPENDENCIES)
++	-rm -f liby.so.1
++	$(CC) $(CFLAGS) -G -h liby.so.1 -o liby.so.1 $(liby_a_OBJECTS)
+ 
+ clean-noinstLTLIBRARIES:
+ 	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)

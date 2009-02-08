@@ -132,6 +132,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*
 
 %changelog
-* Sat Feb 07 2008 - moinakg@gmail.com
+* Sat Feb 07 2009 - moinakg@gmail.com
 - Initial spec (migrated and merged from SFW gate).
 
