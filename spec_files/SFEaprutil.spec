@@ -5,16 +5,21 @@
 %include Solaris.inc
 %include usr-gnu.inc
 
+%ifarch amd64 sparcv9
+%include arch64.inc
+%endif
+
+%include base.inc
+
+
 Name:			SFEaprutil
 License:		Apache,LGPL,BSD
-Version:		1.2.12
+Version:		1.3.4
 Summary:		Abstraction layer on top of Apache Portable Runtime
 Source:			http://apache.mirrors.tds.net/apr/apr-util-%{version}.tar.gz
 URL:			http://apr.apache.org/
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 SUNW_BaseDir:		%{_prefix}
-Requires: SUNWcsl
-Requires: SUNWcsr
 Requires: SFEgawk
 Requires: SFElibapr
 BuildRequires: SFElibapr-devel
@@ -41,9 +46,58 @@ Requires:                SUNWsqlite3-devel
 Requires:                SUNWsfwhea
 
 %prep
-%setup -q -n apr-util-%{version}
+%setup -q -c -n %name-%version
+
+%ifarch amd64 sparcv9
+cp -pr apr-util-%{version} apr-util-%{version}-64
+%endif
 
 %build
+
+%ifarch amd64 sparcv9
+cd apr-util-%{version}-64
+export PATH=/usr/ccs/bin:/usr/gnu/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/opt/jdsbld/bin
+export CFLAGS="%optflags64 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+export CPPFLAGS="-I/usr/gnu/include -I/usr/sfw/include -I/usr/include/pgsql -I/usr/include/pgsql/server"
+export LD=/usr/ccs/bin/ld
+export LDFLAGS="%_ldflags64 -L$RPM_BUILD_ROOT%{_libdir} -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib"
+./configure \
+    --prefix=%{_prefix} \
+    --sysconfdir=%{_sysconfdir} \
+    --libdir=%{_libdir}/%{_arch64} \
+    --disable-static \
+    --with-pic \
+    --with-installbuilddir=%{_datadir}/apr/build \
+    --mandir=%{_mandir} \
+    --infodir=%{_infodir} \
+    --enable-threads \
+    --with-apr=%{_prefix}/bin/%{_arch64}/apr-1-config \
+    --with-dbm=gdbm \
+    --with-gdbm=/usr \
+    --with-pgsql=/usr \
+    --with-sqlite3
+
+# Unfortunate steps to work around a broken configure script
+# that does not honour CFLAGS/CPPFLAGS/LDFLAGS when generating
+# the Makefile
+# configure is broken in other wasy as well. We need to specify
+# *both* --with-dbm=gdbm and --with-gdbm... otherwise gdbm support
+# is compiled with missing symbols due to config flags not being
+# set properly!
+#
+[ ! -f Makefile.orig ] && cp Makefile Makefile.orig
+cat Makefile | sed 's|INCLUDES =|INCLUDES = -I/usr/gnu/include -I/usr/sfw/include -I/usr/include/pgsql -I/usr/include/pgsql/server|' > Makefile.new
+cp Makefile.new Makefile
+rm -f Makefile.new
+cat Makefile | sed 's|APRUTIL_LIBS =|APRUTIL_LIBS = -L/usr/gnu/lib -R/usr/gnu/lib -liconv -lintl -L/usr/sfw/lib -R/usr/sfw/lib|' > Makefile.new
+cp Makefile.new Makefile
+rm -f Makefile.new
+
+make
+cd ..
+%endif
+
+cd apr-util-%{version}
 export PATH=/usr/ccs/bin:/usr/gnu/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/opt/jdsbld/bin
 export CFLAGS="%optflags -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 export CPPFLAGS="-I/usr/gnu/include -I/usr/sfw/include -I/usr/include/pgsql -I/usr/include/pgsql/server"
@@ -84,11 +138,26 @@ make
 
 %install
 rm -rf $RPM_BUILD_ROOT
+%ifarch amd64 sparcv9
+cd apr-util-%{version}-64
+make install DESTDIR=$RPM_BUILD_ROOT
+rm -f $RPM_BUILD_ROOT%{_libdir}/%{_arch64}/lib*a
+rm -f $RPM_BUILD_ROOT%{_libdir}/%{_arch64}/*.exp
+rm -f $RPM_BUILD_ROOT%{_libdir}/%{_arch64}/apr-util-1/*.la
+rm -rf $RPM_BUILD_ROOT%{_datadir}
+rm -rf $RPM_BUILD_ROOT%{_includedir}
+rm -rf $RPM_BUILD_ROOT%{_infodir}
+mkdir -p $RPM_BUILD_ROOT%{_bindir}/%{_arch64}
+mv $RPM_BUILD_ROOT%{_bindir}/apu-1-config $RPM_BUILD_ROOT%{_bindir}/%{_arch64}
+cd ..
+%endif
+
+cd apr-util-%{version}
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT%{_infodir}
-
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*a
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.exp
+rm -f $RPM_BUILD_ROOT%{_libdir}/apr-util-1/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -96,11 +165,24 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_bindir}
-%{_bindir}/*
+%{_bindir}/apu-1-config
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
+%dir %attr (0755, root, bin) %{_libdir}/apr-util-1
+%{_libdir}/apr-util-1/*.so*
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*
+
+%ifarch amd64 sparcv9
+%dir %attr (0755, root, bin) %{_bindir}/%{_arch64}
+%{_bindir}/%{_arch64}/apu-1-config
+%dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
+%{_libdir}/%{_arch64}/lib*.so*
+%dir %attr (0755, root, bin) %{_libdir}/%{_arch64}/apr-util-1
+%{_libdir}/%{_arch64}/apr-util-1/*.so*
+%dir %attr (0755, root, other) %{_libdir}/%{_arch64}/pkgconfig
+%{_libdir}/%{_arch64}/pkgconfig/*
+%endif
 
 %files devel
 %defattr (-, root, bin)
@@ -108,6 +190,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Tue Feb 10 2009 - moinakg@gmail.com
+- Bump version to 1.3.4.
+- Add 64Bit build support.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Update sqlite dependency.
 * Tue Jan 22 2008 - moinakg@gmail.com
