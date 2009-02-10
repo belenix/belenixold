@@ -60,14 +60,14 @@
 %endif
 
 %ifarch sparc
-%define suncc_optflags64           -i %_cc64_opt_level -xstrconst -xarch=v9 -xcode=pic32 -mr
-%define suncc_cxx_optflags64       -i %_cxx64_opt_level -xarch=v9 -xcode=pic32 -mr -norunpath
+%define suncc_optflags64           %_cc64_opt_level -xstrconst -xarch=v9 -xcode=pic32 -mr
+%define suncc_cxx_optflags64       %_cxx64_opt_level -xarch=v9 -xcode=pic32 -mr -norunpath
 %define suncc_ldflags64
 %endif
 
 %ifarch i386
-%define suncc_optflags64           -i %_cc64_opt_level -xstrconst -xarch=generic64 -Kpic -xregs=no%%frameptr
-%define suncc_cxx_optflags64       -i %_cxx64_opt_level -xarch=generic64 -Kpic -pentium -mr -norunpath -xregs=no%%frameptr
+%define suncc_optflags64           %_cc64_opt_level -xstrconst -m64 -Kpic -xregs=no%%frameptr
+%define suncc_cxx_optflags64       %_cxx64_opt_level -m64 -Kpic -pentium -mr -norunpath -xregs=no%%frameptr
 %define suncc_ldflags64
 %endif
 
