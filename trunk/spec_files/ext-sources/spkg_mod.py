@@ -520,8 +520,8 @@ def exec_prog(cmd, outp, logfile=None, outfile=None):
 		err_msg = err_file.read()
 		err = PKGError("WARNING: " + cmd + " had errors\n" + err_msg)
 		err_file.close()
-		logf.write(err_msg)
 		if logf:
+			logf.write(err_msg)
 			logf.close()
 		raise err
 
@@ -1603,7 +1603,12 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 		# Remove packages that have already been found
 		#
 		for name in rmlist:
-			pkgs.remove(name)
+			try:
+				pkgs.remove(name)
+			except:
+				# We can have multiple entries due to package name change
+				# temporary plug to ignore.
+				pass
 
 	# Check for packages not found. We ignore this check in upgrade
 	# all/base mode since there might be packages in the system that
