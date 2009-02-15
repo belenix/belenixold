@@ -1,0 +1,215 @@
+#!/bin/sh -x
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+#ident	"@(#)install-apache2-64	1.4	08/09/24 SMI"
+
+. ${SRCDIR}/install.subr
+. ${BLDDIR}/apache.build.env
+
+# functions - search for "START HERE" to find start of control flow
+
+ins_file() {
+    iprog=$1
+    idir=$2
+    imode=$3
+    _install N ${iprog} ${idir}/${iprog} ${imode}
+}
+
+ins_file_modified() {
+    iprog=$1
+    idir=$2
+    idestfile=$3
+    imode=$4
+    _install N ${iprog} ${idir}/${idestfile} ${imode}
+}
+
+disable_suexec() {
+    cd ${BINDIR}
+    if [ -f "./suexec" ]; then
+        mv suexec suexec.disabled
+    fi
+}
+
+fix_config_files() {
+    cd ${TOP}/Solaris
+    ins_file modules-64.load ${CONFDIR}/conf.d 644
+
+    cd ${CONFDIR}
+
+    # Strip the 64-bit LoadModule directives from httpd.conf and put them in a
+    # separate file
+    grep "^LoadModule " ${TOP}/Solaris/64/httpd.conf >> conf.d/modules-64.load
+    sed -f ${TOP}/Solaris/64/loadmodules.sed conf.d/modules-64.load > conf.d/modules-64.load.new
+    mv conf.d/modules-64.load.new conf.d/modules-64.load
+
+    cd ${BINDIR}
+    # Add logic to source the user-customizable envvars file
+    ENVVAR_INCLUDE=`grep "/envvars" envvars`
+    if [ "x${ENVVAR_INCLUDE}" = "x" ]; then
+        sed -f ${TOP}/Solaris/envvars.sed envvars > envvars.1
+        mv envvars.1 envvars
+    fi
+}
+
+install_real_bins() {
+    cd ${TOP}/${APACHE_WORKER_DIR64}/.libs
+    ins_file_modified httpd ${BINDIR} httpd.worker 555
+
+    cd ${TOP}/${APACHE_PREFORK_DIR64}/.libs
+    ins_file httpd ${BINDIR} 555
+
+    cd ${TOP}/${APACHE_PREFORK_DIR}/support/.libs
+    for i in \
+        ab \
+        checkgid \
+        htcacheclean \
+        htdbm \
+        htdigest \
+        htpasswd \
+        httxt2dbm \
+        logresolve \
+        rotatelogs
+    do
+        ins_file ${i} ${BINDIR} 555
+    done
+}
+
+install_smf_hooks() {
+    cd ${TOP}/Solaris/64
+    ins_file http-apache22 ${ROOT}/lib/svc/method 555
+}
+
+install_auth_gss() {
+    cd ${MOD_AUTH_GSS_DIR}
+    ins_file mod_auth_gss.so ${LIBEXECDIR} 555
+}
+
+post_process() {
+    cd ${BINDIR}
+    for i in \
+        ab \
+        checkgid \
+        htcacheclean \
+        htdbm \
+        htdigest \
+        htpasswd \
+        httpd \
+        httpd.worker \
+        httxt2dbm \
+        logresolve \
+        rotatelogs \
+        suexec.disabled
+    do
+        chmod u+w ${i}
+        ${SRC}/tools/post_process ${i}
+        chmod u-w ${i}
+    done
+
+    cd ${LIBEXECDIR}
+    for i in *.so
+    do
+        chmod u+w ${i}
+        ${SRC}/tools/post_process_so ${i}
+        chmod u-w ${i}
+    done
+}
+
+cleanup_crud() {
+    cd ${LIBDIR}
+    rm *.la
+}
+
+# apache2 stores all kinds of info about the build environment
+# in $ROOT/usr/apache2/build.  We need to massage this so it
+# is all relative to an installed machine, rather than a build
+# proto area.
+
+fix_build_config() {
+    cd ${BUILDDIR}
+
+    gpatch < ${TOP}/Solaris/64/rules.mk.patch
+    gpatch < ${TOP}/Solaris/64/special.mk.patch
+    sed -f ${TOP}/Solaris/fix-config.nice.sed \
+        config.nice > config.nice.1 && \
+        mv config.nice.1 config.nice
+    sed -f ${TOP}/Solaris/fix-config_vars.sed \
+        config_vars.mk > config_vars.mk.1 && \
+        mv config_vars.mk.1 config_vars.mk
+    cd ${TOP}
+}
+
+# create soft links to the binaries in ${BINDIR} from /usr/bin
+# e.g.,  /usr/bin/amd64/ab --> /usr/apache2/2.2/bin/amd64/ab
+#        /usr/bin/sparcv9/ab --> /usr/apache2/2.2/bin/sparcv9/ab
+create_bin_links() {
+    cd ${BINDIR}
+    for i in \
+            ab \
+            apxs \
+            dbmmanage \
+            htcacheclean \
+            htdbm \
+            htdigest \
+            htpasswd \
+            httxt2dbm \
+            logresolve \
+            rotatelogs
+    do
+        _install L ../../${APACHE_DIR_PREFIX}/bin/${MACH64}/${i} ${ROOT}/usr/bin/${MACH64}/${i}
+    done
+}
+
+# START HERE - actual script processing starts here
+
+# Even though this is called "install-apache", it doesn't really
+# install the whole thing.  Much of apache itself is installed by
+# make install - we need to fix permissions.  What we install here
+# are modules that apache won't install as part of its normal build.
+# Each install task is a function, so it's relatively easy to add new
+# stuff.
+
+TOP=`pwd`
+
+PREFIX=${ROOT}/usr/apache2/${APACHE_VERSION_DIR}
+CONFDIR=${ROOT}/etc/apache2/${APACHE_VERSION_DIR}
+
+BINDIR=${PREFIX}/bin/${MACH64}
+BUILDDIR=${PREFIX}/build/${MACH64}
+LIBDIR=${PREFIX}/lib/${MACH64}
+LIBEXECDIR=${PREFIX}/libexec/${MACH64}
+MOD_AUTH_GSS_DIR=${TOP}/mod_auth_gss-64/.libs
+
+disable_suexec
+install_real_bins
+fix_config_files
+install_smf_hooks
+install_auth_gss
+post_process
+fix_build_config
+cleanup_crud
+create_bin_links
+# the 32-bit installl runs after this, so don't fix file permissions here
+
+exit 0

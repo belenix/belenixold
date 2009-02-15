@@ -1,0 +1,10 @@
+--- httpd-2.2.9/Makefile.in.orig	Mon Feb  4 15:00:07 2008
++++ httpd-2.2.9/Makefile.in	Thu Jun 12 04:45:07 2008
+@@ -165,7 +165,6 @@
+ 
+ install-other:
+ 	@test -d $(DESTDIR)$(logfiledir) || $(MKINSTALLDIRS) $(DESTDIR)$(logfiledir)
+-	@test -d $(DESTDIR)$(runtimedir) || $(MKINSTALLDIRS) $(DESTDIR)$(runtimedir)
+ 	@for ext in dll x; do \
+ 		file=apachecore.$$ext; \
+ 		if test -f $$file; then \

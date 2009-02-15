@@ -1,0 +1,23 @@
+--- mod_auth_gss/Makefile	Tue Oct 30 08:11:07 2007
++++ mod_auth_gss-64/Makefile	Tue Oct 30 09:46:48 2007
+@@ -26,8 +26,8 @@
+ 
+ include ../apache.build.env
+ 
+-top_srcdir   = ../$(APACHE_PREFORK_DIR)
+-top_builddir = ../$(APACHE_PREFORK_DIR)
++top_srcdir   = ../$(APACHE_PREFORK_DIR64)
++top_builddir = ../$(APACHE_PREFORK_DIR64)
+ srcdir       = .
+ builddir     = .
+ VPATH        = .
+@@ -64,3 +64,9 @@
+ clean:
+ 	-rm -f .deps *.o *.so *.lo *.la
+ 	-rm -rf .libs
++
++# This ugly hack is here because libtool incorrectly changes
++# "-Wc,*" compiler options into "-Wl,*" linker options, which
++# causes our linker to fail when it being passed "-Qiselect-regsym=0"
++# argument. If libtool fixes this behavior, the following line can be removed.
++CCREGSYM=

@@ -6,6 +6,13 @@
 
 %include Solaris.inc
 
+%ifarch amd64 sparcv9
+%include arch64.inc
+%endif
+
+%include base.inc
+
+
 Name:         SFEgdbm
 Summary:      GNU Database Routines
 Group:        libraries/database
@@ -30,13 +37,40 @@ SUNW_BaseDir:            %{_basedir}
 Requires: %name
 
 %prep
-%setup -q -n gdbm-%version
+%setup -q -c -n %name-%version
+cd gdbm-%{version}
 %patch1 -p1
+cd ..
+
+%ifarch amd64 sparcv9
+cp -pr gdbm-%{version} gdbm-%{version}-64
+%endif
+
 
 %build
+
+%ifarch amd64 sparcv9
+cd gdbm-%{version}-64
+export CFLAGS="%optflags64"
+export LDFLAGS="%_ldflags64"
+glib-gettextize -f
+libtoolize --force
+aclocal
+autoconf
+CFLAGS="$CFLAGS $RPM_OPT_FLAGS"         \
+        ./configure                     \
+                --prefix=%{_prefix}     \
+                --infodir=%{_datadir}/info \
+                --mandir=%{_mandir}     \
+                --libdir=%{_libdir}/%{_arch64}     \
+                --disable-static
+make
+cd ..
+%endif
+
+cd gdbm-%{version}
 export CFLAGS="%optflags"
 export LDFLAGS="%_ldflags"
-
 glib-gettextize -f
 libtoolize --force
 aclocal
@@ -48,12 +82,23 @@ CFLAGS="$CFLAGS $RPM_OPT_FLAGS"         \
                 --mandir=%{_mandir}     \
                 --libdir=%{_libdir}     \
                 --disable-static
+make
+cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make INSTALL_ROOT=$RPM_BUILD_ROOT install
 
+%ifarch amd64 sparcv9
+cd gdbm-%{version}-64
+make INSTALL_ROOT=$RPM_BUILD_ROOT install
+rm -f $RPM_BUILD_ROOT%{_libdir}/%{_arch64}/lib*.la
+cd ..
+%endif
+
+cd gdbm-%{version}
+make INSTALL_ROOT=$RPM_BUILD_ROOT install
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.la
+cd ..
 
 %{?pkgbuild_postprocess: %pkgbuild_postprocess -v -c "%{version}:%{jds_version}:%{name}:$RPM_ARCH:%(date +%%Y-%%m-%%d):%{support_level}" $RPM_BUILD_ROOT}
 
@@ -68,6 +113,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_datadir}/info
 %{_datadir}/info/*
 
+%ifarch amd64 sparcv9
+%dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
+%{_libdir}/%{_arch64}/lib*.so*
+%endif
+
 %files devel
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_includedir}
@@ -78,6 +128,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Feb 15 2009 - moinakg@gmail.com
+- Add 64Bit build.
 * Fri Jun 23 2006 - laca@sun.com
 - rename to SFEgdbm
 - delete -share subpkg

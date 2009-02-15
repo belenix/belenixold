@@ -1,0 +1,84 @@
+#!/usr/bin/ksh93
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# ident	"@(#)apxs-jk.ksh93	1.2	08/02/29 SMI"
+#
+
+set -o errexit
+
+VER=tomcat-connectors-1.2.25-src
+MDIR=${VER}
+APXS=apxs
+MODULE=mod_jk.so
+
+SRC="native/apache-2.0/mod_jk.c native/common/ap_snprintf.c \
+    native/common/jk_ajp12_worker.c native/common/jk_ajp13.c \
+    native/common/jk_ajp13_worker.c native/common/jk_ajp14.c \
+    native/common/jk_ajp14_worker.c native/common/jk_ajp_common.c \
+    native/common/jk_connect.c native/common/jk_context.c \
+    native/common/jk_jni_worker.c native/common/jk_lb_worker.c \
+    native/common/jk_map.c native/common/jk_md5.c \
+    native/common/jk_msg_buff.c native/common/jk_nwmain.c \
+    native/common/jk_pool.c native/common/jk_shm.c \
+    native/common/jk_sockbuf.c native/common/jk_status.c \
+    native/common/jk_uri_worker_map.c native/common/jk_url.c \
+    native/common/jk_util.c native/common/jk_worker.c"
+
+INCLUDES="-I./native/common -I./native/apache-2.0 \
+     -I/usr/java/include -I/usr/java/include/solaris"
+
+do_apxs() {
+    export LTFLAGS="--silent --tag=CC"
+    apxs_bin=${ROOT}/usr/apache2/2.2/bin/${APXS}
+    if [[ ! -x ${MDIR}/native/config.status ]]
+    then
+        (cd ${MDIR}/native
+        ./configure --with-apxs=${apxs_bin} 2>&1 | grep -v 'If "make"'
+        )
+    fi
+    (cd ${MDIR}
+        ${apxs_bin} -c -o ${MODULE} \
+            -S "CC=${CC}" \
+            -DSOLARIS ${INCLUDES} ${SRC}
+        cp .libs/mod_jk.so .
+    )
+}
+
+while getopts "b:" arg
+do
+    case $arg in
+       b)
+           if [ "${OPTARG}" != "32" ]; then
+               APXS=${MACH64}/apxs
+               MDIR="${VER}-64"
+           else
+               MDIR="${VER}-32"
+           fi
+       ;;
+    esac
+done
+
+do_apxs
+
+exit 0

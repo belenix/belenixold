@@ -1,0 +1,128 @@
+--- httpd-2.2.9/support/apxs.in.orig	Tue Jul 11 20:38:44 2006
++++ httpd-2.2.9/support/apxs.in	Wed Jun 25 02:25:09 2008
+@@ -25,7 +25,32 @@
+ 
+ my %config_vars = ();
+ 
+-my $installbuilddir = "@exp_installbuilddir@";
++# Save the current directory we are in so that we can return to it
++my $save_dir=`pwd`;
++chomp $save_dir;
++
++# Determine the absolute root of the Apache installation from $0
++# All paths that refer to the Apache installation are then based relative to
++# $install_root. This ensures that when apxs is run from the build tree, any
++# paths that it returns point back into the build tree
++my $install_root = `dirname $0`;
++chomp $install_root;
++chdir $install_root;
++$install_root = `pwd`;
++chomp $install_root;
++my $new_install_root = "$install_root";
++$new_install_root =~ s!@exp_sbindir@!!g;
++# Set a new install root only if a portion of the path was replaced
++# i.e. only when apxs is run from what looks like a build/install tree
++if ($install_root eq $new_install_root) {
++    $install_root = "";
++} else {
++    $install_root = $new_install_root;
++}
++
++chdir $save_dir;
++
++my $installbuilddir = "$install_root@exp_installbuilddir@";
+ get_config_vars("$installbuilddir/config_vars.mk",\%config_vars);
+ 
+ # read the configuration variables once
+@@ -43,7 +68,9 @@
+ my $CFG_INCLUDEDIR = eval qq("$includedir");
+ my $CFG_CC         = get_vars("CC");
+ my $libexecdir     = get_vars("libexecdir");
+-my $CFG_LIBEXECDIR = eval qq("$libexecdir");
++my $libdir         = get_vars("libdir");
++my $CFG_DEFAULT_LIBEXECDIR = eval qq("$libexecdir");
++my $CFG_LIBEXECDIR = $datadir . "/libexec::ISAINFO::" ;
+ my $sbindir        = get_vars("sbindir");
+ my $CFG_SBINDIR    = eval qq("$sbindir");
+ my $ltflags        = $ENV{'LTFLAGS'};
+@@ -204,7 +231,7 @@
+ 	exit 1;
+ }
+ 
+-unless (grep /mod_so/, `. $envvars && $httpd -l`) {
++unless (grep /mod_so/, `. $envvars && /usr/bin/env LD_LIBRARY_PATH=$libdir:\$LD_LIBRARY_PATH $httpd -l`) {
+     error("Sorry, no shared object support for Apache");
+     error("available under your platform. Make sure");
+     error("the Apache module mod_so is compiled into");
+@@ -218,7 +245,18 @@
+     open IN, $file or die "cannot open $file: $!";
+     while (<IN>){
+         if (/^\s*(.*?)\s*=\s*(.*)$/){
+-            $rh_config->{$1} = $2;
++            my $key = $1;
++            my $val = $2;
++            if (length($install_root) > 0) {
++                $val =~ s!@exp_sysconfdir@!$install_root@exp_sysconfdir@!g;
++                $val =~ s!@exp_exec_prefix@!$install_root@exp_exec_prefix@!g;
++                $val =~ s!@exp_datadir@!$install_root@exp_datadir@!g;
++                $val =~ s!@exp_runtimedir@!$install_root@exp_runtimedir@!g;
++                $val =~ s!$install_root$install_root!$install_root!g;
++                $val =~ s!::APR_PREFIX::!$install_root::APR_PREFIX::!g;
++                $val =~ s!::APU_PREFIX::!$install_root::APU_PREFIX::!g;
++            }
++            $rh_config->{$key} = $val;
+         }
+     }
+     close IN;
+@@ -340,6 +378,7 @@
+ 
+ my $libtool = `$apr_config --apr-libtool`;
+ chomp($libtool);
++$libtool = $libtool;
+ 
+ my $apr_includedir = `$apr_config --includes`;
+ chomp($apr_includedir);
+@@ -527,17 +564,18 @@
+ 
+     #   activate module via LoadModule/AddModule directive
+     if ($opt_a or $opt_A) {
+-        if (not -f "$CFG_SYSCONFDIR/$CFG_TARGET.conf") {
+-            error("Config file $CFG_SYSCONFDIR/$CFG_TARGET.conf not found");
++        my $CONF_FILE = "conf.d/modules-::BITNESS::.load";
++        if (not -f "$CFG_SYSCONFDIR/$CONF_FILE") {
++            error("Config file $CFG_SYSCONFDIR/$CONF_FILE not found");
+             exit(1);
+         }
+ 
+-        open(FP, "<$CFG_SYSCONFDIR/$CFG_TARGET.conf") || die;
++        open(FP, "<$CFG_SYSCONFDIR/$CONF_FILE") || die;
+         my $content = join('', <FP>);
+         close(FP);
+ 
+         if ($content !~ m|\n#?\s*LoadModule\s+|) {
+-            error("Activation failed for custom $CFG_SYSCONFDIR/$CFG_TARGET.conf file.");
++            error("Activation failed for custom $CFG_SYSCONFDIR/$CONF_FILE file.");
+             error("At least one `LoadModule' directive already has to exist.");
+             exit(1);
+         }
+@@ -613,15 +653,15 @@
+                 $content =~ s|^(.*\n)#?\s*$lmd[^\n]*\n|$1$c$lmd\n|s;
+             }
+             $lmd =~ m|LoadModule\s+(.+?)_module.*|;
+-            notice("[$what module `$1' in $CFG_SYSCONFDIR/$CFG_TARGET.conf]");
++            notice("[$what module `$1' in $CFG_SYSCONFDIR/$CONF_FILE]");
+         }
+         if (@lmd) {
+-            if (open(FP, ">$CFG_SYSCONFDIR/$CFG_TARGET.conf.new")) {
++            if (open(FP, ">$CFG_SYSCONFDIR/$CONF_FILE.new")) {
+                 print FP $content;
+                 close(FP);
+-                system("cp $CFG_SYSCONFDIR/$CFG_TARGET.conf $CFG_SYSCONFDIR/$CFG_TARGET.conf.bak && " .
+-                       "cp $CFG_SYSCONFDIR/$CFG_TARGET.conf.new $CFG_SYSCONFDIR/$CFG_TARGET.conf && " .
+-                       "rm $CFG_SYSCONFDIR/$CFG_TARGET.conf.new");
++                system("cp $CFG_SYSCONFDIR/$CONF_FILE $CFG_SYSCONFDIR/$CONF_FILE.bak && " .
++                       "cp $CFG_SYSCONFDIR/$CONF_FILE.new $CFG_SYSCONFDIR/$CONF_FILE && " .
++                       "rm $CFG_SYSCONFDIR/$CONF_FILE.new");
+             } else {
+                 notice("unable to open configuration file");
+             }

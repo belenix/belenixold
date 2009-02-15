@@ -170,7 +170,7 @@ class Cl_img(object):
 		self.CNAMEF = 0; self.VERSIONF = 1
 		self.PKGNAMEF = 2; self.PKGFILEF = 3
 		self.MD5SUMF = 4; self.ORIGVERSF = 5
-		self.TYPEF = 6
+		self.TYPEF = 6; self.SIZEF = 7
 
 		# Action codes for packages
 		self.NONE = 0
@@ -846,12 +846,14 @@ def normalize_versions(pkgs):
 # ver1 < ver2;  return -1
 #
 def compare_version(vstr1, vstr2):
-	"""Compare only the version parts of the given version strings.
-	First 2 segments of the version string give the upstream package
-	version."""
+	"""
+	Compare only the version parts of the given version strings.
+	All segments after first 2 in the version string give the upstream
+	package version.
+	"""
 
-	vers1 = Decimal(''.join(vstr1.split(".")[0:2]))
-	vers2 = Decimal(''.join(vstr2.split(".")[0:2]))
+	vers1 = Decimal(''.join(vstr1.split(".")[2:0]))
+	vers2 = Decimal(''.join(vstr2.split(".")[2:0]))
 
 	return str(vers1.compare(vers2))
 
@@ -863,11 +865,13 @@ def compare_version(vstr1, vstr2):
 # ver1 < ver2;  return -1
 #
 def compare_revision(vstr1, vstr2):
-	"""Compare onyl the revision portion of the given version strings.
-	All segments after first 2 in the version string constitute package revision."""
+	"""
+	Compare only the revision portion of the given version strings.
+	First 2 segments of the version string constitute package revision.
+	"""
 
-	rev1 = Decimal(''.join(vstr1.split(".")[2:]))
-	rev2 = Decimal(''.join(vstr2.split(".")[2:]))
+	rev1 = Decimal(''.join(vstr1.split(".")[:2]))
+	rev2 = Decimal(''.join(vstr2.split(".")[:2]))
 
 	return str(rev1.compare(rev2))
 
@@ -1578,7 +1582,13 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 						continue
 
 					if pdict.has_key(nm):
-						if compare_vers(entry[VERSIONF], \
+						if nm.startswith("SUNW") and \
+						    (entry[VERSIONF].startswith("VERSION=11.11") or \
+						    pdict[nm].origvers.startswith("VERSION=11.11")):
+							cmpfunc = compare_revision
+						else:
+							cmpfunc = compare_vers
+						if cmpfunc(entry[VERSIONF], \
 						    pdict[nm].version) > 0:
 							pdict[nm].update(entry, sv)
 							continue

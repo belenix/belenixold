@@ -1,0 +1,69 @@
+#!/usr/bin/ksh93
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# ident	"@(#)apxs-fcgid.ksh93	1.2	08/02/29 SMI"
+#
+
+set -o errexit
+
+VER=mod_fcgid.2.2
+MDIR=${VER}
+APXS=apxs
+MODULE=mod_fcgid.so
+
+SRC="fcgid_bridge.c fcgid_conf.c fcgid_pm_main.c fcgid_protocol.c \
+    fcgid_spawn_ctl.c mod_fcgid.c fcgid_bucket.c fcgid_filter.c \
+    arch/unix/fcgid_pm_unix.c arch/unix/fcgid_proc_unix.c \
+    arch/unix/fcgid_proctbl_unix.c "
+
+INCLUDES="-Iarch/unix -I."
+
+do_apxs() {
+    export LTFLAGS="--silent --tag=CC"
+    apxs_bin=${ROOT}/usr/apache2/2.2/bin/${APXS}
+    (cd ${MDIR}
+        ${apxs_bin} -c -o ${MODULE} \
+            -S CC=${CC} \
+            -DSOLARIS ${INCLUDES} ${SRC}
+        cp .libs/mod_fcgid.so .
+    )
+}
+
+while getopts "b:" arg
+do
+    case $arg in
+       b)
+           if [ "${OPTARG}" != "32" ]; then
+               APXS=${MACH64}/apxs
+               MDIR="${VER}-64"
+           else
+               MDIR="${VER}-32"
+           fi
+       ;;
+    esac
+done
+
+do_apxs
+
+exit 0

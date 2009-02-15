@@ -1,0 +1,325 @@
+#!/bin/sh -x
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+#ident	"@(#)install-apache2	1.18	08/09/24 SMI"
+
+. ${SRCDIR}/install.subr
+. ${BLDDIR}/apache.build.env
+
+# functions - search for "START HERE" to find start of control flow
+
+ins_file() {
+    iprog=$1
+    idir=$2
+    imode=$3
+    _install N ${iprog} ${idir}/${iprog} ${imode}
+}
+
+ins_file_modified() {
+    iprog=$1
+    idir=$2
+    idestfile=$3
+    imode=$4
+    _install N ${iprog} ${idir}/${idestfile} ${imode}
+}
+
+disable_suexec() {
+    cd ${BINDIR}
+    if [ -f "./suexec" ]; then
+        mv suexec suexec.disabled
+    fi
+}
+
+fix_config_files() {
+    cd ${TOP}/Solaris
+    ins_file modules-32.load ${CONFDIR}/conf.d 644
+
+    cd ${CONFDIR}
+    rm -f *.default
+
+    # Strip the 32-bit LoadModule directives from httpd.conf and put them in a
+    # separate file
+    grep "^LoadModule " ${TOP}/Solaris/32/httpd.conf >> conf.d/modules-32.load
+    sed -f ${TOP}/Solaris/32/loadmodules.sed conf.d/modules-32.load > conf.d/modules-32.load.new
+    mv conf.d/modules-32.load.new conf.d/modules-32.load
+
+    # Add <IfModule prefork.c> directives if they are missing
+    HAS_PREFORK_CONFIG=`grep "IfModule prefork.c" httpd.conf`
+    if [ "x${HAS_PREFORK_CONFIG}" = "x" ]; then
+        sed -f ${TOP}/Solaris/httpdconf.sed httpd.conf > httpd.conf.new
+        mv httpd.conf.new httpd.conf
+    fi
+
+    # Rename <sysconfdir>/extra directory to a more intuitive name as
+    # <sysconfdir>/samples-conf.d and remove the duplicate configuration files
+    # in <sysconfdir>/original/extra directory
+    if [ -d ${CONFDIR}/samples-conf.d ]; then
+        rm -rf ${CONFDIR}/samples-conf.d   
+    fi
+    mv extra samples-conf.d
+    rm -rf ${CONFDIR}/original/extra
+    
+
+    # Rename all the httpd-*.conf files within <sysconfdir>/sample-conf.d dir to 
+    # *.conf (no "httpd-" prefix)
+    cd ${CONFDIR}/samples-conf.d
+    for i in *.conf
+    do
+        NEW_CONF_NAME=`echo $i | sed -e '/^httpd-\(.*\).conf/s;^httpd-;;g'`
+        mv $i $NEW_CONF_NAME
+    done
+
+    # Set the appropriate SSLCipherSuite and other values 
+    # within ssl.conf file in <sysconfdir>/samples-conf.d directory
+    sed -f ${TOP}/Solaris/sslconf.sed ssl.conf > ssl.conf.new
+    mv ssl.conf.new ssl.conf
+
+    cd ${BINDIR}
+    if [ ! -f  ${CONFDIR}/envvars ]; then
+        grep "^#" envvars > ${CONFDIR}/envvars
+    fi
+
+    # Add logic to source the user-customizable envvars file
+    ENVVAR_INCLUDE=`grep "/envvars" envvars` 
+    if [ "x${ENVVAR_INCLUDE}" = "x" ]; then
+        sed -f ${TOP}/Solaris/envvars.sed envvars > envvars.1
+        mv envvars.1 envvars
+    fi
+}
+
+install_real_bins() {
+    cd ${TOP}/${APACHE_WORKER_DIR}/.libs
+    ins_file_modified httpd ${BINDIR} httpd.worker 555
+
+    cd ${TOP}/${APACHE_PREFORK_DIR}/.libs
+    ins_file httpd ${BINDIR} 555
+
+    cd ${TOP}/${APACHE_PREFORK_DIR}/support/.libs
+    for i in \
+            ab \
+            checkgid \
+            htcacheclean \
+            htdbm \
+            htdigest \
+            htpasswd \
+            httxt2dbm \
+            logresolve \
+            rotatelogs
+    do
+        ins_file ${i} ${BINDIR} 555
+    done
+}
+
+install_smf_hooks() {
+    cd ${TOP}/Solaris
+    ins_file http-apache22.xml ${ROOT}/var/svc/manifest/network 444
+}
+
+install_auth_gss() {
+    cd ${MOD_AUTH_GSS_DIR}
+    ins_file mod_auth_gss.so ${LIBEXECDIR} 555
+}
+
+post_process() {
+    cd ${BINDIR}
+    for i in \
+        ab \
+        checkgid \
+        htcacheclean \
+        htdbm \
+        htdigest \
+        htpasswd \
+        httpd \
+        httpd.worker \
+        httxt2dbm \
+        logresolve \
+        rotatelogs \
+        suexec.disabled
+    do
+        chmod u+w ${i}
+        ${SRC}/tools/post_process ${i}
+        chmod u-w ${i}
+    done
+
+    cd ${LIBEXECDIR}
+    for i in *.so
+    do
+        chmod u+w ${i}
+        ${SRC}/tools/post_process_so ${i}
+        chmod u-w ${i}
+    done
+}
+
+cleanup_crud() {
+    rm -rf ${ROOT}${VARDIR}
+}
+
+fix_apache_perms() {
+
+    cd ${CONFDIR}
+    find . -type f -exec chmod 644 {} \;
+
+    cd ${PREFIX}
+    APDIRS="man manual"
+    find ${APDIRS} -type d -exec chmod 755 {} \;
+    find ${APDIRS} -type f -exec chmod 644 {} \;
+
+    cd ${PREFIX}
+    APDIRS="bin build include lib libexec"
+    find ${APDIRS} -type d -exec chmod 755 {} \;
+    find ${APDIRS} -type f -exec chmod 555 {} \;
+
+    cd ${BINDIR}
+    find . -type f -name envvars -exec chmod 644 {} \;
+    find . -type f -name envvars-std -exec chmod 444 {} \;
+    find . -type f -name suexec.disabled -exec chmod 700 {} \;
+
+    cd ${INCLUDEDIR}
+    find . -type f -exec chmod 644 {} \;
+
+    cd ${VARDIR}
+    APDIRS="cgi-bin error htdocs icons logs proxy"
+    find ${APDIRS} -type d -exec chmod 755 {} \;
+    find ${APDIRS} -type f -exec chmod 644 {} \;
+
+    cd ${VARDIR}/cgi-bin
+    chmod 555 * 2>/dev/null
+
+    chmod 755 ${VARDIR}/proxy
+    chmod 755 ${VARDIR}/logs
+}
+
+# apache2 stores all kinds of info about the build environment
+# in $ROOT/usr/apache2/build.  We need to massage this so it
+# is all relative to an installed machine, rather than a build
+# proto area.
+
+fix_build_config() {
+    cd ${BUILDDIR}
+    gpatch < ${TOP}/Solaris/32/rules.mk.patch
+    gpatch < ${TOP}/Solaris/32/special.mk.patch
+    sed -f ${TOP}/Solaris/fix-config.nice.sed \
+        config.nice > config.nice.1 && \
+        mv config.nice.1 config.nice
+    sed -f ${TOP}/Solaris/fix-config_vars.sed \
+        config_vars.mk > config_vars.mk.1 && \
+        mv config_vars.mk.1 config_vars.mk
+    cd ${TOP}
+}
+
+fix_perl_paths() {
+    cd ${VARDIR}
+    _fixup_perl cgi-bin/printenv
+}
+
+# install Apache commonly used man pages
+install_man_files() {
+    cd ${MAN8DIR}
+    for i in *.8
+    do
+        ins_file $i ${ROOT}/usr/share/man/man8 444
+    done
+
+    cd ${TOP}/Solaris
+    ins_file_modified apache2.1m.sunman ${ROOT}/usr/share/man/man1m apache2.1m 444
+}
+
+# install favicon files under default docroot 
+install_favicon_files() {
+    cd ${TOP}/Solaris
+    ins_file favicon.gif ${VARDIR}/htdocs 644
+    ins_file favicon.ico ${VARDIR}/htdocs 644
+}
+
+# create soft links to the binaries in ${BINDIR} from /usr/bin
+# e.g.,  /usr/bin/ab --> /usr/apache2/2.2/bin/ab
+create_bin_links() {
+    cd ${BINDIR}
+    for i in \
+            ab \
+            apxs \
+            dbmmanage \
+            htcacheclean \
+            htdbm \
+            htdigest \
+            htpasswd \
+            httxt2dbm \
+            logresolve \
+            mp2bug \
+            rotatelogs
+    do
+        _install L ../${APACHE_DIR_PREFIX}/bin/${i} ${ROOT}/usr/bin/${i}
+    done
+}
+
+# START HERE - actual script processing starts here
+
+# Even though this is called "install-apache", it doesn't really
+# install the whole thing.  Much of apache itself is installed by
+# make install - we need to fix permissions.  What we install here
+# are modules that apache won't install as part of its normal build.
+# Each install task is a function, so it's relatively easy to add new
+# stuff.
+
+TOP=`pwd`
+
+PREFIX=${ROOT}${APACHE_USR_PREFIX}
+CONFDIR=${ROOT}${APACHE_ETC_PREFIX}
+VARDIR=${ROOT}${APACHE_VAR_PREFIX}
+INCLUDEDIR=${PREFIX}/include
+HTDOCS=${VARDIR}/htdocs
+MANUAL_HTDOCS=${PREFIX}/manual
+MANDIR=${PREFIX}/man
+MAN1DIR=${MANDIR}/man1
+MAN3DIR=${MANDIR}/man3
+MAN8DIR=${MANDIR}/man8
+ETC=${ROOT}/etc
+RIGHTSDIR=${ROOT}/etc/security
+
+BINDIR=${PREFIX}/bin
+BUILDDIR=${PREFIX}/build
+LIBDIR=${PREFIX}/lib
+LIBEXECDIR=${PREFIX}/libexec
+MOD_AUTH_GSS_DIR=${TOP}/mod_auth_gss/.libs
+
+disable_suexec
+install_real_bins
+fix_config_files
+install_smf_hooks
+install_auth_gss
+post_process
+cleanup_crud
+fix_build_config
+fix_perl_paths
+install_man_files
+install_favicon_files
+
+# all installation should be done before this point, so the functions
+# that fixup permissions can get everything that is installed.
+
+fix_apache_perms
+create_bin_links
+
+exit 0

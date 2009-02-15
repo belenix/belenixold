@@ -1,0 +1,60 @@
+#
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# ident	"@(#)Makefile.sfw	1.8	08/10/07 SMI"
+#
+
+include ../apache.build.env
+
+APACHE_CONFD=$(ROOT)/$(APACHE_ETC_PREFIX)/conf.d
+APACHE_SCONFD=$(ROOT)/$(APACHE_ETC_PREFIX)/samples-conf.d
+
+all: all-jk all-fcgid all-security2 all-dtrace
+	@echo "all modules built."
+
+install: install-jk install-fcgid install-security2 install-dtrace
+	@echo "all modules installed."
+
+clean: clean-jk clean-fcgid clean-security2 clean-dtrace
+	rm -rf tmp
+	@echo "all modules cleaned."
+
+conf-install-%:
+	cat $*.conf | sed -e 's/::MACH64::/$(MACH64)/;' > $(APACHE_CONFD)/$*.conf
+
+sconf-install-%:
+	cat $*.conf | sed -e 's/::MACH64::/$(MACH64)/;' > $(APACHE_SCONFD)/$*.conf
+
+include dtrace.mk
+include fcgid.mk
+include security2.mk
+include jk.mk
+include ../../Makefile.cmd
+
+tmp:
+	mkdir -p tmp
+
+include ../../Makefile.targ
+
+FRC:
