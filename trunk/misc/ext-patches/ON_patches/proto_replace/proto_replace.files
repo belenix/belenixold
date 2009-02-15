@@ -1,7 +1,9 @@
 etc/ima.conf
 etc/user_attr
 etc/profile
+etc/passwd
 etc/shadow
+etc/group
 etc/devlink.tab
 etc/mpapi.conf
 etc/vfstab
@@ -14,7 +16,6 @@ etc/security/exec_attr
 etc/security/auth_attr
 etc/nsswitch.conf
 etc/inet/hosts
-etc/passwd
 etc/mime.types
 etc/mailcap
 etc/security/policy.conf

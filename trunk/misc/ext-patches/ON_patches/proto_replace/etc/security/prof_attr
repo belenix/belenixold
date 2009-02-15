@@ -98,3 +98,4 @@ ZFS Storage Management:::Create and Manage ZFS Storage Pools:help=RtZFSStorageMn
 Zone Management:::Zones Virtual Application Environment Administration:help=RtZoneMngmnt.html
 dtwm:::Do not assign to users. Actions and commands required for the window manager (dtwm).:help=Rtdtwm.html
 shutdown:::Do not assign to users. Contains actions requiring shutdown authorization.:auths=solaris.system.shutdown;help=Rtshutdown.html
+MySQL Administration::::auths=solaris.smf.manage.mysql/version_50,solaris.smf.value.mysql/version_50
