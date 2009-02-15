@@ -1,0 +1,17 @@
+--- build/special.mk.orig	Wed Oct 17 04:44:12 2007
++++ build/special.mk	Wed Oct 17 04:45:13 2007
+@@ -24,12 +24,12 @@
+ SHARED_TARGETS = $(shared)
+ INSTALL_TARGETS = install-modules-$(INSTALL_DSO)
+ 
+-include $(top_builddir)/build/rules.mk
++include $(top_builddir)/build::ISAINFO::/rules.mk
+ 
+ install-modules-yes:
+ 	@$(MKINSTALLDIRS) $(DESTDIR)$(libexecdir)
+ 	@list='$(shared)'; for i in $$list; do \
+-	  $(top_srcdir)/build/instdso.sh SH_LIBTOOL='$(SH_LIBTOOL)' $$i $(DESTDIR)$(libexecdir); \
++	  $(top_srcdir)/build::ISAINFO::/instdso.sh SH_LIBTOOL='$(SH_LIBTOOL)' $$i $(DESTDIR)$(libexecdir); \
+ 	done
+ 
+ install-modules-no:

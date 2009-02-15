@@ -1,0 +1,29 @@
+--- apr-util-1.3.4/build/dbd.m4.orig	Tue Jul  1 23:49:28 2008
++++ apr-util-1.3.4/build/dbd.m4	Wed Sep 24 03:03:46 2008
+@@ -34,7 +34,7 @@
+       AC_PATH_PROG([PGSQL_CONFIG],[pg_config])
+       if test "x$PGSQL_CONFIG" != 'x'; then
+         pgsql_CPPFLAGS="-I`$PGSQL_CONFIG --includedir`"
+-        pgsql_LDFLAGS="-L`$PGSQL_CONFIG --libdir`"
++        pgsql_LDFLAGS="-L`$PGSQL_CONFIG --libdir` -R`$PGSQL_CONFIG --libdir`"
+ 
+         APR_ADDTO(CPPFLAGS, [$pgsql_CPPFLAGS])
+         APR_ADDTO(LDFLAGS, [$pgsql_LDFLAGS])
+@@ -71,7 +71,7 @@
+       AC_PATH_PROG([PGSQL_CONFIG],[pg_config],,[$withval/bin])
+       if test "x$PGSQL_CONFIG" != 'x'; then
+         pgsql_CPPFLAGS="-I`$PGSQL_CONFIG --includedir`"
+-        pgsql_LDFLAGS="-L`$PGSQL_CONFIG --libdir`"
++        pgsql_LDFLAGS="-L`$PGSQL_CONFIG --libdir` -R`$PGSQL_CONFIG --libdir`"
+       else
+         pgsql_CPPFLAGS="-I$withval/include"
+         pgsql_LDFLAGS="-L$withval/lib "
+@@ -111,7 +111,7 @@
+     AC_PATH_PROG([PGSQL_CONFIG],[pg_config])
+     if test "x$PGSQL_CONFIG" != 'x'; then
+       pgsql_CPPFLAGS="-I`$PGSQL_CONFIG --includedir`"
+-      pgsql_LDFLAGS="-L`$PGSQL_CONFIG --libdir`"
++      pgsql_LDFLAGS="-L`$PGSQL_CONFIG --libdir` -R`$PGSQL_CONFIG --libdir`"
+ 
+       APR_ADDTO(CPPFLAGS, [$pgsql_CPPFLAGS])
+       APR_ADDTO(LDFLAGS, [$pgsql_LDFLAGS])

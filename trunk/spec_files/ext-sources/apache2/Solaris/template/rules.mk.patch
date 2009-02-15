@@ -1,0 +1,11 @@
+--- build/rules.mk.orig	Wed Oct 17 04:42:37 2007
++++ build/rules.mk	Wed Oct 17 04:43:04 2007
+@@ -16,7 +16,7 @@
+ #
+ # The build environment was originally provided by Sascha Schumann.
+ 
+-include  $(top_builddir)/build/config_vars.mk 
++include  $(top_builddir)/build::ISAINFO::/config_vars.mk 
+ 
+ # Combine all of the flags together in the proper order so that
+ # the user-defined flags can always override the configure ones, if needed.

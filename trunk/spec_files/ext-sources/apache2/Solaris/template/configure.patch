@@ -1,0 +1,22 @@
+--- httpd-2.2.9/configure.orig	Tue Jun 10 12:18:00 2008
++++ httpd-2.2.9/configure	Thu Jun 12 04:46:26 2008
+@@ -7253,7 +7253,7 @@
+   int main() { return 0; }
+ EOF
+   MKDEP="true"
+-  for i in "$CC -MM" "$CC -M" "$CPP -MM" "$CPP -M" "cpp -M"; do
++  for i in "$CC -MM" "$CC -M" "$CC -xM" "$CPP -MM" "$CPP -M" "$CPP -xM" "cpp -M"; do
+     { $as_echo "$as_me:$LINENO: checking if $i can create proper make dependencies" >&5
+ $as_echo_n "checking if $i can create proper make dependencies... " >&6; }
+     if $i conftest.c 2>/dev/null | grep 'conftest.o: conftest.c' >/dev/null; then
+@@ -15048,8 +15048,8 @@
+     saved_LDFLAGS=$LDFLAGS
+   saved_LIBS=$LIBS
+   if test "x$ap_ssltk_base" != "x"; then
+-    if test -d "$ap_ssltk_base/lib"; then
+-      ap_ssltk_lib="$ap_ssltk_base/lib"
++    if test -d "$ap_ssltk_base/lib::ISAINFO::"; then
++      ap_ssltk_lib="$ap_ssltk_base/lib::ISAINFO::"
+     else
+       ap_ssltk_lib="$ap_ssltk_base"
+     fi

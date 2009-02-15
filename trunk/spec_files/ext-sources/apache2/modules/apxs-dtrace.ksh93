@@ -1,0 +1,76 @@
+#!/usr/bin/ksh93
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+# ident	"@(#)apxs-dtrace.ksh93	1.3	08/05/15 SMI"
+#
+
+set -o errexit
+
+VER=mod_dtrace-0.3a
+MDIR=${VER}
+APXS=apxs
+MODULE=mod_dtrace.so
+
+SRC="mod_dtrace.c"
+
+DTRACE="/usr/sbin/dtrace"
+
+INCLUDES=""
+
+do_apxs() {
+    export LTFLAGS="--silent --tag=CC"
+    apxs_bin=${ROOT}/usr/apache2/2.2/bin/${APXS}
+
+    CFLAGS=`${apxs_bin} -q CFLAGS`
+    LDFLAGS_SHLIB=`${apxs_bin} -q LDFLAGS_SHLIB`
+
+    (cd ${MDIR}
+        ${apxs_bin} \
+	     -S CC=${CC} \
+	     -c -o ${MODULE} ${INCLUDES} ${SRC}
+        cp .libs/mod_dtrace.o .
+        ${DTRACE} -o apache.o -s apache.d mod_dtrace.o
+        ${CC} -M mapfile ${CFLAGS} -KPIC -G ${LDFLAGS_SHLIB} -o .libs/${MODULE} mod_dtrace.o apache.o
+    )
+}
+
+while getopts "b:" arg
+do
+    case $arg in
+       b)
+           if [ "${OPTARG}" != "32" ]; then
+               APXS=${MACH64}/apxs
+               MDIR="${VER}-64"
+               DTRACE="/usr/sbin/dtrace -64 -G"
+           else
+               MDIR="${VER}-32"
+               DTRACE="/usr/sbin/dtrace -32 -G"
+           fi
+       ;;
+    esac
+done
+
+do_apxs
+
+exit 0

@@ -1,0 +1,32 @@
+*** httpd-2.2.9/config.layout.orig	Sun Nov 21 10:50:36 2004
+--- httpd-2.2.9/config.layout	Thu Jun 12 04:45:07 2008
+***************
+*** 322,324 ****
+--- 322,348 ----
+      installbuilddir: ${prefix}/etc/apache2/build
+      errordir:      ${datadir}/error
+  </Layout>
++ 
++ # Solaris Layout for Apache 2
++ <Layout Solaris-Apache2>
++     prefix:        /usr/apache2/2.2
++     exec_prefix:   ${prefix}
++     bindir:        ${exec_prefix}/bin::ISAINFO::
++     sbindir:       ${exec_prefix}/bin::ISAINFO::
++     libdir:        ${exec_prefix}/lib::ISAINFO::
++     libexecdir:    ${exec_prefix}/libexec::ISAINFO::
++     mandir:        ${exec_prefix}/man
++     sysconfdir:    /etc/apache2/2.2
++     datadir:       /var/apache2/2.2
++     installbuilddir: ${prefix}/build::ISAINFO::
++     errordir:      ${datadir}/error
++     iconsdir:      ${datadir}/icons
++     htdocsdir:     ${datadir}/htdocs
++     manualdir:     ${prefix}/manual
++     cgidir:        ${datadir}/cgi-bin
++     includedir:    ${exec_prefix}/include
++     localstatedir: ${prefix}
++     runtimedir:    /var/run/apache2/2.2
++     logfiledir:    ${datadir}/logs
++     proxycachedir: ${datadir}/proxy
++ </Layout>

@@ -1,0 +1,18 @@
+--- httpd-2.2.8/support/apachectl.in.orig	Tue Jul 11 20:38:44 2006
++++ httpd-2.2.8/support/apachectl.in	Tue Feb 12 02:24:17 2008
+@@ -75,6 +75,15 @@
+     ARGV="-h"
+ fi
+ 
++if [ ! -d "@exp_runtimedir@" ]; then
++    mkdir -p @exp_runtimedir@
++    chown -R webservd @exp_runtimedir@
++    chgrp -R webservd @exp_runtimedir@
++fi
++
++OPTS_64="-D 64bit"
++HTTPD="$HTTPD $OPTS_64"
++
+ case $ARGV in
+ start|stop|restart|graceful|graceful-stop)
+     $HTTPD -k $ARGV
