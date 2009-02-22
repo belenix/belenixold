@@ -40,7 +40,7 @@ SRC="apache2/apache2_config.c apache2/apache2_io.c apache2/apache2_util.c \
     apache2/persist_dbm.c apache2/re.c apache2/re_actions.c \
     apache2/re_operators.c apache2/re_tfns.c apache2/re_variables.c"
 
-INCLUDES="-I. -I ${ROOT}/usr/include/pcre -I ${ROOT}/usr/include/libxml2"
+INCLUDES="-I. -I /usr/include/pcre -I /usr/include/libxml2"
 
 LIBS="-L ${ROOT}/usr/lib/${LIBP} -lpcre -lxml2"
 

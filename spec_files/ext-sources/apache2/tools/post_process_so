@@ -1,0 +1,115 @@
+#!/bin/ksh
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+#ident	"@(#)post_process_so.ksh	1.4	08/08/04 SMI"
+
+progname=`basename $0`
+
+if [ ! -f "$1" ]; then
+	echo "$0: error: $1 not found."
+	exit 1
+fi
+
+#if [ -z "${SFWRELEASE}" ]; then
+#	SFWRELEASE=`grep ^SFWRELEASE= $SRC/Makefile.master | \
+#	    sed -e 's,^SFWRELEASE=[ 	]*,,'`
+#fi
+
+#if [ -z "${SFWVERSION}" ]; then
+#	SFWVERSION=`grep ^SFWVERSION= $SRC/Makefile.master | \
+#	    sed -e 's,^SFWVERSION=[ 	]*,,'`
+#fi
+
+#if [ -z "${RELEASE_DATE}" ]; then
+#	RELEASE_DATE=`grep ^RELEASE_DATE= $SRC/Makefile.master | \
+#	    sed -e 's,^RELEASE_DATE=[ 	]*,,'`
+#fi
+#PATCHID=${SFWVERSION}
+#PATCH_DATE=${RELEASE_DATE}
+#RELEASE_CM="@(#)SunOS ${SFWRELEASE} ${PATCHID} ${PATCH_DATE}"
+
+strip -x $*
+#/usr/ccs/bin/mcs -d -a "${RELEASE_CM}" $*
+
+#
+# Sadly, the runpaths in many binaries end up with the
+# references to the proto area and other such oddities
+# in them. Sometimes this is fixable and sometimes it
+# is not, so lets just give in and fix them up a bit
+# here. There are a couple of easy things we can do:
+#
+# - If we see $(ROOT) in the runpath, we can remove it.
+# - We can remove duplicate entries (but not change the
+#   order). This is both useful because some things end
+#   up repeated, and because we may have just caused that
+#   if the runpath had $(ROOT)/usr/blah/lib:/usr/blah/lib
+#   in it.
+#
+# Things we could do in the future:
+#
+# - remove 32-bit directories from 64-bit runpaths and
+#   vice-versa. Harder, but may be useful as it's hard
+#   to tell some software that doesn't know it could
+#   be compiled 64-bit to stop putting the 32-bit
+#   directories in.
+# - remove /ws/ and /opt/ references. Possibly useful
+#   but usually the result of forgetting -norunpath when
+#   using CC. But as it may be hard to get -norunpath in
+#   all the right places it might be needed.
+#
+# Note that currently we cannot end up with an empty
+# runpath, but if we start deleting things we may,
+# and then we'd have to delete it completely (we
+# don't want to set the runpath to the current directory).
+#
+for file in $*
+do
+	rpath=`dump -Lv ${file} | grep RUN | nawk '{print $3}'`
+	if [ -z ${rpath} ]; then
+		# skip files with no runpath
+		continue
+	fi
+	newrpath=`echo ${rpath} | sed -e s,${ROOT},,`
+	newrpath=`echo ${newrpath} | nawk -F: '
+	BEGIN {first=1;} \
+	{ \
+		for (i = 1; i <= NF; i++) { \
+			if (found[$i] == "1") \
+				continue; \
+			found[$i] = "1"; \
+			if (!first) \
+				printf(":"); \
+			first=0; \
+			printf("%s", $i); \
+		} \
+	} ' \
+	`
+	if [ "${rpath}" = "${newrpath}" ]; then
+		# skip files where the runpath didn't change.
+		continue
+	fi
+	elfedit -e "dyn:runpath ${newrpath}" ${file}
+	echo "${progname} - runpath of ${file} - ${rpath} => ${newrpath}."
+done

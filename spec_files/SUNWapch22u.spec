@@ -32,6 +32,9 @@
 %define APACHE_ETC_PREFIX %{_sysconfdir}/%{APACHE_DIR_PREFIX}
 %define APACHE_LAYOUT Solaris-Apache2
 
+%define APR_USR_PREFIX /usr/gnu
+%define APR_UTIL_USR_PREFIX /usr/gnu
+
 %define LD_OPTIONS "-M %{SOURCE51}"
 %define CFLAGS_COMMON "-xchip=pentium -xspace -Xa  -xildoff -xc99=all -DSSL_EXPERIMENTAL -DSSL_ENGINE -xO4"
 %define CPPFLAGS "-I%{sfw_inc} -I%{gnu_inc} -I%{_includedir}"
@@ -89,9 +92,11 @@
 %define src44   %{_sourcedir}/apache2/mod_auth_gss/mod_auth_gss.c
 %define src45   %{_sourcedir}/apache2/mod_auth_gss/README
 %define src46   %{_sourcedir}/apache2/mod_auth_gss/Makefile
+%define src55   %{_sourcedir}/apache2/tools/post_process_so
+%define src56   %{_sourcedir}/apache2/tools/post_process
 
-Name:                    SUNWapch22u
-Summary:                 The Apache HTTP Server Version 2.2 (usr components)
+Name:                    SUNWapch22r
+Summary:                 The Apache HTTP Server Version 2.2 (root components)
 Version:                 %{APACHE_VERSION}
 %define mod_dtrace_version 0.3a
 %define mod_fcgid_version 2.2
@@ -115,29 +120,40 @@ BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 Requires: SUNWperl584core
 
+
 %prep
 if [ "x`basename $CC`" = xgcc ]
 then
 	%error This spec file requires SUN Studio, set the CC and CXX env variables
 fi
 
+PATH=/usr/bin:/usr/sfw/bin:/usr/X11/bin:/opt/SUNWspro/bin
+export PATH
+
 rm -rf %{name}-%{version}
 mkdir %{name}-%{version}
 cd %{name}-%{version}
 
 cp -r %{_sourcedir}/apache2/* .
+
+#
+# We are using patches copied from SFW gate here which expect APR and APU in
+# proto area. However we use the system's APR and APU so we just substitute
+# __dummy__ for the APR and APU patterns. We do not want them to be translated
+# into the build directory.
+#
 (cd Solaris/template
 mkdir -p ../32 ../64
 for i in `ls *.sed *.patch http-apache22`; do
       sed -e 's/::ISAINFO:://g' \
            -e 's/::BITNESS::/32/g' \
-           -e 's!::APR_PREFIX::!${APR_USR_PREFIX}!g' \
-           -e 's!::APU_PREFIX::!${APR_UTIL_USR_PREFIX}!g' \
+           -e 's!::APR_PREFIX::!/__dummy__!g' \
+           -e 's!::APU_PREFIX::!/__dummy__!g' \
       < $i > ../32/$i
       sed -e 's/::ISAINFO::/\/%{_arch64}/g' \
            -e 's/::BITNESS::/64/g' \
-           -e 's!::APR_PREFIX::!${APR_USR_PREFIX}!g' \
-           -e 's!::APU_PREFIX::!${APR_UTIL_USR_PREFIX}!g' \
+           -e 's!::APR_PREFIX::!/__dummy_!g' \
+           -e 's!::APU_PREFIX::!/__dummy__!g' \
       < $i > ../64/$i
 done)
 
@@ -176,6 +192,17 @@ APACHE_VAR_PREFIX=%{APACHE_VAR_PREFIX}
 APACHE_ETC_PREFIX=%{APACHE_ETC_PREFIX}
 APACHE_LAYOUT=%{APACHE_LAYOUT}" > apache.build.env
 
+cd modules
+gunzip -c %{SOURCE47} | tar xf -
+gunzip -c %{SOURCE48} | tar xf -
+gunzip -c %{SOURCE49} | tar xf -
+gunzip -c %{SOURCE50} | tar xf -
+find modsecurity-apache_%{modsecurity_version} -type d | xargs chmod go+rx
+cd ..
+
+chmod +x %{src55}
+chmod +x %{src56}
+
 
 %ifarch amd64 sparcv9
 gunzip -c %{SOURCE} | tar xopf -
@@ -203,6 +230,17 @@ mv %{APACHE_DIR} %{APACHE_WORKER_DIR64}
 mkdir mod_auth_gss-64
 cp -r mod_auth_gss/* mod_auth_gss-64
 
+mkdir modules-64
+cp -r modules/* modules-64
+mv modules-64/mod_dtrace-%{mod_dtrace_version} modules-64/mod_dtrace-%{mod_dtrace_version}-64
+mv modules-64/mod_fcgid.%{mod_fcgid_version} modules-64/mod_fcgid.%{mod_fcgid_version}-64
+mv modules-64/modsecurity-apache_%{modsecurity_version} modules-64/modsecurity-apache_%{modsecurity_version}-64
+mv modules-64/tomcat-connectors-%{connector_version}-src modules-64/tomcat-connectors-%{connector_version}-src-64
+
+cd mod_auth_gss-64
+gpatch -p1 < ../patches/mod_auth_gss_Makefile.patch.64
+cd ..
+
 echo "
 APACHE_PREFORK_DIR64=%{APACHE_PREFORK_DIR64}
 APACHE_WORKER_DIR64=%{APACHE_WORKER_DIR64}
@@ -210,10 +248,18 @@ APACHE_WORKER_DIR64=%{APACHE_WORKER_DIR64}
 
 %endif
 
+mv modules/mod_dtrace-%{mod_dtrace_version} modules/mod_dtrace-%{mod_dtrace_version}-32
+mv modules/mod_fcgid.%{mod_fcgid_version} modules/mod_fcgid.%{mod_fcgid_version}-32
+mv modules/modsecurity-apache_%{modsecurity_version} modules/modsecurity-apache_%{modsecurity_version}-32
+mv modules/tomcat-connectors-%{connector_version}-src modules/tomcat-connectors-%{connector_version}-src-32
+
 
 %build
 cd %{name}-%{version}
 BLDDIR=`pwd`
+
+PATH=/usr/bin:/usr/sfw/bin:/usr/X11/bin:/opt/SUNWspro/bin
+export PATH
 
 HTTPD_COMMON_CONFIGURE_OPTIONS="\
     --prefix=%{APACHE_USR_PREFIX} \
@@ -239,7 +285,7 @@ HTTPD_COMMON_CONFIGURE_OPTIONS="\
     --enable-ldap \
     --enable-ssl"
 
-LD_OPTIONS=%{LD_OPTIONS}`
+LD_OPTIONS=%{LD_OPTIONS}
 CFLAGS_COMMON=%{CFLAGS_COMMON}
 CPPFLAGS=%{CPPFLAGS}
 MAKE=%{MAKE}
@@ -250,7 +296,11 @@ LDFLAGS32=%{LDFLAGS32}
 LDFLAGS64=%{LDFLAGS64}
 DESTDIR=${RPM_BUILD_ROOT}
 PATH=${PATH}:%{sfw_bin}
-export LD_OPTIONS PATH MAKE DESTDIR INSTALL PERL CXXFLAGS CPPFLAGS
+APR_USR_PREFIX=%{APR_USR_PREFIX}
+APR_UTIL_USR_PREFIX=%{APR_UTIL_USR_PREFIX}
+export LD_OPTIONS PATH MAKE DESTDIR INSTALL PERL CXXFLAGS CPPFLAGS APR_USR_PREFIX APR_UTIL_USR_PREFIX
+
+. ./apache.build.env
 
 #
 # First run all the configure scripts
@@ -316,8 +366,7 @@ ${MAKE} -e
 
 cd ${BLDDIR}/%{APACHE_WORKER_DIR}
 ${MAKE} -e
-cd ..
- 
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -329,7 +378,7 @@ TMP_HDR_DIR32=${BLDDIR}/Solaris/32/include
 TMP_HDR_DIR64=${BLDDIR}/Solaris/64/include
 TMP_HDR_DIR=${BLDDIR}/Solaris/include
 
-LD_OPTIONS=%{LD_OPTIONS}`
+LD_OPTIONS=%{LD_OPTIONS}
 CFLAGS_COMMON=%{CFLAGS_COMMON}
 CPPFLAGS=%{CPPFLAGS}
 MAKE=%{MAKE}
@@ -340,34 +389,51 @@ LDFLAGS32=%{LDFLAGS32}
 LDFLAGS64=%{LDFLAGS64}
 DESTDIR=${RPM_BUILD_ROOT}
 PATH=${PATH}:%{sfw_bin}
-export LD_OPTIONS PATH MAKE DESTDIR INSTALL PERL CXXFLAGS CPPFLAGS
+APR_USR_PREFIX=/usr/gnu
+APR_UTIL_USR_PREFIX=/usr/gnu
+ROOT=${RPM_BUILD_ROOT}
+SRC=%{_sourcedir}/apache2
+export LD_OPTIONS PATH MAKE DESTDIR INSTALL PERL CXXFLAGS CPPFLAGS APR_USR_PREFIX APR_UTIL_USR_PREFIX ROOT SRC
+
+. ./apache.build.env
 
 mkdir -p ${RPM_BUILD_ROOT}/${APACHE_USR_PREFIX}
+mkdir -p ${RPM_BUILD_ROOT}/${APACHE_USR_PREFIX}/lib
 mkdir -p ${RPM_BUILD_ROOT}/${APACHE_VAR_PREFIX}
+mkdir -p ${RPM_BUILD_ROOT}/${APACHE_VAR_PREFIX}/proxy
 mkdir -p ${RPM_BUILD_ROOT}/${APACHE_ETC_PREFIX}
+mkdir -p ${RPM_BUILD_ROOT}/${APACHE_ETC_PREFIX}/conf.d
+mkdir -p ${RPM_BUILD_ROOT}/lib/svc/method
+mkdir -p ${RPM_BUILD_ROOT}/var/svc/manifest/network
+mkdir -p ${RPM_BUILD_ROOT}/%{_basedir}/bin
+mkdir -p ${RPM_BUILD_ROOT}/%{_mandir}
+mkdir -p ${RPM_BUILD_ROOT}/%{_mandir}/man8
+mkdir -p ${RPM_BUILD_ROOT}/%{_mandir}/man1m
 
 %ifarch amd64 sparcv9
-cd %{APACHE_WORKER_DIR64}
+cd ${APACHE_WORKER_DIR64}
 CFLAGS="-m64 ${CFLAGS_COMMON}"
 LDFLAGS="-m64 ${LDFLAGS64}"
 export CFLAGS LDFLAGS
+
+mkdir -p ${RPM_BUILD_ROOT}/%{_basedir}/bin/%{_arch64}
+mkdir -p ${RPM_BUILD_ROOT}/${APACHE_USR_PREFIX}/lib/%{_arch64}
 
 ${MAKE} -e install DESTDIR=${RPM_BUILD_ROOT}
 mkdir -p ${TMP_HDR_DIR64}
 cp ${DESTDIR}${APACHE_USR_PREFIX}/include/ap_config_layout.h ${TMP_HDR_DIR64}
 
-cd ${BLDDIR}/%{APACHE_PREFORK_DIR64}
+cd ${BLDDIR}/${APACHE_PREFORK_DIR64}
 ${MAKE} -e install DESTDIR=${RPM_BUILD_ROOT}
-cp ${DESTDIR}${APACHE_ETC_PREFIX}/original/httpd.conf Solaris/64
+cp ${DESTDIR}${APACHE_ETC_PREFIX}/original/httpd.conf ../Solaris/64
 
 cd ${BLDDIR}/mod_auth_gss-64
-gpatch -p1 < ../patches/mod_auth_gss_Makefile.patch.64
-${MAKE} install DESTDIR=${RPM_BUILD_ROOT}
+${MAKE} install DESTDIR=${RPM_BUILD_ROOT} ROOT=${RPM_BUILD_ROOT}
 
 %endif
 
 
-cd ${BLDDIR}/%{APACHE_WORKER_DIR64}
+cd ${BLDDIR}/${APACHE_WORKER_DIR64}
 CFLAGS="-m32 ${CFLAGS_COMMON}"
 LDFLAGS="-m32 ${LDFLAGS32}"
 export CFLAGS LDFLAGS
@@ -376,12 +442,12 @@ ${MAKE} -e install DESTDIR=${RPM_BUILD_ROOT}
 mkdir -p ${TMP_HDR_DIR32}
 cp ${DESTDIR}${APACHE_USR_PREFIX}/include/ap_config_layout.h ${TMP_HDR_DIR32}
 
-cd ${BLDDIR}/%{APACHE_PREFORK_DIR32}
+cd ${BLDDIR}/${APACHE_PREFORK_DIR}
 ${MAKE} -e install DESTDIR=${RPM_BUILD_ROOT}
-cp ${DESTDIR}${APACHE_ETC_PREFIX}/original/httpd.conf Solaris/32
+cp ${DESTDIR}${APACHE_ETC_PREFIX}/original/httpd.conf ../Solaris/32
 
 cd ${BLDDIR}/mod_auth_gss
-${MAKE} install DESTDIR=${RPM_BUILD_ROOT}
+${MAKE} install DESTDIR=${RPM_BUILD_ROOT} ROOT=${RPM_BUILD_ROOT}
 
 %ifarch amd64 sparcv9
 MACH64=%{_arch64}
@@ -391,10 +457,13 @@ export MACH64 BLDDIR SRCDIR
 #
 # Run some custom install scripts
 #
-sh %{Source53}
+cd ${BLDDIR}
+sh %{SOURCE53}
 %endif
 
-sh %{Source52}
+unset MACH64
+cd ${BLDDIR}
+sh %{SOURCE52}
 mkdir -p ${TMP_HDR_DIR}
 
 #
@@ -418,22 +487,79 @@ mkdir -p ${TMP_HDR_DIR}
 for hdr in ap_config_layout.h
 do
 %ifarch amd64
-INTEL_64BITCPPSYMBOL = __amd64
+INTEL_64BITCPPSYMBOL=__amd64
 set +e; /usr/bin/diff -D ${INTEL_64BITCPPSYMBOL} \
     ${TMP_HDR_DIR32}/${hdr} ${TMP_HDR_DIR64}/${hdr} > ${TMP_HDR_DIR}/${hdr}
 %endif
 
 %ifarch sparcv9
-SPARC_64BITCPPSYMBOL = __sparcv9
+SPARC_64BITCPPSYMBOL=__sparcv9
 set +e; /usr/bin/diff -D ${SPARC_64BITCPPSYMBOL} \
     ${TMP_HDR_DIR32}/${hdr} ${TMP_HDR_DIR64}/${hdr} > ${TMP_HDR_DIR}/${hdr}
 %endif
-cp ${TMP_HDR_DIR}/${hdr} ${RPM_BUILD_ROOT}/${APACHE_USR_PREFIX}/include
+cp ${TMP_HDR_DIR}/${hdr} ${RPM_BUILD_ROOT}/%{APACHE_USR_PREFIX}/include
 done
 
 #
-# Install all the modules
+# Make and Install all the modules
 #
+APACHE_CONFD=${RPM_BUILD_ROOT}/${APACHE_ETC_PREFIX}/conf.d
+APACHE_SCONFD=${RPM_BUILD_ROOT}/${APACHE_ETC_PREFIX}/samples-conf.d
+
+%ifarch amd64 sparcv9
+cd ${BLDDIR}/modules-64
+PDIR=`pwd`
+MACH64=%{_arch64}
+LDFLAGS="${LDFLAGS64} -M ${PDIR}/mod_dtrace-%{mod_dtrace_version}-64/mapfile"
+CFLAGS="-m64"
+export ROOT MACH64 LDFLAGS CFLAGS
+sh ./apxs-dtrace.ksh93 -b 64
+(cd mod_dtrace-%{mod_dtrace_version}-64
+  sh ../install-module.ksh93 -b 64 -m dtrace)
+cat dtrace.conf | sed -e 's/::MACH64::/%{_arch64}/;' > ${APACHE_CONFD}/dtrace.conf
+
+LDFLAGS="${LDFLAGS64}"
+export LDFLAGS
+sh ./apxs-fcgid.ksh93 -b 64
+(cd mod_fcgid.%{mod_fcgid_version}-64
+  sh ../install-module.ksh93 -b 64 -m fcgid)
+cat fcgid.conf | sed -e 's/::MACH64::/%{_arch64}/;' > ${APACHE_CONFD}/fcgid.conf
+
+sh ./apxs-security2.ksh93 -b 64
+(cd modsecurity-apache_%{modsecurity_version}-64
+  sh ../install-module.ksh93 -b 64 -m security2)
+cat security2.conf | sed -e 's/::MACH64::/%{_arch64}/;' > ${APACHE_SCONFD}/security2.conf
+
+sh ./apxs-jk.ksh93 -b 64
+(cd tomcat-connectors-%{connector_version}-src-64
+  sh ../install-module.ksh93 -b 64 -m jk)
+%endif
+
+cd ${BLDDIR}/modules
+PDIR=`pwd`
+MACH64=""
+LDFLAGS="${LDFLAGS32} -M ${PDIR}/mod_dtrace-%{mod_dtrace_version}-32/mapfile"
+CFLAGS="-m32"
+export ROOT MACH64 LDFLAGS CFLAGS
+sh ./apxs-dtrace.ksh93 -b 32
+(cd mod_dtrace-%{mod_dtrace_version}-32
+  sh ../install-module.ksh93 -b 32 -m dtrace)
+
+LDFLAGS="${LDFLAGS32}"
+export LDFLAGS
+sh ./apxs-fcgid.ksh93 -b 32
+(cd mod_fcgid.%{mod_fcgid_version}-32
+  sh ../install-module.ksh93 -b 32 -m fcgid)
+
+sh ./apxs-security2.ksh93 -b 32
+(cd modsecurity-apache_%{modsecurity_version}-32
+  sh ../install-module.ksh93 -b 32 -m security2)
+
+sh ./apxs-jk.ksh93 -b 32
+(cd tomcat-connectors-%{connector_version}-src-32
+  sh ../install-module.ksh93 -b 32 -m jk)
+cd ..
+ 
 
 %clean
 rm -rf $RPM_BUILD_ROOT

@@ -110,13 +110,13 @@ fix_config_files() {
 }
 
 install_real_bins() {
-    cd ${TOP}/${APACHE_WORKER_DIR}/.libs
+    cd ${TOP}/${APACHE_WORKER_DIR}/
     ins_file_modified httpd ${BINDIR} httpd.worker 555
 
-    cd ${TOP}/${APACHE_PREFORK_DIR}/.libs
+    cd ${TOP}/${APACHE_PREFORK_DIR}/
     ins_file httpd ${BINDIR} 555
 
-    cd ${TOP}/${APACHE_PREFORK_DIR}/support/.libs
+    cd ${TOP}/${APACHE_PREFORK_DIR}/support/
     for i in \
             ab \
             checkgid \
