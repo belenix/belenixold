@@ -25,7 +25,7 @@
 #
 # ident	"@(#)install-module.ksh93	1.3	08/06/18 SMI"
 
-. ${SRC}/tools/install.subr
+. ${SRCDIR}/install.subr
 . ../../apache.build.env
 
 # functions - search for "START HERE" to find start of control flow

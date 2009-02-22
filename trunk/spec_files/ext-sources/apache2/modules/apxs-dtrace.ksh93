@@ -44,6 +44,7 @@ do_apxs() {
 
     CFLAGS=`${apxs_bin} -q CFLAGS`
     LDFLAGS_SHLIB=`${apxs_bin} -q LDFLAGS_SHLIB`
+    LDFLAGS_SHLIB="${LDFLAGS_SHLIB} -R ${APCH_LIBEXEC}"
 
     (cd ${MDIR}
         ${apxs_bin} \
@@ -63,9 +64,11 @@ do
                APXS=${MACH64}/apxs
                MDIR="${VER}-64"
                DTRACE="/usr/sbin/dtrace -64 -G"
+               APCH_LIBEXEC="${APACHE_VAR_PREFIX}/libexec/${MACH64}"
            else
                MDIR="${VER}-32"
                DTRACE="/usr/sbin/dtrace -32 -G"
+               APCH_LIBEXEC="${APACHE_VAR_PREFIX}/libexec"
            fi
        ;;
     esac
