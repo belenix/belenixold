@@ -273,7 +273,7 @@ static char *part_types[] = {
 	"Free FDISK hidden DOS EXT",	/* 155 */
 	"Unknown",			/* 156 */
 	"Unknown",			/* 157 */
-	"Unknown",			/* 158 */
+	"VSTaFS(Extent based FS)",	/* 158 */
 	"BSD/OS",			/* 159 */
 	"Laptop hibernation",		/* 160 */
 	"Laptop hibernate,HP SpeedStor",/* 161 */

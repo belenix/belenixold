@@ -61,11 +61,12 @@ ADMIN_EOF
 	# is in place.  Then install the other packages listed in the
 	# file provided.
 	#
+	# NOTE: We need to install SUNWcsr twice!
+	#
 	$BASECMD -a $ADMIN_FILE SUNWcsr || return $?
 	$BASECMD -a $ADMIN_FILE SUNWcsd || return $?
-	#$BASECMD slim_cd || return $?
-	$BASECMD -a $ADMIN_FILE SUNWcsr || return $?
 	$BASECMD -a $ADMIN_FILE SUNWcsu || return $?
+	$BASECMD -a $ADMIN_FILE SUNWcsr || return $?
 	$BASECMD -a $ADMIN_FILE SUNWpostrun-root || return $?
 	$BASECMD -a $ADMIN_FILE SUNWpostrun || return $?
 
@@ -142,6 +143,8 @@ pkg_list_verify()
 	local status
 	local rval=0
 
+        [ -n "$SPKG_REPO" ] && return 0
+
 	(cd $DIST_PKG_DIR; ls) > $TEMP_STATUS_FILE
 
 	echo "Verifying that needed packages are in directory..."
@@ -162,3 +165,30 @@ pkg_list_verify()
 	return $rval
 }
 
+spkg_add() {
+	local SPKG_REPO=$1
+	local SPKG_CLUSTER=$2
+	local ROOT_DIR=$3
+	local BASECMD="spkg -s ${SPKG_REPO} -R ${ROOT_DIR}"
+
+	echo "Initializing Alternate Root ${ROOT_DIR}"
+	spkg init ${ROOT_DIR} || return $?
+	${BASECMD} updatecatalog || return $?
+
+	#
+	# NOTE: We need to install SUNWcsr twice!
+	#
+	echo "Installing initial packages"
+	${BASECMD} install SUNWcsr || return $?
+	${BASECMD} install SUNWcsd || return $?
+	${BASECMD} install SUNWcsu || return $?
+	${BASECMD} install SUNWcsr || return $?
+	${BASECMD} install SUNWpostrun-root || return $?
+	${BASECMD} install SUNWpostrun || return $?
+
+	echo "Installing Cluster ${SPKG_CLUSTER}"
+	${BASECMD} install ${SPKG_CLUSTER} || return $?
+
+	echo "Installing Storage Packages"
+	${BASECMD} install SUNWmpapir SUNWmpapi SUNWmpsvplr SUNWimar SUNWima SUNWimacr SUNWimac SUNEfchbar SUNWfchba
+}

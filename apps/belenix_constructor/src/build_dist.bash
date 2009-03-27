@@ -73,8 +73,8 @@ TMPDIR=/tmp/distro_tool.$$
 ADMIN_FILE=$TMPDIR/admin
 BOOT_ARCHIVE=$DIST_PROTO/boot/x86.microroot
 MICROROOT=$DIST_PROTO/bootcd_microroot
-RAMDISK_SIZE=88700
-#RAMDISK_SIZE=110000
+#RAMDISK_SIZE=88700
+RAMDISK_SIZE=110000
 DIST_MICROROOT_LIST=$SRC/microroot_list
 
 # Set up root of the proto area
@@ -127,23 +127,27 @@ if [ "$DIST_PKGS_TYPE" = "SVR4" ]
 then
 
 echo "Processing SVR4 Packages ..."
-#pkg_list_verify $DIST_PKG_LIST $DIST_PKG_DIR
-#if [ $? -ne 0 ] ; then
-#	echo "Error in pkg list verify.  Pkgs missing from the directory?"
-#	if [ "$QUIT_ON_PKG_FAILURES" = "yes" ] ; then
-#		exit 1
-#	fi
-#fi
+if [ -n "${SPKG_REPO}" ]
+then
+	spkg_add ${SPKG_REPO} ${SPKG_CLUSTER} ${DIST_PROTO}
+else
+	#pkg_list_verify $DIST_PKG_LIST $DIST_PKG_DIR
+	#if [ $? -ne 0 ] ; then
+	#	echo "Error in pkg list verify.  Pkgs missing from the directory?"
+	#	if [ "$QUIT_ON_PKG_FAILURES" = "yes" ] ; then
+	#		exit 1
+	#	fi
+	#fi
 
-# Add each of the packages specified for the product into the proto area
-pkg_add $DIST_PKG_LIST $DIST_PKG_DIR $DIST_PROTO
-if [ $? -ne 0 ] ; then
-	echo "Error adding packages to proto area"
-	if [ "$QUIT_ON_PKG_FAILURES" = "yes" ] ; then
-		exit 1
+	# Add each of the packages specified for the product into the proto area
+	pkg_add $DIST_PKG_LIST $DIST_PKG_DIR $DIST_PROTO
+	if [ $? -ne 0 ] ; then
+		echo "Error adding packages to proto area"
+		if [ "$QUIT_ON_PKG_FAILURES" = "yes" ] ; then
+			exit 1
+		fi
 	fi
 fi
-
 fi
 
 #
