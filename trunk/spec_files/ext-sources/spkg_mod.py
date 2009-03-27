@@ -304,12 +304,15 @@ class Cl_img(object):
 
 	def init(self, altroot):
 		dwn_dir = altroot + self.SPKG_DWN_DIR
-		try:
-			os.makedirs(dwn_dir)
-		except:
-			pass
+		etc_dir = altroot + "/etc"
+		log_dir = altroot + "/var/sadm/install/logs"
+		for dir in (dwn_dir, etc_dir, log_dir):
+			try:
+				os.makedirs(dir)
+			except:
+				pass
 
-		conf = self.ALTROOT + self.cnffile
+		conf = altroot + self.cnffile
 		if not os.path.exists(conf):
 			shutil.copyfile(self.cnffile, conf)
 
@@ -3074,7 +3077,7 @@ def init(img, pargs):
 
 	altroot = pargs[0]
 	img.init(altroot)
-	updatecatalog(img, [])
+	#updatecatalog(img, [])
 
 def dump_pkgcontents(name, pkgmapfile, long_listing):
 	"""Dump the package pathnames for the given package."""
@@ -3672,7 +3675,7 @@ def do_main():
 		if not os.path.isfile(ALTROOT + '/etc/spkg.conf') or \
 		    not os.path.isfile(ALTROOT + '/var/spkg/admin'):
 			print >> sys.stderr, \
-			    _("'%s' is not a valid Alternate Root image") % img.ALTROOT
+			    _("'%s' is not a valid Alternate Root image") % ALTROOT
 			return 1
 		img.set_altroot(ALTROOT)
 		LOGDIR = "%s/var/spkg/log" % ALTROOT
