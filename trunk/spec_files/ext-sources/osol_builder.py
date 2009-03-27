@@ -265,6 +265,9 @@ merge=/opt/onbld/bin/hgmerge"""
 		pwd = os.getcwd()
 		os.chdir(self.xvm_ws)
 		print "*** Fixing up some XVM proto directories "
+		if self.incremental:
+			if os.path.isdir("proto/staging/include"):
+				return
 		os.makedirs("proto/staging/include")
 		shutil.copytree("xen.hg/xen/include/public", "proto/staging/include/xen")
 
@@ -544,7 +547,7 @@ merge=/opt/onbld/bin/hgmerge"""
 						continue
 		
 					pentry = ln.split()
-					if pentry[2].find("usr/openwin") > -1:
+					if len(pentry) >= 3 and pentry[2].find("usr/openwin") > -1:
 						continue
 
 					if len(pentry) >= 3 and pentry[2] in ign_list:
