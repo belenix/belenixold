@@ -220,7 +220,7 @@ merge=/opt/onbld/bin/hgmerge"""
 		#
 		# Now enable ksh93switch
 		#
-		ksh93_attr = (["ON_BUILD_KSH93_AS_BINKSH", "1"])
+		ksh93_attr = (["ON_BUILD_KSH93_AS_BINKSH", "1"],)
 		self.replace_keys(self.on_ws + "/usr/src/Makefile.ksh93switch", ksh93_attr)
 
 		#
