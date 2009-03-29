@@ -687,22 +687,25 @@ def downloadurl(sv, url, targ, use_mirror=True):
 			print "*** Will execute %s %s %s" % (WGET, wgetopts, url)
 	else:
 		axel_opts = ""
+		mcnt = 0
 		# If the site defines mirrors then prepare 
 		if use_mirror and os.path.exists(sv.mirrors):
 			mh = open(sv.mirrors)
 			murl = url.replace(sv.site, "").strip("/")
 			sv.axel_mirror_prefix = "%s/%s " % (sv.site, murl)
+			mcnt += 1
 			for line in mh:
 				sv.axel_mirror_prefix += "%s/%s " % (line.strip(), murl)
+				mcnt += 1
 			mh.close()
 
 		#
-		# Use only 2 concurrent streams per mirror. We want to be nice!
+		# Use only 1 stream per mirror. We want to be nice!
 		# Axel automatically ignores mirrors not having the file.
 		#
 		if use_mirror and sv.axel_mirror_prefix != "":
-			axel_opts = "-a -n 2 -o %s %s" % \
-			    (targ, sv.axel_mirror_prefix)
+			axel_opts = "-a -n %d -o %s %s" % \
+			    (mcnt, targ, sv.axel_mirror_prefix)
 		else:
 			axel_opts = "-a -n 2 -o %s %s" % (targ, url)
 		if not S__NOEXEC:
@@ -2300,7 +2303,32 @@ def create_plan(img, pargs, incompats, action):
 		#
 		pkgs = [nm for nm in bset]
 	else:
-		pkgs = pargs
+		if action == img.INSTALL:
+			#
+			# Check for spkg install <cluster name>, in which case
+			# <cluster name> is replaced with the list of packages
+			# in the cluster.
+			#
+			pkgs = []
+			for sv in img.PKGSITEVARS:
+				rmlist = []
+				for pkgn in pargs:
+					clust = "%s/clusters/%s" % (sv.metainfo, pkgn)
+					if os.path.isfile(clust):
+						cfh = open(clust, "r")
+						for line in cfh:
+							pn = line.strip()
+							if not pkgname_is_installed(pn, img):
+								pkgs.append(pn)
+						cfh.close()
+						rmlist.append(pkgn)
+				for pkgn in rmlist:
+					pargs.remove(pkgn)
+			for pkgn in pargs:
+				pkgs.append(pkgn)
+		else:
+			pkgs = pargs
+					
 
 	print "Computing package dependencies."
 	if action == img.UNINSTALL:
@@ -2382,9 +2410,9 @@ def execute_plan(tplan, downloadonly, resume_mode=False):
 			img.log_msg(logfile, "*** Downloaded packages\n")
 			if downloadonly == 1:
 				print "** Download complete\n"
-				return ret
+				return
 
-	if tplan.trans:
+	if tplan.trans and not S__NOEXEC:
 		if tplan.trans.get_state() == "CLEANUP":
 			return
 		tplan.trans.put_state("INSTALL")
@@ -2643,8 +2671,8 @@ def upgrade(img, pargs, trans=None):
 		updatecatalog(img, [])
 
 	#
-	# We need to compute the plan whether we are resuming a pending
-	# transaction or starting a new one.
+	# We need to compute the plan when starting a new transaction
+	# For a resumed transaction the cached plan is used.
 	#
 	if not resume_mode:
 		tlist = spkg_trans.check_pending_trans(LOGDIR)
@@ -2703,17 +2731,17 @@ def upgrade(img, pargs, trans=None):
 		img.tmp_cleanup()
 		img.set_reconfigure()
 
-	if not resume_mode:
+	if not resume_mode and not S__NOEXEC:
 		if tplan.trans:
 			tplan.trans.put_data("*" + os.environ["USE_RELEASE_TAG"])
 
-	if tplan.trans:
+	if tplan.trans and not S__NOEXEC:
 		state = tplan.trans.get_state()
 		if state == "BEMOUNT":
 			tplan.trans.put_state("EXECUTE")
 	execute_plan(tplan, 0, resume_mode)
 
-	if tplan.trans:
+	if tplan.trans and not S__NOEXEC:
 		if tplan.trans.get_state() == "INSTALL":
 			tplan.trans.put_state("CLEANUP")
 
