@@ -774,11 +774,11 @@ BASEDIR=${BASEDIR:=/}
 ${BASEDIR}%{_localstatedir}/nicdrv/scripts/drvrm ${BASEDIR} atge
 
 %post jmge
-. ${BASEDIR:=}%{_localstatedir}/nicdrv/scripts/atge.postinst
+. ${BASEDIR:=}%{_localstatedir}/nicdrv/scripts/jmge.postinst
 
 %postun jmge
 BASEDIR=${BASEDIR:=/}
-${BASEDIR}%{_localstatedir}/nicdrv/scripts/drvrm ${BASEDIR} atge
+${BASEDIR}%{_localstatedir}/nicdrv/scripts/drvrm ${BASEDIR} jmge
 
 %post nfo
 . ${BASEDIR:=}%{_localstatedir}/nicdrv/scripts/nfo.postinst
@@ -967,6 +967,8 @@ ${BASEDIR}%{_localstatedir}/nicdrv/scripts/drvrm ${BASEDIR} nfo
 %attr (0644, root, bin) %{_localstatedir}/nicdrv/scripts/nfo.postinst
 
 %changelog
+* Sun Mar 30 2009 - moinakg@belenix.org
+- Fix jmge package postinstall script.
 * Sun Dec 21 2008 - moinakg@belenix.org
 - Merge in changes from SFE repository.
 - Add support for jmge, atge and nfo drivers.

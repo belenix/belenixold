@@ -182,7 +182,7 @@ spkg_add() {
 	${BASECMD} install SUNWcsr || return $?
 	${BASECMD} install SUNWcsd || return $?
 	${BASECMD} install SUNWcsu || return $?
-	${BASECMD} install SUNWcsr || return $?
+	${BASECMD} install -f SUNWcsr || return $?
 	${BASECMD} install SUNWpostrun-root || return $?
 	${BASECMD} install SUNWpostrun || return $?
 
@@ -190,5 +190,5 @@ spkg_add() {
 	${BASECMD} install ${SPKG_CLUSTER} || return $?
 
 	echo "Installing Storage Packages"
-	${BASECMD} install SUNWmpapir SUNWmpapi SUNWmpsvplr SUNWimar SUNWima SUNWimacr SUNWimac SUNEfchbar SUNWfchba
+	${BASECMD} install SUNWmpapir SUNWmpapi SUNWmpsvplr SUNWimar SUNWima SUNWimacr SUNWimac SUNEfchbar SUNWfchba || return $?
 }
