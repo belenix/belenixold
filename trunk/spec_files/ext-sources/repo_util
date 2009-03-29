@@ -448,17 +448,18 @@ sub mix_sources {
 
 				@fields = split;
 				my($line) = $_;
+				my (@nmfs) = split(/:/, $fields[3]);
 				if ( @fields == 8 ) {
 					if ($#pkgs < 0) {
-						$cat->{$version}->{$fields[0]}->{$fields[1]} = $line;
+						$cat->{$version}->{$nmfs[0]}->{$fields[1]} = $line;
 						$count = $count + 1;
 						next;
 					}
 
 					foreach (@pkgs) {
 						if ($_ eq $fields[0] or $_ eq $fields[2]) {
-							push(@pkglst, $fields[0] . ":" . $fields[2]);
-							$cat->{$version}->{$fields[0]}->{$fields[1]} = $line;
+							push(@pkglst, $nmfs[0] . ":" . $fields[2]);
+							$cat->{$version}->{$nmfs[0]}->{$fields[1]} = $line;
 							$count = $count + 1;
 						}
 					}

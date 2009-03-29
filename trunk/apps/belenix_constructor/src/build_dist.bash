@@ -130,6 +130,12 @@ echo "Processing SVR4 Packages ..."
 if [ -n "${SPKG_REPO}" ]
 then
 	spkg_add ${SPKG_REPO} ${SPKG_CLUSTER} ${DIST_PROTO}
+	if [ $? -ne 0 ] ; then
+		echo "Error adding packages to proto area"
+		if [ "$QUIT_ON_PKG_FAILURES" = "yes" ] ; then
+			exit 1
+		fi
+	fi
 else
 	#pkg_list_verify $DIST_PKG_LIST $DIST_PKG_DIR
 	#if [ $? -ne 0 ] ; then
