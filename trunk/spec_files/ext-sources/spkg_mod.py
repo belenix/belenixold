@@ -165,6 +165,7 @@ class Cl_img(object):
 		self.cnames = {}
 		self.upgrade_log = "/var/sadm/install/logs/upgrade_log"
 		self.install_log = "/var/sadm/install/logs/install_log"
+		self.force = False
 
 		# Fields numbers in a catalog entry for a package
 		self.CNAMEF = 0; self.VERSIONF = 1
@@ -395,8 +396,10 @@ Client-side Subcommands:
 	                only if the displayed fingerprint is incorrect.
 			With '-l' list fingerprints for all sites.
 
-	install         <package names>
+	install [-f]    <package names>
 	                Install one or more packages or group packages
+                        With '-f' force install the package even if it is already installed.
+
 	uninstall [-d]  <package names>
 	                Uninstall one or more packages or group packages.
 	                With '-d' this action also removes dependencies of these
@@ -1657,8 +1660,11 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 			# Package exists
 			if type == INSTALL:
 				if level == 0 and not pkg.version_given:
-					# Package specified by user is installed. Crib!
-					raise PKGError(_("Package %s already installed" % name))
+					if not img.force:
+						# Package specified by user is installed. Crib!
+						raise PKGError(_("Package %s already installed" % name))
+					else:
+						pdict[pkgname].action = INSTALL
 				else:
 					#
 					# We are either in dependency handling or user provided
@@ -2557,6 +2563,10 @@ def download_packages(tplan):
 #
 def install(img, pargs, downloadonly):
 	"""Install one or more packages listed on the command line"""
+
+	if len(pargs) > 0 and pargs[0] == "-f":
+		img.force = True
+		del pargs[0]
 
 	if len(pargs) == 0:
 		print >> sys.stderr, \
