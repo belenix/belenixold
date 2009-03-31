@@ -909,6 +909,7 @@ def get_pkgpath(img, pkgname):
 	normpath = "%s/%s" % (img.INSTPKGDIR, pkgname)
 	if os.path.exists(normpath):
 		return normpath
+
 	i = 1
 	while i < 5:
 		normpath = "%s/%s.%d" % (img.INSTPKGDIR, pkgname, i)
@@ -1544,6 +1545,8 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 	newlist = []
 	for sv in img.PKGSITEVARS:
 		catf = sv.catfh
+		if catf == None:
+			continue
 		catf.seek(0)
 
 		# All packages already found in an earlier site, so bail
@@ -1760,14 +1763,18 @@ def build_pkglist(img, pkgs, pdict, incompats, type):
 	for sv in img.PKGSITEVARS:
 		if not os.path.isfile(sv.catalog):
 			updatecatalog(img, [])
-		sv.catfh = open(sv.catalog, "r")
+		try:
+			sv.catfh = open(sv.catalog, "r")
+		except:
+			sv.catfh = None
 
 	pkgs = normalize_versions(pkgs)
 	type = do_build_pkglist(img, pkgs, pdict, incompats, type, 0)
 
 	for sv in img.PKGSITEVARS:
-		sv.catfh.close()
-		sv.catfh = None
+		if sv.catfh != None:
+			sv.catfh.close()
+			sv.catfh = None
 
 	# Return if we are only asked to prepare a catalog entry list
 	if type == img.LIST_ONLY:
@@ -1786,7 +1793,10 @@ def build_uninstall_pkglist(img, pkgs, pdict):
 	for sv in img.PKGSITEVARS:
 		if not os.path.isfile(sv.catalog):
 			updatecatalog(img, [])
-		sv.catfh = open(sv.catalog, "r")
+		try:
+			sv.catfh = open(sv.catalog, "r")
+		except:
+			sv.catfh = None
 
 	#
 	# Build an inverse dependency dictionary for all installed packages and
@@ -1854,8 +1864,9 @@ def build_uninstall_pkglist(img, pkgs, pdict):
 			del pdict[pn]
 
 	for sv in img.PKGSITEVARS:
-		sv.catfh.close()
-		sv.catfh = None
+		if sv.catfh != None:
+			sv.catfh.close()
+			sv.catfh = None
 
 def do_build_uninstall_pkglist(img, pkgs, pdict, level):
 	"""Build a list of packages to be uninstalled. Packages are uninstalled
@@ -1875,6 +1886,8 @@ def do_build_uninstall_pkglist(img, pkgs, pdict, level):
 	newlist = []
 	for sv in img.PKGSITEVARS:
 		catf = sv.catfh
+		if catf == None:
+			continue
 		catf.seek(0)
 
 		for line in catf:
