@@ -120,7 +120,7 @@ ADMIN_EOF
 		rm -f $TMPDIR/.pkg_failed
 		return 1
 	else
-	pkgadd -R $ROOT_DIR -a $ADMIN_FILE -d $PKGS_DIR SUNWmpapir SUNWmpapi SUNWmpsvplr SUNWimar SUNWima SUNWimacr SUNWimac SUNEfchbar SUNWfchba
+	pkgadd -R $ROOT_DIR -a $ADMIN_FILE -d $PKGS_DIR SUNWmpapir SUNWmpapi SUNWmpsvplr SUNWimar SUNWima SUNWimacr SUNWimac SUNWfchbar SUNWfchba
 
 		# Add Skeleton and livecd tools
 		#
@@ -169,10 +169,15 @@ spkg_add() {
 	local SPKG_REPO=$1
 	local SPKG_CLUSTER=$2
 	local ROOT_DIR=$3
+	local SRC=$4
 	local BASECMD="spkg -s ${SPKG_REPO} -R ${ROOT_DIR}"
 
 	echo "Initializing Alternate Root ${ROOT_DIR}"
 	spkg init ${ROOT_DIR} || return $?
+	mkdir -p ${ROOT_DIR}/etc
+	chown root:sys ${ROOT_DIR}/etc
+	chmod 0755 ${ROOT_DIR}/etc
+	cp ${SRC}/spkg.conf ${ROOT_DIR}/etc/spkg.conf
 	${BASECMD} updatecatalog || return $?
 
 	#
@@ -189,6 +194,11 @@ spkg_add() {
 	echo "Installing Cluster ${SPKG_CLUSTER}"
 	${BASECMD} install ${SPKG_CLUSTER} || return $?
 
-	echo "Installing Storage Packages"
-	${BASECMD} install SUNWmpapir SUNWmpapi SUNWmpsvplr SUNWimar SUNWima SUNWimacr SUNWimac SUNEfchbar SUNWfchba || return $?
+	echo "Installing Additional Storage Packages"
+	${BASECMD} install SUNWmpapir SUNWmpapi SUNWmpsvplr SUNWfchbar SUNWfchba || return $?
+	apply_skeleton $ROOT_DIR
+	${BASECMD} install FSWlivecdtools
+	apply_config $ROOT_DIR jack staff
+
+	rm -rf ${ROOT_DIR}/var/spkg/catalog* ${ROOT_DIR}/var/spkg/metainfo*
 }

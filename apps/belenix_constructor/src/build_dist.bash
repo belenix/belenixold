@@ -129,7 +129,7 @@ then
 echo "Processing SVR4 Packages ..."
 if [ -n "${SPKG_REPO}" ]
 then
-	spkg_add ${SPKG_REPO} ${SPKG_CLUSTER} ${DIST_PROTO}
+	spkg_add ${SPKG_REPO} ${SPKG_CLUSTER} ${DIST_PROTO} ${SRC}
 	if [ $? -ne 0 ] ; then
 		echo "Error adding packages to proto area"
 		if [ "$QUIT_ON_PKG_FAILURES" = "yes" ] ; then
@@ -172,13 +172,16 @@ if [ "$DIST_PKGS_TYPE" = "IPS" ]
 then
 	echo "Configuring Gnome in PROTO area"
 	cp -r $SRC/postrun_scripts ${PROTO}
-	chroot $PROTO /postrun_scripts/exec_postrun
+	#chroot $PROTO /postrun_scripts/exec_postrun
+	do_chroot $PROTO /postrun_scripts/exec_postrun
+
 	#Remove the scripts after finish executing them so the image is
 	#not polluted with temporary files.
 	/bin/rm -rf ${PROTO}/postrun_scripts
 else
 	mount -F lofs /proc $PROTO/proc
-	[ -x $PROTO/var/lib/postrun/postrun-runq ] && chroot $PROTO /var/lib/postrun/postrun-runq
+	#[ -x $PROTO/var/lib/postrun/postrun-runq ] && chroot $PROTO /var/lib/postrun/postrun-runq
+	[ -x $PROTO/var/lib/postrun/postrun-runq ] && do_chroot $PROTO /var/lib/postrun/postrun-runq
 	umount $PROTO/proc
 fi
 

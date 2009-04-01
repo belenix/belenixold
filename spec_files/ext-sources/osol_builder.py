@@ -418,12 +418,18 @@ merge=/opt/onbld/bin/hgmerge"""
 		os.chdir(self.on_ws)
 
 		#
-		# We want ksh93 for /sbin/sh
+		# We want ksh93 for /sbin/sh and /usr/bin/ksh
 		#
 		proto = os.path.join(self.on_ws, "proto/root_" + self.arch)
 		sbin_sh = os.path.join(proto, "sbin/sh")
+		bin_ksh = os.path.join(proto, "usr/bin/ksh")
 		ksh93 = os.path.join(proto, "usr/bin/i86/ksh93")
 		shutil.copyfile(ksh93, sbin_sh)
+		try:
+			os.unlink(bin_ksh)
+		except:
+			pass
+		shutil.copyfile(ksh93, bin_ksh)
 
 		#
 		# Now replace some files in the proto dir for a properly functional distro

@@ -339,6 +339,17 @@ ticker() {
 	fi
 }
 
+do_chroot()
+{
+	ROOT=$1
+	shift
+	mount -F lofs /lib/libc.so.1 ${ROOT}/lib/libc.so.1
+	mount -F lofs /lib/ld.so.1 ${ROOT}/lib/ld.so.1
+	chroot ${ROOT} $*
+	umount ${ROOT}/lib/libc.so.1
+	umount ${ROOT}/lib/ld.so.1
+}
+
 livemedia_processing()
 {
 
@@ -359,7 +370,9 @@ livemedia_processing()
 	$MICROROOT/usr/sbin/devfsadm -r $MICROROOT
 
 	# Set up /etc/coreadm.conf
-	chroot $MICROROOT /bin/coreadm -g /tmp/core -G default -i core \
+	#chroot $MICROROOT /bin/coreadm -g /tmp/core -G default -i core \
+	#    -I default -e process
+	do_chroot $MICROROOT /bin/coreadm -g /tmp/core -G default -i core \
 	    -I default -e process
 
 	# Setup the /etc/rtc_config file, assuming it is GMT.
@@ -397,7 +410,8 @@ RTC_CONFIG_EOF
 	(cd $PROTO/usr; find . -name icon-theme.cache -print|xargs rm -f)
 
 	echo "Creating font cache"
-	[ -x ${PROTO}/usr/bin/fc-cache ] && chroot $PROTO /usr/bin/fc-cache --force
+	#[ -x ${PROTO}/usr/bin/fc-cache ] && chroot $PROTO /usr/bin/fc-cache --force
+	[ -x ${PROTO}/usr/bin/fc-cache ] && do_chroot $PROTO /usr/bin/fc-cache --force
 
 	echo "Preloading SMF repository"
 	$SRC/mkrepo $MICROROOT $SRC
@@ -713,8 +727,9 @@ apply_config()
 	(cd ${ESKEL}; cat /tmp/cfg3.$$ | cpio -pdumv ${PROTO}/${USER})
 	rm -f /tmp/cfg3.$$
 
-	echo "chroot ${PROTO} /usr/bin/chown -R ${USER}:${GROUP} /${USER}"
-	chroot ${PROTO} /usr/bin/chown -R ${USER}:${GROUP} /${USER}
+	uid=`grep ${USER} ${PROTO}/etc/passwd | cut -f3 -d":"`
+	gid=`grep ${GROUP} ${PROTO}/etc/passwd | cut -f3 -d":"`
+	/usr/ucb/chown -R ${uid}.${gid} ${PROTO}/${USER}
 
 	if [ $? -ne 0 ]
 	then
