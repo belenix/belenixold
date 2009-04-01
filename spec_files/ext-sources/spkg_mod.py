@@ -192,6 +192,7 @@ class Cl_img(object):
 			self.RELEASES_LIST = apath + self.RELEASES_LIST
 			self.upgrade_log = apath + self.upgrade_log
 			self.install_log = apath + self.install_log
+			self.cnffile =  apath + self.cnffile
 		else:
 			self.SPKG_VAR_DIR = self.SPKG_VAR_DIR.replace(self.ALTROOT, apath)
 			self.SPKG_DWN_DIR = self.SPKG_DWN_DIR.replace(self.ALTROOT, apath)
@@ -201,6 +202,7 @@ class Cl_img(object):
 			self.RELEASES_LIST = self.RELEASES_LIST.replace(self.ALTROOT, apath)
 			self.upgrade_log = self.upgrade_log.replace(self.ALTROOT, apath)
 			self.install_log = self.install_log.replace(self.ALTROOT, apath)
+			self.cnffile = self.cnffile.replace(self.ALTROOT, apath)
 			self.ALTROOT = apath
 
 	def log_msg(self, logfile, msg):
@@ -1665,7 +1667,7 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 				if level == 0 and not pkg.version_given:
 					if not img.force:
 						# Package specified by user is installed. Crib!
-						raise PKGError(_("Package %s already installed" % name))
+						raise PKGError(_("Package %s already installed" % pkgname))
 					else:
 						pdict[pkgname].action = INSTALL
 				else:
