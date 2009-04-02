@@ -884,7 +884,7 @@ def compare_revision(vstr1, vstr2):
 	rev1 = Decimal(''.join(vstr1.split(".")[:2]))
 	rev2 = Decimal(''.join(vstr2.split(".")[:2]))
 
-	return str(rev1.compare(rev2))
+	return cmp(rev1, rev2)
 
 #
 # Compare the full version string
@@ -1536,7 +1536,7 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 	# Locals for performance
 	#
 	CNAMEF = img.CNAMEF;  PKGNAMEF = img.PKGNAMEF
-	VERSIONF = img.VERSIONF
+	VERSIONF = img.VERSIONF;  ORIGVERSF = img.ORIGVERSF
 	UPGRADE = img.UPGRADE;  UPGRADE_ALL = img.UPGRADE_ALL
 	UPGRADE_BASE = img.UPGRADE_BASE;  INSTALL = img.INSTALL
 
@@ -1597,7 +1597,7 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 
 					if pdict.has_key(nm):
 						if nm.startswith("SUNW") and \
-						    (entry[VERSIONF].startswith("VERSION=11.11") or \
+						    (entry[ORIGVERSF].startswith("VERSION=11.11") or \
 						    pdict[nm].origvers.startswith("VERSION=11.11")):
 							cmpfunc = compare_revision
 						else:

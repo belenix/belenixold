@@ -40,6 +40,8 @@ gunzip -c %{SOURCE9} | tar xf -
 
 %build
 cd %{name}-%{version}-build
+PATH=/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
+export PATH
 cd ecc-0.9
 python setup.py build_ext
 cd ..
@@ -50,6 +52,8 @@ cd ..
 
 %install
 cd %{name}-%{version}-build
+PATH=/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
+export PATH
 rm -rf ${RPM_BUILD_ROOT}
 mkdir ${RPM_BUILD_ROOT}
 
