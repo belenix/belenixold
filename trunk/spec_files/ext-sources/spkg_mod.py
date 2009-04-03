@@ -1690,6 +1690,23 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 				else:
 					pdict[pkgname].action = img.NONE
 					continue
+
+				#
+				# If we are upgrading base cluster check and ignore
+				# packages that are already installed and not mentioned
+				# in the base_cluster. These packages would have come in
+				# via dependencies from base_cluster packages. This thing
+				# should not happen but just in case!
+				#
+				if type == UPGRADE_BASE:
+					found = False
+					for sv in img.PKGSITEVARS:
+						if sv.base_cluster.has_key(pkgname):
+							found = True
+					if not found:
+						pdict[pkgname].action = img.NONE
+						print "Ignoring non base cluster package %s" \
+						    % pkgname
 		else:
 			if type == INSTALL or type == UPGRADE_BASE or \
 			    type == UPGRADE_ALL:
