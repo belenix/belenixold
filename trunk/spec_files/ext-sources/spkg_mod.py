@@ -127,6 +127,7 @@ class Cl_sitevars(object):
 		else:
 			self.metainfo = self.metadir
 		self.base_cluster = None
+		self.xwin_cluster = None
 		self.axel_mirror_prefix = ""
 		self.tcat = "%s/catalog" % SPKG_VAR_DIR
 		self.tmeta = "%s/metainfo.tar.7z" % SPKG_VAR_DIR
@@ -1703,14 +1704,26 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 					for sv in img.PKGSITEVARS:
 						if sv.base_cluster.has_key(pkgname):
 							found = True
+							break
 					if not found:
 						pdict[pkgname].action = img.NONE
-						print "Ignoring non base cluster package %s" \
-						    % pkgname
+						print "Ignoring non base package %s" % pkgname
 		else:
 			if type == INSTALL or type == UPGRADE_BASE or \
 			    type == UPGRADE_ALL:
 				pdict[pkgname].action = INSTALL
+
+				#
+				# We want to install some non base packages as new deps
+				# but not those in the Xwindow group.
+				#
+				if type == UPGRADE_BASE:
+					for sv in img.PKGSITEVARS:
+						if sv.xwin_cluster.has_key(pkgname):
+							pdict[pkgname].action = img.NONE
+							print "Ignoring xwindow package %s" \
+							    % pkgname
+							break
 
 			elif type == UPGRADE:
 				if level == 0:
@@ -2304,11 +2317,18 @@ def create_plan(img, pargs, incompats, action):
 	for sv in img.PKGSITEVARS:
 		if not sv.base_cluster:
 			sv.base_cluster = {}
+			sv.xwin_cluster = {}
 			base_cluster = "%s/clusters/base_cluster" % sv.metainfo
+			xwin_cluster = "%s/clusters/xwin_cluster" % sv.metainfo
 			if os.path.isfile(base_cluster):
 				bfh = open(base_cluster, "r")
 				for line in bfh:
 					sv.base_cluster[line.strip()] = ""
+				bfh.close()
+			if os.path.isfile(xwin_cluster):
+				bfh = open(xwin_cluster, "r")
+				for line in bfh:
+					sv.xwin_cluster[line.strip()] = ""
 				bfh.close()
 
 	if action == img.UPGRADE_ALL:
