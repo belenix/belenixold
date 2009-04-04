@@ -53,7 +53,14 @@ fi
 
 if [ "$ZONES_SNAP" = "" ]
 then
-	ZONES_SNAP=`nawk '{ if (match($2, "^\/$") > 0) print $1 }' /etc/mnttab`
+	ZONES_DSET=`nawk '{ if (match($2, "^\/$") > 0) print $1 }' /etc/mnttab`
+	ZONES_SNAP=${ZONES_DSET}@install
+	zfs list $ZONES_SNAP 2>&1 > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "Creating new snapshot for zones"
+		zfs snapshot ${ZONES_SNAP}
+	fi
 fi
 
 f_img=$(gettext "failed to create image")
