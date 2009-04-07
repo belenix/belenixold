@@ -9,7 +9,7 @@
 Name:                SUNWman
 Summary:             Solaris manual pages
 Version:             5.11.1
-%define tarball_version 20081210
+%define tarball_version 20090318
 Source:              http://dlc.sun.com/osol/man/downloads/current/man-sunosman-%{tarball_version}.tar.bz2
 
 URL:                 http://dlc.sun.com/osol/devpro/downloads/current/
@@ -46,5 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/man/*
 
 %changelog
+* Tue Apr 07 2009 - moinakg@belenix.org
+- Updated to new man page consolidation release.
 * Mon Feb 19 2008 - moinak.ghosh@sun.com
 - Initial spec.

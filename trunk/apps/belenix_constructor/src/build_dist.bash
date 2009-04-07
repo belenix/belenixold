@@ -185,8 +185,6 @@ else
 	umount $PROTO/proc
 fi
 
-
-
 #
 # Create the boot archive. This is a UFS filesystem image in a file
 # that is loaded into RAM by Grub. A file is created using mkfile

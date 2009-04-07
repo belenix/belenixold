@@ -1759,7 +1759,8 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 				    pkgname_is_installed(de[1], img):
 					isbase = 0
 					for sv in img.PKGSITEVARS:
-						if sv.base_cluster.has_key(de[1]):
+						if sv.base_cluster.has_key(de[1]) or \
+						    sv.xwin_cluster.has_key(de[1]):
 							isbase = 1
 							break
 					if isbase == 1:

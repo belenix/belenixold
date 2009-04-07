@@ -1,8 +1,8 @@
---- gani-2.4.4/adddrv.sh.orig	2008-02-09 23:51:40.157104110 +0530
-+++ gani-2.4.4/adddrv.sh	2008-02-09 23:51:56.097672914 +0530
-@@ -11,28 +11,5 @@
- set DEVLIST = ( $DEVLIST '"pci10ec,8136"' )	# PCI-E 810xE
- set DEVLIST = ( $DEVLIST '"pci1186,4300"' )	# D-Link DGE-528T
+--- gani-2.6.2/adddrv.sh.orig	2009-01-31 00:16:11.000000000 +0530
++++ gani-2.6.2/adddrv.sh	2009-04-04 14:05:45.514039834 +0530
+@@ -11,29 +11,5 @@
+ set DEVLIST = ( $DEVLIST '"pciex10ec,8168"' )	# PCI-E 8168/811x
+ set DEVLIST = ( $DEVLIST '"pciex10ec,8136"' )	# PCI-E 810xE
  
 -#echo $DEVLIST
 -
@@ -22,7 +22,8 @@
 -endif
 -
 -set existing = `grep "gani " /etc/driver_aliases`
--echo $existing
+-#echo $existing
+-
 -if ("$existing" == "") then
 -	/usr/sbin/add_drv -n -v -m '* 0600 root sys' -i "$DEVLIST2" gani
 -else 

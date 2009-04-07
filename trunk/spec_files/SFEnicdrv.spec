@@ -12,25 +12,25 @@
 %include arch64.inc
 %endif
 
-%define vfe_version 2.6.3
+%define vfe_version 2.6.4
 %define rf_version 2.6.0
 %define ni_version 0.8.11
 %define alta_version 2.6.1
 %define tu_version 2.6.0b
-%define bfe_version 2.6.0a
+%define bfe_version 2.6.1
 %define tne_version 2.4.0a
 %define ife_version 2.6.1
-%define epfe_version 2.4.0
+%define epfe_version 2.6.1
 %define mtd_version 2.4.0
 %define ae_version 2.6.1
 %define tcfe_version 2.4.0
-%define gani_version 2.4.4
+%define gani_version 2.6.2
 %define vel_version 2.6.3
 %define nfo_version 2.6.2
 %define icpt_version 2.4.0
 %define sige_version 2.6.2
 %define em_version 2.4.0
-%define myk_version 2.6.5
+%define myk_version 2.6.8
 %define urf_version 0.8.2
 %define axf_version 0.8.2
 %define upf_version 0.8.2
@@ -101,6 +101,9 @@ Patch7:              nicdrv-07-tcfe.diff
 Patch8:              nicdrv-08-ae.diff
 Patch9:              nicdrv-09-gldv3.diff
 Patch10:             nicdrv-10-nfo.diff
+Patch11:             dld.h.diff
+Patch12:             nicdrv-11-atge.diff
+Patch13:             nicdrv-12-jmge.diff
 
 URL:                 http://homepage2.nifty.com/mrym3/taiyodo/eng/
 SUNW_BaseDir:        /
@@ -391,6 +394,9 @@ Requires: SUNWcnetr
 %patch6 -p0
 %patch7 -p0
 %patch9 -p0
+%patch11 -p0
+%patch12 -p0
+%patch13 -p0
 
 for src in %{SOURCE0} %{SOURCE1} %{SOURCE2} %{SOURCE3} %{SOURCE4} %{SOURCE5} \
 	%{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} \
@@ -429,7 +435,7 @@ if [ "x`uname -r`" = "x5.10" ]
 then
 	gld="2"
 else
-	gld="3"
+	gld="2"
 fi
 
 #
@@ -967,6 +973,9 @@ ${BASEDIR}%{_localstatedir}/nicdrv/scripts/drvrm ${BASEDIR} nfo
 %attr (0644, root, bin) %{_localstatedir}/nicdrv/scripts/nfo.postinst
 
 %changelog
+* Tue Apr 07 2009 - moinakg@belenix.org
+- Fix build on Osol B111 and use GLDv2 for now.
+- Bump to some new driver versions.
 * Sun Mar 30 2009 - moinakg@belenix.org
 - Fix jmge package postinstall script.
 * Sun Dec 21 2008 - moinakg@belenix.org
