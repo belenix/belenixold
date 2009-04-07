@@ -1,0 +1,11 @@
+--- gldv3-headers/common/sys/dld.h.orig	2009-04-04 13:29:26.047361738 +0530
++++ gldv3-headers/common/sys/dld.h	2009-04-04 13:29:42.987608261 +0530
+@@ -94,8 +94,6 @@
+ 
+ #define	DLDIOC_ATTR	(DLDIOC | 0x03)
+ 
+-typedef uint32_t		datalink_id_t;
+-
+ typedef struct dld_ioc_attr {
+ 	datalink_id_t	dia_linkid;
+ 	uint_t		dia_max_sdu;

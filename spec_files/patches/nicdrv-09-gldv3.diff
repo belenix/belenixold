@@ -1,5 +1,5 @@
---- myk-2.6.5/gem.h.orig	2008-12-04 19:58:26.000000000 +0530
-+++ myk-2.6.5/gem.h	2008-12-21 15:59:05.305274826 +0530
+--- myk-2.6.8/gem.h.orig	2008-12-04 19:58:26.000000000 +0530
++++ myk-2.6.8/gem.h	2008-12-21 15:59:05.305274826 +0530
 @@ -714,6 +714,13 @@
  	DDI_DEFINE_STREAM_OPS(dev_ops, nulldev, nulldev, attach, detach, \
  	nodev, NULL, D_MP, NULL, gem_quiesce)

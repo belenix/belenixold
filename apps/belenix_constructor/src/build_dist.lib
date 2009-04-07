@@ -236,8 +236,8 @@ create_iso()
 	fi
 
 	echo "Confirm lofiadm is available."
-	if ! [[ -f ${DIST_PROTO}/usr/sbin/lofiadm ]]; then
-		echo "FAILURE: ${DIST_PROTO}/usr/sbin/lofiadm NOT FOUND"
+	if ! [[ -f /usr/sbin/lofiadm ]]; then
+		echo "FAILURE: /usr/sbin/lofiadm NOT FOUND"
 		fatal_exit
 	fi
 
@@ -247,8 +247,8 @@ create_iso()
 		echo "${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solaris.zlib"
 		time ${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solaris.zlib
 	else
-		echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solaris.zlib"
-		time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solaris.zlib
+		echo "/usr/sbin/lofiadm  -C gzip-9 `pwd`/solaris.zlib"
+		time /usr/sbin/lofiadm -C gzip-9 `pwd`/solaris.zlib
 	fi
 	if [ $? -ne 0 ] ; then
 		echo "FAILURE: compression of solaris failed"
@@ -275,8 +275,8 @@ create_iso()
 		echo "${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solarismisc.zlib"
 		time ${LOFI_COMPRESS_UTILITY} -C gzip-lz `pwd`/solarismisc.zlib
 	else
-		echo "${DIST_PROTO}/usr/sbin/lofiadm  -C gzip-9 `pwd`/solarismisc.zlib"
-		time ${DIST_PROTO}/usr/sbin/lofiadm -C gzip-9 `pwd`/solarismisc.zlib
+		echo "/usr/sbin/lofiadm  -C gzip-9 `pwd`/solarismisc.zlib"
+		time /usr/sbin/lofiadm -C gzip-9 `pwd`/solarismisc.zlib
 	fi
 	if [ $? -ne 0 ] ; then
 		echo "FAILURE: compression of solarismisc failed"
