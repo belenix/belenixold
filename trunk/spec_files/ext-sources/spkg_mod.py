@@ -1578,7 +1578,8 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 					# we need to create a new boot environment.
 					#
 					if type == UPGRADE and level == 0 and \
-					    sv.base_cluster.has_key(nm):
+					    (sv.base_cluster.has_key(nm) or \
+					    sv.xwin_cluster.has_key(nm)):
 						print "NOTE: Core package being upgraded. Will" \
 						    " create new boot environment."
 						type = UPGRADE_ALL
@@ -1820,7 +1821,7 @@ def build_pkglist(img, pkgs, pdict, incompats, type):
 
 	return type
 
-def build_uninstall_pkglist(img, pkgs, pdict):
+def build_uninstall_pkglist(img, pkgs, pdict, nodeps=False):
 	"""Wrapper routine to do preprocessing and call do_build_uninstall_pkglist."""
 
 	for sv in img.PKGSITEVARS:
@@ -1835,11 +1836,6 @@ def build_uninstall_pkglist(img, pkgs, pdict):
 	# Build an inverse dependency dictionary for all installed packages and
 	# group packages.
 	#
-	#invdeps = {}
-	#ipkgs = os.listdir(img.INSTPKGDIR)
-	#if os.path.exists(img.SPKG_GRP_DIR):
-		#ipkgs.extend(os.listdir(img.SPKG_GRP_DIR))
-
 	invdeps = load_inverse_deps(img)
 
 	print "*** Scanning specified packages"
@@ -1874,7 +1870,7 @@ def build_uninstall_pkglist(img, pkgs, pdict):
 	# until there are no more elements to be removed.
 	#
 	recheck = True
-	while recheck:
+	while recheck and not nodeps:
 		recheck = False
 		trimlist = []
 		for pn in pdict.keys():
@@ -2111,7 +2107,7 @@ def install_pkg(img, ent, pkgfile, logfile, checkBasedir=False):
 			raise PKGUncompressError("Failed to decompress package %s\n%s" % \
 			    (ent.refername, pe.message))
 
-		if checkBasedir:
+		if checkBasedir and pkgname_is_installed(ent.pkgname, img):
 			#
 			# Handle the case where package BASEDIR changes from
 			# one revision to the next. Simply overwriting the
@@ -2278,7 +2274,7 @@ def activate_bootenv(img):
 			exec_prog(os.path.join("%s/boot/solaris/bin/update_grub -R %s" % \
 			    (img.ALTROOT, img.ALTROOT)), 2, img.upgrade_log)
 		print "*** Activating new Boot Environment: %s" % img.bename
-		exec_prog("/usr/sbin/beadm unmount -f %s" % img.bename, 2, img.upgrade_log)
+		exec_prog("/usr/sbin/beadm unmount -f %s" % img.bename, 0)
 		exec_prog("/usr/sbin/beadm activate %s" % img.bename, 0)
 	except PKGError, pe:
 		raise PKGError("Failed to activate new boot environment " + img.bename + \
@@ -2309,7 +2305,7 @@ def uninstall_pkg(img, ent, logfile):
 			raise PKGError("Failed to uninstall Group package %s, %s" % \
 			    (ent.refername, pe.message))
 
-def create_plan(img, pargs, incompats, action):
+def create_plan(img, pargs, incompats, action, nodeps=False):
 	"""Create a TransformPlan that contains a set of package transforms for the given action"""
 
 	pdict = {}
@@ -2338,10 +2334,13 @@ def create_plan(img, pargs, incompats, action):
 		pkgs = map(lambda pkg: pkg.replace(".i", ""), os.listdir(img.INSTPKGDIR))
 
 		#
-		# Now add in missing package from base cluster
+		# Now add in missing packages from base, xwin clusters
 		#
 		for sv in img.PKGSITEVARS:
 			for nm in sv.base_cluster.keys():
+				if nm not in pkgs:
+					pkgs.append(nm)
+			for nm in sv.xwin_cluster.keys():
 				if nm not in pkgs:
 					pkgs.append(nm)
 
@@ -2362,9 +2361,9 @@ def create_plan(img, pargs, incompats, action):
 		#
 		pkgs = [nm for nm in bset]
 	else:
-		if action == img.INSTALL:
+		if action == img.INSTALL or action == img.UNINSTALL:
 			#
-			# Check for spkg install <cluster name>, in which case
+			# Check for spkg install/uninstall <cluster name>, in which case
 			# <cluster name> is replaced with the list of packages
 			# in the cluster.
 			#
@@ -2391,7 +2390,7 @@ def create_plan(img, pargs, incompats, action):
 
 	print "Computing package dependencies."
 	if action == img.UNINSTALL:
-		build_uninstall_pkglist(img, pkgs, pdict)
+		build_uninstall_pkglist(img, pkgs, pdict, nodeps)
 	else:
 		action = build_pkglist(img, pkgs, pdict, incompats, action)
 
@@ -2527,6 +2526,10 @@ def execute_plan(tplan, downloadonly, resume_mode=False):
 							img.log_msg(logfile, msg)
 							raise PKGError(msg)
 						except PKGError, pe:
+							traceback.print_exc()
+							msg = "WARNING: Package error: " + \
+							    ent.cname + ": " + pe.message
+							img.log_msg(logfile, msg)
 							pass
 					else:
 						install_pkg(img, ent, ent.dwn_pkgfile,
@@ -2749,13 +2752,14 @@ def upgrade(img, pargs, trans=None):
 				    % (typ, entl[0])))
 
 		print "Computing upgrade plan."
+		incompats = {}
 		if pargs[0] == "base":
-			tplan = create_plan(img, pargs, None, img.UPGRADE_BASE)
+			tplan = create_plan(img, pargs, incompats, img.UPGRADE_BASE)
 
 		elif pargs[0] == "all":
-			tplan = create_plan(img, pargs, None, img.UPGRADE_ALL)
+			tplan = create_plan(img, pargs, incompats, img.UPGRADE_ALL)
 		else:
-			tplan = create_plan(img, pargs, None, img.UPGRADE)
+			tplan = create_plan(img, pargs, incompats, img.UPGRADE)
 
 		if tplan.num == 0:
 			print "------------------------------------------------"
@@ -2797,6 +2801,25 @@ def upgrade(img, pargs, trans=None):
 	if not resume_mode and not S__NOEXEC:
 		if tplan.trans:
 			tplan.trans.put_data("*" + os.environ["USE_RELEASE_TAG"])
+
+	#
+	# If we are doing an upgrade_all then xwindows packages must be evicted
+	# first. This is a special case to handle churn in FOX packages.
+	#
+	# TODO: Need a more general way of handling package eviction
+	#
+	upkgs = []
+	if len(incompats) > 0:
+		upkgs.extend(incompats)
+	if tplan.action == img.UPGRADE_ALL:
+		for sv in img.PKGSITEVARS:
+			for pn in sv.xwin_cluster.keys():
+				if pn not in upkgs and pkgname_is_installed(pn, img):
+					upkgs.append(pn)
+	if len(upkgs) > 0:
+		uplan = create_plan(img, upkgs, None, img.UNINSTALL, True)
+		if uplan.num > 0:
+			execute_plan(uplan, 0, False)
 
 	if tplan.trans and not S__NOEXEC:
 		state = tplan.trans.get_state()
