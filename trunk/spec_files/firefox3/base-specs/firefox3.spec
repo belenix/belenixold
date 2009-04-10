@@ -10,8 +10,8 @@
 Name:        firefox
 %define code_name  none
 Summary:     Mozilla Firefox Web browser
-Version:     3.0.1
-%define tarball_version 3.0.1
+Version:     3.0.8
+%define tarball_version 3.0.8
 Release:     1
 Copyright:   MPL/LGPL
 Group:       Applications/Internet
@@ -402,6 +402,8 @@ rmdir $RPM_BUILD_ROOT%{_ffdir}/dictionaries
 %{_datadir}/pixmaps/%{name}-icon.png
 
 %changelog
+* Fri Apr 10 2009 - moinakg@belenix.org
+- Bump version to 3.0.8
 * Thu Jun 12 2008 - ginn.chen@sun.com
 - Bump to Firefox 3.0 RC3
 - Add with-system-jpeg (bugzilla 437041)
