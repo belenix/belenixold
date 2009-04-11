@@ -1,0 +1,181 @@
+#!/usr/perl5/bin/perl
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License (the "License").
+# You may not use this file except in compliance with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+#ident	"@(#)install-proto.pl	1.3	08/11/21 SMI"
+#
+# BSD compatible install(1b) that honors DESTDIR and performs SFW post
+# processing on various file types
+#
+
+use Getopt::Std;
+use File::Basename;
+use File::Copy;
+
+my ($PERL, $DESTDIR, $SRC, $MANSCRIPT, %opts, @paths) =
+	($ENV{'PERL'}, $ENV{'DESTDIR'}, $ENV{'SRC'}, $ENV{'MANSCRIPT'});
+my ($post_process, $post_process_so, $strip) = (
+	$SRC.'/tools/post_process',
+	$SRC.'/tools/post_process_so',
+	'/usr/ccs/bin/strip');
+my $progname = basename($0);
+
+defined($PERL) || ($PERL = $);	# fallback to this version of perl
+
+(defined($DESTDIR)) || ($DESTDIR = $ENV{'ROOT'});
+
+sub usage {
+	print "$progname [-cs] [-g group] [-o owner] [-m mode] file1 file2\n";
+	print "$progname [-cs] [-g group] [-o owner] [-m mode] file... dir\n";
+	print "$progname -d [-g group] [-o owner] [-m mode] dir\n";
+	exit (1);
+}
+
+sub file_type {
+	local ($path) = @_;
+
+	open(FH, "/bin/file $path|");
+	my $line = <FH>;
+	close(FH);
+
+	# if the path matches the pattern, it's a man page.
+	($path =~ /.*\/man\/man.+\/.*\.[1-9].*/) && ($line = 'roff');
+	
+	return($line);
+}
+
+sub copyfile {
+	local ($src, $dst) = @_;
+
+	if (! -f $src) {	# if there is no src, skip it
+		warn("$src: no such file\n");
+		return;
+	}
+
+	unlink($dst);		# remove the original
+
+	my $type = file_type($src);
+	if ((defined($MANSCRIPT)) && ($type =~ /roff,/)) {
+		(-f $MANSCRIPT) ||
+			die "$progname: error: $MANSCRIPT does not exist\n";
+		system("sed -f $MANSCRIPT <$src >$dst");
+	} elsif ($type =~ /perl .*script/) {
+		my $IFH, $OFH;
+
+		open($IFH, "<$src") || die("$progname: open(<$src): $!\n");
+		open($OFH, ">$dst") || die("$progname: open(>$dst): $!\n");
+
+		while (<$IFH>) {
+			($. == 1) && (s|^#!.*perl|#!${PERL}|g);
+			print($OFH "$_");
+		}
+
+		close($IFH);
+		close($OFH);
+	} elsif (-T $src) {
+		my $IFH, $OFH;
+
+		open($IFH, "<$src") || die("$progname: open(<$src): $!\n");
+		open($OFH, ">$dst") || die("$progname: open(>$dst): $!\n");
+
+		while (<$IFH>) {
+			defined($DESTDIR) && (s|${DESTDIR}||g);
+			print($OFH "$_");
+		}
+
+		close($IFH);
+		close($OFH);
+	} else {
+		copy($src, $dst);
+	}
+
+	# ELF files get post processing
+	if (($type =~ /ELF .*dynamic lib/) && (-x $post_process_so)) {
+		system("$post_process_so $dst");
+		chmod(0555, $dst); # default to ugo rx
+	} elsif (($type =~ /ELF .*executable/) && (-x $post_process) &&
+		 (-x $strip)) {
+		system("$post_process $dst ; $strip $dst");
+		chmod(0555, $dst); # default to ugo rx
+	} elsif ($type =~ /executable/) {
+		chmod(0555, $dst); # default to ugo rx
+	}
+}
+
+sub mkdir_p {
+	local($path, $mode) = @_;
+
+	(-d $path) && return;		# found it, return
+
+	mkdir_p(dirname($path), $mode);	# make the parent first
+	mkdir($path, $mode);
+}
+
+#
+# Execution begins here
+#
+getopts('cdg:m:o:s', \%opts);
+
+# the last argument is the destination (file or dir)
+my $dst = $ARGV[$#ARGV];
+$#ARGV--;
+
+(defined($opts{'d'})) && ($#ARGV != -1) && usage();
+($#ARGV > 0) && (! -d $dst) && usage();
+
+# dst should include the DESTDIR
+($DESTDIR ne substr($dst, 0, length($DESTDIR))) &&
+	($dst = $DESTDIR.'/'.$dst);
+
+if (defined($opts{'d'})) {	# ... -d dir
+	mkdir_p($dst, 0755);
+	push(@paths, $dst);
+} elsif (-d $dst) {		# ... file... dir
+	foreach $path (@ARGV) {
+		my $file = $dst.'/'.basename($path);
+		copyfile($path, $file);
+		push(@paths, $file);
+	}	
+} else {			# ... file1 file2
+	copyfile($ARGV[0], $dst);
+	push(@paths, $dst);
+}
+
+# fix the file attributes
+foreach $path (@paths) {
+	# fix the mode
+	if (defined($opts{'m'})) {
+		chmod(oct($opts{'m'}), $path);
+	}
+
+	# fix the owner/group information
+	if (defined($opts{'o'}) || defined($opts{'g'})) {
+		my ($uid, $gid) = (-1, -1);
+
+		(defined($opts{'o'})) && (($x,$x,$uid) = getpwnam($opts{'o'}));
+		(defined($opts{'g'})) && (($x,$x,$gid) = getgrnam($opts{'g'}));
+		chown($uid, $gid, $path);
+	}
+}
+
+exit 0;
