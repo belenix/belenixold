@@ -1,0 +1,73 @@
+*** Makedefs.in.orig	Tue Jan 22 14:37:21 2008
+--- Makedefs.in	Tue Aug 12 22:09:30 2008
+***************
+*** 116,122 ****
+  ARFLAGS		=	@ARFLAGS@
+  BACKLIBS	=	@BACKLIBS@
+  CFLAGS		=	@CPPFLAGS@ @CFLAGS@
+! COMMONLIBS	=	@LIBS@
+  CUPSDLIBS	=	@CUPSDLIBS@
+  CXXFLAGS	=	@CPPFLAGS@ @CXXFLAGS@
+  CXXLIBS		=	@CXXLIBS@
+--- 116,122 ----
+  ARFLAGS		=	@ARFLAGS@
+  BACKLIBS	=	@BACKLIBS@
+  CFLAGS		=	@CPPFLAGS@ @CFLAGS@
+! COMMONLIBS	=	@LIBS@ -lscf
+  CUPSDLIBS	=	@CUPSDLIBS@
+  CXXFLAGS	=	@CPPFLAGS@ @CXXFLAGS@
+  CXXLIBS		=	@CXXLIBS@
+
+*** cups/http.c.orig	Wed Jan 16 14:20:33 2008
+--- cups/http.c	Tue Aug 12 21:44:32 2008
+***************
+*** 365,371 ****
+--- 365,399 ----
+    return (httpConnectEncrypt(host, port, encryption));
+  }
+  
++ /*
++  * Test to see if CUPS is the "active" print service on Solaris by looking for
++  * a special "general/active" boolean property in the CUPS service instance
++  * svc:/application/cups/scheduler:default.  If it exists and is true, CUPS
++  * is the active print service.
++  */
++ #include <libscf.h>
+  
++ static int
++ cups_is_active()
++ {
++   int active = 0;
++ 
++   scf_simple_prop_t *prop = scf_simple_prop_get(NULL, 
++                                    "svc:/application/cups/scheduler:default",
++                                    "general", "active");
++ 
++   if ((prop != NULL) && (scf_simple_prop_numvalues(prop) > 0)) {
++       uint8_t *value = scf_simple_prop_next_boolean(prop);
++ 
++       if (value != NULL)
++       active = *value;
++     }
++ 
++   scf_simple_prop_free(prop);
++ 
++   return (active);
++ }
++ 
+  /*
+   * 'httpConnectEncrypt()' - Connect to a HTTP server using encryption.
+   */
+***************
+*** 387,392 ****
+--- 415,424 ----
+    if (!host)
+      return (NULL);
+  
++   /* Check to see if CUPS is the "active" print service on Solaris */
++   if (cups_is_active() == 0)
++     return (NULL);
++ 
+    httpInitialize();
+  
+   /*

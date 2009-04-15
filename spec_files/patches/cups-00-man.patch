@@ -1,0 +1,61 @@
+*** man/Makefile.orig	Thu Feb 21 08:24:02 2008
+--- man/Makefile	Thu Feb 21 08:27:20 2008
+***************
+*** 98,107 ****
+  #
+  
+  install:	all
+! 	$(INSTALL_DIR) -m 755 $(MANDIR)/man1
+  	for file in $(MAN1); do \
+! 		echo Installing $$file in $(MANDIR)/man1...; \
+! 		$(INSTALL_MAN) $$file $(MANDIR)/man1; \
+  	done
+  	$(INSTALL_DIR) -m 755 $(MANDIR)/man5
+  	for file in $(MAN5); do \
+--- 98,107 ----
+  #
+  
+  install:	all
+! 	$(INSTALL_DIR) -m 755 $(MANDIR)/man$(MAN1EXT)
+  	for file in $(MAN1); do \
+! 		echo Installing $$file in $(MANDIR)/man$(MAN1EXT)...; \
+! 		$(INSTALL_MAN) $$file $(MANDIR)/man$(MAN1EXT); \
+  	done
+  	$(INSTALL_DIR) -m 755 $(MANDIR)/man5
+  	for file in $(MAN5); do \
+*** Makedefs.in.orig	Thu Feb 21 08:41:15 2008
+--- Makedefs.in	Thu Feb 21 08:41:52 2008
+***************
+*** 243,249 ****
+  #
+  
+  .SILENT:
+! .SUFFIXES:	.1 .1.gz .1m .1m.gz .5 .5.gz .7 .7.gz .8 .8.gz .a .c .cxx .h .man .o .32.o .64.o .gz
+  
+  .c.o:
+  	echo Compiling $<...
+--- 243,249 ----
+  #
+  
+  .SILENT:
+! .SUFFIXES:	.1 .1.gz .1m .1cups .1m.gz .5 .5.gz .7 .7.gz .8 .8.gz .a .c .cxx .h .man .o .32.o .64.o .gz
+  
+  .c.o:
+  	echo Compiling $<...
+***************
+*** 261,267 ****
+  	echo Compiling $<...
+  	$(CXX) $(ARCHFLAGS) $(OPTIM) $(ALL_CXXFLAGS) -c $<
+  
+! .man.1 .man.1m .man.5 .man.7 .man.8:
+  	echo Linking $<...
+  	$(RM) $@
+  	$(LN) $< $@
+--- 261,267 ----
+  	echo Compiling $<...
+  	$(CXX) $(ARCHFLAGS) $(OPTIM) $(ALL_CXXFLAGS) -c $<
+  
+! .man.1 .man.1m .man.1cups .man.5 .man.7 .man.8:
+  	echo Linking $<...
+  	$(RM) $@
+  	$(LN) $< $@
