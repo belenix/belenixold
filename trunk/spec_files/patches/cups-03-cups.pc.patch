@@ -1,0 +1,63 @@
+Index: Makefile
+===================================================================
+--- Makefile	(revision 7386)
++++ Makefile	(working copy)
+@@ -172,6 +172,8 @@
+ 		$(INSTALL_DIR) -m 755 $(BUILDROOT)$(ICONDIR)/hicolor/128x128/apps; \
+ 		$(INSTALL_DATA) desktop/cups-128.png $(BUILDROOT)$(ICONDIR)/hicolor/128x128/apps/cups.png; \
+ 	fi
++	$(INSTALL_DIR) $(BUILDROOT)$(libdir)/pkgconfig
++	$(INSTALL_DATA) cups.pc $(BUILDROOT)$(libdir)/pkgconfig/cups.pc
+ 
+ 
+ #
+@@ -185,7 +187,6 @@
+ 	(cd cups ; $(MAKE) $(MFLAGS) installhdrs) || exit 1;\
+ 	(cd filter ; $(MAKE) $(MFLAGS) installhdrs) || exit 1;
+ 
+-
+ #
+ # Uninstall object and target files...
+ #
+Index: cups.pc.in
+===================================================================
+--- cups.pc.in	(revision 0)
++++ cups.pc.in	(revision 0)
+@@ -0,0 +1,18 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++bindir=@bindir@
++includedir=@includedir@
++libdir=@libdir@
++imagelibdir=@libdir@
++datarootdir=@datadir@
++datadir=@datadir@
++sysconfdir=@sysconfdir@
++cups_datadir=@CUPS_DATADIR@
++cups_serverbin=@CUPS_SERVERBIN@
++cups_serverroot=@CUPS_SERVERROOT@
++
++Name: cups
++Description: Common Unix Printing System
++Version: @CUPS_VERSION@
++Cflags: -I${includedir}
++Libs: -L${libdir} -lcupsimage -lcups
+
+Property changes on: cups.pc.in
+___________________________________________________________________
+Name: svn:executable
+   + *
+
+Index: configure.in
+===================================================================
+--- configure.in	(revision 7386)
++++ configure.in	(working copy)
+@@ -69,7 +69,7 @@
+ 	  man/client.conf.man man/cups-deviced.man man/cups-driverd.man
+ 	  man/cups-lpd.man man/cupsaddsmb.man man/cupsd.man
+ 	  man/cupsd.conf.man man/lpoptions.man
+-	  templates/header.tmpl
++	  templates/header.tmpl cups.pc
+ 	  $LANGFILES)
+ 
+ chmod +x cups-config

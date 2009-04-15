@@ -1,0 +1,21 @@
+*** backend/usb-unix.c.orig	Tue Nov 25 12:32:12 2008
+--- backend/usb-unix.c	Wed Nov 26 00:19:33 2008
+***************
+*** 173,179 ****
+--- 173,188 ----
+        lseek(print_fd, 0, SEEK_SET);
+      }
+  
++ #ifdef __sun
++    /*
++     * *Solaris's usbrn driver doesn't currently support the poll() interface
++     * which causes select() to always fail with errno set to ENXIO, so
++     * we don't want back channel or side channel support.
++     */
++     tbytes = backendRunLoop(print_fd, device_fd, 0, NULL);
++ #else
+      tbytes = backendRunLoop(print_fd, device_fd, use_bc, side_cb);
++ #endif
+  
+      if (print_fd != 0 && tbytes >= 0)
+        _cupsLangPrintf(stderr,

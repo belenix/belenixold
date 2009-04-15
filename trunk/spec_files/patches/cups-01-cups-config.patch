@@ -1,0 +1,23 @@
+*** cups-config.in.orig	Thu Feb 21 09:40:30 2008
+--- cups-config.in	Thu Feb 21 09:41:19 2008
+***************
+*** 105,113 ****
+  	--libs)
+  	    if test $static = no; then
+   	        if test $image = no; then
+!  	            echo -lcups $LIBS
+   		else
+!  	            echo -lcupsimage -lcups $IMGLIBS $LIBS
+   		fi
+  	    else
+  	        if test $image = no; then
+--- 105,113 ----
+  	--libs)
+  	    if test $static = no; then
+   	        if test $image = no; then
+!  	            echo -lcups
+   		else
+!  	            echo -lcupsimage -lcups
+   		fi
+  	    else
+  	        if test $image = no; then

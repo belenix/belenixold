@@ -1,0 +1,301 @@
+Index: Makedefs.in
+===================================================================
+--- Makedefs.in	(revision 7103)
++++ Makedefs.in	(working copy)
+@@ -221,6 +221,7 @@
+ SBINDIR		=	$(BUILDROOT)@sbindir@
+ SERVERBIN	= 	$(BUILDROOT)@CUPS_SERVERBIN@
+ SERVERROOT	= 	$(BUILDROOT)@CUPS_SERVERROOT@
++SMFMANIFESTDIR	= 	@SMFMANIFESTDIR@
+ STATEDIR	=	$(BUILDROOT)@CUPS_STATEDIR@
+ XINETD		=	@XINETD@
+ 
+Index: config-scripts/cups-directories.m4
+===================================================================
+--- config-scripts/cups-directories.m4	(revision 7103)
++++ config-scripts/cups-directories.m4	(working copy)
+@@ -123,12 +123,14 @@
+ AC_ARG_WITH(rclevels, [  --with-rclevels         set run levels for rc scripts],rclevels="$withval",rclevels="2 3 5")
+ AC_ARG_WITH(rcstart, [  --with-rcstart          set start number for rc scripts],rcstart="$withval",rcstart="99")
+ AC_ARG_WITH(rcstop, [  --with-rcstop           set stop number for rc scripts],rcstop="$withval",rcstop="00")
++AC_ARG_WITH(smfmanifestdir, [  --with-smfmanifestdir           set the path to place an smf manifest into],smfmanifestdir="$withval",smfmanifestdir="")
+ 
+ INITDIR=""
+ INITDDIR=""
+ RCLEVELS="$rclevels"
+ RCSTART="$rcstart"
+ RCSTOP="$rcstop"
++SMFMANIFESTDIR=""
+ 
+ if test x$rcdir = x; then
+ 	case "$uname" in
+@@ -192,8 +194,12 @@
+ 
+ 		SunOS*)
+ 			# Solaris
+-			INITDIR="/etc"
+-			RCSTART="81"
++			if test "x$smfmanifestdir" != x; then
++				SMFMANIFESTDIR=$smfmanifestdir
++			else
++				INITDIR="/etc"
++				RCSTART="81"
++			fi
+ 			;;
+ 
+ 		*)
+@@ -214,6 +220,7 @@
+ AC_SUBST(RCLEVELS)
+ AC_SUBST(RCSTART)
+ AC_SUBST(RCSTOP)
++AC_SUBST(SMFMANIFESTDIR)
+ 
+ dnl Xinetd support...
+ AC_ARG_WITH(xinetd, [  --with-xinetd           set path for xinetd config files],XINETD="$withval",XINETD="")
+Index: Makefile
+===================================================================
+--- Makefile	(revision 7103)
++++ Makefile	(working copy)
+@@ -136,6 +136,12 @@
+ 			$(INSTALL_SCRIPT) init/cups.sh $(BUILDROOT)$(INITDDIR)/cups; \
+ 		fi \
+ 	fi
++	if test "x$(SMFMANIFESTDIR)" != x; then \
++		echo Installing SMF manifest in $(SMFMANIFESTDIR)...;\
++		$(INSTALL_DIR) $(BUILDROOT)/$(SMFMANIFESTDIR); \
++		$(INSTALL_SCRIPT) init/cups.xml $(BUILDROOT)$(SMFMANIFESTDIR)/cups.xml; \
++	fi
++		
+ 	if test "x$(DBUSDIR)" != x; then \
+ 		echo Installing cups.conf in $(DBUSDIR)...;\
+ 		$(INSTALL_DIR) -m 755 $(BUILDROOT)$(DBUSDIR)/system.d; \
+Index: configure.in
+===================================================================
+--- configure.in	(revision 7103)
++++ configure.in	(working copy)
+@@ -65,7 +65,7 @@
+ AC_OUTPUT(Makedefs packaging/cups.list init/cups.sh init/cups-lpd cups-config
+ 	  conf/cupsd.conf conf/mime.convs conf/pam.std conf/snmp.conf
+ 	  doc/index.html doc/help/ref-cupsd-conf.html doc/help/standard.html
+-	  init/org.cups.cups-lpd.plist
++	  init/org.cups.cups-lpd.plist init/cups.xml
+ 	  man/client.conf.man man/cups-deviced.man man/cups-driverd.man
+ 	  man/cups-lpd.man man/cupsaddsmb.man man/cupsd.man
+ 	  man/cupsd.conf.man man/lpoptions.man
+Index: init/cups.xml.in
+===================================================================
+--- init/cups.xml.in	(revision 0)
++++ init/cups.xml.in	(revision 0)
+@@ -0,0 +1,212 @@
++<?xml version="1.0"?>
++<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
++<!--
++    Service manifest for CUPS.
++
++    This service manifest introduces smf(5) services for CUPS.  The services
++    described in this file are as follows:
++
++    	svc:/application/cups/scheduler:default
++    	svc:/application/cups/in-lpd:default
++
++    NOTE:  This service manifest is not editable; its contents will be
++    overwritten by package or patch operations, including operating system
++    upgrade.  Make customizations in a different file.
++
++    Norm.Jacobs@Sun.COM
++
++    $Id$
++-->
++
++<service_bundle type='manifest' name='SUNWcups:services'>
++
++<service
++    name='application/cups/scheduler'
++    type='service'
++    version='1'>
++
++    <dependency
++        name='filesystem_minimal'
++        grouping='require_all'
++        restart_on='none'
++        type='service'>
++        <service_fmri value='svc:/system/filesystem/minimal' />
++    </dependency>
++
++    <dependency
++        name='loopback'
++        grouping='optional_all'
++        restart_on='error'
++        type='service'>
++        <service_fmri value='svc:/network/loopback' />
++    </dependency>
++
++
++    <dependency
++        name='network'
++        grouping='optional_all'
++        restart_on='error'
++        type='service'>
++        <service_fmri value='svc:/milestone/network' />
++    </dependency>
++
++    <dependency
++        name='lpsched'
++        grouping='exclude_all'
++        restart_on='none'
++        type='service'>
++        <service_fmri value='svc:/application/print/server' />
++    </dependency>
++
++    <exec_method
++        type='method'
++        name='stop'
++        exec=':kill'
++        timeout_seconds='60' />
++
++    <instance name='default' enabled='false' >
++
++        <dependency
++            name='config_data'
++            grouping='require_all'
++            restart_on='none'
++            type='path'>
++            <service_fmri value='file://localhost@sysconfdir@/cups/cupsd.conf' />
++        </dependency>
++
++        <exec_method
++            type='method'
++            name='start'
++            exec='@sbindir@/cupsd'
++            timeout_seconds='60' >
++            <method_context>
++                <method_credential user='root' group='@CUPS_GROUP@' />
++            </method_context>
++        </exec_method>
++
++        <property_group name='general' type='framework'>
++            <propval name='action_authorization' type='astring'
++                value='solaris.smf.manage.cups' />
++            <propval name='value_authorization' type='astring'
++                value='solaris.smf.manage.cups' />
++        </property_group>
++
++        <template>
++            <common_name>
++                <loctext xml:lang='C'>
++                    CUPS Print Spooler
++                </loctext>
++            </common_name>
++            <documentation>
++                <manpage title='cupsd' section='8'
++                    manpath='@mandir@' />
++            </documentation>
++        </template>
++
++    </instance>
++
++    <stability value='Unstable' />
++
++</service>
++
++<service
++    name='application/cups/in-lpd'
++    type='service'
++    version='1'>
++
++    <dependency
++        name='filesystem_minimal'
++        grouping='require_all'
++        restart_on='none'
++        type='service'>
++        <service_fmri value='svc:/system/filesystem/minimal' />
++    </dependency>
++
++    <dependency
++        name='loopback'
++        grouping='require_any'
++        restart_on='error'
++        type='service'>
++        <service_fmri value='svc:/network/loopback' />
++    </dependency>
++
++    <dependency
++        name='network'
++        grouping='optional_all'
++        restart_on='error'
++        type='service'>
++        <service_fmri value='svc:/milestone/network' />
++    </dependency>
++
++    <dependency
++        name='in-lpd'
++        grouping='exclude_all'
++        restart_on='none'
++        type='service'>
++        <service_fmri value='svc:/application/print/rfc1179' />
++    </dependency>
++
++    <exec_method
++        type='method'
++        name='stop'
++        exec=':kill'
++        timeout_seconds='60' />
++
++    <instance name='default' enabled='false' >
++        <restarter>
++            <service_fmri value='svc:/network/inetd:default' />
++        </restarter>
++
++        <dependency
++            name='cupsd'
++            grouping='require_all'
++            restart_on='none'
++            type='service'>
++            <service_fmri value='svc:/application/cups/scheduler' />
++        </dependency>
++
++        <exec_method
++            type='method'
++            name='inetd_start'
++            exec='@CUPS_SERVERBIN@/daemon/cups-lpd -o document-format=application/octet-stream'
++            timeout_seconds='0'>
++            <method_context>
++                <method_credential user='@CUPS_USER@' group='@CUPS_GROUP@' />
++            </method_context>
++        </exec_method>
++
++        <property_group name='inetd' type='framework'>
++            <stability value='Evolving' />
++            <propval name='endpoint_type' type='astring' value='stream' />
++            <propval name='name' type='astring' value='printer' />
++            <propval name='wait' type='boolean' value='false' />
++            <propval name='isrpc' type='boolean' value='false' />
++            <propval name='proto' type='astring' value='tcp6' />
++        </property_group>
++
++        <property_group name='general' type='framework'>
++            <propval name='action_authorization' type='astring'
++                value='solaris.smf.manage.cups' />
++            <propval name='value_authorization' type='astring'
++                value='solaris.smf.manage.cups' />
++        </property_group>
++
++        <template>
++            <common_name>
++                <loctext xml:lang='C'>
++                    CUPS Line Printer Daemon mini-server
++                </loctext>
++            </common_name>
++            <documentation>
++                <manpage title='cups-lpd' section='8'
++                    manpath='@mandir@' />
++            </documentation>
++        </template>
++
++    </instance>
++
++    <stability value='Unstable' />
++
++</service>
++
++</service_bundle>

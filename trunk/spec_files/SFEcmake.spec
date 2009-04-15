@@ -7,9 +7,11 @@
 
 Name:                    SFEcmake
 Summary:                 Cross platform make system
-Version:                 2.4.7
-Source:                  http://www.cmake.org/files/v2.4/cmake-%{version}.tar.gz
+Version:                 2.6.2
+Source:                  http://www.cmake.org/files/v2.6/cmake-%{version}.tar.gz
 URL:                     http://www.cmake.org
+Patch0:                  cmake-01.diff
+
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 
@@ -23,6 +25,7 @@ Requires:               SUNWlibmsr
 
 %prep
 %setup -q -n cmake-%{version}
+%patch0 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -63,6 +66,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc
 
 %changelog
+* Wed Apr 15 2009 - moinakg@belenix.org
+- Merge in patch from SFW gate.
 * Tue Apr 01 2008 - moinakg@gmail.com
 - Enable building using gcc.
 * Mon Oct 22 2007 - nonsea@users.sourceforge.net

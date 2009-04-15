@@ -6,7 +6,7 @@
 %include Solaris.inc
 
 %define src_name junit
-%define src_ver 4.4
+%define src_ver 4.5
 %define src_url http://%{sf_mirror}/%{src_name}
 %define src_ver1 1.1
 %define src_url1 http://hamcrest.googlecode.com/files
@@ -46,7 +46,7 @@ cd %{name}-%{version}
 export JAVA_HOME=/usr/java
 javac -classpath hamcrest-all-1.1.jar:. $(find . -name '*.java')
 jar cvf %{src_name}-%{version}.jar $(find . -type f '!' -name '*.java')
-javadoc -d javadoc $(find ./ -name '*.java') || :
+javadoc -classpath %{src_name}-%{version}.jar -d javadoc $(find ./ -name '*.java') || :
 
 %install
 cd %{name}-%{version}
@@ -74,6 +74,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadocdir}
 
 %changelog
+* Wed Apr 15 2009 - moinakg@belenix.org
+- Bump version to 4.5 and fix javadoc build.
 * Wed Oct 17 2007 - sobotkap@centrum.cz
 - Modified arguments to works with solaris's find
 * Sat Sep  8 2007 - dougs@truemail.co.th
