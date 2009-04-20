@@ -1,0 +1,26 @@
+diff --git a/js/src/xpconnect/src/xpcconvert.cpp b/js/src/xpconnect/src/xpcconvert.cpp
+--- a/js/src/xpconnect/src/xpcconvert.cpp
++++ b/js/src/xpconnect/src/xpcconvert.cpp
+@@ -1034,17 +1034,22 @@ CreateHolderIfNeeded(XPCCallContext& ccx
+     {
+         XPCJSObjectHolder* objHolder = XPCJSObjectHolder::newHolder(ccx, obj);
+         if(!objHolder)
+             return JS_FALSE;
+         
+         NS_ADDREF(*dest = objHolder);
+     }
+ 
++#ifdef __SUNPRO_CC
++    // Ugly workaound for a bug of Sun Studio 12. See Bug 478390.
++    *d = (jsval)obj;
++#else
+     *d = OBJECT_TO_JSVAL(obj);
++#endif
+ 
+     return JS_TRUE;
+ }
+ 
+ /***************************************************************************/
+ // static
+ JSBool
+ XPCConvert::NativeInterface2JSObject(XPCCallContext& ccx,

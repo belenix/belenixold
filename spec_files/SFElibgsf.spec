@@ -11,12 +11,19 @@
 #
 
 %include Solaris.inc
+%ifarch amd64 sparcv9
+%include arch64.inc
+%use libgsf_64 = libgsf.spec
+%endif
+
+%include base.inc
 %use libgsf = libgsf.spec
 %define sunw_gnu_iconv %(pkginfo -q SUNWgnu-libiconv && echo 1 || echo 0)
 
 Name:                    SFElibgsf
 Summary:                 A library provide i/o abstraction for dealing with different structured file formats
 Version:                 %{default_pkg_version}
+SUNW_Copyright:          %{name}.copyright
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 
@@ -27,9 +34,18 @@ Requires: SUNWgnome-component
 Requires: SUNWgnome-vfs
 Requires: SUNWbzip
 Requires: SUNWpostrun
+Requires: SUNWzlib
+Requires: SUNWlxml
+Requires: SUNWlibms
+Requires: SUNWdesktop-cache
+Requires: SUNWgnome-python-libs
+Requires: SUNWdesktop-cache
 BuildRequires: SUNWgnome-base-libs-devel
 BuildRequires: SUNWgnome-component-devel
 BuildRequires: SUNWgnome-vfs-devel 
+BuildRequires: SUNWlxml-devel
+BuildRequires: SUNWgnome-python-libs-devel
+BuildRequires: SUNWpython-setuptools
 %if %option_with_gnu_iconv
 %if %sunw_gnu_iconv
 Requires: SUNWgnu-libiconv
@@ -55,6 +71,9 @@ Summary:                 %{summary} - developer files
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 Requires: %{name}
+Requires:                SUNWgnome-base-libs-devel
+Requires:                SUNWlxml-devel
+Requires:                SUNWgnome-component-devel
 
 %if %build_l10n
 %package l10n
@@ -67,21 +86,65 @@ Requires:                %{name}
 %prep
 rm -rf %name-%version
 mkdir %name-%version
-%libgsf.prep -d %name-%version
+
+%ifarch amd64 sparcv9
+mkdir %name-%version/%_arch64
+%libgsf_64.prep -d %name-%version/%_arch64
+%endif
+
+mkdir %name-%version/%{base_arch}
+%libgsf.prep -d %name-%version/%{base_arch}
 
 %build
-export CFLAGS="%optflags -I/usr/gnu/include"
+%ifarch amd64 sparcv9
+if [ "x`basename $CC`" != xgcc ]
+then
+  FLAG64="-xarch=generic64"
+else
+  FLAG64="-m64"
+fi
+
+export CFLAGS="%optflags64"
+%if %option_with_gnu_iconv
+export CFLAGS="${CFLAGS} -I/usr/gnu/include -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64} -lintl"
+%endif
+export RPM_OPT_FLAGS="$CFLAGS"
+
+if [ "%_ldflags64" = "%_ldflags64" ]
+then
+	export LDFLAGS="%_ldflags"
+else
+	export LDFLAGS="%_ldflags64"
+fi
+%if %option_with_gnu_iconv
+export LDFLAGS="$LDFLAGS -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64}"
+%endif
+
+%libgsf_64.build -d %name-%version/%{_arch64}
+%endif
+
+
+export CFLAGS="%optflags"
 %if %option_with_gnu_iconv
 export CFLAGS="$CFLAGS -I/usr/gnu/include -L/usr/gnu/lib -R/usr/gnu/lib -lintl"
 %endif
 export RPM_OPT_FLAGS="$CFLAGS"
-export LDFLAGS="%_ldflags -L/usr/gnu/lib -R/usr/gnu/lib"
+export LDFLAGS="%_ldflags"
 
-%libgsf.build -d %name-%version
+%if %option_with_gnu_iconv
+export LDFLAGS="$LDFLAGS -L/usr/gnu/lib -R/usr/gnu/lib"
+%endif
+
+%libgsf.build -d %name-%version/%{base_arch}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%libgsf.install -d %name-%version
+
+%ifarch amd64 sparcv9
+%libgsf_64.install -d %name-%version/%{_arch64}
+%endif
+
+%libgsf.install -d %name-%version/%{base_arch}
 
 %if %{!?_without_gtk_doc:0}%{?_without_gtk_doc:1}
 rm -rf $RPM_BUILD_ROOT%{_datadir}/gtk-doc
@@ -135,6 +198,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.so*
 %attr (-, root, bin) %{_libdir}/python*
 %dir %attr (0755, root, sys) %{_datadir}
+%ifarch amd64 sparcv9
+%dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
+%{_libdir}/%{_arch64}/lib*.so*
+%endif
 %dir %attr (0755, root, bin) %{_mandir}
 %dir %attr (0755, root, bin) %{_mandir}/man1
 %{_mandir}/man1/*
@@ -146,6 +213,10 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*
+%ifarch amd64 sparcv9
+%dir %attr (0755, root, other) %{_libdir}/%{_arch64}/pkgconfig
+%{_libdir}/%{_arch64}/pkgconfig/*
+%endif
 %if %{!?_without_gtk_doc:1}%{?_without_gtk_doc:0}
 %dir %attr (0755, root, sys) %{_datadir}
 %{_datadir}/gtk-doc
@@ -164,6 +235,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Apr 18 2009 - moinakg@gmail.com
+- Enable 64Bit build, add patches, deps and copyright from JDS gate.
 * Mon jan 28 2008 - moinak.ghosh@sun.com
 - Added a couple of missing dependencies.
 * Sat Jan 26 2008 - moinak.ghosh@sun.com

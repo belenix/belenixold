@@ -1,0 +1,80 @@
+diff --git a/accessible/src/base/nsAccessNode.cpp b/accessible/src/base/nsAccessNode.cpp
+--- a/accessible/src/base/nsAccessNode.cpp
++++ b/accessible/src/base/nsAccessNode.cpp
+@@ -337,16 +337,27 @@ void nsAccessNode::ShutdownXPAccessibili
+ 
+   // Release gApplicationAccessible after everything else is shutdown
+   // so we don't accidently create it again while tearing down root accessibles
+   NS_IF_RELEASE(gApplicationAccessible);
+   gApplicationAccessible = nsnull;  
+ 
+   gIsAccessibilityActive = PR_FALSE;
+   NotifyA11yInitOrShutdown();
++}
++
++PRBool
++nsAccessNode::IsDefunct()
++{
++  if (!mDOMNode)
++    return PR_TRUE;
++
++  // Call GetPresShell() since the accessible may be shut down in it.
++  nsCOMPtr<nsIPresShell> presShell(GetPresShell());
++  return !presShell;
+ }
+ 
+ already_AddRefed<nsIPresShell> nsAccessNode::GetPresShell()
+ {
+   nsIPresShell *presShell = nsnull;
+   if (mWeakShell)
+     CallQueryReferent(mWeakShell.get(), &presShell);
+   if (!presShell) {
+diff --git a/accessible/src/base/nsAccessNode.h b/accessible/src/base/nsAccessNode.h
+--- a/accessible/src/base/nsAccessNode.h
++++ b/accessible/src/base/nsAccessNode.h
+@@ -135,17 +135,17 @@ class nsAccessNode: public nsIAccessNode
+ 
+     static nsIDOMNode *gLastFocusedNode;
+     static nsIAccessibilityService* GetAccService();
+     already_AddRefed<nsIDOMNode> GetCurrentFocus();
+ 
+     /**
+      * Returns true when the accessible is defunct.
+      */
+-    virtual PRBool IsDefunct() { return !mDOMNode; }
++    virtual PRBool IsDefunct();
+ 
+     /**
+      * Initialize the access node object, add it to the cache.
+      */
+     virtual nsresult Init();
+ 
+     /**
+      * Shutdown the access node object.
+diff --git a/accessible/src/xul/nsXULTreeAccessible.cpp b/accessible/src/xul/nsXULTreeAccessible.cpp
+--- a/accessible/src/xul/nsXULTreeAccessible.cpp
++++ b/accessible/src/xul/nsXULTreeAccessible.cpp
+@@ -911,17 +911,22 @@ PRBool
+ PRBool
+ nsXULTreeitemAccessible::IsDefunct()
+ {
+   if (!mTree || !mTreeView || !mColumn || mRow < 0)
+     return PR_TRUE;
+ 
+   PRInt32 rowCount = 0;
+   nsresult rv = mTreeView->GetRowCount(&rowCount);
+-  return NS_FAILED(rv) || mRow >= rowCount;
++  if (NS_FAILED(rv) || mRow >= rowCount)
++    return PR_TRUE;
++
++  // Call GetPresShell() since the accessible may be shut down in it.
++  nsCOMPtr<nsIPresShell> presShell(GetPresShell());
++  return !presShell;
+ }
+ 
+ PRBool nsXULTreeitemAccessible::IsExpandable()
+ {
+   if (IsDefunct())
+     return PR_FALSE;
+ 
+   PRBool isContainer;

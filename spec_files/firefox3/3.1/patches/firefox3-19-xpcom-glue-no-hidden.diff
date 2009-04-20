@@ -1,0 +1,20 @@
+--- mozilla/xpcom/glue/Makefile.in.old	2008-12-16 19:04:24.470999627 +0800
++++ mozilla/xpcom/glue/Makefile.in	2008-12-16 19:05:14.928207200 +0800
+@@ -44,6 +44,7 @@
+ include $(srcdir)/objs.mk
+ 
+ EXTRA_DEPS += $(srcdir)/objs.mk
++VISIBILITY_FLAGS =
+ 
+ DIRS            = standalone
+ 
+--- mozilla/xpcom/build/Makefile.in.old	2008-12-16 19:04:56.412369913 +0800
++++ mozilla/xpcom/build/Makefile.in	2008-12-16 19:05:14.928431822 +0800
+@@ -48,6 +48,7 @@
+ 
+ MODULE		= xpcom
+ LIBRARY_NAME	= xpcom_core
++VISIBILITY_FLAGS =
+ 
+ ifneq (,$(filter-out WINNT WINCE,$(OS_ARCH)))
+ SHORT_LIBNAME	= xpcomcor

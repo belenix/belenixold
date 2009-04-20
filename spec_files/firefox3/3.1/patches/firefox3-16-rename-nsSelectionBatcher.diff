@@ -1,0 +1,111 @@
+diff --git a/editor/libeditor/html/nsTableEditor.cpp b/editor/libeditor/html/nsTableEditor.cpp
+--- a/editor/libeditor/html/nsTableEditor.cpp
++++ b/editor/libeditor/html/nsTableEditor.cpp
+@@ -96,28 +96,28 @@ class NS_STACK_CLASS nsSetSelectionAfter
+         mEd->SetSelectionAfterTableEdit(mTable, mRow, mCol, mDirection, mSelected);
+     }
+     // This is needed to abort the caret reset in the destructor
+     //  when one method yields control to another
+     void CancelSetCaret() {mEd = nsnull; mTable = nsnull;}
+ };
+ 
+ // Stack-class to turn on/off selection batching for table selection
+-class NS_STACK_CLASS nsSelectionBatcher
++class NS_STACK_CLASS nsSelectionBatcherForTable
+ {
+ private:
+   nsCOMPtr<nsISelectionPrivate> mSelection;
+ public:
+-  nsSelectionBatcher(nsISelection *aSelection)
++  nsSelectionBatcherForTable(nsISelection *aSelection)
+   {
+     nsCOMPtr<nsISelection> sel(aSelection);
+     mSelection = do_QueryInterface(sel);
+     if (mSelection)  mSelection->StartBatchChanges();
+   }
+-  virtual ~nsSelectionBatcher() 
++  virtual ~nsSelectionBatcherForTable() 
+   { 
+     if (mSelection) mSelection->EndBatchChanges();
+   }
+ };
+ 
+ // Table Editing helper utilities (not exposed in IDL)
+ 
+ NS_IMETHODIMP
+@@ -1551,17 +1551,17 @@ nsHTMLEditor::SelectBlockOfCells(nsIDOME
+   res = GetCellIndexes(aStartCell, &startRowIndex, &startColIndex);
+   if(NS_FAILED(res)) return res;
+ 
+   res = GetCellIndexes(aEndCell, &endRowIndex, &endColIndex);
+   if(NS_FAILED(res)) return res;
+ 
+   // Suppress nsISelectionListener notification
+   //  until all selection changes are finished
+-  nsSelectionBatcher selectionBatcher(selection);
++  nsSelectionBatcherForTable selectionBatcher(selection);
+ 
+   // Examine all cell nodes in current selection and 
+   //  remove those outside the new block cell region
+   PRInt32 minColumn = PR_MIN(startColIndex, endColIndex);
+   PRInt32 minRow    = PR_MIN(startRowIndex, endRowIndex);
+   PRInt32 maxColumn   = PR_MAX(startColIndex, endColIndex);
+   PRInt32 maxRow      = PR_MAX(startRowIndex, endRowIndex);
+ 
+@@ -1634,17 +1634,17 @@ nsHTMLEditor::SelectAllTableCells()
+ 
+   nsCOMPtr<nsISelection> selection;
+   res = GetSelection(getter_AddRefs(selection));
+   if (NS_FAILED(res)) return res;
+   if (!selection) return NS_ERROR_FAILURE;
+ 
+   // Suppress nsISelectionListener notification
+   //  until all selection changes are finished
+-  nsSelectionBatcher selectionBatcher(selection);
++  nsSelectionBatcherForTable selectionBatcher(selection);
+ 
+   // It is now safe to clear the selection
+   // BE SURE TO RESET IT BEFORE LEAVING!
+   res = ClearSelection();
+ 
+   // Select all cells in the same column as current cell
+   PRBool cellSelected = PR_FALSE;
+   PRInt32 rowSpan, colSpan, actualRowSpan, actualColSpan, currentRowIndex, currentColIndex;
+@@ -1704,17 +1704,17 @@ nsHTMLEditor::SelectTableRow()
+   if (NS_FAILED(res)) return res;
+ 
+   //Note: At this point, we could get first and last cells in row,
+   //  then call SelectBlockOfCells, but that would take just
+   //  a little less code, so the following is more efficient
+ 
+   // Suppress nsISelectionListener notification
+   //  until all selection changes are finished
+-  nsSelectionBatcher selectionBatcher(selection);
++  nsSelectionBatcherForTable selectionBatcher(selection);
+ 
+   // It is now safe to clear the selection
+   // BE SURE TO RESET IT BEFORE LEAVING!
+   res = ClearSelection();
+ 
+   // Select all cells in the same row as current cell
+   PRBool cellSelected = PR_FALSE;
+   PRInt32 rowSpan, colSpan, actualRowSpan, actualColSpan, currentRowIndex, currentColIndex;
+@@ -1767,17 +1767,17 @@ nsHTMLEditor::SelectTableColumn()
+   if (!table) return NS_ERROR_FAILURE;
+ 
+   PRInt32 rowCount, colCount;
+   res = GetTableSize(table, &rowCount, &colCount);
+   if (NS_FAILED(res)) return res;
+ 
+   // Suppress nsISelectionListener notification
+   //  until all selection changes are finished
+-  nsSelectionBatcher selectionBatcher(selection);
++  nsSelectionBatcherForTable selectionBatcher(selection);
+ 
+   // It is now safe to clear the selection
+   // BE SURE TO RESET IT BEFORE LEAVING!
+   res = ClearSelection();
+ 
+   // Select all cells in the same column as current cell
+   PRBool cellSelected = PR_FALSE;
+   PRInt32 rowSpan, colSpan, actualRowSpan, actualColSpan, currentRowIndex, currentColIndex;

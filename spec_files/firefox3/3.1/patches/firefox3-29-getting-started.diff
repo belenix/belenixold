@@ -1,0 +1,28 @@
+--- mozilla/other-licenses/branding/firefox/pref/firefox-branding.js.old	2008-05-21 11:39:08.553689000 +0800
++++ mozilla/other-licenses/branding/firefox/pref/firefox-branding.js	2008-05-21 13:17:09.757813000 +0800
+@@ -1,5 +1,5 @@
+-pref("startup.homepage_override_url","http://%LOCALE%.www.mozilla.com/%LOCALE%/%APP%/%VERSION%/whatsnew/");
+-pref("startup.homepage_welcome_url","http://%LOCALE%.www.mozilla.com/%LOCALE%/%APP%/%VERSION%/firstrun/");
++pref("startup.homepage_override_url","file:///usr/share/doc/info/Intro.htm");
++pref("startup.homepage_welcome_url","file:///usr/share/doc/info/Intro.htm");
+ // Interval: Time between checks for a new version (in seconds)
+ // nightly=6 hours, official=24 hours
+ pref("app.update.interval", 86400);
+--- mozilla/other-licenses/branding/firefox/locales/browserconfig.properties.old	2008-05-21 11:38:22.743492000 +0800
++++ mozilla/other-licenses/branding/firefox/locales/browserconfig.properties	2008-05-21 11:38:47.665715000 +0800
+@@ -1,3 +1,3 @@
+ # Do NOT localize or otherwise change these values
+-#expand browser.startup.homepage=http://__AB_CD__.start3.mozilla.com/firefox?client=firefox-a&rls=__MOZ_DISTRIBUTION_ID_UNQUOTED__:__AB_CD__:official
+-#expand browser.startup.homepage_reset=http://__AB_CD__.start3.mozilla.com/firefox?client=firefox-a&rls=__MOZ_DISTRIBUTION_ID_UNQUOTED__:__AB_CD__:official
++#expand browser.startup.homepage=file:///usr/share/doc/info/Intro.htm
++#expand browser.startup.homepage_reset=file:///usr/share/doc/info/Intro.htm
+--- mozilla/browser/components/nsBrowserContentHandler.js.old	2008-05-21 11:40:31.973367000 +0800
++++ mozilla/browser/components/nsBrowserContentHandler.js	2008-05-21 11:41:01.889129000 +0800
+@@ -123,6 +123,7 @@
+  *  OVERRIDE_NONE otherwise.
+  */
+ function needHomepageOverride(prefb) {
++  return OVERRIDE_NONE;
+   var savedmstone = null;
+   try {
+     savedmstone = prefb.getCharPref("browser.startup.homepage_override.mstone");

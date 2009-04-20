@@ -1,0 +1,16 @@
+--- mozilla/build/unix/mozilla.in.orig	Fri Oct 10 21:14:52 2008
++++ mozilla/build/unix/mozilla.in	Fri Oct 10 21:14:58 2008
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ #
+ # ***** BEGIN LICENSE BLOCK *****
+ # Version: MPL 1.1/GPL 2.0/LGPL 2.1
+--- mozilla/build/unix/run-mozilla.sh.orig	Fri Oct 10 22:03:20 2008
++++ mozilla/build/unix/run-mozilla.sh	Fri Oct 10 22:03:26 2008
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ #
+ # ***** BEGIN LICENSE BLOCK *****
+ # Version: MPL 1.1/GPL 2.0/LGPL 2.1

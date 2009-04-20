@@ -1,0 +1,85 @@
+diff --git a/widget/src/gtk2/nsScreenManagerGtk.cpp b/widget/src/gtk2/nsScreenManagerGtk.cpp
+--- a/widget/src/gtk2/nsScreenManagerGtk.cpp
++++ b/widget/src/gtk2/nsScreenManagerGtk.cpp
+@@ -102,17 +102,16 @@ root_window_event_filter(GdkXEvent *aGdk
+   }
+ #endif
+ 
+   return GDK_FILTER_CONTINUE;
+ }
+ 
+ nsScreenManagerGtk :: nsScreenManagerGtk ( )
+   : mXineramalib(nsnull)
+-  , mXineramaIsActive(PR_FALSE)
+   , mRootWindow(nsnull)
+ {
+   // nothing else to do. I guess we could cache a bunch of information
+   // here, but we want to ask the device at runtime in case anything
+   // has changed.
+ }
+ 
+ 
+@@ -126,22 +125,16 @@ nsScreenManagerGtk :: ~nsScreenManagerGt
+ 
+   /* XineramaIsActive() registers a callback function close_display()
+    * in X, which is to be called in XCloseDisplay(). This is the case
+    * if Xinerama is active, even if only with one screen.
+    *
+    * We can't unload libXinerama.so.1 here because this will make
+    * the address of close_display() registered in X to be invalid and
+    * it will crash when XCloseDisplay() is called later. */
+-#ifdef MOZ_X11
+-  if (mXineramalib && mXineramalib != SCREEN_MANAGER_LIBRARY_LOAD_FAILED &&
+-      !mXineramaIsActive) {
+-    PR_UnloadLibrary(mXineramalib);
+-  }
+-#endif
+ }
+ 
+ 
+ // addref, release, QI
+ NS_IMPL_ISUPPORTS1(nsScreenManagerGtk, nsIScreenManager)
+ 
+ 
+ // this function will make sure that everything has been initialized.
+@@ -195,19 +188,16 @@ nsScreenManagerGtk :: Init()
+         
+     // get the number of screens via xinerama
+     if (_XnrmIsActive && _XnrmQueryScreens &&
+         _XnrmIsActive(GDK_DISPLAY())) {
+       screenInfo = _XnrmQueryScreens(GDK_DISPLAY(), &numScreens);
+     }
+   }
+ 
+-  // remember for the destructor, if we are really working with Xinerama
+-  mXineramaIsActive = numScreens > 0;
+-
+   // screenInfo == NULL if either Xinerama couldn't be loaded or
+   // isn't running on the current display
+   if (!screenInfo || numScreens == 1) {
+     numScreens = 1;
+ #endif
+     nsRefPtr<nsScreenGtk> screen;
+ 
+     if (mCachedScreenArray.Count() > 0) {
+diff --git a/widget/src/gtk2/nsScreenManagerGtk.h b/widget/src/gtk2/nsScreenManagerGtk.h
+--- a/widget/src/gtk2/nsScreenManagerGtk.h
++++ b/widget/src/gtk2/nsScreenManagerGtk.h
+@@ -70,17 +70,16 @@ private:
+ private:
+ 
+   nsresult EnsureInit();
+ 
+   // Cached screen array.  Its length is the number of screens we have.
+   nsCOMArray<nsIScreen> mCachedScreenArray;
+ 
+   PRLibrary *mXineramalib;
+-  PRBool mXineramaIsActive;
+ 
+   GdkWindow *mRootWindow;
+ #ifdef MOZ_X11
+   Atom mNetWorkareaAtom;
+ #endif
+ };
+ 
+ #endif  // nsScreenManagerGtk_h___ 

@@ -1,0 +1,93 @@
+diff --git a/layout/xul/base/src/tree/src/nsTreeSelection.cpp b/layout/xul/base/src/tree/src/nsTreeSelection.cpp
+--- a/layout/xul/base/src/tree/src/nsTreeSelection.cpp
++++ b/layout/xul/base/src/tree/src/nsTreeSelection.cpp
+@@ -263,16 +263,18 @@ nsTreeSelection::nsTreeSelection(nsITree
+     mShiftSelectPivot(-1),
+     mFirstRange(nsnull)
+ {
+ }
+ 
+ nsTreeSelection::~nsTreeSelection()
+ {
+   delete mFirstRange;
++  if (mSelectTimer)
++    mSelectTimer->Cancel();
+ }
+ 
+ // QueryInterface implementation for nsBoxObject
+ NS_INTERFACE_MAP_BEGIN(nsTreeSelection)
+   NS_INTERFACE_MAP_ENTRY(nsITreeSelection)
+   NS_INTERFACE_MAP_ENTRY(nsISupports)
+   NS_INTERFACE_MAP_ENTRY_DOM_CLASSINFO(TreeSelection)
+ NS_INTERFACE_MAP_END
+Bug 485217 - Pop the eval context before returning.
+
+diff --git a/content/xslt/src/xslt/txKeyFunctionCall.cpp b/content/xslt/src/xslt/txKeyFunctionCall.cpp
+--- a/content/xslt/src/xslt/txKeyFunctionCall.cpp
++++ b/content/xslt/src/xslt/txKeyFunctionCall.cpp
+@@ -390,19 +390,19 @@ nsresult txXSLKey::testNode(const txXPat
+         if (mKeys[currKey].matchPattern->matches(aNode, &aEs)) {
+             txSingleNodeContext evalContext(aNode, &aEs);
+             nsresult rv = aEs.pushEvalContext(&evalContext);
+             NS_ENSURE_SUCCESS(rv, rv);
+ 
+             nsRefPtr<txAExprResult> exprResult;
+             rv = mKeys[currKey].useExpr->evaluate(&evalContext,
+                                                   getter_AddRefs(exprResult));
+-            NS_ENSURE_SUCCESS(rv, rv);
+ 
+             aEs.popEvalContext();
++            NS_ENSURE_SUCCESS(rv, rv);
+ 
+             if (exprResult->getResultType() == txAExprResult::NODESET) {
+                 txNodeSet* res = static_cast<txNodeSet*>
+                                             (static_cast<txAExprResult*>
+                                                         (exprResult));
+                 PRInt32 i;
+                 for (i = 0; i < res->size(); ++i) {
+                     val.Truncate();
+# HG changeset patch
+# User Blake Kaplan <mrbkap@gmail.com>
+# Date 1238051402 25200
+# Node ID 9c0a0e3e72c35fc9899a2ba9b859cf50433c9642
+# Parent  923816ab8dab54bc6830a50c0bd84e4bd64800ee
+Bug 485286 - Allocate all of these consistently. r+sr=peterv/sicking
+
+diff --git a/content/xslt/src/xslt/txKeyFunctionCall.cpp b/content/xslt/src/xslt/txKeyFunctionCall.cpp
+--- a/content/xslt/src/xslt/txKeyFunctionCall.cpp
++++ b/content/xslt/src/xslt/txKeyFunctionCall.cpp
+@@ -383,26 +383,29 @@ nsresult txXSLKey::testNode(const txXPat
+                             txKeyValueHashKey& aKey,
+                             txKeyValueHash& aKeyValueHash,
+                             txExecutionState& aEs)
+ {
+     nsAutoString val;
+     PRUint32 currKey, numKeys = mKeys.Length();
+     for (currKey = 0; currKey < numKeys; ++currKey) {
+         if (mKeys[currKey].matchPattern->matches(aNode, &aEs)) {
+-            txSingleNodeContext evalContext(aNode, &aEs);
+-            nsresult rv = aEs.pushEvalContext(&evalContext);
++            txSingleNodeContext *evalContext =
++                new txSingleNodeContext(aNode, &aEs);
++            NS_ENSURE_TRUE(evalContext, NS_ERROR_OUT_OF_MEMORY);
++
++            nsresult rv = aEs.pushEvalContext(evalContext);
+             NS_ENSURE_SUCCESS(rv, rv);
+ 
+             nsRefPtr<txAExprResult> exprResult;
+-            rv = mKeys[currKey].useExpr->evaluate(&evalContext,
++            rv = mKeys[currKey].useExpr->evaluate(evalContext,
+                                                   getter_AddRefs(exprResult));
++            NS_ENSURE_SUCCESS(rv, rv);
+ 
+-            aEs.popEvalContext();
+-            NS_ENSURE_SUCCESS(rv, rv);
++            delete aEs.popEvalContext();
+ 
+             if (exprResult->getResultType() == txAExprResult::NODESET) {
+                 txNodeSet* res = static_cast<txNodeSet*>
+                                             (static_cast<txAExprResult*>
+                                                         (exprResult));
+                 PRInt32 i;
+                 for (i = 0; i < res->size(); ++i) {
+                     val.Truncate();

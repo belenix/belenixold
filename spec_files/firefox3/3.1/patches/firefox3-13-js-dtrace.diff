@@ -1,0 +1,19 @@
+Bug 468041: List the object files that depend on javascript-trace.h explicitly.
+
+It seems gratuitous to rebuild every object file when
+javascript-trace.h changes.
+
+diff --git a/js/src/Makefile.in b/js/src/Makefile.in
+--- a/js/src/Makefile.in
++++ b/js/src/Makefile.in
+@@ -652,7 +652,9 @@ $(CURDIR)/javascript-trace.h: $(srcdir)/
+ 	sed 's/if _DTRACE_VERSION/ifdef INCLUDE_MOZILLA_DTRACE/' \
+ 	    javascript-trace.h.in > javascript-trace.h
+ 
+-$(CPPSRCS:%.cpp=%.$(OBJ_SUFFIX)): $(CURDIR)/javascript-trace.h
++# We can't automatically generate dependencies on auto-generated headers;
++# we have to list them explicitly.
++$(addsuffix .$(OBJ_SUFFIX),jsdtracef jsinterp jsobj): $(CURDIR)/javascript-trace.h
+ endif
+ 
+ ifdef GNU_CC

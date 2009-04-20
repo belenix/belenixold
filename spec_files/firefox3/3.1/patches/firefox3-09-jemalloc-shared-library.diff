@@ -1,0 +1,76 @@
+diff --git a/memory/jemalloc/Makefile.in b/memory/jemalloc/Makefile.in
+--- a/memory/jemalloc/Makefile.in
++++ b/memory/jemalloc/Makefile.in
+@@ -88,23 +88,25 @@ endif
+ 
+ else
+ 
+ MODULE_OPTIMIZE_FLAGS = -O2
+ ifeq ($(OS_ARCH),SunOS)
+ ifndef GNU_CC
+ MODULE_OPTIMIZE_FLAGS = -xO5
+ endif
++OS_LDFLAGS += -z interpose
+ endif
+ 
+ LIBRARY_NAME	= jemalloc
+ 
+ # Build jemalloc as a shared lib.  This is mandatory for Darwin, since a library
+ # init function is used on that platform.
+-ifeq ($(OS_ARCH),Darwin)
++# On Solaris, we want to have the ability to use LD_PRELOAD to override malloc.
++ifneq (,$(filter Darwin SunOS,$(OS_ARCH)))
+ FORCE_SHARED_LIB= 1
+ else
+ DIST_INSTALL = 1
+ FORCE_STATIC_LIB= 1
+ endif
+ 
+ CSRCS		= \
+ 		jemalloc.c \
+diff --git a/browser/installer/removed-files.in b/browser/installer/removed-files.in
+--- a/browser/installer/removed-files.in
++++ b/browser/installer/removed-files.in
+@@ -622,17 +622,19 @@ res/cursors/CVS/Tag
+ res/cursors/CVS/Tag
+ #endif
+ #ifdef XP_UNIX
+ #ifndef XP_MACOSX
+ readme.txt
+ chrome/icons/default/default.xpm
+ dictionaries/PL.dic
+ dictionaries/PL.aff
++#ifndef SOLARIS
+ libjemalloc.so
++#endif
+ #endif
+ #endif
+ #ifdef XP_WIN
+ #ifdef MOZ_MEMORY
+ Microsoft.VC80.CRT.manifest
+ msvcm80.dll
+ msvcp80.dll
+ msvcr80.dll
+diff --git a/browser/installer/unix/packages-static b/browser/installer/unix/packages-static
+--- a/browser/installer/unix/packages-static
++++ b/browser/installer/unix/packages-static
+@@ -49,16 +49,19 @@ bin/@MOZ_APP_NAME@
+ bin/@MOZ_APP_NAME@
+ bin/application.ini
+ bin/platform.ini
+ bin/mozilla-xremote-client
+ bin/run-mozilla.sh
+ bin/plugins/libnullplugin.so
+ bin/libsqlite3.so
+ bin/README.txt
++#ifdef SOLARIS
++bin/libjemalloc.so
++#endif
+ bin/blocklist.xml
+ 
+ ; [Components]
+ bin/components/alerts.xpt
+ bin/components/accessibility.xpt
+ bin/components/appshell.xpt
+ bin/components/appstartup.xpt
+ bin/components/autocomplete.xpt

@@ -1,0 +1,41 @@
+diff --git a/widget/src/gtk2/nsWindow.cpp b/widget/src/gtk2/nsWindow.cpp
+--- a/widget/src/gtk2/nsWindow.cpp
++++ b/widget/src/gtk2/nsWindow.cpp
+@@ -6721,17 +6721,17 @@ IM_preedit_changed_cb(GtkIMContext *aCon
+                       nsWindow     *aWindow)
+ {
+     gchar *preedit_string;
+     gint cursor_pos;
+     PangoAttrList *feedback_list;
+ 
+     // if gFocusWindow is null, use the last focused gIMEFocusWindow
+     nsRefPtr<nsWindow> window = gFocusWindow ? gFocusWindow : gIMEFocusWindow;
+-    if (!window)
++    if (!window || IM_get_input_context(window) != aContext)
+         return;
+ 
+     // Should use cursor_pos ?
+     // Of course!!!
+     gtk_im_context_get_preedit_string(aContext, &preedit_string,
+                                       &feedback_list, &cursor_pos);
+ 
+     LOGIM(("preedit string is: %s   length is: %d\n",
+@@ -6784,17 +6784,17 @@ IM_commit_cb(GtkIMContext *aContext,
+ 
+     LOGIM(("IM_commit_cb\n"));
+ 
+     gKeyEventCommitted = PR_TRUE;
+ 
+     // if gFocusWindow is null, use the last focused gIMEFocusWindow
+     nsRefPtr<nsWindow> window = gFocusWindow ? gFocusWindow : gIMEFocusWindow;
+ 
+-    if (!window)
++    if (!window || IM_get_input_context(window) != aContext)
+         return;
+ 
+     /* If IME doesn't change they keyevent that generated this commit,
+        don't send it through XIM - just send it as a normal key press
+        event. */
+ 
+     if (gKeyEvent) {
+         char keyval_utf8[8]; /* should have at least 6 bytes of space */

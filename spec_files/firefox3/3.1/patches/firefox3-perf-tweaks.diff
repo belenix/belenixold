@@ -1,0 +1,21 @@
+--- firefox/modules/libpref/src/init/all.js.o1	2009-04-17 23:00:10.654884259 +0530
++++ firefox/modules/libpref/src/init/all.js	2009-04-17 23:02:04.983419408 +0530
+@@ -647,12 +647,15 @@
+ // NOTE: support for "compress" has been disabled per bug 196406.
+ pref("network.http.accept-encoding" ,"gzip,deflate");
+ 
+-pref("network.http.pipelining"      , false);
++pref("network.http.pipelining"      , true);
+ pref("network.http.pipelining.ssl"  , false); // disable pipelining over SSL
+-pref("network.http.proxy.pipelining", false);
++pref("network.http.proxy.pipelining", true);
+ 
+ // Max number of requests in the pipeline
+-pref("network.http.pipelining.maxrequests" , 4);
++pref("network.http.pipelining.maxrequests" , 8);
++
++pref("network.dnsCacheEntries", 64);
++pref("network.dnsCacheExpiration", 600);
+ 
+ // Prompt for 307 redirects
+ pref("network.http.prompt-temp-redirect", true);

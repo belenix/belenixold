@@ -1,7 +1,7 @@
 #
-# spec file for package SUNWfirefox3
+# spec file for package SUNWfirefox
 #
-# includes module(s): firefox3
+# includes module(s): firefox
 #
 # Copyright 2007 Sun Microsystems, Inc.
 # This file and all modifications and additions to the pristine
@@ -19,20 +19,16 @@
 # use --without-moz-nss-nspr to not devlier Mozilla bundled nss, nspr libs
 # default: with Mozilla bundled nss, nspr libs
 %define without_moz_nss_nspr %{?_without_moz_nss_nspr:1}%{?!_without_moz_nss_nspr:0}
-%use firefox = firefox3.spec
+%use firefox = firefox.spec
 
 #####################################
 ##   Package Information Section   ##
 #####################################
 
-# Build as Firefox3 only if "--with-ff3" is specified 
-# ===================================================
 Name:          SUNWfirefox
 Summary:       Mozilla Firefox Web browser
 Version:       %{firefox.version}
 Source:        %{name}-manpages-0.1.tar.gz
-Source1:       staroffice-mime.types.in
-Source2:       staroffice-mailcap.in
 SUNW_BaseDir:  %{_basedir}
 SUNW_Category: FIREFOX,application,%{jds_version}
 SUNW_Copyright:%{name}.copyright
@@ -46,6 +42,7 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-build
 Requires: SUNWjdsrm
 Requires: SUNWj5rt
 Requires: SUNWgnome-base-libs
+Requires: SUNWdtbas
 Requires: SUNWfontconfig
 Requires: SUNWfreetype2
 Requires: SUNWgnome-config
@@ -53,7 +50,6 @@ Requires: SUNWgnome-libs
 Requires: SUNWgnome-vfs
 Requires: SUNWlibC
 Requires: SUNWlibms
-Requires: SUNWtls
 Requires: SUNWlibmsr
 BuildRequires: SUNWzip
 BuildRequires: SUNWgtar
@@ -68,6 +64,9 @@ Requires: FSWbelenix-branding
 %endif
 %if %without_moz_nss_nspr
 Requires: SUNWpr
+Requires: SUNWprd
+Requires: SUNWtls
+Requires: SUNWtlsd
 %endif
 Requires: SUNWsqlite3
 
@@ -122,7 +121,7 @@ export CFLAGS="$CFLAGS -I/usr/X11/include"
 %install
 %firefox.install -d %name-%version
 
-# creat file list for SUNWfirefox to separate .autoreg(marked as 'v')
+# create file list for SUNWfirefox to separate .autoreg(marked as 'v')
 # and maybe libmozapoc.so if apoc enabled
 cd $RPM_BUILD_ROOT%{_libdir}
 find %{firefox.name} ! -type d | egrep -v "(libmozapoc.so|\.autoreg|xpidl|xpt_dump|xpt_link)" | \
@@ -143,9 +142,22 @@ rm -rf $RPM_BUILD_ROOT
 #########################################
 
 %post
+test -x $BASEDIR/lib/postrun || exit 0
 ( echo 'test -x /usr/bin/update-desktop-database || exit 0';
   echo '/usr/bin/update-desktop-database'
 ) | $BASEDIR/lib/postrun -b -u -c JDS_wait
+
+PKGCOND=/usr/bin/pkgcond
+test -x $PKGCOND || exit 0
+if $PKGCOND is_path_writable $BASEDIR/lib/%{firefox.name} > /dev/null 2>&1 ; then
+  touch $BASEDIR/lib/%{firefox.name}/.autoreg
+
+  for f in components/compreg.dat components/xpti.dat; do
+      test -f $BASEDIR/lib/%{firefox.name}/$f && \
+        rm -f $BASEDIR/lib/%{firefox.name}/$f
+  done
+fi
+exit 0
 
 
 %postun
@@ -154,6 +166,16 @@ test -x $BASEDIR/lib/postrun || exit 0
   echo '/usr/bin/update-desktop-database'
 ) | $BASEDIR/lib/postrun -b -u -c JDS
 
+PKGCOND=/usr/bin/pkgcond
+test -x $PKGCOND || exit 0
+if $PKGCOND is_path_writable $BASEDIR/lib/%{firefox.name} > /dev/null 2>&1 ; then
+  for f in components/compreg.dat components/xpti.dat; do
+      test -f $BASEDIR/lib/%{firefox.name}/$f && \
+        rm -f $BASEDIR/lib/%{firefox.name}/$f
+  done
+fi
+exit 0
+
 
 %if %with_apoc_adapter
 %post apoc-adapter
@@ -161,20 +183,35 @@ PKGCOND=/usr/bin/pkgcond
 test -x $PKGCOND || exit 0
 if $PKGCOND is_path_writable $BASEDIR/lib/%{firefox.name} > /dev/null 2>&1 ; then
   touch $BASEDIR/lib/%{firefox.name}/.autoreg
-fi
 
+  for f in components/compreg.dat components/xpti.dat; do
+      test -f $BASEDIR/lib/%{firefox.name}/$f && \
+        rm -f $BASEDIR/lib/%{firefox.name}/$f
+  done
+fi
 exit 0
+
+
 %postun apoc-adapter
 PKGCOND=/usr/bin/pkgcond
 test -x $PKGCOND || exit 0
 if $PKGCOND is_path_writable $BASEDIR/lib/%{firefox.name} > /dev/null 2>&1 ; then
   touch $BASEDIR/lib/%{firefox.name}/.autoreg
-fi
 
+  for f in components/compreg.dat components/xpti.dat; do
+      test -f $BASEDIR/lib/%{firefox.name}/$f && \
+        rm -f $BASEDIR/lib/%{firefox.name}/$f
+  done
+fi
 exit 0
+
+
 %endif
 
 %files -f SUNWfirefox.list
+
+%doc -d firefox README.txt LICENSE 
+%dir %attr (0755, root, other) %{_datadir}/doc
 
 %defattr(-, root, bin)
 %dir %attr (0755, root, bin) %{_bindir}
@@ -211,10 +248,21 @@ exit 0
 %endif
 
 %changelog
-* Sun Aug 17 2008 - moinakg@belenix.org
-- Remove circular dependency on self.
+* Wed Sep 17 2008 - ginn.chen@sun.com
+- Remove /usr/lib/firefox/components/compreg.dat and /usr/lib/firefox/components/xpti.dat in postinstall and postremove
+- Touch /usr/lib/firefox/.autoreg in postinstall
+- Remove staroffice-mime.types.in, staroffice-mailcap.in
+* Tue Aug 19 2008 - ginn.chen@sun.com
+- Remove -xldscope=symbolic in CFLAGS, CXXFLAGS, use -xldscope=hidden in libpixman Makefile.in instead
+* Mon Aug 18 2008 - dave.lin@sun.com
+- Rename SUNWfirefox3.spec to SUNWfirefox.spec since FF2 has been replaced by FF3 in Nevada and OS for several builds
+* Fri Aug 15 2008 - dave.lin@sun.com
+- add -xldscope=symbolic in CFLAGS, CXXFLAGS to fix the cairo crash issue per Brian's request
+* Thu Jul 17 2008 - dave.lin@sun.com
+- Removed the unnecessary dependency SUNWsolaris-devel-docs(CR6700877),
+  SUNWfirefox.
 * Thu May 22 2008 - dave.lin@sun.com
-- change to build pkg only if "--with-ff3" is specified, otherwisze build nothing
+- Change to build pkg only if "--with-ff3" is specified, otherwise build nothing
 - change to build as "SUNWfirefox" and as default browser
 * Fri May 16 2008 - damien.carbery@sun.com
 - Disable creation of symlink for firefox 3. This means that ff2 is left as

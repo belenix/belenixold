@@ -12,12 +12,11 @@
 Name:                    SFEgmp
 Summary:                 GNU Multiple Presicion Arithmetic Library
 Group:                   libraries/math
-Version:                 4.2.1
+Version:                 4.2.4
 Source:                  http://ftp.gnu.org/gnu/gmp/gmp-%{version}.tar.bz2
 %ifarch amd64
 Source1:                 http://www.loria.fr/~gaudry/mpn_AMD64/mpn_amd64.42.tgz
 %endif
-Patch1:                  gmp-01-solaris.diff
 URL:                     http://swox.com/gmp/
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
@@ -49,6 +48,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
 fi
 
 export CC32=${CC32:-$CC}
+CFLAGS_GEN="-features=extinl -xbuiltin=%none -xcsi -xinline=%auto -xustr=ascii_utf16_ushort -xalias_level=std -xthreadvar=%all -mt -D_REENTRANT -D__EXTENSIONS__=1 -xF=%none $(LARGEILES) -D_XOPEN_SOURCE=600 -D_XPG6 -D_POSIX_PTHREAD_SEMANTICS -D_POSIX_C_SOURCE=200112L -D__XOPEN_OR_POSIX -D_STRICT_STDC -D_STRICT_STDC__ -D_STDC_C99 -D_ISOC99_SOURCE -DNDEBUG -DPIC -KPIC -z combreloc -z redlocsym -z ignore -z rescan -z absexec -s"
 export CFLAGS32="%optflags"
 export CFLAGS64="%optflags64"
 export CXXFLAGS32="%cxx_optflags"
@@ -75,7 +75,6 @@ export LDFLAGS="$LDFLAGS64"
 
 %ifarch amd64 sparcv9
 cd gmp-%{version}-64
-%patch1 -p1
 
 libtoolize --copy --force
 aclocal $ACLOCAL_FLAGS
@@ -95,7 +94,6 @@ cd ..
 %endif
 
 cd gmp-%{version}
-%patch1 -p1
 
 export CC=${CC32:-$CC}
 export CXX=${CXX32:-$CXX}
@@ -169,6 +167,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Fri Apr 17 2009 - moinakg@gmail.com
+- Bump version and remove upstreamed patch.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Change to avoid wierd error from make.
 * Fri Nov 02 2007 - nonsea@users.sourceforge.net

@@ -1,0 +1,15 @@
+--- firefox/build/unix/mozilla.in.ori3	2007-12-26 15:52:21.578403000 +0800
++++ firefox/build/unix/mozilla.in	2007-12-26 15:54:06.096894000 +0800
+@@ -131,6 +131,12 @@ do
+   esac
+ done
+ 
++if [ ! -f /tmp/firefox3-preloaded -a -x /usr/lib/gdmprefetch ]
++then
++  /usr/lib/gdmprefetch @${dist_bin}/firefox-preload.list
++  touch /tmp/firefox3-preloaded
++fi
++
+ if [ $debugging = 1 ]
+ then
+   echo $dist_bin/run-mozilla.sh $script_args $dist_bin/$MOZILLA_BIN "$@"

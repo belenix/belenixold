@@ -1,0 +1,11 @@
+prefix=BASEDIR
+exec_prefix=BASEDIR
+libdir=LIBDIR/NAME
+includedir=INCLUDEDIR/NAME
+idldir=IDLDIR
+
+Name: XPCOM
+Description: The Mozilla Cross Platform Component Library
+Version: 3.1
+Libs: -L${libdir} -L${libdir}/components -R${libdir} -lxpcom -lxul -lnspr4 
+Cflags:-I${includedir} -I${includedir}/stable -I${includedir}/xpcom -I${includedir}/pref -I${includedir}/string -I${includedir}/expat -I${includedir}/nspr -I${includedir}/gtkembedmoz

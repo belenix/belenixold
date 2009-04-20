@@ -1,0 +1,18 @@
+mp=$$
+mkdir -p /tmp/${mp}/b
+(cd /tmp/${mp}/b; ln -s /usr/bin/ginstall install)
+PATH=/tmp/${mp}/b:/usr/gnu/bin:/usr/ucb:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin:/opt/SUNWspro/bin
+export PATH
+CC=/opt/SUNWspro/bin/cc
+export CC
+CXX=/opt/SUNWspro/bin/CC
+export CXX
+
+pkgtool build --halt-on-errors --with-fox --with-ff3 --with-gnu-iconv \
+	--without-dt --with-l10n --without-apoc-adapter --with-indiana-branding \
+	--src=/space/belenix/belenix/trunk/spec_files/firefox3/base-specs:/space/belenix/belenix/trunk/spec_files/firefox3/ext-sources:/space/belenix/belenix/trunk/spec_files/firefox3/patches:/space/belenix/belenix/trunk/spec_files/include \
+	--specdirs=/space/belenix/belenix/trunk/spec_files/firefox3:/space/belenix/belenix/trunk/spec_files/firefox3/base-specs:/space/belenix/belenix/trunk/spec_files/include \
+	--patchdirs=/space/belenix/belenix/trunk/spec_files/firefox3/patches \
+	--nodeps --download SUNWfirefox3.spec 
+
+rm -rf /tmp/${mp}
