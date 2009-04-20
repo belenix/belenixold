@@ -1,0 +1,34 @@
+--- libgsf/configure.in	Tue Sep 16 11:46:00 2008
++++ libgsf/configure.in	Tue Sep 16 11:45:51 2008
+@@ -83,10 +83,13 @@
+     libxml-2.0 >= 2.4.16
+ "
+ dnl Modules required for libgsf-gnome
++# libgsf_gnome_reqs="
++#     $common_reqs
++#     gnome-vfs-2.0 >= 2.2.0
++#     gnome-vfs-module-2.0 >= 2.2.0
++# "
+ libgsf_gnome_reqs="
+     $common_reqs
+-    gnome-vfs-2.0 >= 2.2.0
+-    gnome-vfs-module-2.0 >= 2.2.0
+ "
+ PKG_CHECK_MODULES(LIBGSF, $libgsf_reqs)
+ 
+--- libgsf/python/gsfgnome.override	2008-09-17 14:15:38.018187000 +0800
++++ libgsf/python/gsfgnome.override	2008-09-17 14:15:52.370243000 +0800
+@@ -3,6 +3,13 @@
+ headers
+ #include <Python.h>
+ 
++#include "gsf-config.h"
++#ifdef LIBGSF_GNOMEVFS_VIA_GIO
++#include <gsf/gsf-output-gio.h>
++#define GnomeVFSHandle void
++#define GnomeVFSURI void
++#endif
++
+ #define NO_IMPORT_PYGOBJECT
+ #include "pygobject.h"
+ #include <gsf/gsf-input.h>

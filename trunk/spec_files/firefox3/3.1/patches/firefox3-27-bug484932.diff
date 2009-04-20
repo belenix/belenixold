@@ -1,0 +1,24 @@
+diff --git a/widget/src/gtk2/nsWindow.cpp b/widget/src/gtk2/nsWindow.cpp
+--- a/widget/src/gtk2/nsWindow.cpp
++++ b/widget/src/gtk2/nsWindow.cpp
+@@ -4185,17 +4185,19 @@ nsWindow::NativeResize(PRInt32 aWidth, P
+         GtkAllocation allocation;
+         allocation.x = 0;
+         allocation.y = 0;
+         allocation.width = aWidth;
+         allocation.height = aHeight;
+         gtk_widget_size_allocate(GTK_WIDGET(mContainer), &allocation);
+     }
+ 
+-    moz_drawingarea_resize (mDrawingarea, aWidth, aHeight);
++    if (mDrawingarea) {
++        moz_drawingarea_resize (mDrawingarea, aWidth, aHeight);
++    }
+ }
+ 
+ void
+ nsWindow::NativeResize(PRInt32 aX, PRInt32 aY,
+                        PRInt32 aWidth, PRInt32 aHeight,
+                        PRBool  aRepaint)
+ {
+     mNeedsResize = PR_FALSE;

@@ -1,0 +1,184 @@
+--- libical-0.42/src/libical/icalparser.c.orig	2008-12-11 18:09:33.264006000 +0900
++++ libical-0.42/src/libical/icalparser.c	2008-12-11 19:39:08.537992000 +0900
+@@ -81,6 +81,57 @@ static char* parser_get_param_name(char*
+ 
+ #define TMP_BUF_SIZE 80
+ 
++/*
++ *  Copied from glib.
++ */
++#define UTF8_COMPUTE(Char, Mask, Len)                                         \
++  if (Char < 128)                                                             \
++    {                                                                         \
++      Len = 1;                                                                \
++      Mask = 0x7f;                                                            \
++    }                                                                         \
++  else if ((Char & 0xe0) == 0xc0)                                             \
++    {                                                                         \
++      Len = 2;                                                                \
++      Mask = 0x1f;                                                            \
++    }                                                                         \
++  else if ((Char & 0xf0) == 0xe0)                                             \
++    {                                                                         \
++      Len = 3;                                                                \
++      Mask = 0x0f;                                                            \
++    }                                                                         \
++  else if ((Char & 0xf8) == 0xf0)                                             \
++    {                                                                         \
++      Len = 4;                                                                \
++      Mask = 0x07;                                                            \
++    }                                                                         \
++  else if ((Char & 0xfc) == 0xf8)                                             \
++    {                                                                         \
++      Len = 5;                                                                \
++      Mask = 0x03;                                                            \
++    }                                                                         \
++  else if ((Char & 0xfe) == 0xfc)                                             \
++    {                                                                         \
++      Len = 6;                                                                \
++      Mask = 0x01;                                                            \
++    }                                                                         \
++  else                                                                        \
++    Len = -1;
++
++#define UTF8_GET(Result, Chars, Count, Mask, Len)                             \
++  (Result) = (Chars)[0] & (Mask);                                             \
++  for ((Count) = 1; (Count) < (Len); ++(Count))                               \
++    {                                                                         \
++      if (((Chars)[(Count)] & 0xc0) != 0x80)                                  \
++        {                                                                     \
++          (Result) = -1;                                                      \
++          break;                                                              \
++        }                                                                     \
++      (Result) <<= 6;                                                         \
++      (Result) |= ((Chars)[(Count)] & 0x3f);                                  \
++    }
++
++
+ struct icalparser_impl 
+ {
+     int buffer_full; /* flag indicates that temp is smaller that 
+@@ -100,13 +151,89 @@ struct icalparser_impl 
+ };
+ 
+ 
++int utf8_isspace_simple (int c)
++{
++  switch (c) {
++  case 0x20:
++  case 0xa0:
++  case 0x1680:
++  case 0x2002:
++  case 0x2003:
++  case 0x2004:
++  case 0x2005:
++  case 0x2006:
++  case 0x2007:
++  case 0x2008:
++  case 0x2009:
++  case 0x200a:
++  case 0x200b:
++  case 0x202f:
++  case 0x205f:
++  case 0x3000:
++  case 0x303f:
++  case 0xfeff:
++    return 1;
++    break;
++  default:;
++  }
++
++  return 0;
++}
++
++/*
++ *  Copied from glib.
++ */
++char *utf8_find_prev_char (const char *str,
++                           const char *p)
++{
++  for (--p; p >= str; --p)
++    {
++      if ((*p & 0xc0) != 0x80)
++        return (char *)p;
++    }
++  return NULL;
++}
++
++
++char *utf8_find_next_char (const char *p,
++                           const char *end)
++{
++  if (*p)
++    {
++      if (end)
++        for (++p; p < end && (*p & 0xc0) == 0x80; ++p)
++          ;
++      else
++        for (++p; (*p & 0xc0) == 0x80; ++p)
++          ;
++    }
++  return (p == end) ? NULL : (char *)p;
++}
++
++
++int utf8_get_char (const char *p)
++{
++  int i, mask = 0, len;
++  int result;
++  unsigned char c = (unsigned char) *p;
++
++  UTF8_COMPUTE (c, mask, len);
++  if (len == -1)
++    return (int)-1;
++  UTF8_GET (result, p, i, mask, len);
++
++  return result;
++}
++
++
+ /*
+  * New version of strstrip() that does not move the pointer.
+  */
+ void strstriplt(char *buf)
+ {
+ 	size_t len;
+-	int a;
++	int a, c;
++	char *p;
+ 
+ 	if (buf==NULL) {
+ 		return;
+@@ -115,17 +242,27 @@ void strstriplt(char *buf)
+ 		return;
+ 	}
+ 	len = strlen(buf);
+-        while ((buf[0] != 0) && (isspace(buf[len - 1]))) {
+-                buf[--len] = 0;
++	p = buf + len;
++        while ((buf[0] != 0) && ((p = utf8_find_prev_char(buf, p)) != NULL)) {
++                c = utf8_get_char (p);
++                if (!utf8_isspace_simple (c))
++                        break;
++                *p = 0;
+ 	}
+ 	if (buf[0] == 0) {
+ 		return;
+ 	}
+ 	a = 0;
+-        while ((buf[0]!=0) && (isspace(buf[a]))) {
+-		a++;
++	p = buf;
++        while ((buf[0]!=0) && p && *p) {
++                c = utf8_get_char (p);
++                if (!utf8_isspace_simple (c))
++                        break;
++                p = utf8_find_next_char (p, NULL);
++                if (p != NULL)
++                        a = p - buf;
+ 	}
+-	if (a > 0) {
++	if (p != NULL) {
+                 memmove(buf, &buf[a], len - a + 1);
+ 	}
+ }

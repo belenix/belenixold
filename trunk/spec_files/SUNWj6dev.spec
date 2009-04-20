@@ -6,10 +6,13 @@
 
 %include Solaris.inc
 
+%define vers         1.6.0
+%define bld          13
+
 Name:                SUNWj6dev
-Version:             1.6.0_11
+Version:             %{vers}_%{bld}
 %define jdk_dir jdk%{version}
-%define archive_version 6u11
+%define archive_version 6u%{bld}
 %define derby_version 10.4.1.3
 Summary:             JDK 6.0 Development Tools (%{version})
 Source:              http://download.java.net/dlj/binaries/jdk-%{archive_version}-dlj-solaris-i586.sh
@@ -57,7 +60,8 @@ if [ $do_update -eq 1 ]; then
 
 	(cd ${BASEDIR}%{_prefix}/jdk/instances
 	rm -f latest
-	ln -sf %{jdk_dir} latest)
+	ln -sf %{jdk_dir} latest
+        ln -sf %{jdk_dir} %{vers})
 
 fi
 
@@ -179,6 +183,7 @@ tar cpf - * | (cd ${RPM_BUILD_ROOT}%{_prefix}/jdk/instances; tar xpf - )
 
 mkdir ${RPM_BUILD_ROOT}/opt
 mv ${RPM_BUILD_ROOT}%{_prefix}/jdk/instances/%{jdk_dir}/db ${RPM_BUILD_ROOT}/opt/SUNWjavadb
+chmod 0755 ${RPM_BUILD_ROOT}%{_prefix}/jdk/instances/%{jdk_dir}/jre/lib/ext
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -349,5 +354,7 @@ rm -rf $RPM_BUILD_ROOT
 #%files -n SUNWj6dmx
 
 %changelog
+* Sat Apr 18 2009 - moinakg@belenix.org
+- Bump to latest version and fix permission of a dir.
 * Sat Dec 06 2008 - moinakg@belenix.org
 - Initial spec.

@@ -1,0 +1,13 @@
+PATH=/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin:/opt/SUNWspro/bin
+export PATH
+CC=/opt/SUNWspro/bin/cc
+export CC
+CXX=/opt/SUNWspro/bin/CC
+export CXX
+
+pkgtool build --halt-on-errors --with-fox --with-ff3 --with-gnu-iconv \
+	--without-dt --with-l10n --without-apoc-adapter --with-indiana-branding \
+	--src=/space/belenix/belenix/trunk/spec_files/firefox3/3.1/base-specs:/space/belenix/belenix/trunk/spec_files/firefox3/3.1/ext-sources:/space/belenix/belenix/trunk/spec_files/firefox3/3.1/patches:/space/belenix/belenix/trunk/spec_files/include \
+	--specdirs=/space/belenix/belenix/trunk/spec_files/firefox3/3.1:/space/belenix/belenix/trunk/spec_files/firefox3/3.1/base-specs:/space/belenix/belenix/trunk/spec_files/include \
+	--patchdirs=/space/belenix/belenix/trunk/spec_files/firefox3/3.1/patches \
+	--nodeps --download SUNWfirefox.spec 

@@ -11,13 +11,14 @@
 Name:			libgsf
 License:		LGPL
 Group:			System/Libraries
-Version:		1.14.7
+Version:		1.14.11
 Release:	 	1	
 Distribution:		Java Desktop System
 Vendor:			Sun Microsystems, Inc.
 Summary:		The GNOME Structured File Library
 Source:			http://ftp.gnome.org/pub/gnome/sources/libgsf/1.14/%{name}-%{version}.tar.bz2
 #Patch0:			libgsf-01-uninstalled-pc.diff
+Patch1:                 libgsf-02-gio.diff
 URL:			http://ftp.gnome.org/pub/gnome/sources/libgsf/
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 Docdir:			%{_defaultdocdir}/doc
