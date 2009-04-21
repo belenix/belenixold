@@ -1,0 +1,21 @@
+--- icu4c-3.6.orig/source/config/mh-solaris	2006-02-24 14:31:14.000000000 -0500
++++ icu4c-3.6/source/config/mh-solaris	2006-11-02 14:08:15.000000000 -0500
+@@ -4,13 +4,13 @@
+ ## others. All Rights Reserved.
+ 
+ ## Flags for position independent code
+-SHAREDLIBCFLAGS = -KPIC
+-SHAREDLIBCXXFLAGS = -KPIC
+-SHAREDLIBCPPFLAGS = -DPIC
++SHAREDLIBCFLAGS = $(CFLAGS) -KPIC
++SHAREDLIBCXXFLAGS = $(CXXFLAGS) -KPIC
++SHAREDLIBCPPFLAGS = $(CPPFLAGS) -DPIC
+ 
+ ## Commands to generate dependency files
+-GEN_DEPS.c=  $(CC) -xM $(DEFS) $(CPPFLAGS)
+-GEN_DEPS.cc= $(CXX) -xM $(DEFS) $(CPPFLAGS)
++GEN_DEPS.c=  $(CC) $(CFLAGS) -xM $(DEFS) $(CPPFLAGS)
++GEN_DEPS.cc= $(CXX) $(CXXFLAGS) -xM $(DEFS) $(CPPFLAGS)
+ 
+ # -mt means 'compiles and links a multithreaded program'
+ THREADSCFLAGS += -mt

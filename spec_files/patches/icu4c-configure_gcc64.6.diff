@@ -1,0 +1,15 @@
+--- icu/source/configure.orig	2009-04-21 12:55:56.515449362 +0530
++++ icu/source/configure	2009-04-21 12:57:06.835944917 +0530
+@@ -3005,7 +3005,11 @@
+             SPARCV9=`isainfo -n 2>&1 | grep sparcv9`
+             if test "$GCC" = yes; then
+                 # We could add a check for -m64 depending on the gcc version.
+-                ENABLE_64BIT_LIBS=no
++                if test -n "`$CXX -dumpspecs 2>&1 && $CC -dumpspecs 2>&1 | grep m64`"; then
++                    ENABLE_64BIT_LIBS=yes
++                else
++                    ENABLE_64BIT_LIBS=no
++                fi
+             else
+                 SOL64=`$CXX -xarch=v9 2>&1 && $CC -xarch=v9 2>&1 | grep -v usage:`
+                 if test -z "$SOL64" && test -n "$SPARCV9"; then

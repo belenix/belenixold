@@ -65,6 +65,7 @@ nlsopt=-enable-nls
 nlsopt=-disable-nls
 %endif
 
+export PATH="/opt/SUNWspro/bin:/usr/sfw/bin:/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin"
 export CFLAGS32="%optflags"
 export CFLAGS64="%optflags64"
 export LDFLAGS32="%_ldflags"
@@ -205,6 +206,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Apr 21 2009 - moinakg@belenix.org
+- Set proper PATH during building.
 * Sat Jan 26 2008 - moinak.ghosh@sun.com
 - Add workaround for a potential spurious build issue.
 * Sun Oct 14 2007 - Mark Wright <markwright@internode.on.net>

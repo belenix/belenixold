@@ -1,0 +1,75 @@
+--- WebKit-r42662/WebCore/dom/make_names.pl.orig	2009-04-21 13:55:21.022543567 +0530
++++ WebKit-r42662/WebCore/dom/make_names.pl	2009-04-21 13:56:22.757208800 +0530
+@@ -47,6 +47,13 @@
+ my $extraDefines = 0;
+ my $preprocessor = "/usr/bin/gcc -E -P -x c++";
+ 
++#
++# Allow user to override with GCC
++#
++if ($ENV{"GCC"}) {
++    $preprocessor = $ENV{"GCC"} . " -E -P -x c++";
++}
++
+ GetOptions('tags=s' => \$tagsFile, 
+     'attrs=s' => \$attrsFile,
+     'factory' => \$printFactory,
+--- WebKit-r42662/WebCore/css/make-css-file-arrays.pl.orig	2009-04-21 14:00:51.055652061 +0530
++++ WebKit-r42662/WebCore/css/make-css-file-arrays.pl	2009-04-21 14:01:40.485137607 +0530
+@@ -28,7 +28,15 @@
+ GetOptions('preprocessor=s' => \$preprocessor);
+ 
+ if (!$preprocessor) {
+-    $preprocessor = "/usr/bin/gcc -E -P -x c++";
++    #
++    # Allow user to override with GCC
++    #
++    if ($ENV{"GCC"}) {
++        $preprocessor = $ENV{"GCC"} . " -E -P -x c++";
++
++    } else {
++        $preprocessor = "/usr/bin/gcc -E -P -x c++";
++    }
+ }
+ 
+ my $header = $ARGV[0];
+--- WebKit-r42662/WebCore/bindings/scripts/CodeGeneratorObjC.pm.orig	2009-04-21 14:21:16.447125690 +0530
++++ WebKit-r42662/WebCore/bindings/scripts/CodeGeneratorObjC.pm	2009-04-21 14:23:31.775657516 +0530
+@@ -213,10 +213,18 @@
+ 
+     my $found = 0;
+     my $actualSuperClass;
++    my $gcc = "/usr/bin/gcc";
+     %publicInterfaces = ();
+ 
++    #
++    # Allow user to override with GCC
++    #
++    if ($ENV{"GCC"}) {
++        $gcc = $ENV{"GCC"};
++    }
++
+     my $fileName = "WebCore/bindings/objc/PublicDOMInterfaces.h";
+-    open FILE, "-|", "/usr/bin/gcc", "-E", "-P", "-x", "objective-c", 
++    open FILE, "-|", $gcc, "-E", "-P", "-x", "objective-c", 
+         (map { "-D$_" } split(/ +/, $defines)), "-DOBJC_CODE_GENERATION", $fileName or die "Could not open $fileName";
+     my @documentContent = <FILE>;
+     close FILE;
+--- WebKit-r42662/WebCore/bindings/scripts/IDLParser.pm.orig	2009-04-21 14:24:03.952988947 +0530
++++ WebKit-r42662/WebCore/bindings/scripts/IDLParser.pm	2009-04-21 14:25:28.402166105 +0530
+@@ -64,7 +64,14 @@
+     my $preprocessor = shift;
+ 
+     if (!$preprocessor) {
+-        $preprocessor = "/usr/bin/gcc -E -P -x c++";
++        #
++        # Allow user to override with GCC
++        #
++        if ($ENV{"GCC"}) {
++            $preprocessor = $ENV{"GCC"} . " -E -P -x c++";
++        } else {
++            $preprocessor = "/usr/bin/gcc -E -P -x c++";
++        }
+     }
+ 
+     if (!$defines) {

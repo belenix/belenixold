@@ -1,0 +1,86 @@
+--- icu4c-3.6.orig/source/test/cintltst/cbididat.c	2004-11-11 18:34:56.000000000 -0500
++++ icu4c-3.6/source/test/cintltst/cbididat.c	2006-11-02 18:05:49.000000000 -0500
+@@ -63,7 +63,7 @@
+ 
+ static const uint8_t
+ testText3[]={
+-    L, L, WS, EN, CS, WS, EN, CS, EN, WS, L, L
++    L, L, WS, EN, U_CS, WS, EN, U_CS, EN, WS, L, L
+ };
+ 
+ static const UBiDiLevel
+@@ -78,7 +78,7 @@
+ 
+ static const uint8_t
+ testText4[]={
+-    L, AL, AL, AL, L, AL, AL, L, WS, EN, CS, WS, EN, CS, EN, WS, L, L
++    L, AL, AL, AL, L, AL, AL, L, WS, EN, U_CS, WS, EN, U_CS, EN, WS, L, L
+ };
+ 
+ static const UBiDiLevel
+@@ -93,7 +93,7 @@
+ 
+ static const uint8_t
+ testText5[]={
+-    AL, R, AL, WS, EN, CS, WS, EN, CS, EN, WS, R, R, WS, L, L
++    AL, R, AL, WS, EN, U_CS, WS, EN, U_CS, EN, WS, R, R, WS, L, L
+ };
+ 
+ static const UBiDiLevel
+@@ -156,7 +156,7 @@
+ testText9[]={
+     LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE,
+     LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE,
+-    AN, RLO, NSM, LRE, PDF, RLE, ES, EN, ON
++    AN, RLO, NSM, LRE, PDF, RLE, U_ES, EN, ON
+ };
+ 
+ static const UBiDiLevel
+@@ -173,7 +173,7 @@
+ testText10[]={
+     LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE,
+     LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE, LRE,
+-    LRE, BN, CS, RLO, S, PDF, EN, LRO, AN, ES
++    LRE, BN, U_CS, RLO, S, PDF, EN, LRO, AN, U_ES
+ };
+ 
+ static const UBiDiLevel
+@@ -208,9 +208,9 @@
+ testText12[]={
+     NSM, WS, L, L, L, L, L, L, L, WS, L, L, L, L, WS, 
+     R, R, R, R, R, WS, L, L, L, L, L, L, L, WS, WS, AL, 
+-    AL, AL, AL, WS, EN, EN, ES, EN, EN, CS, S, EN, EN, CS, WS, 
++    AL, AL, AL, WS, EN, EN, U_ES, EN, EN, U_CS, S, EN, EN, U_CS, WS, 
+     EN, EN, WS, AL, AL, AL, AL, AL, B, L, L, L, L, L, L, 
+-    L, L, WS, AN, AN, CS, AN, AN, WS
++    L, L, WS, AN, AN, U_CS, AN, AN, WS
+ };
+ 
+ static const UBiDiLevel
+@@ -265,7 +265,7 @@
+ 
+ static const uint8_t
+ testText13[]={
+-    ON, L, RLO, CS, R, WS, AN, AN, PDF, LRE, R, L, LRO, WS, BN, ON, S, LRE, LRO, B
++    ON, L, RLO, U_CS, R, WS, AN, AN, PDF, LRE, R, L, LRO, WS, BN, ON, S, LRE, LRO, B
+ };
+ 
+ static const UBiDiLevel
+@@ -290,7 +290,7 @@
+ 
+ static const uint8_t
+ testText14[]={
+-    RLO, RLO, AL, AL, WS, EN, ES, ON, WS, S, S, PDF, LRO, WS, AL, ET, RLE, ON, EN, B
++    RLO, RLO, AL, AL, WS, EN, U_ES, ON, WS, S, S, PDF, LRO, WS, AL, ET, RLE, ON, EN, B
+ };
+ 
+ static const UBiDiLevel
+@@ -305,7 +305,7 @@
+ 
+ static const uint8_t
+ testText15[]={
+-    R, L, CS, L
++    R, L, U_CS, L
+ };
+ 
+ static const UBiDiLevel

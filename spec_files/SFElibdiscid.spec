@@ -5,7 +5,7 @@
 #
 %include Solaris.inc
 
-%define	src_ver 0.1.1
+%define	src_ver 0.2.2
 %define	src_name libdiscid
 %define	src_url	http://users.musicbrainz.org/~matt
 
@@ -83,5 +83,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Tue Apr 21 2009 - moinakg@belenix.org
+- Bump version to 0.2.2.
 * Mon Jul 30 2007 - dougs@truemail.co.th
 - Initial spec

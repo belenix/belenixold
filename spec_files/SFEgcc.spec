@@ -9,12 +9,15 @@
 
 Name:                SFEgccruntime
 Summary:             GNU gcc runtime libraries required by applications
-Version:             4.2.4
-Source:              ftp://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.bz2
-Patch1:              gcc-01-libtool-rpath.diff
-Patch2:		     gcc-02-pragma.diff
-Patch3:		     gcc-03-libunwind.diff
-Patch4:		     gcc-04-unwind2.diff
+Version:             4.4
+%define snap_ver     20090331
+%define full_ver     %{version}-%{snap_ver}
+#Source:              ftp://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.bz2
+Source:              ftp://ftp.nluug.nl/mirror/languages/gcc/snapshots/%{full_ver}/gcc-%{full_ver}.tar.bz2
+#Patch1:              gcc-01-libtool-rpath.diff
+#Patch2:		     gcc-02-pragma.diff
+#Patch3:		     gcc-03-libunwind.diff
+#Patch4:		     gcc-04-unwind2.diff
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -28,7 +31,7 @@ Requires: SUNWpostrun
 
 %package -n SFEgcc
 Summary:                 GNU gcc
-Version:                 4.2.4
+Version:                 4.4
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 Requires: %name
@@ -52,11 +55,11 @@ Requires:                %{name}
 %prep
 %setup -q -c -n %{name}-%version
 mkdir gcc
-cd gcc-%{version}
-%patch1 -p1 -b .patch01
-%patch2 -p1 -b .patch02
-%patch3 -p1 -b .patch03
-%patch4 -p1 -b .patch04
+cd gcc-%{full_ver}
+#%patch1 -p1 -b .patch01
+#%patch2 -p1 -b .patch02
+#%patch3 -p1 -b .patch03
+#%patch4 -p1 -b .patch04
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -74,6 +77,7 @@ nlsopt=-disable-nls
 
 %define ld_options      -zignore -zcombreloc -Bdirect -i
 
+export PATH="/opt/SUNWspro/bin:/usr/sfw/bin:/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin"
 export CONFIG_SHELL=/usr/bin/bash
 export CFLAGS=""
 export CPP="cc -E -Xs"
@@ -86,7 +90,7 @@ export LD_OPTIONS="%ld_options %gnu_lib_path"
 export LD="/usr/gnu/bin/ld"
 %endif
 
-../gcc-%{version}/configure			\
+../gcc-%{full_ver}/configure			\
 	--prefix=%{_prefix}			\
         --libdir=%{_libdir}			\
         --libexecdir=%{_libexecdir}		\
@@ -105,6 +109,16 @@ export LD="/usr/gnu/bin/ld"
 	--enable-shared				\
 	--disable-static			\
 	--enable-decimal-float			\
+        --enable-multilib 			\
+        --with-system-zlib 			\
+        --without-ppl				\
+        --enable-gather-detailed-mem-stats	\
+        --enable-largefile			\
+        --enable-symvers			\
+        --without-system-libunwind		\
+        --disable-libmudflap			\
+        --with-long-double-128			\
+        --enable-decimal-float			\
 	$nlsopt
 
 make -j$CPUS bootstrap
@@ -206,6 +220,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Apr 21 2009 - moinakg@belenix.org
+- Bump to 4.4 pre-release snapshot. Comment out unneeded patches.
+- Add configure options as tested for OSUNIX.
 * Tue Aug 12 2008 - moinakg@belenix.org
 - Change to use Solaris linker by default. GNU linker does not support versioned
 - symbols in shared libraries.

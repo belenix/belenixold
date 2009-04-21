@@ -1,0 +1,20 @@
+--- icu4c-3.6.orig/source/tools/pkgdata/dllmode.c	2006-02-24 14:47:48.000000000 -0500
++++ icu4c-3.6/source/tools/pkgdata/dllmode.c	2006-11-02 19:19:53.000000000 -0500
+@@ -160,7 +160,7 @@
+     pkg_mak_writeAssemblyHeader(makefile, o);
+ 
+     sprintf(tmp,"$(TEMP_DIR)/$(NAME)_dat.o : $(TEMP_DIR)/$(NAME)_dat.c\n"
+-                "\t$(COMPILE.c) $(DYNAMICCPPFLAGS) $(DYNAMICCXXFLAGS) -o $@ $<\n\n");
++                "\t$(COMPILE.c) $(DYNAMICCPPFLAGS) $(DYNAMICCFLAGS) -o $@ $<\n\n");
+     T_FileStream_writeLine(makefile, tmp);
+     
+     T_FileStream_writeLine(makefile, "# 'TOCOBJ' contains C Table of Contents objects [if any]\n");
+@@ -195,7 +195,7 @@
+     T_FileStream_writeLine(makefile, "\n\n");
+     T_FileStream_writeLine(makefile, "OBJECTS=$(BASE_OBJECTS:%=$(TEMP_DIR)/%)\n\n");
+     
+-    T_FileStream_writeLine(makefile,"$(TEMP_DIR)/%.o: $(TEMP_DIR)/%.c\n\t$(COMPILE.c) $(DYNAMICCPPFLAGS) $(DYNAMICCXXFLAGS) -o $@ $<\n\n");
++    T_FileStream_writeLine(makefile,"$(TEMP_DIR)/%.o: $(TEMP_DIR)/%.c\n\t$(COMPILE.c) $(DYNAMICCPPFLAGS) $(DYNAMICCFLAGS) -o $@ $<\n\n");
+     
+     T_FileStream_writeLine(makefile,"build-objs: $(SOURCES) $(OBJECTS)\n\n$(OBJECTS): $(SOURCES)\n\n");
+     
