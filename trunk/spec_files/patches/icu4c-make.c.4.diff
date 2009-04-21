@@ -1,0 +1,20 @@
+--- icu4c-3.6.orig/source/tools/pkgdata/make.c	2006-03-22 03:14:10.000000000 -0500
++++ icu4c-3.6/source/tools/pkgdata/make.c	2006-11-02 19:22:59.000000000 -0500
+@@ -368,7 +368,7 @@
+         commands = pkg_appendToList(commands, NULL, uprv_strdup(stanza));
+       }
+       
+-      sprintf(stanza, "@$(COMPILE.c) $(DYNAMICCPPFLAGS) $(DYNAMICCXXFLAGS) -o $@ $(TEMP_DIR)/%s", cfile+genFileOffset); /* for AS/400 */
++      sprintf(stanza, "@$(COMPILE.c) $(DYNAMICCPPFLAGS) $(DYNAMICCFLAGS) -o $@ $(TEMP_DIR)/%s", cfile+genFileOffset); /* for AS/400 */
+       commands = pkg_appendToList(commands, NULL, uprv_strdup(stanza));
+       
+       sprintf(stanza, "@$(RMV) $(TEMP_DIR)/%s", cfile+genFileOffset);
+@@ -400,7 +400,7 @@
+     T_FileStream_writeLine(f, "\n");
+     T_FileStream_writeLine(f, "$(TEMP_DIR)/$(NAME)_dat.o : $(TEMP_DIR)/$(NAME).dat\n");
+     T_FileStream_writeLine(f, "\t$(INVOKE) $(GENCCODE) $(GENCCODE_ASSEMBLY) -n $(NAME) -e $(ENTRYPOINT) -d $(TEMP_DIR) $<\n");
+-    T_FileStream_writeLine(f, "\t$(COMPILE.c) $(DYNAMICCPPFLAGS) $(DYNAMICCXXFLAGS) -o $@ $(TEMP_DIR)/$(NAME)_dat"ASM_SUFFIX"\n");
++    T_FileStream_writeLine(f, "\t$(COMPILE.c) $(DYNAMICCPPFLAGS) $(DYNAMICCFLAGS) -o $@ $(TEMP_DIR)/$(NAME)_dat"ASM_SUFFIX"\n");
+     T_FileStream_writeLine(f, "\t$(RMV) $(TEMP_DIR)/$(NAME)_dat"ASM_SUFFIX"\n");
+     T_FileStream_writeLine(f, "\n");
+     T_FileStream_writeLine(f, "else\n");

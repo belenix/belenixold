@@ -1,0 +1,13 @@
+Index: source/runConfigureICU
+===================================================================
+--- old/source/runConfigureICU	(revision 2754)
++++ new/source/runConfigureICU	(working copy)
+@@ -137,7 +137,7 @@
+     Solaris)
+         THE_OS=SOLARIS
+         THE_COMP="Sun's CC"
+-        CC=`which cc`; export CC
++        CC=`which c99`; export CC
+         CXX=`which CC`; export CXX
+         RELEASE_CFLAGS="-xO4 -xlibmil"
+         RELEASE_CXXFLAGS="-O4 -xlibmil"
