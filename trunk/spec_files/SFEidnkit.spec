@@ -16,6 +16,7 @@ Summary:             Internationalized Domain Name library
 Version:             1.0
 URL:                 http://www.nic.ad.jp/ja/idn/idnkit/download/
 Source:              http://www.nic.ad.jp/ja/idn/idnkit/download/sources/idnkit-%{version}-src.tar.gz
+Source1:             idnkit.pc
 SUNW_BaseDir:        /
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -87,7 +88,7 @@ rm -f $RPM_BUILD_ROOT%{_includedir}/idn/punycode.h
 #
 # We only need 32Bit executables
 #
-rm $RPM_BUILD_ROOT%{_bindir}/*
+rm -f $RPM_BUILD_ROOT%{_bindir}/*
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{_arch64}/*.la
 cd ..
 %endif
@@ -102,6 +103,9 @@ mv $RPM_BUILD_ROOT%{_includedir}/idn/punycode.h $RPM_BUILD_ROOT%{_includedir}/id
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 cd ..
 
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/pkgconfig
+cp %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/pkgconfig
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -112,6 +116,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
+%dir %attr (0755, root, other) %{_libdir}/pkgconfig
+%{_libdir}/pkgconfig/*
 
 %ifarch amd64
 %dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
@@ -141,5 +147,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Fri 24 Apr 2009 - moinakg@gmail.com
+- Bump version to 1.9 and add idnkit.pc.
 * Sun 18 May 2008 - moinakg@gmail.com
 - Initial spec
