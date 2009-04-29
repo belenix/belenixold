@@ -5,7 +5,7 @@
 #
 %include Solaris.inc
 
-%define	src_ver 1.1.3
+%define	src_ver 1.2.1
 %define	src_name xvidcore
 %define	src_url	http://downloads.xvid.org/downloads
 
@@ -33,7 +33,7 @@ SUNW_BaseDir:            %{_basedir}
 Requires: %name
 
 %prep
-%setup -q -n %{src_name}-%version
+%setup -q -n %{src_name}
 %patch1 -p1
 
 %build
@@ -68,8 +68,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*.*a
 (
    cd $RPM_BUILD_ROOT%{_libdir}
-   ln -s libxvidcore.so.4.1 libxvidcore.so.4
-   ln -s libxvidcore.so.4.1 libxvidcore.so
+   ln -s libxvidcore.so.4.2 libxvidcore.so.4
+   ln -s libxvidcore.so.4.2 libxvidcore.so
 )
 
 %clean
@@ -84,6 +84,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Bump version to 1.2.1
 * Thu Feb 21 2008 - moinak.ghosh@sun.com
 - Comment hardcoded dependency on SFEgcc for now.
 * Tue Jan 08 2008 - moinak.ghosh@sun.com

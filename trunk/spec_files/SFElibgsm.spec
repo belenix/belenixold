@@ -5,7 +5,7 @@
 #
 %include Solaris.inc
 
-%define	src_ver 1.0.12
+%define	src_ver 1.0.13
 %define	src_name libgsm
 %define	src_url	http://kbs.cs.tu-berlin.de/~jutta/gsm/gsm-%{version}.tar.gz
 
@@ -13,7 +13,7 @@ Name:		SFElibgsm
 Summary:	GSM audio encoding/decoding library
 Version:	%{src_ver}
 License:	Free (Copyright (C) Technische Universitaet Berlin)
-Source:		%{src_url}/%{src_name}-%{version}.tar.gz
+Source:		%{src_url}
 Patch1:		libgsm-01-makefile.diff
 SUNW_BaseDir:	%{_basedir}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
@@ -32,7 +32,7 @@ SUNW_BaseDir:            %{_basedir}
 Requires: %name
 
 %prep
-%setup -q -n gsm-1.0-pl12
+%setup -q -n gsm-1.0-pl13
 %patch1 -p1
 
 %build
@@ -74,6 +74,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3
 
 %changelog
+- Bump version to 1.0.13.
 * Sun Jan 06 2008 - moinak.ghosh@sun.com
 - Changed a failing install -d to mkdir -p
 * Fri Aug  3 2007 - dougs@truemail.co.th

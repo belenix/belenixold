@@ -14,7 +14,7 @@
 
 Name:                   SFElibfribidi
 Summary:                %fribidi.summary
-Version:                0.10.9
+Version:                %fribidi.version
 Source:                 http://fribidi.org/download/fribidi-%{version}.tar.gz
 SUNW_BaseDir:           %{_basedir}
 BuildRoot:              %{_tmppath}/%{name}-%{version}-build
@@ -48,6 +48,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
+%dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, bin) %{_mandir}
+%dir %attr (0755, root, bin) %{_mandir}/man3
+%{_mandir}/man3/*
 
 %files devel
 %defattr (-, root, bin)
@@ -57,6 +61,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Bump version to 0.19.2 and add mandir paths.
 * Mon Oct 22 2007 - nonsea@users.sourceforge.net
 - Spilit into fribidi.spec
 * Tue Jun  5 2007 - dougs@truemail.co.th

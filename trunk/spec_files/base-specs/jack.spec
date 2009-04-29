@@ -4,7 +4,7 @@
 # includes module(s): jack
 #
 
-%define src_ver 0.103.0
+%define src_ver 0.109.2
 %define src_name jack-audio-connection-kit
 %define src_url http://downloads.sourceforge.net/jackit
 
@@ -73,6 +73,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/jack/lib*.*a
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Bump version to 0.109.2.
 * Fri Jan 11 2008 - moinak.ghosh@sun.com
 - Added C99 flags to support compilation using gcc
 * Tue Aug 28 2007 - dougs@truemail.co.th

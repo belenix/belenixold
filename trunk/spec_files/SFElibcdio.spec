@@ -111,6 +111,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/cdio
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Bump version to 0.81.
 * Sat Jan 19 2008 - moinak.ghosh@sun.com
 - Set g++ as cpp compiler
 - Added back man and info files

@@ -10,7 +10,7 @@
 Name:         libcdio
 License:      LGPL
 Group:        System Environment/Libraries
-Version:      0.79
+Version:      0.81
 Release:      1
 Distribution: Java Desktop System
 Vendor:       Sun Microsystems, Inc.
@@ -84,6 +84,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Bump version to 0.81.
 * Fri Jan 18 2008 - moinak.ghosh@sun.com
 - Add a compatibility symlink 
 * Sat Nov 3 2007 - markwright@internode.on.net

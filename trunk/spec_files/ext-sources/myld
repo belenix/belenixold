@@ -1,0 +1,39 @@
+#!/usr/bin/ksh93
+
+cmd="/usr/ccs/bin/ld"
+num=$#
+count=0
+zparam=""
+while [ $count -lt $num ]
+do
+	count=$((count + 1))
+        param=$1
+	shift
+	if [ ${param:0:2} = "-m" ]
+	then
+		continue
+	fi
+	if [ ${param:0:4} = "-Wl," ]
+	then
+		param=${param:4}
+	fi
+	if [ "${param}" = "-z" ]
+	then
+		zparam="-z"
+		continue
+	else
+		if [ "x${zparam}" = "x-z" ]
+		then
+			zparam=""
+			[ "${param}" = "text" ] && continue
+			param="-z ${param}"
+		fi
+	fi
+	if [ "${param}" = "--no-undefined" ]
+	then
+		continue
+	fi
+        cmd="${cmd} ${param}"
+done
+echo $cmd
+exec $cmd

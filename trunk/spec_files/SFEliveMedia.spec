@@ -5,9 +5,15 @@
 #
 %include Solaris.inc
 
+%ifarch amd64 sparcv9
+%include arch64.inc
+%endif
+
+%include base.inc
+
 Name:                    SFEliveMedia
 Summary:                 liveMedia - live555 Streaming Media
-Version:                 2008.02.08
+Version:                 2009.04.20
 Source:                  http://www.live555.com/liveMedia/public/live.%{version}.tar.gz
 Patch1:                  liveMedia-01-SOLARIS-macro.diff
 Patch2:                  liveMedia-02-config.diff
@@ -16,9 +22,15 @@ BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 
 %prep
-%setup -q -n live
+%setup -q -c -n %name-%version
+cd live
 %patch1 -p1
 %patch2 -p1
+cd ..
+
+%ifarch amd64 sparcv9
+cp -rp live live-64
+%endif
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -26,13 +38,41 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
 
-./genMakefiles solaris
+%ifarch amd64 sparcv9
+cd live-64
+./genMakefiles solaris-64bit
+make -j$CPUS
+cd ..
+%endif
+
+cd live
+./genMakefiles solaris-32bit
 make -j$CPUS 
+cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/usr/lib/live
+
+%ifarch amd64 sparcv9
+cd live-64
+
+gtar fcp - liveMedia/libliveMedia.so groupsock/libgroupsock.so UsageEnvironment/libUsageEnvironment.so BasicUsageEnvironment/libBasicUsageEnvironment.so  | gtar -x -v -C $RPM_BUILD_ROOT/usr/lib/live -f -
+mkdir -p $RPM_BUILD_ROOT/usr/lib/live/liveMedia/%{_arch64}
+mv $RPM_BUILD_ROOT/usr/lib/live/liveMedia/libliveMedia.so $RPM_BUILD_ROOT/usr/lib/live/liveMedia/%{_arch64}
+mkdir -p $RPM_BUILD_ROOT/usr/lib/live/groupsock/%{_arch64}
+mv $RPM_BUILD_ROOT/usr/lib/live/groupsock/libgroupsock.so $RPM_BUILD_ROOT/usr/lib/live/groupsock/%{_arch64}
+mkdir -p $RPM_BUILD_ROOT/usr/lib/live/UsageEnvironment/%{_arch64}
+mv $RPM_BUILD_ROOT/usr/lib/live/UsageEnvironment/libUsageEnvironment.so $RPM_BUILD_ROOT/usr/lib/live/UsageEnvironment/%{_arch64}
+mkdir -p $RPM_BUILD_ROOT/usr/lib/live/BasicUsageEnvironment/%{_arch64}
+mv $RPM_BUILD_ROOT/usr/lib/live/BasicUsageEnvironment/libBasicUsageEnvironment.so $RPM_BUILD_ROOT/usr/lib/live/BasicUsageEnvironment/%{_arch64}
+
+cd ..
+%endif
+
+cd live
 gtar fcp - liveMedia/include groupsock/include UsageEnvironment/include BasicUsageEnvironment/include liveMedia/libliveMedia.so groupsock/libgroupsock.so UsageEnvironment/libUsageEnvironment.so BasicUsageEnvironment/libBasicUsageEnvironment.so  | gtar -x -v -C $RPM_BUILD_ROOT/usr/lib/live -f -
+cd ..
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -43,6 +83,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Bump version to 2009.04.20 and add 64Bit build.
 * Tue Feb 12 2008 <pradhap (at) gmail.com>
 - Bumped up the version to 2008.02.08
 * Thu Dec 27 2007 - Thomas Wagner

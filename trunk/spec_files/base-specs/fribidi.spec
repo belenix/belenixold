@@ -6,7 +6,7 @@
 #
 
 Name:        fribidi 
-Version:     0.10.9
+Version:     0.19.2
 Release:     1
 Summary:     Library implementing the Unicode Bidirectional Algorithm
 Copyright:   LGPL
