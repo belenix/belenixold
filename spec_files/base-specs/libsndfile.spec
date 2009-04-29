@@ -8,16 +8,16 @@
 %define src_url http://www.mega-nerd.com/%{src_name}
 Name:		libsndfile
 Summary:	libsndfile  - a library of C routines for reading and writing files containing sampled audio data
-Version:	1.0.17
+Version:	1.0.19
 Source:		%{src_url}/%{src_name}-%{version}.tar.gz
-Patch1:		libsndfile-01-flac-1.1.3.diff
+#Patch1:		libsndfile-01-flac-1.1.3.diff
 Patch2:		libsndfile-02-cpp_test.diff
 Patch3:		libsndfile-03-endian.diff
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 
 %prep
 %setup -q -n %{src_name}-%version
-%patch1 -p1
+#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 

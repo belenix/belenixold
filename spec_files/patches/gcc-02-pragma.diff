@@ -1,9 +1,0 @@
---- gcc-4.2.1-orig/gcc/config/sol2.h-orig 2008-06-23 00:19:41.055666741 +0400
-+++ gcc-4.2.1-orig/gcc/config/sol2.h	2008-06-23 00:16:39.692030743 +0400
-@@ -242,3 +242,6 @@
- 
- /* Allow macro expansion in #pragma pack.  */
- #define HANDLE_PRAGMA_PACK_WITH_EXPANSION
-+/* Define this so we can compile MS code for use with WINE.  */
-+#define HANDLE_PRAGMA_PACK_PUSH_POP
-+

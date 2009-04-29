@@ -9,16 +9,13 @@
 
 Name:                    SFEmplayer
 Summary:                 mplayer - The Movie Player
-Version:                 1.0
-%define tarball_version 1.0rc2
-Source:                  http://www.mplayerhq.hu/MPlayer/releases/MPlayer-%{tarball_version}.tar.bz2
+Version:                 1.5
+Source:                  http://www.mplayerhq.hu/MPlayer/releases/mplayer-checkout-snapshot.tar.bz2
 Patch1:                  mplayer-01-cddb.diff
-#Patch2:                 mplayer-02-makefile-libfame-dep.diff
-#Patch3:                 mplayer-03-asmrules_20061231.diff
 Patch4:                  mplayer-04-cabac-asm.diff
 Patch5:                  mplayer-05-configure.diff
 Source3:                 http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
-Source4:                 http://www.mplayerhq.hu/MPlayer/skins/Abyss-1.6.tar.bz2
+Source4:                 http://www.mplayerhq.hu/MPlayer/skins/Abyss-1.7.tar.bz2
 Source5:                 http://www.mplayerhq.hu/MPlayer/skins/neutron-1.5.tar.bz2
 Source6:                 http://www.mplayerhq.hu/MPlayer/skins/proton-1.2.tar.bz2
 #Source7:                 http://www.3gpp.org/ftp/Specs/latest/Rel-6/26_series/26104-610.zip
@@ -35,7 +32,7 @@ Requires: SFElame
 Requires: SFEtwolame
 Requires: SFEfaad2
 Requires: SFElibmpcdec
-#Requires: SFEsdl
+Requires: SFEsdl
 Requires: SUNWsmbau
 Requires: SUNWgnome-audio
 Requires: SUNWxorg-clientlibs
@@ -66,7 +63,7 @@ BuildRequires: SFElame-devel
 BuildRequires: SFEtwolame-devel
 BuildRequires: SFEfaad2-devel
 BuildRequires: SFElibmpcdec-devel
-#BuildRequires: SFEsdl-devel
+BuildRequires: SFEsdl-devel
 BuildRequires: SFEgawk
 BuildRequires: SUNWgnome-audio-devel
 
@@ -76,10 +73,9 @@ BuildRequires: SUNWgnome-audio-devel
 %endif
 
 %prep
-%setup -q -n MPlayer-%tarball_version
+%setup -q -c -n %name-%version
+cd mplayer-checkout*
 %patch1 -p1
-#%patch2 -p1
-#%patch3 -p1
 %patch4 -p1
 %patch5 -p1
 
@@ -98,6 +94,8 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
 
+cd mplayer-checkout*
+
 %if %debug_build
 dbgflag=--enable-debug
 export CFLAGS="-g -D__hidden=\"\""
@@ -106,12 +104,14 @@ dbgflag=--disable-debug
 export CFLAGS="-O2 -D__hidden=\"\""
 %endif
 
-export LDFLAGS="-L%{x11}/lib -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib" 
+export LDFLAGS="-L%{x11}/lib -R%{x11}/lib -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib -L/usr/lib/live/liveMedia -R/usr/lib/live/liveMedia -L/usr/lib/live/groupsock -R/usr/lib/live/groupsock -L/usr/lib/live/UsageEnvironment -R/usr/lib/live/UsageEnvironment -L/usr/lib/live/BasicUsageEnvironment -R/usr/lib/live/BasicUsageEnvironment " 
 export CC=gcc
 rm -rf ./grep
 ln -s /usr/sfw/bin/ggrep ./grep
 PATH="`pwd`:$PATH"
 echo "`type grep`"
+
+export CFLAGS="$CFLAGS -fomit-frame-pointer -I/usr/lib/live/liveMedia/include -I/usr/lib/live/groupsock/include -I/usr/lib/live/UsageEnvironment/include -I/usr/lib/live/BasicUsageEnvironment/include -I%{x11}/include -I/usr/sfw/include -I/usr/gnu/include"
 
 bash ./configure				\
 	    --prefix=%{_prefix}			\
@@ -120,21 +120,24 @@ bash ./configure				\
             --confdir=%{_sysconfdir}		\
             --enable-gui			\
             --enable-menu			\
-            --with-extraincdir=/usr/lib/live/liveMedia/include:/usr/lib/live/groupsock/include:/usr/lib/live/UsageEnvironment/include:/usr/lib/live/BasicUsageEnvironment/include:%{x11}/include:/usr/sfw/include \
-            --with-extralibdir=/usr/lib/live/liveMedia:/usr/lib/live/groupsock:/usr/lib/live/UsageEnvironment:/usr/lib/live/BasicUsageEnvironment:%{x11}/lib:/usr/gnu/lib:/usr/sfw/lib \
+	    --extra-cflags="${CFLAGS}"		\
+	    --extra-ldflags="${LDFLAGS}"	\
 %if %option_with_gnu_iconv
             --extra-libs='-lBasicUsageEnvironment -lUsageEnvironment -lgroupsock -lliveMedia -lsocket -lnsl -lstdc++ -lgnuintl -lgnuiconv' \
 %else
             --extra-libs='-lBasicUsageEnvironment -lUsageEnvironment -lgroupsock -lliveMedia -lsocket -lnsl -lstdc++' \
 %endif
             --codecsdir=%{codecdir}		\
-            --enable-faad-external		\
+            --enable-faad			\
             --enable-live			\
+	    --enable-mp3lame			\
             --enable-network			\
 	    --enable-rpath			\
             --enable-largefiles			\
 	    --enable-crash-debug		\
             --disable-directfb			\
+	    --disable-xvr100			\
+	    --disable-liba52-internal		\
             --with-freetype-config=/usr/bin/freetype-config \
 	    $dbgflag
 
@@ -142,6 +145,8 @@ make -j$CPUS
 
 %install
 rm -rf $RPM_BUILD_ROOT
+cd mplayer-checkout*
+
 gmake install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/mplayer/codecs
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/mplayer/skins
@@ -178,6 +183,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Update to latest SVN checkout snapshot.
+- Add back SFEsdl dep.
 * Fri Apr 10 2009 - moinakg@gmail.com
 - Disable 3GPP AMR codecs as they are non-redistributable.
 * Sat Jun 21 2008 - moinakg@gmail.com

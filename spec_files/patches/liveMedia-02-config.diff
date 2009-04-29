@@ -1,16 +1,20 @@
---- live-orig/config.solaris	2007-11-01 02:29:35.000000000 +0000
-+++ live/config.solaris	2007-11-03 11:54:36.210784799 +0000
-@@ -1,4 +1,4 @@
+--- live/config.solaris-32bit.orig	2009-04-26 21:01:39.125156318 +0530
++++ live/config.solaris-32bit	2009-04-26 21:03:04.556065752 +0530
+@@ -1,17 +1,17 @@
 -COMPILE_OPTS =		$(INCLUDES) -I. -O -DSOLARIS -DSOCKLEN_T=socklen_t
-+COMPILE_OPTS =		$(INCLUDES) -I. -O -DSOLARIS -DSOCKLEN_T=socklen_t -fPIC -DPIC -Kpic
++COMPILE_OPTS =		$(INCLUDES) -I. -O -DSOLARIS -DSOCKLEN_T=socklen_t -fPIC -DPIC
  C =			c
- C_COMPILER =		cc
+-C_COMPILER =		cc
++C_COMPILER =		gcc
  C_FLAGS =		$(COMPILE_OPTS)
-@@ -7,11 +7,12 @@
+ CPP =			cpp
+-CPLUSPLUS_COMPILER =	c++
++CPLUSPLUS_COMPILER =	g++
  CPLUSPLUS_FLAGS =	$(COMPILE_OPTS) -Wall
  OBJ =			o
- LINK =			c++ -o
+-LINK =			c++ -o
 -LINK_OPTS =		-L.
++LINK =			g++ -o
 +LINK_OPTS =		-shared -shared-libgcc $(CPLUSPLUS_FLAGS) -Wl,-zignore -Wl,-zcombreloc -L. -L/usr/gnu/lib -R/usr/gnu/lib -R/usr/lib/live/BasicUsageEnvironment -R/usr/lib/live/UsageEnvironment -R/usr/lib/live/groupsock -R/usr/lib/live/liveMedia
  CONSOLE_LINK_OPTS =	$(LINK_OPTS)
 -LIBRARY_LINK =		ld -o
@@ -22,4 +26,31 @@
  LIBS_FOR_CONSOLE_APPLICATION = -lsocket -lnsl
  LIBS_FOR_GUI_APPLICATION = $(LIBS_FOR_CONSOLE_APPLICATION)
  EXE =
-+
+--- live/config.solaris-64bit.orig	2009-04-26 21:03:15.215648995 +0530
++++ live/config.solaris-64bit	2009-04-26 21:11:10.384497131 +0530
+@@ -1,17 +1,17 @@
+-COMPILE_OPTS =          $(INCLUDES) -m64 -I. -O -DSOLARIS -DSOCKLEN_T=socklen_t
++COMPILE_OPTS =          $(INCLUDES) -m64 -I. -O -DSOLARIS -DSOCKLEN_T=socklen_t -fPIC -DPIC
+ C =                     c
+-C_COMPILER =            cc
++C_COMPILER =            gcc
+ C_FLAGS =               $(COMPILE_OPTS)
+ CPP =                   cpp
+ CPLUSPLUS_COMPILER =    c++
+ CPLUSPLUS_FLAGS =       $(COMPILE_OPTS) -Wall
+ OBJ =                   o
+-LINK =                  c++ -m64 -o 
+-LINK_OPTS =             -L.
++LINK =                  g++ -m64 -o 
++LINK_OPTS =             -shared -m64 -shared-libgcc $(CPLUSPLUS_FLAGS) -Wl,-zignore -Wl,-zcombreloc -L. -L/usr/gnu/lib/amd64 -R/usr/gnu/lib/amd64 -R/usr/lib/live/BasicUsageEnvironment/amd64 -R/usr/lib/live/UsageEnvironment/amd64 -R/usr/lib/live/groupsock/amd64 -R/usr/lib/live/liveMedia/amd64
+ CONSOLE_LINK_OPTS =     $(LINK_OPTS)
+-LIBRARY_LINK =          ld -o
+-LIBRARY_LINK_OPTS =     $(LINK_OPTS) -64 -r -dn
+-LIB_SUFFIX =                    a
+-LIBS_FOR_CONSOLE_APPLICATION = -lsocket -lnsl
++LIBRARY_LINK =          g++ -o
++LIBRARY_LINK_OPTS =     $(LINK_OPTS)
++LIB_SUFFIX =                    so
++LIBS_FOR_CONSOLE_APPLICATION = -L/usr/lib/amd64 -R/usr/lib/amd64 -lsocket -lnsl
+ LIBS_FOR_GUI_APPLICATION = $(LIBS_FOR_CONSOLE_APPLICATION)
+ EXE =

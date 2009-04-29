@@ -5,6 +5,13 @@
 #
 %include Solaris.inc
 
+%ifarch amd64 sparcv9
+%include arch64.inc
+%endif
+
+%include base.inc
+
+
 Name:                    SFElibmad
 Summary:                 libmad  - a high-quality MPEG audio decoder
 Version:                 0.15.1.2
@@ -21,36 +28,64 @@ SUNW_BaseDir:            %{_basedir}
 Requires: %name
 
 %prep
-%setup -q -n libmad-%tarball_version
+%setup -q -c -n %name-%version
+
+%ifarch amd64 sparcv9
+cp -rp libmad-%{tarball_version} libmad-%{tarball_version}-64
+%endif
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
 if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
-export CFLAGS="%optflags"
-export ACLOCAL_FLAGS="-I %{_datadir}/aclocal"
-export MSGFMT="/usr/bin/msgfmt"
 
 %define fp_arch	 default
-%ifarch sparc
-%define fp_arch	sparc
-%endif
-
-%ifarch i386
-%define fp_arch intel
-%endif
-
-%ifarch amd64
-%define fp_arch	64bit
-%endif
-
 %if %cc_is_gcc
 %define fpm_option --enable-fpm
 %else
 # asm stuff breaks with sun studio :(
 %define fpm_option --disable-fpm
 %endif
+
+export ACLOCAL_FLAGS="-I %{_datadir}/aclocal"
+export MSGFMT="/usr/bin/msgfmt"
+
+%ifarch amd64 sparcv9
+cd libmad-%{tarball_version}-64
+export CFLAGS="%optflags64"
+
+%ifarch amd64
+%define fp_arch 64bit
+%endif
+%ifarch sparcv9
+%define fp_arch sparcv9
+%endif
+
+./configure --prefix=%{_prefix} --mandir=%{_mandir} \
+            --libdir=%{_libdir}/%{_arch64}   \
+            --libexecdir=%{_libexecdir}/%{_arch64}      \
+            --sysconfdir=%{_sysconfdir}      \
+            --enable-fpm=%{fp_arch}          \
+            --enable-shared                  \
+            --enable-accuracy                \
+            %fpm_option                      \
+            --disable-static
+
+make -j$CPUS 
+cd ..
+%endif
+
+
+%ifarch i386
+%define fp_arch intel
+%endif
+%ifarch sparc
+%define fp_arch sparc
+%endif
+
+cd libmad-%{tarball_version}
+export CFLAGS="%optflags"
 
 ./configure --prefix=%{_prefix} --mandir=%{_mandir} \
             --libdir=%{_libdir}              \
@@ -63,11 +98,22 @@ export MSGFMT="/usr/bin/msgfmt"
 	    --disable-static
 
 make -j$CPUS 
+cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+%ifarch amd64 sparcv9
+cd libmad-%{tarball_version}-64
+make install DESTDIR=$RPM_BUILD_ROOT
+rm -f $RPM_BUILD_ROOT%{_libdir}/%{_arch64}/lib*a
+cd ..
+%endif
+
+cd libmad-%{tarball_version}
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/lib*a
+cd ..
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -77,12 +123,19 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
 
+%ifarch amd64 sparcv9
+%dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
+%{_libdir}/%{_arch64}/lib*.so*
+%endif
+
 %files devel
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Add 64Bit build.
 * Thu Jul 27 2006 - halton.huo@sun.com
 - Correct Source url s/kend/kent
 * Mon Jun 12 2006 - laca@sun.com

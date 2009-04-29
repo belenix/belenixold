@@ -1,11 +1,11 @@
---- gpac/Makefile.orig	2008-02-21 06:11:06.459784059 -0800
-+++ gpac/Makefile	2008-02-21 06:11:50.170896763 -0800
-@@ -69,7 +69,7 @@
- 	ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/lib/libgpac.$(DYN_LIB_SUFFIX)
+--- gpac/Makefile.orig	2008-10-23 21:10:38.000000000 +0530
++++ gpac/Makefile	2009-04-26 10:03:33.150246163 +0530
+@@ -67,7 +67,7 @@
+ 	ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX)
  else
- 	install $(INSTFLAGS) -m 755 bin/gcc/libgpac.$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/lib/libgpac-$(VERSION).$(DYN_LIB_SUFFIX)
--	ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/lib/libgpac.$(DYN_LIB_SUFFIX)
-+	(cd $(DESTDIR)$(prefix)/lib;/usr/bin/ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) libgpac.$(DYN_LIB_SUFFIX))
+ 	install $(INSTFLAGS) -m 755 bin/gcc/libgpac.$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac-$(VERSION).$(DYN_LIB_SUFFIX)
+-	ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) $(DESTDIR)$(prefix)/$(libdir)/libgpac.$(DYN_LIB_SUFFIX)
++	(cd $(DESTDIR)$(prefix)/$(libdir);/usr/bin/ln -sf libgpac-$(VERSION).$(DYN_LIB_SUFFIX) libgpac.$(DYN_LIB_SUFFIX))
  	ldconfig || true
  endif
  endif

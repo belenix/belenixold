@@ -64,37 +64,41 @@ cd WebKit-r%version
 %install
 rm -rf $RPM_BUILD_ROOT
 
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/include/webkit-1.0/webkit
-mkdir -p $RPM_BUILD_ROOT%{_prefix}/include/webkit-1.0/JavaScriptCore/API
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/pkgconfig
-
-cd %{_builddir}/%name-%version/WebKit-r%version/
-cp WebKit/gtk/webkit/*.h $RPM_BUILD_ROOT%{_prefix}/include/webkit-1.0/webkit
-cp -pr JavaScriptCore/ForwardingHeaders/JavaScriptCore/* $RPM_BUILD_ROOT%{_prefix}/include/webkit-1.0/JavaScriptCore/
-cp -pr JavaScriptCore/API/*.h $RPM_BUILD_ROOT%{_prefix}/include/webkit-1.0/JavaScriptCore/API
-
-cd WebKitBuild/Release
-chmod 644 WebKit/gtk/webkit/webkitversion.h
-cp WebKit/gtk/webkit/*.h $RPM_BUILD_ROOT%{_prefix}/include/webkit-1.0/webkit
-
-sed -e 's,local,,g' WebKit/gtk/webkit-1.0.pc > temp.pc
-mv temp.pc $RPM_BUILD_ROOT%{_libdir}/pkgconfig/webkit-1.0.pc
-cp .libs/libwebkit-1.0.so $RPM_BUILD_ROOT%{_libdir}/libwebkit-1.0.so.1
-ln -s libwebkit-1.0.so.1 $RPM_BUILD_ROOT%{_libdir}/libwebkit-1.0.so
+cd %{_builddir}/%name-%version/WebKit-r%version/WebKitBuild/Release
+make install DESTDIR=$RPM_BUILD_ROOT
+mv ${RPM_BUILD_ROOT}/usr/local/* ${RPM_BUILD_ROOT}/usr
+rmdir ${RPM_BUILD_ROOT}/usr/local
+sed -e 's,local,,g' WebKit/gtk/webkit-1.0.pc > $RPM_BUILD_ROOT%{_libdir}/pkgconfig/webkit-1.0.pc
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/libwebkit-1.0.so.2
+mv $RPM_BUILD_ROOT%{_libdir}/libwebkit-1.0.so.2.* $RPM_BUILD_ROOT%{_libdir}/libwebkit-1.0.so.2
+rm -f $RPM_BUILD_ROOT%{_libdir}/libwebkit-1.0.so
+ln -s libwebkit-1.0.so.2 $RPM_BUILD_ROOT%{_libdir}/libwebkit-1.0.so
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr (-, root, bin)
+%dir %attr (0755, root, bin) %{_bindir}
+%{_bindir}/*
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/libwebkit*
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*
 %dir %attr (0755, root, bin) %{_prefix}/include
 %{_prefix}/include/*
+%dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, other) %{_datadir}/webkit-1.0
+%{_datadir}/webkit-1.0/*
+
+%defattr (-, root, other)
+%dir %attr (0755, root, other) %{_localedir}
+%{_localedir}/*
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Fix install script and update paths.
 * Tue Apr 21 2009 - moinakg@belenix.org
 - Imported and versiong bumped from SFE gate.
 - Changes to build with Gcc 4.4.

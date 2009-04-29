@@ -6,7 +6,7 @@
 Name:                    SFElame
 Summary:                 lame  - Ain't an MP3 Encoder
 Version:                 3.97
-Source:                  http://kent.dl.sourceforge.net/sourceforge/lame/lame-%{version}b2.tar.gz
+Source:                  %{sf_download}/lame/lame-%{version}b2.tar.gz
 Patch1:                  lame-01-brhist.diff
 Patch2:                  lame-02-inline.diff
 SUNW_BaseDir:            %{_basedir}
@@ -51,6 +51,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/lib*a
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Update Sourceforge download URL.
 * Sun Apr 22 2007 - dougs@truemail.co.th
 - Forced automake to automake-1.9
 * Tue Mar 20 2007 - dougs@truemail.co.th

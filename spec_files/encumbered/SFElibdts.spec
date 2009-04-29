@@ -11,10 +11,6 @@ Name:                    SFElibdts
 Summary:                 libdts  - a free library for decoding DTS Coherent Acoustics streams
 Version:                 0.0.5
 Source:                  http://download.videolan.org/pub/videolan/libdca/%{version}/%{src_name}-%{version}.tar.bz2
-#Patch1:		 libdts-01-sigtype.diff
-#Patch2:                 libdts-02-picflags.diff
-#Patch2:                 libdts-02-shared.diff
-#Patch3:                 libdts-03-opt.diff
 Patch4:                  libdts-04-tweaks-to-fix-trivial-compiler-errors.diff
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{src_name}-%{version}-build
@@ -31,10 +27,6 @@ Requires: SFEliba52-devel
 
 %prep
 %setup -q -n %src_name-%version
-#%patch1 -p1
-#%patch2 -p1 -b .pic
-#%patch2 -p1
-#%patch3 -p1
 %patch4 -p1
 
 %build
@@ -87,6 +79,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Delete commented out patch lines.
 * Mon Dec 31 2007 - markwright@internode.on.net
 - Bump to 0.0.5. Comment patch1, patch2 and patch3.
 - Add patch 4 to fix trivial compiler errors.

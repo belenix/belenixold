@@ -1,0 +1,27 @@
+#!/bin/sh
+
+cmp=$2
+
+export CC=/opt/SUNWspro/bin/cc
+export CXX=/opt/SUNWspro/bin/CC
+unset LDFLAGS CFLAGS CPPFLAGS CXXFLAGS LD_OPTIONS
+
+if [ "$cmp" = "gcc" ]
+then
+export CC=/usr/gnu/bin/gcc
+export CXX=/usr/gnu/bin/g++
+
+export CXXFLAGS_EXTRA="-L/usr/gnu/lib -R/usr/gnu/lib"
+export CFLAGS_EXTRA="-L/usr/gnu/lib -R/usr/gnu/lib"
+export LDFLAGS_EXTRA="-L/usr/gnu/lib -R/usr/gnu/lib"
+PATH=/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
+export PATH
+
+else
+PATH=/opt/SUNWspro/bin:/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
+export PATH
+fi
+
+unset LD_LIBRARY_PATH
+pkgtool build --download --halt-on-errors --nonotify --with-fox --without-dt --with-l10n --without-apoc-adapter --with-indiana-branding --with-gnu-iconv --autodeps $1
+#pkgbuild -bb --short-circuit --with-fox --without-dt --with-l10n --without-apoc-adapter --with-indiana-branding --with-gnu-iconv $1

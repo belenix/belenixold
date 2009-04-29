@@ -125,6 +125,16 @@ make install DESTDIR=$RPM_BUILD_ROOT
 cd $RPM_BUILD_ROOT%{_prefix}
 ln -s share/man man
 
+cd bin
+mv ar gar
+mv ld gld
+mv nm gnm 
+mv ranlib granlib
+mv as gas
+mv strings gstrings
+mv strip gstrip
+mv size gsize
+
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 
 %if %build_l10n
@@ -202,10 +212,12 @@ rm -rf $RPM_BUILD_ROOT
 %files l10n
 %defattr (-, root, bin)
 %dir %attr (0755, root, sys) %{_datadir}
-%attr (-, root, other) %{_datadir}/locale
+#%attr (-, root, other) %{_datadir}/locale
 %endif
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Use g-prefixed executable names for those conflicting with Solaris native tools.
 * Tue Apr 21 2009 - moinakg@belenix.org
 - Set proper PATH during building.
 * Sat Jan 26 2008 - moinak.ghosh@sun.com

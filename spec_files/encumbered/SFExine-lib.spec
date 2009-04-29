@@ -15,9 +15,11 @@
 Name:         SFExine-lib
 License:      GPL
 Group:        System/Libraries
-Version:      1.1.8
+Version:      1.1.16.3
 Summary:      xine-lib - the core engine of the xine video player
 Source:       %{sf_download}/xine/xine-lib-%{version}.tar.bz2
+Source1:      myld
+Source2:      xine-libtool
 #Patch1:       xine-lib-01-sysi86.diff
 Patch2:       xine-lib-02-asm-pic.diff
 Patch3:       xine-lib-03-gettext.diff
@@ -114,6 +116,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
   CPUS=1
 fi
 
+chmod +x %{SOURCE1}
 glib-gettextize --force
 
 %if %use_gcc3
@@ -124,16 +127,16 @@ glib-gettextize --force
 %else
 	export CXX=/usr/gnu/bin/gcc
 	export CC=/usr/gnu/bin/gcc
-	export LD=/usr/gnu/bin/ld
-	export LDFLAGS="%arch_ldadd %ldadd ${EXTRA_LDFLAGS} -Wl,-export-dynamic -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib"
+	export LDFLAGS="%arch_ldadd %ldadd ${EXTRA_LDFLAGS} -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib"
 	export AS=/usr/gnu/bin/gas
+	export LD=%{SOURCE1}
 %endif
 
 echo "################################"
 $CC --print-prog-name=as
 echo "################################"
 
-libtoolize --copy --force
+#libtoolize --copy --force
 aclocal $ACLOCAL_FLAGS -I m4
 autoheader
 automake -a -c -f 
@@ -143,12 +146,21 @@ export CFLAGS="-O4 -fPIC -DPIC -I/usr/X11/include -I/usr/openwin/include -D_LARG
 export CFLAGS="$CFLAGS -I/usr/gnu/include -L/usr/gnu/lib -R/usr/gnu/lib -lintl -liconv"
 export CXXFLAGS="$CXXFLAGS -I/usr/gnu/include -L/usr/gnu/lib -R/usr/gnu/lib -lintl -liconv"
 %endif
-./configure --prefix=%{_prefix} \
+bash ./configure --prefix=%{_prefix} \
             --with-w32-path=%{mplayer.codecdir} \
             --with-external-libmad \
             --with-external-dvdnav \
             --disable-opengl \
             --with-gnu-as=yes
+
+#cat libtool | sed 's/-shared/-Wl,-G/g' > libtool.new
+#cp libtool.new libtool
+#cat libtool | sed '{
+#    s#\$CC -Wl,-G#%{SOURCE1} -Wl,-G#
+#    s#/bin/sh#/usr/bin/bash#
+#}' > libtool.new
+#cp libtool.new libtool
+cp %{SOURCE2} ./libtool 
 gmake -j $CPUS
 
 %install
@@ -190,109 +202,110 @@ rm -rf $RPM_BUILD_ROOT
 
 %files 
 %defattr (-, root, bin)
+%dir %attr (0755, root, bin) %{_bindir}
+%{_bindir}/xine-list-1.1
 %dir %attr (0755, root, bin) %dir %{_libdir}
 %{_libdir}/*.so*
-%{_libdir}/xine/plugins/1.1.8/mime.types
-%{_libdir}/xine/plugins/1.1.8/post/xineplug_post_audio_filters.so
-%{_libdir}/xine/plugins/1.1.8/post/xineplug_post_goom.so
-%{_libdir}/xine/plugins/1.1.8/post/xineplug_post_mosaico.so
-%{_libdir}/xine/plugins/1.1.8/post/xineplug_post_planar.so
-%{_libdir}/xine/plugins/1.1.8/post/xineplug_post_switch.so
-%{_libdir}/xine/plugins/1.1.8/post/xineplug_post_tvtime.so
-%{_libdir}/xine/plugins/1.1.8/post/xineplug_post_visualizations.so
-%{_libdir}/xine/plugins/1.1.8/vidix
-%{_libdir}/xine/plugins/1.1.8/xineplug_ao_out_esd.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_ao_out_file.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_ao_out_jack.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_ao_out_none.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_ao_out_oss.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_ao_out_sun.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_bitplane.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_gdk_pixbuf.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_image.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_lpcm.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_nsf.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_speex.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_spucmml.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_sputext.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_theora.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_vorbis.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_yuv.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_audio.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_avi.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_fli.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_flv.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_games.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_iff.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_image.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_matroska.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_mng.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_nsv.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_rawdv.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_ogg.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_pva.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_slave.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_sputext.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_yuv_frames.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_cdda.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_dvb.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_dvd.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_file.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_gnome_vfs.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_http.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_net.so
+%{_libdir}/xine/plugins/1.26/mime.types
+%{_libdir}/xine/plugins/1.26/post/xineplug_post_audio_filters.so
+%{_libdir}/xine/plugins/1.26/post/xineplug_post_goom.so
+%{_libdir}/xine/plugins/1.26/post/xineplug_post_mosaico.so
+%{_libdir}/xine/plugins/1.26/post/xineplug_post_planar.so
+%{_libdir}/xine/plugins/1.26/post/xineplug_post_switch.so
+%{_libdir}/xine/plugins/1.26/post/xineplug_post_tvtime.so
+%{_libdir}/xine/plugins/1.26/post/xineplug_post_visualizations.so
+%{_libdir}/xine/plugins/1.26/vidix
+%{_libdir}/xine/plugins/1.26/xineplug_ao_out_esd.so
+%{_libdir}/xine/plugins/1.26/xineplug_ao_out_file.so
+%{_libdir}/xine/plugins/1.26/xineplug_ao_out_jack.so
+%{_libdir}/xine/plugins/1.26/xineplug_ao_out_none.so
+%{_libdir}/xine/plugins/1.26/xineplug_ao_out_oss.so
+%{_libdir}/xine/plugins/1.26/xineplug_ao_out_sun.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_bitplane.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_gdk_pixbuf.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_image.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_lpcm.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_nsf.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_speex.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_spucmml.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_sputext.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_theora.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_vorbis.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_yuv.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_audio.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_avi.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_fli.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_flv.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_games.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_iff.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_image.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_matroska.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_mng.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_nsv.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_rawdv.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_ogg.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_pva.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_slave.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_sputext.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_yuv_frames.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_cdda.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_dvb.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_dvd.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_file.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_gnome_vfs.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_http.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_net.so
 %if %use_gcc3
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_smb.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_smb.so
 %endif
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_pnm.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_rtp.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_rtsp.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_stdin_fifo.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_aa.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_none.so
-#%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_pgx32.so
-#%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_pgx64.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_xxmc.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_xvmc.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_sdl.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_xshm.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_vo_out_xv.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_pnm.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_rtp.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_rtsp.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_stdin_fifo.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_aa.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_none.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_xxmc.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_xvmc.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_sdl.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_xshm.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_xv.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_raw.so
 %dir %attr (0755, root, sys) %{_datadir}
 %{_datadir}/xine
 
 %files encumbered
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %dir %{_libdir}
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_a52.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_dts.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_dvaudio.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_faad.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_ff.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_gsm610.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_mad.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_mpc.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_mpeg2.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_qt.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_real.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_rgb.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_speex.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_spu.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_spucc.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_spudvb.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_decode_w32dll.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_asf.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_mpeg.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_mpeg_block.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_mpeg_elem.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_mpeg_pes.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_mpeg_ts.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_qt.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_rawdv.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_real.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_dmx_yuv4mpeg2.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_mms.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_vcd.so
-%{_libdir}/xine/plugins/1.1.8/xineplug_inp_vcdo.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_a52.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_dts.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_dvaudio.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_faad.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_ff.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_gsm610.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_mad.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_mpc.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_mpeg2.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_qt.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_real.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_rgb.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_speex.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_spu.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_spucc.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_spudvb.so
+%{_libdir}/xine/plugins/1.26/xineplug_decode_w32dll.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_asf.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_mpeg.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_mpeg_block.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_mpeg_elem.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_mpeg_pes.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_mpeg_ts.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_qt.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_rawdv.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_real.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_yuv4mpeg2.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_mms.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_vcd.so
+%{_libdir}/xine/plugins/1.26/xineplug_inp_vcdo.so
 
 %files devel
 %defattr (-, root, bin)
@@ -322,6 +335,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Bump version to 1.1.16.3 and add replacement for broken libtool script.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Force GNU as to work around configure script weirdness.
 - Changes to video out plugins when building with FOX.

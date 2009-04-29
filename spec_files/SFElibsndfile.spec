@@ -19,15 +19,13 @@ Version:                 %{libsndfile.version}
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
-%ifarch amd64 sparcv9
-BuildRequires: SFEogg-vorbis-devel
-Requires: SFEogg-vorbis
-%endif
+BuildRequires: SFEjack-devel
 BuildRequires: SUNWogg-vorbis-devel
 Requires: SUNWogg-vorbis
 Requires: SUNWflac
 Requires: SUNWflac
 Requires: SUNWlibms
+Requires: SFEjack
 
 %package devel
 Summary:                 %{summary} - development files
@@ -71,19 +69,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/sndfile-info
 %{_bindir}/sndfile-play
 %{_bindir}/sndfile-regtest
+%{_bindir}/sndfile-jackplay
+%{_bindir}/sndfile-metadata-set
+%{_bindir}/sndfile-metadata-get
+%{_bindir}/sndfile-cmp
+
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_mandir}
 %dir %attr (0755, root, bin) %{_mandir}/man1
 %{_mandir}/man1/*
-%{_datadir}/octave
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_bindir}/%{_arch64}
 %{_bindir}/%{_arch64}/sndfile-convert
 %{_bindir}/%{_arch64}/sndfile-info
 %{_bindir}/%{_arch64}/sndfile-play
 %{_bindir}/%{_arch64}/sndfile-regtest
+%{_bindir}/%{_arch64}/sndfile-jackplay
+%{_bindir}/%{_arch64}/sndfile-metadata-set
+%{_bindir}/%{_arch64}/sndfile-metadata-get
+%{_bindir}/%{_arch64}/sndfile-cmp
 %dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
 %{_libdir}/%{_arch64}/lib*.so*
 %endif
@@ -105,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Apr 28 2009 - moinakg@belenix.,org
+- Rebuild with Jack support and add dep on SFEjack.
+- Comment out upstream patch.
 * Thu Jan 24 2007 - Thomas Wagner
 - remove %{_mandir}/man1/* from the -devel package
 * Sun Aug 12 2007 - dougs@truemail.co.th

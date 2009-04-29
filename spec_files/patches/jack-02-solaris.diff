@@ -482,20 +482,6 @@ diff -NPur jack-audio-connection-kit-0.103.0.orig/drivers/alsa/memops.c jack-aud
  	static unsigned int seed = 22222;
  	seed = (seed * 96314165) + 907633515;
  
-diff -NPur jack-audio-connection-kit-0.103.0.orig/drivers/dummy/dummy_driver.c jack-audio-connection-kit-0.103.0/drivers/dummy/dummy_driver.c
---- jack-audio-connection-kit-0.103.0.orig/drivers/dummy/dummy_driver.c	2007-08-28 10:33:54.256097920 +0700
-+++ jack-audio-connection-kit-0.103.0/drivers/dummy/dummy_driver.c	2007-08-28 10:34:50.039999107 +0700
-@@ -44,7 +44,9 @@
- FakeVideoSync( dummy_driver_t *driver )
- {
-         static const int VIDEO_SYNC_PERIOD = 48000 / 30;
--        static int vidCounter = VIDEO_SYNC_PERIOD;
-+        static int vidCounter;
-+
-+        vidCounter = VIDEO_SYNC_PERIOD;
-         
-         int period = driver->period_size;
-         jack_position_t *position = &driver->engine->control->current_time;
 diff -NPur jack-audio-connection-kit-0.103.0.orig/drivers/oss/oss_driver.c jack-audio-connection-kit-0.103.0/drivers/oss/oss_driver.c
 --- jack-audio-connection-kit-0.103.0.orig/drivers/oss/oss_driver.c	2007-08-28 10:33:54.268218722 +0700
 +++ jack-audio-connection-kit-0.103.0/drivers/oss/oss_driver.c	2007-08-28 10:51:19.742945420 +0700
