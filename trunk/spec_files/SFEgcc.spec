@@ -9,15 +9,11 @@
 
 Name:                SFEgccruntime
 Summary:             GNU gcc runtime libraries required by applications
-Version:             4.4
-%define snap_ver     20090331
-%define full_ver     %{version}-%{snap_ver}
-#Source:              ftp://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.bz2
-Source:              ftp://ftp.nluug.nl/mirror/languages/gcc/snapshots/%{full_ver}/gcc-%{full_ver}.tar.bz2
-#Patch1:              gcc-01-libtool-rpath.diff
-#Patch2:		     gcc-02-pragma.diff
-#Patch3:		     gcc-03-libunwind.diff
-#Patch4:		     gcc-04-unwind2.diff
+Version:             4.4.0
+#%define snap_ver     20090331
+%define full_ver     %{version}
+Source:              ftp://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.bz2
+#Source:              ftp://ftp.nluug.nl/mirror/languages/gcc/snapshots/%{full_ver}/gcc-%{full_ver}.tar.bz2
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -56,10 +52,6 @@ Requires:                %{name}
 %setup -q -c -n %{name}-%version
 mkdir gcc
 cd gcc-%{full_ver}
-#%patch1 -p1 -b .patch01
-#%patch2 -p1 -b .patch02
-#%patch3 -p1 -b .patch03
-#%patch4 -p1 -b .patch04
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -96,10 +88,10 @@ export LD="/usr/gnu/bin/ld"
         --libexecdir=%{_libexecdir}		\
         --mandir=%{_mandir}			\
 	--infodir=%{_infodir}			\
-	--with-as=/usr/gnu/bin/as		\
+	--with-as=/usr/gnu/bin/gas		\
 	--with-gnu-as				\
 %if %build_gcc_with_gnu_ld
-	--with-ld=/usr/gnu/bin/ld		\
+	--with-ld=/usr/gnu/bin/gld		\
 	--with-gnu-ld				\
 %else
 	--with-ld=/usr/ccs/bin/ld		\
@@ -220,6 +212,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Apr 30 2009 - moinakg@belenix.org
+- Bump to 4.4.0 release version.
+* Tue Apr 28 2009 - moinakg@belenix.org
+- Delete commented patch lines.
 * Tue Apr 21 2009 - moinakg@belenix.org
 - Bump to 4.4 pre-release snapshot. Comment out unneeded patches.
 - Add configure options as tested for OSUNIX.
