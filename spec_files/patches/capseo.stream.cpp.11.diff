@@ -1,0 +1,83 @@
+--- capseo-0.3.0-158.orig/src/stream.cpp	2007-03-04 20:41:33.000000000 -0500
++++ capseo-0.3.0-158/src/stream.cpp	2008-04-25 19:41:01.000000000 -0400
+@@ -13,19 +13,26 @@
+ /////////////////////////////////////////////////////////////////////////////
+ #define _LARGEFILE64_SOURCE (1)
+ 
+-#include "capseo.h"
+-#include "capseo_private.h"
++#include <cstring>
++#include <cstdlib>
++#include <algorithm>
++#include <functional>
++using namespace std;
+ 
+-#include <string.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+ 
++#include "capseo.h"
++#include "capseo_private.h"
++
++#if 0
+ template<typename T>
+ inline T max(const T& a, const T& b) {
+ 	return a > b ? a : b;
+ }
++#endif
+ 
+ inline int CreateEncoderStream(capseo_info_t *info, int fd, capseo_stream_t **stream) {
+ 	capseo_t cs;
+@@ -33,7 +40,7 @@
+ 		return error;
+ 
+ 	*stream = new capseo_stream_t;
+-	bzero(*stream, sizeof(**stream));
++	(void) memset(*stream, '\0', sizeof(**stream));
+ 	(*stream)->frameHandle = cs;
+ 	(*stream)->fd = fd;
+ 
+@@ -55,9 +62,9 @@
+ 
+ 	const int decodedBufferLength = info->width * info->height * 4;
+ 	for (int i = 0; i < 1; ++i) {
+-		bzero(&(*stream)->frames[i], sizeof(capseo_frame_t));
++		(void) memset(&(*stream)->frames[i], '\0', sizeof(capseo_frame_t));
+ 		(*stream)->frames[i].buffer = new uint8_t[decodedBufferLength];
+-		bzero((*stream)->frames[i].buffer, decodedBufferLength);
++		(void) memset((*stream)->frames[i].buffer, '\0', decodedBufferLength);
+ 	}
+ 
+ 	(*stream)->encodedHeader = new uint8_t[max(sizeof(TCapseoStreamHeader), sizeof(TCapseoFrameHeader))];
+@@ -79,7 +86,7 @@
+ 		return error;
+ 
+ 	*stream = new capseo_stream_t;
+-	bzero(*stream, sizeof(**stream));
++	(void) memset(*stream, '\0', sizeof(**stream));
+ 
+ 	const int decodedBufferLength = info->width * info->height * 4;
+ 
+@@ -88,9 +95,9 @@
+ 	(*stream)->encodedBuffer = new uint8_t[decodedBufferLength + 36000];
+ 
+ 	for (int i = 0; i < 2; ++i) {
+-		bzero(&(*stream)->frames[i], sizeof(capseo_frame_t));
++		(void) memset(&(*stream)->frames[i], '\0', sizeof(capseo_frame_t));
+ 		(*stream)->frames[i].buffer = new uint8_t[decodedBufferLength];
+-		bzero((*stream)->frames[i].buffer, decodedBufferLength);
++		(void) memset((*stream)->frames[i].buffer, '\0', decodedBufferLength);
+ 	}
+ 
+ 	(*stream)->encodedHeader = new uint8_t[max(sizeof(TCapseoStreamHeader), sizeof(TCapseoFrameHeader))];
+@@ -191,7 +198,7 @@
+ 
+ 	CapseoFinalize(&stream->frameHandle);
+ 
+-	bzero(stream, sizeof(*stream));
++	(void) memset(stream, '\0', sizeof(*stream));
+ 	delete stream;
+ }
+ 

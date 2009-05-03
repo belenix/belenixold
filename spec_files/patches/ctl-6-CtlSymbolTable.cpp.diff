@@ -1,0 +1,11 @@
+--- ctl-1.4.1.orig/IlmCtl/CtlSymbolTable.cpp	2006-11-29 20:46:44.000000000 -0500
++++ ctl-1.4.1/IlmCtl/CtlSymbolTable.cpp	2007-12-15 16:04:26.000000000 -0500
+@@ -70,7 +70,7 @@
+ 
+ SymbolInfo::SymbolInfo
+     (const Module *module,
+-     const ReadWriteAccess access, /* = RWA_NONE */
++     ReadWriteAccess access, /* = RWA_NONE */
+      bool isTypeName  /* = false */,
+      const TypePtr &type /* = 0 */,
+      const AddrPtr &addr /* = 0 */)

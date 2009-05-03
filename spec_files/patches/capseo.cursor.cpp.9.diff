@@ -1,0 +1,42 @@
+--- capseo-0.3.0-158.orig/src/cursor.cpp	2007-03-07 00:20:20.000000000 -0500
++++ capseo-0.3.0-158/src/cursor.cpp	2008-04-25 19:36:32.000000000 -0400
+@@ -11,13 +11,15 @@
+ //  the terms of GPL. See the file COPYING.
+ //
+ /////////////////////////////////////////////////////////////////////////////
++
++#include <cstdio>
++#include <cmath>
++#include <cassert>
++using namespace std;
++
+ #include "capseo.h"
+ #include "capseo_private.h"
+ 
+-#include <stdio.h>
+-#include <math.h>
+-#include <assert.h>
+-
+ // {{{ yuv-helper
+ #define byte(ptr) ( *(uint8_t *) (ptr) )
+ 
+@@ -105,15 +107,15 @@
+ void drawCursor(capseo_t *cs, capseo_frame_t *out, capseo_cursor_t *cursor, int AReuseHint) {
+ 	uint32_t *src = (uint32_t *)cursor->buffer;
+ 
+-	const int cx = cursor->x / int(pow(2, cs->info.scale));
+-	const int cy = cursor->y / int(pow(2, cs->info.scale));
++	const int cx = cursor->x / int(pow(double(2), cs->info.scale));
++	const int cy = cursor->y / int(pow(double(2), cs->info.scale));
+ 
+ 	int cw = cursor->width;
+ 	int ch = cursor->height;
+ 
+ 	if (AReuseHint) {
+-		cw /= int(pow(2, cs->info.scale));
+-		ch /= int(pow(2, cs->info.scale));
++		cw /= int(pow(double(2), cs->info.scale));
++		ch /= int(pow(double(2), cs->info.scale));
+ 	} else
+ 		for (int i = cs->info.scale; i > 0; --i, cw /= 2, ch /= 2)
+ 			scaleARGB(cursor->buffer, cw, ch);

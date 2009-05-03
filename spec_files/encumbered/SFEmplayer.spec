@@ -43,7 +43,7 @@ Requires: SUNWjpg
 Requires: SUNWpng
 Requires: SUNWogg-vorbis
 Requires: SUNWlibtheora
-Requires: SUNWgccruntime
+Requires: SFEgccruntime
 Requires: SFElibcdio
 Requires: SUNWgnome-base-libs
 Requires: SUNWsmbau
@@ -183,6 +183,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 
 %changelog
+* Sun May 03 2009 - moinakg@belenix.org
+- Update dependency to point to SFEgccruntime for Gcc4.
 * Tue Apr 28 2009 - moinakg@belenix.org
 - Update to latest SVN checkout snapshot.
 - Add back SFEsdl dep.

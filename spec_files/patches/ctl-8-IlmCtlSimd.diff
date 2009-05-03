@@ -1,0 +1,56 @@
+--- old/IlmCtlSimd/CtlSimdStdLibMath.cpp	(revision 1330)
++++ new/IlmCtlSimd/CtlSimdStdLibMath.cpp	(working copy)
+@@ -54,6 +54,9 @@
+ //
+ //-----------------------------------------------------------------------------
+ 
++#include <math.h>
++#include <cmath>
++
+ #include <CtlSimdStdLibMath.h>
+ #include <CtlSimdStdLibTemplates.h>
+ #include <CtlSimdStdLibrary.h>
+@@ -61,7 +64,6 @@
+ #include <CtlSimdCFunc.h>
+ #include <CtlSimdHalfExpLog.h>
+ #include <ImathMatrix.h>
+-#include <cmath>
+ 
+ using namespace Imath;
+ using namespace std;
+--- old/IlmCtlSimd/CtlSimdStdLibColorSpace.cpp	(revision 1330)
++++ new/IlmCtlSimd/CtlSimdStdLibColorSpace.cpp	(working copy)
+@@ -53,6 +53,9 @@
+ //
+ //-----------------------------------------------------------------------------
+ 
++#include <math.h>
++#include <cmath>
++
+ #include <CtlSimdStdLibColorSpace.h>
+ #include <CtlSimdStdLibTemplates.h>
+ #include <CtlSimdStdLibrary.h>
+--- old/IlmCtlSimd/CtlSimdStdLibLookupTable.cpp	(revision 1330)
++++ new/IlmCtlSimd/CtlSimdStdLibLookupTable.cpp	(working copy)
+@@ -53,6 +53,9 @@
+ //
+ //-----------------------------------------------------------------------------
+ 
++#include <math.h>
++#include <cmath>
++
+ #include <CtlSimdStdLibLookupTable.h>
+ #include <CtlSimdStdLibTemplates.h>
+ #include <CtlSimdStdLibrary.h>
+--- old/IlmCtlSimd/CtlSimdStdLibInterpolator.cpp	(revision 1330)
++++ new/IlmCtlSimd/CtlSimdStdLibInterpolator.cpp	(working copy)
+@@ -53,6 +53,9 @@
+ //
+ //-----------------------------------------------------------------------------
+ 
++#include <math.h>
++#include <cmath>
++
+ #include <CtlSimdStdLibInterpolator.h>
+ #include <CtlSimdStdLibTemplates.h>
+ #include <CtlSimdStdLibrary.h>

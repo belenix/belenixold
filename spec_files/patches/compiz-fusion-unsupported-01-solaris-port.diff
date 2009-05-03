@@ -1,86 +1,72 @@
-diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/configure.ac compiz-fusion-plugins-unsupported-0.6.0/configure.ac
---- compiz-fusion-plugins-unsupported-0.6.0.orig/configure.ac	2007-10-15 14:06:18.000000000 -0400
-+++ compiz-fusion-plugins-unsupported-0.6.0/configure.ac	2007-10-31 15:51:50.027096933 -0400
+--- compiz-fusion-plugins-unsupported-0.7.8/configure.ac.orig	2008-09-17 18:59:32.000000000 +0530
++++ compiz-fusion-plugins-unsupported-0.7.8/configure.ac	2009-05-01 10:14:40.988984323 +0530
 @@ -1,6 +1,6 @@
  AC_PREREQ(2.57)
  
--AC_INIT([compiz-fusion-plugins-unsupported],esyscmd(. ./VERSION;echo -n $VERSION), [maniac@opencompositing.org])
-+AC_INIT([compiz-fusion-plugins-unsupported],esyscmd(. ./VERSION;echo $VERSION | tr -d "\n"), [maniac@opencompositing.org])
+-m4_define([plugins_unsupported_version], [esyscmd(. ./VERSION;echo -n $VERSION)])
++m4_define([plugins_unsupported_version], [esyscmd(. ./VERSION;echo -n $VERSION | tr -d "\n")])
  
- AC_DEFINE_UNQUOTED(VERSION,"$VERSION",[Version])
+ AC_INIT([compiz-fusion-plugins-unsupported], [plugins_unsupported_version], [maniac@opencompositing.org])
  
-diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/fakeargb.xml.in compiz-fusion-plugins-unsupported-0.6.0/metadata/fakeargb.xml.in
---- compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/fakeargb.xml.in	2007-10-15 14:06:19.000000000 -0400
-+++ compiz-fusion-plugins-unsupported-0.6.0/metadata/fakeargb.xml.in	2007-10-31 16:03:44.444126929 -0400
-@@ -9,7 +9,7 @@
+--- compiz-fusion-plugins-unsupported-0.7.8/metadata/fakeargb.xml.in.orig	2008-09-17 18:59:32.000000000 +0530
++++ compiz-fusion-plugins-unsupported-0.7.8/metadata/fakeargb.xml.in	2009-05-01 10:15:48.950730563 +0530
+@@ -7,7 +7,7 @@
+ 	    <option name="window_toggle_key" type="key">
+ 		<_short>Toggle Window Fake ARGB</_short>
  		<_long>Toggle window fake ARGB.</_long>
- 		<allowed key="true" button="true"/>
- 		<default>
--		   <key>&lt;Super&gt;f</key>
-+		   <key>&lt;Mod4&gt;f</key>
- 		</default>
+-		<default>&lt;Super&gt;f</default>
++		<default>&lt;Mod4&gt;f</default>
  	    </option>
- 	</display>
-diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/mswitch.xml.in compiz-fusion-plugins-unsupported-0.6.0/metadata/mswitch.xml.in
---- compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/mswitch.xml.in	2007-10-15 14:06:19.000000000 -0400
-+++ compiz-fusion-plugins-unsupported-0.6.0/metadata/mswitch.xml.in	2007-10-31 16:03:44.444980442 -0400
-@@ -9,7 +9,7 @@
+ 	    <option name="window_toggle_button" type="button">
+ 		<_short>Toggle Window Fake ARGB</_short>
+--- compiz-fusion-plugins-unsupported-0.7.8/metadata/mswitch.xml.in.orig	2008-09-17 18:59:32.000000000 +0530
++++ compiz-fusion-plugins-unsupported-0.7.8/metadata/mswitch.xml.in	2009-05-01 10:16:11.087239613 +0530
+@@ -7,7 +7,7 @@
+       <option name="begin_key" type="key">
+ 	<_short>Begin Gesture</_short>
  	<_long> Begin Mouse Gesture </_long>
- 	<allowed key="true" button="true"/>
- 	<default>
--	  <key>&lt;Super&gt;s</key>
-+	  <key>&lt;Mod4&gt;s</key>
- 	</default>
+-	<default>&lt;Super&gt;s</default>
++	<default>&lt;Mod4&gt;s</default>
        </option>
-     </display>
-diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/snow.xml.in compiz-fusion-plugins-unsupported-0.6.0/metadata/snow.xml.in
---- compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/snow.xml.in	2007-10-15 14:06:19.000000000 -0400
-+++ compiz-fusion-plugins-unsupported-0.6.0/metadata/snow.xml.in	2007-10-31 16:03:44.445818001 -0400
-@@ -123,7 +123,7 @@
+       <option name="begin_button" type="button">
+ 	<_short>Begin Gesture</_short>
+--- compiz-fusion-plugins-unsupported-0.7.8/metadata/snow.xml.in.orig	2008-09-17 18:59:32.000000000 +0530
++++ compiz-fusion-plugins-unsupported-0.7.8/metadata/snow.xml.in	2009-05-01 10:16:32.351806496 +0530
+@@ -121,7 +121,7 @@
+ 				<option name="toggle_key" type="key">
+ 					<_short>Snow Toggle</_short>
  					<_long>Snow toggle key</_long>
- 					<allowed key="true"/>
- 					<default>
--						<key>&lt;Super&gt;F3</key>
-+						<key>&lt;Mod4&gt;F3</key>
- 					</default>
+-					<default>&lt;Super&gt;F3</default>
++					<default>&lt;Mod4&gt;F3</default>
  				</option>
  			</group>
-diff -ruN compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/tile.xml.in compiz-fusion-plugins-unsupported-0.6.0/metadata/tile.xml.in
---- compiz-fusion-plugins-unsupported-0.6.0.orig/metadata/tile.xml.in	2007-10-15 14:06:19.000000000 -0400
-+++ compiz-fusion-plugins-unsupported-0.6.0/metadata/tile.xml.in	2007-10-31 16:03:44.444446706 -0400
-@@ -116,7 +116,7 @@
+ 		</display>
+--- compiz-fusion-plugins-unsupported-0.7.8/metadata/tile.xml.in.orig	2008-09-17 18:59:32.000000000 +0530
++++ compiz-fusion-plugins-unsupported-0.7.8/metadata/tile.xml.in	2009-05-01 10:17:39.177533236 +0530
+@@ -110,22 +110,22 @@
+ 				<option name="tile_tile_key" type="key">
+ 					<_short>Tile Windows</_short>
  					<_long>Move and resize all visible windows both vertically and horizontally, so that the occupy whole screen and are in a grid.</_long>
- 					<allowed key="true"/>
- 					<default>
--						<key>&lt;Super&gt;&lt;Shift&gt;a</key>
-+						<key>&lt;Mod4&gt;&lt;Shift&gt;a</key>
- 					</default>
+-					<default>&lt;Super&gt;&lt;Shift&gt;a</default>
++					<default>&lt;Mod4&gt;&lt;Shift&gt;a</default>
  				</option>
- 				<option name="tile_cascade" type="action">
-@@ -124,7 +124,7 @@
+ 				<option name="tile_cascade_key" type="key">
+ 					<_short>Cascade Windows</_short>
  					<_long>Move and resize all visible windows with the delta value set for cascading.</_long>
- 					<allowed key="true"/>
- 					<default>
--						<key>&lt;Super&gt;&lt;Shift&gt;s</key>
-+						<key>&lt;Mod4&gt;&lt;Shift&gt;s</key>
- 					</default>
+-					<default>&lt;Super&gt;&lt;Shift&gt;s</default>
++					<default>&lt;Mod4&gt;&lt;Shift&gt;s</default>
  				</option>
- 				<option name="tile_restore" type="action">
-@@ -132,7 +132,7 @@
+ 				<option name="tile_restore_key" type="key">
+ 					<_short>Restore Windows</_short>
  					<_long>Restore windows to their original position they had before tiling.</_long>
- 					<allowed key="true"/>
- 					<default>
--						<key>&lt;Super&gt;&lt;Shift&gt;z</key>
-+						<key>&lt;Mod4&gt;&lt;Shift&gt;z</key>
- 					</default>
+-					<default>&lt;Super&gt;&lt;Shift&gt;z</default>
++					<default>&lt;Mod4&gt;&lt;Shift&gt;z</default>
  				</option>
- 				<option name="tile_toggle" type="action">
-@@ -140,7 +140,7 @@
+ 				<option name="tile_toggle_key" type="key">
+ 					<_short>Toggle Tiling</_short>
  					<_long>Toggle between tile and restore</_long>
- 					<allowed key="true"/>
- 					<default>
--						<key>&lt;Super&gt;&lt;Shift&gt;x</key>
-+						<key>&lt;Mod4&gt;&lt;Shift&gt;x</key>
- 					</default>
+-					<default>&lt;Super&gt;&lt;Shift&gt;x</default>
++					<default>&lt;Mod4&gt;&lt;Shift&gt;x</default>
  				</option>
  			</group>
+ 		</display>

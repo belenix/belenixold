@@ -10,10 +10,11 @@
 
 Name:                    SFEcompiz-fusion-unsup
 Summary:                 unsupported effects plugins for compiz
-Version:                 0.6.0
+Version:                 0.7.8
 Source:			 http://releases.compiz-fusion.org/%{version}/%{src_name}-%{version}.tar.bz2
 Patch1:			 compiz-fusion-unsupported-01-solaris-port.diff
 SUNW_BaseDir:            %{_basedir}
+SUNW_Copyright:          %{name}.copyright
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 BuildRequires: SFEcompiz-bcop
@@ -48,6 +49,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
 fi
 
 intltoolize --copy --force --automake
+libtoolize --force
 aclocal
 autoheader
 automake -a -c -f
@@ -117,6 +119,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun May 03 2009 - moinakg@belenix.org
+- Bump version to 0.7.8
+- Add copyright file.
 * Sun Mar 23 2008 - moinakg@gmail.com
 - Comment out help dirs since they do not get built.
 * Mon Oct 29 2007 - trisk@acm.jhu.edu

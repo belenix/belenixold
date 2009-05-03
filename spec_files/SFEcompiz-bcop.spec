@@ -4,6 +4,8 @@
 # Copyright 2006 Sun Microsystems, Inc.
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
+# Owner: erwannc 
+#
 
 ####################################################################
 #  beryl compiz XML option parser
@@ -15,12 +17,18 @@
 
 Name:                    SFEcompiz-bcop
 Summary:                 beryl compiz XML option parser
-Version:                 0.6.0
+Version:                 0.7.8
 Source:			 http://releases.compiz-fusion.org/%{version}/%{src_name}-%{version}.tar.bz2
-Patch1:			 compiz-bcop-01-solaris-port.pc
+Patch1:			 compiz-bcop-01-solaris-port.diff
 SUNW_BaseDir:            %{_basedir}
+SUNW_Copyright:          %{name}.copyright
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:		 SFEgetopt
+Requires:		 SUNWlxsl
+Requires:                SUNWbash
+BuildRequires:		 SFEgetopt
+BuildRequires:           SUNWgnome-common-devel
+BuildRequires:		 SUNWlxsl-devel
 %include default-depend.inc
 
 
@@ -70,8 +78,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 %dir %attr(0755, root, sys) %{_datadir}
 %{_datadir}/*
+%doc(bzip2) COPYING
+%dir %attr (0755, root, other) %{_datadir}/doc
 
 %changelog
+* Sun May 03 2009 - moinakg@belenix.org
+- Copy over updated spec from JDS repo.
+* Wed Sep 17 2008 - matt.keenn@sun.com
+- Update copyright
+* Wed Jun 18 2008 - damien.carbery@sun.com
+- Add Requires SUNWbash as /usr/bin/bcop is a bash script.
+* Tue May 27 2008 - damien.carbery@sun.com
+- Add BuildRequires SUNWgnome-common-devel and Build/Requires SUNWlxsl/-devel
+  to prevent build error.
+* Wed Feb 13 2008 - erwann@sun.com
+- remove SFE deps and added to SFO
 * Mon Oct 29 2007 - trisk@acm.jhu.edu
 - Bump to 0.6.0
 * Sat Sep 08 2007 - trisk@acm.jhu.edu

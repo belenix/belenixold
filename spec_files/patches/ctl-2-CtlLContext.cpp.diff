@@ -1,0 +1,10 @@
+--- ctl-1.4.1-orig/IlmCtl/CtlLContext.cpp	2008-03-08 07:12:04.000000000 +0000
++++ ctl-1.4.1/IlmCtl/CtlLContext.cpp	2008-05-26 13:54:31.278956893 +0000
+@@ -51,6 +51,7 @@
+ //
+ //-----------------------------------------------------------------------------
+ 
++#include <CtlSymbolTable.h>
+ #include <CtlLContext.h>
+ #include <CtlModule.h>
+ #include <iostream>

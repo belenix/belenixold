@@ -6,12 +6,12 @@
 %include Solaris.inc
 
 %define src_name	cppunit
-%define src_url		http://jaist.dl.sourceforge.net/sourceforge/cppunit
 
 Name:                   SFEcppunit
 Summary:                C++ port of JUnit
-Version:                1.12.0
-Source:                 %{src_url}/%{src_name}-%{version}.tar.gz
+Version:                1.12.1
+URL:                    http://apps.sourceforge.net/mediawiki/cppunit/index.php?title=Main_Page
+Source:                 %{sf_download}/%{src_name}/%{src_name}-%{version}.tar.gz
 SUNW_BaseDir:           %{_basedir}
 BuildRoot:              %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -38,8 +38,8 @@ aclocal-1.9 -I config
 autoheader
 automake-1.9 -a
 autoconf --force -I config
-export CC=/usr/sfw/bin/gcc
-export CXX=/usr/sfw/bin/g++
+export CC=/usr/gnu/bin/gcc
+export CXX=/usr/gnu/bin/g++
 export CFLAGS="-O3 -Xlinker -i -fno-omit-frame-pointer"
 export CXXFLAGS="-O3 -Xlinker -i -fno-omit-frame-pointer"
 export LDFLAGS="%_ldflags -lX11"
@@ -50,6 +50,8 @@ export LDFLAGS="%_ldflags -lX11"
             --datadir=%{_datadir}	\
             --libexecdir=%{_libexecdir} \
             --sysconfdir=%{_sysconfdir} \
+            --disable-libtool-lock      \
+            --enable-typeinfo-name      \
             --enable-shared		\
 	    --disable-static
 make -j$CPUS 
@@ -84,6 +86,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun May 03 2009 - moinakg@belenix.org
+- Bump version to 1.12.1, enable build using Gcc4.
 * Fri Jan 18 2008 - moinak.ghosh@sun.com
 - Added doxygen,graphviz as buildrequires
 * Mon May  7 2007 - dougs@truemail.co.th

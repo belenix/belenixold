@@ -1,0 +1,14 @@
+--- ctl-1.4.1.orig/IlmCtlSimd/CtlSimdReg.h	2006-11-29 20:46:44.000000000 -0500
++++ ctl-1.4.1/IlmCtlSimd/CtlSimdReg.h	2007-12-15 16:06:56.000000000 -0500
+@@ -49,7 +49,11 @@
+ #ifndef INCLUDED_CTL_SIMD_REG_H
+ #define INCLUDED_CTL_SIMD_REG_H
+ 
++#include <cstdlib>
++#include <cstring>
+ #include <typeinfo>
++using namespace std;
++
+ #include <CtlExc.h>
+ #include <Iex.h>
+ 
