@@ -1,0 +1,12 @@
+--- ctl-1.4.1.orig/IlmCtl/CtlAlign.h	2006-11-29 20:46:44.000000000 -0500
++++ ctl-1.4.1/IlmCtl/CtlAlign.h	2007-12-15 10:31:00.000000000 -0500
+@@ -62,7 +62,9 @@
+ //
+ //-----------------------------------------------------------------------------
+ 
++#include <cstdlib>
+ #include <cstddef>
++using namespace std;
+ 
+ namespace Ctl {
+ 

@@ -1,0 +1,10 @@
+--- ctl-1.4.1-orig/IlmCtl/CtlType.cpp	2008-03-08 07:12:04.000000000 +0000
++++ ctl-1.4.1/IlmCtl/CtlType.cpp	2008-05-26 14:16:29.911738591 +0000
+@@ -54,6 +54,7 @@
+ #include <CtlType.h>
+ #include <CtlSyntaxTree.h>
+ #include <CtlMessage.h>
++#include <CtlSymbolTable.h>
+ #include <CtlLContext.h>
+ #include <CtlAlign.h>
+ #include <CtlExc.h>

@@ -1,5 +1,5 @@
 #
-# spec file for package SFElibcompizconfig
+# spec file for package SUNWlibcompizconfig
 ####################################################################
 # Libcompizconfig is an alternative configuration system for compiz
 ####################################################################
@@ -7,6 +7,9 @@
 # Copyright 2006 Sun Microsystems, Inc.
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
+#
+# Owner: erwannc
+#
 
 
 %include Solaris.inc
@@ -15,10 +18,17 @@
 
 Name:                    SFElibcompizconfig
 Summary:                 compizconfig libraries - is an alternative configuration system for compiz
-Version:                 0.6.0
+Version:                 0.7.8
 Source:			 http://releases.compiz-fusion.org/%{version}/%{src_name}-%{version}.tar.bz2
 Patch1:			 libcompizconfig-01-solaris-port.diff
+Patch2:			 libcompizconfig-02-no-null-def.diff
 SUNW_BaseDir:            %{_basedir}
+SUNW_Copyright:          %{name}.copyright
+
+%ifnarch sparc
+# these packages are only avavilable on x86
+# =========================================
+
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 # add build and runtime dependencies here:
@@ -38,17 +48,10 @@ SUNW_BaseDir:            %{_basedir}
 Requires:                %{name} = %{version}
 %include default-depend.inc
 
-#%if %build_l10n
-#%package l10n
-#Summary:                 %{summary} - l10n files
-#SUNW_BaseDir:            %{_basedir}
-#%include default-depend.inc
-#Requires:                %{name}
-#%endif
-
 %prep
 %setup -q -n %{src_name}-%version
 %patch1 -p1
+%patch2 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -56,6 +59,8 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
 
+rm -f ltmain.sh
+libtoolize --force
 aclocal
 autoheader
 automake -a -c -f
@@ -80,19 +85,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.*a
 rm -f $RPM_BUILD_ROOT%{_libdir}/compiz/*.*a
 rm -f $RPM_BUILD_ROOT%{_libdir}/compizconfig/backends/*.*a
 
-rm -rf $RPM_BUILD_ROOT%{_datadir}/locale
-
-#
-# when not building -l10n packages, remove anything l10n related from
-# $RPM_BUILD_ROOT
-#
-#%if %build_l10n
-#%else
-# REMOVE l10n FILES
-#rm -rf $RPM_BUILD_ROOT%{_datadir}/locale
-#rm -rf $RPM_BUILD_ROOT%{_datadir}/gnome/help/*/[a-z]*
-#rm -rf $RPM_BUILD_ROOT%{_datadir}/omf/*/*-[a-z]*.omf
-#%endif
+# Remove the empty locale dir.
+rmdir $RPM_BUILD_ROOT%{_datadir}/locale
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -104,7 +98,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/compizconfig
 %{_libdir}/lib*.so*
 %dir %attr(0755, root, sys) %{_datadir}
-%{_datadir}/*
+%dir %attr(0755, root, other) %{_datadir}/compiz
+%{_datadir}/compiz/*
+%{_datadir}/compizconfig/*
+%doc(bzip2) COPYING
+%dir %attr (0755, root, other) %{_datadir}/doc
 
 %files root
 %defattr (0755, root, sys)
@@ -118,22 +116,27 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*
 
-#
-# The files included here should match the ones removed in %install
-#
-#%if %build_l10n
-#%files l10n
-#%defattr (-, root, other)
-#%dir %attr (0755, root, sys) %{_datadir}
-#%dir %attr (0755, root, other) %{_datadir}/locale
-#%{_datadir}/locale/*
-#%{_datadir}/gnome/help/*/[a-z]*
-#%{_datadir}/omf/*/*-[a-z]*.omf
-#%endif
+# endif for "ifnarch sparc"
+%endif
 
 %changelog
-* Sun Mar 23 2008 - moinakg@gmail.com
-- Comment out locale files since they are not built.
+* Sun May 03 2009 - moinakg@belenix.org
+- Copy over updated spec from JDS repo.
+* Sun Feb 22 2009 - dave.lin@sun.com
+- Add patch 02-no-null-def.diff to fix nudefined symbol NULL issue.
+* Wed Sep 17 2008 - matt.keenn@sun.com
+- Update copyright
+* Tue Jun 01 2008 - damien.carbery@sun.com
+- Fix perms in %files.
+* Wed Mar 26 2008 - dave.lin@sun.com
+- change to not build this component on SPARC
+* Fri Mar 07 2008 - damien.carbery@sun.com
+- Move %{_datadir} files from root pkg to base pkg.
+* Mon Feb 18 2008 - damien.carbery@sun.com
+- Remove l10n stuff as there are no l10n files installed. Remove empty
+  %{_datadir}/locale during %install.
+* Wed Feb 13 2008 - erwann@sun.com
+- moved to SFO
 * Wed Nov 14 2007 - daymobrew@users.sourceforge.net
 - Add l10n package.
 * Mon Oct 29 2007 - trisk@acm.jhu.edu

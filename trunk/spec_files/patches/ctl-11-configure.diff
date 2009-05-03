@@ -1,0 +1,20 @@
+--- ctl-1.4.1-orig/configure	2007-10-10 00:12:28.000000000 +0200
++++ ctl-1.4.1/configure	2008-01-29 14:56:19.149829000 +0100
+@@ -21289,7 +21289,7 @@
+ echo "$as_me:$LINENO: checking for gcc optimization flags" >&5
+ echo $ECHO_N "checking for gcc optimization flags... $ECHO_C" >&6
+ old_cflags=$CFLAGS
+-CFLAGS="$CFLAGS -pipe"
++CFLAGS="$CFLAGS"
+ cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+ _ACEOF
+@@ -21327,7 +21327,7 @@
+   ac_status=$?
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); }; }; then
+-   EXTRA_OPT_CFLAGS="-pipe"
++   EXTRA_OPT_CFLAGS=""
+ else
+   echo "$as_me: failed program was:" >&5
+ sed 's/^/| /' conftest.$ac_ext >&5

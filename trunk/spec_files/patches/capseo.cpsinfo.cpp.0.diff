@@ -1,0 +1,27 @@
+--- capseo-0.3.0-158.orig/tools/cpsinfo.cpp	2007-07-25 09:10:11.000000000 -0400
++++ capseo-0.3.0-158/tools/cpsinfo.cpp	2008-04-25 19:43:50.000000000 -0400
+@@ -11,10 +11,14 @@
+ //  the terms of GPL. See the file COPYING.
+ //
+ /////////////////////////////////////////////////////////////////////////////
++#include <cstring>
++#include <cstdlib>
++using namespace std;
++
+ #include <stdio.h>
+ #include <stdarg.h>
++
+ #include <capseo.h>
+-#include <string.h>
+ 
+ /* Requirements:
+  * - average FPS
+@@ -42,7 +46,7 @@
+ 		return die("Invalid argument count");
+ 
+ 	capseo_info_t info;
+-	bzero(&info, sizeof(info));
++	(void) memset(&info, '\0', sizeof(info));
+ 	info.mode = CAPSEO_MODE_DECODE;
+ 	info.format = CAPSEO_FORMAT_YUV420;
+ 

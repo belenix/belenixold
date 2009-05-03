@@ -1,0 +1,20 @@
+--- ctl-1.4.1.orig/IlmCtl/CtlLex.cpp	2008-03-08 07:12:04.000000000 +0000
++++ ctl-1.4.1/IlmCtl/CtlLex.cpp	2008-05-26 13:55:43.392844874 +0000
+@@ -52,11 +52,15 @@
+ //
+ //-----------------------------------------------------------------------------
+ 
++#include <iomanip>
++#include <cassert>
++#include <cstdlib>
++using namespace std;
++
+ #include <CtlLex.h>
+ #include <CtlMessage.h>
++#include <CtlSymbolTable.h>
+ #include <CtlLContext.h>
+-#include <iomanip>
+-#include <cassert>
+ 
+ 
+ #if 0

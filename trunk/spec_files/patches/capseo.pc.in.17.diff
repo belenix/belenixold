@@ -1,0 +1,9 @@
+--- 0.3.0-158/capseo.pc.in.ORIG        2008-05-27 09:01:10.695974000 -0400
++++ 0.3.0-158/capseo.pc.in     2008-05-27 09:01:27.004978000 -0400
+@@ -15,5 +15,5 @@
+ # debian/ubuntu doesn't like rpath
+ #Libs: -L${libdir} -Wl,--rpath -Wl,${libdir} -lcapseo
+ 
+-Libs: -L${libdir} -lcapseo
++Libs: -L${libdir} -R${libdir} -lcapseo
+ Cflags: -I${includedir}

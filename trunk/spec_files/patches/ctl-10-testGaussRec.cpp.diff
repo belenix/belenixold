@@ -1,0 +1,16 @@
+--- ctl-1.4.1.orig/IlmCtlMathTest/testGaussRec.cpp	2007-03-20 16:33:52.000000000 -0400
++++ ctl-1.4.1/IlmCtlMathTest/testGaussRec.cpp	2007-12-15 16:15:50.000000000 -0500
+@@ -46,9 +46,12 @@
+ ///////////////////////////////////////////////////////////////////////////
+ 
+ #include <string>
++#include <cstdlib>
+ #include <fstream>
+ #include <iostream>
+-#include <assert.h>
++#include <cassert>
++using namespace std;
++
+ #include <CtlRbfInterpolator.h>
+ #include <ImathVec.h>
+ 

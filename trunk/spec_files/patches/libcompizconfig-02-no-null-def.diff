@@ -1,0 +1,11 @@
+--- libcompizconfig-0.7.6/src/compat.c.ori	2009-02-10 07:08:01.278999638 +0000
++++ libcompizconfig-0.7.6/src/compat.c	2009-02-10 07:06:25.355855678 +0000
+@@ -111,7 +111,7 @@
+ 
+ #ifndef HAVE_STRCASESTR
+ #include <ctype.h>
+-
++#include <string.h>
+ char *strcasestr (char *h, char *n)
+ {
+ 	char *hp, *np = n, *match = 0;

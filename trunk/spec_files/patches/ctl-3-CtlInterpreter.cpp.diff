@@ -1,0 +1,35 @@
+--- ctl-1.4.1.orig/IlmCtl/CtlInterpreter.cpp	2006-12-14 17:43:55.000000000 -0500
++++ ctl-1.4.1/IlmCtl/CtlInterpreter.cpp	2007-12-15 15:57:26.000000000 -0500
+@@ -52,6 +52,14 @@
+ //
+ //-----------------------------------------------------------------------------
+ 
++#include <cstdlib>
++#include <fstream>
++#include <algorithm>
++#include <cassert>
++using namespace std;
++
++#include <unistd.h>
++
+ #include <CtlInterpreter.h>
+ #include <CtlModule.h>
+ #include <CtlModuleSet.h>
+@@ -61,9 +69,6 @@
+ #include <CtlExc.h>
+ #include <IlmThreadMutex.h>
+ #include <Iex.h>
+-#include <fstream>
+-#include <algorithm>
+-#include <cassert>
+ 
+ #ifdef WIN32
+     #include <io.h>
+@@ -71,7 +76,6 @@
+     #include <stdlib.h>
+ #endif
+ 
+-using namespace std;
+ using namespace Iex;
+ using namespace IlmThread;
+ 

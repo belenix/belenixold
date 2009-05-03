@@ -1,5 +1,5 @@
 #
-# spec file for package  SFEcompizconfig-backend-gconf
+# spec file for package  SUNWcompizconfig-backend-gconf
 ####################################################################
 # The gconf backend for CompizConfig. It uses the Gnome configuration
 # system and provides integration into the Gnome desktop environment.
@@ -8,6 +8,8 @@
 # Copyright 2006 Sun Microsystems, Inc.
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
+# 
+# Owner: erwannc
 
 
 %include Solaris.inc
@@ -16,29 +18,25 @@
 
 Name:                    SFEcompizconfig-gconf
 Summary:                 cgconf backend for CompizConfig
-Version:                 0.6.0
+Version:                 0.7.8
 Source:			 http://releases.compiz-fusion.org/%{version}/%{src_name}-%{version}.tar.bz2
 Patch1:			 compizconfig-backend-gconf-01-solaris-port.diff
 SUNW_BaseDir:            %{_basedir}
+SUNW_Copyright:          %{name}.copyright
+
+%ifnarch sparc
+# these packages are only avavilable on x86
+# =========================================
+
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 # add build and runtime dependencies here:
-BuildRequires:	SUNWgnome-base-libs-devel
 BuildRequires:	SUNWgnome-libs-devel
 BuildRequires:	SUNWgnome-config-devel
 BuildRequires:  SFElibcompizconfig
-Requires:	SUNWgnome-base-libs
 Requires:	SUNWgnome-libs
 Requires:	SUNWgnome-config
 Requires:	SFElibcompizconfig
-
-#%if %build_l10n
-#%package l10n
-#Summary:                 %{summary} - l10n files
-#SUNW_BaseDir:            %{_basedir}
-#%include default-depend.inc
-#Requires:                %{name}
-#%endif
 
 %prep
 %setup -q -n %{src_name}-%version
@@ -50,6 +48,8 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
 
+rm -f ltmain.sh
+libtoolize --force
 aclocal
 autoheader
 automake -a -c -f
@@ -72,18 +72,6 @@ make -j$CPUS
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/compizconfig/backends/*.*a
 
-#
-# when not building -l10n packages, remove anything l10n related from
-# $RPM_BUILD_ROOT
-#
-#%if %build_l10n
-#%else
-# REMOVE l10n FILES
-#rm -rf $RPM_BUILD_ROOT%{_datadir}/locale
-#rm -rf $RPM_BUILD_ROOT%{_datadir}/gnome/help/*/[a-z]*
-#rm -rf $RPM_BUILD_ROOT%{_datadir}/omf/*/*-[a-z]*.omf
-#%endif
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -92,22 +80,22 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %dir %attr (0755, root, bin) %{_libdir}/compizconfig
 %{_libdir}/compizconfig/*
+%doc(bzip2) COPYING
+%dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, other) %{_datadir}/doc
 
-#
-# The files included here should match the ones removed in %install
-#
-#%if %build_l10n
-#%files l10n
-#%defattr (-, root, other)
-#%dir %attr (0755, root, sys) %{_datadir}
-#%{_datadir}/locale
-#%{_datadir}/gnome/help/*/[a-z]*
-#%{_datadir}/omf/*/*-[a-z]*.omf
-#%endif
+# endif for "ifnarch sparc"
+%endif
 
 %changelog
-* Sun Mar 23 2008 - moinakg@gmail.com
-- Comment out locale files since they are not built.
+* Sun May 03 2009 - moinakg@belenix.org
+- Copy over updated spec from JDS repo.
+* Wed Sep 17 2008 - matt.keenn@sun.com
+- Update copyright
+* Wed Mar 26 2008 - dave.lin@sun.com
+- change to not build this component on SPARC
+* Wed Feb 13 2008 - erwann@sun.com
+- moved to SFO
 * Wed Nov 14 2007 - daymobrew@users.sourceforge.net
 - Add l10n package.
 * Mon Oct 29 2007 - trisk@acm.jhu.edu
