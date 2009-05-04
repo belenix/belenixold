@@ -1,0 +1,24 @@
+--- dvgrab-3.0.orig/inttypes_gnucompat.h	2007-10-01 10:39:50.588799000 -0400
++++ dvgrab-3.0/inttypes_gnucompat.h	2007-07-17 12:57:33.354399000 -0400
+@@ -0,0 +1,21 @@
++#ifndef _INTTYPES_GNUCOMPAT_H
++#define _INTTYPES_GNUCOMPAT_H
++
++#include <sys/types.h>
++#include <inttypes.h>
++#include <stdint.h>
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++typedef uint8_t u_int8_t;
++typedef uint16_t u_int16_t;
++typedef uint32_t u_int32_t;
++typedef uint64_t u_int64_t;
++
++#ifdef __cplusplus
++}
++#endif
++#endif
++

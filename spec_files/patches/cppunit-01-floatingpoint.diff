@@ -1,0 +1,12 @@
+--- cppunit-1.12.1/include/cppunit/portability/FloatingPoint.h.orig	2009-05-04 06:08:27.365902469 +0530
++++ cppunit-1.12.1/include/cppunit/portability/FloatingPoint.h	2009-05-04 06:09:01.211524273 +0530
+@@ -3,6 +3,9 @@
+ 
+ #include <cppunit/Portability.h>
+ #include <math.h>
++#if defined(sun) || defined(__sun)
++#include <ieeefp.h>
++#endif
+ 
+ CPPUNIT_NS_BEGIN
+ 

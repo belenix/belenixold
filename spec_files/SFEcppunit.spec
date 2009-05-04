@@ -12,6 +12,8 @@ Summary:                C++ port of JUnit
 Version:                1.12.1
 URL:                    http://apps.sourceforge.net/mediawiki/cppunit/index.php?title=Main_Page
 Source:                 %{sf_download}/%{src_name}/%{src_name}-%{version}.tar.gz
+Patch1:                 cppunit-01-floatingpoint.diff
+
 SUNW_BaseDir:           %{_basedir}
 BuildRoot:              %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -25,6 +27,7 @@ SUNW_BaseDir:            %{_prefix}
 
 %prep
 %setup -q -n %{src_name}-%{version}
+%patch1 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -86,6 +89,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 04 2009 - moinakg@belenix.org
+- Fix undefined symbol issue.
 * Sun May 03 2009 - moinakg@belenix.org
 - Bump version to 1.12.1, enable build using Gcc4.
 * Fri Jan 18 2008 - moinak.ghosh@sun.com

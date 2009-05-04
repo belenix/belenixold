@@ -1,0 +1,59 @@
+--- dvgrab-3.4/hdvframe.cc.orig	2008-02-27 08:59:28.000000000 +0530
++++ dvgrab-3.4/hdvframe.cc	2009-05-03 12:00:25.701554988 +0530
+@@ -18,7 +18,11 @@
+ * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+ 
+-#include <string.h>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++using namespace std;
++
+ #include "hdvframe.h"
+ 
+ HDVFrame::HDVFrame( HDVStreamParams *p )
+@@ -81,7 +85,7 @@
+ 			params->carryover_length = 0;
+ 		}
+ 
+-		DEBUG_RAW( d_hdv_video, "->\n<- New HDVFrame:" );
++		sendEventParams( 0, 0, "->\n<- New HDVFrame:" );
+ 	}
+ 
+ 	Frame::SetDataLen( len );
+@@ -145,7 +149,7 @@
+ 	{
+ 		if ( i+HDV_PACKET_SIZE > DATA_BUFFER_LEN )
+ 		{
+-			sendEvent( "\aERROR:HDV Frame out of buffer space, completing packet early" );
++			sendEventParams( 2, 1, "\aERROR:HDV Frame out of buffer space, completing packet early" );
+ 			isComplete = true;
+ 			return;
+ 		}
+@@ -160,14 +164,14 @@
+ 			// The stream has to be synced on packet boundries.
+ 			// This could be changed to do in-code packet marker searching/syncing,
+ 			// but it doesn't do that right now.
+-			sendEvent( "Invalid packet sync_byte 0x%02x!", data[i] );
++			sendEventParams( 2, 1, "Invalid packet sync_byte 0x%02x!", data[i] );
+ 		}
+ 	}
+ }
+ 
+ void HDVFrame::ProcessPacket()
+ {
+-	DEBUG( d_hdv_pids, "PID %04x", packet->pid() );
++	sendEventParams( 2, 1, "PID %04x", packet->pid() );
+ 	packet->Dump();
+ 
+ 	if ( packet->is_program_association_packet() )
+@@ -241,7 +245,7 @@
+ 		params->carryover_length = GetDataLen() - lastDataLen;
+ 		if ( params->carryover_length > CARRYOVER_DATA_MAX_SIZE )
+ 		{
+-			sendEvent( "\aERROR: too much carryover data (%d bytes), DROPPING DATA!\n", params->carryover_length );
++			sendEventParams( 2, 1, "\aERROR: too much carryover data (%d bytes), DROPPING DATA!\n", params->carryover_length );
+ 			params->carryover_length = CARRYOVER_DATA_MAX_SIZE;
+ 		}
+ 		memcpy( params->carryover_data, &data[lastDataLen], params->carryover_length );

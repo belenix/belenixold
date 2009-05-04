@@ -1,0 +1,153 @@
+--- dvgrab-3.4/iec13818-1.cc.orig	2008-02-27 09:00:23.000000000 +0530
++++ dvgrab-3.4/iec13818-1.cc	2009-05-03 12:06:00.462280851 +0530
+@@ -18,10 +18,12 @@
+ */
+ 
+ #include <string>
+-using std::string;
+-
+-#include <string.h>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++using namespace std;
+ 
++#include "error.h"
+ #include "hdvframe.h"
+ #include "iec13818-1.h"
+ 
+@@ -173,7 +175,7 @@
+ {
+ 	bool b = d_hdv_packet || d_hdv_pid_check( pid() );
+ 
+-	DEBUG_PARAMS( b, 1, 0, "HDVPacket FLAG=%02x ERR=%s,P_IND=%s,PRI=%s PID=%04x SCR=%d,ADAPT=%d,CONT=%02d : ",
++	sendEventParams( 1, 0, "HDVPacket FLAG=%02x ERR=%s,P_IND=%s,PRI=%s PID=%04x SCR=%d,ADAPT=%d,CONT=%02d : ",
+ 		sync_byte(),
+ 		transport_error_indicator() ? "T" : "F",
+ 		payload_unit_start_indicator() ? "T" : "F",
+@@ -181,12 +183,11 @@
+ 		pid(),
+ 		transport_scrambling_control(),
+ 		adaptation_field_control(),
+-		continuity_counter()
+-		);
++		continuity_counter());
+ 
+ 	DUMP_RAW_DATA( b, data, 4, HDV_PACKET_SIZE );
+ 
+-	DEBUG_PARAMS( b, 0, 1, "" );
++	sendEventParams( 0, 1, "" );
+ }
+ 
+ 
+@@ -268,7 +269,7 @@
+ 
+ void PAT::Dump()
+ {
+-	DEBUG_PARAMS( d_hdv_pat, 1, 0, "PAT TID=%02x SYN=%s LEN=%04x TSID=%04x VER=%02x IND=%s NUM=%02x LAST=%02x :",
++	sendEventParams( 1, 0, "PAT TID=%02x SYN=%s LEN=%04x TSID=%04x VER=%02x IND=%s NUM=%02x LAST=%02x :",
+ 		table_id(),
+ 		section_syntax_indicator() ? "T" : "F",
+ 		section_length(),
+@@ -280,9 +281,9 @@
+ 		);
+ 
+ 	for ( int n = 0; n < NUM_PROGRAMS; n++ )
+-		DEBUG_RAW( d_hdv_pat, " PROG_NUM=%04x,PID=%04x", program_number( n ), pid( n ) );
++		sendEventParams( 2, 1, " PROG_NUM=%04x,PID=%04x", program_number( n ), pid( n ) );
+ 
+-	DEBUG_PARAMS( d_hdv_pat, 0, 1, "" );
++	sendEventParams( 0, 1, "" );
+ }
+ 
+ 
+@@ -330,7 +331,7 @@
+ 
+ void PMT_element::Dump()
+ {
+-	DEBUG_RAW( d_hdv_pmt, "{TYPE=%02x PID=%04x LEN=%04x ",
++	sendEventParams( 2, 1, "{TYPE=%02x PID=%04x LEN=%04x ",
+ 		stream_type(),
+ 		elementary_PID(),
+ 		ES_info_length()
+@@ -343,12 +344,12 @@
+ 	// http://www.smpte-ra.org/mpegreg/mpegreg.html
+ 	for ( int i = 0; ( desc = descriptor( i ) ); i++ )
+ 	{
+-		DEBUG_RAW( d_hdv_pmt, "DESC=[" );
++		sendEventParams( 2, 1, "DESC=[" );
+ 		DUMP_RAW_DATA( d_hdv_pmt, desc, 0, desc[1]+2 );
+-		DEBUG_RAW( d_hdv_pmt, "\b] " );
++		sendEventParams( 2, 1, "\b] " );
+ 	}
+ 
+-	DEBUG_RAW( d_hdv_pmt, "\b} " );
++	sendEventParams( 2, 1, "\b} " );
+ }
+ 
+ 
+@@ -435,7 +436,7 @@
+ 
+ void PMT::Dump()
+ {
+-	DEBUG_PARAMS( d_hdv_pmt, 1, 0, "PMT TID=%02x SYN=%s SECLEN=%04x PROG#=%04x VER#=%02x IND=%s SEC#=%02x LAST#=%02x PCRPID=%02x PROGLEN=%02x ",
++	sendEventParams( 1, 0, "PMT TID=%02x SYN=%s SECLEN=%04x PROG#=%04x VER#=%02x IND=%s SEC#=%02x LAST#=%02x PCRPID=%02x PROGLEN=%02x ",
+ 		table_id(),
+ 		section_syntax_indicator() ? "T" : "F",
+ 		section_length(),
+@@ -452,9 +453,9 @@
+ 
+ 	for ( int i = 0; ( desc = descriptor( i ) ); i++ )
+ 	{
+-		DEBUG_RAW( d_hdv_pmt, "DESC=[" );
++		sendEventParams( 1, 0, "DESC=[" );
+ 		DUMP_RAW_DATA( d_hdv_pmt, desc, 0, desc[1]+2 );
+-		DEBUG_RAW( d_hdv_pmt, "\b] " );
++		sendEventParams( 1, 0, "\b] " );
+ 	}
+ 
+ 	PMT_element *elem;
+@@ -462,7 +463,7 @@
+ 	for ( int i = 0; ( elem = GetPmtElement( i ) ); i++ )
+ 		elem->Dump();
+ 
+-	DEBUG_PARAMS( d_hdv_pmt, 0, 1, "" );
++	sendEventParams( 0, 1, "" );
+ }
+ 
+ 
+@@ -573,13 +574,13 @@
+ 
+ void PES::Dump()
+ {
+-	DEBUG_PARAMS( d_hdv_pes, 1, 0, "PES START=%06x SID=%02x PES_LEN=%d : GetLength %d : data bytes",
++	sendEventParams( 1, 0, "PES START=%06x SID=%02x PES_LEN=%d : GetLength %d : data bytes",
+ 		packet_start_code_prefix(), stream_id(), PES_packet_length(), GetLength() );
+ 
+ 	for ( int i = 0; i < 16; i++ )
+-		DEBUG_RAW( d_hdv_pes, " 0x%02x", PES_packet_data_byte( i ) );
++		sendEventParams( 1, 0, " 0x%02x", PES_packet_data_byte( i ) );
+ 
+-	DEBUG_PARAMS( d_hdv_pes, 0, 1, "" );
++	sendEventParams( 0, 1, "" );
+ }
+ 
+ 
+@@ -621,7 +622,7 @@
+ 	if ( pos < GetLength() )
+ 		return data[pos];
+ 	else
+-		return 0;
++		return '\0';
+ }
+ 
+ int SonyA1::GetLength()
+@@ -631,7 +632,7 @@
+ 
+ void SonyA1::Dump()
+ {
+-	DEBUG( d_hdv_sonya1, "Record date : %04d/%02d/%02d %02d:%02d:%02d Timecode : %02d:%02d:%02d.%02d Scene Start : %s",
++	sendEventParams( 1, 0, "Record date : %04d/%02d/%02d %02d:%02d:%02d Timecode : %02d:%02d:%02d.%02d Scene Start : %s",
+ 		2000 + year(), month(), day(), hour(), minute(), second(),
+ 		timecode_hour(), timecode_minute(), timecode_second(), timecode_frame(),
+ 		scene_start() ? "T" : "F"

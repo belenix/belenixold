@@ -1,0 +1,21 @@
+--- dvgrab-3.0.orig/Makefile.in	2007-08-07 02:43:14.000000000 -0400
++++ dvgrab-3.0/Makefile.in	2007-08-07 02:43:14.000000000 -0400
+@@ -48,7 +48,8 @@
+ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
+ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+ PROGRAMS = $(bin_PROGRAMS)
+-am_dvgrab_OBJECTS = avi.$(OBJEXT) dvframe.$(OBJEXT) dvgrab.$(OBJEXT) \
++am_dvgrab_OBJECTS = strsep.$(OBJEXT) avi.$(OBJEXT) dvframe.$(OBJEXT) \
++    dvgrab.$(OBJEXT) \
+ 	error.$(OBJEXT) filehandler.$(OBJEXT) frame.$(OBJEXT) \
+ 	hdvframe.$(OBJEXT) iec13818-1.$(OBJEXT) iec13818-2.$(OBJEXT) \
+ 	ieee1394io.$(OBJEXT) io.$(OBJEXT) main.$(OBJEXT) \
+@@ -190,7 +191,7 @@
+ EXTRA_DIST = ChangeLog TODO dvgrab.dox dvgrab.spec dvgrab.1 NEWS
+ man_MANS = dvgrab.1
+ #noinst_PROGRAMS  = riffdump rawdump
+-dvgrab_SOURCES = affine.h avi.cc avi.h dvframe.cc dvframe.h dvgrab.cc dvgrab.h \
++dvgrab_SOURCES = affine.h inttypes_gnucompat.h strsep.h strsep.c avi.cc avi.h dvframe.cc dvframe.h dvgrab.cc dvgrab.h \
+ 	endian_types.h error.cc error.h filehandler.cc filehandler.h frame.cc frame.h \
+ 	hdvframe.cc hdvframe.h iec13818-1.cc iec13818-1.h iec13818-2.cc iec13818-2.h \
+ 	ieee1394io.cc ieee1394io.h io.c io.h main.cc raw1394util.c raw1394util.h riff.cc \

@@ -1,0 +1,72 @@
+--- dvgrab-3.4/ieee1394io.cc.orig	2009-01-15 13:04:50.000000000 +0530
++++ dvgrab-3.4/ieee1394io.cc	2009-05-03 12:32:40.639823701 +0530
+@@ -45,14 +45,13 @@
+  */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ #include <deque>
+ #include <iostream>
+ #include <typeinfo>
+-
+-using std::endl;
++using namespace std;
+ 
+ #include <assert.h>
+ #include <unistd.h>
+@@ -388,6 +387,7 @@
+ 	iec61883Reader *self = NULL;
+ 	void *userdata = raw1394_get_userdata( handle );
+ 
++        // wonderful C++ style.
+ 	if ( typeid( iec61883_mpeg2_t ) == typeid( userdata ) )
+ 	{
+ 		iec61883_mpeg2_t mpeg2 = static_cast< iec61883_mpeg2_t >( userdata );
+@@ -438,7 +438,7 @@
+ 	catch ( string exc )
+ 	{
+ 		Close();
+-		sendEvent( exc.c_str() );
++		sendEventParams( 2, 1, exc.c_str() );
+ 		success = false;
+ 	}
+ 	return success;
+@@ -483,7 +483,7 @@
+ 	}
+ 	catch ( string exc )
+ 	{
+-		sendEvent( exc.c_str() );
++		sendEventParams( 2, 1, exc.c_str() );
+ 		success = false;
+ 	}
+ 	return success;
+@@ -662,7 +662,7 @@
+ 		if ( avc_handle != NULL )
+ 			raw1394_destroy_handle( avc_handle );
+ 		avc_handle = NULL;
+-		sendEvent( exc.c_str() );
++		sendEventParams( 2, 1, exc.c_str() );
+ 	}
+ 	return ;
+ }
+@@ -1092,7 +1092,7 @@
+ 
+ 	if ( ! file )
+ 	{
+-		sendEvent( "No input file" );
++		sendEventParams( 2, 1, "No input file" );
+ 		return NULL;
+ 	}
+ 
+@@ -1106,7 +1106,7 @@
+ 	if ( strcmp( input_file, "-" ) != 0 )
+ 		fclose( file );
+ 
+-	sendEvent( "End of pipe" );
++	sendEventParams( 2, 1, "End of pipe" );
+ 	pthread_mutex_lock( &mutex );
+ 	if ( currentFrame ) outFrames.push_back( currentFrame );
+ 	currentFrame = NULL;
