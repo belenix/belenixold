@@ -1,0 +1,40 @@
+--- dvgrab-3.0.orig/error.cc	2007-07-06 15:04:24.000000000 -0400
++++ dvgrab-3.0/error.cc	2007-10-01 09:26:16.000000000 -0400
+@@ -18,25 +18,16 @@
+ */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+-// C includes
+-
+-#include <errno.h>
+-#include <string.h>
+-
+-// C++ includes
+-
++#include <cerrno>
++#include <cstring>
+ #include <string>
+ #include <iostream>
+ #include <sstream>
+ #include <iomanip>
+-
+-using std::ostringstream;
+-using std::string;
+-using std::endl;
+-using std::ends;
++using namespace std;
+ 
+ // local includes
+ 
+@@ -45,6 +36,7 @@
+ static bool needNewLine = false;
+ 
+ #define MAX_DEBUG_PIDS 512
++
+ static int pids[MAX_DEBUG_PIDS];
+ static int n_pids = 0;
+ 

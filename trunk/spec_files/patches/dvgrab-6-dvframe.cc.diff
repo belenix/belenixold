@@ -1,0 +1,16 @@
+--- dvgrab-3.4/dvframe.cc.orig	2009-01-05 02:46:08.000000000 +0530
++++ dvgrab-3.4/dvframe.cc	2009-05-03 11:43:33.691419437 +0530
+@@ -25,9 +25,10 @@
+     \file dvframe.cc
+ */
+ 
+-#include <stdlib.h>
+-#include <string.h>
+-#include <stdlib.h>
++#include <cstdlib>
++#include <cstring>
++using namespace std;
++
+ #include "dvframe.h"
+ 
+ VideoInfo::VideoInfo() : width( 0 ), height( 0 ), isPAL( false )

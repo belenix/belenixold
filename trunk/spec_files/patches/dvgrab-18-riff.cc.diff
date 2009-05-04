@@ -1,0 +1,54 @@
+--- dvgrab-3.0.orig/riff.cc	2005-04-18 10:55:39.000000000 -0400
++++ dvgrab-3.0/riff.cc	2007-10-01 10:12:53.000000000 -0400
+@@ -18,23 +18,24 @@
+ */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ // C++ includes
+ 
+ #include <string> 
+-//#include <stdio.h>
++#include <cstdio>
+ #include <iostream>
+ #include <iomanip>
+-#include <byteswap.h>
+ 
+-using std::cout;
+-using std::hex;
+-using std::dec;
+-using std::setw;
+-using std::setfill;
+-using std::endl;
++using namespace std;
++
++#if defined(sun) || defined(__sun) || defined(__sun__)
++#include <sys/types.h>
++#include <sys/byteorder.h>
++#else
++#include <byteswap.h>
++#endif
+ 
+ // C includes
+ 
+@@ -360,7 +361,7 @@
+ 	/* Print out the ascii representation of type and name, as well as
+ 	   length and file offset. */
+ 
+-	cout << hex << setfill( '0' ) << "type: "
++	cout << std::ios::hex << setfill( '0' ) << "type: "
+ 	<< ((char *)&entry.type)[0]
+ 	<< ((char *)&entry.type)[1]
+ 	<< ((char *)&entry.type)[2]
+@@ -376,7 +377,7 @@
+ 	<< ((char *)&list_name)[0]
+ 	<< ((char *)&list_name)[1]
+ 	<< ((char *)&list_name)[2]
+-	<< ((char *)&list_name)[3] << dec << endl;
++	<< ((char *)&list_name)[3] << std::ios::dec << endl;
+ 
+ 	/* print the content itself */
+ 

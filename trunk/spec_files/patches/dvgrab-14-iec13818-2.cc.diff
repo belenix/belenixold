@@ -1,0 +1,177 @@
+--- dvgrab-3.4/iec13818-2.cc.orig	2007-11-22 09:37:44.000000000 +0530
++++ dvgrab-3.4/iec13818-2.cc	2009-05-03 12:12:03.232017621 +0530
+@@ -18,8 +18,11 @@
+ */
+ 
+ #include <string>
+-using std::string;
++#include <cstring>
++#include <cstdlib>
++using namespace std;
+ 
++#include "error.h"
+ #include "hdvframe.h"
+ #include "iec13818-2.h"
+ 
+@@ -69,8 +72,8 @@
+ 	if ( offset > 0 && packet->payload_unit_start_indicator() )
+ 	{
+ 		if ( lastSection == slice )
+-			DEBUG_RAW( d_hdv_video, "*%d", sliceCount );
+-		DEBUG_RAW( d_hdv_video, "]" );
++			sendEventParams( 0, 1, "*%d", sliceCount );
++		sendEventParams( 0, 1, "]" );
+ 		isComplete = true;
+ 	}
+ 	else
+@@ -238,7 +241,7 @@
+ 			}
+ 			else
+ 			{
+-				DEBUG_RAW( d_hdv_video, "%02x ", GetData(offset) );
++				sendEventParams( 0, 1, "%02x ", GetData(offset) );
+ 				offset++;
+ 				restart = true;
+ 			}
+@@ -246,12 +249,12 @@
+ 			if ( dstr )
+ 			{
+ 				if ( lastSection == slice && currentSection != slice )
+-					DEBUG_RAW( d_hdv_video, "*%d]", sliceCount );
++					sendEventParams( 0, 1, "*%d]", sliceCount );
+ 
+-				DEBUG_RAW( d_hdv_video, "[%s", dstr );
++				sendEventParams( 0, 1, "[%s", dstr );
+ 
+ 				if ( restart )
+-					DEBUG_RAW( d_hdv_video, "]" );
++					sendEventParams( 0, 1, "]" );
+ 			}
+ 
+ 			if ( restart )
+@@ -267,7 +270,7 @@
+ 		if ( currentSection->IsComplete() )
+ 		{
+ 			if ( currentSection != slice )
+-				DEBUG_RAW( d_hdv_video, "]" );
++				sendEventParams( 0, 1, "]" );
+ 
+ 			if ( currentSection == sequenceHeader )
+ 			{
+@@ -373,7 +376,7 @@
+ 
+ void Picture::Dump()
+ {
+-	DEBUG( d_hdv_video, "Picture section" );
++	sendEventParams( 1, 1, "Picture section" );
+ }
+ 
+ unsigned int Picture::picture_start_code() { return GetBits( 0, 32 ); }
+@@ -470,7 +473,7 @@
+ 
+ void SequenceHeader::Dump()
+ {
+-	DEBUG( d_hdv_video, "SequenceHeader section H %d V %d aspect %d rate %d bitrate %d",
++	sendEventParams( 1, 1, "SequenceHeader section H %d V %d aspect %d rate %d bitrate %d",
+ 	       horizontal_size_value(), vertical_size_value(), aspect_ratio_information(), frame_rate_code(), bit_rate_value() );
+ }
+ 
+@@ -528,7 +531,7 @@
+ 
+ void SequenceExtension::Dump()
+ {
+-	DEBUG( d_hdv_video, "SequenceExtension section" );
++	sendEventParams( 1, 1, "SequenceExtension section" );
+ }
+ 
+ unsigned int SequenceExtension::extension_start_code() { return GetBits( 0, 32 ); }
+@@ -581,7 +584,7 @@
+ 
+ void SequenceDisplayExtension::Dump()
+ {
+-	DEBUG( d_hdv_video, "SequenceDisplayExtension section" );
++	sendEventParams( 1, 1, "SequenceDisplayExtension section" );
+ }
+ 
+ unsigned int SequenceDisplayExtension::extension_start_code() { return GetBits( 0, 32 ); }
+@@ -660,7 +663,7 @@
+ 
+ void QuantMatrixExtension::Dump()
+ {
+-	DEBUG( d_hdv_video, "QuantMatrixExtension section" );
++	sendEventParams( 1, 1, "QuantMatrixExtension section" );
+ }
+ 
+ unsigned int QuantMatrixExtension::extension_start_code() { return GetBits( 0, 32 ); }
+@@ -783,7 +786,7 @@
+ 
+ void CopyrightExtension::Dump()
+ {
+-	DEBUG( d_hdv_video, "CopyrightExtension section" );
++	sendEventParams( 1, 1, "CopyrightExtension section" );
+ }
+ 
+ unsigned int CopyrightExtension::extension_start_code() { return GetBits( 0, 32 ); }
+@@ -841,7 +844,7 @@
+ 
+ void SequenceScalableExtension::Dump()
+ {
+-	DEBUG( d_hdv_video, "SequenceScalableExtension section" );
++	sendEventParams( 1, 1, "SequenceScalableExtension section" );
+ }
+ 
+ unsigned int SequenceScalableExtension::extension_start_code() { return GetBits( 0, 32 ); }
+@@ -929,7 +932,7 @@
+ 
+ void PictureDisplayExtension::Dump()
+ {
+-	DEBUG( d_hdv_video, "PictureDisplayExtension section" );
++	sendEventParams( 1, 1, "PictureDisplayExtension section" );
+ }
+ 
+ unsigned int PictureDisplayExtension::extension_start_code() { return GetBits( 0, 32 ); }
+@@ -1013,7 +1016,7 @@
+ 
+ void PictureCodingExtension::Dump()
+ {
+-	DEBUG( d_hdv_video, "PictureCodingExtension section" );
++	sendEventParams( 1, 1, "PictureCodingExtension section" );
+ }
+ 
+ unsigned int PictureCodingExtension::extension_start_code() { return GetBits( 0, 32 ); }
+@@ -1066,7 +1069,7 @@
+ 
+ void PictureSpatialScalableExtension::Dump()
+ {
+-	DEBUG( d_hdv_video, "PictureSpatialScalableExtension section" );
++	sendEventParams( 1, 1, "PictureSpatialScalableExtension section" );
+ }
+ 
+ unsigned int PictureSpatialScalableExtension::extension_start_code() { return GetBits( 0, 32 ); }
+@@ -1104,7 +1107,7 @@
+ 
+ void PictureTemporalScalableExtension::Dump()
+ {
+-	DEBUG( d_hdv_video, "PictureTemporalScalableExtension section" );
++	sendEventParams( 1, 1, "PictureTemporalScalableExtension section" );
+ }
+ 
+ unsigned int PictureTemporalScalableExtension::extension_start_code() { return GetBits( 0, 32 ); }
+@@ -1147,7 +1150,7 @@
+ 
+ void UserData::Dump()
+ {
+-	DEBUG( d_hdv_video, "UserData section length %d", GetCompleteLength() );
++	sendEventParams( 1, 1, "UserData section length %d", GetCompleteLength() );
+ }
+ 
+ 
+@@ -1272,7 +1275,7 @@
+ 
+ void Slice::Dump()
+ {
+-	DEBUG( d_hdv_video, "Slice section." );
++	sendEventParams( 1, 1, "Slice section." );
+ }
+ 
+ unsigned int Slice::slice_start_code() { return GetBits( 0, 32 ); }

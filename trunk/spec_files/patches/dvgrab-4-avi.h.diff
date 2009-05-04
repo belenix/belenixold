@@ -1,0 +1,14 @@
+--- dvgrab-3.0.orig/avi.h	2007-07-06 14:47:26.000000000 -0400
++++ dvgrab-3.0/avi.h	2007-10-01 08:56:55.000000000 -0400
+@@ -31,7 +31,11 @@
+ #include "riff.h"
+ #include "dvframe.h"
+ 
++#if defined(__GCC__)
+ #define PACKED(x)	__attribute__((packed)) x
++#else
++#define PACKED(x) (x)
++#endif
+ 
+ #define AVI_SMALL_INDEX (0x01)
+ #define AVI_LARGE_INDEX (0x02)

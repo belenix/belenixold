@@ -1,0 +1,11 @@
+--- dvgrab-3.0.orig/smiltime.h	2005-04-18 10:24:48.000000000 -0400
++++ dvgrab-3.0/smiltime.h	2007-10-01 10:23:55.000000000 -0400
+@@ -39,7 +39,7 @@
+ 	    SMIL_TIME_WALLCLOCK,    // not implemented
+ 	    SMIL_TIME_MEDIA_MARKER,    // not implemented
+ 	    SMIL_TIME_REPEAT,     // not implemented
+-	    SMIL_TIME_ACCESSKEY,    //not implemented
++	    SMIL_TIME_ACCESSKEY    //not implemented
+ 	} TimeType;
+ 
+ 	typedef enum {

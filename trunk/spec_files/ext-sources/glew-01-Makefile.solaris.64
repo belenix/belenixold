@@ -1,0 +1,15 @@
+NAME = $(GLEW_NAME)
+LDFLAGS = -m64 -L/usr/X11/lib/$(ARCH64) -R/usr/X11/lib/$(ARCH64) -L/usr/gnu/lib/$(ARCH64) -R/usr/gnu/lib/$(ARCH64)
+CFLAGS = -O3 -fPIC -DPIC -m64
+LD = $(CC) -m64 $(CFLAGS) $(LDFLAGS)
+CFLAGS.EXTRA = -I/usr/openwin/include -I/usr/X11/include
+LDFLAGS.SO =  -shared -h lib$(NAME).so.1
+LDFLAGS.EXTRA = -m64 -L/usr/X11/lib/$(ARCH64) -R/usr/X11/lib/$(ARCH64) -L/usr/gnu/lib/$(ARCH64) -R/usr/gnu/lib/$(ARCH64)
+LDFLAGS.GL = -lGLU -lGL -lXmu -lXi -lXext -lX11
+NAME = GLEW
+BIN.SUFFIX =
+POPT =
+LIB.SONAME = lib$(NAME).so.$(SO_MAJOR)
+LIB.DEVLNK = lib$(NAME).so
+LIB.SHARED = lib$(NAME).so.$(SO_VERSION)
+LIB.STATIC = lib$(NAME).a

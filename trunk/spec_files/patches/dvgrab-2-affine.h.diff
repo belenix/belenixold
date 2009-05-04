@@ -1,0 +1,12 @@
+--- dvgrab-3.0.orig/affine.h	2005-04-18 10:24:48.000000000 -0400
++++ dvgrab-3.0/affine.h	2007-10-01 09:18:04.000000000 -0400
+@@ -21,6 +21,9 @@
+ #define _KINOPLUS_AFFINE_H
+ 
+ #include <cmath>
++using namespace std;
++
++#include <math.h>
+ 
+ /** Affine transforms for 2d image manipulation. Current provides shearing and
+ 	rotating support.

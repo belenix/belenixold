@@ -1,0 +1,48 @@
+--- dvgrab-3.0.orig/endian_types.h	2005-04-18 10:24:48.000000000 -0400
++++ dvgrab-3.0/endian_types.h	2007-10-01 10:35:41.860687000 -0400
+@@ -37,7 +37,19 @@
+ #endif
+ 
+ #include <sys/types.h>
++#if defined(sun) || defined(__sun) || defined(__sun__)
++#include <limits.h>
++#include <sys/types.h>
++#include <inttypes.h>
++#include "inttypes_gnucompat.h"
++#include <sys/byteorder.h>
++#define bswap_8 BSWAP_8
++#define bswap_16 BSWAP_16
++#define bswap_32 BSWAP_32
++#define bswap_64 BSWAP_64
++#else
+ #include <byteswap.h>
++#endif
+ 
+ static inline int8_t bswap(const int8_t& x)
+ {
+@@ -150,7 +162,11 @@
+ 		m |= t.m;
+ 		return *this;
+ 	};
+-} __attribute__((packed));
++}
++#if defined(__GCC__)
++__attribute__((packed))
++#endif
++;
+ 
+ /* Just copy-and-pasted from le_t. Too lazy to do it right. */
+ 
+@@ -204,7 +220,11 @@
+ 		m |= t.m;
+ 		return *this;
+ 	};
+-} __attribute__((packed));
++}
++#if defined(__GCC__)
++__attribute__((packed))
++#endif
++;
+ 
+ /* Define types of native endianness similar to the little and big endian
+  * versions below. Not really necessary but useful occasionally to emphasize

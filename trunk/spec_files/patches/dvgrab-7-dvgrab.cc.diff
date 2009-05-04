@@ -1,0 +1,181 @@
+--- dvgrab-3.4/dvgrab.cc.orig	2009-01-15 13:37:58.000000000 +0530
++++ dvgrab-3.4/dvgrab.cc	2009-05-03 11:52:10.113014706 +0530
+@@ -20,14 +20,13 @@
+ */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ #include <iostream>
+ #include <sstream>
+ #include <iomanip>
+-using std::cerr;
+-using std::endl;
++using namespace std;
+ 
+ #include <assert.h>
+ #include <fcntl.h>
+@@ -42,6 +41,7 @@
+ #include <libavc1394/avc1394_vcr.h>
+ #include <libavc1394/rom1394.h>
+ 
++#include "strsep.h"
+ #include "error.h"
+ #include "riff.h"
+ #include "avi.h"
+@@ -127,7 +127,7 @@
+ 			if ( ! m_connection )
+ 				throw std::string( "failed to establish isochronous connection" );
+ 			m_channel = m_connection->GetChannel();
+-			sendEvent( "Established connection over channel %d", m_channel );
++			sendEventParams( 2, 1, "Established connection over channel %d", m_channel );
+ 		}
+ 		m_reader = new iec61883Reader( m_port, m_channel, m_buffers, 
+ 			this->testCaptureProxy, this, m_hdv );
+@@ -538,7 +538,7 @@
+ 				m_writer = aviWriter;
+ 				if ( m_max_file_size == 0 || m_max_file_size > 1000 )
+ 				{
+-					sendEvent( "Turning on OpenDML to support large file size." );
++					sendEventParams( 2, 1, "Turning on OpenDML to support large file size." );
+ 					m_open_dml = true;
+ 				}
+ 				aviWriter->SetOpenDML( m_open_dml );
+@@ -631,7 +631,7 @@
+ 	// OK, we have data, commence capture
+ 	if ( !g_done && m_frame )
+ 	{
+-		sendEvent( "Capture Started" );
++		sendEventParams( 2, 1, "Capture Started" );
+ 		m_captureActive = true;
+ 		m_total_frames = 0;
+ 
+@@ -687,7 +687,7 @@
+ 				time( &timesys );
+ 				localtime_r( &timesys, &recDate );
+ 			}
+-			sendEvent( "\"%s\": %8.2f MiB %d frames timecode %2.2d:%2.2d:%2.2d.%2.2d date %4.4d.%2.2d.%2.2d %2.2d:%2.2d:%2.2d",
++			sendEventParams( 2, 1, "\"%s\": %8.2f MiB %d frames timecode %2.2d:%2.2d:%2.2d.%2.2d date %4.4d.%2.2d.%2.2d %2.2d:%2.2d:%2.2d",
+ 			           filename.c_str(), size, frames,
+ 			           timeCode.hour, timeCode.min, timeCode.sec, timeCode.frame,
+ 			           recDate.tm_year + 1900, recDate.tm_mon + 1, recDate.tm_mday,
+@@ -695,13 +695,13 @@
+ 			         );
+ 		}
+ 		else
+-			sendEvent( "\"%s\" %8.2f MiB %d frames", filename.c_str(), size, frames );
+-		sendEvent( "Capture Stopped" );
++			sendEventParams( 2, 1, "\"%s\" %8.2f MiB %d frames", filename.c_str(), size, frames );
++		sendEventParams( 2, 1, "Capture Stopped" );
+ 
+ 		if ( m_dropped_frames > 0 )
+-			sendEvent( "Warning: %d dropped frames.", m_dropped_frames );
++			sendEventParams( 2, 1, "Warning: %d dropped frames.", m_dropped_frames );
+ 		if ( m_bad_frames > 0 )
+-			sendEvent( "Warning: %d damaged frames.", m_bad_frames );
++			sendEventParams( 2, 1, "Warning: %d damaged frames.", m_bad_frames );
+ 		m_dropped_frames = 0;
+ 		m_bad_frames = 0;
+ 		m_captureActive = false;
+@@ -714,7 +714,7 @@
+ {
+ 	pthread_attr_t thread_attributes;
+ 
+-	sendEvent( "Bus Reset, launching watchdog thread" );
++	sendEventParams( 2, 1, "Bus Reset, launching watchdog thread" );
+ 
+ 	pthread_attr_init( &thread_attributes );
+ 	pthread_attr_setdetachstate( &thread_attributes, PTHREAD_CREATE_DETACHED );
+@@ -736,7 +736,7 @@
+ 		if ( ! m_reader->WaitForAction( 1 ) )
+ 		{
+ 			cleanup();
+-			sendEvent( "Error: timed out waiting for DV after bus reset" );
++			sendEventParams( 2, 1, "Error: timed out waiting for DV after bus reset" );
+ 			throw;
+ 		}
+ 		// Otherwise, reestablish the connection
+@@ -746,7 +746,7 @@
+ 			if ( newChannel != m_channel )
+ 			{
+ 				cleanup();
+-				sendEvent( "Error: unable to reestablish connection after bus reset" );
++				sendEventParams( 2, 1, "Error: unable to reestablish connection after bus reset" );
+ 				throw;
+ 
+ 				// TODO: the following attempt to recreate reader and restart capture
+@@ -764,16 +764,16 @@
+ 					m_reader->StopThread();
+ 					delete m_reader;
+ 				}		
+-				sendEvent( "Closed existing reader" );
++				sendEventParams( 2, 1, "Closed existing reader" );
+ 				m_reader = new iec61883Reader( m_port, m_channel, m_buffers, 
+ 					this->testCaptureProxy, this, m_hdv );
+ 				if ( m_reader )
+ 				{
+-					sendEvent( "new reader created" );
++					sendEventParams( 2, 1, "new reader created" );
+ 					pthread_create( &capture_thread, NULL, captureThread, this );
+ 					m_reader->StartThread();
+ 				}
+-				sendEvent( "restarting capture" );
++				sendEventParams( 2, 1, "restarting capture" );
+ 				if ( restartCapture )
+ 					startCapture();
+ #endif
+@@ -896,10 +896,10 @@
+ 		{
+ 			sendCaptureStatus( fileName.c_str(), size, framesWritten, lasttc, lastrd, true );
+ 			if ( m_dropped_frames > 0 )
+-				sendEvent( "Warning: %d dropped frames.", m_dropped_frames );
++				sendEventParams( 2, 1, "Warning: %d dropped frames.", m_dropped_frames );
+ 			m_dropped_frames = 0;
+ 			if ( m_bad_frames > 0 )
+-				sendEvent( "Warning: %d damaged frames.", m_bad_frames );
++				sendEventParams( 2, 1, "Warning: %d damaged frames.", m_bad_frames );
+ 			m_bad_frames = 0;
+ 		}
+ 		else if ( m_showstatus )
+@@ -953,10 +953,10 @@
+ 	else
+ 		sprintf( rd, "????.??.?? ??:??:??" );
+ 
+-	sendEvent( "\n\a\"%s\": %s: timecode %s date %s",
++	sendEventParams( 2, 1, "\n\a\"%s\": %s: timecode %s date %s",
+ 		m_writer ? m_writer->GetFileName().c_str() : "", reason, tc, rd );
+ 
+-	sendEvent( meaning );
++	sendEventParams( 2, 1, meaning );
+ }
+ 
+ void DVgrab::captureThreadRun()
+@@ -996,7 +996,7 @@
+ 					if ( ( m_lockstep_maxdrops > -1 && dropped > m_lockstep_maxdrops )
+ 					||( m_lockstep_totaldrops > -1 && m_dropped_frames > m_lockstep_totaldrops ) )
+ 					{
+-						sendEvent( "Warning: closing file early due to too many dropped frames." );
++						sendEventParams( 2, 1, "Warning: closing file early due to too many dropped frames." );
+ 						m_lockPending = true;
+ 					}
+ 					for ( int n = 0; n < dropped; n++ )
+@@ -1027,7 +1027,7 @@
+ 				{
+ 					if ( m_lockstep_totaldrops > -1 && m_dropped_frames > m_lockstep_totaldrops )
+ 					{
+-						sendEvent( "Warning: closing file early due to too many dropped frames." );
++						sendEventParams( 2, 1, "Warning: closing file early due to too many dropped frames." );
+ 						m_lockPending = true;
+ 					}
+ 					writeFrame();
+@@ -1107,7 +1107,7 @@
+ 		quadlet_t resp2 = AVC1394_MASK_RESPONSE_OPERAND( status, 2 );
+ 		quadlet_t resp3 = AVC1394_MASK_RESPONSE_OPERAND( status, 3 );
+ 		if ( resp2 == AVC1394_VCR_RESPONSE_TRANSPORT_STATE_WIND && resp3 == AVC1394_VCR_OPERAND_WIND_STOP )
+-			sendEvent( "Winding Stopped" );
++			sendEventParams( 2, 1, "Winding Stopped" );
+ 	}
+ 	m_transportStatus = prevStatus = status;
+ 

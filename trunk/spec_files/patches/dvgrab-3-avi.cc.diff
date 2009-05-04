@@ -1,0 +1,146 @@
+--- dvgrab-3.4/avi.cc.orig	2008-02-27 08:57:34.000000000 +0530
++++ dvgrab-3.4/avi.cc	2009-05-03 11:41:25.288445358 +0530
+@@ -18,7 +18,7 @@
+ */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ // C++ includes
+@@ -26,20 +26,15 @@
+ #include <string>
+ #include <iostream>
+ #include <iomanip>
+-
+-using std::cout;
+-using std::hex;
+-using std::dec;
+-using std::setw;
+-using std::setfill;
+-using std::endl;
++#include <cstdio>
++#include <cstdlib>
++#include <cassert>
++using namespace std;
+ 
+ // C includes
+ 
+-#include <stdio.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+-#include <assert.h>
+ #include <string.h>
+ 
+ // local includes
+@@ -74,7 +69,7 @@
+ 		hdrl_list( -1 ), avih_chunk( -1 ), movi_list( -1 ), junk_chunk( -1 ), idx1_chunk( -1 ),
+ 		index_type( -1 ), current_ix00( -1 ), odml_list( -1 ), dmlh_chunk( -1 ), isUpdateIdx1( true )
+ {
+-	// cerr << "0x" << hex << (long)this << dec << " AVIFile::AVIFile() : RIFFFile(), ..." << endl;
++	// cerr << "0x" << std::ios::hex << (long)this << std::ios::dec << " AVIFile::AVIFile() : RIFFFile(), ..." << endl;
+ 
+ 	for ( int i = 0; i < 2; ++i )
+ 	{
+@@ -101,7 +96,7 @@
+ 
+ AVIFile::AVIFile( const AVIFile& avi ) : RIFFFile( avi )
+ {
+-	// cerr << "0x" << hex << (long)this << dec << " 0x" << hex << (long)&avi << dec << " AVIFile::AVIFile(const AVIFile& avi) : RIFFFile(avi)" << endl;
++	// cerr << "0x" << std::ios::hex << (long)this << std::ios::dec << " 0x" << std::ios::hex << (long)&avi << std::ios::dec << " AVIFile::AVIFile(const AVIFile& avi) : RIFFFile(avi)" << endl;
+ 
+ 	mainHdr = avi.mainHdr;
+ 	idx1 = new AVISimpleIndex;
+@@ -144,7 +139,7 @@
+ 
+ AVIFile& AVIFile::operator=( const AVIFile& avi )
+ {
+-	// cerr << "0x" << hex << (long)this << dec << " 0x" << hex << (long)&avi << dec << " AVIFile& AVIFile::operator=(const AVIFile& avi)" << endl;
++	// cerr << "0x" << std::ios::hex << (long)this << std::ios::dec << " 0x" << std::ios::hex << (long)&avi << std::ios::dec << " AVIFile& AVIFile::operator=(const AVIFile& avi)" << endl;
+ 
+ 	if ( this != &avi )
+ 	{
+@@ -188,7 +183,7 @@
+ 
+ AVIFile::~AVIFile()
+ {
+-	// cerr << "0x" << hex << (long)this << dec << " AVIFile::~AVIFile()" << endl;
++	// cerr << "0x" << std::ios::hex << (long)this << std::ios::dec << " AVIFile::~AVIFile()" << endl;
+ 
+ 	for ( int i = 0; i < 2; ++i )
+ 	{
+@@ -503,9 +498,9 @@
+ 		for ( i = 0; i < avi_super_index.nEntriesInUse; ++i )
+ 		{
+ 			cout << ' ' << setw( 4 ) << setfill( ' ' ) << i
+-			<< ": qwOffset    : 0x" << setw( 12 ) << setfill( '0' ) << hex << avi_super_index.aIndex[ i ].qwOffset << endl
++			<< ": qwOffset    : 0x" << setw( 12 ) << setfill( '0' ) << std::ios::hex << avi_super_index.aIndex[ i ].qwOffset << endl
+ 			<< "       dwSize      : 0x" << setw( 8 ) << avi_super_index.aIndex[ i ].dwSize << endl
+-			<< "       dwDuration  : " << dec << avi_super_index.aIndex[ i ].dwDuration << endl;
++			<< "       dwDuration  : " << std::ios::dec << avi_super_index.aIndex[ i ].dwDuration << endl;
+ 		}
+ 	}
+ 	else if ( entry.type == make_fourcc( "strf" ) )
+@@ -545,12 +540,12 @@
+ 			DVINFO dvinfo;
+ 			fail_if( lseek( fd, entry.offset, SEEK_SET ) == ( off_t ) - 1 );
+ 			fail_neg( read( fd, &dvinfo, sizeof( DVINFO ) ) );
+-			cout << "    dvinfo.dwDVAAuxSrc : 0x" << setw( 8 ) << setfill( '0' ) << hex << dvinfo.dwDVAAuxSrc << endl;
+-			cout << "    dvinfo.dwDVAAuxCtl : 0x" << setw( 8 ) << setfill( '0' ) << hex << dvinfo.dwDVAAuxCtl << endl;
+-			cout << "    dvinfo.dwDVAAuxSrc1: 0x" << setw( 8 ) << setfill( '0' ) << hex << dvinfo.dwDVAAuxSrc1 << endl;
+-			cout << "    dvinfo.dwDVAAuxCtl1: 0x" << setw( 8 ) << setfill( '0' ) << hex << dvinfo.dwDVAAuxCtl1 << endl;
+-			cout << "    dvinfo.dwDVVAuxSrc : 0x" << setw( 8 ) << setfill( '0' ) << hex << dvinfo.dwDVVAuxSrc << endl;
+-			cout << "    dvinfo.dwDVVAuxCtl : 0x" << setw( 8 ) << setfill( '0' ) << hex << dvinfo.dwDVVAuxCtl << endl;
++			cout << "    dvinfo.dwDVAAuxSrc : 0x" << setw( 8 ) << setfill( '0' ) << std::ios::hex << dvinfo.dwDVAAuxSrc << endl;
++			cout << "    dvinfo.dwDVAAuxCtl : 0x" << setw( 8 ) << setfill( '0' ) << std::ios::hex << dvinfo.dwDVAAuxCtl << endl;
++			cout << "    dvinfo.dwDVAAuxSrc1: 0x" << setw( 8 ) << setfill( '0' ) << std::ios::hex << dvinfo.dwDVAAuxSrc1 << endl;
++			cout << "    dvinfo.dwDVAAuxCtl1: 0x" << setw( 8 ) << setfill( '0' ) << std::ios::hex << dvinfo.dwDVAAuxCtl1 << endl;
++			cout << "    dvinfo.dwDVVAuxSrc : 0x" << setw( 8 ) << setfill( '0' ) << std::ios::hex << dvinfo.dwDVVAuxSrc << endl;
++			cout << "    dvinfo.dwDVVAuxCtl : 0x" << setw( 8 ) << setfill( '0' ) << std::ios::hex << dvinfo.dwDVVAuxCtl << endl;
+ 		}
+ 	}
+ 
+@@ -577,14 +572,14 @@
+ 		<< ((char *)&avi_std_index.dwChunkId)[2]
+ 		<< ((char *)&avi_std_index.dwChunkId)[3]
+ 		<< '\'' << endl
+-		<< "    qwBaseOffset:   0x" << setw( 12 ) << hex << avi_std_index.qwBaseOffset << endl
+-		<< "    dwReserved:     " << dec << ( int ) avi_std_index.dwReserved << endl;
++		<< "    qwBaseOffset:   0x" << setw( 12 ) << std::ios::hex << avi_std_index.qwBaseOffset << endl
++		<< "    dwReserved:     " << std::ios::dec << ( int ) avi_std_index.dwReserved << endl;
+ 		for ( i = 0; i < avi_std_index.nEntriesInUse; ++i )
+ 		{
+ 			cout << ' ' << setw( 4 ) << setfill( ' ' ) << i
+-			<< ": dwOffset    : 0x" << setw( 8 ) << setfill( '0' ) << hex << avi_std_index.aIndex[ i ].dwOffset
++			<< ": dwOffset    : 0x" << setw( 8 ) << setfill( '0' ) << std::ios::hex << avi_std_index.aIndex[ i ].dwOffset
+ 			<< " (0x" << setw( 12 ) << avi_std_index.qwBaseOffset + avi_std_index.aIndex[ i ].dwOffset << ')' << endl
+-			<< "       dwSize      : 0x" << setw( 8 ) << avi_std_index.aIndex[ i ].dwSize << dec << endl;
++			<< "       dwSize      : 0x" << setw( 8 ) << avi_std_index.aIndex[ i ].dwSize << std::ios::dec << endl;
+ 		}
+ 
+ 	}
+@@ -608,10 +603,10 @@
+ 			<< ((char *)&idx1[ i * 4 + 0 ])[2]
+ 			<< ((char *)&idx1[ i * 4 + 0 ])[3]
+ 			<< '\'' << endl
+-			<< "       dwType    : 0x" << setw( 8 ) << hex << idx1[ i * 4 + 1 ] << endl
++			<< "       dwType    : 0x" << setw( 8 ) << std::ios::hex << idx1[ i * 4 + 1 ] << endl
+ 			<< "       dwOffset  : 0x" << setw( 8 ) << idx1[ i * 4 + 2 ] << endl
+ 			// << " (0x" << setw(8) << idx1[i * 4 + 2] + GetDirectoryEntry(movi_list).offset << ')' << endl
+-			<< "       dwSize    : 0x" << setw( 8 ) << idx1[ i * 4 + 3 ] << dec << endl;
++			<< "       dwSize    : 0x" << setw( 8 ) << idx1[ i * 4 + 3 ] << std::ios::dec << endl;
+ 		}
+ 
+ 		delete[] idx1;
+@@ -628,8 +623,8 @@
+ 		for ( i = 0; i < numEntries; ++i )
+ 		{
+ 			cout << ' ' << setw( 4 ) << setfill( ' ' ) << i << setfill( '0' ) << ": "
+-			<< " dwTotalFrames: 0x" << setw( 8 ) << hex << dmlh[ i ]
+-			<< " (" << dec << dmlh[ i ] << ")" << endl;
++			<< " dwTotalFrames: 0x" << setw( 8 ) << std::ios::hex << dmlh[ i ]
++			<< " (" << std::ios::dec << dmlh[ i ] << ")" << endl;
+ 		}
+ 		delete[] dmlh;
+ 	}

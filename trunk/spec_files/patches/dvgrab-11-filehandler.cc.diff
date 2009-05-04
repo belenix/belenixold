@@ -1,0 +1,105 @@
+--- dvgrab-3.4/filehandler.cc.orig	2009-01-15 13:34:06.000000000 +0530
++++ dvgrab-3.4/filehandler.cc	2009-05-03 11:57:15.128856158 +0530
+@@ -20,23 +20,21 @@
+ */
+ 
+ #ifdef HAVE_CONFIG_H
+-#include <config.h>
++#include "config.h"
+ #endif
+ 
+ #include <string>
+ #include <iostream>
+ #include <sstream>
+ #include <iomanip>
++#include <cstdio>
++#include <csignal>
++#include <cstring>
++#include <cstdlib>
++using namespace std;
+ 
+-using std::cout;
+-using std::endl;
+-using std::ostringstream;
+-using std::setw;
+-using std::setfill;
+-using std::ends;
++#include <strings.h>
+ 
+-#include <stdio.h>
+-#include <signal.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+ #include <sys/stat.h>
+@@ -60,13 +58,13 @@
+ FileTracker::FileTracker( ) : mode( CAPTURE_MOVIE_APPEND )
+ {
+ 	return ;
+-	sendEvent( ">> Constructing File Capture tracker" );
++	sendEventParams( 2, 1, ">> Constructing File Capture tracker" );
+ }
+ 
+ FileTracker::~FileTracker( )
+ {
+ 	return ;
+-	sendEvent( ">> Destroying File Capture tracker" );
++	sendEventParams( 2, 1, ">> Destroying File Capture tracker" );
+ }
+ 
+ FileTracker &FileTracker::GetInstance( )
+@@ -97,7 +95,7 @@
+ 	return ;
+ 	if ( this->mode != CAPTURE_IGNORE )
+ 	{
+-		sendEvent( ">>>> Registering %s with the tracker", file );
++		sendEventParams( 2, 1, ">>>> Registering %s with the tracker", file );
+ 		list.push_back( strdup( file ) );
+ 	}
+ }
+@@ -467,7 +465,7 @@
+ 
+ 		if ( ! Create( filename ) )
+ 		{
+-			sendEvent( ">>> Error creating file!" );
++			sendEventParams ( 2, 1, ">>> Error creating file!" );
+ 			return false;
+ 		}
+ 		isNewFile = true;
+@@ -485,7 +483,7 @@
+ 	{
+ 		if ( 0 > Write( frame ) )
+ 		{
+-			sendEvent( ">>> Error writing frame!" );
++			sendEventParams( 2, 1, ">>> Error writing frame!" );
+ 			return false;
+ 		}
+ 		framesToSkip = everyNthFrame;
+@@ -700,7 +698,8 @@
+ 	{
+ 
+ 	case AVI_DV1_FORMAT:
+-		fail_null( avi = new AVI1File );
++		avi = new (nothrow) AVI1File();
++                assert( avi != NULL );
+ 		if ( avi->Create( filename.c_str() ) == false )
+ 			return false;
+ 		avi->Init( videoInfo.isPAL ? AVI_PAL : AVI_NTSC, audioInfo.frequency,
+@@ -708,7 +707,8 @@
+ 		break;
+ 
+ 	case AVI_DV2_FORMAT:
+-		fail_null( avi = new AVI2File );
++		avi = new (nothrow) AVI2File();
++                assert( avi != NULL );
+ 		if ( avi->Create( filename.c_str() ) == false )
+ 			return false;
+ 		if ( GetOpenDML() )
+@@ -741,7 +741,7 @@
+ 		SetSampleFrame( (DVFrame*)frame );
+ 		if ( ! Create( *filen ) )
+ 		{
+-			sendEvent( ">>> Error creating file!" );
++			sendEventParams ( 2, 1, ">>> Error creating file!" );
+ 			return false;
+ 		}
+ 	}
