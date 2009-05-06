@@ -19,10 +19,12 @@ Source1:                 http://www.loria.fr/~gaudry/mpn_AMD64/mpn_amd64.42.tgz
 %endif
 URL:                     http://swox.com/gmp/
 SUNW_BaseDir:            %{_basedir}
+SUNW_Copyright:          LICENSE.LGPL
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 
 %include default-depend.inc
-Requires: SUNWgccruntime
+Requires: SFEgccruntime
+BuildRequires: SFEgcc
 
 %package devel
 Summary:                 %{summary} - development files
@@ -48,17 +50,31 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
 fi
 
 export CC32=${CC32:-$CC}
-CFLAGS_GEN="-features=extinl -xbuiltin=%none -xcsi -xinline=%auto -xustr=ascii_utf16_ushort -xalias_level=std -xthreadvar=%all -mt -D_REENTRANT -D__EXTENSIONS__=1 -xF=%none $(LARGEILES) -D_XOPEN_SOURCE=600 -D_XPG6 -D_POSIX_PTHREAD_SEMANTICS -D_POSIX_C_SOURCE=200112L -D__XOPEN_OR_POSIX -D_STRICT_STDC -D_STRICT_STDC__ -D_STDC_C99 -D_ISOC99_SOURCE -DNDEBUG -DPIC -KPIC -z combreloc -z redlocsym -z ignore -z rescan -z absexec -s"
+%if %cc_is_gcc
+CFLAGS_GEN="-fno-builtin -finline-functions -std=c99 -D_REENTRANT -D__EXTENSIONS__=1 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_XOPEN_SOURCE=600 -D_XPG6 -D_POSIX_PTHREAD_SEMANTICS -D_POSIX_C_SOURCE=200112L -D__XOPEN_OR_POSIX -D_STRICT_STDC -D_STRICT_STDC__ -D_STDC_C99 -D_ISOC99_SOURCE -DNDEBUG -DPIC -fPIC -z combreloc -z redlocsym -z ignore -z rescan -z absexec -s"
+export CPPFLAGS="-fexceptions"
+
+%else
+CFLAGS_GEN="-features=extinl -xbuiltin=%none -xcsi -xinline=%auto -xustr=ascii_utf16_ushort -xalias_level=std -xthreadvar=%all -mt -D_REENTRANT -D__EXTENSIONS__=1 -xF=%none -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_XOPEN_SOURCE=600 -D_XPG6 -D_POSIX_PTHREAD_SEMANTICS -D_POSIX_C_SOURCE=200112L -D__XOPEN_OR_POSIX -D_STRICT_STDC -D_STRICT_STDC__ -D_STDC_C99 -D_ISOC99_SOURCE -DNDEBUG -DPIC -KPIC -z combreloc -z redlocsym -z ignore -z rescan -z absexec -s"
+%endif
+
 export CFLAGS32="%optflags"
 export CFLAGS64="%optflags64"
 export CXXFLAGS32="%cxx_optflags"
 export CXXFLAGS64="%cxx_optflags64"
 export LDFLAGS32="%_ldflags"
 export LDFLAGS64="%_ldflags"
+export CXX_ORIG64=${CXX64:-$CXX}
+export CXX_ORIG32=${CXX32:-$CXX}
+
+%if %cc_is_gcc
+export LDFLAGS32="$LDFLAGS32 -L/usr/gnu/lib -R/usr/gnu/lib"
+export LDFLAGS64="$LDFLAGS64 -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64}"
+%endif
 
 %ifarch sparcv9
 export CC=${CC64:-$CC}
-export CXX=${CXX64:-$CXX}
+export CXX="${CXX_ORIG64}"
 export CFLAGS="$CFLAGS64"
 export CXXFLAGS="$CXXFLAGS64"
 export LDFLAGS="$LDFLAGS64"
@@ -66,10 +82,14 @@ export LDFLAGS="$LDFLAGS64"
 
 %ifarch amd64
 export CC="gcc"
-export CXX=${CXX64:-$CXX}
 export CFLAGS="-mtune=opteron -m64 -O3 -fomit-frame-pointer -fPIC -DPIC"
 export CXXFLAGS="$CXXFLAGS64"
 export LDFLAGS="$LDFLAGS64"
+%if %cc_is_gcc
+export CXX="$CXX_ORIG64 -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64}"
+%else
+export CXX="$CXX_ORIG64"
+%endif
 %endif
 
 
@@ -82,13 +102,16 @@ autoheader
 automake -a -c -f 
 autoconf
 export ABI=64
+
+cp configure configure.orig
+cat configure.orig | sed 's/cclist="gcc cc"/cclist="gcc cc"; host_cpu="x86_64"/' > configure
 ./configure --prefix=%{_prefix}				\
 	    --mandir=%{_mandir}				\
             --libdir=%{_libdir}/%{_arch64}		\
             --infodir=%{_infodir}			\
             --libexecdir=%{_libexecdir}/%{_arch64}      \
-            --sysconfdir=%{_sysconfdir}      		\
-            --disable-cxx
+            --sysconfdir=%{_sysconfdir}			\
+            --enable-cxx
 make -j $CPUS 
 cd ..
 %endif
@@ -96,10 +119,13 @@ cd ..
 cd gmp-%{version}
 
 export CC=${CC32:-$CC}
-export CXX=${CXX32:-$CXX}
+export CXX="${CXX_ORIG32}"
 export CFLAGS="$CFLAGS32"
 export CXXFLAGS="$CXXFLAGS32"
 export LDFLAGS="$LDFLAGS32"
+%if %cc_is_gcc
+export CXX="$CXX -L/usr/gnu/lib -R/usr/gnu/lib"
+%endif
 
 export ABI=32
 ./configure --prefix=%{_prefix}		\
@@ -108,7 +134,7 @@ export ABI=32
             --infodir=%{_infodir}       \
             --libexecdir=%{_libexecdir} \
             --sysconfdir=%{_sysconfdir} \
-            --disable-cxx
+            --enable-cxx
 make -j $CPUS 
 
 %install
@@ -118,6 +144,12 @@ cd gmp-%{version}-64
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{_arch64}/*.a
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{_arch64}/*.la
+
+#
+# For GMP 64Bit headers are different from 32Bit headers
+#
+mkdir -p $RPM_BUILD_ROOT/%{_includedir}/%{_arch64}
+mv $RPM_BUILD_ROOT/%{_includedir}/*.h $RPM_BUILD_ROOT/%{_includedir}/%{_arch64}
 cd ..
 %endif
 
@@ -164,9 +196,16 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_includedir}
-%{_includedir}/*
+%{_includedir}/*.h
+%ifarch amd64 sparcv9
+%dir %attr (0755, root, bin) %{_includedir}/%{_arch64}
+%{_includedir}/%{_arch64}/*.h
+%endif
 
 %changelog
+* Web May 06 2009 - moinakg@belenix.org
+- Enable building C++ library, build with Gcc4.4.
+- Fix installation of 64Bit headers.
 * Fri Apr 17 2009 - moinakg@gmail.com
 - Bump version and remove upstreamed patch.
 * Sun Feb 24 2008 - moinakg@gmail.com

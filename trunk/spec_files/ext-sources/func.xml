@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+
+<!-- Service config for Certmaster server (https://fedorahosted.org/func/) -->
+<service_bundle type="manifest" name="func">
+
+	<service name="application/func" type="service" version="1">
+  
+	<dependency
+		name="func_system"
+		grouping="require_all"
+		restart_on="none"
+		type="service"> 
+		<service_fmri value="svc:/milestone/network:default" /> 
+	</dependency>
+
+	<dependency
+		name='func_fs_local'
+		grouping='require_all'
+		restart_on='none'
+		type='service'>
+		<service_fmri value='svc:/system/filesystem/local:default' />
+	</dependency> 
+
+	<dependency name="func_minion_conf"
+		grouping="require_all"
+		restart_on="restart"
+		type="path">
+		<service_fmri value="file://localhost/etc/func/minion.conf" /> 
+	</dependency>
+
+	<exec_method
+		type="method"
+		name="start"
+		exec="/lib/svc/method/svc-func start"
+		timeout_seconds='30' />
+
+	<exec_method type="method"
+		name="stop"
+		exec="/lib/svc/method/svc-func stop"
+		timeout_seconds="2" />
+
+	<exec_method
+		type="method"
+		name="restart"
+		exec="/lib/svc/method/svc-func restart"
+		timeout_seconds="30" />
+
+	<instance name="default" enabled="false">
+		<property_group name="func" type="application">
+			<propval
+				name="data"
+				type="astring"
+				value="/var/lib/func" />
+			<propval
+				name="profile"
+				type="astring"
+				value="Primary Administrator" />
+		</property_group>
+	</instance>
+
+	<stability value="Evolving" />
+	<template>
+		<common_name>
+			<loctext xml:lang="C">SSL certificate distribution server</loctext>
+		</common_name>
+		<documentation>
+			<!-- The documentation entry is a fake. We don't have a manpage yet. -->
+			<manpage title="coherence" section="1" />
+			<doc_link
+				name="Certmaster Documentation"
+				uri="https://fedorahosted.org/func/" />
+		</documentation>
+	</template>
+	</service>
+</service_bundle>

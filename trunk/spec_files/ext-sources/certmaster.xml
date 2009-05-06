@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+
+<!-- Service config for Certmaster server (https://fedorahosted.org/certmaster/) -->
+<service_bundle type="manifest" name="certmaster">
+
+	<service name="application/certmaster" type="service" version="1">
+  
+	<dependency
+		name="certmaster_system"
+		grouping="require_all"
+		restart_on="none"
+		type="service"> 
+		<service_fmri value="svc:/milestone/network:default" /> 
+	</dependency>
+
+	<dependency
+		name='certmaster_filesystem_local'
+		grouping='require_all'
+		restart_on='none'
+		type='service'>
+		<service_fmri value='svc:/system/filesystem/local:default' />
+	</dependency> 
+
+	<dependency name="certmaster_config_file"
+		grouping="require_all"
+		restart_on="restart"
+		type="path">
+		<service_fmri value="file://localhost/etc/certmaster/certmaster.conf" /> 
+	</dependency>
+
+	<exec_method
+		type="method"
+		name="start"
+		exec="/lib/svc/method/svc-certmaster start"
+		timeout_seconds='30' />
+
+	<exec_method type="method"
+		name="stop"
+		exec="/lib/svc/method/svc-certmaster stop"
+		timeout_seconds="2" />
+
+	<exec_method
+		type="method"
+		name="restart"
+		exec="/lib/svc/method/svc-certmaster restart"
+		timeout_seconds="30" />
+
+	<instance name="default" enabled="false">
+		<property_group name="certmaster" type="application">
+			<propval
+				name="data"
+				type="astring"
+				value="/var/lib/certmaster" />
+			<propval
+				name="profile"
+				type="astring"
+				value="Primary Administrator" />
+		</property_group>
+	</instance>
+
+	<stability value="Evolving" />
+	<template>
+		<common_name>
+			<loctext xml:lang="C">SSL certificate distribution server</loctext>
+		</common_name>
+		<documentation>
+			<manpage title="certmaster" section="1" />
+			<doc_link
+				name="Certmaster Documentation"
+				uri="https://fedorahosted.org/certmaster/" />
+		</documentation>
+	</template>
+	</service>
+</service_bundle>

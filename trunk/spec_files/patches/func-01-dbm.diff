@@ -1,0 +1,40 @@
+--- func-0.24/func/jobthing.py.orig	2009-05-06 14:23:57.672102279 +0530
++++ func-0.24/func/jobthing.py	2009-05-06 14:24:31.461620142 +0530
+@@ -14,7 +14,7 @@
+ # along with this program; if not, write to the Free Software
+ # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ 
+-import dbm
++import mydbm
+ import fcntl
+ import os
+ import pprint
+@@ -118,7 +118,7 @@
+     except IOError, e:
+         raise Func_Client_Exception, 'Cannot create status file. Ensure you have permission to write in %s directory' % dir
+     fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+-    internal_db = dbm.open(filename, 'c', 0644 )
++    internal_db = mydbm.open(filename, 'c', 0644 )
+     storage = shelve.Shelf(internal_db)
+ 
+ 
+--- func-0.24/func/forkbomb.py.orig	2009-05-06 14:23:50.520189964 +0530
++++ func-0.24/func/forkbomb.py	2009-05-06 14:24:19.237232526 +0530
+@@ -16,7 +16,7 @@
+ import random # for testing only
+ import time   # for testing only
+ import shelve
+-import dbm
++import mydbm
+ import sys
+ import tempfile
+ import fcntl
+@@ -41,7 +41,7 @@
+ 
+     handle = open(filename,"w")
+     fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+-    internal_db = dbm.open(filename, 'c', 0644 )
++    internal_db = mydbm.open(filename, 'c', 0644 )
+     storage = shelve.Shelf(internal_db)
+ 
+     if clear:

@@ -14,21 +14,29 @@ Version:             4.4.0
 %define full_ver     %{version}
 Source:              ftp://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.bz2
 #Source:              ftp://ftp.nluug.nl/mirror/languages/gcc/snapshots/%{full_ver}/gcc-%{full_ver}.tar.bz2
+
 SUNW_BaseDir:        %{_basedir}
+SUNW_Copyright:      SFEgccruntime.copyright
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 BuildRequires: SFEgmp-devel
 BuildRequires: SFEbinutils
 Requires: SFEbinutils
 BuildRequires: SFEmpfr-devel
+BuildRequires: SFEppl-devel
+BuildRequires: SFEcloog-devel
 Requires: SFEmpfr
 Requires: SFEgmp
+Requires: SFEppl
+Requires: SFEcloog
 Requires: SUNWpostrun
 
 %package -n SFEgcc
 Summary:                 GNU gcc
 Version:                 4.4
+
 SUNW_BaseDir:            %{_basedir}
+SUNW_Copyright:          SFEgcc.copyright
 %include default-depend.inc
 Requires: %name
 BuildRequires: SFEgmp-devel
@@ -69,6 +77,7 @@ nlsopt=-disable-nls
 
 %define ld_options      -zignore -zcombreloc -Bdirect -i
 
+%define gnu_lib_path -L/usr/gnu/lib -R/usr/gnu/lib
 export PATH="/opt/SUNWspro/bin:/usr/sfw/bin:/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin"
 export CONFIG_SHELL=/usr/bin/bash
 export CFLAGS=""
@@ -103,7 +112,7 @@ export LD="/usr/gnu/bin/ld"
 	--enable-decimal-float			\
         --enable-multilib 			\
         --with-system-zlib 			\
-        --without-ppl				\
+        --with-ppl=%{_prefix}			\
         --enable-gather-detailed-mem-stats	\
         --enable-largefile			\
         --enable-symvers			\
@@ -212,6 +221,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Web May 06 2009 - moinakg@belenix.org
+- Enable building with ClooG and PPL libs to get the Graphite framework.
 * Thu Apr 30 2009 - moinakg@belenix.org
 - Bump to 4.4.0 release version.
 * Tue Apr 28 2009 - moinakg@belenix.org
