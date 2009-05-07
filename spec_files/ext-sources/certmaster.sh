@@ -13,7 +13,6 @@ getproparg() {
 
 PROGNAME=certmaster
 DATADIR=`getproparg certmaster/data`
-LOCKFILE=${DATADIR}/`/usr/bin/uname -n`.lock
 
 if [ -z ${DATADIR} ]; then
 	echo "certmaster/data property not set"
@@ -28,61 +27,46 @@ fi
 RETVAL=0
 
 start() {
-	# Check if it is already running
-	if [ ! -f ${LOCKFILE} ]; then
-	    echo "Starting: " /usr/bin/$PROGNAME 
-	    $PROGNAME &
-	    RETVAL=$?
-	    [ ${RETVAL} -eq 0 ] && touch ${LOCKFILE}
-	    echo
-	fi
+	echo "Starting: " /usr/bin/$PROGNAME -c $CONFIGFILE
+	$PROGNAME &
+        RETVAL=$?
 	return $RETVAL
 }
 
 stop() {
-	echo "Stopping: " $PROGNAME
-	pkill -f /usr/bin/$PROGNAME
-	RETVAL=$?
-	[ ${RETVAL} -eq 0 ] && rm -f ${LOCKFILE}
-  return $RETVAL
+        echo "Stopping: /usr/bin/$PROGNAME"
+        pkill -P 1 "^$PROGNAME"
+        RETVAL=$?
+        return $RETVAL
 }
 
-
 restart() {
-	$0 stop
-	$0 start
-}	
+        $0 stop
+        $0 start
+}
 
 reload() {
 	trap "" SIGHUP
-	killall -HUP $PROGNAME
-	rm -f ${LOCKFILE}
-}	
+	pkill -HUP $PROGNAME
+}
 
 case "$1" in
 start)
 	start
 	;;
+
 stop)
-	stop
-	;;
+        stop
+        ;;
+restart)
+        restart
+        ;;
 reload)
 	reload
 	;;
-restart)
-	restart
-	;;
-condrestart)
-	if [ -f ${LOCKFILE} ]; then
-	    restart
-	fi
-	;;
-status)
-	status $PROGNAME 
-	;;
 *)
 	INITNAME=`basename $0`
-	gprintf "Usage: %s {start|stop|restart|condrestart|status}\n" "$INITNAME"
+	printf "Usage: %s {start|stop|reload}\n" "$INITNAME"
 	exit 1
 esac
 

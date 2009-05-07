@@ -15,7 +15,9 @@ Source:                  http://people.fedoraproject.org/~alikins/files/func/fun
 Source1:                 func.xml
 Source2:                 func.sh
 Source3:                 mydbm.py
+Source4:                 http://www.belenix.org/binfiles/func-solaris-modules-0.1.tar.gz
 Patch1:                  func-01-dbm.diff
+Patch2:                  func-02-setup.py.diff
 URL:                     https://fedorahosted.org/func/
 
 SUNW_BaseDir:            /
@@ -30,7 +32,10 @@ BuildRequires:           SUNWPython25-devel
 %setup -q -c -n %{name}-%version
 cd func-%{version}
 %patch1 -p1
+%patch2 -p1
 cp %{SOURCE3} func/
+(cd func/minion/modules
+ gunzip -c %{SOURCE4} | tar xf -)
 
 %build
 cd func-%{version}
@@ -97,5 +102,7 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr (0755, root, sys) %{_localstatedir}/svc/manifest/application/func.xml
 
 %changelog
+* Fri May 08 2009 - moinakg@belenix.org
+- Updated startup scripts and add Solaris functionality.
 * Web May 06 2009 - moinakg@belenix.org
 - Initial spec file.
