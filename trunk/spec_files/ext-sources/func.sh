@@ -13,7 +13,6 @@ getproparg() {
 
 PROGNAME=funcd
 DATADIR=`getproparg func/data`
-LOCKFILE=${DATADIR}/`/usr/bin/uname -n`.lock
 
 if [ -z ${DATADIR} ]; then
 	echo "func/data property not set"
@@ -28,23 +27,17 @@ fi
 RETVAL=0
 
 start() {
-	# Check if it is already running
-	if [ ! -f ${LOCKFILE} ]; then
-	    echo "Starting: " /usr/bin/$PROGNAME --daemon
-	    $PROGNAME --daemon
-	    RETVAL=$?
-	    [ ${RETVAL} -eq 0 ] && touch ${LOCKFILE}
-	    echo
-	fi
+	echo "Starting: " /usr/bin/$PROGNAME --daemon
+	$PROGNAME --daemon
+	RETVAL=$?
 	return $RETVAL
 }
 
 stop() {
 	echo "Stopping: " $PROGNAME
-	pkill -f /usr/bin/$PROGNAME
+	pkill -P 1 "^$PROGNAME"
 	RETVAL=$?
-	[ ${RETVAL} -eq 0 ] && rm -f ${LOCKFILE}
-  return $RETVAL
+	return $RETVAL
 }
 
 
@@ -55,8 +48,7 @@ restart() {
 
 reload() {
 	trap "" SIGHUP
-	killall -HUP $PROGNAME
-	rm -f ${LOCKFILE}
+	pkill -HUP $PROGNAME
 }	
 
 case "$1" in
@@ -72,17 +64,9 @@ reload)
 restart)
 	restart
 	;;
-condrestart)
-	if [ -f ${LOCKFILE} ]; then
-	    restart
-	fi
-	;;
-status)
-	status $PROGNAME 
-	;;
 *)
 	INITNAME=`basename $0`
-	gprintf "Usage: %s {start|stop|restart|condrestart|status}\n" "$INITNAME"
+	printf "Usage: %s {start|stop|restart|reload}\n" "$INITNAME"
 	exit 1
 esac
 

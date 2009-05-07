@@ -1,0 +1,15 @@
+--- func-0.24/setup.py.orig	2009-05-08 00:36:06.932215664 +0530
++++ func-0.24/setup.py	2009-05-08 00:38:07.180213432 +0530
+@@ -50,7 +50,11 @@
+                             # this will work.
+                             "%s/minion/modules.netapp" % NAME,
+                             "%s/minion/modules.netapp.vol" % NAME,
+-			    "%s/minion/modules.iptables" % NAME
++			    "%s/minion/modules.iptables" % NAME,
++                            "%s/minion/modules.solaris" % NAME,
++                            "%s/minion/modules.solaris.zfs" % NAME,
++                            "%s/minion/modules.solaris.zfs.pool" % NAME,
++                            "%s/minion/modules.solaris.zfs.zvol" % NAME
+                 ],
+                 data_files = [(initpath, ["init-scripts/funcd"]),
+                               (etcpath,  ["etc/minion.conf"]),
