@@ -18,6 +18,7 @@ Source3:                 certmaster-initchk.sh
 URL:                     https://fedorahosted.org/certmaster/
 
 SUNW_BaseDir:            /
+License:                 GPL2
 SUNW_Copyright:          LICENSE.GPL
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:                SUNWPython25

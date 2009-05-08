@@ -67,3 +67,21 @@ fi
 #
 /usr/bin/chown -f -R ${USER}:${GROUP} ${DATADIR}/*
 /usr/bin/chown -f -R ${USER}:${GROUP} ${LOGDIR}/*
+
+for auth in func.module.write:::Allow Func Modules to change system parameters::
+do
+	grep "$auth" /etc/security/auth_attr > /dev/null
+        if [ $? -ne 0 ]
+	then
+		echo "$auth" >> /etc/security/auth_attr
+	fi
+done
+
+for prof in Func Admin:::Administrative Rights for Func modules:auths=func.*
+do
+	grep "$prof" /etc/security/prof_attr > /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "$prof" >> /etc/security/prof_attr
+	fi
+done

@@ -1,0 +1,33 @@
+--- func-0.24/func/minion/modules/command.py.orig	2009-05-08 22:55:51.515114866 +0530
++++ func-0.24/func/minion/modules/command.py	2009-05-08 22:57:23.954341287 +0530
+@@ -13,9 +13,18 @@
+ Abitrary command execution module for func.
+ """
+ 
++import os
++import pwd
+ import func_module
+ from func.minion import sub_process
+ 
++OS = os.uname()[0]
++USER = pwd.getpwuid(os.getuid())[0]
++FUNC_WRITE_ATTR = "func.module.write"
++
++if OS == 'SunOS':
++    import func.secdb
++
+ class Command(func_module.FuncModule):
+ 
+     version = "0.0.1"
+@@ -27,6 +36,11 @@
+         Runs a command, returning the return code, stdout, and stderr as a tuple.
+         NOT FOR USE WITH INTERACTIVE COMMANDS.
+         """
++
++        if OS == 'SunOS':
++            if func.secdb.chkauthattr(FUNC_WRITE_ATTR, USER) == 0:
++                raise Exception, "User not authorized to perform this function"
++
+         cmdref = sub_process.Popen(command, stdout=sub_process.PIPE,
+                                    stderr=sub_process.PIPE, shell=True,
+                                    close_fds=True, env=env)
