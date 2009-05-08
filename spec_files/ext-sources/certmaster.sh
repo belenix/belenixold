@@ -14,8 +14,9 @@ getproparg() {
 PROGNAME=certmaster
 DATADIR=`getproparg certmaster/data`
 PROFILE=`getproparg certmaster/profile`
-USER=certmaster
-GROUP=certmaster
+LOGDIR=`getproparg certmaster/logdir`
+USER=certmast
+GROUP=certmast
 
 if [ -z ${DATADIR} ]; then
 	echo "certmaster/data property not set"
@@ -30,13 +31,14 @@ fi
 #
 # Initial processing.
 #
-/usr/bin/certmaster-initchk "$USER" "$GROUP" "$DATADIR" "$PROFILE"
+/usr/lib/certmaster/certmaster-initchk "$USER" "$GROUP" "$DATADIR" "$LOGDIR" "$PROFILE"
+[ $? -ne 0 ] && exit $SMF_EXIT_ERR_FATAL
 
 RETVAL=0
 
 start() {
 	echo "Starting: " /usr/bin/$PROGNAME -c $CONFIGFILE
-	$PROGNAME &
+	su - $USER -c "pfexec /usr/bin/$PROGNAME --daemon"
         RETVAL=$?
 	return $RETVAL
 }

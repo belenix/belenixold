@@ -13,9 +13,10 @@ getproparg() {
 
 PROGNAME=funcd
 DATADIR=`getproparg func/data`
-PROFILE=`getproparg certmaster/profile`
-USER=certmaster
-GROUP=certmaster
+PROFILE=`getproparg func/profile`
+LOGDIR=`getproparg func/logdir`
+USER=func
+GROUP=func
 
 if [ -z ${DATADIR} ]; then
 	echo "func/data property not set"
@@ -30,13 +31,14 @@ fi
 #
 # Initial processing.
 #
-/usr/bin/func-initchk "$USER" "$GROUP" "$DATADIR" "$PROFILE"
+/usr/lib/func/func-initchk "$USER" "$GROUP" "$DATADIR" "$LOGDIR" "$PROFILE"
+[ $? -ne 0 ] && exit $SMF_EXIT_ERR_FATAL
 
 RETVAL=0
 
 start() {
 	echo "Starting: " /usr/bin/$PROGNAME --daemon
-	$PROGNAME --daemon
+	su - $USER -c "pfexec $PROGNAME --daemon"
 	RETVAL=$?
 	return $RETVAL
 }

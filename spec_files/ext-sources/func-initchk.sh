@@ -3,13 +3,17 @@
 USER=$1
 GROUP=$2
 DATADIR=$3
-PROFILE=$4
+LOGDIR=$4
+PROFILE=$5
 PASSWD=/etc/passwd
+GROUPFILE=/etc/group
 
-if [ -z "$USER" -o -z "$GROUP" -o -z "$DATADIR" -o -z "$PROFILE" ]
+PROFILE=`echo "$PROFILE" | sed 's/\\\//g'`
+
+if [ -z "$USER" -o -z "$GROUP" -o -z "$DATADIR" -o -z "$LOGDIR" -o -z "$PROFILE" ]
 then
 	echo "ERROR: All parameters are not specified"
-	echo "Usage: $0 <username> <groupname> <datadir> <profile>"
+	echo "Usage: $0 <username> <groupname> <datadir> <logdir> <profile>"
 	exit 1
 fi
 
@@ -21,15 +25,19 @@ fi
 grep "^${USER}:" $PASSWD > /dev/null
 if [ $? -ne 0 ]
 then
-	groupadd $GROUP
-	[ $? -ne 0 ] exit 1
-	useradd -s /usr/bin/false -d / -g $GROUP -P "$PROFILE" $USER
-	[ $? -ne 0 ] exit 1
+	grep "^${GROUP}:" $GROUPFILE > /dev/null
+	if [ $? -ne 0 ]
+	then
+		groupadd $GROUP
+		[ $? -ne 0 ] && exit 1
+	fi
+	useradd -s /usr/bin/sh -d / -g $GROUP -P "$PROFILE" $USER
+	[ $? -ne 0 ] && exit 1
 else
 	#
 	# Get the current profile of the user
 	#
-	uprof = `cat /etc/user_attr | nawk -F "^moinakg:" 'BEGIN {FS=":"} {
+	uprof=`cat /etc/user_attr | nawk -F "^moinakg:" 'BEGIN {FS=":"} {
 	patt = "profiles=";
 	pos = index($5, patt);
 	if (pos > 0) {
@@ -41,8 +49,8 @@ else
 			prof = rem
 		}
 		print prof
-	}`
-	[ $? -ne 0 ] exit 1
+	}}'`
+	[ $? -ne 0 ] && exit 1
 
 	#
 	# If they are not the same as one in SMF then modify
@@ -50,11 +58,12 @@ else
 	if [ "$uprof" != "$PROFILE" ]
 	then
 		usermod -P "$PROFILE" $USER
-		[ $? -ne 0 ] exit 1
+		[ $? -ne 0 ] && exit 1
 	fi
 fi
 
 #
 # Ensure runtime dirs are owned by above user
 #
-chown -R ${USER}:${GROUP} ${DATADIR}/*
+/usr/bin/chown -f -R ${USER}:${GROUP} ${DATADIR}/*
+/usr/bin/chown -f -R ${USER}:${GROUP} ${LOGDIR}/*

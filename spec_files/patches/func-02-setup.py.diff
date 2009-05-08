@@ -6,10 +6,10 @@
                              "%s/minion/modules.netapp.vol" % NAME,
 -			    "%s/minion/modules.iptables" % NAME
 +			    "%s/minion/modules.iptables" % NAME,
-+                            "%s/minion/modules.solaris" % NAME,
-+                            "%s/minion/modules.solaris.zfs" % NAME,
-+                            "%s/minion/modules.solaris.zfs.pool" % NAME,
-+                            "%s/minion/modules.solaris.zfs.zvol" % NAME
++                            "%s/minion/modules.opensolaris" % NAME,
++                            "%s/minion/modules.opensolaris.zfs" % NAME,
++                            "%s/minion/modules.opensolaris.zfs.pool" % NAME,
++                            "%s/minion/modules.opensolaris.zfs.zvol" % NAME
                  ],
                  data_files = [(initpath, ["init-scripts/funcd"]),
                                (etcpath,  ["etc/minion.conf"]),
