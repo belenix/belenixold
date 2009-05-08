@@ -1,12 +1,9 @@
 #
-# spec file for package SFEfunc
+# spec file for package func
 #
 # includes module(s): Func
 #
 %include Solaris.inc
-
-# pfexec groupadd func
-# pfexec useradd -s /usr/bin/false -d / -g func -R root -P "Primary Administrator" func
 
 Name:                    func
 Summary:                 Fedora Unified Network Controller
@@ -18,11 +15,14 @@ Source3:                 mydbm.py
 Source4:                 http://www.belenix.org/binfiles/func-opensolaris-modules-0.1.tar.gz
 Source5:                 func-initchk.sh
 Source6:                 func.README.opensolaris
+Source7:                 func-secdbmodule.c
 Patch1:                  func-01-dbm.diff
 Patch2:                  func-02-setup.py.diff
+Patch3:                  func-03-command.py.diff
 URL:                     https://fedorahosted.org/func/
 
 SUNW_BaseDir:            /
+License:                 GPL2
 SUNW_Copyright:          LICENSE.GPL
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:                SUNWPython25
@@ -36,9 +36,11 @@ BuildRequires:           SUNWPython25-devel
 cd func-%{version}
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 cp %{SOURCE3} func/
 (cd func/minion/modules
  gunzip -c %{SOURCE4} | tar xf -)
+cp %{SOURCE7} func/secdbmodule.c
 
 %build
 cd func-%{version}

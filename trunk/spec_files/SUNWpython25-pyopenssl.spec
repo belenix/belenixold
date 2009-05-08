@@ -12,6 +12,8 @@ Source:                  http://nchc.dl.sourceforge.net/sourceforge/pyopenssl/py
 URL:                     http://pyopenssl.sourceforge.net/
 
 SUNW_BaseDir:            %{_basedir}
+License:                 GPL2
+SUNW_Copyright:          LICENSE.GPL
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:                SUNWPython25
 BuildRequires:           SUNWPython25-devel

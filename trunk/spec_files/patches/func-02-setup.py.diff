@@ -1,5 +1,13 @@
---- func-0.24/setup.py.orig	2009-05-08 00:36:06.932215664 +0530
-+++ func-0.24/setup.py	2009-05-08 00:38:07.180213432 +0530
+--- func-0.24/setup.py.orig	2008-11-17 07:09:58.000000000 +0530
++++ func-0.24/setup.py	2009-05-08 22:04:28.856121022 +0530
+@@ -1,6 +1,6 @@
+ #!/usr/bin/python
+ 
+-from distutils.core import setup
++from distutils.core import setup, Extension
+ #from setuptools import setup,find_packages
+ 
+ NAME = "func"
 @@ -50,7 +50,11 @@
                              # this will work.
                              "%s/minion/modules.netapp" % NAME,
@@ -13,3 +21,11 @@
                  ],
                  data_files = [(initpath, ["init-scripts/funcd"]),
                                (etcpath,  ["etc/minion.conf"]),
+@@ -65,6 +69,7 @@
+ 			      (varpath,  []),
+ 			      (aclpath,  [])
+                 ],
++                ext_modules=[Extension('func.secdb', ['func/secdbmodule.c'], libraries=['secdb'])],
+                 description = SHORT_DESC,
+                 long_description = LONG_DESC
+         )
