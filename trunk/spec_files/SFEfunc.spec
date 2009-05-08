@@ -16,6 +16,7 @@ Source1:                 func.xml
 Source2:                 func.sh
 Source3:                 mydbm.py
 Source4:                 http://www.belenix.org/binfiles/func-solaris-modules-0.1.tar.gz
+Source5:                 func-initchk.sh
 Patch1:                  func-01-dbm.diff
 Patch2:                  func-02-setup.py.diff
 URL:                     https://fedorahosted.org/func/
@@ -59,6 +60,10 @@ chmod 0644 ${RPM_BUILD_ROOT}%{_localstatedir}/svc/manifest/application/*
 mkdir -p ${RPM_BUILD_ROOT}/lib/svc/method
 cp %{SOURCE2} ${RPM_BUILD_ROOT}/lib/svc/method/svc-func
 chmod 0755 ${RPM_BUILD_ROOT}/lib/svc/method/svc-func
+chmod -R a+r ${RPM_BUILD_ROOT}%{_sysconfdir}/func
+
+cp %{SOURCE5} ${RPM_BUILD_ROOT}%{_bindir}/func-initchk
+chmod a+x ${RPM_BUILD_ROOT}%{_bindir}/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -89,9 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/func/modules/*
 %dir %attr (0755, root, sys) %{_localstatedir}
 %dir %attr (0755, root, other) %{_localstatedir}/lib
-%dir %attr (0755, root, bin) %{_localstatedir}/lib/func
+%dir %attr (0777, root, bin) %{_localstatedir}/lib/func
 %dir %attr (0755, root, sys) %{_localstatedir}/log
-%dir %attr (0755, root, bin) %{_localstatedir}/log/func
+%dir %attr (0777, root, bin) %{_localstatedir}/log/func
 %dir %attr (0755, root, bin) /lib
 %dir %attr (0755, root, bin) /lib/svc
 %dir %attr (0755, root, bin) /lib/svc/method

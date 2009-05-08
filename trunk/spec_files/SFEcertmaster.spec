@@ -14,6 +14,7 @@ Version:                 0.24
 Source:                  http://people.fedoraproject.org/~alikins/files/certmaster/certmaster-%{version}.tar.gz
 Source1:                 certmaster.xml
 Source2:                 certmaster.sh
+Source3:                 certmaster-initchk.sh
 URL:                     https://fedorahosted.org/certmaster/
 
 SUNW_BaseDir:            /
@@ -49,6 +50,17 @@ mkdir -p ${RPM_BUILD_ROOT}/lib/svc/method
 cp %{SOURCE2} ${RPM_BUILD_ROOT}/lib/svc/method/svc-certmaster
 chmod 0755 ${RPM_BUILD_ROOT}/lib/svc/method/svc-certmaster
 
+cp %{SOURCE3} ${RPM_BUILD_ROOT}%{_bindir}/certmaster-initchk
+chmod a+x ${RPM_BUILD_ROOT}%{_bindir}/*
+
+#
+# These directries will be created at runtime with the appropriate
+# certmaster daemon user ownership.
+#
+rm -rf ${RPM_BUILD_ROOT}%{_localstatedir}/lib/certmaster/*
+rm -rf ${RPM_BUILD_ROOT}%{_sysconfdir}/pki/*
+rm -rf ${RPM_BUILD_ROOT}%{_localstatedir}/log/certmaster/*
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -74,14 +86,12 @@ rm -rf $RPM_BUILD_ROOT
 %config %class(preserve) %attr (0644, root, bin) %{_sysconfdir}/certmaster/certmaster.conf
 %dir %attr (0755, root, bin) %{_sysconfdir}/logrotate.d
 %{_sysconfdir}/logrotate.d/*
-%dir %attr (0755, root, bin) %{_sysconfdir}/pki
-%{_sysconfdir}/pki/*
+%dir %attr (0777, root, bin) %{_sysconfdir}/pki
 %dir %attr (0755, root, sys) %{_localstatedir}
 %dir %attr (0755, root, other) %{_localstatedir}/lib
-%dir %attr (0755, root, bin) %{_localstatedir}/lib/certmaster
-%{_localstatedir}/lib/certmaster/*
+%dir %attr (0777, root, bin) %{_localstatedir}/lib/certmaster
 %dir %attr (0755, root, sys) %{_localstatedir}/log
-%dir %attr (0755, root, bin) %{_localstatedir}/log/certmaster
+%dir %attr (0777, root, bin) %{_localstatedir}/log/certmaster
 %dir %attr (0755, root, bin) /lib
 %dir %attr (0755, root, bin) /lib/svc
 %dir %attr (0755, root, bin) /lib/svc/method

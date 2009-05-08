@@ -13,6 +13,9 @@ getproparg() {
 
 PROGNAME=funcd
 DATADIR=`getproparg func/data`
+PROFILE=`getproparg certmaster/profile`
+USER=certmaster
+GROUP=certmaster
 
 if [ -z ${DATADIR} ]; then
 	echo "func/data property not set"
@@ -23,6 +26,11 @@ if [ ! -d ${DATADIR} ]; then
 	echo "func/data directory ${DATADIR} is not a valid directory"
 	exit $SMF_EXIT_ERR_CONFIG
 fi
+
+#
+# Initial processing.
+#
+/usr/bin/func-initchk "$USER" "$GROUP" "$DATADIR" "$PROFILE"
 
 RETVAL=0
 
