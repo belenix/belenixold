@@ -1,0 +1,47 @@
+This is the OpenSolaris port of Func: Fedora Unified Network Controller
+
+Visit https://fedorahosted.org/func for full detail on Func.
+
+Quick Start Steps:
+
+1) Install SUNWPython25, SUNWpython25-pyopenssl, certmaster and func
+   packages in that order.
+   These packages have to be installed both at the controlling server
+   and every client that you wish to control. Once installed 2 SMF
+   services certmaster and func will be registered in disabled state.
+   Func and Certmaster need at least Python 2.5 to work.
+
+2) On the server you need to enable the "certmaster" service. The SMF
+   service definition contains a property called: certmaster/profile
+   that indicates the Rights Profile for the service. By default it 
+   is Primary Administrator in this initial release. You can change
+   to another profile using:
+   svccfg -s certmaster:default setprop certmaster/profile = astring:"Profile Name"
+   svccfg -s certmaster:default refresh
+
+3) On each client edit /etc/certmaster/minion.conf and provide the
+   correct certmaster server name in the line "certmaster = server name".
+
+4) The service "func" on the client side starts the funcd agent. This
+   service also contains the property func/profile to control the agent's
+   Rights Profile and limit what actions the server can do.
+   The func service should not be enabled on the server side.
+
+5) Once the server and all clients have been started you need to sign
+   the client certificates on the server. To view the certificates
+   execute certmaster-ca --list
+   To sign: certmaster-ca --sign <cert nanme>
+
+6) Now you are ready to access clients from the server. Some OpenSolaris
+   examples:
+
+   func rigel call opensolaris.service get_list
+   func rigel call opensolaris.service get_info svc:/network/http:apache22
+   func rigel call opensolaris.service enable system/power
+   func rigel call opensolaris.zfs list
+   func rigel call opensolaris.zfs.pool list
+
+   And so on. Please read the func documentation and go thru
+   /usr/lib/python2.5/site-packages/func/minion/modules/opensolaris/
+   for more details. This is a work in progress and module documentation
+   will be provided later.

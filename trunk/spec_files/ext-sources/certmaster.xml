@@ -53,6 +53,10 @@
 				type="astring"
 				value="/var/lib/certmaster" />
 			<propval
+				name="logdir"
+				type="astring"
+				value="/var/log/certmaster" />
+			<propval
 				name="profile"
 				type="astring"
 				value="Primary Administrator" />

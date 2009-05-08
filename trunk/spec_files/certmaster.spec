@@ -8,7 +8,7 @@
 # pfexec groupadd func
 # pfexec useradd -s /usr/bin/false -d / -g func -R root -P "Primary Administrator" func
 
-Name:                    SFEcertmaster
+Name:                    certmaster
 Summary:                 A set of tools and a library for easily distributing SSL certificates to applications
 Version:                 0.24
 Source:                  http://people.fedoraproject.org/~alikins/files/certmaster/certmaster-%{version}.tar.gz
@@ -18,6 +18,7 @@ Source3:                 certmaster-initchk.sh
 URL:                     https://fedorahosted.org/certmaster/
 
 SUNW_BaseDir:            /
+SUNW_Copyright:          LICENSE.GPL
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:                SUNWPython25
 Requires:                SUNWpython25-pyopenssl
@@ -50,8 +51,9 @@ mkdir -p ${RPM_BUILD_ROOT}/lib/svc/method
 cp %{SOURCE2} ${RPM_BUILD_ROOT}/lib/svc/method/svc-certmaster
 chmod 0755 ${RPM_BUILD_ROOT}/lib/svc/method/svc-certmaster
 
-cp %{SOURCE3} ${RPM_BUILD_ROOT}%{_bindir}/certmaster-initchk
-chmod a+x ${RPM_BUILD_ROOT}%{_bindir}/*
+mkdir -p ${RPM_BUILD_ROOT}%{_libdir}/certmaster
+cp %{SOURCE3} ${RPM_BUILD_ROOT}%{_libdir}/certmaster/certmaster-initchk
+chmod a+x ${RPM_BUILD_ROOT}%{_libdir}/certmaster/certmaster-initchk
 
 #
 # These directries will be created at runtime with the appropriate
@@ -73,6 +75,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}/python2.5
 %dir %attr (0755, root, bin) %{_libdir}/python2.5/site-packages
 %{_libdir}/python2.5/site-packages/*
+%dir %attr (0755, root, bin) %{_libdir}/certmaster
+%{_libdir}/certmaster/certmaster-initchk
 %dir %attr (0755, root, bin) %{_bindir}
 %{_bindir}/*
 %dir %attr (0755, root, sys) %{_datadir}
@@ -102,5 +106,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr (0755, root, sys) %{_localstatedir}/svc/manifest/application/certmaster.xml
 
 %changelog
+* Fri May 08 2009 - moinakg@belenix.org
+- Updated startup scripts and add Solaris functionality.
+- Renamed package and multitude of fixes.
 * Web May 06 2009 - moinakg@belenix.org
 - Initial spec file
