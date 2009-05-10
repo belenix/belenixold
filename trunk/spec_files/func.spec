@@ -23,13 +23,12 @@ URL:                     https://fedorahosted.org/func/
 
 SUNW_BaseDir:            /
 License:                 GPL2
-SUNW_Copyright:          LICENSE.GPL
+SUNW_Copyright:          %{name}.copyright
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:                SUNWPython25
-Requires:                SUNWpython25-pyopenssl
+Requires:                python25-pyopenssl
 Requires:                certmaster
 BuildRequires:           SUNWPython25-devel
-
 
 %prep
 %setup -q -c -n %{name}-%version
@@ -123,6 +122,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/doc/func/*
 
 %changelog
+* Sun May 10 2009 - moinakg@belenix.org
+- Update dependency and fix a couple of bugs.
 * Fri May 08 2009 - moinakg@belenix.org
 - Updated startup scripts and add Solaris functionality.
 - Renamed package and multitude of fixes.

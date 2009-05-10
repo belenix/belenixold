@@ -37,7 +37,7 @@ else
 	#
 	# Get the current profile of the user
 	#
-	uprof=`cat /etc/user_attr | nawk -F "^moinakg:" 'BEGIN {FS=":"} {
+	uprof=`cat /etc/user_attr | nawk -F "^${USER}:" 'BEGIN {FS=":"} {
 	patt = "profiles=";
 	pos = index($5, patt);
 	if (pos > 0) {

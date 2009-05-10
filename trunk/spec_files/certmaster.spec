@@ -5,9 +5,6 @@
 #
 %include Solaris.inc
 
-# pfexec groupadd func
-# pfexec useradd -s /usr/bin/false -d / -g func -R root -P "Primary Administrator" func
-
 Name:                    certmaster
 Summary:                 A set of tools and a library for easily distributing SSL certificates to applications
 Version:                 0.24
@@ -19,12 +16,11 @@ URL:                     https://fedorahosted.org/certmaster/
 
 SUNW_BaseDir:            /
 License:                 GPL2
-SUNW_Copyright:          LICENSE.GPL
+SUNW_Copyright:          %{name}.copyright
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:                SUNWPython25
-Requires:                SUNWpython25-pyopenssl
+Requires:                python25-pyopenssl
 BuildRequires:           SUNWPython25-devel
-
 
 %prep
 %setup -q -c -n %{name}-%version
@@ -107,6 +103,8 @@ rm -rf $RPM_BUILD_ROOT
 %class(manifest) %attr (0755, root, sys) %{_localstatedir}/svc/manifest/application/certmaster.xml
 
 %changelog
+* Sun May 10 2009 - moinakg@belenix.org
+- Update dependency and copyright and fix a couple of bugs.
 * Fri May 08 2009 - moinakg@belenix.org
 - Updated startup scripts and add Solaris functionality.
 - Renamed package and multitude of fixes.
