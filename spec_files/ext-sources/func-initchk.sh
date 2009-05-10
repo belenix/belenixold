@@ -37,7 +37,7 @@ else
 	#
 	# Get the current profile of the user
 	#
-	uprof=`cat /etc/user_attr | nawk -F "^moinakg:" 'BEGIN {FS=":"} {
+	uprof=`cat /etc/user_attr | nawk -F "^${USER}:" 'BEGIN {FS=":"} {
 	patt = "profiles=";
 	pos = index($5, patt);
 	if (pos > 0) {
@@ -68,7 +68,7 @@ fi
 /usr/bin/chown -f -R ${USER}:${GROUP} ${DATADIR}/*
 /usr/bin/chown -f -R ${USER}:${GROUP} ${LOGDIR}/*
 
-for auth in func.module.write:::Allow Func Modules to change system parameters::
+for auth in "func.module.write:::Allow Func Modules to change system parameters::"
 do
 	grep "$auth" /etc/security/auth_attr > /dev/null
         if [ $? -ne 0 ]
@@ -77,7 +77,7 @@ do
 	fi
 done
 
-for prof in Func Admin:::Administrative Rights for Func modules:auths=func.*
+for prof in "Func Admin:::Administrative Rights for Func modules:auths=func.*"
 do
 	grep "$prof" /etc/security/prof_attr > /dev/null
 	if [ $? -ne 0 ]

@@ -1,11 +1,11 @@
 #
-# spec file for package SUNWpython25-pyopenssl
+# spec file for package python25-pyopenssl
 #
 # includes module(s): Pyopenssl
 #
 %include Solaris.inc
 
-Name:                    SUNWpython25-pyopenssl
+Name:                    python25-pyopenssl
 Summary:                 pyOpenSSL - Python interface to the OpenSSL library (Python 2.5)
 Version:                 0.9
 Source:                  http://nchc.dl.sourceforge.net/sourceforge/pyopenssl/pyOpenSSL-%{version}.tar.gz
@@ -13,7 +13,7 @@ URL:                     http://pyopenssl.sourceforge.net/
 
 SUNW_BaseDir:            %{_basedir}
 License:                 GPL2
-SUNW_Copyright:          LICENSE.GPL
+SUNW_Copyright:          %{name}.copyright
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:                SUNWPython25
 BuildRequires:           SUNWPython25-devel
@@ -45,6 +45,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.5/vendor-packages/*
 
 %changelog
+* Sun May 10 2009 - moinakg@belenix.org
+- Rename package to drop SUNW prefix.
 * Web May 06 2009 - moinakg@belenix.org
 - Initial spec file.
 
