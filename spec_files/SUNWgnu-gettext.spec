@@ -1,21 +1,20 @@
 #
-# spec file for package SFEgettext
+# spec file for package SUNWgnu-gettext
 #
 # includes module(s): GNU gettext
 #
 %include Solaris.inc
 %include usr-gnu.inc
 
-Name:                SFEgettext
+Name:                SUNWgnu-gettext
 Summary:             GNU gettext
-Version:             0.16.1
+Version:             0.17
 Source:              ftp://ftp.gnu.org/pub/gnu/gettext/gettext-%{version}.tar.gz
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
-Patch1:              gettext-01-vasprintf.diff
+#Patch1:              gettext-01-vasprintf.diff
 %include default-depend.inc
 Requires: SUNWpostrun
-BuildConflicts:      SUNWgnu-gettext
 
 %package devel
 Summary:                 %{summary} - developer files
@@ -33,7 +32,10 @@ Requires:                %{name}
 
 %prep
 %setup -q -c -n %name-%version
-%patch1 -p0
+#cd gettext-%{version}
+#%patch1 -p1
+#cd ..
+
 %ifarch amd64 sparcv9
 cp -pr gettext-%{version} gettext-%{version}-64
 %endif
@@ -54,17 +56,10 @@ export CFLAGS32="%optflags"
 export CFLAGS64="%optflags64"
 export CXXFLAGS32="%cxx_optflags"
 export CXXFLAGS64="%cxx_optflags64"
-export LDFLAGS32="%_ldflags"
-export LDFLAGS64="%_ldflags"
+export LDFLAGS32="%_ldflags -lsec"
+export LDFLAGS64="%_ldflags -lsec"
 
 %ifarch amd64 sparcv9
-
-$CC -V 2>&1 | /usr/xpg4/bin/grep -q "CC: Sun C++ 5.8 Patch 121018-0[0-8]" && {
-    echo "The version of the compiler you are using is known to crash the"
-    echo "system when compiling this code. Please install the latest patches"
-    echo "for the compiler and try again." 
-    exit 1
-}
 
 export CC=${CC64:-$CC}
 export CXX=${CXX64:-$CXX}
@@ -111,6 +106,10 @@ cd gettext-%{version}-64
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{_arch64}/*.a
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{_arch64}/*.la
+mkdir -p cd $RPM_BUILD_ROOT/usr/lib/%{_arch64}
+(cd $RPM_BUILD_ROOT/usr/lib/%{_arch64}
+ ln -s ../../gnu/lib/%{_arch64}/libintl.so libgnuintl.so)
+ 
 cd ..
 %endif
 
@@ -123,6 +122,11 @@ ln -s share/man man
 
 rm -rf $RPM_BUILD_ROOT%{_infodir}
 rm $RPM_BUILD_ROOT%{_libdir}/charset.alias
+rm $RPM_BUILD_ROOT%{_libdir}/%{_arch64}/charset.alias
+
+(cd $RPM_BUILD_ROOT/usr/lib
+ ln -s ../gnu/lib/libintl.so libgnuintl.so)
+
 
 %if %build_l10n
 %else
@@ -144,6 +148,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
+%dir %attr (0755, root, bin) /usr/lib
+/usr/lib/libgnuintl.so
 %dir %attr (0755, root, bin) %{_libdir}/gettext
 %{_libdir}/gettext/*
 %dir %attr (0755, root, sys) %{_datadir}
@@ -158,7 +164,8 @@ rm -rf $RPM_BUILD_ROOT
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
 %{_libdir}/%{_arch64}/lib*.so*
-%config %{_libdir}/%{_arch64}/charset.alias
+%dir %attr (0755, root, bin) /usr/lib/%{_arch64}
+/usr/lib/%{_arch64}/libgnuintl.so
 %dir %attr (0755, root, bin) %{_libdir}/%{_arch64}/gettext
 %{_libdir}/%{_arch64}/gettext/*
 %endif
@@ -182,6 +189,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue May 12 2009 - moinakg@belenix.org
+- Bump version to 0.17.
+- Rename package to satisfy dependencies.
 * Fri Jan 11 2008 - moinak.ghosh@sun.com
 - Fix missing '$' in CC variable reference
 - Add patch to fix invalid usage of a va_list variable

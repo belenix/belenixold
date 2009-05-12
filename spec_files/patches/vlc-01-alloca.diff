@@ -1,0 +1,12 @@
+--- vlc-0.9.9a/modules/demux/mkv.cpp.orig	2009-05-10 19:05:38.924531266 +0530
++++ vlc-0.9.9a/modules/demux/mkv.cpp	2009-05-10 19:06:29.587855835 +0530
+@@ -44,6 +44,9 @@
+ #   include <time.h>                                               /* time() */
+ #endif
+ 
++#ifdef HAVE_ALLOCA
++#   include <alloca.h>
++#endif
+ 
+ #include <vlc_codecs.h>               /* BITMAPINFOHEADER, WAVEFORMATEX */
+ #include <vlc_iso_lang.h>

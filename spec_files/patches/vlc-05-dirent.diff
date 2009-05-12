@@ -1,0 +1,16 @@
+--- vlc-0.9.9a/src/libvlc.h.orig	2009-05-11 22:07:41.723073120 +0530
++++ vlc-0.9.9a/src/libvlc.h	2009-05-11 22:06:47.446373862 +0530
+@@ -288,6 +288,13 @@
+ void *vlc_readdir (void *);
+ int   vlc_closedir(void *);
+ void  vlc_rewinddir(void *);
++#else
++#include <fcntl.h>
++#include <sys/stat.h>
++#include <limits.h>
++#include <sys/types.h>
++#include <dirent.h>
++#include <stdio.h>
+ # endif
+ 
+ #if defined (WIN32)
