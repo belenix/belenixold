@@ -1,0 +1,12 @@
+--- vlc-0.9.9a/src/config/file.c.orig	2009-05-11 23:11:59.534743616 +0530
++++ vlc-0.9.9a/src/config/file.c	2009-05-11 23:12:46.372605596 +0530
+@@ -376,6 +376,9 @@
+     if (desc == NULL)
+         desc = "?";
+ 
++    if (type == NULL)
++        type = "?";
++
+     if (fprintf (file, "# %s (%s)\n%s%s=", desc, _(type),
+                  comment ? "#" : "", name) < 0)
+         return -1;

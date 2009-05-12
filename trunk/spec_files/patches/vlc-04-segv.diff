@@ -1,0 +1,21 @@
+--- vlc-0.9.9a/src/libvlc.c.orig	2009-05-11 19:01:21.403064739 +0530
++++ vlc-0.9.9a/src/libvlc.c	2009-05-11 19:18:55.955235726 +0530
+@@ -1144,9 +1144,15 @@
+     p_intf = intf_Create( p_libvlc, psz_module ? psz_module : "$intf" );
+     if( p_intf == NULL )
+     {
+-        msg_Err( p_libvlc, "interface \"%s\" initialization failed",
+-                 psz_module );
+-        return VLC_EGENERIC;
++         if (psz_module)
++         {
++             msg_Err( p_libvlc, "interface \"%s\" initialization failed",
++                      psz_module );
++         } else 
++         {
++             msg_Err( p_libvlc, "Default interface initialization failed" );
++         }
++         return VLC_EGENERIC;
+     }
+ 
+     /* Try to run the interface */

@@ -14,9 +14,9 @@
  action	key-play (0,0)
  	unselect unselect/barroff.png
  	select   selection/play.png
---- vlc.orig/modules/video_filter/osdmenu.c
-+++ vlc/modules/video_filter/osdmenu.c
-@@ -90,7 +90,7 @@
+--- vlc-0.9.9a/modules/video_filter/osdmenu.c.orig	2009-05-11 23:27:15.222456814 +0530
++++ vlc-0.9.9a/modules/video_filter/osdmenu.c	2009-05-11 23:27:40.995758254 +0530
+@@ -105,7 +105,7 @@
  #if defined( WIN32 ) || defined( UNDER_CE )
  #define OSD_DEFAULT_CFG "osdmenu/default.cfg"
  #else

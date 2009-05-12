@@ -1,0 +1,24 @@
+--- vlc-0.9.9a/modules/gui/skins2/controls/ctrl_tree.cpp.orig	2009-05-10 19:41:51.068982856 +0530
++++ vlc-0.9.9a/modules/gui/skins2/controls/ctrl_tree.cpp	2009-05-10 19:41:58.025019236 +0530
+@@ -36,9 +36,6 @@
+ #include "../events/evt_mouse.hpp"
+ #include "../events/evt_scroll.hpp"
+ #include "vlc_keys.h"
+-#ifdef sun
+-#   include "solaris_specific.h" // for lrint
+-#endif
+ 
+ #define SCROLL_STEP 0.05
+ #define LINE_INTERVAL 1  // Number of pixels inserted between 2 lines
+--- vlc-0.9.9a/modules/gui/skins2/controls/ctrl_list.cpp.orig	2009-05-10 19:55:37.345558634 +0530
++++ vlc-0.9.9a/modules/gui/skins2/controls/ctrl_list.cpp	2009-05-10 19:55:44.974166175 +0530
+@@ -35,9 +35,6 @@
+ #include "../events/evt_mouse.hpp"
+ #include "../events/evt_scroll.hpp"
+ #include "vlc_keys.h"
+-#ifdef sun
+-#   include "solaris_specific.h" // for lrint
+-#endif
+ 
+ #define SCROLL_STEP 0.05f
+ #define LINE_INTERVAL 1  // Number of pixels inserted between 2 lines

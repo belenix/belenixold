@@ -12,20 +12,19 @@
 
 Name:                   SFEvlc
 Summary:                vlc - the cross-platform media player and streaming server
-Version:                0.8.6c
+Version:                0.9.9a
 Source:                 %{src_url}/%{version}/%{src_name}-%{version}.tar.bz2
-Patch1:                 vlc-01-configure-no-pipe.diff
-Patch2:                 vlc-02-solaris.diff
+Patch1:                 vlc-01-alloca.diff
+Patch2:                 vlc-02-solaris_specific.diff
 Patch3:                 vlc-03-oss.diff
-Patch4:                 vlc-04-solaris_specific.diff
-Patch5:                 vlc-05-solaris-cmds.diff
-Patch6:                 vlc-06-intl.diff
-Patch7:			vlc-07-live.diff
+Patch4:                 vlc-04-segv.diff
+Patch5:                 vlc-05-dirent.diff
+Patch6:                 vlc-06-file.c.diff
 Patch8:			vlc-08-osdmenu_path.diff
 Patch9:			vlc-09-pic-mmx.diff
-Patch10:		vlc-10-real_codecs_path.diff
+
 SUNW_BaseDir:           %{_basedir}
-SUNW_BaseDir:           %{_basedir}
+SUNW_Copyright:         %{src_name}.copyright
 BuildRoot:              %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 
@@ -78,6 +77,8 @@ BuildRequires:  SFElibx264-devel
 Requires:       SFElibx264
 BuildRequires:  SFElibtar-devel
 Requires:       SFElibtar
+BuildRequires:  SFEqt4-devel
+Requires:       SFEqt4
 
 %if %build_l10n
 %package l10n
@@ -95,16 +96,19 @@ Requires:                %{name}
 
 %prep
 %setup -q -n vlc-%version
-#%patch1 -p1
+%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
 %patch8 -p1
 %patch9 -p1
-%patch10 -p1
+
+%if %cc_is_gcc
+%else
+%error "This spec file requires Gcc4 to build. Please set the CC and CXX environment variables"
+%endif
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -126,24 +130,33 @@ export PATH=/usr/gnu/bin:$PATH
 export ACLOCAL_FLAGS="-I %{_datadir}/aclocal"
 export CC=gcc
 export CXX=g++
-export CPPFLAGS="-D_XOPEN_SOURCE=500 -D__EXTENSIONS__ -I/usr/X11/include -I/usr/gnu/include"
+export SHELL="/usr/bin/bash"
+#
+# -D_XPG4_2 is to get CMSG_* declarations and expected struct msghdr in <sys/socket.h>.
+# -D-D__C99FEATURES__ to get fpclassify
+#
+export CPPFLAGS="-D__EXTENSIONS__ -D_XPG4_2 -D__C99FEATURES__ -I/usr/X11/include -I/usr/gnu/include -I/usr/lib/live/liveMedia/include -I/usr/lib/live/groupsock/include -I/usr/lib/live/BasicUsageEnvironment/include -I/usr/lib/live/UsageEnvironment/include"
 %if %debug_build
 export CFLAGS="-g"
 %else
-export CFLAGS="-O4"
+export CFLAGS="-O3"
 %endif
-export LDFLAGS="$X11LIB $GNULIB"
+
+export CFLAGS="$CFLAGS -fno-strict-aliasing -ftree-loop-distribution -ftree-loop-linear -floop-interchange -floop-strip-mine"
+export CXXFLAGS="-fno-strict-aliasing -ftree-loop-distribution -ftree-loop-linear -floop-interchange -floop-strip-mine"
+LIVE_LFLAGS="-L/usr/lib/live/liveMedia -R/usr/lib/live/liveMedia -L/usr/lib/live/groupsock -R/usr/lib/live/groupsock -L/usr/lib/live/BasicUsageEnvironment -R/usr/lib/live/BasicUsageEnvironment"
+export LDFLAGS="-lsocket -lnsl -lgnuintl -lgnuiconv $X11LIB $GNULIB $LIVE_LFLAGS"
 
 rm ./configure
-./bootstrap
-./configure --prefix=%{_prefix}			\
+bash ./bootstrap
+
+bash ./configure --prefix=%{_prefix}            \
 	    --bindir=%{_bindir}			\
 	    --mandir=%{_mandir}			\
             --libdir=%{_libdir}			\
             --libexecdir=%{_libexecdir}		\
             --sysconfdir=%{_sysconfdir}		\
 	    --enable-shared			\
-	    --disable-rpath			\
 	    --enable-mkv			\
 	    --enable-live555			\
 	    --enable-ffmpeg			\
@@ -156,18 +169,30 @@ rm ./configure
 	    --disable-static			\
 	    $nlsopt
 
-# Disable libmpeg2 to get past configure.
+#
+# FIX '$echo' in libtool
+#
+cp libtool libtool.orig
+cat libtool.orig | sed '{
+    s#\$echo#echo#g
+    s#/bin/sh#/usr/bin/bash#
+}' > libtool
 
-%if %build_l10n
-printf '%%%s/\/intl\/libintl.a/-lintl/\nwq\n' | ex - vlc-config
-%endif
+cp ./modules/misc/freetype.c ./modules/misc/freetype.c.orig
+cat ./modules/misc/freetype.c.orig | sed '{
+    s#/usr/share/fonts/truetype/freefont/FreeSerifBold.ttf#/usr/openwin/lib/X11/fonts/TrueType/FreeSerifBold.ttf#
+}' > ./modules/misc/freetype.c
 
+export RM="/usr/bin/rm -f"
 make -j$CPUS 
 
 %install
 rm -rf $RPM_BUILD_ROOT
+export RM="/usr/bin/rm -f"
+export SHELL="/usr/bin/bash"
+
 make install DESTDIR=$RPM_BUILD_ROOT
-#rm -f $RPM_BUILD_ROOT%{_libdir}/lib*a
+rm -f $RPM_BUILD_ROOT%{_libdir}/lib*a
 rm -f $RPM_BUILD_ROOT%{_libdir}/charset.alias
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
 cp $RPM_BUILD_ROOT%{_datadir}/vlc/vlc48x48.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/vlc.png
@@ -175,6 +200,8 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps
 cp $RPM_BUILD_ROOT%{_datadir}/vlc/vlc32x32.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/32x32/apps/vlc.png
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps
 cp $RPM_BUILD_ROOT%{_datadir}/vlc/vlc16x16.png $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/16x16/apps/vlc.png
+
+find ${RPM_BUILD_ROOT} -name "*.la" | xargs rm -f 
 
 %if %build_l10n
 %else
@@ -223,6 +250,7 @@ test -x $BASEDIR/lib/postrun || exit 0
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
 %dir %attr (0755, root, bin) %{_libdir}
+%{_libdir}/lib*.so*
 %{_libdir}/vlc
 %dir %attr (-, root, other) %{_datadir}/icons
 %dir %attr (-, root, other) %{_datadir}/icons/hicolor
@@ -247,9 +275,13 @@ test -x $BASEDIR/lib/postrun || exit 0
 %defattr (-, root, bin)
 %{_includedir}
 %dir %attr (0755, root, bin) %{_libdir}
-%{_libdir}/lib*.a
+%dir %attr (0755, root, other) %{_libdir}/pkgconfig
+%{_libdir}/pkgconfig/*
 
 %changelog
+* Tue May 12 2009 - moinakg@belenix.org
+- Bump version to 0.9.9a.
+- Rework patches.
 * Sat Jun 21 2008 - moinakg@gmail.com
 - Remove dependency from SFEfreetype. It is no longer needed since
 - SUNWfreetype is updated to new version.

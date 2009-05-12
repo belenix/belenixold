@@ -12,7 +12,7 @@ Source:                  http://nchc.dl.sourceforge.net/sourceforge/pyopenssl/py
 URL:                     http://pyopenssl.sourceforge.net/
 
 SUNW_BaseDir:            %{_basedir}
-License:                 GPL2
+License:                 LGPL 2.1
 SUNW_Copyright:          %{name}.copyright
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:                SUNWPython25
@@ -45,6 +45,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.5/vendor-packages/*
 
 %changelog
+* Tue May 12 2009 - moinakg@belenix.org
+- Fix license.
 * Sun May 10 2009 - moinakg@belenix.org
 - Rename package to drop SUNW prefix.
 * Web May 06 2009 - moinakg@belenix.org
