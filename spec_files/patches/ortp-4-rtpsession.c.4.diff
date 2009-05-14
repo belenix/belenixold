@@ -1,0 +1,229 @@
+--- ortp-0.16.0/src/rtpsession.c.orig	2008-12-18 03:10:01.000000000 +0530
++++ ortp-0.16.0/src/rtpsession.c	2009-05-14 08:53:29.688348892 +0530
+@@ -32,7 +32,7 @@
+ #include "utils.h"
+ #include "rtpsession_priv.h"
+ 
+-extern mblk_t *rtcp_create_simple_bye_packet(uint32_t ssrc, const char *reason);
++extern ortp_mblk_t *rtcp_create_simple_bye_packet(uint32_t ssrc, const char *reason);
+ extern int rtcp_sr_init(RtpSession *session, char *buf, int size);
+ extern int rtcp_rr_init(RtpSession *session, char *buf, int size);
+ 
+@@ -85,7 +85,7 @@
+ }
+ #define wait_point_wakeup(wp) ortp_cond_signal(&(wp)->cond);
+ 
+-extern void rtp_parse(RtpSession *session, mblk_t *mp, uint32_t local_str_ts,
++extern void rtp_parse(RtpSession *session, ortp_mblk_t *mp, uint32_t local_str_ts,
+ 		struct sockaddr *addr, socklen_t addrlen);
+ 
+ 
+@@ -98,9 +98,9 @@
+ 	((uint16_t)((uint16_t)(seq1) - (uint16_t)(seq2))< (uint16_t)(1<<15))
+ 
+ /* put an rtp packet in queue. It is called by rtp_parse()*/
+-void rtp_putq(queue_t *q, mblk_t *mp)
++void rtp_putq(ortp_queue_t *q, ortp_mblk_t *mp)
+ {
+-	mblk_t *tmp;
++	ortp_mblk_t *tmp;
+ 	rtp_header_t *rtp=(rtp_header_t*)mp->b_rptr,*tmprtp;
+ 	/* insert message block by increasing time stamp order : the last (at the bottom)
+ 		message of the queue is the newest*/
+@@ -139,9 +139,9 @@
+ 
+ 
+ 
+-mblk_t *rtp_getq(queue_t *q,uint32_t timestamp, int *rejected)
++ortp_mblk_t *rtp_getq(ortp_queue_t *q,uint32_t timestamp, int *rejected)
+ {
+-	mblk_t *tmp,*ret=NULL,*old=NULL;
++	ortp_mblk_t *tmp,*ret=NULL,*old=NULL;
+ 	rtp_header_t *tmprtp;
+ 	uint32_t ts_found=0;
+ 	
+@@ -183,9 +183,9 @@
+ 	return ret;
+ }
+ 
+-mblk_t *rtp_getq_permissive(queue_t *q,uint32_t timestamp, int *rejected)
++ortp_mblk_t *rtp_getq_permissive(ortp_queue_t *q,uint32_t timestamp, int *rejected)
+ {
+-	mblk_t *tmp,*ret=NULL;
++	ortp_mblk_t *tmp,*ret=NULL;
+ 	rtp_header_t *tmprtp;
+ 	
+ 	*rejected=0;
+@@ -693,11 +693,11 @@
+  *@param header_size the rtp header size. For standart size (without extensions), it is RTP_FIXED_HEADER_SIZE
+  *@param payload data to be copied into the rtp packet.
+  *@param payload_size size of data carried by the rtp packet.
+- *@return a rtp packet in a mblk_t (message block) structure.
++ *@return a rtp packet in a ortp_mblk_t (message block) structure.
+ **/
+-mblk_t * rtp_session_create_packet(RtpSession *session,int header_size, const uint8_t *payload, int payload_size)
++ortp_mblk_t * rtp_session_create_packet(RtpSession *session,int header_size, const uint8_t *payload, int payload_size)
+ {
+-	mblk_t *mp;
++	ortp_mblk_t *mp;
+ 	int msglen=header_size+payload_size;
+ 	rtp_header_t *rtp;
+ 	
+@@ -726,12 +726,12 @@
+  * @param payload the data to be sent with this packet
+  * @param payload_size size of data
+  * @param freefn a function that will be called when the payload buffer is no more needed.
+- * @return: a rtp packet in a mblk_t (message block) structure.
++ * @return: a rtp packet in a ortp_mblk_t (message block) structure.
+ **/
+ 
+-mblk_t * rtp_session_create_packet_with_data(RtpSession *session, uint8_t *payload, int payload_size, void (*freefn)(void*))
++ortp_mblk_t * rtp_session_create_packet_with_data(RtpSession *session, uint8_t *payload, int payload_size, void (*freefn)(void*))
+ {
+-	mblk_t *mp,*mpayload;
++	ortp_mblk_t *mp,*mpayload;
+ 	int header_size=RTP_FIXED_HEADER_SIZE; /* revisit when support for csrc is done */
+ 	rtp_header_t *rtp;
+ 	
+@@ -739,7 +739,7 @@
+ 	rtp=(rtp_header_t*)mp->b_rptr;
+ 	rtp_header_init_from_session(rtp,session);
+ 	mp->b_wptr+=header_size;
+-	/* create a mblk_t around the user supplied payload buffer */
++	/* create a ortp_mblk_t around the user supplied payload buffer */
+ 	mpayload=esballoc(payload,payload_size,BPRI_MED,freefn);
+ 	mpayload->b_wptr+=payload_size;
+ 	/* link it with the header */
+@@ -759,11 +759,11 @@
+  * @param buffer a buffer that contains first just enough place to write a RTP header, then the data to send.
+  * @param size the size of the buffer
+  * @param freefn a function that will be called once the buffer is no more needed (the data has been sent).
+- * @return a rtp packet in a mblk_t (message block) structure.
++ * @return a rtp packet in a ortp_mblk_t (message block) structure.
+ **/
+-mblk_t * rtp_session_create_packet_in_place(RtpSession *session,uint8_t *buffer, int size, void (*freefn)(void*) )
++ortp_mblk_t * rtp_session_create_packet_in_place(RtpSession *session,uint8_t *buffer, int size, void (*freefn)(void*) )
+ {
+-	mblk_t *mp;
++	ortp_mblk_t *mp;
+ 	rtp_header_t *rtp;
+ 	
+ 	mp=esballoc(buffer,size,BPRI_MED,freefn);
+@@ -775,7 +775,7 @@
+ 
+ 
+ int
+-__rtp_session_sendm_with_ts (RtpSession * session, mblk_t *mp, uint32_t packet_ts, uint32_t send_ts)
++__rtp_session_sendm_with_ts (RtpSession * session, ortp_mblk_t *mp, uint32_t packet_ts, uint32_t send_ts)
+ {
+ 	rtp_header_t *rtp;
+ 	uint32_t packet_time;
+@@ -864,12 +864,12 @@
+  *  The packet (@mp) is freed once it is sended.
+  *
+  *@param session a rtp session.
+- *@param mp a rtp packet presented as a mblk_t.
++ *@param mp a rtp packet presented as a ortp_mblk_t.
+  *@param timestamp the timestamp of the data to be sent.
+  * @return the number of bytes sent over the network.
+ **/
+ 
+-int rtp_session_sendm_with_ts(RtpSession *session, mblk_t *packet, uint32_t timestamp){
++int rtp_session_sendm_with_ts(RtpSession *session, ortp_mblk_t *packet, uint32_t timestamp){
+ 	return __rtp_session_sendm_with_ts(session,packet,timestamp,timestamp);
+ }
+ 
+@@ -892,7 +892,7 @@
+ rtp_session_send_with_ts (RtpSession * session, const uint8_t * buffer, int len,
+ 			  uint32_t userts)
+ {
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	int err;
+ #ifdef USE_SENDMSG
+ 	m=rtp_session_create_packet_with_data(session,(uint8_t*)buffer,len,NULL);
+@@ -905,7 +905,7 @@
+ 
+ 
+ 
+-extern void rtcp_parse(RtpSession *session, mblk_t *mp);
++extern void rtcp_parse(RtpSession *session, ortp_mblk_t *mp);
+ 
+ 
+ 
+@@ -916,7 +916,7 @@
+ 
+ 
+ /**
+- *	Try to get a rtp packet presented as a mblk_t structure from the rtp session.
++ *	Try to get a rtp packet presented as a ortp_mblk_t structure from the rtp session.
+  *	The @user_ts parameter is relative to the first timestamp of the incoming stream. In other
+  *	words, the application does not have to know the first timestamp of the stream, it can
+  *	simply call for the first time this function with @user_ts=0, and then incrementing it
+@@ -926,7 +926,7 @@
+  *	This function returns the entire packet (with header).
+  *
+  *	The behaviour of this function has changed since version 0.15.0. Previously the payload data could be 
+- *	accessed using  mblk_t::b_cont::b_rptr field of the returned mblk_t.
++ *	accessed using  ortp_mblk_t::b_cont::b_rptr field of the returned ortp_mblk_t.
+  *	This is no more the case.
+  *	The convenient way of accessing the payload data is to use rtp_get_payload() :
+  *	@code
+@@ -943,13 +943,13 @@
+  * @param session a rtp session.
+  * @param user_ts a timestamp.
+  *
+- * @return a rtp packet presented as a mblk_t.
++ * @return a rtp packet presented as a ortp_mblk_t.
+ **/
+ 
+-mblk_t *
++ortp_mblk_t *
+ rtp_session_recvm_with_ts (RtpSession * session, uint32_t user_ts)
+ {
+-	mblk_t *mp = NULL;
++	ortp_mblk_t *mp = NULL;
+ 	rtp_header_t *rtp;
+ 	uint32_t ts;
+ 	uint32_t packet_time;
+@@ -1004,7 +1004,7 @@
+ 	
+ 	if (session->flags & RTP_SESSION_RECV_SYNC)
+ 	{
+-		queue_t *q = &session->rtp.rq;
++		ortp_queue_t *q = &session->rtp.rq;
+ 		if (qempty(q))
+ 		{
+ 			ortp_debug ("Queue is empty.");
+@@ -1139,7 +1139,7 @@
+ **/
+ int rtp_session_recv_with_ts (RtpSession * session, uint8_t * buffer,
+ 			       int len, uint32_t ts, int * have_more){
+-	mblk_t *mp=NULL;
++	ortp_mblk_t *mp=NULL;
+ 	int plen,blen=0;
+ 	*have_more=0;
+ 	while(1){
+@@ -1491,7 +1491,7 @@
+ 
+ /* packet api */
+ 
+-void rtp_add_csrc(mblk_t *mp, uint32_t csrc)
++void rtp_add_csrc(ortp_mblk_t *mp, uint32_t csrc)
+ {
+ 	rtp_header_t *hdr=(rtp_header_t*)mp->b_rptr;
+ 	hdr->csrc[hdr->cc]=csrc;
+@@ -1500,11 +1500,11 @@
+ 
+ /**
+  * Get a pointer to the beginning of the payload data of the RTP packet.
+- * @param packet a RTP packet represented as a mblk_t
++ * @param packet a RTP packet represented as a ortp_mblk_t
+  * @param start a pointer to the beginning of the payload data, pointing inside the packet.
+  * @return the length of the payload data.
+ **/
+-int rtp_get_payload(mblk_t *packet, unsigned char **start){
++int rtp_get_payload(ortp_mblk_t *packet, unsigned char **start){
+ 	unsigned char *tmp;
+ 	int header_len=RTP_FIXED_HEADER_SIZE+(rtp_get_cc(packet)*4);
+ 	tmp=packet->b_rptr+header_len;

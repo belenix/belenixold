@@ -1,0 +1,24 @@
+--- ortp-0.13.1.orig/src/rtpsession_priv.h	2007-01-15 11:47:21.000000000 -0500
++++ ortp-0.13.1/src/rtpsession_priv.h	2008-05-16 19:45:06.000000000 -0400
+@@ -39,15 +39,15 @@
+ #define rtp_session_using_transport(s, stream) (((s)->flags & RTP_SESSION_USING_TRANSPORT) && (s->stream.tr != 0))
+ 
+ void rtp_session_update_payload_type(RtpSession * session, int pt);
+-void rtp_putq(queue_t *q, mblk_t *mp);
+-mblk_t * rtp_getq(queue_t *q, uint32_t ts, int *rejected);
++void rtp_putq(ortp_queue_t *q, ortp_mblk_t *mp);
++ortp_mblk_t * rtp_getq(ortp_queue_t *q, uint32_t ts, int *rejected);
+ int rtp_session_rtp_recv(RtpSession * session, uint32_t ts);
+ int rtp_session_rtcp_recv(RtpSession * session);
+-int rtp_session_rtp_send (RtpSession * session, mblk_t * m);
+-int rtp_session_rtcp_send (RtpSession * session, mblk_t * m);
++int rtp_session_rtp_send (RtpSession * session, ortp_mblk_t * m);
++int rtp_session_rtcp_send (RtpSession * session, ortp_mblk_t * m);
+ 
+-void rtp_session_rtp_parse(RtpSession *session, mblk_t *mp, uint32_t local_str_ts, struct sockaddr *addr, socklen_t addrlen);
+-void rtp_session_rtcp_parse(RtpSession *session, mblk_t *mp);
++void rtp_session_rtp_parse(RtpSession *session, ortp_mblk_t *mp, uint32_t local_str_ts, struct sockaddr *addr, socklen_t addrlen);
++void rtp_session_rtcp_parse(RtpSession *session, ortp_mblk_t *mp);
+ 
+ void rtp_session_dispatch_event(RtpSession *session, OrtpEvent *ev);
+ 

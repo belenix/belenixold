@@ -1,0 +1,19 @@
+--- libeXosip2-3.1.0.orig/tools/sip_reg.c	2008-01-28 11:40:33.000000000 -0500
++++ libeXosip2-3.1.0/tools/sip_reg.c	2008-05-16 17:00:25.289682000 -0400
+@@ -77,11 +77,15 @@
+ #define LOG_WARNING 0
+ #define LOG_DEBUG 0
+ 
+-#elif defined(LOG_PERROR)
++#elif defined(LOG_PERROR) || defined(sun) || defined(__sun) || defined(__sun__)
+ /* If we can, we use syslog() to emit the debugging messages to stderr. */
+ #define syslog_wrapper    syslog
+ #else
++#if defined(__GNUC__)
+ #define syslog_wrapper(a,b...) fprintf(stderr,b);fprintf(stderr,"\n")
++#else
++#define syslog_wrapper(a,b,...) fprintf(stderr,b);fprintf(stderr,"\n")
++#endif /* __GNUC__ */
+ #endif
+ 
+ 

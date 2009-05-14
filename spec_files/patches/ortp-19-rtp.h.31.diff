@@ -1,0 +1,26 @@
+--- ortp-0.16.0/include/ortp/rtp.h.orig	2008-09-11 02:20:30.000000000 +0530
++++ ortp-0.16.0/include/ortp/rtp.h	2009-05-14 09:06:16.019770994 +0530
+@@ -90,12 +90,12 @@
+ #endif
+ 
+ /* packet api */
+-/* the first argument is a mblk_t. The header is supposed to be not splitted  */
++/* the first argument is a ortp_mblk_t. The header is supposed to be not splitted  */
+ #define rtp_set_markbit(mp,value)		((rtp_header_t*)((mp)->b_rptr))->markbit=(value)
+ #define rtp_set_seqnumber(mp,seq)	((rtp_header_t*)((mp)->b_rptr))->seq_number=(seq)
+ #define rtp_set_timestamp(mp,ts)	((rtp_header_t*)((mp)->b_rptr))->timestamp=(ts)
+ #define rtp_set_ssrc(mp,_ssrc)		((rtp_header_t*)((mp)->b_rptr))->ssrc=(_ssrc)
+-void rtp_add_csrc(mblk_t *mp ,uint32_t csrc);
++void rtp_add_csrc(ortp_mblk_t *mp ,uint32_t csrc);
+ #define rtp_set_payload_type(mp,pt)	((rtp_header_t*)((mp)->b_rptr))->paytype=(pt)
+ 
+ #define rtp_get_markbit(mp)	(((rtp_header_t*)((mp)->b_rptr))->markbit)	
+@@ -106,7 +106,7 @@
+ #define rtp_get_cc(mp)		(((rtp_header_t*)((mp)->b_rptr))->cc)
+ #define rtp_get_csrc(mp, idx)		(((rtp_header_t*)((mp)->b_rptr))->csrc[idx])
+ 
+-int rtp_get_payload(mblk_t *packet, unsigned char **start);
++int rtp_get_payload(ortp_mblk_t *packet, unsigned char **start);
+ 
+ #ifdef __cplusplus
+ }

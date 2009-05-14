@@ -30,7 +30,7 @@ python2.5 setup.py build
 %install
 rm -rf $RPM_BUILD_ROOT
 cd pyOpenSSL-%{version}
-python2.5 setup.py install --prefix=${RPM_BUILD_ROOT}%{_prefix}
+python2.5 setup.py install --prefix=%{_prefix} --root=${RPM_BUILD_ROOT}
 
 mv ${RPM_BUILD_ROOT}%{_libdir}/python2.5/site-packages ${RPM_BUILD_ROOT}%{_libdir}/python2.5/vendor-packages
 
@@ -45,6 +45,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.5/vendor-packages/*
 
 %changelog
+* Thu May 14 2009 - moinakg@belenix.org
+- Fixed DESTDIR install for distutils.
 * Tue May 12 2009 - moinakg@belenix.org
 - Fix license.
 * Sun May 10 2009 - moinakg@belenix.org

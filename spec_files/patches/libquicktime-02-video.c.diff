@@ -1,0 +1,47 @@
+--- libquicktime-1.1.1/plugins/ffmpeg/video.c.orig	2009-05-12 17:13:46.575099464 +0530
++++ libquicktime-1.1.1/plugins/ffmpeg/video.c	2009-05-12 17:18:00.546573993 +0530
+@@ -102,7 +102,7 @@
+ colormodels[] =
+   {
+     { PIX_FMT_YUV420P,  BC_YUV420P,  1 },  ///< Planar YUV 4:2:0 (1 Cr & Cb sample per 2x2 Y samples)
+-    { PIX_FMT_YUV422,   BC_YUV422,   1 },
++    { PIX_FMT_YUYV422,  BC_YUV422,   1 },
+     { PIX_FMT_RGB24,    BC_RGB888,   1 },  ///< Packed pixel, 3 bytes per pixel, RGBRGB...
+     { PIX_FMT_BGR24,    BC_BGR888,   1 },  ///< Packed pixel, 3 bytes per pixel, BGRBGR...
+     { PIX_FMT_YUV422P,  BC_YUV422P,  1 },  ///< Planar YUV 4:2:2 (1 Cr & Cb sample per 2x1 Y samples)
+@@ -112,7 +112,7 @@
+     { PIX_FMT_YUVJ420P, BC_YUVJ420P, 1 }, ///< Planar YUV 4:2:0 full scale (jpeg)
+     { PIX_FMT_YUVJ422P, BC_YUVJ422P, 1 }, ///< Planar YUV 4:2:2 full scale (jpeg)
+     { PIX_FMT_YUVJ444P, BC_YUVJ444P, 1 }, ///< Planar YUV 4:4:4 full scale (jpeg)
+-    { PIX_FMT_RGBA32,   BC_RGBA8888, 0 },  ///< Packed pixel, 4 bytes per pixel, BGRABGRA...
++    { PIX_FMT_RGBA,     BC_RGBA8888, 0 },  ///< Packed pixel, 4 bytes per pixel, BGRABGRA...
+     { PIX_FMT_RGB555,   BC_RGB888,   0 },  ///< always stored in cpu endianness, most significant bit to 1
+     { PIX_FMT_GRAY8,    BC_RGB888,   0 },
+     { PIX_FMT_MONOWHITE, BC_RGB888,  0 },///< 0 is white
+@@ -236,7 +236,7 @@
+ /* From avcodec.h: */
+ 
+ /*
+- * PIX_FMT_RGBA32 is handled in an endian-specific manner. A RGBA
++ * PIX_FMT_RGBA is handled in an endian-specific manner. A RGBA
+  * color is put together as:
+  *  (A << 24) | (R << 16) | (G << 8) | B
+  * This is stored as BGRA on little endian CPU architectures and ARGB on
+@@ -296,7 +296,7 @@
+    *  Could someone please tell me, how people can make such a brain dead
+    *  RGBA format like in ffmpeg??
+    */
+-  if((in_format == PIX_FMT_RGBA32) && (out_format == BC_RGBA8888))
++  if((in_format == PIX_FMT_RGBA) && (out_format == BC_RGBA8888))
+     {
+     convert_image_decode_rgba(in_frame, out_frame, width, height);
+     return;
+@@ -537,7 +537,7 @@
+       
+ #ifdef HAVE_LIBSWSCALE
+ 
+-      if(!((codec->avctx->pix_fmt == PIX_FMT_RGBA32) &&
++      if(!((codec->avctx->pix_fmt == PIX_FMT_RGBA) &&
+            (vtrack->stream_cmodel == BC_RGBA8888)))
+         {
+         codec->swsContext =

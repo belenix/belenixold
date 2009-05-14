@@ -4,7 +4,7 @@
 # includes module(s): libquicktime
 #
 
-%define src_ver 1.0.0
+%define src_ver 1.1.1
 %define src_name libquicktime
 %define src_url http://downloads.sourceforge.net/%{src_name}
 
@@ -13,15 +13,13 @@ Summary:	Quicktime library
 Version:	%{src_ver}
 Source:		%{src_url}/%{src_name}-%{version}.tar.gz
 Patch1:		libquicktime-01-configure.diff
-Patch2:		libquicktime-02-gtk.diff
-Patch3:		libquicktime-03-rtjpeg.diff
+Patch2:		libquicktime-02-video.c.diff
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 
 %prep
 %setup -q -n %{src_name}-%{version}
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -30,7 +28,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
 fi
 
 export CPPFLAGS="-I/usr/X11/include"
-export CFLAGS="%optflags -I/usr/X11/include"
+export CFLAGS="%optflags -finline-functions -funroll-all-loops -I/usr/X11/include"
 export LDFLAGS="%_ldflags"
 export AVCODEC_CFLAGS="%optflags"
 
@@ -63,6 +61,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libquicktime/lib*.*a
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu May 14 2009 - moinakg@belenix.org
+- Bump version to 1.1.1 and fix build flags.
 * Tue Feb 12 2008 <pradhap (at) gmail.com>
 - Fixed links
 * Sun Jan 06 2008 - moinak.ghosh@sun.com

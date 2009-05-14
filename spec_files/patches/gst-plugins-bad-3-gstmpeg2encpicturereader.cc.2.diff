@@ -1,0 +1,25 @@
+--- gst-plugins-bad-0.10.6.orig/ext/mpeg2enc/gstmpeg2encpicturereader.cc	2008-02-04 11:22:11.000000000 -0500
++++ gst-plugins-bad-0.10.6/ext/mpeg2enc/gstmpeg2encpicturereader.cc	2008-04-21 15:58:55.000000000 -0400
+@@ -19,6 +19,10 @@
+  * Boston, MA 02111-1307, USA.
+  */
+ 
++#include <cstdlib>
++#include <cstring>
++using namespace std;
++
+ #ifdef HAVE_CONFIG_H
+ #include "config.h"
+ #endif
+@@ -107,11 +111,7 @@
+  */
+ 
+ bool
+-#ifdef GST_MJPEGTOOLS_19x
+-    GstMpeg2EncPictureReader::LoadFrame (ImagePlanes & image)
+-#else
+     GstMpeg2EncPictureReader::LoadFrame ()
+-#endif
+ {
+ 
+ #ifndef GST_MJPEGTOOLS_19x

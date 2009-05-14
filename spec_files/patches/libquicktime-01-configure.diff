@@ -1,21 +1,32 @@
---- libquicktime-1.0.0/configure.ac.orig	2007-09-04 20:24:08.783630622 +0700
-+++ libquicktime-1.0.0/configure.ac	2007-09-04 20:30:29.863912454 +0700
-@@ -687,17 +687,9 @@
+--- libquicktime-1.1.1/configure.ac.orig	2008-12-17 16:43:10.000000000 +0530
++++ libquicktime-1.1.1/configure.ac	2009-05-12 16:46:11.913286100 +0530
+@@ -800,12 +800,6 @@
  dnl Build CFLAGS
  dnl
  
 -COMMON_CFLAGS=""
--lqt_test_cflags="-finline-functions -Wall -Winline"
+-lqt_test_cflags="-finline-functions -Wall -Winline -Wmissing-declarations -Wdeclaration-after-statement"
 -for i in $lqt_test_cflags; do
 -  LQT_TRY_CFLAGS($i, COMMON_CFLAGS="$COMMON_CFLAGS $i") ;
 -done
+-
+ dnl
+ dnl GCC Visibility
+ dnl
+@@ -824,14 +818,12 @@
+ 
+ if test "x${USER_CFLAGS}" = "x"; then
+ 
+-  dnl Optimizing flags
+-
+-  LQT_OPT_CFLAGS($host_cpu, ["-O3 -funroll-all-loops -fomit-frame-pointer"])
+-
+   CFLAGS="$OPT_CFLAGS"
+ 
+ fi
+ 
 +COMMON_CFLAGS="$CFLAGS"
- 
- 
--dnl Optimizing flags
--
--LQT_OPT_CFLAGS($host_cpu, ["-O3 -funroll-all-loops -fomit-frame-pointer"])
--
++
  AH_TEMPLATE([NDEBUG],
              [Causes debug code to e removed])
  

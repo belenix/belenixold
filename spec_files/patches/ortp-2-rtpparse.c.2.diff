@@ -1,0 +1,32 @@
+--- ortp-0.16.0/src/rtpparse.c.orig	2009-05-14 10:15:30.874563476 +0530
++++ ortp-0.16.0/src/rtpparse.c	2009-05-14 10:10:25.807535641 +0530
+@@ -25,9 +25,9 @@
+ 
+ #define SSRC_CHANGED_THRESHOLD 50
+ 
+-static void queue_packet(queue_t *q, int maxrqsz, mblk_t *mp, rtp_header_t *rtp, int *discarded)
++static void queue_packet(ortp_queue_t *q, int maxrqsz, ortp_mblk_t *mp, rtp_header_t *rtp, int *discarded)
+ {
+-	mblk_t *tmp;
++	ortp_mblk_t *tmp;
+ 	int header_size;
+ 	*discarded=0;
+ 	header_size=RTP_FIXED_HEADER_SIZE+ (4*rtp->cc);
+@@ -43,7 +43,7 @@
+ 	/* make some checks: q size must not exceed RtpStream::max_rq_size */
+ 	while (q->q_mcount > maxrqsz)
+ 	{
+-		/* remove the oldest mblk_t */
++		/* remove the oldest ortp_mblk_t */
+ 		tmp=getq(q);
+ 		if (mp!=NULL)
+ 		{
+@@ -54,7 +54,7 @@
+ 	}
+ }
+ 
+-void rtp_session_rtp_parse(RtpSession *session, mblk_t *mp, uint32_t local_str_ts, struct sockaddr *addr, socklen_t addrlen)
++void rtp_session_rtp_parse(RtpSession *session, ortp_mblk_t *mp, uint32_t local_str_ts, struct sockaddr *addr, socklen_t addrlen)
+ {
+ 	int i;
+ 	rtp_header_t *rtp;

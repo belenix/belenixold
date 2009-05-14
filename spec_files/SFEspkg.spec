@@ -58,11 +58,11 @@ rm -rf ${RPM_BUILD_ROOT}
 mkdir ${RPM_BUILD_ROOT}
 
 cd ecc-0.9
-python setup.py install --prefix=${RPM_BUILD_ROOT}/usr
+python setup.py install --prefix=/usr --root=${RPM_BUILD_ROOT}
 cd ..
 
 cd aes-1.1
-python setup.py install --prefix=${RPM_BUILD_ROOT}/usr
+python setup.py install --prefix=/usr --root=${RPM_BUILD_ROOT}
 cd ..
 
 mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
@@ -105,6 +105,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.4/site-packages/*
 
 %changelog
+* Thu May 14 2009 - moinakg@belenix.org
+- Fix DESTDIR install for distutils.
 * Mon Nov 03 2008 - moinakg@belenix.org
 - Add copying of spkg_trans.py missed out in previous commit.
 * Mon Nov 03 2008 - moinakg@belenix.org

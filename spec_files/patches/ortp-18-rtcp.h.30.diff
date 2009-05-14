@@ -1,0 +1,66 @@
+--- ortp-0.13.1.orig/include/ortp/rtcp.h	2006-09-05 12:39:14.000000000 -0400
++++ ortp-0.13.1/include/ortp/rtcp.h	2008-05-16 19:49:36.000000000 -0400
+@@ -207,42 +207,42 @@
+ 
+ /*in case of coumpound packet, set read pointer of m to the beginning of the next RTCP
+ packet */
+-bool_t rtcp_next_packet(mblk_t *m);
++bool_t rtcp_next_packet(ortp_mblk_t *m);
+ /* put the read pointer at the first RTCP packet of the compound packet (as before any previous calls ot rtcp_next_packet() */
+-void rtcp_rewind(mblk_t *m);
++void rtcp_rewind(ortp_mblk_t *m);
+ /* get common header*/
+-const rtcp_common_header_t * rtcp_get_common_header(const mblk_t *m);
++const rtcp_common_header_t * rtcp_get_common_header(const ortp_mblk_t *m);
+ 
+ /*Sender Report accessors */
+ /* check if this packet is a SR and if it is correct */
+-bool_t rtcp_is_SR(const mblk_t *m);
+-uint32_t rtcp_SR_get_ssrc(const mblk_t *m);
+-const sender_info_t * rtcp_SR_get_sender_info(const mblk_t *m);
+-const report_block_t * rtcp_SR_get_report_block(const mblk_t *m, int idx);
++bool_t rtcp_is_SR(const ortp_mblk_t *m);
++uint32_t rtcp_SR_get_ssrc(const ortp_mblk_t *m);
++const sender_info_t * rtcp_SR_get_sender_info(const ortp_mblk_t *m);
++const report_block_t * rtcp_SR_get_report_block(const ortp_mblk_t *m, int idx);
+ 
+ /*Receiver report accessors*/
+-bool_t rtcp_is_RR(const mblk_t *m);
+-uint32_t rtcp_RR_get_ssrc(const mblk_t *m);
+-const report_block_t * rtcp_RR_get_report_block(const mblk_t *m,int idx);
++bool_t rtcp_is_RR(const ortp_mblk_t *m);
++uint32_t rtcp_RR_get_ssrc(const ortp_mblk_t *m);
++const report_block_t * rtcp_RR_get_report_block(const ortp_mblk_t *m,int idx);
+ 
+ /*SDES accessors */
+-bool_t rtcp_is_SDES(const mblk_t *m);
++bool_t rtcp_is_SDES(const ortp_mblk_t *m);
+ typedef void (*SdesItemFoundCallback)(void *user_data, uint32_t csrc, rtcp_sdes_type_t t, const char *content, uint8_t content_len); 
+-void rtcp_sdes_parse(const mblk_t *m, SdesItemFoundCallback cb, void *user_data);
++void rtcp_sdes_parse(const ortp_mblk_t *m, SdesItemFoundCallback cb, void *user_data);
+ 
+ /*BYE accessors */
+-bool_t rtcp_is_BYE(const mblk_t *m);
+-bool_t rtcp_BYE_get_ssrc(const mblk_t *m, int idx, uint32_t *ssrc);
+-bool_t rtcp_BYE_get_reason(const mblk_t *m, const char **reason, int *reason_len);
++bool_t rtcp_is_BYE(const ortp_mblk_t *m);
++bool_t rtcp_BYE_get_ssrc(const ortp_mblk_t *m, int idx, uint32_t *ssrc);
++bool_t rtcp_BYE_get_reason(const ortp_mblk_t *m, const char **reason, int *reason_len);
+ 
+ /*APP accessors */
+-bool_t rtcp_is_APP(const mblk_t *m);
+-int rtcp_APP_get_subtype(const mblk_t *m);
+-uint32_t rtcp_APP_get_ssrc(const mblk_t *m);
++bool_t rtcp_is_APP(const ortp_mblk_t *m);
++int rtcp_APP_get_subtype(const ortp_mblk_t *m);
++uint32_t rtcp_APP_get_ssrc(const ortp_mblk_t *m);
+ /* name argument is supposed to be at least 4 characters (note: no '\0' written)*/
+-void rtcp_APP_get_name(const mblk_t *m, char *name); 
+-/* retrieve the data. when returning, data points directly into the mblk_t */
+-void rtcp_APP_get_data(const mblk_t *m, uint8_t **data, int *len);
++void rtcp_APP_get_name(const ortp_mblk_t *m, char *name); 
++/* retrieve the data. when returning, data points directly into the ortp_mblk_t */
++void rtcp_APP_get_data(const ortp_mblk_t *m, uint8_t **data, int *len);
+ 
+ 
+ #ifdef __cplusplus
