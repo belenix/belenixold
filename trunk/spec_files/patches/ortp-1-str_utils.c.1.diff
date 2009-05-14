@@ -1,0 +1,284 @@
+--- ortp-0.16.0/src/str_utils.c.orig	2009-05-14 09:44:03.017560202 +0530
++++ ortp-0.16.0/src/str_utils.c	2009-05-14 09:44:30.983105042 +0530
+@@ -22,14 +22,14 @@
+ #include "ortp/str_utils.h"
+ #include "utils.h"
+ 
+-void qinit(queue_t *q){
++void qinit(ortp_queue_t *q){
+ 	mblk_init(&q->_q_stopper);
+ 	q->_q_stopper.b_next=&q->_q_stopper;
+ 	q->_q_stopper.b_prev=&q->_q_stopper;
+ 	q->q_mcount=0;
+ }
+ 
+-void mblk_init(mblk_t *mp)
++void mblk_init(ortp_mblk_t *mp)
+ {
+ 	mp->b_cont=mp->b_prev=mp->b_next=NULL;
+ 	mp->b_rptr=mp->b_wptr=NULL;
+@@ -37,22 +37,22 @@
+ 	mp->reserved2=0;
+ }
+ 
+-dblk_t *datab_alloc(int size){
+-	dblk_t *db;
+-	int total_size=sizeof(dblk_t)+size;
+-	db=(dblk_t *) ortp_malloc(total_size);
+-	db->db_base=(uint8_t*)db+sizeof(dblk_t);
++ortp_dblk_t *datab_alloc(int size){
++	ortp_dblk_t *db;
++	int total_size=sizeof(ortp_dblk_t)+size;
++	db=(ortp_dblk_t *) ortp_malloc(total_size);
++	db->db_base=(uint8_t*)db+sizeof(ortp_dblk_t);
+ 	db->db_lim=db->db_base+size;
+ 	db->db_ref=1;
+ 	db->db_freefn=NULL;	/* the buffer pointed by db_base must never be freed !*/
+ 	return db;
+ }
+ 
+-static inline void datab_ref(dblk_t *d){
++static inline void datab_ref(ortp_dblk_t *d){
+ 	d->db_ref++;
+ }
+ 
+-static inline void datab_unref(dblk_t *d){
++static inline void datab_unref(ortp_dblk_t *d){
+ 	d->db_ref--;
+ 	if (d->db_ref==0){
+ 		if (d->db_freefn!=NULL)
+@@ -62,12 +62,12 @@
+ }
+ 
+ 
+-mblk_t *allocb(int size, int pri)
++ortp_mblk_t *allocb(int size, int pri)
+ {
+-	mblk_t *mp;
+-	dblk_t *datab;
++	ortp_mblk_t *mp;
++	ortp_dblk_t *datab;
+ 	
+-	mp=(mblk_t *) ortp_malloc(sizeof(mblk_t));
++	mp=(ortp_mblk_t *) ortp_malloc(sizeof(ortp_mblk_t));
+ 	mblk_init(mp);
+ 	datab=datab_alloc(size);
+ 	
+@@ -77,14 +77,14 @@
+ 	return mp;
+ }
+ 
+-mblk_t *esballoc(uint8_t *buf, int size, int pri, void (*freefn)(void*) )
++ortp_mblk_t *esballoc(uint8_t *buf, int size, int pri, void (*freefn)(void*) )
+ {
+-	mblk_t *mp;
+-	dblk_t *datab;
++	ortp_mblk_t *mp;
++	ortp_dblk_t *datab;
+ 	
+-	mp=(mblk_t *) ortp_malloc(sizeof(mblk_t));
++	mp=(ortp_mblk_t *) ortp_malloc(sizeof(ortp_mblk_t));
+ 	mblk_init(mp);
+-	datab=(dblk_t *) ortp_malloc(sizeof(dblk_t));
++	datab=(ortp_dblk_t *) ortp_malloc(sizeof(ortp_dblk_t));
+ 	
+ 
+ 	datab->db_base=buf;
+@@ -99,7 +99,7 @@
+ }
+ 
+ 	
+-void freeb(mblk_t *mp)
++void freeb(ortp_mblk_t *mp)
+ {
+ 	return_if_fail(mp->b_datap!=NULL);
+ 	return_if_fail(mp->b_datap->db_base!=NULL);
+@@ -108,9 +108,9 @@
+ 	ortp_free(mp);
+ }
+ 
+-void freemsg(mblk_t *mp)
++void freemsg(ortp_mblk_t *mp)
+ {
+-	mblk_t *tmp1,*tmp2;
++	ortp_mblk_t *tmp1,*tmp2;
+ 	tmp1=mp;
+ 	while(tmp1!=NULL)
+ 	{
+@@ -120,14 +120,14 @@
+ 	}
+ }
+ 
+-mblk_t *dupb(mblk_t *mp)
++ortp_mblk_t *dupb(ortp_mblk_t *mp)
+ {
+-	mblk_t *newm;
++	ortp_mblk_t *newm;
+ 	return_val_if_fail(mp->b_datap!=NULL,NULL);
+ 	return_val_if_fail(mp->b_datap->db_base!=NULL,NULL);
+ 	
+ 	datab_ref(mp->b_datap);
+-	newm=(mblk_t *) ortp_malloc(sizeof(mblk_t));
++	newm=(ortp_mblk_t *) ortp_malloc(sizeof(ortp_mblk_t));
+ 	mblk_init(newm);
+ 	newm->reserved1=mp->reserved1;
+ 	newm->reserved2=mp->reserved2;
+@@ -137,10 +137,10 @@
+ 	return newm;
+ }
+ 
+-/* duplicates a complex mblk_t */
+-mblk_t	*dupmsg(mblk_t* m)
++/* duplicates a complex ortp_mblk_t */
++ortp_mblk_t	*dupmsg(ortp_mblk_t* m)
+ {
+-	mblk_t *newm=NULL,*mp,*prev;
++	ortp_mblk_t *newm=NULL,*mp,*prev;
+ 	prev=newm=dupb(m);
+ 	m=m->b_cont;
+ 	while (m!=NULL){
+@@ -152,7 +152,7 @@
+ 	return newm;
+ }
+ 
+-void putq(queue_t *q,mblk_t *mp)
++void putq(ortp_queue_t *q,ortp_mblk_t *mp)
+ {
+ 	q->_q_stopper.b_prev->b_next=mp;
+ 	mp->b_prev=q->_q_stopper.b_prev;
+@@ -161,9 +161,9 @@
+ 	q->q_mcount++;
+ }
+ 
+-mblk_t *getq(queue_t *q)
++ortp_mblk_t *getq(ortp_queue_t *q)
+ {
+-	mblk_t *tmp;
++	ortp_mblk_t *tmp;
+ 	tmp=q->_q_stopper.b_next;
+ 	if (tmp==&q->_q_stopper) return NULL;
+ 	q->_q_stopper.b_next=tmp->b_next;
+@@ -174,15 +174,15 @@
+ 	return tmp;
+ }
+ 
+-mblk_t * peekq(queue_t *q){
+-	mblk_t *tmp;
++ortp_mblk_t * peekq(ortp_queue_t *q){
++	ortp_mblk_t *tmp;
+ 	tmp=q->_q_stopper.b_next;
+ 	if (tmp==&q->_q_stopper) return NULL;
+ 	return tmp;
+ }
+ 
+ /* insert mp in q just before emp */
+-void insq(queue_t *q,mblk_t *emp, mblk_t *mp)
++void insq(ortp_queue_t *q,ortp_mblk_t *emp, ortp_mblk_t *mp)
+ {
+ 	if (emp==NULL){
+ 		putq(q,mp);
+@@ -195,7 +195,7 @@
+ 	mp->b_next=emp;	
+ }
+ 
+-void remq(queue_t *q, mblk_t *mp){
++void remq(ortp_queue_t *q, ortp_mblk_t *mp){
+ 	q->q_mcount--;
+ 	mp->b_prev->b_next=mp->b_next;
+ 	mp->b_next->b_prev=mp->b_prev;
+@@ -204,9 +204,9 @@
+ }
+ 
+ /* remove and free all messages in the q */
+-void flushq(queue_t *q, int how)
++void flushq(ortp_queue_t *q, int how)
+ {
+-	mblk_t *mp;
++	ortp_mblk_t *mp;
+ 	
+ 	while ((mp=getq(q))!=NULL)
+ 	{
+@@ -214,7 +214,7 @@
+ 	}
+ }
+ 
+-int msgdsize(const mblk_t *mp)
++int msgdsize(const ortp_mblk_t *mp)
+ {
+ 	int msgsize=0;
+ 	while(mp!=NULL){
+@@ -224,10 +224,10 @@
+ 	return msgsize;
+ }
+ 
+-void msgpullup(mblk_t *mp,int len)
++void msgpullup(ortp_mblk_t *mp,int len)
+ {
+-	mblk_t *firstm=mp;
+-	dblk_t *db;
++	ortp_mblk_t *firstm=mp;
++	ortp_dblk_t *db;
+ 	int wlen=0;
+ 
+ 	if (mp->b_cont==NULL && len==-1) return;	/*nothing to do, message is not fragmented */
+@@ -256,9 +256,9 @@
+ }
+ 
+ 
+-mblk_t *copyb(mblk_t *mp)
++ortp_mblk_t *copyb(ortp_mblk_t *mp)
+ {
+-	mblk_t *newm;
++	ortp_mblk_t *newm;
+ 	int len=(int) (mp->b_wptr-mp->b_rptr);
+ 	newm=allocb(len,BPRI_MED);
+ 	memcpy(newm->b_wptr,mp->b_rptr,len);
+@@ -266,9 +266,9 @@
+ 	return newm;
+ }
+ 
+-mblk_t *copymsg(mblk_t *mp)
++ortp_mblk_t *copymsg(ortp_mblk_t *mp)
+ {
+-	mblk_t *newm=0,*m;
++	ortp_mblk_t *newm=0,*m;
+ 	m=newm=copyb(mp);
+ 	mp=mp->b_cont;
+ 	while(mp!=NULL){
+@@ -279,7 +279,7 @@
+ 	return newm;
+ }
+ 
+-mblk_t * appendb(mblk_t *mp, const char *data, int size, bool_t pad){
++ortp_mblk_t * appendb(ortp_mblk_t *mp, const char *data, int size, bool_t pad){
+ 	int padcnt=0;
+ 	int i;
+ 	if (pad){
+@@ -300,12 +300,12 @@
+ 	return mp;
+ }
+ 
+-void msgappend(mblk_t *mp, const char *data, int size, bool_t pad){
++void msgappend(ortp_mblk_t *mp, const char *data, int size, bool_t pad){
+ 	while(mp->b_cont!=NULL) mp=mp->b_cont;
+ 	appendb(mp,data,size,pad);
+ }
+ 
+-mblk_t *concatb(mblk_t *mp, mblk_t *newm){
++ortp_mblk_t *concatb(ortp_mblk_t *mp, ortp_mblk_t *newm){
+ 	while (mp->b_cont!=NULL) mp=mp->b_cont;
+ 	mp->b_cont=newm;
+ 	while(newm->b_cont!=NULL) newm=newm->b_cont;
+@@ -316,9 +316,9 @@
+ 	qinit(&a->q);
+ }
+ 
+-mblk_t *msgb_allocator_alloc(msgb_allocator_t *a, int size){
+-	queue_t *q=&a->q;
+-	mblk_t *m,*found=NULL;
++ortp_mblk_t *msgb_allocator_alloc(msgb_allocator_t *a, int size){
++	ortp_queue_t *q=&a->q;
++	ortp_mblk_t *m,*found=NULL;
+ 
+ 	/*lookup for an unused msgb (data block with ref count ==1)*/
+ 	for(m=qbegin(q);!qend(q,m);m=qnext(q,m)){

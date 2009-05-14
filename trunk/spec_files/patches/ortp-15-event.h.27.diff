@@ -1,0 +1,29 @@
+--- ortp-0.13.1.orig/include/ortp/event.h	2006-07-17 14:45:00.000000000 -0400
++++ ortp-0.13.1/include/ortp/event.h	2008-05-16 19:46:57.000000000 -0400
+@@ -22,7 +22,7 @@
+ 
+ #include <ortp/str_utils.h>
+ 
+-typedef mblk_t OrtpEvent;
++typedef ortp_mblk_t OrtpEvent;
+ 
+ typedef unsigned long OrtpEventType;
+ 
+@@ -37,7 +37,7 @@
+ 
+ 
+ struct _OrtpEventData{
+-	mblk_t *packet;	/* most events are associated to a received packet */
++	ortp_mblk_t *packet;	/* most events are associated to a received packet */
+ 	RtpEndpoint *ep;
+ 	union {
+ 		int telephone_event;
+@@ -68,7 +68,7 @@
+ OrtpEvent *ortp_event_dup(OrtpEvent *ev);
+ 
+ typedef struct OrtpEvQueue{
+-	queue_t q;
++	ortp_queue_t q;
+ 	ortp_mutex_t mutex;
+ } OrtpEvQueue;
+ 

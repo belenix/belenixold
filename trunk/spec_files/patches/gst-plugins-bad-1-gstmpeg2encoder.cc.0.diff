@@ -1,0 +1,14 @@
+--- gst-plugins-bad-0.10.6.orig/ext/mpeg2enc/gstmpeg2encoder.cc	2008-01-27 02:32:19.000000000 -0500
++++ gst-plugins-bad-0.10.6/ext/mpeg2enc/gstmpeg2encoder.cc	2008-04-21 15:58:34.000000000 -0400
+@@ -26,11 +26,7 @@
+ 
+ #include <mpegconsts.h>
+ #include <quantize.hh>
+-#ifdef GST_MJPEGTOOLS_19x
+-#include <ontheflyratectl.hh>
+-#else
+ #include <ratectl.hh>
+-#endif
+ #include <seqencoder.hh>
+ #include <mpeg2coder.hh>
+ 

@@ -1,0 +1,77 @@
+--- ortp-0.16.0/include/ortp/rtpsession.h.orig	2009-05-14 10:28:35.758814279 +0530
++++ ortp-0.16.0/include/ortp/rtpsession.h	2009-05-14 10:27:40.282368813 +0530
+@@ -89,8 +89,8 @@
+ {
+ 	void *data;
+ 	ortp_socket_t (*t_getsocket)(struct _RtpTransport *t);
+-	int  (*t_sendto)(struct _RtpTransport *t, mblk_t *msg , int flags, const struct sockaddr *to, socklen_t tolen);
+-	int  (*t_recvfrom)(struct _RtpTransport *t, mblk_t *msg, int flags, struct sockaddr *from, socklen_t *fromlen);
++	int  (*t_sendto)(struct _RtpTransport *t, ortp_mblk_t *msg , int flags, const struct sockaddr *to, socklen_t tolen);
++	int  (*t_recvfrom)(struct _RtpTransport *t, ortp_mblk_t *msg, int flags, struct sockaddr *from, socklen_t *fromlen);
+ 	struct _RtpSession *session;//<back pointer to the owning session, set by oRTP
+ }  RtpTransport;
+ 
+@@ -104,9 +104,9 @@
+ 	int max_rq_size;
+ 	int time_jump;
+ 	uint32_t ts_jump;
+-	queue_t rq;
+-	queue_t tev_rq;
+-	mblk_t *cached_mp;
++	ortp_queue_t rq;
++	ortp_queue_t tev_rq;
++	ortp_mblk_t *cached_mp;
+ 	int loc_port;
+ #ifdef ORTP_INET6
+ 	struct sockaddr_storage rem_addr;
+@@ -153,7 +153,7 @@
+ 	int sockfamily;
+         struct _RtpTransport *tr; 
+ 
+-	mblk_t *cached_mp;
++	ortp_mblk_t *cached_mp;
+ #ifdef ORTP_INET6
+ 	struct sockaddr_storage rem_addr;
+ #else
+@@ -210,11 +210,11 @@
+ 	void * user_data;
+ 	/* FIXME: Should be a table for all session participants. */
+ 	struct timeval last_recv_time; /* Time of receiving the RTP/RTCP packet. */
+-	mblk_t *pending;
++	ortp_mblk_t *pending;
+ 	/* telephony events extension */
+-	mblk_t *current_tev;		/* the pending telephony events */
+-	mblk_t *sd;
+-	queue_t contributing_sources;
++	ortp_mblk_t *current_tev;		/* the pending telephony events */
++	ortp_mblk_t *sd;
++	ortp_queue_t contributing_sources;
+ 	bool_t symmetric_rtp;
+ 	bool_t permissive; /*use the permissive algorithm*/
+ 	bool_t use_connect; /* use connect() on the socket */
+@@ -303,11 +303,11 @@
+ void rtp_session_enable_rtcp(RtpSession *session, bool_t yesno);
+ 
+ /*low level recv and send functions */
+-mblk_t * rtp_session_recvm_with_ts (RtpSession * session, uint32_t user_ts);
+-mblk_t * rtp_session_create_packet(RtpSession *session,int header_size, const uint8_t *payload, int payload_size);
+-mblk_t * rtp_session_create_packet_with_data(RtpSession *session, uint8_t *payload, int payload_size, void (*freefn)(void*));
+-mblk_t * rtp_session_create_packet_in_place(RtpSession *session,uint8_t *buffer, int size, void (*freefn)(void*) );
+-int rtp_session_sendm_with_ts (RtpSession * session, mblk_t *mp, uint32_t userts);
++ortp_mblk_t * rtp_session_recvm_with_ts (RtpSession * session, uint32_t user_ts);
++ortp_mblk_t * rtp_session_create_packet(RtpSession *session,int header_size, const uint8_t *payload, int payload_size);
++ortp_mblk_t * rtp_session_create_packet_with_data(RtpSession *session, uint8_t *payload, int payload_size, void (*freefn)(void*));
++ortp_mblk_t * rtp_session_create_packet_in_place(RtpSession *session,uint8_t *buffer, int size, void (*freefn)(void*) );
++int rtp_session_sendm_with_ts (RtpSession * session, ortp_mblk_t *mp, uint32_t userts);
+ /* high level recv and send functions */
+ int rtp_session_recv_with_ts(RtpSession *session, uint8_t *buffer, int len, uint32_t ts, int *have_more);
+ int rtp_session_send_with_ts(RtpSession *session, const uint8_t *buffer, int len, uint32_t userts);
+@@ -357,7 +357,7 @@
+     const char *cname, const char *name, const char *email, const char *phone, 
+     const char *loc, const char *tool, const char *note);
+ void rtp_session_remove_contributing_sources(RtpSession *session, uint32_t csrc);
+-mblk_t* rtp_session_create_rtcp_sdes_packet(RtpSession *session);
++ortp_mblk_t* rtp_session_create_rtcp_sdes_packet(RtpSession *session);
+ 
+ void rtp_session_get_last_recv_time(RtpSession *session, struct timeval *tv);
+ int rtp_session_bye(RtpSession *session, const char *reason);

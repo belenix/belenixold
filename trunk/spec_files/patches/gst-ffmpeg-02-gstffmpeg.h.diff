@@ -1,0 +1,13 @@
+--- gst-ffmpeg-0.10.6.orig/ext/ffmpeg/gstffmpeg.h	2008-11-08 10:45:25.000000000 -0500
++++ gst-ffmpeg-0.10.6/ext/ffmpeg/gstffmpeg.h	2009-02-22 15:30:10.864470000 -0500
+@@ -34,6 +34,10 @@
+ 
+ #include <gst/gst.h>
+ 
++#ifndef G_PARAM_STATIC_STRINGS
++#define G_PARAM_STATIC_STRINGS (G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB)
++#endif
++
+ GST_DEBUG_CATEGORY_EXTERN (ffmpeg_debug);
+ #define GST_CAT_DEFAULT ffmpeg_debug
+ 

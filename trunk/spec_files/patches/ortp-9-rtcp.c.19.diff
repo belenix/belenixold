@@ -1,0 +1,172 @@
+--- ortp-0.16.0/src/rtcp.c.orig	2008-09-11 02:20:32.000000000 +0530
++++ ortp-0.16.0/src/rtcp.c	2009-05-14 08:56:56.133267355 +0530
+@@ -42,8 +42,8 @@
+ 	rtcp_common_header_set_length(ch,(bytes_len/4)-1);
+ }
+ 
+-static mblk_t *sdes_chunk_new(uint32_t ssrc){
+-	mblk_t *m=allocb(RTCP_SDES_CHUNK_DEFAULT_SIZE,0);
++static ortp_mblk_t *sdes_chunk_new(uint32_t ssrc){
++	ortp_mblk_t *m=allocb(RTCP_SDES_CHUNK_DEFAULT_SIZE,0);
+ 	sdes_chunk_t *sc=(sdes_chunk_t*)m->b_rptr;
+ 	sc->csrc=htonl(ssrc);
+ 	m->b_wptr+=sizeof(sc->csrc);
+@@ -51,7 +51,7 @@
+ }
+ 
+ 
+-static mblk_t * sdes_chunk_append_item(mblk_t *m, rtcp_sdes_type_t sdes_type, const char *content)
++static ortp_mblk_t * sdes_chunk_append_item(ortp_mblk_t *m, rtcp_sdes_type_t sdes_type, const char *content)
+ {	
+ 	if ( content )
+ 	{
+@@ -64,14 +64,14 @@
+ 	return m;
+ }
+ 
+-static void sdes_chunk_set_ssrc(mblk_t *m, uint32_t ssrc){
++static void sdes_chunk_set_ssrc(ortp_mblk_t *m, uint32_t ssrc){
+ 	sdes_chunk_t *sc=(sdes_chunk_t*)m->b_rptr;
+ 	sc->csrc=htonl(ssrc);
+ }
+ 
+ #define sdes_chunk_get_ssrc(m) ntohl(((sdes_chunk_t*)((m)->b_rptr))->csrc)
+ 
+-static mblk_t * sdes_chunk_pad(mblk_t *m){
++static ortp_mblk_t * sdes_chunk_pad(ortp_mblk_t *m){
+ 	return appendb(m,"",1,TRUE);
+ }
+ 
+@@ -82,8 +82,8 @@
+ void rtp_session_set_source_description(RtpSession *session, 
+     const char *cname, const char *name, const char *email, const char *phone, 
+     const char *loc, const char *tool, const char *note){
+-	mblk_t *chunk = sdes_chunk_new(session->snd.ssrc);
+-	mblk_t *m=chunk;
++	ortp_mblk_t *chunk = sdes_chunk_new(session->snd.ssrc);
++	ortp_mblk_t *m=chunk;
+ 	const char *_cname=cname;
+ 	if (_cname==NULL)
+ 	{
+@@ -106,8 +106,8 @@
+     const char *cname, const char *name, const char *email, const char *phone, 
+     const char *loc, const char *tool, const char *note)
+ {
+-	mblk_t *chunk = sdes_chunk_new(csrc);
+-	mblk_t *m=chunk;
++	ortp_mblk_t *chunk = sdes_chunk_new(csrc);
++	ortp_mblk_t *m=chunk;
+ 	char *_cname=(char*)cname;
+ 	if (_cname==NULL)
+ 	{
+@@ -126,12 +126,12 @@
+ 
+ 
+ 
+-mblk_t* rtp_session_create_rtcp_sdes_packet(RtpSession *session)
++ortp_mblk_t* rtp_session_create_rtcp_sdes_packet(RtpSession *session)
+ {
+-    mblk_t *mp=allocb(sizeof(rtcp_common_header_t),0);
++    ortp_mblk_t *mp=allocb(sizeof(rtcp_common_header_t),0);
+ 	rtcp_common_header_t *rtcp;
+-    mblk_t *tmp,*m=mp;
+-	queue_t *q;
++    ortp_mblk_t *tmp,*m=mp;
++	ortp_queue_t *q;
+ 	int rc=0;
+     rtcp = (rtcp_common_header_t*)mp->b_wptr;
+ 	mp->b_wptr+=sizeof(rtcp_common_header_t);
+@@ -151,12 +151,12 @@
+ }
+  
+ 
+-mblk_t *rtcp_create_simple_bye_packet(uint32_t ssrc, const char *reason)
++ortp_mblk_t *rtcp_create_simple_bye_packet(uint32_t ssrc, const char *reason)
+ {	
+ 	int packet_size;
+ 	int strsize = 0;
+ 	int strpadding = 0;
+-	mblk_t *mp;
++	ortp_mblk_t *mp;
+ 	rtcp_bye_t *rtcp;
+ 
+ 	packet_size	= RTCP_BYE_HEADER_SIZE;
+@@ -187,8 +187,8 @@
+ 
+ void rtp_session_remove_contributing_sources(RtpSession *session, uint32_t ssrc)
+ {
+-	queue_t *q=&session->contributing_sources;
+-	mblk_t *tmp;
++	ortp_queue_t *q=&session->contributing_sources;
++	ortp_mblk_t *tmp;
+ 	for (tmp=qbegin(q); !qend(q,tmp); tmp=qnext(q,tmp)){
+ 		uint32_t csrc=sdes_chunk_get_ssrc(tmp);
+ 		if (csrc==ssrc) {
+@@ -296,9 +296,9 @@
+ 	return sizeof(rtcp_app_t);
+ }
+ 
+-static mblk_t * make_rr(RtpSession *session){
+-	mblk_t *cm=NULL;
+-	mblk_t *sdes=NULL;
++static ortp_mblk_t * make_rr(RtpSession *session){
++	ortp_mblk_t *cm=NULL;
++	ortp_mblk_t *sdes=NULL;
+ 	
+ 	cm=allocb(sizeof(rtcp_sr_t),0);
+ 	cm->b_wptr+=rtcp_rr_init(session,cm->b_wptr,sizeof(rtcp_rr_t));
+@@ -311,9 +311,9 @@
+ }
+ 
+ 
+-static mblk_t * make_sr(RtpSession *session){
+-	mblk_t *cm=NULL;
+-	mblk_t *sdes=NULL;
++static ortp_mblk_t * make_sr(RtpSession *session){
++	ortp_mblk_t *cm=NULL;
++	ortp_mblk_t *sdes=NULL;
+ 	
+ 	cm=allocb(sizeof(rtcp_sr_t),0);
+ 	cm->b_wptr+=rtcp_sr_init(session,cm->b_wptr,sizeof(rtcp_sr_t));
+@@ -327,7 +327,7 @@
+ 
+ void rtp_session_rtcp_process_send(RtpSession *session){
+ 	RtpStream *st=&session->rtp;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	if (st->rcv_last_app_ts - st->last_rtcp_report_snt_r > st->rtcp_report_snt_interval 
+ 		|| st->snd_last_ts - st->last_rtcp_report_snt_s > st->rtcp_report_snt_interval){
+ 		st->last_rtcp_report_snt_r=st->rcv_last_app_ts;
+@@ -341,7 +341,7 @@
+ 
+ void rtp_session_rtcp_process_recv(RtpSession *session){
+ 	RtpStream *st=&session->rtp;
+-	mblk_t *m=NULL;
++	ortp_mblk_t *m=NULL;
+ 	if (st->rcv_last_app_ts - st->last_rtcp_report_snt_r > st->rtcp_report_snt_interval 
+ 		|| st->snd_last_ts - st->last_rtcp_report_snt_s > st->rtcp_report_snt_interval){
+ 		st->last_rtcp_report_snt_r=st->rcv_last_app_ts;
+@@ -363,8 +363,8 @@
+ }
+ 
+ void rtp_session_send_rtcp_APP(RtpSession *session, uint8_t subtype, const char *name, const uint8_t *data, int datalen){
+-	mblk_t *h=allocb(sizeof(rtcp_app_t),0);
+-	mblk_t *d;
++	ortp_mblk_t *h=allocb(sizeof(rtcp_app_t),0);
++	ortp_mblk_t *d;
+ 	h->b_wptr+=rtcp_app_init(session,h->b_wptr,subtype,name,datalen+sizeof(rtcp_app_t));
+ 	d=esballoc((uint8_t*)data,datalen,0,NULL);
+ 	h->b_cont=d;
+@@ -379,9 +379,9 @@
+ int
+ rtp_session_bye(RtpSession *session, const char *reason)
+ {
+-    mblk_t *cm;
+-    mblk_t *sdes = NULL;
+-    mblk_t *bye = NULL;
++    ortp_mblk_t *cm;
++    ortp_mblk_t *sdes = NULL;
++    ortp_mblk_t *bye = NULL;
+     int ret;
+ 
+     /* Make a BYE packet (will be on the end of the compund packet). */

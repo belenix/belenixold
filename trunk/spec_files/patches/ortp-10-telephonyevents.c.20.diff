@@ -1,0 +1,85 @@
+--- ortp-0.16.0/src/telephonyevents.c.orig	2008-09-11 02:20:32.000000000 +0530
++++ ortp-0.16.0/src/telephonyevents.c	2009-05-14 08:58:43.344033307 +0530
+@@ -93,9 +93,9 @@
+  *cannot support telephony event (because the rtp profile it is bound to does not include
+  *a telephony event payload type).
+ **/
+-mblk_t	*rtp_session_create_telephone_event_packet(RtpSession *session, int start)
++ortp_mblk_t	*rtp_session_create_telephone_event_packet(RtpSession *session, int start)
+ {
+-	mblk_t *mp;
++	ortp_mblk_t *mp;
+ 	rtp_header_t *rtp;
+ 	
+ 	return_val_if_fail(session->snd.telephone_events_pt!=-1,NULL);
+@@ -123,7 +123,7 @@
+ 
+ /**
+  *@param session a rtp session.
+- *@param packet a rtp packet as a mblk_t
++ *@param packet a rtp packet as a ortp_mblk_t
+  *@param event the event type as described in rfc2833, ie one of the TEV_* macros.
+  *@param end a boolean to indicate if the end bit should be set. (end of tone)
+  *@param volume the volume of the telephony tone, as described in rfc2833
+@@ -135,17 +135,17 @@
+  *@return 0 on success.
+ **/
+ int rtp_session_add_telephone_event(RtpSession *session,
+-			mblk_t *packet, uint8_t event, int end, uint8_t volume, uint16_t duration)
++			ortp_mblk_t *packet, uint8_t event, int end, uint8_t volume, uint16_t duration)
+ {
+-	mblk_t *mp=packet;
++	ortp_mblk_t *mp=packet;
+ 	telephone_event_t *event_hdr;
+ 
+ 
+ 	/* find the place where to add the new telephony event to the packet */
+ 	while(mp->b_cont!=NULL) mp=mp->b_cont;
+-	/* see if we need to allocate a new mblk_t */
++	/* see if we need to allocate a new ortp_mblk_t */
+ 	if ( ( mp->b_wptr) >= (mp->b_datap->db_lim)){
+-		mblk_t *newm=allocb(TELEPHONY_EVENTS_ALLOCATED_SIZE,BPRI_MED);
++		ortp_mblk_t *newm=allocb(TELEPHONY_EVENTS_ALLOCATED_SIZE,BPRI_MED);
+ 		mp->b_cont=newm;
+ 		mp=mp->b_cont;
+ 	}
+@@ -186,7 +186,7 @@
+ **/
+ int rtp_session_send_dtmf2(RtpSession *session, char dtmf, uint32_t userts, int duration)
+ {
+-	mblk_t *m1,*m2,*m3;
++	ortp_mblk_t *m1,*m2,*m3;
+ 	int tev_type;
+ 	int durationtier = duration/3;
+ 
+@@ -297,12 +297,12 @@
+  *	Reads telephony events from a rtp packet. *@tab points to the beginning of the event buffer.
+  *
+  * @param session a rtp session from which telephony events are received.
+- * @param packet a rtp packet as a mblk_t.
++ * @param packet a rtp packet as a ortp_mblk_t.
+  * @param tab the address of a pointer.
+  * @return the number of events in the packet if successfull, 0 if the packet did not contain telephony events.
+ **/
+ int rtp_session_read_telephone_event(RtpSession *session,
+-		mblk_t *packet,telephone_event_t **tab)
++		ortp_mblk_t *packet,telephone_event_t **tab)
+ {
+ 	int datasize;
+ 	int num;
+@@ -345,13 +345,13 @@
+ }
+ 
+ /* for high level telephony event callback */
+-void rtp_session_check_telephone_events(RtpSession *session, mblk_t *m0)
++void rtp_session_check_telephone_events(RtpSession *session, ortp_mblk_t *m0)
+ {
+ 	telephone_event_t *events,*evbuf;
+ 	int num,num2;
+ 	int i;
+ 	rtp_header_t *hdr;
+-	mblk_t *cur_tev;
++	ortp_mblk_t *cur_tev;
+ 	unsigned char *payload;
+ 	int datasize;
+ 	

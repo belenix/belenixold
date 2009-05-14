@@ -1,0 +1,174 @@
+--- ortp-0.16.0/include/ortp/str_utils.h.orig	2009-05-14 10:04:06.128675528 +0530
++++ ortp-0.16.0/include/ortp/str_utils.h	2009-05-14 10:04:46.430618738 +0530
+@@ -20,94 +20,116 @@
+ #ifndef STR_UTILS_H
+ #define STR_UTILS_H
+ 
+-
+ #include <ortp/port.h>
+ 
++#if defined(sun) || defined(__sun) || defined(__sun__)
++#undef mblk_init
++#undef qinit
++#undef putq
++#undef getq
++#undef insq
++#undef remq
++#undef peekq
++#undef flushq
++#undef mblk_init
++#undef allocb
++#undef esballoc
++#undef freeb
++#undef freemsg
++#undef dupb
++#undef dupmsg
++#undef msgdsize
++#undef msgpullup
++#undef copyb
++#undef copymsg
++#undef appendb
++#undef concatb
++#endif
+ 
+-typedef struct msgb
++typedef struct ortp_msgb
+ {
+-	struct msgb *b_prev;
+-	struct msgb *b_next;
+-	struct msgb *b_cont;
+-	struct datab *b_datap;
++	struct ortp_msgb *b_prev;
++	struct ortp_msgb *b_next;
++	struct ortp_msgb *b_cont;
++	struct ortp_datab *b_datap;
+ 	unsigned char *b_rptr;
+ 	unsigned char *b_wptr;
+ 	uint32_t reserved1;
+ 	uint32_t reserved2;
+-} mblk_t;
++} ortp_mblk_t;
+ 
+-typedef struct datab
++typedef struct ortp_datab
+ {
+ 	unsigned char *db_base;
+ 	unsigned char *db_lim;
+ 	void (*db_freefn)(void*);
+ 	int db_ref;
+-} dblk_t;
++} ortp_dblk_t;
+ 
+-typedef struct _queue
++typedef struct ortp_queue
+ {
+-	mblk_t _q_stopper;
++	ortp_mblk_t _q_stopper;
+ 	int q_mcount;	/*number of packet in the q */
+-} queue_t;
++} ortp_queue_t;
+ 
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+ 
+-void qinit(queue_t *q);
++void qinit(ortp_queue_t *q);
+ 	
+-void putq(queue_t *q, mblk_t *m);
++void putq(ortp_queue_t *q, ortp_mblk_t *m);
+ 
+-mblk_t * getq(queue_t *q);
++ortp_mblk_t * getq(ortp_queue_t *q);
+ 
+-void insq(queue_t *q,mblk_t *emp, mblk_t *mp);
++void insq(ortp_queue_t *q, ortp_mblk_t *emp, ortp_mblk_t *mp);
+ 	
+-void remq(queue_t *q, mblk_t *mp);
++void remq(ortp_queue_t *q, ortp_mblk_t *mp);
+ 
+-mblk_t * peekq(queue_t *q);
++ortp_mblk_t * peekq(ortp_queue_t *q);
+ 
+ /* remove and free all messages in the q */
+-#define FLUSHALL 0
+-void flushq(queue_t *q, int how);
++/* #define FLUSHALL 0 */
++void flushq(ortp_queue_t *q, int how);
+ 
+-void mblk_init(mblk_t *mp);
++void mblk_init(ortp_mblk_t *mp);
+ 	
+-/* allocates a mblk_t, that points to a datab_t, that points to a buffer of size size. */
+-mblk_t *allocb(int size, int unused);
+-#define BPRI_MED 0
++/* allocates a ortp_mblk_t, that points to a ortp_datab_t, that points to a buffer of size size. */
++ortp_mblk_t *allocb(int size, int unused);
++/* #define BPRI_MED 0 */
+ 
+-/* allocates a mblk_t, that points to a datab_t, that points to buf; buf will be freed using freefn */
+-mblk_t *esballoc(uint8_t *buf, int size, int pri, void (*freefn)(void*) );
++/* allocates a ortp_mblk_t, that points to a ortp_datab_t, that points to buf; buf will be freed using freefn */
++ortp_mblk_t *esballoc(uint8_t *buf, int size, int pri, void (*freefn)(void*) );
+ 
+-/* frees a mblk_t, and if the datab ref_count is 0, frees it and the buffer too */
+-void freeb(mblk_t *m);
++/* frees a ortp_mblk_t, and if the datab ref_count is 0, frees it and the buffer too */
++void freeb(ortp_mblk_t *m);
+ 
+-/* frees recursively (follow b_cont) a mblk_t, and if the datab
++/* frees recursively (follow b_cont) a ortp_mblk_t, and if the datab
+ ref_count is 0, frees it and the buffer too */
+-void freemsg(mblk_t *mp);
++void freemsg(ortp_mblk_t *mp);
+ 
+-/* duplicates a mblk_t , buffer is not duplicated*/
+-mblk_t *dupb(mblk_t *m);
++/* duplicates a ortp_mblk_t , buffer is not duplicated*/
++ortp_mblk_t *dupb(ortp_mblk_t *m);
+ 
+-/* duplicates a complex mblk_t, buffer is not duplicated */
+-mblk_t	*dupmsg(mblk_t* m);
++/* duplicates a complex ortp_mblk_t, buffer is not duplicated */
++ortp_mblk_t	*dupmsg(ortp_mblk_t* m);
+ 
+ /* returns the size of data of a message */
+-int msgdsize(const mblk_t *mp);
++int msgdsize(const ortp_mblk_t *mp);
+ 
+ /* concatenates all fragment of a complex message*/
+-void msgpullup(mblk_t *mp,int len);
++void msgpullup(ortp_mblk_t *mp,int len);
+ 
+ /* duplicates a single message, but with buffer included */
+-mblk_t *copyb(mblk_t *mp);
++ortp_mblk_t *copyb(ortp_mblk_t *mp);
+ 
+ /* duplicates a complex message with buffer included */
+-mblk_t *copymsg(mblk_t *mp);
++ortp_mblk_t *copymsg(ortp_mblk_t *mp);
+ 
+-mblk_t * appendb(mblk_t *mp, const char *data, int size, bool_t pad);
+-void msgappend(mblk_t *mp, const char *data, int size, bool_t pad);
++ortp_mblk_t * appendb(ortp_mblk_t *mp, const char *data, int size, bool_t pad);
++void msgappend(ortp_mblk_t *mp, const char *data, int size, bool_t pad);
+ 
+-mblk_t *concatb(mblk_t *mp, mblk_t *newm);
++ortp_mblk_t *concatb(ortp_mblk_t *mp, ortp_mblk_t *newm);
+ 
+ #define qempty(q) (&(q)->_q_stopper==(q)->_q_stopper.b_next)
+ #define qfirst(q) ((q)->_q_stopper.b_next!=&(q)->_q_stopper ? (q)->_q_stopper.b_next : NULL)
+@@ -117,11 +139,11 @@
+ #define qnext(q,mp) ((mp)->b_next)
+ 
+ typedef struct _msgb_allocator{
+-	queue_t q;
++	ortp_queue_t q;
+ }msgb_allocator_t;
+ 
+ void msgb_allocator_init(msgb_allocator_t *pa);
+-mblk_t *msgb_allocator_alloc(msgb_allocator_t *pa, int size);
++ortp_mblk_t *msgb_allocator_alloc(msgb_allocator_t *pa, int size);
+ void msgb_allocator_uninit(msgb_allocator_t *pa);
+ 
+ #ifdef __cplusplus

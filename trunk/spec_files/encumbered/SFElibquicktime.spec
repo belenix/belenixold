@@ -20,11 +20,19 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 BuildRequires: SFEffmpeg-devel
 Requires: SFEffmpeg
-BuildRequires: SFEogg-vorbis-devel
-Requires: SFEogg-vorbis
+BuildRequires: SUNWogg-vorbis-devel
+Requires: SUNWogg-vorbis
 
 %package devel
 Summary:         %{summary} - development files
+SUNW_BaseDir:    %{_basedir}
+%include default-depend.inc
+Requires: %name
+Requires:       SFEffmpeg-devel
+Requires:       SUNWogg-vorbis-devel
+
+%package doc
+Summary:         %{summary} - documentation files
 SUNW_BaseDir:    %{_basedir}
 %include default-depend.inc
 Requires: %name
@@ -117,7 +125,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{_arch64}/pkgconfig/*
 %endif
 
+%files doc
+%defattr (-, root, bin)
+%dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, other) %{_docdir}
+%{_docdir}/*
+
 %changelog
+* Thu May 14 2009 - moinakg@belenix.org
+- Update dependency and add doc package.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Include l10n files.
 * Tue Sep  4 2007 - dougs@truemail.co.th

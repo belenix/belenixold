@@ -1,0 +1,65 @@
+--- ortp-0.16.0/src/rtpsession_inet.c.orig	2009-05-14 10:40:09.368873338 +0530
++++ ortp-0.16.0/src/rtpsession_inet.c	2009-05-14 10:30:48.335315712 +0530
+@@ -719,7 +719,7 @@
+ 	socklen_t fromlen=sizeof(from);
+ 	if (rtp_session_using_transport(session, rtp))
+ 	  {
+-		mblk_t *trashmp=esballoc(trash,sizeof(trash),0,NULL);
++		ortp_mblk_t *trashmp=esballoc(trash,sizeof(trash),0,NULL);
+ 		
+ 	    while (session->rtp.tr->t_recvfrom(session->rtp.tr,trashmp,0,(struct sockaddr *)&from,&fromlen)>0){};
+ 
+@@ -740,7 +740,7 @@
+ 
+ #ifdef USE_SENDMSG 
+ #define MAX_IOV 30
+-static int rtp_sendmsg(int sock,mblk_t *m, struct sockaddr *rem_addr, int addr_len){
++static int rtp_sendmsg(int sock,ortp_mblk_t *m, struct sockaddr *rem_addr, int addr_len){
+ 	int error;
+ 	struct msghdr msg;
+ 	struct iovec iov[MAX_IOV];
+@@ -781,7 +781,7 @@
+ }
+ 
+ int
+-rtp_session_rtp_send (RtpSession * session, mblk_t * m)
++rtp_session_rtp_send (RtpSession * session, ortp_mblk_t * m)
+ {
+ 	int error;
+ 	int i;
+@@ -828,7 +828,7 @@
+ }
+ 
+ int
+-rtp_session_rtcp_send (RtpSession * session, mblk_t * m)
++rtp_session_rtcp_send (RtpSession * session, ortp_mblk_t * m)
+ {
+ 	int error=0;
+ 	ortp_socket_t sockfd=session->rtcp.socket;
+@@ -882,7 +882,7 @@
+ 	struct sockaddr remaddr;
+ #endif
+ 	socklen_t addrlen = sizeof (remaddr);
+-	mblk_t *mp;
++	ortp_mblk_t *mp;
+ 	
+ 	if ((sockfd<0) && !rtp_session_using_transport(session, rtp)) return -1;  /*session has no sockets for the moment*/
+ 
+@@ -944,7 +944,7 @@
+ 	return error;
+ }
+ 
+-void rtp_session_notify_inc_rtcp(RtpSession *session, mblk_t *m){
++void rtp_session_notify_inc_rtcp(RtpSession *session, ortp_mblk_t *m){
+ 	if (session->eventqs!=NULL){
+ 		OrtpEvent *ev=ortp_event_new(ORTP_EVENT_RTCP_PACKET_RECEIVED);
+ 		OrtpEventData *d=ortp_event_get_data(ev);
+@@ -964,7 +964,7 @@
+ 	struct sockaddr remaddr;
+ #endif
+ 	socklen_t addrlen=0;
+-	mblk_t *mp;
++	ortp_mblk_t *mp;
+ 
+ 	if (session->rtcp.socket<0 && !rtp_session_using_transport(session, rtcp)) return -1;  /*session has no rtcp sockets for the moment*/
+ 	
