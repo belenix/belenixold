@@ -1,0 +1,13 @@
+--- mediastreamer-2.2.4/include/mediastreamer2/mediastream.h.orig	2009-04-15 11:56:49.000000000 +0530
++++ mediastreamer-2.2.4/include/mediastreamer2/mediastream.h	2009-05-14 17:31:02.731012886 +0530
+@@ -26,8 +26,8 @@
+ #include "mediastreamer2/mssndcard.h"
+ #include "mediastreamer2/mswebcam.h"
+ #include "mediastreamer2/msvideo.h"
+-#include "ortp/ortp.h"
+-#include "ortp/event.h"
++#include <ortp/ortp.h>
++#include <ortp/event.h>
+ 
+ typedef enum EchoLimiterType{
+ 	ELInactive,

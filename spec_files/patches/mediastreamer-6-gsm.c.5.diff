@@ -1,0 +1,30 @@
+--- mediastreamer-2.1.1.orig/src/gsm.c	2007-10-18 16:05:10.000000000 -0400
++++ mediastreamer-2.1.1/src/gsm.c	2008-05-16 20:59:15.000000000 -0400
+@@ -46,14 +46,14 @@
+ 
+ static void enc_process(MSFilter *f){
+ 	EncState *s=(EncState*)f->data;
+-	mblk_t *im;
++	ortp_mblk_t *im;
+ 	int16_t buf[160];
+ 	
+ 	while((im=ms_queue_get(f->inputs[0]))!=NULL){
+ 		ms_bufferizer_put(s->bufferizer,im);
+ 	}
+ 	while(ms_bufferizer_read(s->bufferizer,(uint8_t*)buf,sizeof(buf))==sizeof(buf)) {
+-		mblk_t *om=allocb(33,0);
++		ortp_mblk_t *om=allocb(33,0);
+ 		gsm_encode(s->state,(gsm_signal*)buf,(gsm_byte*)om->b_wptr);
+ 		om->b_wptr+=33;
+ 		mblk_set_timestamp_info(om,s->ts);
+@@ -109,8 +109,8 @@
+ 
+ static void dec_process(MSFilter *f){
+ 	gsm s=(gsm)f->data;
+-	mblk_t *im;
+-	mblk_t *om;
++	ortp_mblk_t *im;
++	ortp_mblk_t *om;
+ 	const int frsz=160*2;
+ 
+ 	while((im=ms_queue_get(f->inputs[0]))!=NULL){

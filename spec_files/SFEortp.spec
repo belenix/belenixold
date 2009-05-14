@@ -50,6 +50,8 @@ Requires:                SFElibexosip2
 BuildRequires:           SFElibexosip2-devel
 Requires:                SUNWopenssl-libraries
 BuildRequires:           SUNWopenssl-include
+Requires:                SUNWspeex
+BuildRequires:           SUNWspeex-devel
 
 %package devel
 Summary:                 %{summary} - development files
@@ -59,6 +61,7 @@ Requires: %name
 Requires:                SFElibosip2-devel
 Requires:                SFElibexosip2-devel
 Requires:                SUNWopenssl-include
+Requires:                SUNWspeex-devel
 
 %package doc
 Summary:                 %{summary} - documentation files
@@ -203,4 +206,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Thu May 14 2009 - moinakg@belenix.org
+- Add speex dependency.
 - Initial version

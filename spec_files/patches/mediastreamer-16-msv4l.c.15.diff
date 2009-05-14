@@ -1,0 +1,147 @@
+--- mediastreamer-2.2.4/src/msv4l.c.orig	2008-12-18 03:07:32.000000000 +0530
++++ mediastreamer-2.2.4/src/msv4l.c	2009-05-14 15:00:13.272512810 +0530
+@@ -17,7 +17,7 @@
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+ 
+-#ifdef __linux
++#if defined(__linux) || defined(sun) || defined(__sun) || defined(__sun__)
+ 
+ #include "mediastreamer-config.h"
+ 
+@@ -62,9 +62,9 @@
+ 	MSVideoSize got_vsize;
+ 	int pix_fmt;
+ 	int int_pix_fmt; /*internal pixel format */
+-	mblk_t *frames[VIDEO_MAX_FRAME];
+-	mblk_t *mire;
+-	queue_t rq;
++	ortp_mblk_t *frames[VIDEO_MAX_FRAME];
++	ortp_mblk_t *mire;
++	ortp_queue_t rq;
+ 	ms_mutex_t mutex;
+ 	int frame_ind;
+ 	int frame_max;
+@@ -167,7 +167,7 @@
+ 	
+ 	for (i=0; i<req.count; ++i) {
+ 		struct v4l2_buffer buf;
+-		mblk_t *msg;
++		ortp_mblk_t *msg;
+ 		void *start;
+ 		memset(&buf,0,sizeof(buf));
+ 	
+@@ -221,11 +221,11 @@
+ 	return 0;
+ }
+ 
+-static mblk_t * v4lv2_grab_image(V4lState *s){
++static ortp_mblk_t * v4lv2_grab_image(V4lState *s){
+ 	struct v4l2_buffer buf;
+ 	unsigned int k;
+ 	memset(&buf,0,sizeof(buf));
+-	mblk_t *ret=NULL;
++	ortp_mblk_t *ret=NULL;
+ 
+ 	buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+ 	buf.memory = V4L2_MEMORY_MMAP;
+@@ -470,7 +470,7 @@
+ 	ms_message("Using %i-frames mmap'd buffer at %p, len %i",
+ 		s->frame_max, s->mmapdbuf,s->msize);
+ 	for(i=0;i<s->frame_max;i++){
+-		mblk_t *buf=esballoc((uint8_t*)s->mmapdbuf+vmbuf.offsets[i],vmbuf.offsets[1],0,NULL);
++		ortp_mblk_t *buf=esballoc((uint8_t*)s->mmapdbuf+vmbuf.offsets[i],vmbuf.offsets[1],0,NULL);
+ 		/* adjust to real size of picture*/
+ 		if (s->pix_fmt==MS_RGB24)
+ 			buf->b_wptr+=s->vsize.width*s->vsize.height*3;
+@@ -680,9 +680,9 @@
+ 	}
+ }
+ 
+-static mblk_t *crop_or_pad(V4lState *s, mblk_t *pic){
++static ortp_mblk_t *crop_or_pad(V4lState *s, ortp_mblk_t *pic){
+ 	int size=s->vsize.width*s->vsize.height;
+-	mblk_t *newpic;
++	ortp_mblk_t *newpic;
+ 	if (s->pix_fmt==MS_YUV420P) size=size*3/2;
+ 	else if (s->pix_fmt==MS_YUYV) size=size*2;
+ 	else if (s->pix_fmt==MS_UYVY) size=size*2;
+@@ -696,13 +696,13 @@
+ 	return newpic;
+ }
+ 
+-static mblk_t * v4l_grab_image_mmap(V4lState *s){
++static ortp_mblk_t * v4l_grab_image_mmap(V4lState *s){
+ 	struct video_mmap vmap;
+ 	int err;
+ 	int syncframe;
+ 	int jitter=s->frame_max-1;
+ 	int query_frame;
+-	mblk_t *ret;
++	ortp_mblk_t *ret;
+ 	vmap.width=s->got_vsize.width;
+ 	vmap.height=s->got_vsize.height;
+ 	vmap.format=ms_to_v4l_pix_fmt(s->pix_fmt);
+@@ -741,7 +741,7 @@
+ 	return ret;
+ }
+ 
+-static mblk_t * v4l_make_mire(V4lState *s){
++static ortp_mblk_t * v4l_make_mire(V4lState *s){
+ 	unsigned char *data;
+ 	int i,j,line,pos;
+ 	int patternw=s->vsize.width/6; 
+@@ -771,7 +771,7 @@
+ 	return s->mire;
+ }
+ 
+-static mblk_t * v4l_make_nowebcam(V4lState *s){
++static ortp_mblk_t * v4l_make_nowebcam(V4lState *s){
+ 	if (s->mire==NULL && s->frame_ind==0){
+ 		s->mire=ms_load_nowebcam(&s->vsize, -1);
+ 	}
+@@ -835,7 +835,7 @@
+ 	s->msize=0;
+ 	for(i=0;i<s->frame_max;++i){
+ 		if (s->v4lv2){
+-			mblk_t *msg=s->frames[i];
++			ortp_mblk_t *msg=s->frames[i];
+ 			int len=msg->b_datap->db_lim-msg->b_datap->db_base;
+ 			if (munmap(msg->b_datap->db_base,len)<0){
+ 				ms_warning("MSV4l: Fail to unmap: %s",strerror(errno));
+@@ -862,7 +862,7 @@
+ 		ms_thread_exit(NULL);
+ 	}
+ 	while(s->run){
+-		mblk_t *m;
++		ortp_mblk_t *m;
+ #ifdef HAVE_LINUX_VIDEODEV2_H
+ 		if (s->v4lv2)
+ 			m=v4lv2_grab_image(s);
+@@ -880,7 +880,7 @@
+ 				ms_error("grabbing failed !");
+ 			}
+ 		} else if (m!=NULL) {
+-			mblk_t *dm=dupmsg(m);
++			ortp_mblk_t *dm=dupmsg(m);
+ 			ms_mutex_lock(&s->mutex);
+ 			putq(&s->rq,dm);
+ 			ms_mutex_unlock(&s->mutex);
+@@ -902,7 +902,7 @@
+ 	}
+ 	cur_frame=((obj->ticker->time-s->start_time)*s->fps/1000.0);
+ 	if (cur_frame>=s->frame_count){
+-		mblk_t *om=NULL;
++		ortp_mblk_t *om=NULL;
+ 		ms_mutex_lock(&s->mutex);
+ 		/*keep the most recent frame if several frames have been captured */
+ 		if (s->fd!=-1){
+@@ -911,7 +911,7 @@
+ 			if (s->usemire){
+ 				om=dupmsg(v4l_make_mire(s));
+ 			}else {
+-				mblk_t *tmpm=v4l_make_nowebcam(s);
++				ortp_mblk_t *tmpm=v4l_make_nowebcam(s);
+ 				if (tmpm) {
+ 					om=dupmsg(tmpm);
+ 					mblk_set_precious_flag(om,1);

@@ -1,0 +1,98 @@
+--- mediastreamer-2.2.4/src/videoenc.c.orig	2009-04-23 17:51:36.000000000 +0530
++++ mediastreamer-2.2.4/src/videoenc.c	2009-05-14 17:21:10.523536569 +0530
+@@ -69,7 +69,7 @@
+ 	AVCodecContext av_context;
+ 	AVCodec *av_codec;
+ 	enum CodecID codec;
+-	mblk_t *comp_buf;
++	ortp_mblk_t *comp_buf;
+ 	MSVideoSize vsize;
+ 	int mtu;	/* network maximum transmission unit in bytes */
+ 	int profile;
+@@ -316,8 +316,8 @@
+ 	}
+ }
+ 
+-static void add_rfc2190_header(mblk_t **packet, AVCodecContext *context){
+-	mblk_t *header;
++static void add_rfc2190_header(ortp_mblk_t **packet, AVCodecContext *context){
++	ortp_mblk_t *header;
+ 	header = allocb(4, 0);
+ 	memset(header->b_wptr, 0, 4);
+ 	// assume video size is CIF or QCIF
+@@ -352,8 +352,8 @@
+ 	return k;
+ }
+ 
+-static void rfc2190_generate_packets(MSFilter *f, EncState *s, mblk_t *frame, uint32_t timestamp){
+-	mblk_t *packet=NULL;
++static void rfc2190_generate_packets(MSFilter *f, EncState *s, ortp_mblk_t *frame, uint32_t timestamp){
++	ortp_mblk_t *packet=NULL;
+ 	
+ 	while (frame->b_rptr<frame->b_wptr){
+ 		packet=dupb(frame);
+@@ -366,9 +366,9 @@
+ 	mblk_set_marker_info(packet,TRUE);
+ }
+ 
+-static void mpeg4_fragment_and_send(MSFilter *f,EncState *s,mblk_t *frame, uint32_t timestamp){
++static void mpeg4_fragment_and_send(MSFilter *f,EncState *s,ortp_mblk_t *frame, uint32_t timestamp){
+ 	uint8_t *rptr;
+-	mblk_t *packet=NULL;
++	ortp_mblk_t *packet=NULL;
+ 	int len;
+ 	for (rptr=frame->b_rptr;rptr<frame->b_wptr;){
+ 		len=MIN(s->mtu,(frame->b_wptr-rptr));
+@@ -383,8 +383,8 @@
+ 	mblk_set_marker_info(packet,TRUE);
+ }
+ 
+-static void rfc4629_generate_follow_on_packets(MSFilter *f, EncState *s, mblk_t *frame, uint32_t timestamp, uint8_t *psc, uint8_t *end, bool_t last_packet){
+-	mblk_t *packet;
++static void rfc4629_generate_follow_on_packets(MSFilter *f, EncState *s, ortp_mblk_t *frame, uint32_t timestamp, uint8_t *psc, uint8_t *end, bool_t last_packet){
++	ortp_mblk_t *packet;
+ 	int len=end-psc;
+ 	
+ 	packet=dupb(frame);	
+@@ -406,7 +406,7 @@
+ 		ms_queue_put(f->outputs[0],packet);
+ 		ms_debug("generating %i follow-on packets",num);
+ 		for (i=1;i<num;++i){
+-			mblk_t *header;
++			ortp_mblk_t *header;
+ 			packet=dupb(frame);
+ 			packet->b_rptr=pos;
+ 			pos=packet->b_wptr=MIN(pos+s->mtu,end);
+@@ -440,7 +440,7 @@
+ 	return ret;
+ }
+ 
+-static void split_and_send(MSFilter *f, EncState *s, mblk_t *frame){
++static void split_and_send(MSFilter *f, EncState *s, ortp_mblk_t *frame){
+ 	uint8_t *lastpsc;
+ 	uint8_t *psc;
+ 	uint32_t timestamp=f->ticker->time*90LL;
+@@ -470,12 +470,12 @@
+ 	}
+ }
+ 
+-static void process_frame(MSFilter *f, mblk_t *inm){
++static void process_frame(MSFilter *f, ortp_mblk_t *inm){
+ 	EncState *s=(EncState*)f->data;
+ 	AVFrame pict;
+ 	AVCodecContext *c=&s->av_context;
+ 	int error;
+-	mblk_t *comp_buf=s->comp_buf;
++	ortp_mblk_t *comp_buf=s->comp_buf;
+ 	int comp_buf_sz=comp_buf->b_datap->db_lim-comp_buf->b_datap->db_base;
+ 
+ 	/* convert image if necessary */
+@@ -515,7 +515,7 @@
+ }
+ 
+ static void enc_process(MSFilter *f){
+-	mblk_t *inm;
++	ortp_mblk_t *inm;
+ 	EncState *s=(EncState*)f->data;
+ 	if (s->av_context.codec==NULL) {
+ 		ms_queue_flush(f->inputs[0]);

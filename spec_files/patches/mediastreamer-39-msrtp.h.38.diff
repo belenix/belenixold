@@ -1,0 +1,11 @@
+--- mediastreamer-2.1.1.orig/include/mediastreamer2/msrtp.h	2006-09-12 15:21:29.000000000 -0400
++++ mediastreamer-2.1.1/include/mediastreamer2/msrtp.h	2008-05-16 20:49:16.000000000 -0400
+@@ -23,7 +23,7 @@
+ 
+ #include "msfilter.h"
+ #include "ice.h"
+-#include "ortp/ortp.h"
++#include <ortp/ortp.h>
+ 
+ #define MS_RTP_RECV_SET_SESSION		MS_FILTER_METHOD(MS_RTP_RECV_ID,0,RtpSession*)
+ 

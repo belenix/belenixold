@@ -1,0 +1,99 @@
+--- mediastreamer-2.1.1.orig/src/theora.c	2008-01-11 12:11:20.000000000 -0500
++++ mediastreamer-2.1.1/src/theora.c	2008-05-16 20:59:18.000000000 -0400
+@@ -27,7 +27,7 @@
+ 	theora_state tstate;
+ 	theora_info tinfo;
+ 	yuv_buffer yuv;
+-	mblk_t *packed_conf;
++	ortp_mblk_t *packed_conf;
+ 	uint64_t start_time;
+ 	uint64_t conf_time;
+ 	unsigned int mtu;
+@@ -196,7 +196,7 @@
+ static int create_packed_conf(EncState *s){
+ 	ogg_packet p;
+ 	theora_state *tstate=&s->tstate;
+-	mblk_t *h,*t;
++	ortp_mblk_t *h,*t;
+ 	if (theora_encode_header(tstate,&p)!=0){
+ 		ms_error("theora_encode_header() error.");
+ 		return -1;
+@@ -249,16 +249,16 @@
+ 	}
+ }
+ 
+-static void enc_fill_yuv(yuv_buffer *yuv, mblk_t *im){
++static void enc_fill_yuv(yuv_buffer *yuv, ortp_mblk_t *im){
+ 	yuv->y=(uint8_t*)im->b_rptr;
+ 	yuv->u=(uint8_t*)im->b_rptr+(yuv->y_stride*yuv->y_height);
+ 	yuv->v=(uint8_t*)yuv->u+(yuv->uv_stride*yuv->uv_height);
+ }
+ 
+ 
+-static void packetize_and_send(MSFilter *f, EncState *s, mblk_t *om, uint32_t timestamp, uint8_t tdt){
+-	mblk_t *packet;
+-	mblk_t *h;
++static void packetize_and_send(MSFilter *f, EncState *s, ortp_mblk_t *om, uint32_t timestamp, uint8_t tdt){
++	ortp_mblk_t *packet;
++	ortp_mblk_t *h;
+ 	int npackets=0;
+ 	static const int ident=0xdede;
+ 	while(om!=NULL){
+@@ -311,7 +311,7 @@
+ }
+ 
+ static void enc_process(MSFilter *f){
+-	mblk_t *im,*om;
++	ortp_mblk_t *im,*om;
+ 	ogg_packet op;
+ 	EncState *s=(EncState*)f->data;
+ 	uint64_t timems=f->ticker->time;
+@@ -402,8 +402,8 @@
+ typedef struct DecState{
+ 	theora_state tstate;
+ 	theora_info tinfo;
+-	mblk_t *yuv;
+-	mblk_t *curframe;
++	ortp_mblk_t *yuv;
++	ortp_mblk_t *curframe;
+ 	bool_t ready;
+ }DecState;
+ 
+@@ -449,7 +449,7 @@
+ 	return FALSE;
+ }
+ /* remove payload header and agregates fragmented packets */
+-static mblk_t *dec_unpacketize(MSFilter *f, DecState *s, mblk_t *im, int *tdt){
++static ortp_mblk_t *dec_unpacketize(MSFilter *f, DecState *s, ortp_mblk_t *im, int *tdt){
+ 	uint8_t ft;
+ 	*tdt=payload_header_get_tdt((uint8_t*)im->b_rptr);
+ 	ft=payload_header_get_ft((uint8_t*)im->b_rptr);
+@@ -467,7 +467,7 @@
+ 			freemsg(im);
+ 	}else{/*end fragment*/
+ 		if (s->curframe!=NULL){
+-			mblk_t *ret;
++			ortp_mblk_t *ret;
+ 			concatb(s->curframe,im);
+ 			msgpullup(s->curframe,-1);
+ 			ret=s->curframe;
+@@ -483,7 +483,7 @@
+ 	yuv_buffer yuv;
+ 	if (theora_decode_packetin(&s->tstate,op)==0){
+ 		if (theora_decode_YUVout(&s->tstate,&yuv)==0){
+-			mblk_t *om;
++			ortp_mblk_t *om;
+ 			int i;
+ 			int ylen=yuv.y_width*yuv.y_height;
+ 			int uvlen=yuv.uv_width*yuv.uv_height;
+@@ -513,8 +513,8 @@
+ }
+ 
+ static void dec_process(MSFilter *f){
+-	mblk_t *im;
+-	mblk_t *m;
++	ortp_mblk_t *im;
++	ortp_mblk_t *m;
+ 	ogg_packet op;
+ 	int tdt;
+ 	DecState *s=(DecState*)f->data;

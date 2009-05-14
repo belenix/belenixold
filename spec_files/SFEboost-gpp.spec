@@ -31,7 +31,8 @@ SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 BuildRequires: SFEicu4c
-BuildRequires: SUNWPython25
+Requires: SUNWPython25
+BuildRequires: SUNWPython25-devel
 Requires: SFEicu4c
 
 %package devel
@@ -39,6 +40,9 @@ Summary:        %{summary} - development files
 SUNW_BaseDir:   %{_basedir}
 %include default-depend.inc
 Requires:       %{name}
+Requires:       SFEicu4c
+Requires:       SUNWPython25
+Requires:       SUNWPython25-devel
 
 %prep
 %setup -q -c -n %name-%version
@@ -63,7 +67,7 @@ cd boost_%{major}_%{minor}_%{patchlevel}-64
 
 export CC=gcc
 export CXX=g++
-export CXXFLAGS="%gcc_cxx_optflags64"
+export CXXFLAGS="%gcc_cxx_optflags64 -fno-strict-aliasing"
 export LDFLAGS="%_ldflags64 -L%{_prefix}/lib/%{_arch64} -R%{_prefix}/lib/%{_arch64}"
 export EXPAT_INCLUDE=%{_prefix}/include
 export EXPAT_LIBPATH=%{_prefix}/lib/%{_arch64}
@@ -98,7 +102,7 @@ cd ..
 cd boost_%{major}_%{minor}_%{patchlevel}
 export CC=gcc
 export CXX=g++
-export CXXFLAGS="%gcc_cxx_optflags"
+export CXXFLAGS="%gcc_cxx_optflags -fno-strict-aliasing"
 export LDFLAGS="%_ldflags"
 export EXPAT_INCLUDE=%{_prefix}/include
 export EXPAT_LIBPATH=%{_prefix}/lib
@@ -190,6 +194,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/boost/*
 
 %changelog
+* Thu May 14 2009 - moinakg@belenix.org
+- Update dependencies.
+- Disable strict aliasing to avoid aliasing problems.
 * Tue Apr 28 2009 - moinakg@belenix.org
 - Pull in from SFE gate, bump version to 1.38.0
 - Fix build,install and add 64Bit build.

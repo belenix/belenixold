@@ -1,0 +1,11 @@
+--- mediastreamer-2.1.1.orig/src/tee.c	2007-11-07 05:32:21.000000000 -0500
++++ mediastreamer-2.1.1/src/tee.c	2008-05-16 20:59:18.000000000 -0400
+@@ -35,7 +35,7 @@
+ 
+ static void tee_process(MSFilter *f){
+ 	TeeData *d=(TeeData*)f->data;
+-	mblk_t *im;
++	ortp_mblk_t *im;
+ 	int i;
+ 	while((im=ms_queue_get(f->inputs[0]))!=NULL){
+ 		for(i=0;i<f->desc->noutputs;i++){

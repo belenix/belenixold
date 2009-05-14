@@ -1,0 +1,61 @@
+--- mediastreamer-2.2.4/include/mediastreamer2/msqueue.h.orig	2008-09-29 15:01:47.000000000 +0530
++++ mediastreamer-2.2.4/include/mediastreamer2/msqueue.h	2009-05-14 17:25:02.873529520 +0530
+@@ -19,7 +19,7 @@
+ #ifndef MSQUEUE_H
+ #define MSQUEUE_H
+ 
+-#include "ortp/str_utils.h"
++#include <ortp/str_utils.h>
+ 
+ /* for the moment these are stupid queues limited to one element*/
+ 
+@@ -30,7 +30,7 @@
+ 
+ typedef struct _MSQueue
+ {
+-	queue_t q;
++	ortp_queue_t q;
+ 	MSCPoint prev;
+ 	MSCPoint next;
+ }MSQueue;
+@@ -38,16 +38,16 @@
+ 
+ MSQueue * ms_queue_new(struct _MSFilter *f1, int pin1, struct _MSFilter *f2, int pin2 );
+ 
+-static inline mblk_t *ms_queue_get(MSQueue *q){
++static inline ortp_mblk_t *ms_queue_get(MSQueue *q){
+ 	return getq(&q->q);
+ }
+ 
+-static inline void ms_queue_put(MSQueue *q, mblk_t *m){
++static inline void ms_queue_put(MSQueue *q, ortp_mblk_t *m){
+ 	putq(&q->q,m);
+ 	return;
+ }
+ 
+-static inline mblk_t * ms_queue_peek_last(MSQueue *q){
++static inline ortp_mblk_t * ms_queue_peek_last(MSQueue *q){
+ 	return qlast(&q->q);
+ }
+ 
+@@ -79,7 +79,7 @@
+ #define mblk_get_precious_flag(m)    (((m)->reserved2)>>10 & 0x1)
+ 
+ struct _MSBufferizer{
+-	queue_t q;
++	ortp_queue_t q;
+ 	int size;
+ };
+ 
+@@ -91,9 +91,9 @@
+ /*initialize in memory */
+ void ms_bufferizer_init(MSBufferizer *obj);
+ 
+-void ms_bufferizer_put(MSBufferizer *obj, mblk_t *m);
++void ms_bufferizer_put(MSBufferizer *obj, ortp_mblk_t *m);
+ 
+-/* put every mblk_t from q, into the bufferizer */
++/* put every ortp_mblk_t from q, into the bufferizer */
+ void ms_bufferizer_put_from_queue(MSBufferizer *obj, MSQueue *q);
+ 
+ int ms_bufferizer_read(MSBufferizer *obj, uint8_t *data, int datalen);

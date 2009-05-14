@@ -1,0 +1,11 @@
+--- mediastreamer-2.1.1.orig/src/msjoin.c	2006-12-11 08:04:20.000000000 -0500
++++ mediastreamer-2.1.1/src/msjoin.c	2008-05-16 20:59:16.000000000 -0400
+@@ -20,7 +20,7 @@
+ #include "mediastreamer2/msfilter.h"
+ 
+ static void join_process(MSFilter *f){
+-	mblk_t *im;
++	ortp_mblk_t *im;
+ 	if (f->inputs[0]!=NULL)
+ 	{
+ 		while((im=ms_queue_get(f->inputs[0]))!=NULL){

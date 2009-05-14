@@ -1,0 +1,11 @@
+--- mediastreamer-2.2.4/src/Makefile.in.orig	2009-05-05 15:14:17.000000000 +0530
++++ mediastreamer-2.2.4/src/Makefile.in	2009-05-14 17:23:45.255648411 +0530
+@@ -338,7 +338,7 @@
+ libmediastreamer_la_LIBADD = $(ORTP_LIBS) $(PORTAUDIO_LIBS) \
+ 	$(ALSA_LIBS) $(ARTS_LIBS) $(SPEEX_LIBS) $(GSM_LIBS) \
+ 	$(THEORA_LIBS) $(am__append_14)
+-libmediastreamer_la_LDFLAGS = -rdynamic
++libmediastreamer_la_LDFLAGS = -rdynamic -no-undefined
+ AM_CFLAGS = -I$(top_srcdir) $(ORTP_CFLAGS) $(SPEEX_CFLAGS) \
+ 	$(GSM_CFLAGS) $(STRICT_OPTIONS) $(am__append_15)
+ imgdir = $(datadir)/images/

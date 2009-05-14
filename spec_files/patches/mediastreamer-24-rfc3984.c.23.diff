@@ -1,0 +1,117 @@
+--- mediastreamer-2.2.4/src/rfc3984.c.orig	2008-09-11 02:21:43.000000000 +0530
++++ mediastreamer-2.2.4/src/rfc3984.c	2009-05-14 15:07:26.971646777 +0530
+@@ -49,20 +49,20 @@
+ 	ctx->maxsz=size;
+ }
+ 
+-static void send_packet(MSQueue *rtpq, uint32_t ts, mblk_t *m, bool_t marker){
++static void send_packet(MSQueue *rtpq, uint32_t ts, ortp_mblk_t *m, bool_t marker){
+ 	mblk_set_timestamp_info(m,ts);
+ 	mblk_set_marker_info(m,marker);
+ 	ms_queue_put(rtpq,m);
+ }
+ 
+-static void put_nal_size(mblk_t *m, uint16_t sz){
++static void put_nal_size(ortp_mblk_t *m, uint16_t sz){
+ 	uint16_t size=htons(sz);
+ 	*(uint16_t*)m->b_wptr=size;
+ 	m->b_wptr+=2;
+ }
+ 
+-static mblk_t * prepend_stapa(mblk_t *m){
+-	mblk_t *hm=allocb(3,0);
++static ortp_mblk_t * prepend_stapa(ortp_mblk_t *m){
++	ortp_mblk_t *hm=allocb(3,0);
+ 	nal_header_init(hm->b_wptr,nal_header_get_nri(m->b_rptr),TYPE_STAP_A);
+ 	hm->b_wptr+=1;
+ 	put_nal_size(hm,msgdsize(m));
+@@ -70,8 +70,8 @@
+ 	return hm;
+ }
+ 
+-static mblk_t * concat_nalus(mblk_t *m1, mblk_t *m2){
+-	mblk_t *l=allocb(2,0);
++static ortp_mblk_t * concat_nalus(ortp_mblk_t *m1, ortp_mblk_t *m2){
++	ortp_mblk_t *l=allocb(2,0);
+ 	/*eventually append a stap-A header to m1, if not already done*/
+ 	if (nal_header_get_type(m1->b_rptr)!=TYPE_STAP_A){
+ 		m1=prepend_stapa(m1);
+@@ -82,9 +82,9 @@
+ 	return m1;
+ }
+ 
+-static mblk_t *prepend_fu_indicator_and_header(mblk_t *m, uint8_t indicator,
++static ortp_mblk_t *prepend_fu_indicator_and_header(ortp_mblk_t *m, uint8_t indicator,
+ 	bool_t start, bool_t end, uint8_t type){
+-	mblk_t *h=allocb(2,0);
++	ortp_mblk_t *h=allocb(2,0);
+ 	h->b_wptr[0]=indicator;
+ 	h->b_wptr[1]=((start&0x1)<<7)|((end&0x1)<<6)|type;
+ 	h->b_wptr+=2;
+@@ -93,8 +93,8 @@
+ 	return h;
+ }
+ 
+-static void frag_nalu_and_send(MSQueue *rtpq, uint32_t ts, mblk_t *nalu, bool_t marker, int maxsize){
+-	mblk_t *m;
++static void frag_nalu_and_send(MSQueue *rtpq, uint32_t ts, ortp_mblk_t *nalu, bool_t marker, int maxsize){
++	ortp_mblk_t *m;
+ 	int payload_max_size=maxsize-2;/*minus FUA header*/
+ 	uint8_t fu_indicator;
+ 	uint8_t type=nal_header_get_type(nalu->b_rptr);
+@@ -116,7 +116,7 @@
+ }
+ 
+ static void rfc3984_pack_mode_0(Rfc3984Context *ctx, MSQueue *naluq, MSQueue *rtpq, uint32_t ts){
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	bool_t end;
+ 	int size;
+ 	while((m=ms_queue_get(naluq))!=NULL){
+@@ -131,7 +131,7 @@
+ 
+ /*process NALUs and pack them into rtp payloads */
+ static void rfc3984_pack_mode_1(Rfc3984Context *ctx, MSQueue *naluq, MSQueue *rtpq, uint32_t ts){
+-	mblk_t *m,*prevm=NULL;
++	ortp_mblk_t *m,*prevm=NULL;
+ 	int prevsz=0,sz;
+ 	bool_t end;
+ 	while((m=ms_queue_get(naluq))!=NULL){
+@@ -187,8 +187,8 @@
+ 	}
+ }
+ 
+-static mblk_t * aggregate_fua(Rfc3984Context *ctx, mblk_t *im){
+-	mblk_t *om=NULL;
++static ortp_mblk_t * aggregate_fua(Rfc3984Context *ctx, ortp_mblk_t *im){
++	ortp_mblk_t *om=NULL;
+ 	uint8_t fu_header;
+ 	uint8_t nri,type;
+ 	bool_t start,end;
+@@ -225,7 +225,7 @@
+ }
+ 
+ /*process incoming rtp data and output NALUs, whenever possible*/
+-void rfc3984_unpack(Rfc3984Context *ctx, mblk_t *im, MSQueue *out){
++void rfc3984_unpack(Rfc3984Context *ctx, ortp_mblk_t *im, MSQueue *out){
+ 	uint8_t type=nal_header_get_type(im->b_rptr);
+ 	uint8_t *p;
+ 	int marker = mblk_get_marker_info(im);
+@@ -249,7 +249,7 @@
+ 		/*split into nalus*/
+ 		uint16_t sz;
+ 		uint8_t *buf=(uint8_t*)&sz;
+-		mblk_t *nal;
++		ortp_mblk_t *nal;
+ 		for(p=im->b_rptr+1;p<im->b_wptr;){
+ 			buf[0]=p[0];
+ 			buf[1]=p[1];
+@@ -269,7 +269,7 @@
+ 		freemsg(im);
+ 	}else if (type==TYPE_FU_A){
+ 		ms_debug("Receiving FU-A");
+-		mblk_t *o=aggregate_fua(ctx,im);
++		ortp_mblk_t *o=aggregate_fua(ctx,im);
+ 		if (o) ms_queue_put(&ctx->q,o);
+ 	}else{
+ 		if (ctx->m){

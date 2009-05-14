@@ -1,0 +1,58 @@
+--- mediastreamer-2.1.1.orig/src/oss.c	2007-04-05 12:39:26.000000000 -0400
++++ mediastreamer-2.1.1/src/oss.c	2008-05-16 20:59:17.000000000 -0400
+@@ -145,7 +145,7 @@
+ 	int bits;
+ 	ms_thread_t thread;
+ 	ms_mutex_t mutex;
+-	queue_t rq;
++	ortp_queue_t rq;
+ 	MSBufferizer * bufferizer;
+ 	bool_t read_started;
+ 	bool_t write_started;
+@@ -316,7 +316,7 @@
+ 	uint8_t *rtmpbuff=NULL;
+ 	uint8_t *wtmpbuff=NULL;
+ 	int err;
+-	mblk_t *rm=NULL;
++	ortp_mblk_t *rm=NULL;
+ 	d->pcmfd=oss_open(d->pcmdev,d->bits,d->stereo,d->rate,&bsize);
+ 	if (d->pcmfd>=0){
+ 		rtmpbuff=(uint8_t*)malloc(bsize);
+@@ -463,16 +463,16 @@
+ 	}
+ }
+ 
+-static mblk_t *oss_get(MSSndCard *card){
++static ortp_mblk_t *oss_get(MSSndCard *card){
+ 	OssData *d=(OssData*)card->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	ms_mutex_lock(&d->mutex);
+ 	m=getq(&d->rq);
+ 	ms_mutex_unlock(&d->mutex);
+ 	return m;
+ }
+ 
+-static void oss_put(MSSndCard *card, mblk_t *m){
++static void oss_put(MSSndCard *card, ortp_mblk_t *m){
+ 	OssData *d=(OssData*)card->data;
+ 	ms_mutex_lock(&d->mutex);
+ 	ms_bufferizer_put(d->bufferizer,m);
+@@ -492,7 +492,7 @@
+ 
+ static void oss_read_process(MSFilter *f){
+ 	MSSndCard *card=(MSSndCard*)f->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	while((m=oss_get(card))!=NULL){
+ 		ms_queue_put(f->outputs[0],m);
+ 	}
+@@ -510,7 +510,7 @@
+ 
+ static void oss_write_process(MSFilter *f){
+ 	MSSndCard *card=(MSSndCard*)f->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	while((m=ms_queue_get(f->inputs[0]))!=NULL){
+ 		oss_put(card,m);
+ 	}
