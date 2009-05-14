@@ -1,0 +1,13 @@
+--- mediastreamer-2.2.4/src/mscommon.c.orig	2009-04-11 22:12:59.000000000 +0530
++++ mediastreamer-2.2.4/src/mscommon.c	2009-05-14 14:35:38.882298705 +0530
+@@ -349,8 +349,8 @@
+ 		return -1;
+ 	}
+ 	while( (de=readdir(ds))!=NULL){
+-		if ((de->d_type==DT_REG && strstr(de->d_name,PLUGINS_EXT)!=NULL)
+-		    || (de->d_type==DT_UNKNOWN && strstr(de->d_name,PLUGINS_EXT)==de->d_name+strlen(de->d_name)-strlen(PLUGINS_EXT))) {
++		if ((strstr(de->d_name,PLUGINS_EXT)!=NULL)
++		    || (strstr(de->d_name,PLUGINS_EXT)==de->d_name+strlen(de->d_name)-strlen(PLUGINS_EXT))) {
+ 			void *handle;
+ 			fullpath=ms_strdup_printf("%s/%s",dir,de->d_name);
+ 			ms_message("Loading plugin %s...",fullpath);

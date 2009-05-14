@@ -1,0 +1,11 @@
+--- mediastreamer-2.2.4/src/msresample.c.orig	2009-04-23 02:07:36.000000000 +0530
++++ mediastreamer-2.2.4/src/msresample.c	2009-05-14 14:46:29.453230220 +0530
+@@ -65,7 +65,7 @@
+ 	int size_of_input;
+ 	int size_of_output;
+ 
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	
+ 	if (dt->output_rate==dt->input_rate)
+ 	  {

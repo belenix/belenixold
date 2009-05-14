@@ -1,0 +1,77 @@
+--- mediastreamer-2.2.4/src/videodec.c.orig	2009-04-23 17:51:36.000000000 +0530
++++ mediastreamer-2.2.4/src/videodec.c	2009-05-14 17:18:40.679641489 +0530
+@@ -34,9 +34,9 @@
+ 	AVCodecContext av_context;
+ 	AVCodec *av_codec;
+ 	enum CodecID codec;
+-	mblk_t *input;
++	ortp_mblk_t *input;
+ 	YuvBuf outbuf;
+-	mblk_t *yuv_msg;
++	ortp_mblk_t *yuv_msg;
+ 	struct SwsContext *sws_ctx;
+ 	enum PixelFormat output_pix_fmt;
+ 	uint8_t dci[512];
+@@ -140,7 +140,7 @@
+ 	}
+ }
+ 
+-static mblk_t * skip_rfc2190_header(mblk_t *inm){
++static ortp_mblk_t * skip_rfc2190_header(ortp_mblk_t *inm){
+ 	if (msgdsize(inm) >= 4) {
+ 		uint8_t *ph = inm->b_rptr;
+ 		int F = (ph[0]>>7) & 0x1;
+@@ -155,7 +155,7 @@
+ 	return inm;
+ }
+ 
+-static mblk_t * skip_rfc2429_header(mblk_t *inm){
++static ortp_mblk_t * skip_rfc2429_header(ortp_mblk_t *inm){
+ 	if (msgdsize(inm) >= 2){
+ 		uint32_t *p = (uint32_t*)inm->b_rptr;
+ 		uint8_t *ph=inm->b_rptr;
+@@ -188,7 +188,7 @@
+ 	return NULL;
+ }
+ 
+-static mblk_t * parse_snow_header(DecState *s,mblk_t *inm){
++static ortp_mblk_t * parse_snow_header(DecState *s,ortp_mblk_t *inm){
+ 	if (msgdsize(inm) >= 4){
+ 		uint32_t h = ntohl(*(uint32_t*)inm->b_rptr);
+ 		if (!s->snow_initialized){
+@@ -212,7 +212,7 @@
+ 	}
+ }
+ 
+-static mblk_t *get_as_yuvmsg(MSFilter *f, DecState *s, AVFrame *orig){
++static ortp_mblk_t *get_as_yuvmsg(MSFilter *f, DecState *s, AVFrame *orig){
+ 	AVCodecContext *ctx=&s->av_context;
+ 
+ 	if (s->outbuf.w!=ctx->width || s->outbuf.h!=ctx->height){
+@@ -234,7 +234,7 @@
+ 	return dupmsg(s->yuv_msg);
+ }
+ 
+-static void dec_process_frame(MSFilter *f, mblk_t *inm){
++static void dec_process_frame(MSFilter *f, ortp_mblk_t *inm){
+ 	DecState *s=(DecState*)f->data;
+ 	AVFrame orig;
+ 	int got_picture;
+@@ -252,7 +252,7 @@
+ 		}
+ 		
+ 		if (mblk_get_marker_info(inm)){
+-			mblk_t *frame;
++			ortp_mblk_t *frame;
+ 			int remain,len;
+ 			/*ms_message("got marker bit !");*/
+ 			/*append some padding bytes for ffmpeg to safely 
+@@ -282,7 +282,7 @@
+ }
+ 
+ static void dec_process(MSFilter *f){
+-	mblk_t *inm;
++	ortp_mblk_t *inm;
+ 	while((inm=ms_queue_get(f->inputs[0]))!=0){
+ 		dec_process_frame(f,inm);
+ 	}

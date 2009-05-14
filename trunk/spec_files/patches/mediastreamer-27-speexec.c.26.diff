@@ -1,0 +1,18 @@
+--- mediastreamer-2.2.4/src/speexec.c.orig	2009-04-09 01:58:00.000000000 +0530
++++ mediastreamer-2.2.4/src/speexec.c	2009-05-14 15:12:50.780144628 +0530
+@@ -90,12 +90,12 @@
+ 	SpeexECState *s=(SpeexECState*)f->data;
+ 	int nbytes=s->framesize*2;
+ 	uint8_t *in1;
+-	mblk_t *om0,*om1;
++	ortp_mblk_t *om0,*om1;
+ #ifdef AMD_WIN32_HACK
+ 	static int count=0;
+ #endif
+-	mblk_t *m;
+-	mblk_t *md;	
++	ortp_mblk_t *m;
++	ortp_mblk_t *md;	
+ 
+ 	if (s->size_delay<s->playback_delay){
+ 		while((m=ms_queue_get(f->inputs[0]))!=NULL

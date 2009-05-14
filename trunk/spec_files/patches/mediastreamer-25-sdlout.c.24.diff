@@ -1,0 +1,57 @@
+--- mediastreamer-2.1.1.orig/src/sdlout.c	2007-11-07 06:07:37.000000000 -0500
++++ mediastreamer-2.1.1/src/sdlout.c	2008-05-16 20:59:18.000000000 -0400
+@@ -31,7 +31,7 @@
+ 	MSPixFmt format;
+ 	SDL_Surface *screen;
+ 	SDL_Overlay *overlay;
+-	mblk_t *smallb;
++	ortp_mblk_t *smallb;
+ 	int scale_factor;
+ 	bool_t lsize_init;
+ } SdlOut;
+@@ -111,14 +111,14 @@
+ 	}
+ }
+ 
+-mblk_t * resize_yuv_small(unsigned char *pict, int w, int h, int scale){
++ortp_mblk_t * resize_yuv_small(unsigned char *pict, int w, int h, int scale){
+ 	int i,j,id,jd;
+ 	int nh,nw;
+ 	unsigned char *smallpict;
+ 	int ysize,usize,ydsize,udsize;
+ 	int smallpict_sz;
+ 	unsigned char *dptr,*sptr;
+-	mblk_t *smallb;
++	ortp_mblk_t *smallb;
+ 	nw=w/scale;
+ 	nh=h/scale;
+ 	ysize=w*h;
+@@ -160,7 +160,7 @@
+ 	return smallb;
+ }
+ 
+-static void fill_overlay_at_pos(SDL_Overlay *lay, mblk_t *m, int x, int y, int w, int h){
++static void fill_overlay_at_pos(SDL_Overlay *lay, ortp_mblk_t *m, int x, int y, int w, int h){
+ 	unsigned char *data=m->b_rptr;
+ 	int i,j;
+ 	int jlim,ilim;
+@@ -201,7 +201,7 @@
+ 	SDL_UnlockYUVOverlay(lay);
+ }
+ 
+-static void fill_overlay(SDL_Overlay *lay,mblk_t *m){
++static void fill_overlay(SDL_Overlay *lay,ortp_mblk_t *m){
+ 	
+ 	int w2,h2;
+ 	char *data=(char*)m->b_rptr;
+@@ -219,8 +219,8 @@
+ 
+ static void sdl_out_process(MSFilter *f){
+ 	SdlOut *obj=(SdlOut*)f->data;
+-	mblk_t *inm0=NULL;
+-	mblk_t *inm1=NULL;
++	ortp_mblk_t *inm0=NULL;
++	ortp_mblk_t *inm1=NULL;
+ 	int err;
+ 	SDL_Rect smallrect;
+ 	SDL_Rect rect;

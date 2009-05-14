@@ -1,0 +1,58 @@
+--- mediastreamer-2.2.4/src/msv4m.c.orig	2009-04-11 21:18:23.000000000 +0530
++++ mediastreamer-2.2.4/src/msv4m.c	2009-05-14 15:02:13.083626385 +0530
+@@ -63,8 +63,8 @@
+   MSVideoSize got_vsize;
+   int pix_fmt;
+   int int_pix_fmt; /*internal pixel format */
+-  mblk_t *mire;
+-  queue_t rq;
++  ortp_mblk_t *mire;
++  ortp_queue_t rq;
+   ms_mutex_t mutex;
+   int frame_ind;
+   int frame_max;
+@@ -158,7 +158,7 @@
+         
+     {
+       unsigned line;
+-      mblk_t *buf;
++      ortp_mblk_t *buf;
+       int size = s->vsize.width * s->vsize.height * 3;
+       buf=allocb(size,0);
+       
+@@ -404,7 +404,7 @@
+ 	ms_free(s);
+ }
+ 
+-static mblk_t * v4m_make_mire(v4mState *s){
++static ortp_mblk_t * v4m_make_mire(v4mState *s){
+ 	unsigned char *data;
+ 	int i,j,line,pos;
+ 	int patternw=s->vsize.width/6; 
+@@ -434,7 +434,7 @@
+ 	return s->mire;
+ }
+ 
+-static mblk_t * v4m_make_nowebcam(v4mState *s){
++static ortp_mblk_t * v4m_make_nowebcam(v4mState *s){
+ 	if (s->mire==NULL && s->frame_ind==0){
+ 		s->mire=ms_load_nowebcam(&s->vsize, -1);
+ 	}
+@@ -460,7 +460,7 @@
+ 
+ 	cur_frame=((obj->ticker->time-s->start_time)*s->fps/1000.0);
+ 	if (cur_frame>=s->frame_count){
+-		mblk_t *om=NULL;
++		ortp_mblk_t *om=NULL;
+ 		/*keep the most recent frame if several frames have been captured */
+ 		if (s->seqgrab!=NULL){
+ 			om=getq(&s->rq);
+@@ -472,7 +472,7 @@
+ 			if (s->usemire){
+ 				om=dupmsg(v4m_make_mire(s));
+ 			}else {
+-				mblk_t *tmpm=v4m_make_nowebcam(s);
++				ortp_mblk_t *tmpm=v4m_make_nowebcam(s);
+ 				if (tmpm) om=dupmsg(tmpm);
+ 			}
+ 		    }

@@ -1,0 +1,15 @@
+--- mediastreamer-2.2.4/include/mediastreamer2/ice.h.orig	2009-05-14 17:30:02.676401845 +0530
++++ mediastreamer-2.2.4/include/mediastreamer2/ice.h	2009-05-14 17:30:14.001434817 +0530
+@@ -21,9 +21,9 @@
+ #define ice_hh
+ 
+ #include "msfilter.h"
+-#include "ortp/stun_udp.h"
+-#include "ortp/stun.h"
+-#include "ortp/ortp.h"
++#include <ortp/stun_udp.h>
++#include <ortp/stun.h>
++#include <ortp/ortp.h>
+ 
+ /* list of state for STUN connectivity check */
+ #define ICE_PRUNED -1

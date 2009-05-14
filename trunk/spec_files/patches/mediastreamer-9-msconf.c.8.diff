@@ -1,0 +1,40 @@
+--- mediastreamer-2.2.4/src/msconf.c.orig	2009-04-09 01:58:00.000000000 +0530
++++ mediastreamer-2.2.4/src/msconf.c	2009-05-14 14:56:32.090893873 +0530
+@@ -493,8 +493,8 @@
+ 	return (int16_t)sample;
+ }
+ 
+-static mblk_t * conf_output(ConfState *s, Channel *chan, int16_t attenuation){
+-	mblk_t *m=allocb(s->conf_gran,0);
++static ortp_mblk_t * conf_output(ConfState *s, Channel *chan, int16_t attenuation){
++	ortp_mblk_t *m=allocb(s->conf_gran,0);
+ 	int i;
+ 	int tmp;
+ 	if (chan->has_contributed==TRUE){
+@@ -516,7 +516,7 @@
+ static void conf_dispatch(MSFilter *f, ConfState *s){
+ 	int i;
+ 	Channel *chan;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 
+ 	for (i=0;i<CONF_MAX_PINS;++i){
+ 		if (f->outputs[i]!=NULL){
+@@ -582,7 +582,7 @@
+ 						if (f->outputs[0]!=NULL)
+ 						{
+ 							/* send in pin0 */
+-							mblk_t *m=allocb(s->conf_gran,0);
++							ortp_mblk_t *m=allocb(s->conf_gran,0);
+ 							memcpy(m->b_wptr, chan->input, s->conf_gran);
+ 							m->b_wptr+=s->conf_gran;
+ 							ms_queue_put(f->outputs[0],m);
+@@ -597,7 +597,7 @@
+ 						if (f->outputs[i]!=NULL)
+ 						{
+ 							/* send in pinI */
+-							mblk_t *m=allocb(s->conf_gran,0);
++							ortp_mblk_t *m=allocb(s->conf_gran,0);
+ 							memcpy(m->b_wptr, chan0->input, s->conf_gran);
+ 							m->b_wptr+=s->conf_gran;
+ 							ms_queue_put(f->outputs[i],m);

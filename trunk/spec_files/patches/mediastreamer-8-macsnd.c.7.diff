@@ -1,0 +1,58 @@
+--- mediastreamer-2.1.1.orig/src/macsnd.c	2008-01-22 16:37:36.000000000 -0500
++++ mediastreamer-2.1.1/src/macsnd.c	2008-05-16 20:59:16.000000000 -0400
+@@ -70,7 +70,7 @@
+ 	int rate;
+ 	int bits;
+ 	ms_mutex_t mutex;
+-	queue_t rq;
++	ortp_queue_t rq;
+ 	MSBufferizer * bufferizer;
+ 	bool_t read_started;
+ 	bool_t write_started;
+@@ -211,7 +211,7 @@
+ 	if(err != noErr)
+ 		ms_error("readRenderProc:AudioConverterFillComplexBuffer %08x mNumberBuffers = %d", err, ioData->mNumberBuffers);
+ 
+-	mblk_t *rm=NULL;
++	ortp_mblk_t *rm=NULL;
+ 	rm=allocb(d->fMSBuffer->mBuffers[0].mDataByteSize,0);
+ 	memcpy(rm->b_wptr, d->fMSBuffer->mBuffers[0].mData, d->fMSBuffer->mBuffers[0].mDataByteSize);
+ //	memset(rm->b_wptr, 0, d->fMSBuffer->mBuffers[0].mDataByteSize);
+@@ -578,16 +578,16 @@
+ 	}
+ }
+ 
+-static mblk_t *ca_get(MSSndCard *card){
++static ortp_mblk_t *ca_get(MSSndCard *card){
+ 	CAData *d=(CAData*)card->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	ms_mutex_lock(&d->mutex);
+ 	m=getq(&d->rq);
+ 	ms_mutex_unlock(&d->mutex);
+ 	return m;
+ }
+ 
+-static void ca_put(MSSndCard *card, mblk_t *m){
++static void ca_put(MSSndCard *card, ortp_mblk_t *m){
+ 	CAData *d=(CAData*)card->data;
+ 	ms_mutex_lock(&d->mutex);
+ 	ms_bufferizer_put(d->bufferizer,m);
+@@ -607,7 +607,7 @@
+ 
+ static void ca_read_process(MSFilter *f){
+ 	MSSndCard *card=(MSSndCard*)f->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	while((m=ca_get(card))!=NULL){
+ 		ms_queue_put(f->outputs[0],m);
+ 	}
+@@ -628,7 +628,7 @@
+ static void ca_write_process(MSFilter *f){
+ //	ms_debug("ca_write_process");
+ 	MSSndCard *card=(MSSndCard*)f->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	while((m=ms_queue_get(f->inputs[0]))!=NULL){
+ 		ca_put(card,m);
+ 	}

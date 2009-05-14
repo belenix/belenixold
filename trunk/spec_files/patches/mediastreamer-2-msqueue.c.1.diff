@@ -1,0 +1,36 @@
+--- mediastreamer-2.1.1.orig/src/msqueue.c	2008-01-03 12:40:49.000000000 -0500
++++ mediastreamer-2.1.1/src/msqueue.c	2008-05-16 20:54:44.000000000 -0400
+@@ -61,13 +61,13 @@
+ 	return obj;
+ }
+ 
+-void ms_bufferizer_put(MSBufferizer *obj, mblk_t *m){
++void ms_bufferizer_put(MSBufferizer *obj, ortp_mblk_t *m){
+ 	obj->size+=msgdsize(m);
+ 	putq(&obj->q,m);
+ }
+ 
+ void ms_bufferizer_put_from_queue(MSBufferizer *obj, MSQueue *q){
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	while((m=ms_queue_get(q))!=NULL){
+ 		ms_bufferizer_put(obj,m);
+ 	}
+@@ -77,7 +77,7 @@
+ 	if (obj->size>=datalen){
+ 		int sz=0;
+ 		int cplen;
+-		mblk_t *m=peekq(&obj->q);
++		ortp_mblk_t *m=peekq(&obj->q);
+ 		/*we can return something */
+ 		while(sz<datalen){
+ 			cplen=MIN(m->b_wptr-m->b_rptr,datalen-sz);
+@@ -90,7 +90,7 @@
+ 					m=m->b_cont;
+ 				}
+ 				else{
+-					mblk_t *remove=getq(&obj->q);
++					ortp_mblk_t *remove=getq(&obj->q);
+ 					freemsg(remove);
+ 					m=peekq(&obj->q);
+ 				}

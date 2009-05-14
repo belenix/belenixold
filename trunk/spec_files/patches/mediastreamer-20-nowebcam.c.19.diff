@@ -1,0 +1,68 @@
+--- mediastreamer-2.2.4/src/nowebcam.c.orig	2009-04-27 01:31:42.000000000 +0530
++++ mediastreamer-2.2.4/src/nowebcam.c	2009-05-14 15:05:26.529580018 +0530
+@@ -39,12 +39,12 @@
+ #include <malloc.h>
+ #endif
+ 
+-static mblk_t *jpeg2yuv(uint8_t *jpgbuf, int bufsize, MSVideoSize *reqsize){
++static ortp_mblk_t *jpeg2yuv(uint8_t *jpgbuf, int bufsize, MSVideoSize *reqsize){
+ 	AVCodecContext av_context;
+ 	int got_picture=0;
+ 	AVFrame orig;
+ 	AVPicture dest;
+-	mblk_t *ret;
++	ortp_mblk_t *ret;
+ 	struct SwsContext *sws_ctx;
+ 	AVPacket pkt;
+ 
+@@ -1554,10 +1554,10 @@
+ /* end binary data. size = 22092 bytes */
+ #endif
+ 
+-mblk_t *ms_load_generate_yuv(MSVideoSize *reqsize)
++ortp_mblk_t *ms_load_generate_yuv(MSVideoSize *reqsize)
+ {
+ 	YuvBuf buf;
+-	mblk_t *m=NULL;
++	ortp_mblk_t *m=NULL;
+ #ifndef MS2_MINIMAL_SIZE
+ 	m=jpeg2yuv((uint8_t*)&def_mire,sizeof(def_mire),reqsize);
+ 	if (m!=NULL)
+@@ -1575,8 +1575,8 @@
+ 	return m;
+ }
+ 
+-mblk_t *ms_load_jpeg_as_yuv(const char *jpgpath, MSVideoSize *reqsize){
+-	mblk_t *m=NULL;
++ortp_mblk_t *ms_load_jpeg_as_yuv(const char *jpgpath, MSVideoSize *reqsize){
++	ortp_mblk_t *m=NULL;
+ 	struct stat statbuf;
+ 	uint8_t *jpgbuf;
+ #if !defined(_MSC_VER)
+@@ -1643,7 +1643,7 @@
+ static const char *def_image_path=PACKAGE_DATA_DIR "/images/" NOWEBCAM_JPG ".jpg";
+ 
+ 
+-mblk_t *ms_load_nowebcam(MSVideoSize *reqsize, int idx){
++ortp_mblk_t *ms_load_nowebcam(MSVideoSize *reqsize, int idx){
+ 	char tmp[256];
+ 	if (idx<0)
+ 		snprintf(tmp, sizeof(tmp), "%s/images/%s.jpg", PACKAGE_DATA_DIR, NOWEBCAM_JPG);
+@@ -1656,7 +1656,7 @@
+ 	MSVideoSize vsize;
+ 	char *nowebcamimage;
+ 	uint64_t lasttime;
+-	mblk_t *pic;
++	ortp_mblk_t *pic;
+ }SIData;
+ 
+ void static_image_init(MSFilter *f){
+@@ -1690,7 +1690,7 @@
+ 	if ((f->ticker->time - d->lasttime>1000) || d->lasttime==0){
+ 		ms_mutex_lock(&f->lock);
+ 		if (d->pic) {
+-			mblk_t *o=dupb(d->pic);
++			ortp_mblk_t *o=dupb(d->pic);
+ 			/*prevent mirroring at the output*/
+ 			mblk_set_precious_flag(o,1);
+ 			ms_queue_put(f->outputs[0],o);

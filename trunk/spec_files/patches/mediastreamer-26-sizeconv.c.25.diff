@@ -1,0 +1,43 @@
+--- mediastreamer-2.2.4/src/sizeconv.c.orig	2009-03-28 23:48:23.000000000 +0530
++++ mediastreamer-2.2.4/src/sizeconv.c	2009-05-14 15:11:46.418238682 +0530
+@@ -32,11 +32,11 @@
+ 	MSVideoSize in_vsize;
+ 	YuvBuf outbuf;
+ 	struct SwsContext *sws_ctx;
+-	mblk_t *om;
++	ortp_mblk_t *om;
+ 	float fps;
+ 	float start_time;
+ 	int frame_count;
+-	queue_t rq;
++	ortp_queue_t rq;
+ } SizeConvState;
+ 
+ 
+@@ -77,7 +77,7 @@
+   s->frame_count=-1;
+ }
+ 
+-static mblk_t *size_conv_alloc_mblk(SizeConvState *s){
++static ortp_mblk_t *size_conv_alloc_mblk(SizeConvState *s){
+ 	if (s->om!=NULL){
+ 		int ref=s->om->b_datap->db_ref;
+ 		if (ref==1){
+@@ -112,7 +112,7 @@
+ static void size_conv_process(MSFilter *f){
+ 	SizeConvState *s=(SizeConvState*)f->data;
+ 	YuvBuf inbuf;
+-	mblk_t *im;
++	ortp_mblk_t *im;
+ 	int cur_frame;
+ 
+ 	ms_filter_lock(f);
+@@ -152,7 +152,7 @@
+ 				ms_queue_put(f->outputs[0],im);
+ 			}else{
+ 				struct SwsContext *sws_ctx=get_resampler(s,inbuf.w,inbuf.h);
+-				mblk_t *om=size_conv_alloc_mblk(s);
++				ortp_mblk_t *om=size_conv_alloc_mblk(s);
+ 				if (sws_scale(sws_ctx,inbuf.planes,inbuf.strides, 0,
+ 					inbuf.h, s->outbuf.planes, s->outbuf.strides)<0){
+ 					ms_error("MSSizeConv: error in sws_scale().");

@@ -1,0 +1,11 @@
+--- mediastreamer-2.1.1.orig/src/msfileplayer.c	2007-10-08 08:44:47.000000000 -0400
++++ mediastreamer-2.1.1/src/msfileplayer.c	2008-05-16 20:59:16.000000000 -0400
+@@ -144,7 +144,7 @@
+ 	ms_filter_lock(f);
+ 	if (d->state==STARTED){
+ 		int err;
+-		mblk_t *om=allocb(bytes,0);
++		ortp_mblk_t *om=allocb(bytes,0);
+ 		if (d->pause_time>0){
+ 			err=bytes;
+ 			memset(om->b_wptr,0,bytes);

@@ -1,0 +1,11 @@
+--- mediastreamer-2.2.4/tests/mediastream.c.orig	2009-04-27 21:04:57.000000000 +0530
++++ mediastreamer-2.2.4/tests/mediastream.c	2009-05-14 17:35:57.378476626 +0530
+@@ -87,7 +87,7 @@
+ 	}
+ }
+ 
+-static void parse_rtcp(mblk_t *m){
++static void parse_rtcp(ortp_mblk_t *m){
+ 	do{
+ 		if (rtcp_is_RR(m)){
+ 			ms_message("Receiving RTCP RR");

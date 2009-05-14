@@ -1,0 +1,28 @@
+--- mediastreamer-2.2.4/src/msvideo.c.orig	2009-04-16 19:14:29.000000000 +0530
++++ mediastreamer-2.2.4/src/msvideo.c	2009-05-14 15:03:44.509814014 +0530
+@@ -35,7 +35,7 @@
+ 	buf->strides[3]=0;
+ }
+ 
+-int yuv_buf_init_from_mblk(YuvBuf *buf, mblk_t *m){
++int yuv_buf_init_from_mblk(YuvBuf *buf, ortp_mblk_t *m){
+ 	int size=m->b_wptr-m->b_rptr;
+ 	int w,h;
+ 	if (size==(MS_VIDEO_SIZE_QCIF_W*MS_VIDEO_SIZE_QCIF_H*3)/2){
+@@ -82,13 +82,13 @@
+ 	return 0;
+ }
+ 
+-void yuv_buf_init_from_mblk_with_size(YuvBuf *buf, mblk_t *m, int w, int h){
++void yuv_buf_init_from_mblk_with_size(YuvBuf *buf, ortp_mblk_t *m, int w, int h){
+ 	yuv_buf_init(buf,w,h,m->b_rptr);
+ }
+ 
+-mblk_t * yuv_buf_alloc(YuvBuf *buf, int w, int h){
++ortp_mblk_t * yuv_buf_alloc(YuvBuf *buf, int w, int h){
+ 	int size=(w*h*3)/2;
+-	mblk_t *msg=allocb(size,0);
++	ortp_mblk_t *msg=allocb(size,0);
+ 	yuv_buf_init(buf,w,h,msg->b_wptr);
+ 	msg->b_wptr+=size;
+ 	return msg;

@@ -1,0 +1,20 @@
+--- mediastreamer-2.2.4/src/videoout.c.orig	2009-05-05 15:24:45.000000000 +0530
++++ mediastreamer-2.2.4/src/videoout.c	2009-05-14 17:22:11.925112746 +0530
+@@ -553,7 +553,7 @@
+ 	MSPicture fbuf;
+ 	MSPicture local_pic;
+ 	MSRect local_rect;
+-	mblk_t *local_msg;
++	ortp_mblk_t *local_msg;
+ 	MSVideoSize prevsize;
+ 	int corner;
+ 	struct SwsContext *sws1;
+@@ -712,7 +712,7 @@
+ 
+ static void video_out_process(MSFilter *f){
+ 	VideoOut *obj=(VideoOut*)f->data;
+-	mblk_t *inm;
++	ortp_mblk_t *inm;
+ 
+ 	ms_filter_lock(f);
+ 	if (!obj->ready) video_out_prepare(f);

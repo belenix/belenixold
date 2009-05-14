@@ -1,0 +1,32 @@
+--- mediastreamer-2.1.1.orig/src/alaw.c	2007-10-18 16:05:09.000000000 -0400
++++ mediastreamer-2.1.1/src/alaw.c	2008-05-16 20:59:15.000000000 -0400
+@@ -54,7 +54,7 @@
+ 	int frame_per_packet=2;
+ 	int size_of_pcm=320;
+ 
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	
+ 	if (dt->ptime>=10)
+ 	{
+@@ -72,7 +72,7 @@
+ 		ms_bufferizer_put(bz,m);
+ 	}
+ 	while (ms_bufferizer_read(bz,buffer,size_of_pcm)==size_of_pcm){
+-		mblk_t *o=allocb(size_of_pcm/2,0);
++		ortp_mblk_t *o=allocb(size_of_pcm/2,0);
+ 		int i;
+ 		for (i=0;i<size_of_pcm/2;i++){
+ 			*o->b_wptr=s16_to_alaw(((int16_t*)buffer)[i]);
+@@ -173,9 +173,9 @@
+ #endif
+ 
+ static void alaw_dec_process(MSFilter *obj){
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	while((m=ms_queue_get(obj->inputs[0]))!=NULL){
+-		mblk_t *o;
++		ortp_mblk_t *o;
+ 		msgpullup(m,-1);
+ 		o=allocb((m->b_wptr-m->b_rptr)*2,0);
+ 		for(;m->b_rptr<m->b_wptr;m->b_rptr++,o->b_wptr+=2){

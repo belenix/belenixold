@@ -1,0 +1,11 @@
+--- mediastreamer-2.2.4/src/ice.c.orig	2009-03-23 17:46:40.000000000 +0530
++++ mediastreamer-2.2.4/src/ice.c	2009-05-14 14:55:14.072996950 +0530
+@@ -482,7 +482,7 @@
+ 	bool_t res;
+ 	int highest_priority_success=-1;
+ 	OrtpEventData *evt_data = ortp_event_get_data(evt);
+-	mblk_t *mp = evt_data->packet;
++	ortp_mblk_t *mp = evt_data->packet;
+ 	struct sockaddr_in *udp_remote;
+ 	char src6host[NI_MAXHOST];
+ 	int recvport = 0;

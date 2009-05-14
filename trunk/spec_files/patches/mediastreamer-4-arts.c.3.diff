@@ -1,0 +1,29 @@
+--- mediastreamer-2.1.1.orig/src/arts.c	2006-11-09 05:45:26.000000000 -0500
++++ mediastreamer-2.1.1/src/arts.c	2008-05-16 20:59:15.000000000 -0400
+@@ -46,7 +46,7 @@
+ 	int bits;
+ 	int bsize;
+ 	arts_stream_t stream;
+-	mblk_t *msg;
++	ortp_mblk_t *msg;
+ } ArtsState;
+ 
+ static void reader_init(MSFilter *f){
+@@ -85,7 +85,7 @@
+ 	int err;
+ 	ArtsState *s=(ArtsState *)f->data;
+ 	if (s->stream!=NULL){
+-		mblk_t *om=s->msg;
++		ortp_mblk_t *om=s->msg;
+ 		if (om==NULL) om=allocb(s->bsize,0);
+ 		err=arts_read(s->stream,om->b_wptr,s->bsize);
+ 		if (err>0){
+@@ -115,7 +115,7 @@
+ static void writer_process(MSFilter *f){
+ 	ArtsState *s=(ArtsState *)f->data;
+ 	int err;
+-	mblk_t *im;
++	ortp_mblk_t *im;
+ 	
+ 	if (s->stream==NULL){
+ 		ms_queue_flush(f->inputs[0]);

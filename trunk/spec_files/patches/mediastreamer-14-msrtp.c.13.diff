@@ -1,0 +1,29 @@
+--- mediastreamer-2.2.4/src/msrtp.c.orig	2009-03-29 02:10:36.000000000 +0530
++++ mediastreamer-2.2.4/src/msrtp.c	2009-05-14 14:58:34.445923534 +0530
+@@ -158,7 +158,7 @@
+ 	SenderData *d = (SenderData *) f->data;
+ 	RtpSession *s = d->session;
+ 
+-	mblk_t *im;
++	ortp_mblk_t *im;
+ 	uint32_t timestamp;
+ 
+ 	if (s == NULL){
+@@ -174,7 +174,7 @@
+ 	}
+ 
+ 	while ((im = ms_queue_get(f->inputs[0])) != NULL) {
+-		mblk_t *header;
++		ortp_mblk_t *header;
+ 
+ 		timestamp = get_cur_timestamp(f, mblk_get_timestamp_info(im));
+ 		ms_filter_lock(f);
+@@ -312,7 +312,7 @@
+ static void receiver_process(MSFilter * f)
+ {
+ 	ReceiverData *d = (ReceiverData *) f->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	uint32_t timestamp;
+ 
+ 	if (d->session == NULL)

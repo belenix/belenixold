@@ -1,0 +1,58 @@
+--- mediastreamer-2.1.1.orig/src/pasnd.c	2006-11-22 04:21:27.000000000 -0500
++++ mediastreamer-2.1.1/src/pasnd.c	2008-05-16 20:59:17.000000000 -0400
+@@ -40,7 +40,7 @@
+   int bits;
+   ms_thread_t thread;
+   ms_mutex_t mutex;
+-  queue_t rq;
++  ortp_queue_t rq;
+   MSBufferizer * bufferizer;
+   bool_t read_started;
+   bool_t write_started;
+@@ -112,7 +112,7 @@
+   if (device->read_started)
+     {
+       int vad;
+-      mblk_t *rm=NULL;
++      ortp_mblk_t *rm=NULL;
+       if (rm==NULL) rm=allocb(framesPerBuffer*2,0);
+       memcpy(rm->b_wptr,inputBuffer, framesPerBuffer*2);
+       
+@@ -471,16 +471,16 @@
+ 	}
+ }
+ 
+-static mblk_t *pasnd_get(MSSndCard *card){
++static ortp_mblk_t *pasnd_get(MSSndCard *card){
+ 	PASndData *d=(PASndData*)card->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	ms_mutex_lock(&d->mutex);
+ 	m=getq(&d->rq);
+ 	ms_mutex_unlock(&d->mutex);
+ 	return m;
+ }
+ 
+-static void pasnd_put(MSSndCard *card, mblk_t *m){
++static void pasnd_put(MSSndCard *card, ortp_mblk_t *m){
+ 	PASndData *d=(PASndData*)card->data;
+ 	ms_mutex_lock(&d->mutex);
+ 	ms_bufferizer_put(d->bufferizer,m);
+@@ -500,7 +500,7 @@
+ 
+ static void pasnd_read_process(MSFilter *f){
+ 	MSSndCard *card=(MSSndCard*)f->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	while((m=pasnd_get(card))!=NULL){
+ 		ms_queue_put(f->outputs[0],m);
+ 	}
+@@ -518,7 +518,7 @@
+ 
+ static void pasnd_write_process(MSFilter *f){
+ 	MSSndCard *card=(MSSndCard*)f->data;
+-	mblk_t *m;
++	ortp_mblk_t *m;
+ 	while((m=ms_queue_get(f->inputs[0]))!=NULL){
+ 		pasnd_put(card,m);
+ 	}
