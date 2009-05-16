@@ -16,6 +16,7 @@ Version:                4.4.3
 URL:                    http://www.qtsoftware.com/products/
 Source:                 ftp://ftp.trolltech.com/qt/source/qt-x11-opensource-src-%{version}.tar.gz
 Patch1:                 qt4-01-use_bash.diff
+Patch2:                 qt4-02-qglobal.h.diff
 
 %define src_dir         qt-x11-opensource-src-%{version}
 License:		LICENSE.GPL
@@ -65,6 +66,28 @@ SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 Requires: %name
 Conflicts:              SFEqt3-devel
+Requires:               SFEgiflib
+Requires:               SFElibmng-devel
+Requires:               SUNWsqlite3-devel
+Requires:               SUNWfontconfig
+Requires:               SUNWfreetype2
+Requires:               SUNWgnu-libiconv-devel
+Requires:               SFEunixodbc
+Requires:               SUNWhal
+Requires:               SUNWdbus-devel
+Requires:               SUNWxorg-headers
+Requires:               SFEcups-devel
+Requires:               SUNWmysql5u
+Requires:               SUNWgnome-media-devel
+Requires:               SFEnas-devel
+Requires:               SUNWTiff-devel
+Requires:               SUNWpng-devel
+
+%package debug
+Summary:                 %{summary} - debug libraries
+SUNW_BaseDir:            %{_basedir}
+%include default-depend.inc
+Requires: %{name}-devel
 
 %package doc
 Summary:                 %{summary} - documentation files
@@ -282,6 +305,12 @@ make install INSTALL_ROOT=$RPM_BUILD_ROOT
 #
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/%{_arch64}/*.la
 rm -rf ${RPM_BUILD_ROOT}%{_datadir}
+
+mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/qt4/Qt/64
+mv ${RPM_BUILD_ROOT}%{_includedir}/qt4/Qt/qconfig.h ${RPM_BUILD_ROOT}%{_includedir}/qt4/Qt/64
+mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/qt4/QtCore/64
+mv ${RPM_BUILD_ROOT}%{_includedir}/qt4/QtCore/qconfig.h ${RPM_BUILD_ROOT}%{_includedir}/qt4/QtCore/64
+
 cd ..
 %endif
 
@@ -298,6 +327,50 @@ rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
   cd doc
   ln -s ../../doc/qt3/html
 )
+
+#
+# Patch qglobal.h to pull in correct 32Bit or 64Bit qconfig
+#
+(cd ${RPM_BUILD_ROOT}%{_includedir}/qt4/Qt
+ %patch2 -p4
+)
+(cd ${RPM_BUILD_ROOT}%{_includedir}/qt4/QtCore
+ %patch2 -p4
+)
+
+#
+# Fix qmake.conf
+#
+LPATHS="-L/usr/X11/lib/%{_arch64} -R/usr/X11/lib/%{_arch64} -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64} -L%{postgres_dir}/lib/%{_arch64} -R%{postgres_dir}/lib/%{_arch64} -L%{mysql_dir}/lib/%{_arch64} -R%{mysql_dir}/lib/%{_arch64} -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64}"
+QMAKE64="${RPM_BUILD_ROOT}%{_datadir}/qt4/mkspecs/solaris-g++-64/qmake.conf"
+cp ${QMAKE64} ${QMAKE64}.orig
+cat ${QMAKE64}.orig | sed "{
+    s@^QMAKE_LIBDIR		=.*@QMAKE_LIBDIR          = @
+    s@^QMAKE_LFLAGS		= -m64@QMAKE_LFLAGS		= -m64 ${LPATHS}@
+    s@^QMAKE_LIBS		=@QMAKE_LIBS		= -lstdc++ -lintl -liconv@
+    s@^QMAKE_LIBDIR_X11	=.*@QMAKE_LIBDIR_X11	= /usr/X11/lib/%{_arch64}@
+    s@^QMAKE_INCDIR_X11	=.*@QMAKE_INCDIR_X11	= /usr/X11/include@
+    s@^QMAKE_LIBDIR_OPENGL	=.*@QMAKE_LIBDIR_OPENGL	= /usr/X11/lib/GL/%{_arch64}@
+    s@^QMAKE_INCDIR_OPENGL	=.*@QMAKE_INCDIR_OPENGL	= /usr/X11/include@
+}" > ${QMAKE64}
+
+LPATHS="-L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L%{postgres_dir}/lib -R%{postgres_dir}/lib -L%{mysql_dir}/lib -R%{mysql_dir}/lib -L/usr/sfw/lib -R/usr/sfw/lib"
+QMAKE="${RPM_BUILD_ROOT}%{_datadir}/qt4/mkspecs/solaris-g++/qmake.conf"
+cp ${QMAKE} ${QMAKE}.orig
+cat ${QMAKE}.orig | sed "{
+    s@^QMAKE_LIBDIR		=.*@QMAKE_LIBDIR          = @
+    s@^QMAKE_LFLAGS		=@QMAKE_LFLAGS		= ${LPATHS}@
+    s@^QMAKE_LIBS		=@QMAKE_LIBS		= -lstdc++ -lintl -liconv@
+    s@^QMAKE_LIBDIR_X11	=.*@QMAKE_LIBDIR_X11	= /usr/X11/lib@
+    s@^QMAKE_INCDIR_X11	=.*@QMAKE_INCDIR_X11	= /usr/X11/include@
+    s@^QMAKE_LIBDIR_OPENGL	=.*@QMAKE_LIBDIR_OPENGL	= /usr/X11/lib/GL@
+    s@^QMAKE_INCDIR_OPENGL	=.*@QMAKE_INCDIR_OPENGL	= /usr/X11/include@
+}" > ${QMAKE}
+
+rm -f ${QMAKE64}.orig
+rm -f ${QMAKE}.orig
+
+cd ..
 
 
 %files
@@ -717,38 +790,6 @@ rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 %dir %attr (0755, root, bin) %{_datadir}/qt4/mkspecs
 %{_datadir}/qt4/mkspecs/*
 
-%dir %attr (0755, root, bin) %{_libdir}
-%{_libdir}/*.debug
-%dir %attr (0755, root, bin) %{_libdir}/qt4
-%dir %attr (0755, root, bin) %{_libdir}/qt4/plugins
-%{_libdir}/qt4/plugins/designer/libqt3supportwidgets.so.debug
-%{_libdir}/qt4/plugins/designer/libcontainerextension.so.debug
-%{_libdir}/qt4/plugins/designer/libcustomwidgetplugin.so.debug
-%{_libdir}/qt4/plugins/designer/libtaskmenuextension.so.debug
-%{_libdir}/qt4/plugins/designer/libarthurplugin.so.debug
-%{_libdir}/qt4/plugins/designer/libworldtimeclockplugin.so.debug
-%{_libdir}/qt4/plugins/designer/libqwebview.so.debug
-%{_libdir}/qt4/plugins/accessible/libqtaccessiblewidgets.so.debug
-%{_libdir}/qt4/plugins/accessible/libqtaccessiblecompatwidgets.so.debug
-%{_libdir}/qt4/plugins/codecs/libqcncodecs.so.debug
-%{_libdir}/qt4/plugins/codecs/libqtwcodecs.so.debug
-%{_libdir}/qt4/plugins/codecs/libqkrcodecs.so.debug
-%{_libdir}/qt4/plugins/codecs/libqjpcodecs.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqsvg.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqtiff.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqmng.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqico.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqgif.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqjpeg.so.debug
-%{_libdir}/qt4/plugins/iconengines/libqsvgicon.so.debug
-%{_libdir}/qt4/plugins/inputmethods/libqimsw-multi.so.debug
-%{_libdir}/qt4/plugins/script/libqtscriptdbus.so.debug
-%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so.debug
-%{_libdir}/qt4/plugins/sqldrivers/libqsqlite.so.debug
-%{_libdir}/qt4/plugins/sqldrivers/libqsqlpsql.so.debug
-%{_libdir}/qt4/plugins/sqldrivers/libqsqlodbc.so.debug
-%{_libdir}/qt4/plugins/sqldrivers/libqsqlmysql.so.debug
-
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/Qt3Support.pc
 %{_libdir}/pkgconfig/QtAssistantClient.pc
@@ -771,9 +812,6 @@ rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 %{_libdir}/pkgconfig/QtWebKit.pc
 %{_libdir}/pkgconfig/QtXml.pc
 %{_libdir}/pkgconfig/QtXmlPatterns.pc
-
-%dir %attr (0755, root, bin) %{_bindir}
-%{_bindir}/*.debug
 
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_libdir}/%_arch64
@@ -809,8 +847,48 @@ rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 %{_datadir}/qt4/q3porting.xml
 %{_datadir}/qt4/doc
 
+%files debug
+%defattr (-, root, bin)
+%dir %attr (0755, root, bin) %{_libdir}
+%{_libdir}/*.debug
+%dir %attr (0755, root, bin) %{_libdir}/qt4
+%dir %attr (0755, root, bin) %{_libdir}/qt4/plugins
+%{_libdir}/qt4/plugins/designer/libqt3supportwidgets.so.debug
+%{_libdir}/qt4/plugins/designer/libcontainerextension.so.debug
+%{_libdir}/qt4/plugins/designer/libcustomwidgetplugin.so.debug
+%{_libdir}/qt4/plugins/designer/libtaskmenuextension.so.debug
+%{_libdir}/qt4/plugins/designer/libarthurplugin.so.debug
+%{_libdir}/qt4/plugins/designer/libworldtimeclockplugin.so.debug
+%{_libdir}/qt4/plugins/designer/libqwebview.so.debug
+%{_libdir}/qt4/plugins/accessible/libqtaccessiblewidgets.so.debug
+%{_libdir}/qt4/plugins/accessible/libqtaccessiblecompatwidgets.so.debug
+%{_libdir}/qt4/plugins/codecs/libqcncodecs.so.debug
+%{_libdir}/qt4/plugins/codecs/libqtwcodecs.so.debug
+%{_libdir}/qt4/plugins/codecs/libqkrcodecs.so.debug
+%{_libdir}/qt4/plugins/codecs/libqjpcodecs.so.debug
+%{_libdir}/qt4/plugins/imageformats/libqsvg.so.debug
+%{_libdir}/qt4/plugins/imageformats/libqtiff.so.debug
+%{_libdir}/qt4/plugins/imageformats/libqmng.so.debug
+%{_libdir}/qt4/plugins/imageformats/libqico.so.debug
+%{_libdir}/qt4/plugins/imageformats/libqgif.so.debug
+%{_libdir}/qt4/plugins/imageformats/libqjpeg.so.debug
+%{_libdir}/qt4/plugins/iconengines/libqsvgicon.so.debug
+%{_libdir}/qt4/plugins/inputmethods/libqimsw-multi.so.debug
+%{_libdir}/qt4/plugins/script/libqtscriptdbus.so.debug
+%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so.debug
+%{_libdir}/qt4/plugins/sqldrivers/libqsqlite.so.debug
+%{_libdir}/qt4/plugins/sqldrivers/libqsqlpsql.so.debug
+%{_libdir}/qt4/plugins/sqldrivers/libqsqlodbc.so.debug
+%{_libdir}/qt4/plugins/sqldrivers/libqsqlmysql.so.debug
+
+%dir %attr (0755, root, bin) %{_bindir}
+%{_bindir}/*.debug
 
 %changelog
+* Sat May 16 2009 - moinakg@belenix.org
+- Add debug package.
+- Update devel package dependencies.
+- Fix mkspecs and add patch for dual-arch qconfig.h.
 * Sun May 03 2009 - moinakg@belenix.org
 - Imported from KDE Solaris CvsDude and heavily modified.
 * Fri Oct 24 2008 - oboril.lukas@gmail.com
@@ -825,4 +903,3 @@ rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 
 * Thu Dec 13 2007 - groot@kde.org
 - Initial version
-
