@@ -15,6 +15,12 @@ Summary:		Qt4 is an X11 toolkit.
 Version:                4.4.3
 URL:                    http://www.qtsoftware.com/products/
 Source:                 ftp://ftp.trolltech.com/qt/source/qt-x11-opensource-src-%{version}.tar.gz
+Source1:                assistant.desktop
+Source2:                designer.desktop
+Source3:                linguist.desktop
+Source4:                qtdemo.desktop
+Source5:                qtconfig.desktop
+
 Patch1:                 qt4-01-use_bash.diff
 Patch2:                 qt4-02-qglobal.h.diff
 
@@ -58,14 +64,12 @@ Requires:               SUNWmysql5u
 Requires:               SUNWTiff
 Requires:               SFEgccruntime
 Requires:               SUNWpng
-Conflicts:              SFEqt3
 
 %package devel
 Summary:                 %{summary} - development files
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 Requires: %name
-Conflicts:              SFEqt3-devel
 Requires:               SFEgiflib
 Requires:               SFElibmng-devel
 Requires:               SUNWsqlite3-devel
@@ -143,7 +147,7 @@ chmod 0755 bin/%{_arch64}/*
 cd %{src_dir}-64
 
 INCL_PATHS="-I/usr/X11/include -I/usr/gnu/include -I%{postgres_dir}/include -I%{postgres_dir}/include/server -I%{mysql_dir}/include -I/usr/sfw/include -D_REENTRANT -DSOLARIS -D_POSIX_PTHREAD_SEMANTICS -D__EXTENSIONS__ -D_LARGEFILE_SOURCE"
-export CFLAGS="-O4 -m64 -fPIC -DPIC -Xlinker -i -fno-omit-frame-pointer ${INCL_PATHS}"
+export CFLAGS="-O3 -m64 -fPIC -DPIC -Xlinker -i -march=opteron -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
 
 LPATHS="-L/usr/X11/lib/%{_arch64} -R/usr/X11/lib/%{_arch64} -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64} -L%{postgres_dir}/lib/%{_arch64} -R%{postgres_dir}/lib/%{_arch64} -L%{mysql_dir}/lib/%{_arch64} -R%{mysql_dir}/lib/%{_arch64} -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64} -L%{_builddir}/%{src_dir}-64/lib"
 export LDFLAGS="%_ldflags64 ${LPATHS}"
@@ -154,7 +158,7 @@ export PATH="${PDIR}/bin/%{_arch64}:%{_prefix}/bin/%{_arch64}:${OPATH}"
 
 echo yes | ./configure -prefix %{_prefix} \
            -platform solaris-g++-64 \
-           -bindir %{_bindir}/%{_arch64} \
+           -bindir %{_prefix}/qt4/bin/%{_arch64} \
            -docdir %{_docdir}/qt4 \
            -headerdir %{_includedir}/qt4 \
            -libdir %{_libdir}/%{_arch64} \
@@ -194,6 +198,7 @@ echo yes | ./configure -prefix %{_prefix} \
            -system-nas-sound \
            -xmlpatterns \
            -svg \
+           -no-phonon \
            -qt-gif \
            -dbus-linked \
            -iconv \
@@ -220,7 +225,7 @@ cd ..
 cd %{src_dir}
 
 INCL_PATHS="-I/usr/X11/include -I/usr/gnu/include -I%{postgres_dir}/include -I%{postgres_dir}/include/server -I%{mysql_dir}/include -I/usr/sfw/include -D_REENTRANT -DSOLARIS -D_POSIX_PTHREAD_SEMANTICS -D__EXTENSIONS__ -D_LARGEFILE_SOURCE"
-export CFLAGS="-O4 -fPIC -DPIC -Xlinker -i -fno-omit-frame-pointer ${INCL_PATHS}"
+export CFLAGS="-O3 -fPIC -DPIC -Xlinker -i -march=pentium4 -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
 
 LPATHS="-L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L%{postgres_dir}/lib -R%{postgres_dir}/lib -L%{mysql_dir}/lib -R%{mysql_dir}/lib -L/usr/sfw/lib -R/usr/sfw/lib -L%{_builddir}/%{src_dir}/lib"
 export LDFLAGS="%_ldflags64 ${LPATHS}"
@@ -231,7 +236,7 @@ export PATH="${PDIR}/bin:${OPATH}"
 
 echo yes | ./configure -prefix %{_prefix} \
            -platform solaris-g++ \
-           -bindir %{_bindir} \
+           -bindir %{_prefix}/qt4/bin \
            -docdir %{_docdir}/qt4 \
            -headerdir %{_includedir}/qt4 \
            -libdir %{_libdir} \
@@ -271,7 +276,7 @@ echo yes | ./configure -prefix %{_prefix} \
            -system-nas-sound \
            -xmlpatterns \
            -svg \
-           -phonon \
+           -no-phonon \
            -qt-gif \
            -dbus-linked \
            -iconv \
@@ -311,6 +316,25 @@ mv ${RPM_BUILD_ROOT}%{_includedir}/qt4/Qt/qconfig.h ${RPM_BUILD_ROOT}%{_included
 mkdir -p ${RPM_BUILD_ROOT}%{_includedir}/qt4/QtCore/64
 mv ${RPM_BUILD_ROOT}%{_includedir}/qt4/QtCore/qconfig.h ${RPM_BUILD_ROOT}%{_includedir}/qt4/QtCore/64
 
+#
+# Fixup binaries that conflict with Qt3
+#
+mkdir -p ${RPM_BUILD_ROOT}%{_bindir}/%{_arch64}
+(cd ${RPM_BUILD_ROOT}%{_prefix}/qt4/bin/%{_arch64}
+ for i in * ; do
+   case "${i}" in
+     assistant|designer|linguist|lrelease|lupdate|moc|qmake|qtconfig|qtdemo|uic)
+       mv $i ../../../bin/%{_arch64}/${i}-qt4
+       ln -s ../../../bin/%{_arch64}/${i}-qt4 .
+       ln -s ../../../bin/%{_arch64}/${i}-qt4 $i
+       ;;
+     *)
+       mv $i ../../../bin/%{_arch64}/
+       ln -s ../../../bin/%{_arch64}/$i .
+       ;;
+   esac
+ done)
+
 cd ..
 %endif
 
@@ -329,7 +353,28 @@ rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 )
 
 #
-# Patch qglobal.h to pull in correct 32Bit or 64Bit qconfig
+# Fixup binaries that conflict with Qt3
+#
+(cd ${RPM_BUILD_ROOT}%{_prefix}/qt4/bin
+ for i in * ; do
+   case "${i}" in
+     assistant|designer|linguist|lrelease|lupdate|moc|qmake|qtconfig|qtdemo|uic)
+       mv $i ../../bin/${i}-qt4
+       ln -s ../../bin/${i}-qt4 .
+       ln -s ../../bin/${i}-qt4 $i
+       ;;
+     %{_arch64}) echo ""
+       ;;
+     *)
+       mv $i ../../bin/
+       ln -s ../../bin/$i .
+       ;;
+   esac
+ done)
+
+#
+# Patch qglobal.h to pull in correct 32Bit or 64Bit qconfig depending on
+# build flags.
 #
 (cd ${RPM_BUILD_ROOT}%{_includedir}/qt4/Qt
  %patch2 -p4
@@ -370,62 +415,49 @@ cat ${QMAKE}.orig | sed "{
 rm -f ${QMAKE64}.orig
 rm -f ${QMAKE}.orig
 
+#
+# Copy *.desktop entries
+#
+mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/applications
+cp %{SOURCE1} ${RPM_BUILD_ROOT}%{_datadir}/applications
+cp %{SOURCE2} ${RPM_BUILD_ROOT}%{_datadir}/applications
+cp %{SOURCE3} ${RPM_BUILD_ROOT}%{_datadir}/applications
+cp %{SOURCE4} ${RPM_BUILD_ROOT}%{_datadir}/applications
+cp %{SOURCE5} ${RPM_BUILD_ROOT}%{_datadir}/applications
+
 cd ..
 
 
 %files
 %defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_bindir}
-%{_bindir}/assistant
+%{_bindir}/assistant-qt4
 %{_bindir}/assistant_adp
-%{_bindir}/designer
-%{_bindir}/linguist
-%{_bindir}/lrelease
-%{_bindir}/lupdate
-%{_bindir}/moc
-%{_bindir}/pixeltool
-%{_bindir}/qcollectiongenerator
 %{_bindir}/qdbus
-%{_bindir}/qdbuscpp2xml
 %{_bindir}/qdbusviewer
-%{_bindir}/qdbusxml2cpp
-%{_bindir}/qhelpconverter
-%{_bindir}/qhelpgenerator
-%{_bindir}/qmake
-%{_bindir}/qt3to4
-%{_bindir}/qtconfig
-%{_bindir}/qtdemo
-%{_bindir}/rcc
-%{_bindir}/uic
-%{_bindir}/uic3
-%{_bindir}/xmlpatterns
+
+%dir %attr (0755, root, bin) %{_prefix}/qt4
+%dir %attr (0755, root, bin) %{_prefix}/qt4/bin
+%{_prefix}/qt4/bin/assistant
+%{_prefix}/qt4/bin/assistant_adp
+%{_prefix}/qt4/bin/assistant-qt4
+%{_prefix}/qt4/bin/qdbus
+%{_prefix}/qt4/bin/qdbusviewer
+
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_bindir}/%_arch64
-%{_bindir}/%_arch64/assistant
 %{_bindir}/%_arch64/assistant_adp
-%{_bindir}/%_arch64/designer
-%{_bindir}/%_arch64/linguist
-%{_bindir}/%_arch64/lrelease
-%{_bindir}/%_arch64/lupdate
-%{_bindir}/%_arch64/moc
-%{_bindir}/%_arch64/pixeltool
-%{_bindir}/%_arch64/qcollectiongenerator
+%{_bindir}/%_arch64/assistant-qt4
 %{_bindir}/%_arch64/qdbus
-%{_bindir}/%_arch64/qdbuscpp2xml
 %{_bindir}/%_arch64/qdbusviewer
-%{_bindir}/%_arch64/qdbusxml2cpp
-%{_bindir}/%_arch64/qhelpconverter
-%{_bindir}/%_arch64/qhelpgenerator
-%{_bindir}/%_arch64/qmake
-%{_bindir}/%_arch64/qt3to4
-%{_bindir}/%_arch64/qtconfig
-%{_bindir}/%_arch64/qtdemo
-%{_bindir}/%_arch64/rcc
-%{_bindir}/%_arch64/uic
-%{_bindir}/%_arch64/uic3
-%{_bindir}/%_arch64/xmlpatterns
-%endif
 
+%dir %attr (0755, root, bin) %{_prefix}/qt4/bin/%{_arch64}
+%{_prefix}/qt4/bin/%{_arch64}/assistant
+%{_prefix}/qt4/bin/%{_arch64}/assistant_adp
+%{_prefix}/qt4/bin/%{_arch64}/assistant-qt4
+%{_prefix}/qt4/bin/%_arch64/qdbus
+%{_prefix}/qt4/bin/%_arch64/qdbusviewer
+%endif
 
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/libQt3Support.prl
@@ -488,11 +520,11 @@ cd ..
 #%{_libdir}/libQtPhonon.so.4
 #%{_libdir}/libQtPhonon.so.4.1
 #%{_libdir}/libQtPhonon.so.4.1.3
-%{_libdir}/libphonon.prl
-%{_libdir}/libphonon.so
-%{_libdir}/libphonon.so.4
-%{_libdir}/libphonon.so.4.1
-%{_libdir}/libphonon.so.4.1.3
+#%{_libdir}/libphonon.prl
+#%{_libdir}/libphonon.so
+#%{_libdir}/libphonon.so.4
+#%{_libdir}/libphonon.so.4.1
+#%{_libdir}/libphonon.so.4.1.3
 %{_libdir}/libQtScript.prl
 %{_libdir}/libQtScript.so
 %{_libdir}/libQtScript.so.4
@@ -530,6 +562,7 @@ cd ..
 %{_libdir}/libQtXmlPatterns.so.4
 %{_libdir}/libQtXmlPatterns.so.4.4
 %{_libdir}/libQtXmlPatterns.so.4.4.3
+
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_libdir}/%_arch64
 %{_libdir}/%_arch64/libQt3Support.prl
@@ -678,6 +711,9 @@ cd ..
 %{_datadir}/qt4/translations/qvfb_zh_CN.qm
 %{_datadir}/qt4/translations/qvfb_zh_TW.qm
 
+%dir %attr (0755, root, other) %{_datadir}/applications
+%{_datadir}/applications/assistant.desktop
+
 %dir %attr (0755, root, bin) %{_datadir}/qt4/phrasebooks
 %{_datadir}/qt4/phrasebooks/swedish.qph
 %{_datadir}/qt4/phrasebooks/polish.qph
@@ -715,7 +751,7 @@ cd ..
 %{_libdir}/qt4/plugins/imageformats/libqsvg.so
 %{_libdir}/qt4/plugins/imageformats/libqtiff.so
 %{_libdir}/qt4/plugins/inputmethods/libqimsw-multi.so
-%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so
+#%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so
 %{_libdir}/qt4/plugins/script/libqtscriptdbus.so
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlite.so
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlmysql.so
@@ -756,6 +792,111 @@ cd ..
 
 %files devel
 %defattr (-, root, bin)
+%dir %attr (0755, root, bin) %{_bindir}
+%{_bindir}/designer-qt4
+%{_bindir}/linguist-qt4
+%{_bindir}/lrelease-qt4
+%{_bindir}/lupdate-qt4
+%{_bindir}/moc-qt4
+%{_bindir}/pixeltool
+%{_bindir}/qcollectiongenerator
+%{_bindir}/qdbuscpp2xml
+%{_bindir}/qdbusxml2cpp
+%{_bindir}/qhelpconverter
+%{_bindir}/qhelpgenerator
+%{_bindir}/qmake-qt4
+%{_bindir}/qt3to4
+%{_bindir}/qtconfig-qt4
+%{_bindir}/qtdemo-qt4
+%{_bindir}/rcc
+%{_bindir}/uic-qt4
+%{_bindir}/uic3
+%{_bindir}/xmlpatterns
+
+%dir %attr (0755, root, bin) %{_prefix}/qt4
+%dir %attr (0755, root, bin) %{_prefix}/qt4/bin
+%{_prefix}/qt4/bin/designer
+%{_prefix}/qt4/bin/qcollectiongenerator
+%{_prefix}/qt4/bin/qdbuscpp2xml
+%{_prefix}/qt4/bin/qdbusxml2cpp
+%{_prefix}/qt4/bin/qhelpconverter
+%{_prefix}/qt4/bin/qhelpgenerator
+%{_prefix}/qt4/bin/linguist
+%{_prefix}/qt4/bin/lrelease
+%{_prefix}/qt4/bin/lupdate
+%{_prefix}/qt4/bin/moc
+%{_prefix}/qt4/bin/qmake
+%{_prefix}/qt4/bin/qtconfig
+%{_prefix}/qt4/bin/qtdemo
+%{_prefix}/qt4/bin/uic
+%{_prefix}/qt4/bin/designer-qt4
+%{_prefix}/qt4/bin/linguist-qt4
+%{_prefix}/qt4/bin/lrelease-qt4
+%{_prefix}/qt4/bin/lupdate-qt4
+%{_prefix}/qt4/bin/moc-qt4
+%{_prefix}/qt4/bin/qmake-qt4
+%{_prefix}/qt4/bin/qtconfig-qt4
+%{_prefix}/qt4/bin/qtdemo-qt4
+%{_prefix}/qt4/bin/uic-qt4
+%{_prefix}/qt4/bin/rcc
+%{_prefix}/qt4/bin/uic3
+%{_prefix}/qt4/bin/qt3to4
+%{_prefix}/qt4/bin/pixeltool
+%{_prefix}/qt4/bin/xmlpatterns
+
+%ifarch amd64 sparcv9
+%dir %attr (0755, root, bin) %{_bindir}/%_arch64
+%{_bindir}/%_arch64/designer-qt4
+%{_bindir}/%_arch64/linguist-qt4
+%{_bindir}/%_arch64/lrelease-qt4
+%{_bindir}/%_arch64/lupdate-qt4
+%{_bindir}/%_arch64/moc-qt4
+%{_bindir}/%_arch64/pixeltool
+%{_bindir}/%_arch64/qcollectiongenerator
+%{_bindir}/%_arch64/qdbuscpp2xml
+%{_bindir}/%_arch64/qdbusxml2cpp
+%{_bindir}/%_arch64/qhelpconverter
+%{_bindir}/%_arch64/qhelpgenerator
+%{_bindir}/%_arch64/qmake-qt4
+%{_bindir}/%_arch64/qt3to4
+%{_bindir}/%_arch64/qtconfig-qt4
+%{_bindir}/%_arch64/qtdemo-qt4
+%{_bindir}/%_arch64/rcc
+%{_bindir}/%_arch64/uic-qt4
+%{_bindir}/%_arch64/uic3
+%{_bindir}/%_arch64/xmlpatterns
+
+%dir %attr (0755, root, bin) %{_prefix}/qt4/bin/%{_arch64}
+%{_prefix}/qt4/bin/%{_arch64}/designer
+%{_prefix}/qt4/bin/%{_arch64}/linguist
+%{_prefix}/qt4/bin/%{_arch64}/lrelease
+%{_prefix}/qt4/bin/%{_arch64}/lupdate
+%{_prefix}/qt4/bin/%{_arch64}/moc
+%{_prefix}/qt4/bin/%{_arch64}/qmake
+%{_prefix}/qt4/bin/%{_arch64}/qtconfig
+%{_prefix}/qt4/bin/%{_arch64}/qtdemo
+%{_prefix}/qt4/bin/%{_arch64}/uic
+%{_prefix}/qt4/bin/%{_arch64}/designer-qt4
+%{_prefix}/qt4/bin/%{_arch64}/linguist-qt4
+%{_prefix}/qt4/bin/%{_arch64}/lrelease-qt4
+%{_prefix}/qt4/bin/%{_arch64}/lupdate-qt4
+%{_prefix}/qt4/bin/%{_arch64}/moc-qt4
+%{_prefix}/qt4/bin/%{_arch64}/qmake-qt4
+%{_prefix}/qt4/bin/%{_arch64}/qtconfig-qt4
+%{_prefix}/qt4/bin/%{_arch64}/qtdemo-qt4
+%{_prefix}/qt4/bin/%{_arch64}/uic-qt4
+%{_prefix}/qt4/bin/%{_arch64}/uic3
+%{_prefix}/qt4/bin/%{_arch64}/qdbuscpp2xml
+%{_prefix}/qt4/bin/%{_arch64}/qhelpgenerator
+%{_prefix}/qt4/bin/%{_arch64}/qt3to4
+%{_prefix}/qt4/bin/%{_arch64}/qhelpconverter
+%{_prefix}/qt4/bin/%{_arch64}/pixeltool
+%{_prefix}/qt4/bin/%{_arch64}/xmlpatterns
+%{_prefix}/qt4/bin/%{_arch64}/rcc
+%{_prefix}/qt4/bin/%{_arch64}/qdbusxml2cpp
+%{_prefix}/qt4/bin/%{_arch64}/qcollectiongenerator
+%endif
+
 %dir %attr (0755, root, bin) %{_includedir}
 %dir %attr (0755, root, bin) %{_includedir}/qt4
 %dir %attr (0755, root, bin) %{_includedir}/qt4/Qt
@@ -777,7 +918,7 @@ cd ..
 %{_includedir}/qt4/QtXmlPatterns/*
 %{_includedir}/qt4/QtHelp/*
 %{_includedir}/qt4/QtWebKit/*
-%{_includedir}/qt4/phonon/*
+#%{_includedir}/qt4/phonon/*
 
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_datadir}/qt4
@@ -789,6 +930,12 @@ cd ..
 
 %dir %attr (0755, root, bin) %{_datadir}/qt4/mkspecs
 %{_datadir}/qt4/mkspecs/*
+
+%dir %attr (0755, root, other) %{_datadir}/applications
+%{_datadir}/applications/designer.desktop
+%{_datadir}/applications/linguist.desktop
+%{_datadir}/applications/qtdemo.desktop
+%{_datadir}/applications/qtconfig.desktop
 
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/Qt3Support.pc
@@ -803,7 +950,7 @@ cd ..
 %{_libdir}/pkgconfig/QtNetwork.pc
 %{_libdir}/pkgconfig/QtOpenGL.pc
 #%{_libdir}/pkgconfig/QtPhonon.pc
-%{_libdir}/pkgconfig/phonon.pc
+#%{_libdir}/pkgconfig/phonon.pc
 %{_libdir}/pkgconfig/QtScript.pc
 %{_libdir}/pkgconfig/QtSql.pc
 %{_libdir}/pkgconfig/QtSvg.pc
@@ -849,6 +996,10 @@ cd ..
 
 %files debug
 %defattr (-, root, bin)
+%dir %attr (0755, root, bin) %{_prefix}/qt4
+%dir %attr (0755, root, bin) %{_prefix}/qt4/bin
+%{_prefix}/qt4/bin/*.debug
+
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/*.debug
 %dir %attr (0755, root, bin) %{_libdir}/qt4
@@ -875,7 +1026,7 @@ cd ..
 %{_libdir}/qt4/plugins/iconengines/libqsvgicon.so.debug
 %{_libdir}/qt4/plugins/inputmethods/libqimsw-multi.so.debug
 %{_libdir}/qt4/plugins/script/libqtscriptdbus.so.debug
-%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so.debug
+#%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so.debug
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlite.so.debug
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlpsql.so.debug
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlodbc.so.debug
@@ -885,6 +1036,11 @@ cd ..
 %{_bindir}/*.debug
 
 %changelog
+* Sun Apr 17 2009 - moinakg@belenix.org
+- Fix packaging to avoid conflict with Qt3.
+- Build with newer arch and avoid aliasing issues.
+- Add in *.desktop files from FC10.
+- Disable Qt4 internal Phonon in favor of KDE4's Phonon.
 * Sat May 16 2009 - moinakg@belenix.org
 - Add debug package.
 - Update devel package dependencies.

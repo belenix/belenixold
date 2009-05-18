@@ -19,6 +19,8 @@ Vendor:			   http://pkgbuild.sf.net/spec-files-extra
 %define                    pkg_prefix SFE
 %{?sf_mirror:#}%define sf_mirror easynews.dl.sourceforge.net
 %{?sf_download:#}%define sf_download http://downloads.sourceforge.net
+%{?kde_mirror:#}%define kde_mirror ftp://mirrors.dotsrc.org/kde/stable
+%{?kde4_version:#}%define kde4_version 4.2.3
 
 %define xfce_pkg_version 4.4.2
 %define xfce_src_url http://www.us.xfce.org/archive/xfce-%{xfce_pkg_version}/src
@@ -26,6 +28,8 @@ Vendor:			   http://pkgbuild.sf.net/spec-files-extra
 
 
 # ChangeLog:
+# 2009-05-17  moinakg@gmail.com
+# - Define some KDE4 constants.
 # 2008-03-01  moinakg@gmail.com
 # - Add Xfce definitions.
 # 2008-02-21  moinakg@gmail.com

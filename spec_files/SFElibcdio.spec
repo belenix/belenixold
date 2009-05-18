@@ -63,8 +63,8 @@ cd %{_builddir}/%name-%version/libcdio-%{libcdio.version}
 #
 %build
 export CFLAGS="%gcc_optflags"
-export CC=/usr/sfw/bin/gcc
-export CXX=/usr/sfw/bin/g++
+export CC=/usr/gnu/bin/gcc
+export CXX=/usr/gnu/bin/g++
 %if %with_hal
 export LDFLAGS="%_ldflags -lhal -ldbus-1"
 %else
@@ -80,6 +80,8 @@ export LDFLAGS="%_ldflags"
 #rm -rf $RPM_BUILD_ROOT%{_prefix}/share
 #rm -rf $RPM_BUILD_ROOT%{_prefix}/info
 rm -f $RPM_BUILD_ROOT%{_prefix}/share/info/dir
+(cd $RPM_BUILD_ROOT%{_libdir}
+ ln -s libcdio.so.10 libcdio.so.7)
 
 #%{?pkgbuild_postprocess: %pkgbuild_postprocess -v -c "%{version}:%{jds_version}:%{name}:$RPM_ARCH:%(date +%%Y-%%m-%%d):%{support_level}" $RPM_BUILD_ROOT}
 
@@ -111,6 +113,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/cdio
 
 %changelog
+* Sun Apr 17 2009 - moinakg@belenix.org
+- Add a compatibility symlink.
 * Tue Apr 28 2009 - moinakg@belenix.org
 - Bump version to 0.81.
 * Sat Jan 19 2008 - moinak.ghosh@sun.com
