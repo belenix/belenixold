@@ -109,8 +109,8 @@
 %define gnu_inc         /usr/gnu/include
 %define gnu_lib         /usr/gnu/lib/%{bld_arch}
 %define gnu_lib_path    -L%gnu_lib -R%gnu_lib
-%define gnu_lib64       /usr/gnu/lib/%{bld_arch}
-%define gnu_lib_path64  -L%gnu_lib -R%gnu_lib
+%define gnu_lib64       /usr/gnu/lib/%{_arch64}
+%define gnu_lib_path64  -L%gnu_lib64 -R%gnu_lib64
 %define sfw_bin         /usr/sfw/bin/%{bld_arch}
 %define sfw_inc         /usr/sfw/include
 %define sfw_lib         /usr/sfw/lib/%{bld_arch}
@@ -121,6 +121,8 @@
 %define xorg_lib_path   -L%xorg_lib -R%xorg_lib
 
 # ChangeLog:
+# 2009-05-17  moinakg@belenix.org
+# - Fix 64Bit Gnu lib paths.
 # 2009-05-16  moinakg@belenix.org
 # - Add 64Bit Gnu lib paths.
 # 2008-02-21  moinak.ghosh@sun.com

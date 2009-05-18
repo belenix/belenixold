@@ -65,7 +65,7 @@ export LDFLAGS="%_ldflags64"
 
 cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DCMAKE_BUILD_TYPE=Release                                      \
-        -DCMAKE_C_COMPILER:FILEPATH=$(CC)                               \
+        -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
         -DCMAKE_CXX_COMPILER:FILEPATH=${CXX}                            \
         -DCMAKE_CXX_FLAGS_RELEASE:STRING="${CXXFLAGS}"                  \
@@ -86,7 +86,7 @@ export LDFLAGS="%_ldflags"
 
 cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DCMAKE_BUILD_TYPE=Release                                      \
-        -DCMAKE_C_COMPILER:FILEPATH=$(CC)                               \
+        -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
         -DCMAKE_CXX_COMPILER:FILEPATH=${CXX}                            \
         -DCMAKE_CXX_FLAGS_RELEASE:STRING="${CXXFLAGS}"                  \
@@ -158,6 +158,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sun Apr 17 2009 - moinakg@belenix.org
+- Fix minor specfile bug.
 * Sat May 16 2009 - moinakg@belenix.org
 - Pull in from SFE repo.
 * Tue Apr 28 2009 - moinakg@belenix.org

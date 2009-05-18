@@ -50,6 +50,8 @@ BuildRequires: SFElibcdio-devel
 Requires: SFElibcdio
 BuildRequires: SFElibmng-devel
 Requires: SFElibmng
+BuildRequires: SFElibxcb-devel
+Requires: SFElibxcb
 BuildRequires: SFElibdvdnav-devel
 BuildRequires: SFElibmad-devel
 
@@ -234,8 +236,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/xine/plugins/1.26/xineplug_decode_yuv.so
 %{_libdir}/xine/plugins/1.26/xineplug_dmx_audio.so
 %{_libdir}/xine/plugins/1.26/xineplug_dmx_avi.so
-%{_libdir}/xine/plugins/1.26/xineplug_dmx_fli.so
 %{_libdir}/xine/plugins/1.26/xineplug_dmx_flv.so
+%{_libdir}/xine/plugins/1.26/xineplug_dmx_fli.so
 %{_libdir}/xine/plugins/1.26/xineplug_dmx_games.so
 %{_libdir}/xine/plugins/1.26/xineplug_dmx_iff.so
 %{_libdir}/xine/plugins/1.26/xineplug_dmx_image.so
@@ -270,6 +272,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/xine/plugins/1.26/xineplug_vo_out_xshm.so
 %{_libdir}/xine/plugins/1.26/xineplug_vo_out_xv.so
 %{_libdir}/xine/plugins/1.26/xineplug_vo_out_raw.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_xcbxv.so
+%{_libdir}/xine/plugins/1.26/xineplug_vo_out_xcbshm.so
 %dir %attr (0755, root, sys) %{_datadir}
 %{_datadir}/xine
 
@@ -335,6 +339,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Apr 17 2009 - moinakg@belenix.org
+- Build with libxcb support for KDE4 Phonon.
 * Tue Apr 28 2009 - moinakg@belenix.org
 - Bump version to 1.1.16.3 and add replacement for broken libtool script.
 * Sun Feb 24 2008 - moinakg@gmail.com

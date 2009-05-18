@@ -45,10 +45,30 @@ Requires: SUNWogg-vorbis
 Requires: SUNWlibtheora
 Requires: SFEgccruntime
 Requires: SFElibcdio
-Requires: SUNWgnome-base-libs
+Requires: SUNWglib2
+Requires: SUNWcairo
+Requires: SUNWpango
+Requires: SUNWlibatk
+Requires: SUNWgtk2
 Requires: SUNWsmbau
+Requires: SUNWgnu-libiconv
+Requires: SUNWgnu-gettext
+Requires: SUNWdbus-libs
+Requires: SFElibx264
+Requires: SFEgccruntime
+Requires: SUNWfreetype2
+Requires: SFEjack
+Requires: SFEaalib
+Requires: SFEnas
+Requires: SUNWxwplt
+Requires: SUNWzlib
+Requires: SUNWbzip
+Requires: SFElibmng
+Requires: SFElibcdio
+Requires: SFElibdts
+Requires: SFElibdv
+Requires: SFExvid
 Requires: SFElibfribidi
-#Requires: SFElibiconv
 BuildRequires: SFElibfribidi-devel
 Requires: SFEladspa
 BuildRequires: SFEladspa-devel
@@ -66,6 +86,23 @@ BuildRequires: SFElibmpcdec-devel
 BuildRequires: SFEsdl-devel
 BuildRequires: SFEgawk
 BuildRequires: SUNWgnome-audio-devel
+BuildRequires: SUNWgnu-libiconv-devel
+BuildRequires: SFElibx264-devel
+BuildRequires: SUNWgnu-gettext-devel
+BuildRequires: SUNWdbus-devel
+BuildRequires: SFEjack-devel
+BuildRequires: SFEaalib-devel
+BuildRequires: SFEnas-devel
+BuildRequires: SFElibmng-devel
+BuildRequires: SFElibcdio-devel
+BuildRequires: SFElibdts-devel
+BuildRequires: SFElibdv-devel
+BuildRequires: SFExvid-devel
+BuildRequires: SUNWglib2-devel
+BuildRequires: SUNWcairo-devel
+BuildRequires: SUNWpango-devel
+BuildRequires: SUNWlibatk-devel
+BuildRequires: SUNWgtk2-devel
 
 %define x11	/usr/openwin
 %ifarch i386 amd64
@@ -183,6 +220,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 
 %changelog
+* Sun Apr 17 2009 - moinakg@belenix.org
+- Fix dependencies.
 * Sun May 03 2009 - moinakg@belenix.org
 - Update dependency to point to SFEgccruntime for Gcc4.
 * Tue Apr 28 2009 - moinakg@belenix.org
