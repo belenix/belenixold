@@ -1,0 +1,16 @@
+--- pciutils-3.1.2/lib/configure.orig	2009-05-19 21:56:48.549978961 +0530
++++ pciutils-3.1.2/lib/configure	2009-05-19 21:57:45.540298495 +0530
+@@ -180,7 +180,12 @@
+ 	echo >>$m 'LIB_LDLIBS=$(WITH_LIBS)'
+ 	echo >>$c '#define PCI_SHARED_LIB'
+ 	if [ "$SHARED" = yes ] ; then
+-		echo >>$m 'SONAME=-Wl,-soname,$(LIBNAME).so$(ABI_VERSION)'
++		if [ "$sys" = "sunos" ]
++		then
++			echo >>$m 'SONAME=-Wl,-h -Wl,$(LIBNAME).so$(ABI_VERSION)'
++		else
++			echo >>$m 'SONAME=-Wl,-soname,$(LIBNAME).so$(ABI_VERSION)'
++		fi
+ 	fi
+ fi
+ echo >>$m 'PCILIBPC=$(LIBNAME).pc'

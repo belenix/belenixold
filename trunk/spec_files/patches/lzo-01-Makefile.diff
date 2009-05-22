@@ -1,0 +1,30 @@
+--- lzo-2.03-64/src/Makefile.am.orig	2009-05-18 21:13:12.372147216 +0530
++++ lzo-2.03-64/src/Makefile.am	2009-05-18 21:33:31.280259520 +0530
+@@ -59,10 +59,10 @@
+ 	lzo1y_f1.lo lzo1y_f2.lo lzo1y_s1.lo lzo1y_s2.lo
+ 
+ .S.o:
+-	$(CC) -c $<
++	$(CC) -c $(CFLAGS) $<
+ 
+ .S.lo:
+-	$(LIBTOOL) --mode=compile $(CC) -c $<
++	$(LIBTOOL) --mode=compile $(CC) -c $(CFLAGS) $<
+ 
+ endif
+ 
+--- lzo-2.03-64/src/Makefile.in.orig	2009-05-18 21:34:03.492579931 +0530
++++ lzo-2.03-64/src/Makefile.in	2009-05-18 21:34:33.090118632 +0530
+@@ -591,10 +591,10 @@
+ 
+ 
+ @LZO_USE_ASM_TRUE@.S.o:
+-@LZO_USE_ASM_TRUE@	$(CC) -c $<
++@LZO_USE_ASM_TRUE@	$(CC) -c $(CFLAGS) $<
+ 
+ @LZO_USE_ASM_TRUE@.S.lo:
+-@LZO_USE_ASM_TRUE@	$(LIBTOOL) --mode=compile $(CC) -c $<
++@LZO_USE_ASM_TRUE@	$(LIBTOOL) --mode=compile $(CC) -c $(CFLAGS) $<
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:

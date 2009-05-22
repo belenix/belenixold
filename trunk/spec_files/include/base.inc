@@ -93,6 +93,7 @@
 %define xorg_lib        /usr/X11/lib
 %define xorg_inc        /usr/X11/include
 %define xorg_lib_path   -L%xorg_lib -R%xorg_lib
+%define qt4_bin_path    /usr/qt4/bin
 
 # ChangeLog:
 # 2008-02-24  moinakg@gmail.com

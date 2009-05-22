@@ -114,11 +114,16 @@
 %define sfw_bin         /usr/sfw/bin/%{bld_arch}
 %define sfw_inc         /usr/sfw/include
 %define sfw_lib         /usr/sfw/lib/%{bld_arch}
+%define sfw_lib64       /usr/sfw/lib/%{_arch64}
 %define sfw_lib_path    -L%sfw_lib -R%sfw_lib
+%define sfw_lib_path64  -L%sfw_lib64 -R%sfw_lib64
 %define xorg_bin        /usr/X11/bin/%{bld_arch}
 %define xorg_lib        /usr/X11/lib/%{bld_arch}
+%define xorg_lib64      /usr/X11/lib/%{_arch64}
 %define xorg_inc        /usr/X11/include
 %define xorg_lib_path   -L%xorg_lib -R%xorg_lib
+%define xorg_lib_path64 -L%xorg_lib64 -R%xorg_lib64
+%define qt4_bin_path64  /usr/qt4/bin/%{_arch64}
 
 # ChangeLog:
 # 2009-05-17  moinakg@belenix.org

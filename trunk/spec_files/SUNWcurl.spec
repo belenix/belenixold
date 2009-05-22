@@ -12,6 +12,7 @@ Summary:                 curl - Get a file from FTP or HTTP server.
 Version:                 7.19.0
 URL:                     http://curl.haxx.se/
 Source:                  http://curl.haxx.se/download/curl-%{version}.tar.bz2
+Source1:                 curlbuild_wrapper.h
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 
@@ -72,9 +73,16 @@ export RPM_OPT_FLAGS="$CFLAGS"
 rm -rf ${RPM_BUILD_ROOT}
 %ifarch amd64 sparcv9
 %curl64.install -d %name-%version/%_arch64
+mkdir -p ${RPM_BUILD_ROOT}/%{_includedir}/curl/64
+mv ${RPM_BUILD_ROOT}/%{_includedir}/curl/curlbuild.h ${RPM_BUILD_ROOT}/%{_includedir}/curl/64
 %endif
 
 %curl.install -d %name-%version/%{base_arch}
+cp %{SOURCE1} ${RPM_BUILD_ROOT}/%{_includedir}/curl/
+cp ${RPM_BUILD_ROOT}/%{_includedir}/curl/curl.h .
+cat curl.h | sed '{
+    s@curlbuild.h@curlbuild_wrapper.h@
+}' > ${RPM_BUILD_ROOT}/%{_includedir}/curl/curl.h
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -121,6 +129,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri May 22 2009 - moinakg@belenix.org
+- Add supporting header for proper multilib functionality.
 * Thu Oct 30 2008 - moinakg@belenix.org
 - Add largefile support flags.
 * Wed Oct 29 2008 - moinakg@belenix.org
