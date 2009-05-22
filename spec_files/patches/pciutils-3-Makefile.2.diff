@@ -1,0 +1,14 @@
+--- pciutils-3.1.2/lib/Makefile.orig	2009-05-19 23:00:56.969605741 +0530
++++ pciutils-3.1.2/lib/Makefile	2009-05-19 23:01:08.262779040 +0530
+@@ -50,9 +50,9 @@
+ 	$(AR) rcs $@ $^
+ 	$(RANLIB) $@
+ else
+-CFLAGS += -fPIC -fvisibility=hidden
++CFLAGS += -fPIC 
+ $(PCILIB): $(addsuffix .o,$(OBJS))
+-	$(CC) -shared $(LDFLAGS) $(SONAME) -Wl,--version-script=libpci.ver -o $@ $^ $(LIB_LDLIBS)
++	$(CC) -shared $(LDFLAGS) $(SONAME) -o $@ $^ $(LIB_LDLIBS)
+ endif
+ 
+ $(PCILIBPC): libpci.pc.in

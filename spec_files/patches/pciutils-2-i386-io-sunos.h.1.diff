@@ -1,0 +1,22 @@
+--- pciutils-2.2.7.orig/./lib/i386-io-sunos.h	2006-07-30 07:21:28.000000000 -0400
++++ pciutils-2.2.7/./lib/i386-io-sunos.h	2008-05-26 16:39:28.449357000 -0400
+@@ -10,6 +10,10 @@
+ #include <sys/sysi86.h>
+ #include <sys/psw.h>
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
++
+ static int
+ intel_setup_io(struct pci_access *a UNUSED)
+ {
+@@ -64,3 +68,8 @@
+ {
+   __asm__ __volatile__ ("outl (%w1)": :"a" (value), "Nd" (port));
+ }
++
++#ifdef __cplusplus
++}
++#endif
++

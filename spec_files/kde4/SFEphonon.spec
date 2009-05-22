@@ -66,12 +66,14 @@ export CC=%{_prefix}/gnu/bin/gcc
 export CXX=%{_prefix}/gnu/bin/g++
 export QTDIR=%{_prefix}
 export QT_INCLUDES=%{_includedir}/qt4
+OPATH=${PATH}
 
 #%ifarch amd64 sparcv9
 #cd %{src_dir}-%{version}-64
 #export CFLAGS="%optflags64 -I${QT_INCLUDES}"
 #export CXXFLAGS="%cxx_optflags64 -I${QT_INCLUDES}"
 #export LDFLAGS="%_ldflags64 -L%{_prefix}/lib/%{_arch64} -R%{_prefix}/lib/%{_arch64} %{gnu_lib_path64} -lstdc++"
+#export PATH="%{qt4_bin_path64}:${OPATH}"
 #
 #cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
 #        -DCMAKE_BUILD_TYPE=Release                                      \
@@ -93,6 +95,7 @@ cd %{src_dir}-%{version}
 export CFLAGS="%optflags"
 export CXXFLAGS="%cxx_optflags"
 export LDFLAGS="%_ldflags -L%{_prefix}/lib -R%{_prefix}/lib %{gnu_lib_path} -lstdc++"
+export PATH="%{qt4_bin_path}:${OPATH}"
 
 cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DCMAKE_BUILD_TYPE=Release                                      \
@@ -108,22 +111,30 @@ cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
 
 make VERBOSE=1
 cd ..
+export PATH="${OPATH}"
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
+OPATH=${PATH}
+
 #%ifarch amd64 sparcv9
 #cd %{src_dir}-%{version}-64
+#export PATH="%{qt4_bin_path64}:${OPATH}"
+#
 #make install DESTDIR=$RPM_BUILD_ROOT
 #rm -f ${RPM_BUILD_ROOT}%{_libdir}/%{_arch64}/*.a
 #cd ..
 #%endif
 
 cd %{src_dir}-%{version}
+export PATH="%{qt4_bin_path}:${OPATH}"
+
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.a
 cd ..
+export PATH="${OPATH}"
 
 
 %clean
