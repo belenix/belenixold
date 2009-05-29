@@ -1,0 +1,12 @@
+--- tapioca-qt.SVN-R2109.orig/QtTapioca.pc.in	2008-05-14 23:37:21.549661000 -0400
++++ tapioca-qt.SVN-R2109/QtTapioca.pc.in	2008-05-15 13:44:55.603109000 -0400
+@@ -5,7 +5,7 @@
+ 
+ Name: QtTapioca
+ Description: Qt Tapioca binding library
+-Version: 0.14.1
++Version: 0.15.1
+ Requires: QtCore QtDBus QtTelepathyClient
+-Libs: -L${CMAKE_INSTALL_PREFIX}/lib -lQtTapioca
++Libs: -L${CMAKE_INSTALL_PREFIX}/lib -lQtCore -lQtDBus -lQtTapioca
+ Cflags: -I${CMAKE_INSTALL_PREFIX}/include/QtTapioca -I${CMAKE_INSTALL_PREFIX}/include/

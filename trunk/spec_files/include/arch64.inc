@@ -16,9 +16,10 @@
 %define opt_arch64 1
 %define can_isaexec 1
 %define gtk_doc_option --disable-gtk-doc
+%define gnu_iconv_ldadd -Wl,-zignore -R/usr/gnu/lib/%{_arch64} -lgnuintl -lgnuiconv
 
 %if %option_with_gnu_iconv
-%define arch_ldadd -L%{_libdir} -R%{_libdir} -Wl,-zignore -R/usr/gnu/lib/%{_arch64} -lgnuintl -lgnuiconv
+%define arch_ldadd -L%{_libdir} -R%{_libdir} %{gnu_iconv_ldadd}
 %else
 %define arch_ldadd -L%{_libdir} -R%{_libdir}
 %endif
@@ -79,6 +80,7 @@
 %define _gpp_version %(g++ --version | head -1 | cut -f3 -d' ')
 %define _cxx_libdir	   %{_prefix}/lib/g++/%{_gpp_version}/%{_arch64}
 %define _ldflags64 %gcc_ldflags64
+%define _bit64flag %gcc_ldflags64
 
 %else
 # cc is not gcc
@@ -88,12 +90,19 @@
 %define cxx_optflags64 %suncc_cxx_optflags64
 %define _cxx_libdir %{_prefix}/lib
 %define _ldflags64 %suncc_ldflags64
+%define _bit64flag %suncc_ldflags64
 
 %endif
 
 %define optflags %optflags64 ${EXTRA_CFLAGS}
 %define cxx_optflags %cxx_optflags64 ${EXTRA_CXXFLAGS}
 %define _ldflags %__ldflags %_ldflags64
+%if %option_with_gnu_iconv
+%define _ldflags64 %{_bit64flag} -L%{_libdir}/%{_arch64} -R%{_libdir}/%{_arch64} %{gnu_iconv_ldadd} %{_ldopt}
+%else
+%define _ldflags64 %{_bit64flag} -L%{_libdir}/%{_arch64} -R%{_libdir}/%{_arch64} %{_ldopt}
+%endif
+
 
 %define _bindir		 %{_prefix}/bin/%{bld_arch}
 %define _libdir		 %{_prefix}/lib/%{bld_arch}
@@ -126,6 +135,8 @@
 %define qt4_bin_path64  /usr/qt4/bin/%{_arch64}
 
 # ChangeLog:
+# 2009-05-29  moinakg@belenix(dot)org
+# - Update _ldflags64 with proper flags.
 # 2009-05-17  moinakg@belenix.org
 # - Fix 64Bit Gnu lib paths.
 # 2009-05-16  moinakg@belenix.org

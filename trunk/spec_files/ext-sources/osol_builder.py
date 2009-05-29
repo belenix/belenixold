@@ -238,12 +238,14 @@ merge=/opt/onbld/bin/hgmerge"""
 		patches = os.listdir(self.on_patches)
 		patches.sort()
 		for patch in patches:
+			print "Processing patch %s" % patch
 			if patch.endswith(".script"):
 				#
 				# This is a patch script, execute it giving the ON workspace
 				# directory as the argument.
 				#
 				cmd = "sh %s %s" % (os.path.join(self.on_patches, patch), self.on_ws)
+				print "Running script %s" % cmd
 				pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
 				rt = pipe.wait()
 				if rt != 0:

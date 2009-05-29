@@ -1,0 +1,8 @@
+--- demos/simpleclient/CMakeLists.txt.orig	2007-07-06 15:44:34.000000000 +0530
++++ demos/simpleclient/CMakeLists.txt	2009-05-26 01:41:50.617635161 +0530
+@@ -1,4 +1,5 @@
+ SET(QT_DONT_USE_QTGUI "YES")
++SET(QT_USE_QTDBUS ON)
+ INCLUDE(${QT_USE_FILE})
+ 
+ SET(SERVICE_FILE "de.basyskom.simpleclient.service")

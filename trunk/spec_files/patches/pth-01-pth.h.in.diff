@@ -1,0 +1,21 @@
+--- GNUPTH-2.0.7-orig/pth.h.in	2006-06-08 19:54:02.000000000 +0200
++++ GNUPTH-2.0.7/pth.h.in	2008-02-01 12:21:59.104473000 +0100
+@@ -89,10 +89,17 @@
+ 
+     /* check if the user requests a bigger FD_SETSIZE than we can handle */
+ #if defined(FD_SETSIZE)
+-#if FD_SETSIZE > @PTH_FDSETSIZE@
++#if defined(_LP64)
++#if FD_SETSIZE > 65536 /* 64bit */
++#error "FD_SETSIZE is larger than what GNU Pth can handle."
++#endif
++#else
++#if FD_SETSIZE > 1024 /* 32bit */
+ #error "FD_SETSIZE is larger than what GNU Pth can handle."
+ #endif
+ #endif
++#endif
++
+ 
+ BEGIN_DECLARATION
+ 

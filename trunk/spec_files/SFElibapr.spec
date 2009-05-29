@@ -17,6 +17,8 @@ Group:			system/dscm
 Version:		1.3.3
 Summary:		Apache Portable Runtime
 Source:			http://apache.ziply.com/apr/apr-%{version}.tar.gz
+Patch1:                 apr-01-voidp_sizeof.diff
+
 URL:			http://apr.apache.org/
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 SUNW_BaseDir:		%{_prefix}
@@ -36,7 +38,6 @@ Requires:                SUNWhea
 
 %prep
 %setup -q -c -n %name-%version
-
 %ifarch amd64 sparcv9
 cp -pr apr-%{version} apr-%{version}-64
 %endif
@@ -48,7 +49,7 @@ cd apr-%{version}-64
 export PATH=/usr/ccs/bin:/usr/gnu/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/opt/jdsbld/bin
 export CFLAGS="%optflags64 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 export LD=/usr/ccs/bin/ld
-export LDFLAGS="%_ldflags64 -L$RPM_BUILD_ROOT%{_libdir}"
+export LDFLAGS="%_ldflags64 -L/lib/%{_arch64} -R/lib/%{_arch64} -L$RPM_BUILD_ROOT%{_libdir}"
 ./configure \
     --prefix=%{_prefix} \
     --sysconfdir=%{_sysconfdir} \
@@ -68,7 +69,7 @@ cd apr-%{version}
 export PATH=/usr/ccs/bin:/usr/gnu/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/opt/jdsbld/bin
 export CFLAGS="%optflags -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 export LD=/usr/ccs/bin/ld
-export LDFLAGS="%_ldflags -L$RPM_BUILD_ROOT%{_libdir}"
+export LDFLAGS="%_ldflags -L/lib -R/lib -L$RPM_BUILD_ROOT%{_libdir}"
 ./configure \
     --prefix=%{_prefix} \
     --sysconfdir=%{_sysconfdir} \
@@ -79,7 +80,9 @@ export LDFLAGS="%_ldflags -L$RPM_BUILD_ROOT%{_libdir}"
     --mandir=%{_mandir} \
     --infodir=%{_infodir} \
     --enable-threads
-    
+ 
+%patch1 -p1
+
 make
 
 %install
@@ -132,6 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Fri May 29 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
+- Add patch for building with Gcc 4.4.
+- Add lib paths to properly detect some libs.
 * Tue Feb 10 2009 - moinakg@gmail.com
 - Bump version to 1.3.3.
 - Add 64Bit build.

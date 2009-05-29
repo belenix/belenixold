@@ -1,0 +1,12 @@
+--- telepathy-qt.SVN-R2109.orig/QtTelepathyCore.pc.in	2008-05-14 23:43:22.193243000 -0400
++++ telepathy-qt.SVN-R2109/QtTelepathyCore.pc.in	2008-05-15 13:25:20.862055000 -0400
+@@ -5,7 +5,7 @@
+ 
+ Name: QtTelepathy
+ Description: Qt Telepathy core library
+-Version: 0.1.0
++Version: 0.15.1
+ Requires: QtCore QtDBus QtTelepathyCommon
+-Libs: -L${CMAKE_INSTALL_PREFIX}/lib -lQtTelepathyCore
++Libs: -L${CMAKE_INSTALL_PREFIX}/lib -lQtCore -lQtDBus -lQtTelepathyCore
+ Cflags: -I${CMAKE_INSTALL_PREFIX}/include/QtTelepathy/Core -I${CMAKE_INSTALL_PREFIX}/include

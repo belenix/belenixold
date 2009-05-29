@@ -1,0 +1,14 @@
+--- apr-1.3.3/include/apr.h.orig	2009-05-27 01:20:56.044952123 +0530
++++ apr-1.3.3/include/apr.h	2009-05-27 01:26:58.762460295 +0530
+@@ -286,7 +286,11 @@
+ typedef  socklen_t       apr_socklen_t;
+ typedef  ino_t           apr_ino_t;
+ 
++#if defined(_LP64)
++#define APR_SIZEOF_VOIDP 8
++#else
+ #define APR_SIZEOF_VOIDP 4
++#endif
+ 
+ #if APR_SIZEOF_VOIDP == 8
+ typedef  apr_uint64_t            apr_uintptr_t;

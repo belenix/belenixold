@@ -1,0 +1,12 @@
+--- decibel-0.5.0-64/demos/accounthandling/registeraccount.cpp.orig	2009-05-26 22:30:29.024724649 +0530
++++ decibel-0.5.0-64/demos/accounthandling/registeraccount.cpp	2009-05-26 22:31:24.722767674 +0530
+@@ -60,7 +60,8 @@
+     QVariantMap data;
+     for (int i = 1; i < argc; ++i)
+     {
+-        QStringList keyValue(QString(argv[i]).split("="));
++        QString av(argv[i]);
++        QStringList keyValue(av.split("="));
+ 
+         // instead of proper error handling:
+         Q_ASSERT(keyValue.size() == 2);

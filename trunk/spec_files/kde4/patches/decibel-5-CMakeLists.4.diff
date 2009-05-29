@@ -1,0 +1,10 @@
+Index: demos/protocolhandling/CMakeLists.txt
+===================================================================
+--- demos/protocolhandling/CMakeLists.txt	(revision 2520)
++++ demos/protocolhandling/CMakeLists.txt	(working copy)
+@@ -1,4 +1,5 @@
+ SET(QT_DONT_USE_QTGUI "YES")
++SET(QT_USE_QTDBUS ON)
+ INCLUDE(${QT_USE_FILE})
+ 
+ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include
