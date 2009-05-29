@@ -1,0 +1,20 @@
+--- src/luceneindexer/jsgzipcompressstream.h	2009-02-01 14:55:38.000000000 -0500
++++ src/luceneindexer/jsgzipcompressstream.h.new	2009-02-04 15:59:47.853800775 -0500
+@@ -20,6 +20,7 @@
+ #ifndef GZIPCOMPRESSSTREAM_H
+ #define GZIPCOMPRESSSTREAM_H
+ 
++#include <cstdio>
+ #include <strigi/strigiconfig.h>   // (u)int64_t
+ #include <CLucene/util/streambase.h>
+ #include <CLucene/util/bufferedstream.h>
+--- src/daemon/strigithread.cpp	2009-02-01 14:56:01.000000000 -0500
++++ src/daemon/strigithread.cpp.new	2009-02-04 15:10:27.600054542 -0500
+@@ -27,6 +27,7 @@
+ #include <signal.h>
+ #include <vector>
+ #include <stdlib.h>
++#include <cstdio>
+ #include <unistd.h>
+ #include <sys/resource.h>
+ #include <sys/syscall.h>

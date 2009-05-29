@@ -147,8 +147,11 @@ then
 	then
 		spkg install devel
 		spkg install SUNWuiu8
+		spkg install SUNWtss
+		spkg install SUNWpostgr-83-devel
+		spkg install SUNWsmagt-devel
 	else
-		pkg install SUNWsvn SUNWbtool SUNWj6cfg SUNWgnu-automake-19 SUNWj6rt SUNWaconf SUNWmercurial SUNWlibtool SUNWgnu-automake-110 SUNWj6rtx SUNWgmake SUNWj6dvx SUNWsprot SUNWbison SUNWj6dev SUNWflexlex SUNWcvs
+		pkg install SUNWsvn SUNWbtool SUNWj6cfg SUNWgnu-automake-19 SUNWj6rt SUNWaconf SUNWmercurial SUNWlibtool SUNWgnu-automake-110 SUNWj6rtx SUNWgmake SUNWj6dvx SUNWsprot SUNWbison SUNWj6dev SUNWflexlex SUNWcvs SUNWtss SUNWpostgr-83-devel SUNWsmagt
 	fi
 	rm -f /tmp/catalog
 	rm -rf /tmp/pkglocal

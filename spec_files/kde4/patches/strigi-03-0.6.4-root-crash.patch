@@ -1,0 +1,20 @@
+diff -up strigi-0.6.4/src/streamanalyzer/analysisresult.cpp.root-crash strigi-0.6.4/src/streamanalyzer/analysisresult.cpp
+--- strigi-0.6.4/src/streamanalyzer/analysisresult.cpp.root-crash	2009-02-01 20:55:55.000000000 +0100
++++ strigi-0.6.4/src/streamanalyzer/analysisresult.cpp	2009-04-21 13:52:21.000000000 +0200
+@@ -149,7 +149,15 @@ AnalysisResult::Private::Private(const s
+     if (pos == std::string::npos) {
+         m_name = m_path;
+     } else {
+-        assert(pos != m_path.size()-1); // make sure there is no trailing '/'
++        if (pos == m_path.size()-1) {
++            // assert that there is no trailing '/' unless it is part of a
++            // protocol, which means the parent must be "" and the string must
++            // end in a colon followed by up to three slashes
++            assert(m_parentpath == "");
++            int i = m_path.size();
++            while (--i > 0 && m_path[i] == '/') {}
++            assert(i > 0 && m_path[i] == ':');
++        }
+         m_name = m_path.substr(pos+1);
+     }
+     // check that the path start with the path of the parent

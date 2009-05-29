@@ -1,0 +1,34 @@
+Index: apcupsd-3.14.5/platforms/sun/Makefile
+===================================================================
+--- apcupsd-3.14.5.orig/platforms/sun/Makefile	2009-04-19 17:57:41.824794840 +0200
++++ apcupsd-3.14.5/platforms/sun/Makefile	2009-04-19 17:58:55.486750566 +0200
+@@ -8,25 +8,15 @@ all-uninstall: uninstall-sun $(if $(DEST
+ 
+ install-sun:
+ 	$(call DISTINST,Sun)
+-	$(call MKDIR,/etc/rc0.d)
+-	$(call MKDIR,/etc/rc1.d)
+-	$(call MKDIR,/etc/rc2.d)
+-	$(call MKDIR,/etc/init.d)
+-	$(call INSTPROG,744,apcupsd,/etc/init.d/apcupsd)
+-	$(call SYMLINK,../init.d/apcupsd,/etc/rc0.d/K21apcupsd)
+-	$(call SYMLINK,../init.d/apcupsd,/etc/rc1.d/S89apcupsd)
+-	$(call SYMLINK,../init.d/apcupsd,/etc/rc2.d/S89apcupsd)
++	$(call MKDIR,/lib/svc/method)
++	$(call INSTPROG,744,apcupsd,/lib/svc/method/apcupsd)
+ 	@echo "================================================="
+ 	@echo "apcupsd script installation for Solaris $(DISTVER) complete."
+ 	@echo "You should now edit $(sysconfdir)/apcupsd.conf  to correspond"
+-	@echo "to your setup then start the apcupsd daemon with:"
+-	@echo 
+-	@echo "/etc/init.d/apcupsd start"
+-	@echo 
+-	@echo "Thereafter when you reboot, it will be stopped and started"
+-	@echo "automatically."
++	@echo "to your setup."
+ 	@echo "================================================="
+ 
++
+ install-usb:
+ 	@echo "Configuring ugen driver to match APC UPSes..."
+ 	@echo

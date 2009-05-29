@@ -48,11 +48,12 @@ SUNW_Copyright:            default-copyright.txt
 %define arch_ldadd
 %endif
 %define ldadd
+%define _ldopt -Wl,-zignore -Wl,-zcombreloc -Wl,-Bdirect
 
 %if %debug_build
 %define __ldflags           %arch_ldadd %ldadd ${EXTRA_LDFLAGS}
 %else
-%define __ldflags           %arch_ldadd %ldadd -Wl,-zignore -Wl,-zcombreloc -Wl,-Bdirect ${EXTRA_LDFLAGS}
+%define __ldflags           %arch_ldadd %ldadd %{_ldopt} ${EXTRA_LDFLAGS}
 %endif
 
 %define gcc_picflags -fPIC -DPIC
@@ -79,6 +80,8 @@ SUNW_Copyright:            default-copyright.txt
 %define _pkg_config_path   %{_libdir}/pkgconfig
 
 # ChangeLog:
+# 2009-05-29  moinakg@belenix(dot)org
+# - Separate out ld options.
 # 2008-02-21  moinak.ghosh@sun.com
 # - Add definitions to properly define 64Bit LDFLAGS for Gcc.
 # 2007-09-28  Laszlo (Laca) Peter  <laca@sun.com>

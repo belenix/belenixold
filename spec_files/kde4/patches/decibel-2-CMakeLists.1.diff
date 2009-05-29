@@ -1,0 +1,17 @@
+--- src/server/CMakeLists.txt.orig	2009-05-26 01:54:31.992933560 +0530
++++ src/server/CMakeLists.txt	2009-05-26 01:54:40.765570352 +0530
+@@ -1,4 +1,5 @@
+ SET(QT_DONT_USE_QTGUI "YES")
++SET(QT_USE_QTDBUS ON)
+ INCLUDE(${QT_USE_FILE})
+ 
+ INCLUDE_DIRECTORIES(${QT_QTCORE_INCLUDE_DIR}
+@@ -88,7 +89,7 @@
+ TARGET_LINK_LIBRARIES(decibel
+                       ${QT_LIBRARIES}
+                       ${QTTAPIOCA_LIBRARIES}
+-                      decibelstatic)
++                      decibelstatic QtDBus)
+ 
+ if (APPLE)
+ 	# no statics on OSX

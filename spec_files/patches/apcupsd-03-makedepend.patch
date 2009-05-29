@@ -1,0 +1,13 @@
+Index: apcupsd-3.14.5/autoconf/targets.mak
+===================================================================
+--- apcupsd-3.14.5.orig/autoconf/targets.mak	2008-08-03 16:48:45.000000000 +0200
++++ apcupsd-3.14.5/autoconf/targets.mak	2009-04-19 16:25:49.085039805 +0200
+@@ -115,7 +115,7 @@ define ECHO_N
+ endef
+ 
+ # How to build dependencies
+-MAKEDEPEND = $(CC) -M $(CPPFLAGS) $< > $(df).d
++MAKEDEPEND = $(CC) -xM $(CPPFLAGS) $< > $(df).d
+ ifeq ($(strip $(NODEPS)),)
+   define DEPENDS
+ 	if test ! -d $(DEPDIR); then mkdir -p $(DEPDIR); fi; \
