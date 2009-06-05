@@ -1,0 +1,11 @@
+--- mplayer-checkout-2009-06-04/libavcodec/x86/mlpdsp.c.orig	2009-06-05 22:32:01.372274627 +0530
++++ mplayer-checkout-2009-06-04/libavcodec/x86/mlpdsp.c	2009-06-05 22:44:26.847412240 +0530
+@@ -104,7 +104,7 @@
+ #endif /* !ARCH_X86_64 */
+ 
+ #define BINC  AV_STRINGIFY(4* MAX_CHANNELS)
+-#define IOFFS AV_STRINGIFY(4*(MAX_FIR_ORDER + MAX_BLOCKSIZE))
++#define IOFFS AV_STRINGIFY(4* MAX_FIR_PLUS_BLOCKSIZE)
+ #define IOFFC AV_STRINGIFY(4* MAX_FIR_ORDER)
+ 
+ #define FIRMUL(label, offset) MLPMUL(label, #offset,   "0",   "0")

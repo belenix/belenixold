@@ -12,8 +12,13 @@ Summary:                 mplayer - The Movie Player
 Version:                 1.5
 Source:                  http://www.mplayerhq.hu/MPlayer/releases/mplayer-checkout-snapshot.tar.bz2
 Patch1:                  mplayer-01-cddb.diff
-Patch4:                  mplayer-04-cabac-asm.diff
+
+# Workaround for possible Gas bug on Solaris.
+Patch2:                  mplayer-02-mlp.h.diff
+patch3:                  mplayer-03-mlpdsp.c.diff
+
 Patch5:                  mplayer-05-configure.diff
+
 Source3:                 http://www.mplayerhq.hu/MPlayer/skins/Blue-1.7.tar.bz2
 Source4:                 http://www.mplayerhq.hu/MPlayer/skins/Abyss-1.7.tar.bz2
 Source5:                 http://www.mplayerhq.hu/MPlayer/skins/neutron-1.5.tar.bz2
@@ -113,7 +118,8 @@ BuildRequires: SUNWgtk2-devel
 %setup -q -c -n %name-%version
 cd mplayer-checkout*
 %patch1 -p1
-%patch4 -p1
+%patch2 -p1
+%patch3 -p1
 %patch5 -p1
 
 #unzip %SOURCE7
@@ -220,6 +226,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 
 %changelog
+* Fri Jun 05 2009 - moinakg@belenix(dot)org
+- Updated to latest SVN snapshot.
+- Remove disabling of x86 optimizations in cabac
+- Add patch to work around possible Gas bug on Solaris.
 * Sun Apr 17 2009 - moinakg@belenix.org
 - Fix dependencies.
 * Sun May 03 2009 - moinakg@belenix.org
