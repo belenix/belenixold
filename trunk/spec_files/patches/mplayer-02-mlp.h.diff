@@ -1,0 +1,12 @@
+--- mplayer-checkout-2009-06-04/libavcodec/mlp.h.orig	2009-06-05 22:44:37.506846423 +0530
++++ mplayer-checkout-2009-06-04/libavcodec/mlp.h	2009-06-05 22:46:40.458714343 +0530
+@@ -62,6 +62,9 @@
+ #define MAX_FIR_ORDER       8
+ #define MAX_IIR_ORDER       4
+ 
++/** MAX_FIR_ORDER + MAX_BLOCKSIZE (8 + (40 * (192000 / 48000)) **/
++#define MAX_FIR_PLUS_BLOCKSIZE 168
++
+ /** Code that signals end of a stream. */
+ #define END_OF_STREAM       0xd234d234
+ 
