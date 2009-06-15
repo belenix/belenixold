@@ -47,9 +47,11 @@ fi
 
 mkdir build && cd build
 export CFLAGS="%optflags"
+export CXXFLAGS="%cxx_optflags"
 export LDFLAGS="%_ldflags -L/usr/sfw/lib -R/usr/sfw/lib"
 export LD_LIBRARY_PATH="%_pkg_config_path"
 cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_BUILD_TYPE=%{build_type} \
+                -DCMAKE_SKIP_RPATH:BOOL=YES \
                 -DBUILD_SHARED_LIBS=On -DICAL_ERRORS_ARE_FATAL=false \
                 -DLIB_INSTALL_DIR=%{_libdir} ..
 make
@@ -57,13 +59,11 @@ make
 %ifarch amd64 sparcv9
 mkdir ../build-%{_arch64} && cd ../build-%{_arch64}
 export CFLAGS="%optflags64"
-%if %("%_ldflags64" != "")
+export CXXFLAGS="%cxx_optflags64"
 export LDFLAGS="%_ldflags64 -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64}"
-%else
-export LDFLAGS="%_ldflags -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64}"
-%endif
 export LD_LIBRARY_PATH=%{_libdir}/%{_arch64}/pkgconfig
 cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_BUILD_TYPE=%{build_type} \
+                -DCMAKE_SKIP_RPATH:BOOL=YES \
                 -DBUILD_SHARED_LIBS=On -DICAL_ERRORS_ARE_FATAL=false \
                 -DLIB_INSTALL_DIR=%{_libdir}/%{_arch64} ..
 make
@@ -104,6 +104,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Fix C++ build flags and avoid stripping of binaries.
 * Sat Apr 18 2009 - moinakg@gmail.com
 - Bump to latest version that uses Cmake and enable 64Bit build.
 * Mon Jan 21 2008 - moinak.ghosh@sun.com

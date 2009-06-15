@@ -1,0 +1,11 @@
+--- libcaptury-0.3.0/examples/capture-screen.cpp.orig	2009-06-07 13:38:29.444974836 +0530
++++ libcaptury-0.3.0/examples/capture-screen.cpp	2009-06-07 13:39:11.586904799 +0530
+@@ -88,7 +88,7 @@
+ 	Window win = createWindow(dpy, span, span);
+ 
+ 	captury_config_t config;
+-	bzero(&config, sizeof(config));
++	(void) memset(&config, '\0', sizeof(config));
+ 
+ 	config.x = 0;
+ 	config.y = 0;

@@ -1,0 +1,11 @@
+--- ImageMagick-6.5.3-4-64/PerlMagick/Magick.xs.orig	2009-06-12 08:44:40.809194604 +0530
++++ ImageMagick-6.5.3-4-64/PerlMagick/Magick.xs	2009-06-12 08:45:28.985717181 +0530
+@@ -58,6 +58,8 @@
+ 
+ #define PERL_NO_GET_CONTEXT
+ #include "EXTERN.h"
++#include <sys/stat.h>
++#include <sys/vnode.h>
+ #include "perl.h"
+ #include "XSUB.h"
+ #include <math.h>

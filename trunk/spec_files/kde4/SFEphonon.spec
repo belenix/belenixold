@@ -154,7 +154,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/*.so*
-%dir %attr (0755, root, other) %{_libdir}/kde4
+%dir %attr (0755, root, bin) %{_libdir}/kde4
 %{_libdir}/kde4/*
 
 %defattr (-, root, other)
@@ -174,5 +174,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/phonon.pc
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Fix directory permission.
 * Sun Apr 17 2009 - moinakg@belenix.org
 - Initial version.

@@ -3,6 +3,7 @@
 #
 # includes module(s): decibel
 #
+# The KDE4 Support is only 32Bit since we do not have 64Bit KDE4 yet.
 #
 %include Solaris.inc
 
@@ -32,10 +33,12 @@ BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 Requires:      SFEqt4
 Requires:      SFEtapioca-qt
+Requires:      SFEkdelibs4
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEcmake
 BuildRequires: SFEdoxygen
 BuildRequires: SFEtapioca-qt-devel
+BuildRequires: SFEkdelibs4-devel
 
 
 %description
@@ -104,12 +107,16 @@ export PKG_CONFIG_PATH=%{_prefix}/lib/%{_arch64}/pkgconfig:%{_prefix}/gnu/lib/%{
 
 cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DCMAKE_BUILD_TYPE=Release                                      \
+        -DCMAKE_SKIP_RPATH:BOOL=YES                                     \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
         -DCMAKE_CXX_COMPILER:FILEPATH=${CXX}                            \
         -DCMAKE_CXX_FLAGS_RELEASE:STRING="${CXXFLAGS}"                  \
         -DLIB_INSTALL_DIR=%{_libdir}/%{_arch64}                         \
         -DBIN_INSTALL_DIR=%{_bindir}/%{_arch64}                         \
+        -DQTTAPIOCA_LIBRARIES=%{_libdir}/%{_arch64}/libQtTapioca.so     \
+        -DKDE4_KDECONFIG_EXECUTABLE:FILEPATH=UNINITIALIZED              \
+        -DKDE4_PLASMA_OPENGL_FOUND:FILEPATH=UNINITIALIZED               \
         -DINCLUDE_INSTALL_DIR=%{_includedir}                            \
         -DBUILD_SHARED_LIBS=On                                          \
         -DPKGCONFIG_INSTALL_PREFIX=%{_libdir}/%{_arch64}/pkgconfig      \
@@ -128,6 +135,7 @@ export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
 
 cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DCMAKE_BUILD_TYPE=Release                                      \
+        -DCMAKE_SKIP_RPATH:BOOL=YES                                     \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
         -DCMAKE_CXX_COMPILER:FILEPATH=${CXX}                            \
@@ -174,10 +182,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_bindir}
 %{_bindir}/decibel
 %{_bindir}/decibel_logger
+%{_bindir}/minigui
 
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_datadir}/Decibel
 %{_datadir}/Decibel/*
+%dir %attr (0755, root, bin) %{_datadir}/kde4
+%dir %attr (0755, root, bin) %{_datadir}/kde4/services
+%{_datadir}/kde4/services/*
 %dir %attr (0755, root, bin) %{_datadir}/dbus-1
 %dir %attr (0755, root, bin) %{_datadir}/dbus-1/services
 %{_datadir}/dbus-1/services/*
@@ -186,6 +198,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/*.so*
+%dir %attr (0755, root, bin) %{_libdir}/kde4
+%{_libdir}/kde4/*
 %dir %attr (0755, root, bin) %{_libdir}/Decibel
 %{_libdir}/Decibel/*
 
@@ -215,5 +229,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Avoid stripping of binaries.
 * Fri May 29 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version.

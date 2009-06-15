@@ -10,6 +10,13 @@
 # Owner: jedy
 #
 %include Solaris.inc
+
+%ifarch amd64 sparcv9
+%include arch64.inc
+%use aspell64 = aspell.spec
+%endif
+
+%include base.inc
 %use aspell = aspell.spec
 
 Name:          SFEaspell
@@ -18,7 +25,11 @@ Version:       %{aspell.version}
 SUNW_BaseDir:  %{_prefix}
 BuildRoot:     %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
+%if %cc_is_gcc
+Requires:      SFEgccruntime
+%else
 Requires:      SUNWlibC
+%endif
 Requires:      SUNWlibms
 Requires:      SUNWlibmsr
 Requires:      SUNWperl584core
@@ -32,10 +43,35 @@ Requires:      SFEaspell
 
 %prep
 rm -rf %name-%version
+%ifarch amd64 sparcv9
+mkdir -p %name-%version/%_arch64
+%aspell64.prep -d  %name-%version/%_arch64
+%endif
+
 mkdir -p %name-%version
 %aspell.prep -d %name-%version
 
 %build
+%if %option_with_indiana_branding
+export MSGFMT="/usr/gnu/bin/msgfmt"
+%else
+export MSGFMT="/usr/bin/msgfmt"
+%endif
+
+%ifarch amd64 sparcv9
+%if %cc_is_gcc
+export CFLAGS="%optflags64"
+export LDFLAGS="%_ldflags64 -lm -lstdc++"
+export CXXFLAGS="%cxx_optflags64"
+%else
+export CXX="$CXX -norunpath"
+export CFLAGS="%optflags64"
+export LDFLAGS="%_ldflags64 -lCrun -lm"
+export CXXFLAGS="%cxx_optflags64 -staticlib=stlport4"
+%endif
+
+%aspell64.build -d %name-%version/%_arch64
+%endif
 
 %if %cc_is_gcc
 export CFLAGS="%optflags"
@@ -48,19 +84,15 @@ export LDFLAGS="%_ldflags -lCrun -lm"
 export CXXFLAGS="%cxx_optflags -staticlib=stlport4"
 %endif
 
-%if %option_with_indiana_branding
-export MSGFMT="/usr/gnu/bin/msgfmt"
-%else
-export MSGFMT="/usr/bin/msgfmt"
-%endif
-
 %aspell.build -d %name-%version
 
 %install
-%aspell.install -d %name-%version
-mv $RPM_BUILD_ROOT%{_bindir}/* $RPM_BUILD_ROOT%{_libdir}/aspell/
-rm -rf $RPM_BUILD_ROOT%{_bindir}
+%ifarch amd64 sparcv9
+%aspell64.install -d %name-%version/%_arch64
+rm -rf $RPM_BUILD_ROOT%{_datadir}
+%endif
 
+%aspell.install -d %name-%version
 # The only stuff in datadir is doc, info and man which we do not want
 # to package.  
 #
@@ -73,9 +105,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_libdir}
-%{_libdir}/lib*.so*
-%{_libdir}/aspell
+%dir %attr (0755, root, bin) %{_prefix}/bin
+%{_prefix}/bin/*
+%dir %attr (0755, root, bin) %{_prefix}/lib
+%{_prefix}/lib/*
 
 %files devel
 %defattr (-, root, bin)
@@ -83,6 +116,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Add 64Bit build and rebuild with Gcc4.4
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Add from SFE repo.
 * Sat Apr 21 2007 - dougs@truemail.co.th

@@ -65,6 +65,7 @@ export LDFLAGS="%_ldflags64"
 
 cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DCMAKE_BUILD_TYPE=Release                                      \
+        -DCMAKE_SKIP_RPATH:BOOL=YES                                     \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
         -DCMAKE_CXX_COMPILER:FILEPATH=${CXX}                            \
@@ -86,6 +87,7 @@ export LDFLAGS="%_ldflags"
 
 cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DCMAKE_BUILD_TYPE=Release                                      \
+        -DCMAKE_SKIP_RPATH:BOOL=YES                                     \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
         -DCMAKE_CXX_COMPILER:FILEPATH=${CXX}                            \
@@ -158,6 +160,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Avoid stripping of binaries.
 * Sun Apr 17 2009 - moinakg@belenix.org
 - Fix minor specfile bug.
 * Sat May 16 2009 - moinakg@belenix.org

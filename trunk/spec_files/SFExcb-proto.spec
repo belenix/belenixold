@@ -13,10 +13,11 @@
 %include base.inc
 
 %define _python_ver      2.5
+%define _orig_ver        1.2
 Name:                    SFExcb-proto
 Summary:                 XML-XCB protocol descriptions that libxcb uses to generate the majority of its code and API.
-Version:                 1.4
-Source:                  http://xcb.freedesktop.org/dist/xcb-proto-%{version}.tar.gz
+Version:                 1.5-%{_orig_ver}
+Source:                  http://xcb.freedesktop.org/dist/xcb-proto-1.2.tar.gz
 URL:                     http://xcb.freedesktop.org/
 License:                 MIT_X11
 
@@ -38,7 +39,7 @@ threading support, and extensibility.
 %prep
 %setup -q -c -n %name-%version
 %ifarch amd64 sparcv9
-cp -rp xcb-proto-%{version} xcb-proto-%{version}-64
+cp -rp xcb-proto-%{_orig_ver} xcb-proto-%{_orig_ver}-64
 %endif
 
 %build
@@ -50,7 +51,7 @@ fi
 export PYTHON=%{_prefix}/bin/python%{_python_ver}
 
 %ifarch amd64 sparcv9
-cd xcb-proto-%{version}-64
+cd xcb-proto-%{_orig_ver}-64
 export CFLAGS="%optflags64"
 export CXXFLAGS="%cxx_optflags64"
 export LDFLAGS="%_ldflags64"
@@ -67,7 +68,7 @@ make -j$CPUS
 cd ..
 %endif
 
-cd xcb-proto-%{version}
+cd xcb-proto-%{_orig_ver}
 export CFLAGS="%optflags"
 export CXXFLAGS="%cxx_optflags"
 export LDFLAGS="%_ldflags"
@@ -88,13 +89,13 @@ cd ..
 rm -rf $RPM_BUILD_ROOT
 
 %ifarch amd64 sparcv9
-cd xcb-proto-%{version}-64
+cd xcb-proto-%{_orig_ver}-64
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/%{_arch64}/*.la
 cd ..
 %endif
 
-cd xcb-proto-%{version}
+cd xcb-proto-%{_orig_ver}
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 cd ..
@@ -169,5 +170,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Downgrade version to support older Xorg in OpenSolaris.
 * Sun Apr 17 2009 - moinakg@belenix.org
 - Initial version

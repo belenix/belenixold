@@ -65,6 +65,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python%{python_version}/vendor-packages/*
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Archive obsolete spec.
 * Sun Mar 22 2009 - moinakg@belenix.org
 - Import from SFE gate.
 - Bump version, fix URL.

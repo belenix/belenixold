@@ -1,0 +1,13 @@
+diff -up kdebase-runtime-4.2.3/kstyles/oxygen/oxygen.cpp.kde#186340 kdebase-runtime-4.2.3/kstyles/oxygen/oxygen.cpp
+--- kdebase-runtime-4.2.3/kstyles/oxygen/oxygen.cpp.kde#186340	2009-04-30 04:11:54.000000000 -0500
++++ kdebase-runtime-4.2.3/kstyles/oxygen/oxygen.cpp	2009-05-12 10:43:10.253144149 -0500
+@@ -3055,7 +3055,8 @@ QSize OxygenStyle::sizeFromContents(Cont
+ 
+             if (const QStyleOptionToolButton* tbOpt = qstyleoption_cast<const QStyleOptionToolButton*>(option)) {
+                 if ((!tbOpt->icon.isNull()) && (!tbOpt->text.isEmpty()) && tbOpt->toolButtonStyle == Qt::ToolButtonTextUnderIcon)
+-                    size.setHeight(size.height()-9);
++                    // TODO: Make this font size dependent
++                    size.setHeight(size.height()-5);
+             }
+ 
+             // We want to avoid super-skiny buttons, for things like "up" when icons + text

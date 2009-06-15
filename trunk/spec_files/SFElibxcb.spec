@@ -13,10 +13,11 @@
 %include base.inc
 
 %define _python_ver      2.5
+%define _orig_ver        1.1.91
 Name:                    SFElibxcb
 Summary:                 An interface to the X Window System protocol, which replaces the current Xlib interface.
-Version:                 1.2
-Source:                  http://xcb.freedesktop.org/dist/libxcb-%{version}.tar.gz
+Version:                 1.3-1.1.91
+Source:                  http://xcb.freedesktop.org/dist/libxcb-1.1.91.tar.gz
 URL:                     http://xcb.freedesktop.org/
 License:                 MIT_X11
 
@@ -57,7 +58,7 @@ Requires: %name
 %prep
 %setup -q -c -n %name-%version
 %ifarch amd64 sparcv9
-cp -rp libxcb-%{version} libxcb-%{version}-64
+cp -rp libxcb-%{_orig_ver} libxcb-%{_orig_ver}-64
 %endif
 
 %build
@@ -69,7 +70,7 @@ fi
 export PYTHON=%{_bindir}/python%{_python_ver}
 
 %ifarch amd64 sparcv9
-cd libxcb-%{version}-64
+cd libxcb-%{_orig_ver}-64
 export CFLAGS="%optflags64"
 export CXXFLAGS="%cxx_optflags64"
 export LDFLAGS="%_ldflags64"
@@ -86,7 +87,7 @@ make -j$CPUS
 cd ..
 %endif
 
-cd libxcb-%{version}
+cd libxcb-%{_orig_ver}
 export CFLAGS="%optflags"
 export CXXFLAGS="%cxx_optflags"
 export LDFLAGS="%_ldflags"
@@ -107,13 +108,13 @@ cd ..
 rm -rf $RPM_BUILD_ROOT
 
 %ifarch amd64 sparcv9
-cd libxcb-%{version}-64
+cd libxcb-%{_orig_ver}-64
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/%{_arch64}/*.la
 cd ..
 %endif
 
-cd libxcb-%{version}
+cd libxcb-%{_orig_ver}
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 cd ..
@@ -153,5 +154,5 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Apr 17 2009 - moinakg@belenix.org
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Initial version

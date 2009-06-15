@@ -1,0 +1,30 @@
+--- kdebindings-4.2.4/python/pykde4/sip/kdeui/kstartupinfo.sip.orig	2009-06-14 19:58:53.900808060 +0530
++++ kdebindings-4.2.4/python/pykde4/sip/kdeui/kstartupinfo.sip	2009-06-14 22:24:30.579912941 +0530
+@@ -173,7 +173,27 @@
+ //force
+ 
+ public:
++    //
++    // sipCpp->pids() returns Qlist<long> while sip refuses to accept Qlist<long>
++    // return type for pids so it is set as QList<int>. However compiler fails
++    // when encountering new Qlist<int>(Qlist<long>)!!
++    // So we do some explicit mapping via Methodcode below.
++    //
+     QList<int>              pids () const;
++%MethodCode
++        Py_BEGIN_ALLOW_THREADS
++        QList<long> *plst = new QList<long>(sipCpp->pids());
++        sipRes = new QList<int>();
++        QListIterator<long> i(*plst);
++        while (i.hasNext()) {
++            int n;
++            n = (int)(i.next());
++            sipRes->append(n);
++        }
++        delete plst;
++        Py_END_ALLOW_THREADS
++%End
++
+ //end
+ 
+ };   // KStartupInfoData

@@ -14,10 +14,11 @@
 
 Name:                    SFEcapseo
 Summary:                 Capseo - a realtime video encoder/decoder library
-%define  tarball_dir capseo-0.3.0~svn158.orig
-Version:                 0.3.0_svn158
+%define  tarball_version 0.3.0
+%define  tarball_dir capseo_%{tarball_version}
+Version:                 0.3.0_git200
 URL:                     http://code.ninchens.net/projects/capseo
-Source:                  http://www.belenix.org/binfiles/capseo_%{version}.tar.gz
+Source:                  http://www.belenix.org/binfiles/capseo_%{tarball_version}.tar.bz2
 Patch1:                  capseo.pc.in.17.diff
 Patch2:                  capseo.encode-raw.cpp.13.diff
 Patch3:                  capseo.encode-stream.cpp.14.diff
@@ -87,16 +88,12 @@ cd %{tarball_dir}-64
 
 export CFLAGS="%optflags64"
 export CPPFLAGS="%optflags64"
-export LDFLAGS="%_ldflags64 -L/usr/lib/%{_arch64} -R/usr/lib/%{_arch64}"
+export LDFLAGS="%_ldflags64 -L/usr/lib/%{_arch64} -R/usr/lib/%{_arch64} %{gnu_lib_path64}"
 X11_LIBS="-L/usr/X11/lib/%{_arch64} -R/usr/X11/lib/%{_arch64} -lX11"
 export X11_LIBS
 
-
-# smack the timestamps into line
-touch -r configure *
-
-chmod 0755 configure
-
+find . -type f | xargs touch
+bash ./autogen.sh
 ./configure \
         --prefix=%{_prefix} \
         --bindir=%{_bindir}/%{_arch64} \
@@ -111,6 +108,12 @@ chmod 0755 configure
         --disable-libtool-lock \
         --enable-examples --enable-theora --with-pic --with-accel=$accel
 
+(cd src/arch-%{_arch64}
+ cp Makefile Makefile.orig
+ cat Makefile.orig | sed '{
+     s#\$(LINK)#\$(LIBTOOL) --tag=CC \$(AM_LIBTOOLFLAGS) \$(LIBTOOLFLAGS) --mode=link \$(CC) \$(AM_CFLAGS) \$(CFLAGS) \$(LDFLAGS) -o $@#
+ }' > Makefile)
+
 make -j $CPUS
 cd ..
 %endif
@@ -119,14 +122,18 @@ cd %{tarball_dir}
 accel=x86
 export CFLAGS="%optflags"
 export CPPFLAGS="%optflags"
-export LDFLAGS="%_ldflags"
+export LDFLAGS="%_ldflags %{gnu_lib_path}"
 X11_LIBS="-L/usr/X11/lib -R/usr/X11/lib -lX11"
 export X11_LIBS
 
-# smack the timestamps into line
-touch -r configure *
-
-chmod 0755 configure
+find . -type f | xargs touch
+#bash ./autogen.sh
+rm -f ltmain.sh
+libtoolize --force
+aclocal
+autoheader
+automake -a -c -f
+autoconf
 
 ./configure \
         --prefix=%{_prefix} \
@@ -169,7 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
 %dir %attr (0755, root, bin) %{_libdir}
-%{_libdir}/libcapseo.so.0.2.0
+%{_libdir}/libcapseo.so.0.3.0
 %{_libdir}/libcapseo.so.0
 %{_libdir}/libcapseo.so
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
@@ -181,7 +188,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_libdir}/%_arch64
-%{_libdir}/%_arch64/libcapseo.so.0.2.0
+%{_libdir}/%_arch64/libcapseo.so.0.3.0
 %{_libdir}/%_arch64/libcapseo.so.0
 %{_libdir}/%_arch64/libcapseo.so
 %dir %attr (0755, root, other) %{_libdir}/%_arch64/pkgconfig
@@ -193,5 +200,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Fix build.
 * Sun May 03 2009 - moinakg@belenix.org
 - Initial spec file
