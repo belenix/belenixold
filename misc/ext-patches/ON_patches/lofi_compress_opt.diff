@@ -1,246 +1,195 @@
---- usr/src/uts/common/io/lofi.c.orig	2009-01-29 06:58:22.000000000 +0300
-+++ usr/src/uts/common/io/lofi.c	2009-02-08 06:22:19.280742295 +0300
-@@ -180,6 +180,7 @@
- 
- uint32_t lofi_max_files = LOFI_MAX_FILES;
- const char lofi_crypto_magic[6] = LOFI_CRYPTO_MAGIC;
-+uint32_t lofi_max_comp_cache = 1;
- 
- static int gzip_decompress(void *src, size_t srclen, void *dst,
- 	size_t *destlen, int level);
-@@ -190,6 +191,84 @@
- 	{gzip_decompress,	NULL,	9,	"gzip-9"}
- };
- 
-+
-+static struct lofi_comp_cache *
-+lofi_find_comp_data(struct lofi_state *lsp, uint64_t seg_index)
-+{
-+	struct lofi_comp_cache *lc, *lc_prev;
-+
-+	for (lc_prev = NULL, lc = lsp->ls_comp_cache; lc != NULL;
-+	    lc_prev = lc, lc = lc->lc_next)
-+	{
-+		if (lc->lc_index == seg_index) {
-+			/*
-+			 * LRU: move to head of list
-+			 */
-+			if (lc_prev != NULL) {
-+				lc_prev->lc_next = lc->lc_next;
-+				lc->lc_next = lsp->ls_comp_cache;
-+				lsp->ls_comp_cache = lc;
-+			}
-+			return lc;
-+		}
-+		
-+	}
-+	return NULL;
-+}
-+
-+
-+static struct lofi_comp_cache *
-+lofi_add_comp_data(struct lofi_state *lsp, uint64_t seg_index,
-+    unsigned char *data)
-+{
-+	struct lofi_comp_cache *lc, *lc_prev;
-+	uint32_t	num_lc = 0;
-+
-+	if (lofi_max_comp_cache == 0)
-+		return NULL;
-+
-+	for (lc_prev = NULL, lc = lsp->ls_comp_cache; lc != NULL;
-+	    lc_prev = lc, lc = lc->lc_next)
-+	{
-+		num_lc++;
-+		if (lc->lc_next == NULL)
-+			break;
-+	}
-+
-+	if (num_lc < lofi_max_comp_cache) {
-+		lc = kmem_alloc(sizeof (struct lofi_comp_cache), KM_SLEEP);
-+		lc->lc_data = NULL;
-+		lc->lc_next = lsp->ls_comp_cache;
-+		lsp->ls_comp_cache = lc;
-+	} else if (lc_prev != NULL) {
-+		lc_prev->lc_next = NULL;
-+		lc->lc_next = lsp->ls_comp_cache;
-+		lsp->ls_comp_cache = lc;
-+	}
-+
-+	if (lc->lc_data != NULL)
-+		kmem_free(lc->lc_data, lsp->ls_uncomp_seg_sz);
-+	lc->lc_data = data;
-+	lc->lc_index = seg_index;
-+	return lc;
-+}
-+
-+
-+static void
-+lofi_free_comp_data(struct lofi_state *lsp)
-+{
-+	struct lofi_comp_cache *lc, *lc_next;
-+
-+	for (lc = lsp->ls_comp_cache; lc != NULL; lc = lc_next) {
-+		lc_next = lc->lc_next;
-+		if (lc->lc_data != NULL)
-+			kmem_free(lc->lc_data, lsp->ls_uncomp_seg_sz);
-+		kmem_free(lc, sizeof (struct lofi_comp_cache));
-+	}
-+	lsp->ls_comp_cache = NULL;
-+}
-+
-+
- static int
- lofi_busy(void)
+--- usr/src/uts/common/io/lofi.c	Fri May  1 12:32:04 2009
++++ usr/src/uts/common/io/lofi.c	Fri May  1 12:32:03 2009
+@@ -351,6 +351,7 @@
  {
-@@ -325,6 +404,8 @@
- 		mutex_destroy(&lsp->ls_kstat_lock);
+ 	dev_t	newdev;
+ 	char	namebuf[50];
++	int	i;
+ 
+ 	ASSERT(mutex_owned(&lofi_lock));
+ 
+@@ -391,6 +392,20 @@
+ 		lsp->ls_uncomp_seg_sz = 0;
  	}
  
-+	lofi_free_comp_data(lsp);
++	/*
++	 * Free pre-allocated compressed buffers
++	 */
++	if (lsp->ls_comp_bufs != NULL) {
++		for (i = 0; i < lofi_taskq_nthreads; i++) {
++			if (lsp->ls_comp_bufs[i].bufsize > 0)
++				kmem_free(lsp->ls_comp_bufs[i].buf,
++				    lsp->ls_comp_bufs[i].bufsize);
++		}	
++		kmem_free(lsp->ls_comp_bufs, 
++		    sizeof (struct compbuf) * lofi_taskq_nthreads);
++		mutex_destroy(&lsp->ls_comp_bufs_lock);
++	}	
 +
- 	if (lsp->ls_uncomp_seg_sz > 0) {
- 		kmem_free(lsp->ls_comp_index_data, lsp->ls_comp_index_data_sz);
- 		lsp->ls_uncomp_seg_sz = 0;
-@@ -826,6 +907,9 @@
+ 	mutex_destroy(&lsp->ls_vp_lock);
+ 
+ 	ddi_soft_state_free(lofi_statep, minor);
+@@ -1009,7 +1024,7 @@
+ 		u_offset_t salign, ealign;
  		u_offset_t sdiff;
  		uint32_t comp_data_sz;
- 		uint64_t i;
-+		uint64_t uncompressed_seg_index;
-+		struct lofi_comp_cache *lc;
-+
+-		uint64_t i;
++		uint64_t i, j;
  
  		/*
  		 * From here on we're dealing primarily with compressed files
-@@ -856,6 +940,24 @@
- 		eblkoff = (offset + bp->b_bcount) & (lsp->ls_uncomp_seg_sz - 1);
- 
- 		/*
-+		 * Check the compressed block cache
-+		 */
-+		if (sblkno == eblkno ||
-+		    sblkno + 1 == eblkno && eblkoff == 0) {
-+			mutex_enter(&lsp->ls_comp_cache_lock);
-+			lc = lofi_find_comp_data(lsp, sblkno);
-+			if (lc != NULL) {
-+				bcopy(lc->lc_data + sblkoff, bufaddr,
-+				    bp->b_bcount);
-+				mutex_exit(&lsp->ls_comp_cache_lock);
-+				bp->b_resid = 0;
-+				error = 0;
-+				goto done;
-+			}
-+			mutex_exit(&lsp->ls_comp_cache_lock);
-+		}
-+
-+		/*
- 		 * Align start offset to block boundary for segmap
- 		 */
- 		salign = lsp->ls_comp_seg_index[sblkno];
-@@ -892,7 +994,6 @@
+@@ -1105,8 +1120,28 @@
+ 		 * segments and one uncompressed segment since we
  		 * uncompress segments one at a time
  		 */
- 		compressed_seg = kmem_alloc(bp->b_bcount, KM_SLEEP);
+-		compressed_seg = kmem_alloc(bp->b_bcount, KM_SLEEP);
 -		uncompressed_seg = kmem_alloc(lsp->ls_uncomp_seg_sz, KM_SLEEP);
++		mutex_enter(&lsp->ls_comp_bufs_lock);
++		for (i = 0; i < lofi_taskq_nthreads; i++) {
++			if (lsp->ls_comp_bufs[i].inuse == 0) {
++				lsp->ls_comp_bufs[i].inuse = 1;
++				j = i;
++				break;
++			}
++		}
++
++		mutex_exit(&lsp->ls_comp_bufs_lock);
++		ASSERT(j < lofi_taskq_nthreads);
++
++		if (lsp->ls_comp_bufs[j].bufsize < bp->b_bcount) {
++			if (lsp->ls_comp_bufs[j].bufsize > 0)
++				kmem_free(lsp->ls_comp_bufs[j].buf,
++				    lsp->ls_comp_bufs[j].bufsize);
++			lsp->ls_comp_bufs[j].buf = kmem_alloc(bp->b_bcount,
++							KM_SLEEP);
++			lsp->ls_comp_bufs[j].bufsize = bp->b_bcount;
++		}
++		compressed_seg = lsp->ls_comp_bufs[j].buf;
++
  		/*
  		 * Map in the calculated number of blocks
  		 */
-@@ -910,6 +1011,8 @@
+@@ -1124,6 +1159,7 @@
  		cmpbuf = compressed_seg + sdiff;
- 		for (i = sblkno; i < (eblkno + 1) && i < lsp->ls_comp_index_sz;
- 		    i++) {
-+			unsigned char *useg;
-+
+ 		for (i = sblkno; i <= eblkno; i++) {
+ 			ASSERT(i < lsp->ls_comp_index_sz - 1);
++			uchar_t	*useg;
+ 
  			/*
- 			 * Each of the segment index entries contains
- 			 * the starting block number for that segment.
-@@ -933,10 +1036,16 @@
+ 			 * The last segment is special in that it is
+@@ -1153,9 +1189,15 @@
  			 * at all
  			 */
  			if (*cmpbuf == UNCOMPRESSED) {
 -				bcopy((cmpbuf + SEGHDR), uncompressed_seg,
 -				    (cmpbytes - SEGHDR));
-+				/*bcopy((cmpbuf + SEGHDR), uncompressed_seg,
-+				    (cmpbytes - SEGHDR));*/
 +				useg = cmpbuf + SEGHDR;
  			} else {
- 				seglen = lsp->ls_uncomp_seg_sz;
 +				if (uncompressed_seg == NULL)
-+					uncompressed_seg =
-+					    kmem_alloc(lsp->ls_uncomp_seg_sz, KM_SLEEP);
++					uncompressed_seg = 
++					    kmem_alloc(lsp->ls_uncomp_seg_sz,
++					    KM_SLEEP);
 +				useg = uncompressed_seg;
 +				uncompressed_seg_index = i;
- 
++
  				if (li->l_decompress((cmpbuf + SEGHDR),
  				    (cmpbytes - SEGHDR), uncompressed_seg,
-@@ -960,7 +1069,7 @@
- 					    (lsp->ls_uncomp_seg_sz - eblkoff);
+ 				    &seglen, li->l_level) != 0) {
+@@ -1164,8 +1206,6 @@
+ 				}
  			}
+ 
+-			uncompressed_seg_index = i;
+-
+ 			/*
+ 			 * Determine how much uncompressed data we
+ 			 * have to copy and copy it
+@@ -1174,7 +1214,7 @@
+ 			if (i == eblkno)
+ 				xfersize -= (lsp->ls_uncomp_seg_sz - eblkoff);
  
 -			bcopy((uncompressed_seg + sblkoff), bufaddr, xfersize);
 +			bcopy((useg + sblkoff), bufaddr, xfersize);
  
  			cmpbuf += cmpbytes;
  			bufaddr += xfersize;
-@@ -970,6 +1079,17 @@
- 			if (bp->b_resid == 0)
- 				break;
+@@ -1186,7 +1226,13 @@
  		}
-+
+ 
+ 		/*
+-		 * Add the data for the last decopressed segment to
++		 * Skip to done if there is no uncompressed data to cache
++		 */ 
 +		if (uncompressed_seg == NULL)
 +			goto done;
 +
-+		mutex_enter(&lsp->ls_comp_cache_lock);
-+		if ((lc = lofi_add_comp_data(lsp, uncompressed_seg_index,
-+		    uncompressed_seg)) != NULL) {
-+			uncompressed_seg = NULL;
-+		}
-+		mutex_exit(&lsp->ls_comp_cache_lock);
-+
++		/*
++		 * Add the data for the last decompressed segment to
+ 		 * the cache.
+ 		 *
+ 		 * In case the uncompressed segment data was added to (and
+@@ -1201,8 +1247,11 @@
+ 		mutex_exit(&lsp->ls_comp_cache_lock);
+ 
  done:
- 		if (compressed_seg != NULL)
- 			kmem_free(compressed_seg, comp_data_sz);
-@@ -1413,7 +1533,8 @@
- 	/*
- 	 * The compressed segment size must be a power of 2
- 	 */
--	if (lsp->ls_uncomp_seg_sz % 2)
-+	if (lsp->ls_uncomp_seg_sz == 0 ||
-+	    (lsp->ls_uncomp_seg_sz & (lsp->ls_uncomp_seg_sz - 1)) != 0)
- 		return (EINVAL);
- 
- 	for (i = 0; !((lsp->ls_uncomp_seg_sz >> i) & 1); i++)
-@@ -1652,6 +1773,7 @@
+-		if (compressed_seg != NULL)
+-			kmem_free(compressed_seg, comp_data_sz);
++		if (compressed_seg != NULL) {
++			mutex_enter(&lsp->ls_comp_bufs_lock);
++			lsp->ls_comp_bufs[j].inuse = 0;
++			mutex_exit(&lsp->ls_comp_bufs_lock);
++		}	
+ 		if (uncompressed_seg != NULL)
+ 			kmem_free(uncompressed_seg, lsp->ls_uncomp_seg_sz);
+ 	} /* end of handling compressed files */
+@@ -1710,6 +1759,13 @@
+ 		    BE_64(lsp->ls_comp_seg_index[i]);
  	}
- 	cv_init(&lsp->ls_vp_cv, NULL, CV_DRIVER, NULL);
- 	mutex_init(&lsp->ls_vp_lock, NULL, MUTEX_DRIVER, NULL);
-+	mutex_init(&lsp->ls_comp_cache_lock, NULL, MUTEX_DRIVER, NULL);
  
- 	/*
- 	 * save open mode so file can be closed properly and vnode counts
---- usr/src/uts/common/sys/lofi.h.orig	2009-01-29 06:58:26.000000000 +0300
-+++ usr/src/uts/common/sys/lofi.h	2009-02-08 05:59:50.249064822 +0300
-@@ -162,6 +162,12 @@
++	/*
++	 * Finally setup per-thread pre-allocated buffers 
++	 */
++	lsp->ls_comp_bufs = kmem_zalloc(lofi_taskq_nthreads *
++	    sizeof (struct compbuf), KM_SLEEP);
++	mutex_init(&lsp->ls_comp_bufs_lock, NULL, MUTEX_DRIVER, NULL);
++
+ 	return (error);
+ }
  
- #if defined(_KERNEL)
+@@ -1994,6 +2050,7 @@
+ 		goto propout;
  
-+struct lofi_comp_cache {
-+	struct lofi_comp_cache *lc_next;
-+	unsigned char	*lc_data;
-+	uint64_t	lc_index;
+ 	/* initialize these variables for all lofi files */
++	lsp->ls_comp_bufs = NULL;
+ 	lsp->ls_uncomp_seg_sz = 0;
+ 	lsp->ls_vp_comp_size = lsp->ls_vp_size;
+ 	lsp->ls_comp_algorithm[0] = '\0';
+--- usr/src/uts/common/sys/lofi.h	Fri May  1 12:32:05 2009
++++ usr/src/uts/common/sys/lofi.h	Fri May  1 12:32:05 2009
+@@ -190,6 +190,15 @@
+ 	((vtype == VREG) || (vtype == VBLK) || (vtype == VCHR))
+ 
+ /*
++ * Pre-allocated memory buffers for the purpose of compression
++ */
++struct compbuf {
++	void		*buf;
++	uint32_t	bufsize;
++	int		inuse;
 +};
 +
- /*
-  * We limit the maximum number of active lofi devices to 128, which seems very
-  * large. You can tune this by changing lofi_max_files in /etc/system.
-@@ -229,6 +235,10 @@
++/*
+  * Need exactly 6 bytes to identify encrypted lofi image
+  */
+ extern const char lofi_crypto_magic[6];
+@@ -244,6 +253,10 @@
  	uint32_t	ls_comp_index_data_sz;
  	u_offset_t	ls_vp_comp_size; /* actual compressed file size */
  
-+	kmutex_t	ls_comp_cache_lock;
-+	struct lofi_comp_cache *ls_comp_cache;
++	/* pre-allocated list of buffers for compressed segment data */
++	kmutex_t	ls_comp_bufs_lock;
++	struct compbuf	*ls_comp_bufs;
 +
-+
- 	/* the following fields are required for encryption support */
- 	boolean_t		ls_crypto_enabled;
- 	u_offset_t		ls_crypto_offset;	/* crypto meta size */
+ 	/* lock and anchor for compressed segment caching */
+ 	kmutex_t	ls_comp_cache_lock;	/* protects ls_comp_cache */
+ 	list_t		ls_comp_cache;		/* cached decompressed segs */
