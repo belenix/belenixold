@@ -1,0 +1,21 @@
+--- kdebindings-4.2.4/CMakeLists.txt.orig	2009-06-14 13:20:52.290878817 +0530
++++ kdebindings-4.2.4/CMakeLists.txt	2009-06-14 13:21:11.415984469 +0530
+@@ -54,12 +54,12 @@
+   macro_optional_find_package(KDevPlatform)
+ endif(DEPEND_PACKAGE_KDevPlatform)
+ 
+-macro_optional_add_subdirectory(smoke)
+-macro_optional_add_subdirectory(ruby)
++#macro_optional_add_subdirectory(smoke)
++#macro_optional_add_subdirectory(ruby)
+ macro_optional_add_subdirectory(python)
+-macro_optional_add_subdirectory(csharp)
+-macro_optional_add_subdirectory(java)
+-macro_optional_add_subdirectory(php)
+-macro_optional_add_subdirectory(falcon)
++#macro_optional_add_subdirectory(csharp)
++#macro_optional_add_subdirectory(java)
++#macro_optional_add_subdirectory(php)
++#macro_optional_add_subdirectory(falcon)
+ 
+ macro_display_feature_log()

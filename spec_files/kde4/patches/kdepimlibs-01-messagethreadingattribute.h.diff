@@ -1,0 +1,11 @@
+--- kdepimlibs-4.2.4/akonadi/kmime/messagethreadingattribute.h.orig	2009-06-14 18:38:22.583583375 +0530
++++ kdepimlibs-4.2.4/akonadi/kmime/messagethreadingattribute.h	2009-06-14 18:41:32.713273027 +0530
+@@ -85,7 +85,7 @@
+ 
+   private:
+     class Private;
+-    Private * const d;
++    Private * d;
+ };
+ 
+ }

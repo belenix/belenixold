@@ -1,6 +1,6 @@
---- aspell-0.60.4/modules/speller/default/affix.cpp-orig	2006-01-25 12:48:22.221889000 -0800
-+++ aspell-0.60.4/modules/speller/default/affix.cpp	2006-01-25 12:48:39.274322000 -0800
-@@ -172,8 +172,8 @@ struct AffixLess
+--- aspell-0.60.6/modules/speller/default/affix.cpp.orig        2007-12-03 07:24:20.000000000 +0530
++++ aspell-0.60.6/modules/speller/default/affix.cpp     2009-05-30 16:16:09.023530053 +0530
+@@ -172,8 +172,8 @@
  //     typedef const char * Value;
  //     typedef const char * Key;
  //     static const bool is_multi = false;
@@ -11,67 +11,34 @@
  //     bool equal(const char * x, const char * y) {return strcmp(x,y) == 0;}
  //     const char * key(const char * c) {return c;}
  //   };
-@@ -193,8 +193,8 @@ struct CondsLookupParms {
+@@ -193,8 +193,8 @@
    typedef const Conds * Value;
    typedef const char * Key;
    static const bool is_multi = false;
--  hash<const char *> hfun;
+-  acommon::hash<const char *> hfun;
 -  size_t hash(const char * s) {return hfun(s);}
-+  hash<const char *> thehash;
++  acommon::hash<const char *> thehash;
 +  size_t hash(const char * s) {return thehash(s);}
    bool equal(const char * x, const char * y) {return strcmp(x,y) == 0;}
    const char * key(const Conds * c) {return c->str;}
  };
---- aspell-0.60.4/modules/speller/default/affix.hpp-orig	2006-01-25 08:56:19.726654000 -0800
-+++ aspell-0.60.4/modules/speller/default/affix.hpp	2006-01-25 08:56:33.890263000 -0800
-@@ -107,7 +107,7 @@ namespace aspeller {
-     {
-       return expand(word,aff,buf,0);
-     }
--    WordAff * expand_suffix(ParmString word, const unsigned char * new_aff,
-+    WordAff * expand_suffix(ParmString word, const unsigned char * aff,
-                             ObjStack &, int limit = INT_MAX,
-                             unsigned char * new_aff = 0, WordAff * * * l = 0,
-                             ParmString orig_word = 0) const;
---- aspell-0.60.4/common/string.hpp-orig	2006-01-25 08:48:03.868105000 -0800
-+++ aspell-0.60.4/common/string.hpp	2006-01-25 08:48:10.228839000 -0800
-@@ -492,7 +492,7 @@ namespace acommon {
- 
- namespace std
- {
--  template<> static inline void swap(acommon::String & x, acommon::String & y) {return x.swap(y);}
-+  template<> inline void swap(acommon::String & x, acommon::String & y) {return x.swap(y);}
- }
- 
- #endif
---- aspell-0.60.4/common/convert.cpp-orig	2006-01-25 08:51:18.821841000 -0800
-+++ aspell-0.60.4/common/convert.cpp	2006-01-25 08:54:00.865108000 -0800
-@@ -238,7 +238,7 @@ namespace acommon {
-   }
- 
-   template <class T>
--  static void free_norm_table(NormTable<T> * d)
-+  void free_norm_table(NormTable<T> * d)
-   {
-     for (T * cur = d->data; cur != d->end; ++cur) {
-       if (cur->sub_table) 
---- aspell-0.60.4/prog/aspell.cpp-orig	2006-01-25 10:47:40.169624000 -0800
-+++ aspell-0.60.4/prog/aspell.cpp	2006-01-25 10:48:01.320279000 -0800
-@@ -1880,7 +1880,7 @@ struct SML_Parms {
+--- aspell-0.60.6/prog/aspell.cpp.orig  2007-12-03 08:53:57.000000000 +0530
++++ aspell-0.60.6/prog/aspell.cpp       2009-05-31 13:07:55.908561246 +0530
+@@ -1892,7 +1892,7 @@
    typedef SML_WordEntry Value;
    typedef const char * Key;
    static const bool is_multi = false;
--  hash<const char *> hash;
-+  hash<const char *> thehash;
+-  acommon::hash<const char *> hash;
++  acommon::hash<const char *> thehash;
    bool equal(Key x, Key y) {return strcmp(x,y) == 0;}
    Key key(const Value & v) {return v.word;}
  };
-@@ -2031,7 +2031,7 @@ struct CML_Parms {
+@@ -2043,7 +2043,7 @@
    typedef CML_Entry Value;
    typedef const char * Key;
    static const bool is_multi = true;
--  hash<const char *> hash;
-+  hash<const char *> thehash;
+-  acommon::hash<const char *> hash;
++  acommon::hash<const char *> thehash;
    bool equal(Key x, Key y) {return strcmp(x,y) == 0;}
    Key key(const Value & v) {return v.word;}
  };
@@ -126,9 +93,9 @@
    };
  
    template <typename K, typename V, typename HF = hash<K>, typename E = std::equal_to<K> >
---- aspell-0.60.4/modules/speller/default/readonly_ws.cpp-orig	2006-01-25 08:58:10.945381000 -0800
-+++ aspell-0.60.4/modules/speller/default/readonly_ws.cpp	2006-01-25 09:36:00.510958000 -0800
-@@ -197,7 +197,7 @@ namespace {
+--- aspell-0.60.6/modules/speller/default/readonly_ws.cpp.orig  2007-12-03 07:20:43.000000000 +0530
++++ aspell-0.60.6/modules/speller/default/readonly_ws.cpp       2009-05-31 13:11:44.873974159 +0530
+@@ -196,7 +196,7 @@
      struct WordLookupParms {
        const char * block_begin;
        WordLookupParms() {}
@@ -137,12 +104,12 @@
        typedef u32int                    Value;
        typedef const char *              Key;
        static const bool is_multi = false;
-@@ -727,7 +727,7 @@ namespace {
+@@ -726,7 +726,7 @@
    struct WordLookupParms {
      const char * block_begin;
      WordLookupParms() {}
--    typedef Vector<u32int>      Vector;
-+    typedef Vector<u32int>      TheVector;
+-    typedef acommon::Vector<u32int> Vector;
++    typedef acommon::Vector<u32int> TheVector;
      typedef u32int              Value;
      typedef const char *        Key;
      static const bool is_multi = false;
@@ -171,23 +138,3 @@
      bool equal(const char * x, const char * y) {return strcmp(x,y) == 0;}
    };
    typedef StringPair Value_;
---- aspell-0.60.4/gen/mk-static-filter.pl-orig	2006-01-25 13:22:28.191252000 -0800
-+++ aspell-0.60.4/gen/mk-static-filter.pl	2006-01-25 13:36:24.392225000 -0800
-@@ -158,11 +158,17 @@ while ($filter = shift @filterhashes) {
-   printf STATICFILTERS "\n  };\n";
-   printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_begin = ".
-                                               ${$filter}{"NAME"}."_options;\n";
-+# If structure is empty, set options_end to same as options_begin.
-+if ($firstopt == 1) {
-+  printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_end = ".
-+                                              ${$filter}{"NAME"}."_options;\n";
-+} else {
-   printf STATICFILTERS "\n  const KeyInfo * ".${$filter}{"NAME"}."_options_end = ".
-                                               ${$filter}{"NAME"}."_options+sizeof(".
-                                               ${$filter}{"NAME"}."_options)/".
-                                               "sizeof(KeyInfo);\n";
- }
-+}
- 
- #finally create filter modules list.
- printf STATICFILTERS  "\n\n  static ConfigModule filter_modules[] = {\n";

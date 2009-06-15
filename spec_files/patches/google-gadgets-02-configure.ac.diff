@@ -1,0 +1,22 @@
+--- google-gadgets-for-linux-0.10.5/configure.ac.orig	2009-06-07 19:54:04.954527648 +0530
++++ google-gadgets-for-linux-0.10.5/configure.ac	2009-06-07 19:58:27.958658838 +0530
+@@ -564,7 +564,7 @@
+ has_qtnetwork=no
+ has_qtwebkit=no
+ has_qtscript=no
+-if test x$ggl_host_type = xlinux; then
++if test x$ggl_host_type = xlinux -o x$ggl_host_type = xsolaris; then
+   PKG_CHECK_MODULES(QT4, [QtGui >= 4.3 QtCore >= 4.3 QtNetwork >= 4.3],
+ 		    [has_qt4=yes
+ 		     MOC=`$PKG_CONFIG --variable=moc_location QtCore`],
+@@ -611,6 +611,10 @@
+   AC_MSG_WARN([Qt support is not available for $ggl_host_type])
+ fi
+ 
++if test -x /usr/qt4/bin/moc; then
++  MOC=/usr/qt4/bin/moc
++fi
++
+ AC_SUBST(MOC)
+ 
+ # MOC is mandatory to build qt related code.

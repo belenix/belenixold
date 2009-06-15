@@ -1,0 +1,19 @@
+--- kdelibs-4.2.3/kdeui/util/kcrash.cpp.orig	2009-06-02 23:06:49.583895251 +0530
++++ kdelibs-4.2.3/kdeui/util/kcrash.cpp	2009-06-02 23:07:53.286451951 +0530
+@@ -38,6 +38,8 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ 
++#include <ucontext.h>
++
+ #include <sys/types.h>
+ #include <sys/time.h>
+ #include <sys/resource.h>
+@@ -158,6 +160,7 @@
+ void
+ KCrash::setCrashHandler (HandlerType handler)
+ {
++  (void)printstack(2 /* stderr */);
+ #ifdef Q_OS_UNIX
+   if (!handler)
+     handler = SIG_DFL;

@@ -1,0 +1,9 @@
+diff -up kdebase-runtime-4.1.1/knetattach/knetattach.desktop.orig kdebase-runtime-4.1.1/knetattach/knetattach.desktop
+--- kdebase-runtime-4.1.1/knetattach/knetattach.desktop.orig	2008-09-01 18:50:10.000000000 +0200
++++ kdebase-runtime-4.1.1/knetattach/knetattach.desktop	2008-09-01 18:50:42.000000000 +0200
+@@ -91,4 +91,5 @@ Type=Application
+ Terminal=false
+ X-KDE-StartupNotify=true
+ Categories=Qt;KDE;Network;
++NoDisplay=true
+ X-DocPath=knetattach/index.html

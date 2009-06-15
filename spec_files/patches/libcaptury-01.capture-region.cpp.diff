@@ -1,0 +1,11 @@
+--- libcaptury-0.3.0/examples/capture-region.cpp.orig	2009-06-07 13:35:21.008148249 +0530
++++ libcaptury-0.3.0/examples/capture-region.cpp	2009-06-07 13:36:02.717999426 +0530
+@@ -70,7 +70,7 @@
+ 	Window win = createWindow(dpy, 400, 400);
+ 
+ 	captury_config_t config;
+-	bzero(&config, sizeof(config));
++        (void) memset(&config, '\0', sizeof(config));
+ 
+ 	config.x = 0;
+ 	config.y = 0;

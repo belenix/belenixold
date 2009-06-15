@@ -1,0 +1,10 @@
+--- kdelibs-4.2.4/cmake/modules/FindKDE4Internal.cmake.orig	2009-06-04 20:06:34.793122128 +0530
++++ kdelibs-4.2.4/cmake/modules/FindKDE4Internal.cmake	2009-06-04 20:05:12.697918101 +0530
+@@ -764,6 +764,7 @@
+ # CMake generators if no build type is set.
+ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE RelWithDebInfo)
++   set(CMAKE_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE})
+ endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+ 
+ 

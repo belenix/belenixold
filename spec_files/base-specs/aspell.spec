@@ -7,7 +7,7 @@
 # bugdb: http://sourceforge.net/tracker/index.php?func=detail&group_id=245&atid=100245&aid=
 #
 Name:     	aspell
-Version: 	0.60.4
+Version: 	0.60.6
 Release:        356
 Vendor:		Sun Microsystems, Inc.
 Distribution:	Java Desktop System
@@ -72,10 +72,10 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
   CPUS=1
 fi
 
-libtoolize --force
-aclocal $ACLOCAL_FLAGS
-autoconf
-automake -a -c -f
+#libtoolize --force
+#aclocal $ACLOCAL_FLAGS
+#autoconf
+#automake -a -c -f
 
 %ifos solaris
 %define curses_options "--disable-wide-curses"
@@ -84,8 +84,10 @@ automake -a -c -f
 %endif
 
 # For some reason, wide curses fails on Solaris, so disabling for now.
-CFLAGS="$RPM_OPT_FLAGS" ./configure \
+./configure \
     --prefix=%{_prefix} \
+    --libdir=%{_libdir} \
+    --bindir=%{_bindir} \
     --sysconfdir=/etc \
     --mandir=%{_mandir} \
     --infodir=%{_datadir}/info \
@@ -105,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/info
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Bump version to 0.60.6.
+- Disable re-generation of configure.
 * Tue Mar 12 2007 - jeff.cai@sun.com
 - Move to sourceforge from opensolaris.
 * Thu Apr 20 2006 - halton.huo@sun.com

@@ -80,6 +80,7 @@ export PKG_CONFIG_PATH=%{_prefix}/lib/%{_arch64}/pkgconfig:%{_prefix}/gnu/lib/%{
 
 cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DCMAKE_BUILD_TYPE=Release                                      \
+        -DCMAKE_SKIP_RPATH:BOOL=YES                                     \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
         -DCMAKE_CXX_COMPILER:FILEPATH=${CXX}                            \
@@ -104,6 +105,7 @@ export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
 
 cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DCMAKE_BUILD_TYPE=Release                                      \
+        -DCMAKE_SKIP_RPATH:BOOL=YES                                     \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
         -DCMAKE_CXX_COMPILER:FILEPATH=${CXX}                            \
@@ -174,5 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jun 15 2009 - moinakg@belenix(dot)org
+- Avoid stripping of binaries.
 * Fri May 22 2009 - moinakg@belenix.org
 - Initial version.

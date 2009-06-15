@@ -1,0 +1,11 @@
+--- kdebindings-4.2.4/python/pykde4/sip/kdecore/kptydevice.sip.orig	2009-06-14 19:41:05.585242787 +0530
++++ kdebindings-4.2.4/python/pykde4/sip/kdecore/kptydevice.sip	2009-06-14 19:39:28.035344338 +0530
+@@ -48,7 +48,7 @@
+ protected:
+     virtual qint64       readData (char*, qint64);
+     virtual qint64       readLineData (char*, qint64);
+-    virtual qint64       writeData (const char*, qint64);
++    //virtual qint64       writeData (const char*, qint64);
+ 
+ };  // class KPtyDevice
+ 

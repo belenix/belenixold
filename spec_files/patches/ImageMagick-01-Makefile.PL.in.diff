@@ -1,0 +1,20 @@
+--- ImageMagick-6.5.3-4-64/PerlMagick/Makefile.PL.in.orig	2009-06-12 00:42:12.650180520 +0530
++++ ImageMagick-6.5.3-4-64/PerlMagick/Makefile.PL.in	2009-06-12 00:41:44.142168755 +0530
+@@ -68,7 +68,7 @@
+    # 'CPPFLAGS' => "$Config{'cppflags'} @CPPFLAGS@",
+ 
+    # C compiler flags (e.g. -O -g)
+-   'CCFLAGS' => "$Config{'ccflags'} @CFLAGS@",
++   'CCFLAGS' => "@CFLAGS@",
+ 
+    # Linker
+    #'LD' => $Config{'ld'} == $Config{'cc'} ? '@CC@' : $Config{'ld'},
+@@ -89,7 +89,7 @@
+    'MAP_TARGET'	=> 'PerlMagick',
+ 
+    # Let CFLAGS drive optimization flags by setting OPTIMIZE to empty
+-   # 'OPTIMIZE'	=> '',
++   'OPTIMIZE'	=> '-O3',
+ 
+    # Use same compiler as ImageMagick
+    'PERLMAINCC'	=> '@PERLMAINCC@ @OPENMP_CFLAGS@',

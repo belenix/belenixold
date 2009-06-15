@@ -1,0 +1,99 @@
+--- kdelibs-4.2.3-64/kio/kfile/kpropertiesdialog.cpp.orig	2009-05-31 22:40:33.124133079 +0530
++++ kdelibs-4.2.3-64/kio/kfile/kpropertiesdialog.cpp	2009-05-31 22:41:59.635534645 +0530
+@@ -50,6 +50,8 @@
+ extern "C" {
+ #include <pwd.h>
+ #include <grp.h>
++#include <string.h>
++#include <unistd.h> 
+ #include <time.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+@@ -141,6 +143,87 @@
+ #endif
+ #endif
+ 
++#ifdef Q_OS_SOLARIS
++/*
++ * getgrouplist implementation for KDE.  getgrouplist() is a function found in
++ * many BSD UNIXes.  Implementation is based off of the manual page description
++ * of the function (a test is also included in main()), any errors are due to
++ * me misunderstanding the intended use of the function.
++ *
++ * Copyright (C) 2009 Michael Pyne <michael.pyne@...>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ */
++
++#define STR_ISEQUAL(a,b) (0 == strcmp(a,b))
++
++/* Note: Not a thread-safe or re-entrant implementation */
++int getgrouplist(const char *user, gid_t group, gid_t *groups, int *ngroups)
++{
++    struct group *cur_group = 0;
++    int num_groups_for_user = 0, found_group = 0, i = 0;
++
++    if(user == NULL || ngroups == NULL || groups == NULL)
++        return -1;
++
++    setgrent();
++
++    /* Iterate through groups, examining each group to see if user is a member */
++    while((cur_group = getgrent()) != NULL) {
++        i = 0;
++
++        while(cur_group->gr_mem[i] != NULL) {
++            if(STR_ISEQUAL(cur_group->gr_mem[i], user)) {
++                if((*ngroups) > num_groups_for_user)
++                    groups[num_groups_for_user] = cur_group->gr_gid;
++                if(cur_group->gr_gid == group)
++                    found_group = 1; /* Make a note for later... */
++
++                ++num_groups_for_user;
++                break;
++            }
++
++            ++i;
++        }
++    }
++
++    endgrent();
++
++    /* The spec says to include the group gid passed as a parameter in the result list
++     * even if it doesn't show up in the group database, and to reflect that in the
++     * number of groups returned.  So if we didn't encounter group while searching add it
++     * now.
++     */
++    if(!found_group) {
++        if((*ngroups) > num_groups_for_user)
++            groups[num_groups_for_user] = group;
++        ++num_groups_for_user;
++    }
++
++    if((*ngroups) < num_groups_for_user) {
++        /* Not enough room, return -1 after setting *ngroups */
++        *ngroups = num_groups_for_user;
++        return -1;
++    }
++
++    /* Enough room, return *ngroups after setting. */
++    *ngroups = num_groups_for_user;
++    return *ngroups;
++}
++#endif
++
+ using namespace KDEPrivate;
+ 
+ static QString nameFromFileName(QString nameStr)
