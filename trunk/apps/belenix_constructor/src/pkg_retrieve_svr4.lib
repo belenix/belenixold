@@ -200,5 +200,18 @@ spkg_add() {
 	${BASECMD} install FSWlivecdtools
 	apply_config $ROOT_DIR jack staff
 
+	#
+	# Cleanup spkg local-site metadata
+	#
 	rm -rf ${ROOT_DIR}/var/spkg/catalog* ${ROOT_DIR}/var/spkg/metainfo*
+
+	(cd ${ROOT_DIR}/usr/openwin/lib/X11
+	  ln -s ../../../X11/lib/X11/fonts
+	  ln -s ../../../X11/lib/X11/locale
+	  ln -s ../../../X11/lib/X11/xkb
+	  ln -s ../../../X11/lib/X11/xserver
+	  ln -s ../../../X11/lib/X11/fs
+          ln -s ../../../X11/lib/X11/bindings
+	  ln -s ../../../X11/lib/X11/config
+	  ln -s ../../../X11/lib/X11/proxymngr)
 }
