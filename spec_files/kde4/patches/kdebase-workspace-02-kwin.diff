@@ -1,0 +1,16 @@
+--- kdebase-workspace-4.2.4/kwin/composite.cpp.orig	2009-06-14 10:57:10.163990793 +0530
++++ kdebase-workspace-4.2.4/kwin/composite.cpp	2009-06-14 10:56:05.894791538 +0530
+@@ -345,6 +345,13 @@
+         // it for some reason, e.g. transformations or translucency, the next pass that does not
+         // need this anymore and paints normally will also reset the suspended unredirect.
+         // Otherwise the window would not be painted normally anyway.
++
++        // With vsync, next repaint is scheduled dynamically at the end of this function,
++        // and it can have a very short timeout. If we now idle here, make sure the idling
++        // does not actually caused heavy load by firing the timer often too quickly.
++        if( compositeTimer.interval() != compositeRate )
++            compositeTimer.start( compositeRate );
++
+         return;
+         }
+     // create a list of all windows in the stacking order

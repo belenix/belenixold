@@ -1,0 +1,12 @@
+diff -up kdebase-workspace-4.2.0/libs/kworkspace/kdisplaymanager.cpp.kde#180576 kdebase-workspace-4.2.0/libs/kworkspace/kdisplaymanager.cpp
+--- kdebase-workspace-4.2.0/libs/kworkspace/kdisplaymanager.cpp.kde#180576	2009-02-09 13:25:39.000000000 -0600
++++ kdebase-workspace-4.2.0/libs/kworkspace/kdisplaymanager.cpp	2009-02-09 13:27:30.000000000 -0600
+@@ -218,7 +218,7 @@ KDisplayManager::shutdown( KWorkSpace::S
+               KWorkSpace::ShutdownMode shutdownMode, /* NOT Default */
+               const QString &bootOption )
+ {
+-	if (shutdownType == KWorkSpace::ShutdownTypeNone)
++	if (shutdownType == KWorkSpace::ShutdownTypeNone || shutdownType == KWorkSpace::ShutdownTypeLogout)
+ 		return;
+ 
+ 	if (DMType == NoDM) {

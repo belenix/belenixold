@@ -1,0 +1,84 @@
+Index: systemsettings/mainwindow.cpp
+===================================================================
+--- systemsettings/mainwindow.cpp	(revision 835492)
++++ systemsettings/mainwindow.cpp	(working copy)
+@@ -27,6 +27,7 @@
+ 
+ #include <QLayout>
+ #include <QStackedWidget>
++#include <QProcess>
+ 
+ #include <KAction>
+ #include <KActionCollection>
+@@ -42,6 +43,7 @@
+ #include <KStandardAction>
+ #include <KTabWidget>
+ #include <kcategorizedsortfilterproxymodel.h>
++#include <KStandardDirs>
+ #include <kcategorizedview.h>
+ #include <kcategorydrawer.h>
+ #include <kiconloader.h>
+@@ -176,13 +178,6 @@
+         connect( tv,
+                 SIGNAL(activated(const QModelIndex&)),
+                 SLOT(selectionChanged(const QModelIndex&)) );
+-        if (KGlobalSettings::singleClick()) {
+-            connect( tv, SIGNAL(clicked(const QModelIndex&)),
+-                     SLOT(selectionChanged(const QModelIndex&)));
+-        } else {
+-            connect( tv, SIGNAL(doubleClicked(const QModelIndex&)),
+-                     SLOT(selectionChanged(const QModelIndex&)));
+-        }
+         connect( search, SIGNAL(textChanged(const QString&)),
+                 kcsfpm, SLOT(setFilterRegExp(const QString&)));
+         connect( kcsfpm, SIGNAL(layoutChanged()),
+@@ -299,9 +294,13 @@
+         return;
+ 
+     MenuItem * mItem = selected.data( Qt::UserRole ).value<MenuItem*>();
++    bool needsRootPrivs = false;
+     if ( mItem ) {
+         kDebug() << "Selected item: " << mItem->service->name();
+         kDebug() << "Comment:       " << mItem->service->comment();
++
++        needsRootPrivs = mItem->service->property( "X-KDE-RootOnly", QVariant::Bool ).toBool();
++        kDebug() << "Needs root privs:" << needsRootPrivs;
+     } else {
+         kDebug() << ":'( Got dud pointer from " << selected.data( Qt::DisplayRole ).toString();
+         Q_ASSERT(mItem); // Would core dump below. Do it now
+@@ -313,6 +312,35 @@
+     if ( groupWidget )
+         return;
+ 
++    if ( needsRootPrivs )
++    {
++        QString kdesu = KStandardDirs::findExe( "kdesu" );
++        //kDebug() << "kdesu path:" << kdesu;
++
++        QString cmd = mItem->service->exec().trimmed();
++
++        /* Prepare the process to run the kcmshell */
++        if ( cmd.left(5) == "kdesu" )
++        {
++            cmd = cmd.remove(0,5).trimmed();
++
++            /* Remove all kdesu switches */
++            while ( cmd.length() > 1 && cmd[ 0 ] == '-' )
++                cmd = cmd.remove( 0, cmd.indexOf( ' ' ) ).trimmed();
++        }
++
++        if ( cmd.left(9) == "kcmshell4" )
++            cmd = cmd.remove(0,9).trimmed();
++
++        QStringList args;
++        args << "-i" << QString( mItem->service->icon() ) << "-c" << QString( "%1 %2 --lang %3" ).arg( KStandardDirs::locate("exe", "kcmshell4") ).arg( cmd ).arg( KGlobal::locale()->language() );
++
++        kDebug() << "Starting root module: " << args;
++        QProcess::startDetached( kdesu, args );
++
++        return;
++    }
++
+     groupWidget = moduleItemToWidgetDict[mItem->service];
+ 
+     if( !groupWidget ) {
