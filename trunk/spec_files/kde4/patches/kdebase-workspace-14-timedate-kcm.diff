@@ -1,0 +1,11 @@
+Index: workspace/kcontrol/dateandtime/clock.desktop
+===================================================================
+--- kcontrol/dateandtime/clock.desktop	(revision 780224)
++++ kcontrol/dateandtime/clock.desktop	(working copy)
+@@ -1,5 +1,5 @@
+ [Desktop Entry]
+-Exec=kcmshell4 kde-clock.desktop
++Exec=kcmshell4 clock
+ Icon=preferences-system-time
+ Type=Service
+ X-KDE-ServiceTypes=KCModule

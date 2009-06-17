@@ -1,0 +1,14 @@
+--- libxklavier-3.9-64/tests/test_config.c.orig	2009-06-15 20:41:49.649402906 +0530
++++ libxklavier-3.9-64/tests/test_config.c	2009-06-15 20:42:40.487588214 +0530
+@@ -74,9 +74,8 @@
+ {
+ 	printf("[%s][%s][%s] %s multiple selection\n", item->name,
+ 	       item->description, item->short_description,
+-	       GPOINTER_TO_INT(g_object_get_data
+-			       (G_OBJECT(item),
+-				XCI_PROP_ALLOW_MULTIPLE_SELECTION)) ?
++	       (g_object_get_data(G_OBJECT(item),
++			XCI_PROP_ALLOW_MULTIPLE_SELECTION)) ?
+ 	       "Allows" : "Does not allow");
+ 	xkl_config_registry_foreach_option(config, item->name,
+ 					   print_option, data);

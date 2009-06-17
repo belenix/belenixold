@@ -1,0 +1,11 @@
+--- kdebase-workspace-4.2.4/ksmserver/fadeeffect.cpp.orig	2009-06-15 21:36:21.790322262 +0530
++++ kdebase-workspace-4.2.4/ksmserver/fadeeffect.cpp	2009-06-15 21:37:01.436165129 +0530
+@@ -237,7 +237,7 @@
+                          __m128i *result, uint length)
+ {
+     length = (length + 15) >> 4;
+-    register const __m128i alpha    = _mm_set1_epi16(__uint16_t (a));
++    register const __m128i alpha    = _mm_set1_epi16(uint16_t (a));
+     register const __m128i negalpha = _mm_xor_si128(alpha, _mm_set1_epi16 (0x00ff));
+ 
+     for (uint i = 0; i < length; i++)

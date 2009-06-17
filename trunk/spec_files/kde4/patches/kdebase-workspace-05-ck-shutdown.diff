@@ -1,0 +1,63 @@
+diff -ur kdebase-workspace-4.0.72/libs/kworkspace/kdisplaymanager.cpp kdebase-workspace-4.0.72-ck-shutdown/libs/kworkspace/kdisplaymanager.cpp
+--- kdebase-workspace-4.0.72/libs/kworkspace/kdisplaymanager.cpp	2008-02-21 10:28:02.000000000 +0100
++++ kdebase-workspace-4.0.72-ck-shutdown/libs/kworkspace/kdisplaymanager.cpp	2008-05-07 00:56:17.000000000 +0200
+@@ -26,6 +26,7 @@
+ #include <QtDBus/QtDBus>
+ 
+ #include <QRegExp>
++#include <QLatin1String>
+ 
+ #include <X11/Xauth.h>
+ #include <X11/Xlib.h>
+@@ -85,6 +86,7 @@
+ 				strcpy( sa.sun_path, "/tmp/.gdm_socket" );
+ 				if (::connect( d->fd, (struct sockaddr *)&sa, sizeof(sa) )) {
+ 					::close( d->fd );
++					DMType = NoDM;
+ 					d->fd = -1;
+ 					break;
+ 				}
+@@ -185,6 +187,21 @@
+ bool
+ KDisplayManager::canShutdown()
+ {
++	if (DMType == NoDM) {
++		// No DM or newest GDM running, we'll try shutting down through ConsoleKit.
++		// Unfortunately, ConsoleKit won't tell us if we're allowed to do that
++		// (it also depends on whether there are other users logged in on the
++		// system), so we can only check if it's running at all.
++		QDBusConnection systemBus = QDBusConnection::systemBus();
++		if (!systemBus.isConnected())
++			return false;
++		QDBusInterface consoleKit( QLatin1String( "org.freedesktop.ConsoleKit" ),
++		                           QLatin1String( "/org/freedesktop/ConsoleKit/Manager" ),
++		                           QLatin1String( "org.freedesktop.ConsoleKit.Manager" ),
++		                           systemBus );
++		return consoleKit.isValid();
++	}
++
+ 	if (DMType == OldKDM)
+ 		return strstr( ctl, ",maysd" ) != 0;
+ 
+@@ -204,6 +221,21 @@
+ 	if (shutdownType == KWorkSpace::ShutdownTypeNone)
+ 		return;
+ 
++	if (DMType == NoDM) {
++		// No DM or newest GDM running, try shutting down through ConsoleKit.
++		QDBusConnection systemBus = QDBusConnection::systemBus();
++		if (!systemBus.isConnected())
++			return;
++		QDBusInterface consoleKit( QLatin1String( "org.freedesktop.ConsoleKit" ),
++		                           QLatin1String( "/org/freedesktop/ConsoleKit/Manager" ),
++		                           QLatin1String( "org.freedesktop.ConsoleKit.Manager" ),
++		                           systemBus );
++		if (consoleKit.isValid())
++			consoleKit.call( QLatin1String( shutdownType == KWorkSpace::ShutdownTypeReboot ?
++		                                        "Restart" : "Stop" ) );
++		return;
++	}
++
+ 	bool cap_ask;
+ 	if (DMType == NewKDM) {
+ 		QByteArray re;

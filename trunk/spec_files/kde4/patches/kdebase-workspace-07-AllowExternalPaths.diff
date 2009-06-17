@@ -1,0 +1,11 @@
+diff -up kdebase-workspace-4.1.96/plasma/wallpapers/image/backgroundpackage.cpp.orig kdebase-workspace-4.1.96/plasma/wallpapers/image/backgroundpackage.cpp
+--- kdebase-workspace-4.1.96/plasma/wallpapers/image/backgroundpackage.cpp.orig	2009-01-16 14:57:51.000000000 +0100
++++ kdebase-workspace-4.1.96/plasma/wallpapers/image/backgroundpackage.cpp	2009-01-16 14:58:43.000000000 +0100
+@@ -157,6 +157,7 @@ BackgroundPackageStructure::BackgroundPa
+ 
+     addDirectoryDefinition("images", "images", i18n("Images"));
+     addFileDefinition("screenshot", "screenshot.png", i18n("Screenshot"));
++    setAllowExternalPaths(true);
+ }
+ 
+ 

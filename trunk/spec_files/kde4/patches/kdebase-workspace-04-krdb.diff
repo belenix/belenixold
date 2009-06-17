@@ -1,0 +1,12 @@
+Index: kcontrol/krdb/krdb.cpp
+===================================================================
+--- kcontrol/krdb/krdb.cpp	(revision 797373)
++++ kcontrol/krdb/krdb.cpp	(working copy)
+@@ -389,6 +389,7 @@
+     t << endl;
+     if ( 2==version ) {  // we should maybe check for MacOS settings here
+ 	t << "gtk-alternative-button-order = 1" << endl;
++	t << "gtk-fallback-icon-theme = \"gnome\"" << endl;
+ 	t << endl;
+     }
+ 

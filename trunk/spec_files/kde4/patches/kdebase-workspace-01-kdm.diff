@@ -1,0 +1,21 @@
+Index: workspace/kdm/backend/sessreg.c
+===================================================================
+--- workspace/kdm/backend/sessreg.c	(revision 790700)
++++ workspace/kdm/backend/sessreg.c	(working copy)
+@@ -36,6 +36,7 @@
+ */
+ 
+ #define _FILE_OFFSET_BITS 64
++#include "config-kdm.h"
+ #include "dm.h"
+ #include "dm_error.h"
+ 
+@@ -43,6 +44,8 @@
+ # define NO_LASTLOG
+ #endif
+ 
++#define HAVE_LASTLOG_H (1)
++
+ #ifndef NO_LASTLOG
+ # ifdef HAVE_LASTLOG_H
+ #  include <lastlog.h>
