@@ -1,0 +1,352 @@
+diff -up ghostscript-8.64/lib/bdftops.gs-executable ghostscript-8.64/lib/bdftops
+--- ghostscript-8.64/lib/bdftops.gs-executable	2009-06-10 17:55:39.762484085 +0100
++++ ghostscript-8.64/lib/bdftops	2009-06-10 17:55:39.765483778 +0100
+@@ -6,8 +6,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -dBATCH -dNODISPLAY -- bdftops.ps "$@"
++exec "$gs" -q -dBATCH -dNODISPLAY -- bdftops.ps "$@"
+diff -up ghostscript-8.64/lib/dumphint.gs-executable ghostscript-8.64/lib/dumphint
+--- ghostscript-8.64/lib/dumphint.gs-executable	2009-06-10 17:55:39.767484373 +0100
++++ ghostscript-8.64/lib/dumphint	2009-06-10 17:55:39.823360403 +0100
+@@ -7,9 +7,8 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+ 
+ OPTIONS="-dSAFER -dDELAYSAFER"
+@@ -27,4 +26,4 @@ if [ $# -ne 1 ]; then
+ 	exit 1
+ fi
+ 
+-exec "$GS_EXECUTABLE" -q -dNODISPLAY $OPTIONS -- "`dirname $0`/dumphint.ps" "$1"
++exec "$gs" -q -dNODISPLAY $OPTIONS -- "`dirname $0`/dumphint.ps" "$1"
+diff -up ghostscript-8.64/lib/eps2eps.gs-executable ghostscript-8.64/lib/eps2eps
+--- ghostscript-8.64/lib/eps2eps.gs-executable	2009-06-10 17:55:39.846358935 +0100
++++ ghostscript-8.64/lib/eps2eps	2009-06-10 17:55:39.848359175 +0100
+@@ -7,9 +7,8 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+ OPTIONS="-dDEVICEWIDTH=250000 -dDEVICEHEIGHT=250000"
+ while true
+@@ -26,4 +25,4 @@ if [ $# -ne 2 ]; then
+ 	exit 1
+ fi
+ 
+-exec "$GS_EXECUTABLE" -q -sDEVICE=epswrite -sstdout=%stderr "-sOutputFile=$2" -dNOPAUSE -dBATCH -dSAFER $OPTIONS "$1"
++exec "$gs" -q -sDEVICE=epswrite -sstdout=%stderr "-sOutputFile=$2" -dNOPAUSE -dBATCH -dSAFER $OPTIONS "$1"
+diff -up ghostscript-8.64/lib/font2c.gs-executable ghostscript-8.64/lib/font2c
+--- ghostscript-8.64/lib/font2c.gs-executable	2009-06-10 17:55:39.850358868 +0100
++++ ghostscript-8.64/lib/font2c	2009-06-10 17:55:39.852359769 +0100
+@@ -6,8 +6,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -dNODISPLAY -dWRITESYSTEMDICT -- font2c.ps "$@"
++exec "$gs" -q -dNODISPLAY -dWRITESYSTEMDICT -- font2c.ps "$@"
+diff -up ghostscript-8.64/lib/gsbj.gs-executable ghostscript-8.64/lib/gsbj
+--- ghostscript-8.64/lib/gsbj.gs-executable	2009-06-10 17:55:39.854358559 +0100
++++ ghostscript-8.64/lib/gsbj	2009-06-10 17:55:39.856358929 +0100
+@@ -6,8 +6,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -sDEVICE=bj10e -r180 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
++exec "$gs" -q -sDEVICE=bj10e -r180 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
+diff -up ghostscript-8.64/lib/gsdj500.gs-executable ghostscript-8.64/lib/gsdj500
+--- ghostscript-8.64/lib/gsdj500.gs-executable	2009-06-10 17:55:39.863358659 +0100
++++ ghostscript-8.64/lib/gsdj500	2009-06-10 17:55:39.865358381 +0100
+@@ -6,8 +6,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -sDEVICE=djet500 -r300 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
++exec "$gs" -q -sDEVICE=djet500 -r300 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
+diff -up ghostscript-8.64/lib/gsdj.gs-executable ghostscript-8.64/lib/gsdj
+--- ghostscript-8.64/lib/gsdj.gs-executable	2009-06-10 17:55:39.858358853 +0100
++++ ghostscript-8.64/lib/gsdj	2009-06-10 17:55:39.860359097 +0100
+@@ -6,8 +6,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -sDEVICE=deskjet -r300 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
++exec "$gs" -q -sDEVICE=deskjet -r300 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
+diff -up ghostscript-8.64/lib/gslj.gs-executable ghostscript-8.64/lib/gslj
+--- ghostscript-8.64/lib/gslj.gs-executable	2009-06-10 17:55:39.867359335 +0100
++++ ghostscript-8.64/lib/gslj	2009-06-10 17:55:39.868359409 +0100
+@@ -6,8 +6,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -sDEVICE=laserjet -r300 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
++exec "$gs" -q -sDEVICE=laserjet -r300 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
+diff -up ghostscript-8.64/lib/gslp.gs-executable ghostscript-8.64/lib/gslp
+--- ghostscript-8.64/lib/gslp.gs-executable	2009-06-10 17:55:39.870359296 +0100
++++ ghostscript-8.64/lib/gslp	2009-06-10 17:55:39.872359052 +0100
+@@ -6,8 +6,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -sDEVICE=epson -r180 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
++exec "$gs" -q -sDEVICE=epson -r180 -dNOPAUSE -sPROGNAME=$0 -- gslp.ps --heading-center "`date`" "$@"
+diff -up ghostscript-8.64/lib/gsnd.gs-executable ghostscript-8.64/lib/gsnd
+--- ghostscript-8.64/lib/gsnd.gs-executable	2009-06-10 17:55:39.874358723 +0100
++++ ghostscript-8.64/lib/gsnd	2009-06-10 17:55:39.876358801 +0100
+@@ -6,8 +6,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -dNODISPLAY "$@"
++exec "$gs" -dNODISPLAY "$@"
+diff -up ghostscript-8.64/lib/pdf2dsc.gs-executable ghostscript-8.64/lib/pdf2dsc
+--- ghostscript-8.64/lib/pdf2dsc.gs-executable	2009-06-10 17:55:39.878358517 +0100
++++ ghostscript-8.64/lib/pdf2dsc	2009-06-10 17:55:39.880358835 +0100
+@@ -11,9 +11,8 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+ me=`basename $0`
+ 
+@@ -31,5 +30,5 @@ pdffile=$1
+ dscfile=$2
+ : ${dscfile:=`echo $pdffile | sed 's,\.[^/.]*,,'`.dsc}
+ 
+-exec "$GS_EXECUTABLE" -q -dNODISPLAY -dSAFER -dDELAYSAFER\
++exec "$gs" -q -dNODISPLAY -dSAFER -dDELAYSAFER\
+     -sPDFname="$pdffile" -sDSCname="$dscfile" pdf2dsc.ps -c quit
+diff -up ghostscript-8.64/lib/pdf2ps.gs-executable ghostscript-8.64/lib/pdf2ps
+--- ghostscript-8.64/lib/pdf2ps.gs-executable	2009-06-10 17:55:39.882358707 +0100
++++ ghostscript-8.64/lib/pdf2ps	2009-06-10 17:55:39.884359406 +0100
+@@ -7,9 +7,8 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+ OPTIONS=""
+ while true
+@@ -35,4 +34,4 @@ fi
+ # Doing an initial 'save' helps keep fonts from being flushed between pages.
+ # We have to include the options twice because -I only takes effect if it
+ # appears before other options.
+-exec "$GS_EXECUTABLE" $OPTIONS -q -dNOPAUSE -dBATCH -dSAFER -sDEVICE=pswrite "-sOutputFile=$outfile" $OPTIONS -c save pop -f "$1"
++exec "$gs" $OPTIONS -q -dNOPAUSE -dBATCH -dSAFER -sDEVICE=pswrite "-sOutputFile=$outfile" $OPTIONS -c save pop -f "$1"
+diff -up ghostscript-8.64/lib/pdfopt.gs-executable ghostscript-8.64/lib/pdfopt
+--- ghostscript-8.64/lib/pdfopt.gs-executable	2009-06-10 17:55:39.886358586 +0100
++++ ghostscript-8.64/lib/pdfopt	2009-06-10 17:55:39.888358849 +0100
+@@ -7,9 +7,8 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+ OPTIONS="-dSAFER -dDELAYSAFER"
+ while true
+@@ -26,4 +25,4 @@ if [ $# -ne 2 ]; then
+ 	exit 1
+ fi
+ 
+-exec "$GS_EXECUTABLE" -q -dNODISPLAY $OPTIONS -- pdfopt.ps "$1" "$2"
++exec "$gs" -q -dNODISPLAY $OPTIONS -- pdfopt.ps "$1" "$2"
+diff -up ghostscript-8.64/lib/pf2afm.gs-executable ghostscript-8.64/lib/pf2afm
+--- ghostscript-8.64/lib/pf2afm.gs-executable	2009-06-10 17:55:39.890358746 +0100
++++ ghostscript-8.64/lib/pf2afm	2009-06-10 17:55:39.892358698 +0100
+@@ -10,8 +10,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -dNODISPLAY -dSAFER -dDELAYSAFER  -- pf2afm.ps "$@"
++exec "$gs" -q -dNODISPLAY -dSAFER -dDELAYSAFER  -- pf2afm.ps "$@"
+diff -up ghostscript-8.64/lib/pfbtopfa.gs-executable ghostscript-8.64/lib/pfbtopfa
+--- ghostscript-8.64/lib/pfbtopfa.gs-executable	2009-06-10 17:55:39.894358695 +0100
++++ ghostscript-8.64/lib/pfbtopfa	2009-06-10 17:55:39.896359133 +0100
+@@ -7,9 +7,8 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+ if [ $# -eq 2 ] 
+ then
+@@ -22,4 +21,4 @@ else
+     exit 1
+ fi
+ 
+-exec "$GS_EXECUTABLE" -q -dNODISPLAY -- pfbtopfa.ps "$1" "$outfile"
++exec "$gs" -q -dNODISPLAY -- pfbtopfa.ps "$1" "$outfile"
+diff -up ghostscript-8.64/lib/pphs.gs-executable ghostscript-8.64/lib/pphs
+--- ghostscript-8.64/lib/pphs.gs-executable	2009-06-10 17:55:39.898358975 +0100
++++ ghostscript-8.64/lib/pphs	2009-06-10 17:55:39.900359087 +0100
+@@ -9,8 +9,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -dNODISPLAY -- pphs.ps "$@"
++exec "$gs" -q -dNODISPLAY -- pphs.ps "$@"
+diff -up ghostscript-8.64/lib/printafm.gs-executable ghostscript-8.64/lib/printafm
+--- ghostscript-8.64/lib/printafm.gs-executable	2009-06-10 17:55:39.902358678 +0100
++++ ghostscript-8.64/lib/printafm	2009-06-10 17:55:39.904358851 +0100
+@@ -9,8 +9,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -dNODISPLAY -- printafm.ps "$@"
++exec "$gs" -q -dNODISPLAY -- printafm.ps "$@"
+diff -up ghostscript-8.64/lib/ps2epsi.gs-executable ghostscript-8.64/lib/ps2epsi
+--- ghostscript-8.64/lib/ps2epsi.gs-executable	2009-06-10 17:55:39.906359755 +0100
++++ ghostscript-8.64/lib/ps2epsi	2009-06-10 17:55:39.908359051 +0100
+@@ -6,9 +6,8 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+ # try to create a temporary file securely
+ if test -z "$TMPDIR"; then
+@@ -75,7 +74,7 @@ awk 'F==1	{
+ 		}
+ 	' U="$USERNAME$LOGNAME"  F=1 - F=2 "${infile}" >"$tmpfile"
+ 
+-"$GS_EXECUTABLE" -q -sPAPERSIZE=a0 -dNOPAUSE -dSAFER -dDELAYSAFER -r72 -sDEVICE=bit -sOutputFile=/dev/null "$tmpfile" ps2epsi.ps "$tmpfile" <"${infile}" 1>&2
++"$gs" -q -sPAPERSIZE=a0 -dNOPAUSE -dSAFER -dDELAYSAFER -r72 -sDEVICE=bit -sOutputFile=/dev/null "$tmpfile" ps2epsi.ps "$tmpfile" <"${infile}" 1>&2
+ rm -f "$tmpfile"
+ rm -rf "$tmpdir"
+ 
+diff -up ghostscript-8.64/lib/ps2pdfwr.gs-executable ghostscript-8.64/lib/ps2pdfwr
+--- ghostscript-8.64/lib/ps2pdfwr.gs-executable	2009-06-10 17:55:39.910358261 +0100
++++ ghostscript-8.64/lib/ps2pdfwr	2009-06-10 17:55:39.912359265 +0100
+@@ -7,9 +7,8 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+ OPTIONS="-dSAFER"
+ while true
+@@ -42,4 +41,4 @@ fi
+ 
+ # We have to include the options twice because -I only takes effect if it
+ # appears before other options.
+-exec "$GS_EXECUTABLE" $OPTIONS -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sstdout=%stderr "-sOutputFile=$outfile" $OPTIONS -c .setpdfwrite -f "$infile"
++exec "$gs" $OPTIONS -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sstdout=%stderr "-sOutputFile=$outfile" $OPTIONS -c .setpdfwrite -f "$infile"
+diff -up ghostscript-8.64/lib/ps2ps.gs-executable ghostscript-8.64/lib/ps2ps
+--- ghostscript-8.64/lib/ps2ps.gs-executable	2009-06-10 17:55:39.914358120 +0100
++++ ghostscript-8.64/lib/ps2ps	2009-06-10 17:55:39.915358850 +0100
+@@ -7,9 +7,8 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+ OPTIONS="-dSAFER"
+ while true
+@@ -27,4 +26,4 @@ if [ $# -ne 2 ]; then
+ 	exit 1
+ fi
+ 
+-exec "$GS_EXECUTABLE" -q -sDEVICE=pswrite -sstdout=%stderr "-sOutputFile=$2" -dNOPAUSE -dBATCH $OPTIONS "$1"
++exec "$gs" -q -sDEVICE=pswrite -sstdout=%stderr "-sOutputFile=$2" -dNOPAUSE -dBATCH $OPTIONS "$1"
+diff -up ghostscript-8.64/lib/wftopfa.gs-executable ghostscript-8.64/lib/wftopfa
+--- ghostscript-8.64/lib/wftopfa.gs-executable	2009-06-10 17:55:39.917358998 +0100
++++ ghostscript-8.64/lib/wftopfa	2009-06-10 17:55:39.919358413 +0100
+@@ -6,8 +6,7 @@
+ GS_EXECUTABLE=gs
+ gs="`dirname $0`/$GS_EXECUTABLE"
+ if test ! -x "$gs"; then
+-	gs="$GS_EXECUTABLE"
++	gs="$gs"
+ fi
+-GS_EXECUTABLE="$gs"
+ 
+-exec "$GS_EXECUTABLE" -q -dNODISPLAY -- wftopfa.ps "$@"
++exec "$gs" -q -dNODISPLAY -- wftopfa.ps "$@"

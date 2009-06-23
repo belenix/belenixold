@@ -1,0 +1,9 @@
+--- qt-4.4.1.orig/config.tests/unix/freetype/freetype.pro	2008-07-29 06:23:29.000000000 -0400
++++ qt-4.4.1/config.tests/unix/freetype/freetype.pro	2008-08-31 22:58:46.051708000 -0400
+@@ -1,5 +1,5 @@
+ SOURCES = freetype.cpp
+ CONFIG += x11
+ CONFIG -= qt
+-LIBS += -lfreetype
++LIBS +=  -lXrender -lX11 -lXext  -lfreetype -lfontconfig
+ include(freetype.pri)

@@ -1,0 +1,19 @@
+diff -up kdebindings-4.2.3/csharp/kimono/src/marshall_macros_kde.h.orig kdebindings-4.2.3/csharp/kimono/src/marshall_macros_kde.h
+--- kdebindings-4.2.3/csharp/kimono/src/marshall_macros_kde.h.orig	2009-05-08 14:50:31.000000000 +0200
++++ kdebindings-4.2.3/csharp/kimono/src/marshall_macros_kde.h	2009-05-08 14:51:31.000000000 +0200
+@@ -1,3 +1,4 @@
++#include <stdio.h>
+ #include <ksharedptr.h>
+ 
+ template<class Item, const char *ItemSTR>
+diff -up kdebindings-4.2.3/csharp/qyoto/src/qyotosmokebinding.cpp.orig kdebindings-4.2.3/csharp/qyoto/src/qyotosmokebinding.cpp
+--- kdebindings-4.2.3/csharp/qyoto/src/qyotosmokebinding.cpp.orig	2009-05-08 14:28:23.000000000 +0200
++++ kdebindings-4.2.3/csharp/qyoto/src/qyotosmokebinding.cpp	2009-05-08 14:29:05.000000000 +0200
+@@ -13,6 +13,7 @@
+  *                                                                         *
+  ***************************************************************************/
+ 
++#include <stdio.h>
+ #include <stdlib.h>
+ #include "qyotosmokebinding.h"
+ #include "qyoto.h"

@@ -1,0 +1,29 @@
+*** Resource/Init/pdf_sec.ps.orig     Tue Aug 12 13:55:01 2008
+--- Resource/Init/pdf_sec.ps  Tue Aug 12 13:55:43 2008
+***************
+*** 286,297 ****
+      } ifelse
+    } ifelse
+  
+! %   Trailer /Encrypt oget /P oget 4 and 0 eq #? and
+! %    { (   ****This owner of this file has requested you do not print it.\n)
+! %      pdfformaterror printProducer
+! %      /pdf_process_Encrypt cvx /invalidfileaccess signalerror
+! %    }
+! %   if
+  } bind def
+  
+  % Calculate the key used to decrypt an object (to pass to .decpdfrun or
+--- 286,297 ----
+      } ifelse
+    } ifelse
+  
+!   Trailer /Encrypt oget /P oget 4 and 0 eq #? and
+!    { (   ****This owner of this file has requested you do not print it.\n)
+!      pdfformaterror printProducer
+!      /pdf_process_Encrypt cvx /invalidfileaccess signalerror
+!    }
+!   if
+  } bind def
+  
+  % Calculate the key used to decrypt an object (to pass to .decpdfrun or

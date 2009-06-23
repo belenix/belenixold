@@ -1,0 +1,18 @@
+--- qt-x11-opensource-src-4.4.3/tools/assistant/lib/fulltextsearch/fulltextsearch.pro.orig	2009-06-22 20:32:45.911088666 +0530
++++ qt-x11-opensource-src-4.4.3/tools/assistant/lib/fulltextsearch/fulltextsearch.pro	2009-06-22 20:33:35.028617080 +0530
+@@ -43,6 +43,15 @@
+ }
+ 
+ # the following define could be set globally in case we need it elsewhere
++# also do not use long double for float_t on Solaris
+ solaris* {
+     DEFINES += Q_SOLARIS_VERSION=$$system(uname -r | sed -e 's/5\.//')
++    DEFINES += FLT_EVAL_METHOD=1
++    DEFINES += __FLT_EVAL_METHOD__=1
++    QMAKE_CFLAGS += -DFLT_EVAL_METHOD=1
++    QMAKE_CFLAGS += -D__FLT_EVAL_METHOD__=1
++    QMAKE_CXXFLAGS += -DFLT_EVAL_METHOD=1
++    QMAKE_CXXFLAGS += -D__FLT_EVAL_METHOD__=1
++    QMAKE_LFLAGS += -DFLT_EVAL_METHOD=1
++    QMAKE_LFLAGS += -D__FLT_EVAL_METHOD__=1
+ }

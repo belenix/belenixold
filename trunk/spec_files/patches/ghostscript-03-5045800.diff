@@ -1,0 +1,19 @@
+*** Resource/Init/gs_init.ps.orig	Wed Aug 13 09:58:40 2008
+--- Resource/Init/gs_init.ps	Wed Aug 13 09:59:57 2008
+***************
+*** 2014,2020 ****
+  {
+    SAFETY /safe get not {
+      <<
+!       /PermitFileReading [ ]
+        /PermitFileWriting [ ]
+        /PermitFileControl [ ]
+      >> setuserparams
+--- 2014,2020 ----
+  {
+    SAFETY /safe get not {
+      <<
+!       /PermitFileReading [ (/usr/openwin/lib/*) (/usr/X11/lib/*) (/usr/share/ghostscript/*) ]
+        /PermitFileWriting [ ]
+        /PermitFileControl [ ]
+      >> setuserparams

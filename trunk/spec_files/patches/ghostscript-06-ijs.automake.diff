@@ -1,0 +1,38 @@
+*** ijs/Makefile.am.orig	Tue Sep 23 21:05:40 2008
+--- ijs/Makefile.am	Tue Sep 23 21:06:06 2008
+***************
+*** 24,30 ****
+  
+  ## Process this file with automake to produce Makefile.in.
+  
+! AUTOMAKE_OPTIONS = 1.6 foreign dist-bzip2 no-dependencies 
+  
+  @SET_MAKE@
+  
+--- 24,30 ----
+  
+  ## Process this file with automake to produce Makefile.in.
+  
+! AUTOMAKE_OPTIONS = 1.10 foreign dist-bzip2 no-dependencies 
+  
+  @SET_MAKE@
+  
+*** ijs/autogen.sh.orig	Tue Sep 23 21:28:21 2008
+--- ijs/autogen.sh	Tue Sep 23 21:32:25 2008
+***************
+*** 33,39 ****
+  
+  # do we need automake?
+  (grep "^AM_INIT_AUTOMAKE" "$CONFIG_AC" >/dev/null) && {
+!   AM_NEEDED=`fgrep AUTOMAKE_OPTIONS Makefile.am | $VERSIONGREP`
+    AM_NMAJOR=`echo $AM_NEEDED |cut -d. -f1`
+    AM_NMINOR=`echo $AM_NEEDED |cut -d. -f2`
+    AM_NPATCHLEVEL=`echo $AM_NEEDED |cut -d. -f3`
+--- 33,39 ----
+  
+  # do we need automake?
+  (grep "^AM_INIT_AUTOMAKE" "$CONFIG_AC" >/dev/null) && {
+!   AM_NEEDED=`fgrep AUTOMAKE_OPTIONS Makefile.am | nawk '{ print $3 }'`
+    AM_NMAJOR=`echo $AM_NEEDED |cut -d. -f1`
+    AM_NMINOR=`echo $AM_NEEDED |cut -d. -f2`
+    AM_NPATCHLEVEL=`echo $AM_NEEDED |cut -d. -f3`

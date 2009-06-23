@@ -1,0 +1,11 @@
+diff -Naupr djvulibre-3.5.19.orig/i18n/ja/Makefile.in djvulibre-3.5.19/i18n/ja/Makefile.in
+--- djvulibre-3.5.19.orig/i18n/ja/Makefile.in	2007-03-25 22:48:29.000000000 +0200
++++ djvulibre-3.5.19/i18n/ja/Makefile.in	2007-06-11 13:59:52.000000000 +0200
+@@ -53,7 +53,6 @@ install: install-man
+ 
+ # Rules
+ nsdejavu.1: ${srcdir}/nsdejavu.1.in
+-	LC_CTYPE=ja_JP.eucjp \
+ 	  sed < ${srcdir}/nsdejavu.1.in > nsdejavu.1 \
+ 	  -e 's,LIBDIR,${libdir},' -e 's,NSDEJAVUSO,${NSDEJAVU},'
+ 

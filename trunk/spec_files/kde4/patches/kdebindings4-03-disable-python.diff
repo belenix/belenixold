@@ -1,0 +1,11 @@
+--- kdebindings-4.2.4/CMakeLists.txt.orig	2009-06-20 21:04:16.836651557 +0530
++++ kdebindings-4.2.4/CMakeLists.txt	2009-06-20 21:04:33.274034614 +0530
+@@ -56,7 +56,7 @@
+ 
+ macro_optional_add_subdirectory(smoke)
+ macro_optional_add_subdirectory(ruby)
+-macro_optional_add_subdirectory(python)
++#macro_optional_add_subdirectory(python)
+ macro_optional_add_subdirectory(csharp)
+ macro_optional_add_subdirectory(java)
+ macro_optional_add_subdirectory(php)

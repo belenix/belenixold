@@ -1,0 +1,22 @@
+--- kdebindings-4.2.4/java/krossjava/krossjava/jvmvariant.h.orig	2009-06-20 22:23:50.480747378 +0530
++++ kdebindings-4.2.4/java/krossjava/krossjava/jvmvariant.h	2009-06-20 22:24:01.949698165 +0530
+@@ -30,13 +30,13 @@
+ #include <QStringList>
+ #include <QVariant>
+ #include <QMetaType>
+-//#include <QSize>
+-//#include <QPoint>
+-//#include <QRect>
++#include <QSize>
++#include <QPoint>
++#include <QRect>
+ #include <QUrl>
+-//#include <QDate>
+-//#include <QTime>
+-//#include <QDateTime>
++#include <QDate>
++#include <QTime>
++#include <QDateTime>
+ 
+ namespace Kross {
+ 
