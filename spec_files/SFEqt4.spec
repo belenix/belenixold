@@ -23,6 +23,12 @@ Source5:                qtconfig.desktop
 
 Patch1:                 qt4-01-use_bash.diff
 Patch2:                 qt4-02-qglobal.h.diff
+Patch3:                 qt4-03-qmutex_unix.cpp.diff
+Patch4:                 qt4-04-gnu-libiconv.pro.diff
+Patch5:                 qt4-05-fulltextsearch.pro.diff
+Patch6:                 qt4-06-freetype.pro.diff
+Patch7:                 qt4-07-psql.pro.diff
+Patch8:                 qt4-08-fontconfig.pro.diff
 
 %define src_dir         qt-x11-opensource-src-%{version}
 License:		LICENSE.GPL
@@ -103,6 +109,12 @@ Requires: %name
 %setup -q -c -n %name-%version
 cd %{src_dir}
 %patch1 -p10
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
 cd ..
 
 %ifarch amd64 sparcv9
@@ -1036,6 +1048,8 @@ cd ..
 %{_bindir}/*.debug
 
 %changelog
+* Tue Jun 23 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
+- Pull in more needed patches from KDE-Solaris repo.
 * Sun Apr 17 2009 - moinakg@belenix.org
 - Fix packaging to avoid conflict with Qt3.
 - Build with newer arch and avoid aliasing issues.

@@ -1,0 +1,10 @@
+--- djvulibre-3.5.21.org/configure	2009-01-16 20:59:06.000000000 +0530
++++ djvulibre-3.5.21/configure	2009-01-16 20:57:27.000000000 +0530
+@@ -21691,6 +21691,7 @@
+ __sync_lock_test_and_set(&l,1);
+   __sync_lock_release(&l);
+   __sync_add_and_fetch(&l,1);
++  __sync_bool_compare_and_swap(&l,&l,1);
+   return 0;
+   ;
+   return 0;

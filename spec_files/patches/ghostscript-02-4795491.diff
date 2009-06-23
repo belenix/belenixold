@@ -1,0 +1,31 @@
+--- configure.ac.orig	2009-01-25 12:29:45.000000000 +0530
++++ configure.ac	2009-06-20 09:39:07.300207050 +0530
+@@ -987,12 +987,15 @@
+ 		X_DEVS=""
+ 		;;
+ 		SunOS)
+-		DYNAMIC_CFLAGS="-KPIC"
++		if test -n "$GCC"; then
++			DYNAMIC_CFLAGS="-fPIC"
++		else
++			DYNAMIC_CFLAGS="-KPIC"
++		fi
+ 		DYNAMIC_DEVS="\$(GLOBJDIR)/X11.so"
+ 		DYNAMIC_FLAGS="-DGS_DEVS_SHARED -DGS_DEVS_SHARED_DIR=\\\"\$(gssharedir)\\\""
+ 		DYNAMIC_LDFLAGS="-G"
+ 		DYNAMIC_LIBS=""
+-		X_DEVS=""
+ 		;;
+ 		*)
+ 		AC_MSG_ERROR([Sorry, dynamic driver support not available on this platform!])
+@@ -1034,6 +1037,10 @@
+ 	# These font directories are used by Solaris...
+ 	fontpath="${fontpath}:/usr/openwin/lib/X11/fonts/Type1"
+ 	fontpath="${fontpath}:/usr/openwin/lib/X11/fonts/TrueType"
++	fontpath="${fontpath}:/usr/openwin/lib/X11/fonts/Type3"
++	fontpath="${fontpath}:/usr/X11/lib/X11/fonts/Type1"
++	fontpath="${fontpath}:/usr/X11/lib/X11/fonts/Type3"
++	fontpath="${fontpath}:/usr/X11/lib/X11/fonts/TrueType"
+ 
+ 	# This font directory is used by CUPS...
+ 	if test "x$CUPSCONFIG" != x; then

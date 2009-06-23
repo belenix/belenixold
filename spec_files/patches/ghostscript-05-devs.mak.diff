@@ -1,0 +1,11 @@
+--- base/devs.mak.orig	2008-11-08 00:19:34.000000000 +0530
++++ base/devs.mak	2009-06-20 09:32:56.874899549 +0530
+@@ -526,7 +526,7 @@
+ ### NON PORTABLE, ONLY UNIX WITH GCC SUPPORT
+ 
+ $(GLOBJ)X11.so : $(x11alt_) $(x11_)
+-	$(CCLD) -shared -Wl,'-soX11.so' $(x11alt_) $(x11_) -L/usr/X11R6/lib -lXt -lSM -lICE -lXext -lX11 $(XLIBDIRS)
++	$(CCLD) -G -Wl,'-soX11.so' $(x11alt_) $(x11_) -L/usr/X11R6/lib -lXt -lSM -lICE -lXext -lX11 $(XLIBDIRS)
+ 	mv X11.so $(GLOBJ)X11.so
+ 
+ ###### --------------- Memory-buffered printer devices --------------- ######

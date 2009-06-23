@@ -1,0 +1,42 @@
+diff -up poppler-0.10.5/configure.ac.orig poppler-0.10.5/configure.ac
+--- poppler-0.10.5/configure.ac.orig	2009-03-11 23:09:29.000000000 +0000
++++ poppler-0.10.5/configure.ac	2009-04-06 15:51:45.172433445 +0100
+@@ -437,7 +437,7 @@ case "$enable_compile_warnings" in
+ 		-fno-common $CXXFLAGS" ;;
+ esac
+ 
+-case $($PKG_CONFIG --version) in
++case `$PKG_CONFIG --version` in
+   0.?|0.1[0-7])
+     PC_REQUIRES_PRIVATE="";
+     PC_REQUIRES="poppler = $VERSION";;
+@@ -467,9 +467,11 @@ qt4/src/Makefile
+ qt4/tests/Makefile
+ qt4/demos/Makefile
+ poppler.pc
++poppler-uninstalled.pc
+ poppler-cairo.pc
+ poppler-splash.pc
+ poppler-glib.pc
++poppler-glib-uninstalled.pc
+ poppler-qt.pc
+ poppler-qt4.pc])
+ 
+--- /dev/null	2005-11-29 19:09:34.000000000 -0500
++++ poppler-0.4.2/poppler-uninstalled.pc.in	2005-11-29 20:01:11.422451000 -0500
+@@ -0,0 +1,6 @@
++Name: poppler
++Description: PDF rendering library - uninstalled
++Version: @VERSION@
++
++Libs: -L${pc_top_builddir}/${pcfiledir}/poppler/.libs -lpoppler
++Cflags: -I${pc_top_builddir}/${pcfiledir}/poppler
+--- /dev/null	2005-11-29 19:09:34.000000000 -0500
++++ poppler-0.4.2/poppler-glib-uninstalled.pc.in	2005-11-29 19:59:56.237671000 -0500
+@@ -0,0 +1,6 @@
++Name: poppler-glib
++Description: GLib wrapper for poppler - uninstalled
++Version: @VERSION@
++Requires: poppler = @VERSION@ gobject-2.0 gdk-pixbuf-2.0
++Libs: -L${pc_top_builddir}/${pcfiledir}/glib/.libs -lpoppler-glib
++Cflags: -I${pc_top_builddir}/${pcfiledir}/glib

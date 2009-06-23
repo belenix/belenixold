@@ -1,0 +1,16 @@
+diff -U 5 -r csharp/plasma/CMakeLists.txt csharp/plasma/CMakeLists.txt
+--- csharp/plasma/CMakeLists.txt	2008-12-10 11:12:50.000000000 -0500
++++ csharp/plasma/CMakeLists.txt	2009-03-19 23:47:56.000000000 -0400
+@@ -2,11 +2,11 @@
+ 
+ IF (NOT QT4_FOUND)
+ 	FIND_PACKAGE(Qt4 REQUIRED)
+ ENDIF (NOT QT4_FOUND)
+ 
+-add_subdirectory( examples )
++# add_subdirectory( examples )
+ 
+ SET(SRC_CPP src/plasma.cpp src/plasmahandlers.cpp)
+ 
+ SET(SRC_CS src/AssemblyInfo.cs 
+  src/PlasmaScripting_DataEngine.cs

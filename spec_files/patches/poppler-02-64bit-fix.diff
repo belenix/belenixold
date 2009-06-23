@@ -1,0 +1,17 @@
+--- poppler-0.10.7-64/glib/poppler-page.cc.orig	2009-06-19 21:12:31.800684411 +0530
++++ poppler-0.10.7-64/glib/poppler-page.cc	2009-06-19 21:17:57.118132616 +0530
+@@ -1267,7 +1267,13 @@
+ static GBool
+ image_draw_decide_cb (int image_id, void *data)
+ {
+-  return (image_id == GPOINTER_TO_INT (data));
++  uint64_t dta;
++
++  /*
++   * Fix for 64Bit build.
++   */
++  dta = (uint64_t)(data);
++  return (image_id == dta);
+ }
+ 
+ /**

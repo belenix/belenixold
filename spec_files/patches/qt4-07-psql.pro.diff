@@ -1,0 +1,8 @@
+--- qt-4.4.1.orig/config.tests/unix/psql/psql.pro	2008-07-29 06:23:29.000000000 -0400
++++ qt-4.4.1/config.tests/unix/psql/psql.pro	2008-08-31 23:00:46.047431000 -0400
+@@ -1,4 +1,4 @@
+ SOURCES = psql.cpp
+ CONFIG -= qt dylib
+ mac:CONFIG -= app_bundle
+-LIBS += -lpq
++LIBS += -lsocket -lxnet -lresolv -lnsl  -lintl -lpq 
