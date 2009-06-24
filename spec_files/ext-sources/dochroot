@@ -1,0 +1,41 @@
+#!/bin/sh
+
+#
+# Script to kick-off a chroot environment that is suitable for network access
+# and for running sandboxed builds.
+#
+
+ALTROOT=$1
+
+if [ "x$ALTROOT" = "x" ]
+then
+	echo ""
+	echo "Usage: $0 </path/to/alternate/root/image>"
+	echo ""
+	exit 0
+fi
+
+if [ -d ${ALTROOT}/proc -a -d ${ALTROOT}/etc/mnttab -a -d ${ALTROOT}/dev/fd \
+	-a -d ${ALTROOT}/devices -a -d ${ALTROOT}/var/run ]
+then
+	umount ${ALTROOT}/proc        2> /dev/null
+	umount ${ALTROOT}/etc/mnttab  2> /dev/null
+	umount ${ALTROOT}/dev/fd      2> /dev/null
+	umount ${ALTROOT}/dev         2> /dev/null
+	umount ${ALTROOT}/devices     2> /dev/null
+	umount ${ALTROOT}/var/run     2> /dev/null
+
+	mount -F lofs /proc ${ALTROOT}/proc
+	mount -F lofs /etc/mnttab ${ALTROOT}/etc/mnttab
+	mount -F lofs /dev ${ALTROOT}/dev
+	mount -F fd -O fd ${ALTROOT}/dev/fd
+	mount -F lofs -O /devices ${ALTROOT}/devices
+	mount -F lofs /var/run ${ALTROOT}/var/run
+fi
+
+if [ -x ${ALTROOT}/usr/bin/bash ]
+then
+	chroot ${ALTROOT} /usr/bin/bash
+else
+	chroot ${ALTROOT} /usr/bin/sh
+fi
