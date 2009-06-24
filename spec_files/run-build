@@ -1,6 +1,21 @@
 #!/bin/sh
 
+specfile=$1
 cmp=$2
+stage=$3
+
+if [ "x$specfile" = "x" ]
+then
+	echo ""
+	echo "Usage: $0 <specfile> <gcc|studio> [Stage]"
+	echo "       Where Stage can be omitted in which case it does a default pkgtool"
+	echo "       full build. Alternatively Stage can be one of the following:"
+	echo "       build   - Prepare and Compile only"
+	echo "       install - Install to DESTDIR only"
+	echo "       pkg     - Package up contents previously installed to DESTDIR"
+	echo ""
+	exit 0
+fi
 
 export CC=/opt/SUNWspro/bin/cc
 export CXX=/opt/SUNWspro/bin/CC
@@ -23,5 +38,30 @@ export PATH
 fi
 
 unset LD_LIBRARY_PATH
-pkgtool build --download --halt-on-errors --nonotify --with-fox --without-dt --with-l10n --without-apoc-adapter --with-indiana-branding --with-gnu-iconv --autodeps $1
-#pkgbuild -bb --short-circuit --with-fox --without-dt --with-l10n --without-apoc-adapter --with-indiana-branding --with-gnu-iconv $1
+
+if [ "x$stage" = "x" ]
+then
+	pkgtool build --download --halt-on-errors --nonotify --with-fox \
+	    --without-dt --with-l10n --without-apoc-adapter \
+	    --with-indiana-branding --with-gnu-iconv --autodeps $specfile
+
+elif [ "$stage" = "full" ]
+then
+	pkgbuild -ba --with-fox --without-dt --with-l10n --without-apoc-adapter \
+	    --with-indiana-branding --with-gnu-iconv $specfile
+
+elif [ "$stage" = "build" ]
+then
+	pkgbuild -bc --short-circuit --with-fox --without-dt --with-l10n \
+	    --without-apoc-adapter --with-indiana-branding --with-gnu-iconv $specfile
+
+elif [ "$stage" = "install" ]
+then
+	pkgbuild -bi --short-circuit --with-fox --without-dt --with-l10n \
+	    --without-apoc-adapter --with-indiana-branding --with-gnu-iconv $specfile
+
+elif [ "$stage" = "pkg" ]
+then
+	pkgbuild -bb --short-circuit --with-fox --without-dt --with-l10n \
+	    --without-apoc-adapter --with-indiana-branding --with-gnu-iconv $specfile
+fi
