@@ -1,0 +1,11 @@
+--- mozilla/configure.orig	2009-06-24 13:16:32.298344470 +0530
++++ mozilla/configure	2009-06-24 13:17:23.246098035 +0530
+@@ -5141,7 +5141,7 @@
+ 
+ MOZ_JS_LIBS='-L$(LIBXUL_DIST)/bin -lmozjs'
+ DYNAMIC_XPCOM_LIBS='-L$(LIBXUL_DIST)/bin -lxpcom -lxpcom_core'
+-MOZ_FIX_LINK_PATHS='-Wl,-rpath-link,$(LIBXUL_DIST)/bin'
++MOZ_FIX_LINK_PATHS=
+ XPCOM_FROZEN_LDOPTS='-L$(LIBXUL_DIST)/bin -lxpcom'
+ LIBXUL_LIBS='$(XPCOM_FROZEN_LDOPTS) -lxul'
+ XPCOM_GLUE_LDOPTS='$(LIBXUL_DIST)/lib/$(LIB_PREFIX)xpcomglue_s.$(LIB_SUFFIX) $(XPCOM_FROZEN_LDOPTS)'

@@ -1,0 +1,10 @@
+--- mozilla/security/coreconf/SunOS5.mk.orig	2009-06-24 21:20:05.501725266 +0530
++++ mozilla/security/coreconf/SunOS5.mk	2009-06-24 21:22:12.309398903 +0530
+@@ -160,6 +160,7 @@
+ # (Similarly for -fPIC in case of gcc.)
+ ifdef NS_USE_GCC
+ 	DSO_CFLAGS += -fPIC
++	DSO_LDOPTS += -L/usr/gnu/lib -R/usr/gnu/lib
+ else
+ 	DSO_CFLAGS += -KPIC
+ endif
