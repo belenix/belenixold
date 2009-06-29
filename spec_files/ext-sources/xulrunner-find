@@ -1,0 +1,12 @@
+#!/bin/sh
+
+argstr=""
+for arg in $*
+do
+	if [ "$arg" = "-xtype" ]
+	then
+		arg=-type
+	fi
+	argstr="$argstr $arg"
+done
+exec /usr/bin/find $argstr
