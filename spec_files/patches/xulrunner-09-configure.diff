@@ -1,0 +1,24 @@
+--- mozilla/configure.orig	2009-06-24 23:46:33.465274997 +0530
++++ mozilla/configure	2009-06-24 23:48:02.061961596 +0530
+@@ -7175,10 +7175,10 @@
+        WARNINGS_AS_ERRORS='-Werror'
+        MOZ_OPTIMIZE_FLAGS="-xO4"
+        MKSHLIB='$(CXX) $(CXXFLAGS) $(DSO_PIC_FLAGS) $(DSO_LDOPTS) -h $@ -o $@'
+-       MKCSHLIB='$(CC) $(CFLAGS) $(DSO_PIC_FLAGS) -G -z muldefs -h $@ -o $@'
++       MKCSHLIB='$(CC) $(CFLAGS) $(DSO_PIC_FLAGS) -shared -z muldefs -h $@ -o $@'
+        MKSHLIB_FORCE_ALL='-z allextract'
+        MKSHLIB_UNFORCE_ALL='-z defaultextract'
+-       DSO_LDOPTS='-G -z muldefs'
++       DSO_LDOPTS='-shared -z muldefs'
+        AR_LIST="$AR t"
+        AR_EXTRACT="$AR x"
+        AR_DELETE="$AR d"
+@@ -7236,7 +7236,7 @@
+ 
+     else
+        ASFLAGS="$ASFLAGS -fPIC"
+-       DSO_LDOPTS='-G'
++       DSO_LDOPTS='-shared'
+        _WARNINGS_CFLAGS=''
+        _WARNINGS_CXXFLAGS=''
+        if test "$OS_RELEASE" = "5.3"; then

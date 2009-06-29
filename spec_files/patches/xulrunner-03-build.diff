@@ -1,0 +1,21 @@
+--- mozilla/security/manager/Makefile.in.orig	2008-04-19 16:07:41.000000000 +0530
++++ mozilla/security/manager/Makefile.in	2009-06-24 12:18:29.228466943 +0530
+@@ -179,7 +179,6 @@
+ DEFAULT_GMAKE_FLAGS += NSPR_LIB_DIR=$(NSPR_LIB_DIR)
+ DEFAULT_GMAKE_FLAGS += MOZILLA_CLIENT=1
+ DEFAULT_GMAKE_FLAGS += NO_MDUPDATE=1
+-DEFAULT_GMAKE_FLAGS += NSS_ENABLE_ECC=1
+ ABS_topsrcdir   := $(shell cd $(topsrcdir); pwd)
+ ifneq ($(ABS_topsrcdir),$(MOZ_BUILD_ROOT))
+ DEFAULT_GMAKE_FLAGS += BUILD_TREE=$(MOZ_BUILD_ROOT)
+--- mozilla/security/manager/ssl/src/Makefile.in.orig	2008-09-17 02:14:53.000000000 +0530
++++ mozilla/security/manager/ssl/src/Makefile.in	2009-06-24 12:13:45.923381878 +0530
+@@ -135,8 +135,6 @@
+ 
+ EXTRA_DEPS = $(NSS_DEP_LIBS)
+ 
+-DEFINES += -DNSS_ENABLE_ECC
+-
+ # Use local includes because they are inserted before INCLUDES
+ # so that Mozilla's nss.h is used, not glibc's
+ LOCAL_INCLUDES += $(NSS_CFLAGS)

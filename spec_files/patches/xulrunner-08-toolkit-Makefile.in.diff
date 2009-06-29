@@ -1,0 +1,11 @@
+--- mozilla/toolkit/library/Makefile.in.orig	2009-06-24 21:59:33.123171419 +0530
++++ mozilla/toolkit/library/Makefile.in	2009-06-24 22:00:22.224618328 +0530
+@@ -227,7 +227,7 @@
+ endif
+ 
+ ifeq ($(OS_ARCH),SunOS)
+-EXTRA_DSO_LDOPTS += -lelf -ldemangle -lCstd
++EXTRA_DSO_LDOPTS += -lelf -L/usr/gnu/lib -R/usr/gnu/lib -lstdc++
+ endif
+ 
+ ifeq ($(OS_ARCH),WINNT)
