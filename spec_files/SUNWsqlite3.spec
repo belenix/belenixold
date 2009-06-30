@@ -15,10 +15,12 @@
 
 %include base.inc
 
+%define compat_link1     libsqlite3-3.5.4.so.0
+
 Name:                    SUNWsqlite3
 Summary:                 SQLite3, an embeddable, zero-conf, self-contained, serverless transactional SQL engine
-Version:                 3.5.4
-%define doc_version      3_5_4
+Version:                 3.6.7
+%define doc_version      3_6_7
 URL:                     http://www.sqlite.org/
 Source:                  http://www.sqlite.org/sqlite-%{version}.tar.gz
 Source1:                 http://www.sqlite.org/sqlite_docs_%{doc_version}.zip
@@ -109,7 +111,7 @@ cd ..
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
 mkdir -p ${RPM_BUILD_ROOT}%{_docdir}
-cp -pr sqlite_docs_%{doc_version} ${RPM_BUILD_ROOT}%{_docdir}/sqlite3
+cp -pr sqlite-%{doc_version}-docs ${RPM_BUILD_ROOT}%{_docdir}/sqlite3
 
 ROOT=${RPM_BUILD_ROOT}
 TCLDIR=%{_libdir}/tcl8.4/sqlite3
@@ -134,7 +136,9 @@ mkdir -p ${ROOTBIN64}
 /usr/ucb/install -m 0755 solaris/libsqlite3.so.0 ${ROOTLIB64}/libsqlite3.so.0
 (cd ${ROOTLIB64}
   ln -s libsqlite3.so.0 libsqlite3.so
-  ln -s libsqlite3.so.0 libsqlite3-%{version}.so.0)
+  ln -s libsqlite3.so.0 libsqlite3-%{version}.so.0
+  ln -s %{compat_link1} libsqlite3-%{version}.so.0
+)
 (cd ${ROOTSQLITE3TCLDIR}
   ln -s %{_arch64} 64)
 /usr/ucb/install -m 0755 solaris/libtclsqlite3.so ${ROOTSQLITE3TCLDIR64}/libtclsqlite3.so
@@ -150,7 +154,9 @@ mkdir -p ${ROOTMANDIR}
 /usr/ucb/install -m 0755 solaris/libsqlite3.so.0 ${ROOTLIB}/libsqlite3.so.0
 (cd ${ROOTLIB}
   ln -s libsqlite3.so.0 libsqlite3.so
-  ln -s libsqlite3.so.0 libsqlite3-%{version}.so.0)
+  ln -s libsqlite3.so.0 libsqlite3-%{version}.so.0
+  ln -s %{compat_link1} libsqlite3-%{version}.so.0
+)
 /usr/ucb/install -m 0755 solaris/libtclsqlite3.so ${ROOTSQLITE3TCLDIR}/libtclsqlite3.so
 /usr/ucb/install -m 0755 solaris/sqlite3 ${ROOTBIN}/sqlite3
 /usr/ucb/install -m 0644 sqlite3.pc ${ROOTPKGCONFIGDIR}/sqlite3.pc
@@ -159,6 +165,7 @@ mkdir -p ${ROOTMANDIR}
 /usr/ucb/install -m 0644 src/sqlite3ext.h ${ROOTINCLUDEDIR}/sqlite3ext.h
 /usr/ucb/install -m 0644 %{SOURCE5} ${ROOTMANDIR}/`basename %{SOURCE5}`
 cd ..
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -219,6 +226,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Tue Jun 30 2009 - moinakg@gmail.com
+- Bump version and add compat links.
 * Tue Feb 10 2009 - moinakg@gmail.com
 - Initial spec (migrated and modified from SFW gate).
 
