@@ -1,0 +1,31 @@
+--- gnokii-0.6.27/gnokii/gnokii.c.orig	2009-06-28 19:45:02.484363356 +0530
++++ gnokii-0.6.27/gnokii/gnokii.c	2009-06-28 19:46:19.011468044 +0530
+@@ -1052,6 +1052,19 @@
+ 
+ #define ARGV_CHUNK 10
+ 
++#ifndef HAVE_STRNDUP
++char *str_ndup(const char *src, size_t n)
++{
++	char *dst = malloc(n + 1);
++
++	if (!dst)
++		return NULL;
++
++	dst[n] = '\0';
++	return (char *)memcpy(dst, src, n);
++}
++#endif
++
+ int shell(gn_data *data, struct gn_statemachine *state)
+ {
+ #ifdef HAVE_READLINE
+@@ -1082,7 +1095,7 @@
+ 			else
+ 				len = strlen(input);
+ 			if (len > 0)
+-				argv[argc++] = strndup(input, len);
++				argv[argc++] = str_ndup(input, len);
+ 			input = tmp;
+ 		} while (input);
+ 		argv[argc] = NULL;
