@@ -1,0 +1,11 @@
+--- kdenetwork-4.2.4/krfb/connectioncontroller.cpp.orig	2009-06-27 20:09:45.205528824 +0530
++++ kdenetwork-4.2.4/krfb/connectioncontroller.cpp	2009-06-27 20:10:47.164052804 +0530
+@@ -76,7 +76,7 @@
+     unsigned char challenge[CHALLENGESIZE];
+ 
+     memcpy(challenge, ochallenge, CHALLENGESIZE);
+-    bzero(passwd, MAXPWLEN);
++    memset(passwd, 0, MAXPWLEN);
+     if (!p.isNull()) {
+         strncpy(passwd, p.toLatin1(),
+                 (MAXPWLEN <= p.length()) ? MAXPWLEN : p.length());

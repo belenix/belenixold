@@ -29,6 +29,7 @@ Patch6:                  kdelibs4-06-kstandarddirs.diff
 Patch7:                  kdelibs4-07-kde149705.diff
 Patch8:                  kdelibs4-08-AllowExternalPaths.patch
 Patch9:                  kdelibs-09-kpixmapcache.cpp.diff
+Patch10:                 kdelibs4-10-klocale.cpp.diff
 
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
@@ -108,6 +109,7 @@ cd %{src_dir}-%{version}
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 cd ..
 
 #%ifarch amd64 sparcv9
@@ -268,5 +270,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Thu Jul 02 2009 - moinakg@belenix(dot)org
+- Patch up a locale issue.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Initial version.

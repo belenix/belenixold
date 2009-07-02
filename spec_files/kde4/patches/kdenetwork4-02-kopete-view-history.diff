@@ -1,0 +1,98 @@
+diff -uNr kdenetwork-4.2.0/kopete/plugins/history/historychatui.rc kdenetwork-4.2.0-kopete-view-history/kopete/plugins/history/historychatui.rc
+--- kdenetwork-4.2.0/kopete/plugins/history/historychatui.rc	2008-09-03 16:55:06.000000000 +0530
++++ kdenetwork-4.2.0-kopete-view-history/kopete/plugins/history/historychatui.rc	2009-02-21 16:14:21.364179805 +0530
+@@ -1,8 +1,9 @@
+ <!DOCTYPE kpartgui>
+-<kpartgui version="19" name="kopetechatwindow">
++<kpartgui version="21" name="kopetechatwindow">
+ 	<MenuBar>
+ 		<Menu name="tools" >
+ 			<text>&amp;Tools</text>
++			<Action name="viewChatHistory" />
+ 			<Action name="historyPrevious" />
+ 			<Action name="historyNext" />
+ 			<Action name="historyLast"  />
+@@ -16,4 +17,8 @@
+ 		<Action name="historyQuote" />
+ 	</ToolBar>
+ 
++	<ToolBar name="chatToolBar" fullWidth="true">
++		<Action name="viewChatHistory" />
++	</ToolBar>
++
+ </kpartgui>
+diff -uNr kdenetwork-4.2.0/kopete/plugins/history/historyguiclient.cpp kdenetwork-4.2.0-kopete-view-history/kopete/plugins/history/historyguiclient.cpp
+--- kdenetwork-4.2.0/kopete/plugins/history/historyguiclient.cpp	2008-12-10 21:44:03.000000000 +0530
++++ kdenetwork-4.2.0-kopete-view-history/kopete/plugins/history/historyguiclient.cpp	2009-02-21 16:07:53.209181963 +0530
+@@ -17,9 +17,11 @@
+ #include "historyguiclient.h"
+ #include "historylogger.h"
+ #include "historyconfig.h"
++#include "historydialog.h"
+ #include "historyplugin.h"
+ 
+ #include "kopetechatsession.h"
++#include "kopetechatsessionmanager.h"
+ #include "kopetecontact.h"
+ #include "kopeteview.h"
+ 
+@@ -58,6 +60,10 @@
+ 	actionNext = KStandardAction::forward ( this, SLOT ( slotNext() ), this );
+ 	actionCollection()->addAction ( "historyNext", actionNext );
+ 
++	KAction *viewChatHistory = new KAction( KIcon("view-history"), i18n("View &History" ), this );
++	actionCollection()->addAction( "viewChatHistory", viewChatHistory );
++	connect(viewChatHistory, SIGNAL(triggered(bool)), this, SLOT(slotViewHistory()));
++
+ 	KAction *actionQuote = new KAction ( KIcon ( "go-last" ),i18n ( "Quote Last Message" ), this );
+ 	actionCollection()->addAction ( "historyQuote",actionQuote );
+ 	connect ( actionQuote,SIGNAL ( triggered ( bool ) ),this,SLOT ( slotQuote() ) );
+@@ -153,4 +159,37 @@
+ 	m_manager->view()->setCurrentMessage ( msg );
+ }
+ 
++void HistoryGUIClient::slotViewHistory()
++{
++	// Original Code, but this any segfault if anything in this pipe is NULL - Tejas Dinkar
++	//Kopete::MetaContact *m = Kopete::ChatSessionManager::self()->activeView()->msgManager()->members().first()->metaContact();
++	
++	//The same as above but with some checking
++	KopeteView::KopeteView *view= Kopete::ChatSessionManager::self()->activeView();
++	if (!view) {
++		kDebug()<<"Unable to Get Active View!";
++		return;
++	}
++
++	Kopete::ChatSession *session = view->msgManager();
++	if (!session) {
++		kDebug()<<"Unable to Get Active Session!";
++		return;
++	}
++
++	Kopete::Contact *contact = session->members().first();
++	if (!contact) {
++		kDebug()<<"Unable to get contact!";
++		return;
++	}
++
++	Kopete::MetaContact *m = contact->metaContact();
++
++	if(m)
++	{
++		HistoryDialog* dialog = new HistoryDialog(m);
++		dialog->setObjectName( QLatin1String("HistoryDialog") );
++	}
++}
++
+ #include "historyguiclient.moc"
+diff -uNr kdenetwork-4.2.0/kopete/plugins/history/historyguiclient.h kdenetwork-4.2.0-kopete-view-history/kopete/plugins/history/historyguiclient.h
+--- kdenetwork-4.2.0/kopete/plugins/history/historyguiclient.h	2008-02-13 21:16:06.000000000 +0530
++++ kdenetwork-4.2.0-kopete-view-history/kopete/plugins/history/historyguiclient.h	2009-02-21 16:09:45.449182229 +0530
+@@ -41,6 +41,7 @@
+ 	void slotLast();
+ 	void slotNext();
+ 	void slotQuote();
++	void slotViewHistory();
+ 
+ private:
+ 	HistoryLogger *m_logger;

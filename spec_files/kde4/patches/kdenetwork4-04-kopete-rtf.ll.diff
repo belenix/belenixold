@@ -1,0 +1,52 @@
+--- kdenetwork-4.2.4/kopete/protocols/groupwise/libgroupwise/rtf.ll.orig	2009-06-27 14:59:10.253020103 +0530
++++ kdenetwork-4.2.4/kopete/protocols/groupwise/libgroupwise/rtf.ll	2009-06-27 14:59:44.642723571 +0530
+@@ -633,8 +633,8 @@
+ const unsigned GREEN		= 3;
+ const unsigned BLUE			= 4;
+ const unsigned CF			= 5;
+-const unsigned FS			= 6;
+-const unsigned HIGHLIGHT	= 7;
++const unsigned _FS			= 6;
++const unsigned _HIGHLIGHT	= 7;
+ const unsigned PARD			= 8;
+ const unsigned PAR			= 9;
+ const unsigned I			= 10;
+@@ -797,10 +797,10 @@
+                 case CF:
+                     cur_level.setFontColor(cmd_value);
+                     break;
+-                case FS:
++                case _FS:
+                     cur_level.setFontSizeHalfPoints(cmd_value);
+                     break;
+-                case HIGHLIGHT:
++                case _HIGHLIGHT:
+                     cur_level.setFontBgColor(cmd_value);
+                     break;
+                 case PARD:
+--- kdenetwork-4.2.4/kopete/protocols/groupwise/libgroupwise/rtf.cc.orig	2009-06-27 15:04:51.205953940 +0530
++++ kdenetwork-4.2.4/kopete/protocols/groupwise/libgroupwise/rtf.cc	2009-06-27 15:05:20.619668205 +0530
+@@ -2298,8 +2298,8 @@
+ const unsigned GREEN		= 3;
+ const unsigned BLUE			= 4;
+ const unsigned CF			= 5;
+-const unsigned FS			= 6;
+-const unsigned HIGHLIGHT	= 7;
++const unsigned _FS			= 6;
++const unsigned _HIGHLIGHT	= 7;
+ const unsigned PARD			= 8;
+ const unsigned PAR			= 9;
+ const unsigned I			= 10;
+@@ -2462,10 +2462,10 @@
+                 case CF:
+                     cur_level.setFontColor(cmd_value);
+                     break;
+-                case FS:
++                case _FS:
+                     cur_level.setFontSizeHalfPoints(cmd_value);
+                     break;
+-                case HIGHLIGHT:
++                case _HIGHLIGHT:
+                     cur_level.setFontBgColor(cmd_value);
+                     break;
+                 case PARD:
