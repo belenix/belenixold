@@ -1,0 +1,11 @@
+--- gnokii-0.6.27/mysql_config	2009-06-28 19:50:10.188549088 +0530
++++ gnokii-0.6.27/mysql_config.new	2009-06-28 20:21:40.786147008 +0530
+@@ -116,7 +116,7 @@
+   embedded_libs="$embedded_libs -lmygcc "
+ fi
+ 
+-cflags="-I$pkgincludedir  -DDBUG_OFF -xO4 -xstrconst -xprefetch=auto -xprefetch_level=3 -mt -fns=no -fsimple=1 -xbuiltin=%all -xlibmil -xlibmopt -xtarget=generic   -DBIG_TABLES -DHAVE_RWLOCK_T " #note: end space!
++cflags="-I$pkgincludedir  -DDBUG_OFF -O3 -march=pentium4 -fno-signed-zeros  -ffinite-math-only -DBIG_TABLES -DHAVE_RWLOCK_T " #note: end space!
+ include="-I$pkgincludedir"
+ 
+ # Remove some options that a client doesn't have to care about
