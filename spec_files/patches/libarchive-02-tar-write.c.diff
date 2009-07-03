@@ -1,0 +1,10 @@
+--- libarchive-2.6.2-64/tar/write.c.orig	2009-07-02 21:29:44.825730428 +0530
++++ libarchive-2.6.2-64/tar/write.c	2009-07-02 21:30:03.031188504 +0530
+@@ -46,6 +46,7 @@
+ #endif
+ #if defined(HAVE_EXT2FS_EXT2_FS_H) && !defined(__CYGWIN__)
+ /* This header exists but is broken on Cygwin. */
++#include <sys/ioccom.h>
+ #include <ext2fs/ext2_fs.h>
+ #endif
+ #ifdef HAVE_FCNTL_H
