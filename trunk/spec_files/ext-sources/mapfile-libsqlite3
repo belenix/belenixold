@@ -18,10 +18,10 @@
 #
 # CDDL HEADER END
 #
-# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)mapfile-libsqlite3	1.2	08/12/18 SMI"
+# ident	"@(#)mapfile-libsqlite3	1.3	09/01/26 SMI"
 #
 # Defines the public interface to SQLite3
 #
@@ -175,7 +175,6 @@ sqlite_3.5.4 {
 	sqlite3ErrStr;
 
 	# exported data
-	sqlite3_io_trace;
 	sqlite3_temp_directory;
 	sqlite3_version;
 

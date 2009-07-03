@@ -1,59 +1,58 @@
-diff -r -u sqlite-3.5.4-old/Makefile.in sqlite-3.5.4/Makefile.in
---- sqlite-3.5.4-old/Makefile.in	Tue Oct 21 17:36:53 2008
-+++ sqlite-3.5.4/Makefile.in	Tue Oct 21 17:18:49 2008
-@@ -336,11 +336,17 @@
+--- sqlite-3.6.7-old/Makefile.in      Thu Dec  4 13:41:45 2008
++++ sqlite-3.6.7/Makefile.in  Wed Feb  4 16:45:34 2009
+@@ -468,9 +468,15 @@
  # all that automatic generation.
  #
- target_source:	$(SRC) parse.c opcodes.c keywordhash.h $(VDBEHDR) 
+ .target_source:	$(SRC)
 -	rm -rf tsrc
  	mkdir -p tsrc
--	cp $(SRC) $(VDBEHDR) tsrc
--	rm tsrc/sqlite.h.in tsrc/parse.y
--	cp parse.c opcodes.c keywordhash.h tsrc
-+	for i in $(SRC) $(VDBEHDR) parse.c opcodes.c keywordhash.h; \
+-	cp $(SRC) tsrc
++	for i in $(SRC); \
 +	do \
-+		[ $$i = $(TOP)/src/sqlite.h.in ] && continue; \
-+		[ $$i = $(TOP)/src/parse.y ] && continue; \
 +		if /bin/test $$i -nt tsrc/$$i; \
 +		then \
 +			cp $$i tsrc; \
 +			touch target_source; \
 +		fi; \
 +	done
+ 	rm tsrc/sqlite.h.in tsrc/parse.y
+ 	touch .target_source
  
- sqlite3.c:	target_source $(TOP)/tool/mksqlite3c.tcl
- 	tclsh $(TOP)/tool/mksqlite3c.tcl
-@@ -598,7 +604,7 @@
+@@ -767,7 +773,7 @@
  clean:	
  	rm -f *.lo *.la *.o sqlite3$(TEXE) libsqlite3.la
  	rm -f sqlite3.h opcodes.*
--	rm -rf .libs .deps 
-+	rm -rf .libs .deps solaris
+-	rm -rf .libs .deps tsrc
++	rm -rf .libs .deps tsrc solaris
  	rm -f lemon$(BEXE) lempar.c parse.* sqlite*.tar.gz
  	rm -f mkkeywordhash$(BEXE) keywordhash.h
  	rm -f $(PUBLISH)
-@@ -627,3 +633,26 @@
+@@ -797,3 +803,30 @@
  sqlite3.dll: $(REAL_LIBOBJ) sqlite3.def
- 	$(TCC) -shared -o sqlite3.dll sqlite3.def \
+ 	$(TCC) -shared -o $@ sqlite3.def \
  		-Wl,"--strip-all" $(REAL_LIBOBJ)
 + 
 +solaris:
 +	mkdir -p solaris
 +
 +solaris/libsqlite3.so.0: solaris sqlite3.c
++	rm -f solaris/libsqlite3.so.0
 +	$(TCC) -DSQLITE_PRIVATE= -o solaris/libsqlite3.so.0 -G -KPIC sqlite3.c \
 +		-L$(ROOT)/usr/lib  -M $(LIBSQLITE_MAPFILE) \
 +		-h libsqlite3.so.0 -lc -lpthread $(TLIBS)
 +
 +solaris/libsqlite3.so: solaris/libsqlite3.so.0
++	rm -f solaris/libsqlite3.so
 +	ln -s libsqlite3.so.0 solaris/libsqlite3.so
 + 
 +solaris/sqlite3: solaris/libsqlite3.so
++	rm -f solaris/sqlite3
 +	$(TCC) -o solaris/sqlite3 $(TOP)/src/shell.c \
 +		-I$(ROOT)/usr/include -L$(TOP)/solaris -L$(ROOT)/usr/lib \
 +		$(TLIBS) -M $(CMD_MAPFILE) -lsqlite3
 +
 +solaris/libtclsqlite3.so: solaris/libsqlite3.so
++	rm -f solaris/libtclsqlite3.so
 +	$(TCC) -o solaris/libtclsqlite3.so -G -KPIC $(TOP)/src/tclsqlite.c \
 +		-I$(ROOT)/usr/include -L$(TOP)/solaris -L$(ROOT)/usr/lib \
 +		-h libtclsqlite3.so.0 -lsqlite3 -L/usr/lib -ltclstub8.4 \
