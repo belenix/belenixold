@@ -1,0 +1,20 @@
+--- pycups-1.9.46-64/Makefile.orig	2009-07-02 22:58:57.380374162 +0530
++++ pycups-1.9.46-64/Makefile	2009-07-02 22:58:44.744529656 +0530
+@@ -9,7 +9,7 @@
+ 	COPYING NEWS README TODO ChangeLog
+ 
+ cups.so: $(SOURCES)
+-	CFLAGS=-DVERSION=\\\"$(VERSION)\\\" python setup.py build
++	python setup.py build
+ 	mv build/lib*/$@ .
+ 
+ doc:	cups.so
+@@ -23,7 +23,7 @@
+ 	rm -rf $(NAME)-$(VERSION)
+ 	mkdir $(NAME)-$(VERSION)
+ 	cp -a $(SOURCES) $(DIST) $(NAME)-$(VERSION)
+-	tar jcf $(NAME)-$(VERSION).tar.bz2 $(NAME)-$(VERSION)
++	/usr/bin/tar jcf $(NAME)-$(VERSION).tar.bz2 $(NAME)-$(VERSION)
+ 	rm -rf $(NAME)-$(VERSION)
+ 
+ install:
