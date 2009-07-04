@@ -8,6 +8,8 @@
 %include base.inc
 
 %define src_dir          akonadi
+%define mysql_version    5.0
+
 Name:                    SFEakonadi
 Summary:                 PIM data storage server
 Version:                 1.1.2
@@ -96,6 +98,7 @@ cmake   -DCMAKE_INSTALL_PREFIX=%{_prefix}                               \
         -DINCLUDE_INSTALL_DIR=%{_includedir}                            \
         -DBOOST_INCLUDEDIR=%{_includedir}/boost/gcc4                    \
         -DBOOST_LIBRARYDIR=%{_libdir}/boost/gcc4                        \
+        -DMYSQLD_EXECUTABLE:FILEPATH=%{_prefix}/mysql/%{mysql_version}/bin/mysqld \
         -DBUILD_SHARED_LIBS=On                                          \
         -DCMAKE_VERBOSE_MAKEFILE=1 . > config.log 2>&1
 
@@ -154,5 +157,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Jul 04 2009 - moinakg@belenix(dot)org
+- Fix to use proper mysql binary.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Initial version.

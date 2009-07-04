@@ -3,8 +3,6 @@
 #
 # includes module(s): google-gadgets
 #
-# No XULRunner support yet till we figure out how to build it with Gcc4 on Solaris
-#
 %include Solaris.inc
 
 Name:                    SFEgoogle-gadgets
@@ -44,6 +42,7 @@ Requires: SUNWfontconfig
 Requires: SUNWfreetype2
 Requires: SUNWgnome-libs
 Requires: SUNWgnome-vfs
+Requires: SFExulrunner
 
 BuildRequires: SUNWcurl-devel
 BuildRequires: SUNWlxml-devel
@@ -58,6 +57,7 @@ BuildRequires: SUNWcairo-devel
 BuildRequires: SUNWgnome-libs-devel
 BuildRequires: SUNWgnome-common-devel
 BuildRequires: SUNWgtk2-devel
+BuildRequires: SFExulrunner-devel
 
 %package qt
 Summary:                 Qt front-end for %{name}
@@ -78,6 +78,20 @@ SUNW_BaseDir:            %{_basedir}
 Requires: %{name}
 Requires: %{name}-qt
 Requires: %{name}-gtk
+Requires: SUNWcurl-devel
+Requires: SUNWlxml-devel
+Requires: SUNWdbus-devel
+Requires: SUNWgnome-media-devel
+Requires: SFEqt4-devel
+Requires: SUNWlibrsvg-devel
+Requires: SUNWgnome-libs-devel
+Requires: SUNWgnome-vfs-devel
+Requires: SUNWflexlex
+Requires: SUNWcairo-devel
+Requires: SUNWgnome-libs-devel
+Requires: SUNWgnome-common-devel
+Requires: SUNWgtk2-devel
+Requires: SFExulrunner-devel
 
 %prep
 %setup -q -n google-gadgets-for-linux-%{version}
@@ -99,7 +113,9 @@ export MOC=%{qt4_bin_path}/moc
 ./autotools/bootstrap.sh
 cp /usr/share/automake-1.10/mkinstalldirs libltdl/
 chmod a+x libltdl/mkinstalldirs
-./configure --prefix=/usr
+./configure --prefix=%{_prefix} \
+            --disable-static \
+            --with-browser-plugins-dir=%{_libdir}/firefox/plugins
 make
 
 export PATH=$OPATH
@@ -139,6 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libggadget-1*.so*
 
 %dir %attr (0755, root, bin) %{_libdir}/google-gadgets
+%{_libdir}/google-gadgets/gtkmoz-browser-child
 %dir %attr (0755, root, bin) %{_libdir}/google-gadgets/modules
 %{_libdir}/google-gadgets/modules/analytics*
 %{_libdir}/google-gadgets/modules/curl*
@@ -148,6 +165,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/google-gadgets/modules/gst*
 %{_libdir}/google-gadgets/modules/libxml2*
 %{_libdir}/google-gadgets/modules/linux*
+%{_libdir}/google-gadgets/modules/smjs*
 
 %defattr (-, root, other)
 %dir %attr (0755, root, other) %{_datadir}/icons
@@ -191,5 +209,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/google-gadgets/include/*
 
 %changelog
+* Sat Jul 04 2009 - moinakg@belenix(dot)org
+- Start using XULRunner for the smjs module.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Pull in and modify from SFE repo.
