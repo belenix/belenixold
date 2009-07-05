@@ -1,0 +1,22 @@
+diff -up kdeutils-4.2.4/ark/app/ark.desktop.servicepack kdeutils-4.2.4/ark/app/ark.desktop
+--- kdeutils-4.2.4/ark/app/ark.desktop.servicepack	2009-05-28 14:21:15.000000000 -0500
++++ kdeutils-4.2.4/ark/app/ark.desktop	2009-06-04 09:47:50.008152351 -0500
+@@ -1,5 +1,5 @@
+ [Desktop Entry]
+-MimeType=application/x-gzip;application/x-tar;application/x-compressed-tar;application/x-bzip-compressed-tar;application/zip;application/x-bzip;application/x-rar;application/x-tarz;application/x-bzip2;application/x-java-archive;application/x-deb;application/x-ace;application/x-7z-compressed;application/x-compress;application/x-zip-compressed;
++MimeType=application/x-gzip;application/x-tar;application/x-compressed-tar;application/x-bzip-compressed-tar;application/zip;application/x-bzip;application/x-rar;application/x-tarz;application/x-bzip2;application/x-java-archive;application/x-deb;application/x-ace;application/x-7z-compressed;application/x-compress;application/x-zip-compressed;application/x-servicepack;
+ GenericName=Archiving Tool
+ GenericName[af]=Argiveer Program
+ GenericName[ar]=أداة أرشفة
+diff -up kdeutils-4.2.4/ark/app/ark_servicemenu.desktop.servicepack kdeutils-4.2.4/ark/app/ark_servicemenu.desktop
+--- kdeutils-4.2.4/ark/app/ark_servicemenu.desktop.servicepack	2009-04-30 04:11:48.000000000 -0500
++++ kdeutils-4.2.4/ark/app/ark_servicemenu.desktop	2009-06-04 09:48:05.462929194 -0500
+@@ -1,7 +1,7 @@
+ [Desktop Entry]
+ Type=Service
+ ServiceTypes=KonqPopupMenu/Plugin
+-MimeType=application/x-gzip;application/x-tar;application/x-compressed-tar;application/x-bzip-compressed-tar;application/zip;application/x-bzip;application/x-rar;application/x-tarz;application/x-bzip2;application/x-java-archive;application/x-deb;application/x-ace;application/x-7z-compressed;application/x-compress;application/x-zip-compressed;
++MimeType=application/x-gzip;application/x-tar;application/x-compressed-tar;application/x-bzip-compressed-tar;application/zip;application/x-bzip;application/x-rar;application/x-tarz;application/x-bzip2;application/x-java-archive;application/x-deb;application/x-ace;application/x-7z-compressed;application/x-compress;application/x-zip-compressed;application/x-servicepack;
+ Actions=arkAutoExtractHere;arkExtractTo;arkExtractHere;
+ #X-KDE-Submenu=Extract me beautiful
+ X-KDE-Priority=TopLevel

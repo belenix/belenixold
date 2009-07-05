@@ -23,6 +23,9 @@ URL:			http://apr.apache.org/
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 SUNW_BaseDir:		%{_prefix}
 Requires: SFEgawk
+%if %cc_is_gcc
+Requires: SFEgccruntime
+%endif
 
 %description
 Apache Portable Runtime (APR) provides software libraries
@@ -135,6 +138,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sun Jul 05 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
+- Add dependency on SFEgccruntime for Gcc builds.
 * Fri May 29 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Add patch for building with Gcc 4.4.
 - Add lib paths to properly detect some libs.
