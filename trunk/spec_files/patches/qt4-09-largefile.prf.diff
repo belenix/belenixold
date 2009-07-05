@@ -1,0 +1,6 @@
+--- qt-4.4.1.orig/mkspecs/features/unix/largefile.prf	2008-07-29 06:23:32.000000000 -0400
++++ qt-4.4.1/mkspecs/features/unix/largefile.prf	2008-08-30 17:08:58.000000000 -0400
+@@ -1,2 +1,2 @@
+-DEFINES += _LARGEFILE64_SOURCE _LARGEFILE_SOURCE
++DEFINES += _LARGEFILE64_SOURCE _LARGEFILE_SOURCE _FILE_OFFSET_BITS=64
+ 

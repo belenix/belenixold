@@ -1,0 +1,18 @@
+Index: src/3rdparty/webkit/JavaScriptCore/kjs/regexp.h
+===================================================================
+--- old/src/3rdparty/webkit/JavaScriptCore/kjs/regexp.h	(revision 2742)
++++ new/src/3rdparty/webkit/JavaScriptCore/kjs/regexp.h	(working copy)
+@@ -27,7 +27,12 @@
+ #include "config.h"
+ 
+ #if HAVE(PCREPOSIX)
+-#include <pcre.h>
++// This will get the pcre from src/3rdparty/webkit/JavaScriptCore/pcre/pcre.h
++// and not any of the system PCRE versions (in particular /opt/foss/include/
++// contains another pcre.h). Since the Qt webkit code is written for
++// pcre 6.4 as included here and not the 7.6 that is elsewhere, we
++// *have* to stick with the bundled source.
++#include "../pcre/pcre.h"
+ #else  // POSIX regex - not so good...
+ extern "C" { // bug with some libc5 distributions
+ #include <regex.h>

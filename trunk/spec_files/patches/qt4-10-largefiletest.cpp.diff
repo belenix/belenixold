@@ -1,0 +1,39 @@
+--- qt-4.4.1.orig/config.tests/unix/largefile/largefiletest.cpp	2008-07-29 06:23:29.000000000 -0400
++++ qt-4.4.1/config.tests/unix/largefile/largefiletest.cpp	2008-08-30 16:46:42.000000000 -0400
+@@ -2,10 +2,25 @@
+ platforms.
+ */
+ 
++#if defined(sun) || defined(__sun) || defined(__sun__)
++#if defined(_LP64)
++#if !defined _LARGEFILE64_SOURCE
++#define _LARGEFILE64_SOURCE
++#endif
++#else
++#ifndef _LARGEFILE_SOURCE
+ #define _LARGEFILE_SOURCE
+-#define _LARGE_FILES
++#endif
++#endif
++
++#if !defined(_FILE_OFFSET_BITS)
+ #define _FILE_OFFSET_BITS 64
++#endif
++#endif /* sun || __sun || __sun__ */
++
++#include <stdlib.h>
+ #include <unistd.h>
++#include <limits.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <assert.h>
+@@ -15,7 +30,8 @@
+ {
+ // check that off_t can hold 2^63 - 1 and perform basic operations...
+ #define OFF_T_64 (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
+-    if (OFF_T_64 % 2147483647 != 1)
++
++    if ((OFF_T_64 % 2147483647) != 1)
+ 	return 1;
+ 
+     // stat breaks on SCO OpenServer
