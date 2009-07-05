@@ -1,0 +1,11 @@
+--- qt-4.4.1.orig/mkspecs/features/qt.prf	2008-07-29 06:23:32.000000000 -0400
++++ qt-4.4.1/mkspecs/features/qt.prf	2008-08-30 17:08:18.000000000 -0400
+@@ -134,7 +134,7 @@
+    else:isEqual(QTLIB, script):qlib = QtScript
+    else:isEqual(QTLIB, testlib):qlib = QtTest
+    else:isEqual(QTLIB, dbus):qlib = QtDBus
+-   else:isEqual(QTLIB, phonon):qlib = phonon
++   else:isEqual(QTLIB, phonon):qlib = QtPhonon
+    else:isEqual(QTLIB, webkit):qlib = QtWebKit
+    else:message("Unknown QT: $$QTLIB"):qlib =
+    !isEmpty(qlib) {

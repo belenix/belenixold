@@ -1,0 +1,16 @@
+--- qt-4.4.1.orig/src/corelib/arch/i386/arch.pri	2008-07-29 06:23:35.000000000 -0400
++++ qt-4.4.1/src/corelib/arch/i386/arch.pri	2008-08-30 17:03:36.000000000 -0400
+@@ -1,4 +1,4 @@
+ # 
+ # i386 architecture
+ #
+-!*-g++*:!*-icc*:SOURCES += $$QT_ARCH_CPP/qatomic_i386.s
++SOURCES += $$QT_ARCH_CPP/qatomic_i386.s
+--- qt-4.4.1.orig/src/corelib/arch/x86_64/arch.pri	2008-07-29 06:23:35.000000000 -0400
++++ qt-4.4.1/src/corelib/arch/x86_64/arch.pri	2008-08-30 17:03:00.000000000 -0400
+@@ -1,4 +1,4 @@
+ #
+ # AMD64 architecture
+ #
+-solaris-cc*:SOURCES += $$QT_ARCH_CPP/qatomic_sun.s
++SOURCES += $$QT_ARCH_CPP/qatomic_sun.s

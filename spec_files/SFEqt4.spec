@@ -29,6 +29,18 @@ Patch5:                 qt4-05-fulltextsearch.pro.diff
 Patch6:                 qt4-06-freetype.pro.diff
 Patch7:                 qt4-07-psql.pro.diff
 Patch8:                 qt4-08-fontconfig.pro.diff
+Patch9:                 qt4-09-largefile.prf.diff
+Patch10:                qt4-10-largefiletest.cpp.diff
+Patch11:                qt4-11-main.cpp.diff
+Patch12:                qt4-12-phonon.pro.diff
+Patch13:                qt4-13-qt.prf.diff
+Patch14:                qt4-14-mediaplayer.h.diff
+Patch17:                qt4-17-qsql-unicode.diff
+Patch18:                qt4-18-thread.pri.diff
+Patch19:                qt4-19-regexp.h.diff
+Patch20:                qt4-20-arch.pri.diff
+Patch21:                qt4-21-xfixes.pro.diff
+Patch22:                qt4-22-xcursor.pro.diff
 
 %define src_dir         qt-x11-opensource-src-%{version}
 License:		LICENSE.GPL
@@ -53,6 +65,7 @@ BuildRequires:		SUNWgnome-media-devel
 BuildRequires:		SFEnas-devel
 BuildRequires:		SUNWTiff-devel
 BuildRequires:          SUNWpng-devel
+BuildRequires:          SUNWgnome-media-devel
 Requires:               SFEgiflib
 Requires:		SFElibmng
 Requires:		SUNWxwplt
@@ -70,6 +83,7 @@ Requires:               SUNWmysql5u
 Requires:               SUNWTiff
 Requires:               SFEgccruntime
 Requires:               SUNWpng
+Requires:               SUNWgnome-media
 
 %package devel
 Summary:                 %{summary} - development files
@@ -92,6 +106,7 @@ Requires:               SUNWgnome-media-devel
 Requires:               SFEnas-devel
 Requires:               SUNWTiff-devel
 Requires:               SUNWpng-devel
+Requires:               SUNWgnome-media-devel
 
 %package debug
 Summary:                 %{summary} - debug libraries
@@ -115,6 +130,18 @@ cd %{src_dir}
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
 cd ..
 
 %ifarch amd64 sparcv9
@@ -159,7 +186,7 @@ chmod 0755 bin/%{_arch64}/*
 cd %{src_dir}-64
 
 INCL_PATHS="-I/usr/X11/include -I/usr/gnu/include -I%{postgres_dir}/include -I%{postgres_dir}/include/server -I%{mysql_dir}/include -I/usr/sfw/include -D_REENTRANT -DSOLARIS -D_POSIX_PTHREAD_SEMANTICS -D__EXTENSIONS__ -D_LARGEFILE_SOURCE"
-export CFLAGS="-O3 -m64 -fPIC -DPIC -Xlinker -i -march=opteron -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
+export CFLAGS="-O3 -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -ftree-loop-distribution -fno-gcse -fivopts -ftree-loop-im -m64 -fPIC -DPIC -Xlinker -i -march=opteron -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
 
 LPATHS="-L/usr/X11/lib/%{_arch64} -R/usr/X11/lib/%{_arch64} -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64} -L%{postgres_dir}/lib/%{_arch64} -R%{postgres_dir}/lib/%{_arch64} -L%{mysql_dir}/lib/%{_arch64} -R%{mysql_dir}/lib/%{_arch64} -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64} -L%{_builddir}/%{src_dir}-64/lib"
 export LDFLAGS="%_ldflags64 ${LPATHS}"
@@ -237,10 +264,10 @@ cd ..
 cd %{src_dir}
 
 INCL_PATHS="-I/usr/X11/include -I/usr/gnu/include -I%{postgres_dir}/include -I%{postgres_dir}/include/server -I%{mysql_dir}/include -I/usr/sfw/include -D_REENTRANT -DSOLARIS -D_POSIX_PTHREAD_SEMANTICS -D__EXTENSIONS__ -D_LARGEFILE_SOURCE"
-export CFLAGS="-O3 -fPIC -DPIC -Xlinker -i -march=pentium4 -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
+export CFLAGS="-O3 -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -ftree-loop-distribution -fno-gcse -fivopts -ftree-loop-im -fPIC -DPIC -Xlinker -i -march=pentium4 -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
 
 LPATHS="-L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L%{postgres_dir}/lib -R%{postgres_dir}/lib -L%{mysql_dir}/lib -R%{mysql_dir}/lib -L/usr/sfw/lib -R/usr/sfw/lib -L%{_builddir}/%{src_dir}/lib"
-export LDFLAGS="%_ldflags64 ${LPATHS}"
+export LDFLAGS="%_ldflags ${LPATHS}"
 
 export CXXFLAGS=${CFLAGS}
 export QMAKE_LFLAGS="-L/usr/gnu/lib -R/usr/gnu/lib"
@@ -288,7 +315,8 @@ echo yes | ./configure -prefix %{_prefix} \
            -system-nas-sound \
            -xmlpatterns \
            -svg \
-           -no-phonon \
+           -phonon \
+           -phonon-backend \
            -qt-gif \
            -dbus-linked \
            -iconv \
@@ -527,16 +555,11 @@ cd ..
 %{_libdir}/libQtOpenGL.so.4
 %{_libdir}/libQtOpenGL.so.4.4
 %{_libdir}/libQtOpenGL.so.4.4.3
-#%{_libdir}/libQtPhonon.prl
-#%{_libdir}/libQtPhonon.so
-#%{_libdir}/libQtPhonon.so.4
-#%{_libdir}/libQtPhonon.so.4.1
-#%{_libdir}/libQtPhonon.so.4.1.3
-#%{_libdir}/libphonon.prl
-#%{_libdir}/libphonon.so
-#%{_libdir}/libphonon.so.4
-#%{_libdir}/libphonon.so.4.1
-#%{_libdir}/libphonon.so.4.1.3
+%{_libdir}/libQtPhonon.prl
+%{_libdir}/libQtPhonon.so
+%{_libdir}/libQtPhonon.so.4
+%{_libdir}/libQtPhonon.so.4.1
+%{_libdir}/libQtPhonon.so.4.1.3
 %{_libdir}/libQtScript.prl
 %{_libdir}/libQtScript.so
 %{_libdir}/libQtScript.so.4
@@ -763,7 +786,7 @@ cd ..
 %{_libdir}/qt4/plugins/imageformats/libqsvg.so
 %{_libdir}/qt4/plugins/imageformats/libqtiff.so
 %{_libdir}/qt4/plugins/inputmethods/libqimsw-multi.so
-#%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so
+%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so
 %{_libdir}/qt4/plugins/script/libqtscriptdbus.so
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlite.so
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlmysql.so
@@ -930,7 +953,6 @@ cd ..
 %{_includedir}/qt4/QtXmlPatterns/*
 %{_includedir}/qt4/QtHelp/*
 %{_includedir}/qt4/QtWebKit/*
-#%{_includedir}/qt4/phonon/*
 
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_datadir}/qt4
@@ -961,8 +983,7 @@ cd ..
 %{_libdir}/pkgconfig/QtHelp.pc
 %{_libdir}/pkgconfig/QtNetwork.pc
 %{_libdir}/pkgconfig/QtOpenGL.pc
-#%{_libdir}/pkgconfig/QtPhonon.pc
-#%{_libdir}/pkgconfig/phonon.pc
+%{_libdir}/pkgconfig/QtPhonon.pc
 %{_libdir}/pkgconfig/QtScript.pc
 %{_libdir}/pkgconfig/QtSql.pc
 %{_libdir}/pkgconfig/QtSvg.pc
@@ -1038,7 +1059,7 @@ cd ..
 %{_libdir}/qt4/plugins/iconengines/libqsvgicon.so.debug
 %{_libdir}/qt4/plugins/inputmethods/libqimsw-multi.so.debug
 %{_libdir}/qt4/plugins/script/libqtscriptdbus.so.debug
-#%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so.debug
+%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so.debug
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlite.so.debug
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlpsql.so.debug
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlodbc.so.debug
@@ -1048,6 +1069,8 @@ cd ..
 %{_bindir}/*.debug
 
 %changelog
+* Sun Jul 05 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
+- Pull in additional patches and enable phonon build for 32Bit target.
 * Tue Jun 23 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Pull in more needed patches from KDE-Solaris repo.
 * Sun Apr 17 2009 - moinakg@belenix.org
