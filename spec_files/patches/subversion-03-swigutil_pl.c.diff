@@ -1,0 +1,11 @@
+--- subversion-1.5.6/subversion/bindings/swig/perl/libsvn_swig_perl/swigutil_pl.c.orig	2009-07-04 14:06:53.953424317 +0530
++++ subversion-1.5.6/subversion/bindings/swig/perl/libsvn_swig_perl/swigutil_pl.c	2009-07-04 14:07:27.815171117 +0530
+@@ -16,6 +16,8 @@
+  * ====================================================================
+  */
+ 
++#include <sys/stat.h>
++#include <sys/vnode.h>
+ #include <EXTERN.h>
+ #include <perl.h>
+ #include <XSUB.h>

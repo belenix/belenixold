@@ -1,0 +1,11 @@
+--- kmail/kmfolderindex.cpp	2008-08-07 17:18:02.438568030 +0200
++++ kmail/kmfolderindex.cpp	2008-08-07 17:18:23.134556935 +0200
+@@ -410,7 +410,7 @@
+       return false;
+ 
+   mIndexStreamPtrLength = stat_buf.st_size;
+-  mIndexStreamPtr = static_cast<uchar *>( mmap( 0, mIndexStreamPtrLength,
++  mIndexStreamPtr = reinterpret_cast<uchar *>( mmap( 0, mIndexStreamPtrLength,
+                                                 PROT_READ, MAP_SHARED,
+                                                 fileno( mIndexStream ), 0 ) );
+   if ( mIndexStreamPtr == MAP_FAILED ) {

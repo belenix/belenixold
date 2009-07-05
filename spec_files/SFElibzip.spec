@@ -43,7 +43,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
 fi
 
 cd libzip-%{version}
-export CFLAGS="%optflags"
+export CFLAGS="%optflags `/usr/bin/getconf LFS_CFLAGS`"
 export LDFLAGS="%_ldflags"
 
 ./configure --prefix=%{_prefix} --mandir=%{_mandir} \
@@ -84,5 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Sun Jul 05 2009 - moinakg<at>gmail(dot)com
+- Add largefile support flags.
 * Tue Jun 23 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version

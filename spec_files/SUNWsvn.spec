@@ -5,12 +5,10 @@
 #
 %include Solaris.inc
 
-%define apache_prefix /usr/apache2/2.2
-
 Name:			SUNWsvn
 License:		Apache,LGPL,BSD
 Group:			system/dscm
-Version:		1.5.0
+Version:		1.5.6
 Release:		1
 Summary:		Subversion SCM
 Source:			http://subversion.tigris.org/downloads/subversion-%{version}.tar.bz2
@@ -20,6 +18,10 @@ Source1:                svn-config
 Source2:                svn-libtool
 Patch1:                 subversion-01-libneon.la.diff
 Patch2:                 subversion-02-Makefile.diff
+Patch3:                 subversion-03-swigutil_pl.c.diff
+Patch4:                 subversion-05-core.c.diff
+Patch5:                 subversion-04-Makefile.PL.in.diff
+
 URL:			http://subversion.tigris.org/
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 SUNW_BaseDir:		%{_prefix}
@@ -32,10 +34,11 @@ Requires: SUNWpostrun
 Requires: SUNWopenssl-libraries
 Requires: SUNWlexpt
 Requires: SUNWneon
-Requires: SUNWapch22u
-BuildRequires: SUNWPython
+Requires: SFElibapr
+BuildRequires: SUNWPython26
 BuildRequires: SUNWopenssl-include
 BuildRequires: SFEgdbm-devel
+BuildRequires: SFElibapr-devel
 BuildRequires: SUNWapch22u
 
 %description
@@ -49,9 +52,10 @@ Requires:                %{name}
 Requires:                SUNWbash
 Requires: SUNWopenssl-include
 Requires: SFEgdbm-devel
-Requires: SUNWPython
+Requires: SUNWPython26
 Requires: SUNWperl584core
 Requires: SUNWperl584usr
+Requires: SFElibapr-devel
 Requires: SUNWapch22u
 
 %package perl
@@ -88,14 +92,24 @@ Requires:                %{name}
 %setup -q -n subversion-%{version}
 %patch1 -p1 -b .patch01
 %patch2 -p1 -b .patch02
+%patch3 -p1 -b .patch03
+%patch4 -p1 -b .patch04
+%if %cc_is_gcc
+%patch5 -p1 -b .patch05
+%endif
 
 %build
-export PATH=/usr/ccs/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/opt/jdsbld/bin
+%if %cc_is_gcc
+%else
+export PATH=/usr/ccs/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/usr/gnu/bin
+%endif
 export CFLAGS="%optflags -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 export LD=/usr/ccs/bin/ld
-export LDFLAGS="%_ldflags -L$RPM_BUILD_ROOT%{_libdir} -Wl,-zmuldefs"
-export PATH=$PATH:/usr/apache2/2.2/bin
+export LDFLAGS="%_ldflags -L$RPM_BUILD_ROOT%{_libdir} -Wl,-zmuldefs -L/lib -R/lib"
+ln -s %{_bindir}/python2.6 python
+export PATH=`pwd`:$PATH:%{_prefix}/apache2/2.2/bin
 export ACLOCAL_FLAGS="-I build/ac-macros"
+
 ./autogen.sh
 ./configure \
     --prefix=%{_prefix} \
@@ -109,11 +123,11 @@ export ACLOCAL_FLAGS="-I build/ac-macros"
     --with-ssl \
     --infodir=%{_infodir} \
     --without-berkeley-db \
-    --with-apr=%{apache_prefix}/bin/apr-1-config \
-    --with-apr-util=%{apache_prefix}/bin/apu-1-config \
+    --with-apr=%{gnu_bin}/apr-1-config \
+    --with-apr-util=%{gnu_bin}/apu-1-config \
     --with-neon=%{_prefix} \
-    --with-apxs=%{apache_prefix}/bin/apxs \
-    --with-jdk=/usr/java \
+    --with-apxs=%{_prefix}/apache2/2.2/bin/apxs \
+    --with-jdk=%{_prefix}/java \
     --enable-javahl \
     --with-swig --libdir=%{_libdir}/svn
 
@@ -127,6 +141,8 @@ gmake javahl
 
 %install
 rm -rf $RPM_BUILD_ROOT
+export PATH=`pwd`:$PATH:%{_prefix}/apache2/2.2/bin
+
 gmake install DESTDIR=$RPM_BUILD_ROOT
 gmake install-swig-py DESTDIR=$RPM_BUILD_ROOT
 gmake install-swig-pl DESTDIR=$RPM_BUILD_ROOT
@@ -236,5 +252,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Jul 05 2009 - moinakg<at>gmail(dot)com
+- Bump version, add new patches and update build to use system apr lib.
 * Fri Jan 09 2009 - moinakg@belenix.org
 - Initial version derived from SFEsubversion and SFW gate.
