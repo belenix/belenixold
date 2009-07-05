@@ -1,0 +1,28 @@
+--- kdeadmin-4.2.4/kuser/globals.h.orig	2008-01-05 05:28:29.000000000 +0530
++++ kdeadmin-4.2.4/kuser/globals.h	2009-06-27 23:14:23.817277068 +0530
+@@ -46,7 +46,11 @@
+   #define MAIL_SPOOL_DIR _PATH_MAILDIR
+ #else
+   #define SHELL_FILE "/etc/shells"
+-  #define MAIL_SPOOL_DIR "/var/spool/mail"
++  #if defined(__sun)
++   #define MAIL_SPOOL_DIR "/var/mail"
++  #else
++   #define MAIL_SPOOL_DIR "/var/spool/mail"
++  #endif
+ #endif
+ 
+ #if defined(__FreeBSD__) || defined(__bsdi__)
+@@ -64,8 +68,12 @@
+   #define GRMKDB "cd /var/yp; make 2>&1 >> /var/log/kuser"
+   #define SKELDIR "/etc/skel"
+   #define SKEL_FILE_PREFIX ""
++#if defined(__sun)
++  #define CRONTAB_DIR "/var/cron"
++#else
+   #define CRONTAB_DIR "/var/spool/cron"
+ #endif
++#endif
+ 
+ #define GROUP_FILE "/etc/group"
+ #define GROUP_FILE_MASK S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH

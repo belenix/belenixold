@@ -1,0 +1,11 @@
+--- subversion-1.5.6/subversion/bindings/swig/perl/native/core.c.orig	2009-07-04 14:40:32.718268157 +0530
++++ subversion-1.5.6/subversion/bindings/swig/perl/native/core.c	2009-07-04 14:41:02.268856267 +0530
+@@ -705,6 +705,8 @@
+ #include <stdlib.h>
+ extern "C" {
+ #endif
++#include <sys/stat.h>
++#include <sys/vnode.h>
+ #include "EXTERN.h"
+ #include "perl.h"
+ #include "XSUB.h"

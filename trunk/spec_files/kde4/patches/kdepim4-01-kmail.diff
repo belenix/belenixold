@@ -1,0 +1,15 @@
+Index: kmail/kmstartup.cpp
+===================================================================
+--- kmail/kmstartup.cpp	(revision 755172)
++++ kmail/kmstartup.cpp	(working copy)
+@@ -229,8 +229,8 @@
+     }
+   }
+ 
+-  group.writeEntry("pid", getpid());
+-  group.writeEntry("hostname", hostName);
++  group.writeEntry( "pid", (long long) getpid());
++  group.writeEntry( "hostname", hostName);
+   group.writeEntry( "appName", appName );
+   group.writeEntry( "programName", programName );
+   group.sync();

@@ -1,0 +1,11 @@
+--- subversion-1.5.6/subversion/bindings/swig/perl/native/Makefile.PL.in.orig	2009-07-04 14:38:38.306683440 +0530
++++ subversion-1.5.6/subversion/bindings/swig/perl/native/Makefile.PL.in	2009-07-04 14:39:35.128545217 +0530
+@@ -52,6 +52,8 @@
+                   (map {$_ = abs_path($_); "-L$_"} @ldpaths),
+                   @ldmodules, '-lsvn_swig_perl-1',
+                   `$swig -perl -ldflags`)],
++    CC => 'gcc',
++    OPTIMIZE => '-O3 -fPIC -DPIC',
+     test => { TESTS => "$swig_srcdir/perl/native/t/*.t" }
+ );
+ 

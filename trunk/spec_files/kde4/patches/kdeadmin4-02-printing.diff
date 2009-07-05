@@ -1,0 +1,244 @@
+diff -up kdeadmin-4.2.2/system-config-printer-kde/CMakeLists.txt.printing kdeadmin-4.2.2/system-config-printer-kde/CMakeLists.txt
+--- kdeadmin-4.2.2/system-config-printer-kde/CMakeLists.txt.printing	2009-01-01 17:27:18.000000000 +0100
++++ kdeadmin-4.2.2/system-config-printer-kde/CMakeLists.txt	2009-04-21 14:47:20.000000000 +0200
+@@ -7,35 +7,17 @@ ENDMACRO(PYKDE4_ADD_EXECUTABLE)
+ macro_optional_find_package(PythonLibrary)
+ macro_optional_find_package(SIP)
+ 
+-macro_optional_find_package(PyQt4)
+-IF(NOT PYQT4_FOUND)
+-    macro_log_feature(PYQT4_FOUND "PyQt4" "PyQt4 was not found.  It is needed by system-config-printer-kde to run. (Use -DINSTALL_SYSTEM_CONFIG_PRINTER=TRUE to install anyway)" "http://www.riverbankcomputing.co.uk/software/pyqt/" FALSE)
+-ENDIF(NOT PYQT4_FOUND)
+-
+-macro_optional_find_package(PyKDE)
+-IF(NOT PYKDE_FOUND)
+-    macro_log_feature(PYKDE_FOUND "PyKDE" "PyKDE was not found.  It is needed by system-config-printer-kde to run.  (Use -DINSTALL_SYSTEM_CONFIG_PRINTER=TRUE to install anyway)" "http://websvn.kde.org/trunk/KDE/kdebindings/python/pykde4/" FALSE)
+-ENDIF(NOT PYKDE_FOUND)
+-
+-macro_optional_find_package(PyCups)
+-IF(NOT PYCUPS_FOUND)
+-    macro_log_feature(PYCUPS_FOUND "PyCups" "PyCups was not found.  It is needed by system-config-printer-kde to run.  (Use -DINSTALL_SYSTEM_CONFIG_PRINTER=TRUE to install anyway)" "http://cyberelk.net/tim/software/pycups/" FALSE)
+-ENDIF(NOT PYCUPS_FOUND)
+-
+-macro_optional_find_package(SystemConfigPrinter)
+-IF(NOT SYSTEMCONFIGPRINTER_FOUND)
+-    macro_log_feature(SYSTEMCONFIGPRINTER_FOUND "system-config-printer" "system-config-printer was not found.  Some of its modules (cupshelpers.py, config.py, smburi.py and debug.py) are required by system-config-printer-kde." "http://cyberelk.net/tim/software/system-config-printer/" FALSE)
+-ENDIF(NOT SYSTEMCONFIGPRINTER_FOUND)
+-
+-IF(PYQT4_FOUND AND PYKDE_FOUND AND PYCUPS_FOUND AND SYSTEMCONFIGPRINTER_FOUND)
+-    SET(INSTALL_SYSTEM_CONFIG_PRINTER TRUE)
+-ENDIF(PYQT4_FOUND AND PYKDE_FOUND AND PYCUPS_FOUND AND SYSTEMCONFIGPRINTER_FOUND)
++if(PYTHONLIBRARY_FOUND)
++   set(INSTALL_SYSTEM_CONFIG_PRINTER TRUE)
++endif(PYTHONLIBRARY_FOUND)
+ 
+ IF(INSTALL_SYSTEM_CONFIG_PRINTER)
+     install( FILES
+         new-printer.ui
+         system-config-printer.ui
+         system-config-printer-kde.py
++        debug.py
++        smburi.py
+         DESTINATION ${DATA_INSTALL_DIR}/system-config-printer-kde )
+     PYKDE4_ADD_EXECUTABLE(system-config-printer-kde.py system-config-printer-kde)
+     install(FILES system-config-printer-kde.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+diff -up /dev/null kdeadmin-4.2.2/system-config-printer-kde/debug.py
+--- /dev/null	2009-04-15 10:28:46.227012446 +0200
++++ kdeadmin-4.2.2/system-config-printer-kde/debug.py	2009-04-21 14:47:20.000000000 +0200
+@@ -0,0 +1,55 @@
++#!/usr/bin/env python
++
++## Copyright (C) 2008 Red Hat, Inc.
++## Copyright (C) 2008 Tim Waugh <twaugh@redhat.com>
++
++## This program is free software; you can redistribute it and/or modify
++## it under the terms of the GNU General Public License as published by
++## the Free Software Foundation; either version 2 of the License, or
++## (at your option) any later version.
++
++## This program is distributed in the hope that it will be useful,
++## but WITHOUT ANY WARRANTY; without even the implied warranty of
++## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++## GNU General Public License for more details.
++
++## You should have received a copy of the GNU General Public License
++## along with this program; if not, write to the Free Software
++## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++
++import sys
++import traceback
++
++_debug=False
++def debugprint (x):
++    if _debug:
++        try:
++            print >>sys.stderr, x
++        except:
++            pass
++
++def get_debugging ():
++    return _debug
++
++def set_debugging (d):
++    global _debug
++    _debug = d
++
++def fatalException (exitcode=1):
++    nonfatalException (type="fatal", end="Exiting")
++    sys.exit (exitcode)
++
++def nonfatalException (type="non-fatal", end="Continuing anyway.."):
++    d = get_debugging ()
++    set_debugging (True)
++    debugprint ("Caught %s exception.  Traceback:" % type)
++    (type, value, tb) = sys.exc_info ()
++    tblast = traceback.extract_tb (tb, limit=None)
++    if len (tblast):
++        tblast = tblast[:len (tblast) - 1]
++    extxt = traceback.format_exception_only (type, value)
++    for line in traceback.format_tb(tb):
++        debugprint (line.strip ())
++    debugprint (extxt[0].strip ())
++    debugprint (end)
++    set_debugging (d)
+diff -up /dev/null kdeadmin-4.2.2/system-config-printer-kde/smburi.py
+--- /dev/null	2009-04-15 10:28:46.227012446 +0200
++++ kdeadmin-4.2.2/system-config-printer-kde/smburi.py	2009-04-21 14:47:20.000000000 +0200
+@@ -0,0 +1,95 @@
++#!/usr/bin/env python
++
++## system-config-printer
++
++## Copyright (C) 2006, 2007, 2008 Red Hat, Inc.
++## Copyright (C) 2006, 2007 Florian Festi <ffesti@redhat.com>
++## Copyright (C) 2006, 2007, 2008 Tim Waugh <twaugh@redhat.com>
++
++## This program is free software; you can redistribute it and/or modify
++## it under the terms of the GNU General Public License as published by
++## the Free Software Foundation; either version 2 of the License, or
++## (at your option) any later version.
++
++## This program is distributed in the hope that it will be useful,
++## but WITHOUT ANY WARRANTY; without even the implied warranty of
++## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++## GNU General Public License for more details.
++
++## You should have received a copy of the GNU General Public License
++## along with this program; if not, write to the Free Software
++## Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++
++import urllib
++
++class SMBURI:
++    def __init__ (self,
++                  uri=None,
++                  group='', host='', share='', user='', password=''):
++        if uri:
++            if group or host or share or user or password:
++                raise RuntimeError
++
++            if uri.startswith ("smb://"):
++                uri = uri[6:]
++
++            self.uri = uri
++        else:
++            self.uri = self._construct (group, host, share,
++                                        user=user, password=password)
++
++    def _construct (self, group, host, share, user='', password=''):
++        uri_password = ''
++        if password:
++            uri_password = ':' + urllib.quote (password)
++        if user:
++            uri_password += '@'
++        uri = "%s%s%s" % (urllib.quote (user),
++                          uri_password,
++                          urllib.quote (group))
++        if len (group) > 0:
++            uri += '/'
++        uri += urllib.quote (host)
++        if len (share) > 0:
++            uri += "/" + urllib.quote (share)
++        return uri
++
++    def get_uri (self):
++        return self.uri
++
++    def sanitize_uri (self):
++        group, host, share, user, password = self.separate ()
++        return self._construct (group, host, share)
++
++    def separate (self):
++        uri = self.get_uri ()
++        user = ''
++        password = ''
++        auth = uri.find ('@')
++        if auth != -1:
++            u = uri[:auth].find(':')
++            if u != -1:
++                user = uri[:u]
++                password = uri[u + 1:auth]
++            else:
++                user = uri[:auth]
++            uri = uri[auth + 1:]
++        sep = uri.count ('/')
++        group = ''
++        if sep == 2:
++            g = uri.find('/')
++            group = uri[:g]
++            uri = uri[g + 1:]
++        if sep < 1:
++            host = ''
++        else:
++            h = uri.find('/')
++            host = uri[:h]
++            uri = uri[h + 1:]
++            p = host.find(':')
++            if p != -1:
++                host = host[:p]
++        share = uri
++        return (urllib.unquote (group), urllib.unquote (host),
++                urllib.unquote (share),
++                urllib.unquote (user), urllib.unquote (password))
+diff -up kdeadmin-4.2.2/system-config-printer-kde/system-config-printer-kde.py.printing kdeadmin-4.2.2/system-config-printer-kde/system-config-printer-kde.py
+--- kdeadmin-4.2.2/system-config-printer-kde/system-config-printer-kde.py.printing	2008-12-21 21:20:45.000000000 +0100
++++ kdeadmin-4.2.2/system-config-printer-kde/system-config-printer-kde.py	2009-04-21 15:29:16.000000000 +0200
+@@ -33,7 +33,7 @@ import sys, os, time, traceback, re, tem
+ import thread
+ 
+ #load modules from system-config-printer-common (debug, smburi), change path here if you have it installed elsewhere
+-SYSTEM_CONFIG_PRINTER_DIR = "/usr/share/system-config-printer"
++SYSTEM_CONFIG_PRINTER_DIR = "/usr/share/kde4/apps/system-config-printer-kde"
+ if os.path.exists(SYSTEM_CONFIG_PRINTER_DIR + "/debug.py"):
+     sys.path.append(SYSTEM_CONFIG_PRINTER_DIR)
+ 
+@@ -64,7 +64,6 @@ import cups
+ cups.require ("1.9.27")
+ 
+ # These come from system-config-printer
+-import config
+ import cupshelpers  #, options
+ from smburi import SMBURI
+ from debug import *
+@@ -717,8 +716,7 @@ class GUI(QWidget):
+                 job_id = self.cups.printTestPage(self.printer.name)
+ 
+             self.setTestButton (self.printer)
+-            QMessageBox.information(self, i18nc("Test page submitted", "Submitted"), i18n("Test page submitted as "
+-                                                            "job %d") % job_id)
++            KMessageBox.information(self, i18n("Test page submitted as job %1", job_id), i18nc("Test page submitted", "Submitted"))
+         except cups.IPPError, (e, msg):
+             if (e == cups.IPP_NOT_AUTHORIZED and
+                 self.connect_server != 'localhost' and
+@@ -1480,9 +1478,8 @@ class NewPrinterGUI(QDialog):
+         """
+ 
+         # Optionally disable downloadable driver support.
+-        if not config.DOWNLOADABLE_DRIVER_SUPPORT:
+-            self.rbtnNPDownloadableDriverSearch.setEnabled(False)
+-            self.downloadableDriverSearchFrame.hide()
++        self.rbtnNPDownloadableDriverSearch.setEnabled(False)
++        self.downloadableDriverSearchFrame.hide()
+ 
+         """
+         # Set up OpenPrinting widgets.

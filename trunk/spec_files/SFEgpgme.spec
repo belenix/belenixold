@@ -7,7 +7,7 @@
 
 Name:                SFEgpgme
 Summary:             A C wrapper library for GnuPG
-Version:             1.1.5
+Version:             1.2.0
 Source:              ftp://ftp.gnupg.org/gcrypt/gpgme/gpgme-%{version}.tar.gz
 
 SUNW_BaseDir:        %{_basedir}
@@ -43,6 +43,7 @@ rm ${RPM_BUILD_ROOT}%{_libdir}/libgpgme-pthread.la
 rm ${RPM_BUILD_ROOT}%{_libdir}/libgpgme-pth.la
 rm ${RPM_BUILD_ROOT}%{_libdir}/libgpgme.la
 rm ${RPM_BUILD_ROOT}%{_datadir}/info/dir
+rmdir ${RPM_BUILD_ROOT}%{_prefix}/libexec
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -84,6 +85,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/common-lisp
 
 %changelog
+* Sun Jul 05 2009 - moinakg<at>gmail(dot)com
+- Bump version and remove an empty directory.
 * Wed Jan 02 2008 - jijun.yu@sun.com
 - Remove the unused file. 
 * Mon Dec 17 2007 - jijun.yu@sun.com
