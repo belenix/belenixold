@@ -60,11 +60,11 @@ export MSGFMT="/usr/bin/msgfmt"
 %ifarch amd64 sparcv9
 export CFLAGS="%optflags64 -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib/%_arch64 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 export RPM_OPT_FLAGS="$CFLAGS"
-export LDFLAGS="-m64 -L/usr/sfw/lib/%_arch64 -R/usr/sfw/lib/%_arch64"
+export LDFLAGS="-m64 %{gnu_lib_path64} %{sfw_lib_path64}"
 %curl64.build -d %name-%version/%_arch64
 %endif
 
-export LDFLAGS="-L/usr/sfw/lib -R/usr/sfw/lib"
+export LDFLAGS="%{gnu_lib_path} %{sfw_lib_path}"
 export CFLAGS="%optflags -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 export RPM_OPT_FLAGS="$CFLAGS"
 %curl.build -d %name-%version/%{base_arch}
@@ -129,6 +129,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jul 07 2009 - moinakg(at)belenix<dot>org
+- Fix paths to pick up correct libgcc.
 * Fri May 22 2009 - moinakg@belenix.org
 - Add supporting header for proper multilib functionality.
 * Thu Oct 30 2008 - moinakg@belenix.org

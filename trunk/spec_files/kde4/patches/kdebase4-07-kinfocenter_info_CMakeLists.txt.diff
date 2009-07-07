@@ -1,0 +1,17 @@
+--- kdebase-4.2.4/apps/kinfocenter/info/CMakeLists.txt.orig	2009-07-06 23:41:19.210582068 +0530
++++ kdebase-4.2.4/apps/kinfocenter/info/CMakeLists.txt	2009-07-07 00:36:33.588937807 +0530
+@@ -12,7 +12,13 @@
+ 
+ kde4_add_plugin(kcm_info ${kcm_info_PART_SRCS})
+ 
+-target_link_libraries(kcm_info  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${X11_X11_LIB})
++IF(HAVE_LIBDEVINFO_H)
++    FIND_LIBRARY(DEVINFO_LIBRARY NAMES devinfo)
++    FIND_LIBRARY(KSTAT_LIBRARY NAMES kstat)
++    target_link_libraries(kcm_info  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${X11_X11_LIB} ${DEVINFO_LIBRARY} ${KSTAT_LIBRARY})
++else(HAVE_LIBDEVINFO_H)
++    target_link_libraries(kcm_info  ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${X11_X11_LIB})
++endif(HAVE_LIBDEVINFO_H)
+ 
+ 
+ install(TARGETS kcm_info  DESTINATION ${PLUGIN_INSTALL_DIR} )

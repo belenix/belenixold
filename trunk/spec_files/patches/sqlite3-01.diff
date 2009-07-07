@@ -1,6 +1,6 @@
---- sqlite-3.6.7-old/Makefile.in      Thu Dec  4 13:41:45 2008
-+++ sqlite-3.6.7/Makefile.in  Wed Feb  4 16:45:34 2009
-@@ -468,9 +468,15 @@
+--- sqlite-3.6.16/Makefile.in.orig	2009-06-25 17:05:50.000000000 +0530
++++ sqlite-3.6.16/Makefile.in	2009-07-06 19:33:08.031834608 +0530
+@@ -484,9 +484,15 @@
  # all that automatic generation.
  #
  .target_source:	$(SRC)
@@ -16,9 +16,9 @@
 +		fi; \
 +	done
  	rm tsrc/sqlite.h.in tsrc/parse.y
- 	touch .target_source
- 
-@@ -767,7 +773,7 @@
+ 	$(TCLSH_CMD) $(TOP)/tool/vdbe-compress.tcl <tsrc/vdbe.c >vdbe.new
+ 	mv vdbe.new tsrc/vdbe.c
+@@ -798,7 +804,7 @@
  clean:	
  	rm -f *.lo *.la *.o sqlite3$(TEXE) libsqlite3.la
  	rm -f sqlite3.h opcodes.*
@@ -27,7 +27,7 @@
  	rm -f lemon$(BEXE) lempar.c parse.* sqlite*.tar.gz
  	rm -f mkkeywordhash$(BEXE) keywordhash.h
  	rm -f $(PUBLISH)
-@@ -797,3 +803,30 @@
+@@ -828,3 +834,30 @@
  sqlite3.dll: $(REAL_LIBOBJ) sqlite3.def
  	$(TCC) -shared -o $@ sqlite3.def \
  		-Wl,"--strip-all" $(REAL_LIBOBJ)

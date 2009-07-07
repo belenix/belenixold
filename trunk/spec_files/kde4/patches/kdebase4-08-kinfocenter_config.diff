@@ -1,0 +1,11 @@
+--- kdebase-4.2.4/apps/kinfocenter/base/config-infocenter.h.cmake.orig	2009-07-07 00:00:57.345034660 +0530
++++ kdebase-4.2.4/apps/kinfocenter/base/config-infocenter.h.cmake	2009-07-07 00:01:20.174509331 +0530
+@@ -2,7 +2,7 @@
+ #undef HAVE_COREAUDIO
+ 
+ /* Defines if you have libdevinfo of Solaris 7 or later */
+-#undef HAVE_LIBDEVINFO_H
++#cmakedefine HAVE_LIBDEVINFO_H
+ 
+ /* Define to 1 if you have the <devinfo.h> header file. */
+ #cmakedefine HAVE_DEVINFO_H 1

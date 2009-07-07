@@ -1,0 +1,20 @@
+--- kdebase-4.2.4/apps/kinfocenter/memory/CMakeLists.txt.orig	2009-07-06 23:17:56.686604334 +0530
++++ kdebase-4.2.4/apps/kinfocenter/memory/CMakeLists.txt	2009-07-06 23:30:22.558535348 +0530
+@@ -5,7 +5,16 @@
+ 
+ kde4_add_plugin(kcm_memory ${KCM_MEMORY_PART_SRCS})
+ 
+-target_link_libraries(kcm_memory ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
++IF(CMAKE_SYSTEM MATCHES "SunOS-5.*")
++    FIND_LIBRARY(KSTAT_LIBRARY NAMES kstat)
++    if(KSTAT_LIBRARY)
++        target_link_libraries(kcm_memory ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY} ${KSTAT_LIBRARY})
++    else(KSTAT_LIBRARY)
++        target_link_libraries(kcm_memory ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
++    endif(KSTAT_LIBRARY)
++else(CMAKE_SYSTEM MATCHES "SunOS-5.*")
++    target_link_libraries(kcm_memory ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY})
++endif(CMAKE_SYSTEM MATCHES "SunOS-5.*")
+ 
+ install(TARGETS kcm_memory  DESTINATION ${PLUGIN_INSTALL_DIR})
+ 

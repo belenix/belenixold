@@ -20,6 +20,11 @@ Patch1:                  kdebase4-01-kpci.diff
 Patch2:                  kdebase4-02-kpci.diff
 Patch3:                  kdebase4-03-konsole-session.diff
 Patch4:                  kdebase4-04-konsole-flowcontrol.diff
+Patch5:                  kdebase4-05-kinfocenter_CMakeLists.txt.diff
+Patch6:                  kdebase4-06-kinfocenter_memory_CMakeLists.txt.diff
+Patch7:                  kdebase4-07-kinfocenter_info_CMakeLists.txt.diff
+Patch8:                  kdebase4-08-kinfocenter_config.diff
+Patch9:                  kdebase4-09-info_solaris.cpp.diff
 
 SUNW_BaseDir:            /
 #SUNW_Copyright:          %{name}.copyright
@@ -77,6 +82,11 @@ cd %{src_dir}-%{version}
 %patch2 -p0
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
 cd ..
 
 %build
@@ -96,7 +106,7 @@ export CMAKE_INCLUDE_PATH="%{gnu_inc}:%{xorg_inc}"
 export JAVA_HOME=%{_prefix}/java
 OPATH=${PATH}
 
-mkdir kdebld
+mkdir -p kdebld
 cd kdebld
 
 #
@@ -200,5 +210,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Tue Jul 07 2009 - moinakg(at)belenix<dot>org
+- Patches to enable kinfocenter Solaris functionality.
 * Wed Jun 17 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version.
