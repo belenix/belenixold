@@ -102,7 +102,7 @@ export CPPFLAGS="-I%{_includedir}/gmp -I%{_includedir}/mpfr"
 cd redland-%{version}-64
 export CFLAGS="%optflags64"
 export CXXFLAGS="%cxx_optflags64"
-export LDFLAGS="%_ldflags64"
+export LDFLAGS="%_ldflags64 %{gnu_lib_path64}"
 export PATH="%{_prefix}/bin/%{_arch64}:%{_prefix}/gnu/bin/%{_arch64}:${PATH}"
 
 ./configure --prefix=%{_prefix} --mandir=%{_mandir} \
@@ -126,6 +126,11 @@ export PATH="%{_prefix}/bin/%{_arch64}:%{_prefix}/gnu/bin/%{_arch64}:${PATH}"
             --with-threads                    \
             --enable-gtk-doc=no
 
+cp src/Makefile src/Makefile.orig 
+cat src/Makefile.orig | sed '{
+    s#librdf_storage_sqlite_la_LIBADD = -lsqlite3#librdf_storage_sqlite_la_LIBADD = -lsqlite3 -lrdf#
+}' > src/Makefile
+
 make -j$CPUS 
 cd ..
 %endif
@@ -133,7 +138,7 @@ cd ..
 cd redland-%{version}
 export CFLAGS="%optflags"
 export CXXFLAGS="%cxx_optflags"
-export LDFLAGS="%_ldflags"
+export LDFLAGS="%_ldflags %{gnu_lib_path}"
 export PATH="${OPATH}"
 
 ./configure --prefix=%{_prefix} --mandir=%{_mandir} \
@@ -157,6 +162,11 @@ export PATH="${OPATH}"
             --with-threads                    \
             --enable-gtk-doc=yes              \
             --with-html-dir=%{_docdir}
+
+cp src/Makefile src/Makefile.orig 
+cat src/Makefile.orig | sed '{
+    s#librdf_storage_sqlite_la_LIBADD = -lsqlite3#librdf_storage_sqlite_la_LIBADD = -lsqlite3 -lrdf#
+}' > src/Makefile
 
 make -j$CPUS
 cd ..
@@ -238,5 +248,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Tue Jul 07 2009 - moinakg(at)belenix<dot>org
+- Fix build to link with correct libraries.
 * Fri May 22 2009 - moinakg@belenix.org
 - Initial version

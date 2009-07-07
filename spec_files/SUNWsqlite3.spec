@@ -19,8 +19,8 @@
 
 Name:                    SUNWsqlite3
 Summary:                 SQLite3, an embeddable, zero-conf, self-contained, serverless transactional SQL engine
-Version:                 3.6.7
-%define doc_version      3_6_7
+Version:                 3.6.16
+%define doc_version      3_6_16
 URL:                     http://www.sqlite.org/
 Source:                  http://www.sqlite.org/sqlite-%{version}.tar.gz
 Source1:                 http://www.sqlite.org/sqlite_docs_%{doc_version}.zip
@@ -226,6 +226,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Tue Jul 07 2009 - moinakg(at)belenix<dot>org
+- Bump version to 3.6.16 needed by current XULRunner.
 * Tue Jun 30 2009 - moinakg@gmail.com
 - Bump version and add compat links.
 * Tue Feb 10 2009 - moinakg@gmail.com

@@ -26,6 +26,17 @@
 # Defines the public interface to SQLite3
 #
 
+sqlite_3.5.16 {
+    global:
+	# exported functions
+	sqlite3_backup_finish;
+	sqlite3_backup_step;
+	sqlite3_backup_init;
+
+    local:
+	*;
+} sqlite_3.5.4;
+
 sqlite_3.5.4 {
     global:
 	# exported functions

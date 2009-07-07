@@ -1,0 +1,33 @@
+--- kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp.orig	2009-07-07 00:06:39.641858485 +0530
++++ kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp	2009-07-07 00:25:43.620376026 +0530
+@@ -325,13 +325,12 @@
+ 			result = *it;
+ 		}
+ 		if( result == NULL ) {
+-			QStringList list;
+-			list << token;
+-
++			QString txt(token);
+ 			/*
+ 			 *  we haven't found the node, create a new one
+ 			 */
+-			result = new QTreeWidgetItem(parent, previous, list);
++			result = new QTreeWidgetItem(parent, previous);
++			result->setText(0, txt);
+ 		}
+ 		else {
+ 			/*
+@@ -458,10 +457,10 @@
+ 	else
+ 	nodeResult = type;
+ 
+-	QStringList node;
+-	node << i18n( "Nodetype:" ) << nodeResult;
++	QStringList qnode;
++	qnode << i18n( "Nodetype:" ) << nodeResult;
+ 
+-	new QTreeWidgetItem(item, node);
++	new QTreeWidgetItem(item, qnode);
+ 
+ 	if( (dev = di_minor_devt( minor )) != DDI_DEV_T_NONE ) {
+ 		majmin.sprintf( "%ld/%ld", major( dev ), minor( dev ));

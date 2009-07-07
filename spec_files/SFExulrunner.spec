@@ -20,9 +20,10 @@
 
 Name:                    SFExulrunner
 Summary:                 XUL Runtime for Gecko Applications
-Version:                 1.9.0.10
+Version:                 1.9.1
 URL:                     http://developer.mozilla.org/En/XULRunner
-Source:                  http://releases.mozilla.org/pub/mozilla.org/xulrunner/releases/%{version}/source/xulrunner-%{version}-source.tar.bz2
+#Source:                  http://releases.mozilla.org/pub/mozilla.org/xulrunner/releases/%{version}/source/xulrunner-%{version}-source.tar.bz2
+Source:                  http://www.belenix.org/binfiles/xulrunner-1.9.1-source.tar.bz2
 Source1:                 xulrunner-mozconfig
 Source2:                 xulrunner-find
 %define tarball_dir mozilla
@@ -32,8 +33,6 @@ Source2:                 xulrunner-find
 Patch1:                  xulrunner-01-path.diff
 Patch3:                  xulrunner-03-build.diff
 Patch4:                  xulrunner-04-ps-pdf-simplify-operators.diff
-Patch5:                  xulrunner-05-configure-rpath-link.diff
-Patch6:                  xulrunner-06-nsAppRunner.cpp.diff
 Patch7:                  xulrunner-07-SunOS5.mk.diff
 Patch8:                  xulrunner-08-toolkit-Makefile.in.diff
 Patch9:                  xulrunner-09-configure.diff
@@ -67,6 +66,7 @@ BuildRequires:           SUNWpango-devel
 BuildRequires:           FSWxorg-headers
 BuildRequires:           SUNWsqlite3-devel
 BuildRequires:           SFElcms-devel
+BuildRequires:           SFEautoconf213
 
 %description
 XULRunner provides the XUL Runtime environment for Gecko applications.
@@ -91,6 +91,7 @@ Requires:           SUNWpango-devel
 Requires:           FSWxorg-headers
 Requires:           SUNWsqlite3-devel
 Requires:           SFElcms-devel
+Requires:           SFEautoconf213
 
 %prep
 %if %cc_is_gcc
@@ -102,11 +103,10 @@ Requires:           SFElcms-devel
 mkdir 32
 mv %{tarball_dir} 32
 cd 32/%{tarball_dir}
+rm -f configure
 %patch1 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
@@ -259,5 +259,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jul 07 2009 - moinakg(at)belenix<dot>org
+- Upgrade to 1.9.1 from current mozilla svn.
 * Mon Jun 29 2009 - moinakg@belenix.org
 - Initial spec file

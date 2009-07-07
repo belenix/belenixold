@@ -1,0 +1,53 @@
+--- kdelibs-4.2.4/kpty/kpty.cpp.orig	2009-07-07 19:56:29.180686435 +0530
++++ kdelibs-4.2.4/kpty/kpty.cpp	2009-07-07 20:09:31.236748796 +0530
+@@ -626,19 +626,38 @@
+ 
+ // XXX Supposedly, tc[gs]etattr do not work with the master on Solaris.
+ // Please verify.
++//
++// XXX Yeah it does not work, checked on OpenSolaris/BeleniX
++//
+ 
+-bool KPty::tcGetAttr(struct ::termios *ttmode) const
++bool KPty::tcGetAttr(struct ::termios *ttmode)
+ {
+     Q_D(const KPty);
+ 
++#ifdef Q_OS_SOLARIS
++    // Ensure slave is open.
++    if (openSlave()) {
++        return tcgetattr(d->slaveFd, ttmode) == 0;
++    }
++    return false;
++#else
+     return _tcgetattr(d->masterFd, ttmode) == 0;
++#endif
+ }
+ 
+ bool KPty::tcSetAttr(struct ::termios *ttmode)
+ {
+     Q_D(KPty);
+ 
++#ifdef Q_OS_SOLARIS
++    // Ensure slave is open.
++    if (openSlave()) {
++        return tcsetattr(d->slaveFd, TCSANOW, ttmode) == 0;
++    }
++    return false;
++#else
+     return _tcsetattr(d->masterFd, ttmode) == 0;
++#endif
+ }
+ 
+ bool KPty::setWinSize(int lines, int columns)
+--- kdelibs-4.2.4/kpty/kpty.h.orig	2009-07-07 20:11:34.634989962 +0530
++++ kdelibs-4.2.4/kpty/kpty.h	2009-07-07 20:12:41.849487049 +0530
+@@ -129,7 +129,7 @@
+    *  the struct in your class, in your method.
+    * @return @c true on success, false otherwise
+    */
+-  bool tcGetAttr(struct ::termios *ttmode) const;
++  bool tcGetAttr(struct ::termios *ttmode);
+ 
+   /**
+    * Wrapper around tcsetattr(3) with mode TCSANOW.

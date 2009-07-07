@@ -1,0 +1,10 @@
+--- kdebase-4.2.4/apps/kinfocenter/base/CMakeLists.txt.orig	2009-07-06 22:53:10.392885196 +0530
++++ kdebase-4.2.4/apps/kinfocenter/base/CMakeLists.txt	2009-07-06 22:53:46.901832266 +0530
+@@ -3,6 +3,7 @@
+ #   to be set if both -ldevinfo and libdevinfo.h exist
+ 
+ check_include_files(devinfo.h HAVE_DEVINFO_H)       # info_fbsd.cpp
++check_include_files(libdevinfo.h HAVE_LIBDEVINFO_H) # info_solaris.cpp
+ check_include_files(fstab.h HAVE_FSTAB_H)           # info_linux.cpp
+ check_include_files(linux/raw.h HAVE_LINUX_RAW_H)   # info_linux.cpp
+ check_include_files(mntent.h HAVE_MNTENT_H)         # info_linux.cpp
