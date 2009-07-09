@@ -1,0 +1,33 @@
+--- kdebase-runtime-4.2.4/kdesu/kdesud/secure.cpp.orig	2009-07-06 21:44:29.366043473 +0530
++++ kdebase-runtime-4.2.4/kdesu/kdesud/secure.cpp	2009-07-06 22:03:42.352526583 +0530
+@@ -22,6 +22,10 @@
+ 
+ #include <kdebug.h>
+ 
++#ifdef Q_OS_SOLARIS
++#include <ucred.h>
++#endif
++
+ // FIXME: This is just here to make it compile (since ksock* was removed from kdelibs).
+ // It would be better to fix it more globally. (Caleb Tennis)
+ typedef unsigned ksocklen_t;
+@@ -58,6 +62,19 @@
+     }
+ }
+ 
++# elif defined(Q_OS_SOLARIS)
++SocketSecurity::SocketSecurity(int sockfd) : pid(-1), gid(-1), uid(-1)
++{
++    ucred_t *ucred = NULL;
++
++    if (getpeerucred(sockfd, &ucred) == 0) {
++        uid = ucred_geteuid(ucred);
++        gid = ucred_getrgid(ucred);
++        pid = -1;
++        ucred_free(ucred);
++    }
++}
++
+ # else
+ #ifdef __GNUC__
+ #warning SocketSecurity support for your platform not implemented/available!

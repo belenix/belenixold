@@ -15,6 +15,7 @@ Version:                 4.2.4
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdebase-runtime-%{version}.tar.bz2
+Patch1:                  kdebase4-runtime-01-secure.cpp.diff
 
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
@@ -81,6 +82,7 @@ Requires: %name
 %prep
 %setup -q -c -n %name-%version
 cd %{src_dir}-%{version}
+%patch1 -p1
 cd ..
 
 %build
@@ -160,7 +162,22 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/*.so*
 %dir %attr (0755, root, bin) %{_libdir}/kde4
-%{_libdir}/kde4/*
+%{_libdir}/kde4/*.so
+%dir %attr (0755, root, bin) %{_libdir}/kde4/libexec
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/drkonqi
+%attr (6555, root, bin) %{_libdir}/kde4/libexec/kdeeject
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/kdesu
+%attr (6555, root, bin) %{_libdir}/kde4/libexec/kdesud
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/khc_docbookdig.pl
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/khc_htdig.pl
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/khc_htsearch.pl
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/khc_indexbuilder
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/khc_mansearch.pl
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/kioexec
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/klocaldomainurifilterhelper
+%attr (6555, root, bin) %{_libdir}/kde4/libexec/knetattach
+%dir %attr (0755, root, bin) %{_libdir}/kde4/plugins
+%{_libdir}/kde4/plugins/*
 %dir %attr (0755, root, other) %{_libdir}/kconf_update_bin
 %{_libdir}/kconf_update_bin/*
 %dir %attr (0755, root, bin) %{_libdir}/strigi
@@ -225,5 +242,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Thu Jul 09 2009 - moinakg<at>belenix(dot)org
+- Set some executables as setuid/gid.
+- Add SocketSecurity implementation for Solaris.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Initial version.
