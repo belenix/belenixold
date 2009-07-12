@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# Script to generate file system usage information files (.pkgsize)
+# for use of the install-jds script to calculate the disk space
+# requirements
+
+if [ $# = 0 -o "x$1" = "x--help" -o "x$1" = "x-h" ]; then
+    echo "Usage: $0 directory..."
+    echo "Calculate file system usage information files for the given directories"
+    exit 1
+fi
+
+TEMPFILES=
+register_tempfile () {
+    TEMPFILES="$TEMPFILES $1"
+}
+
+clean_up () {
+    IFS=" "
+    cd /
+    for f in $TEMPFILES; do
+	rm -rf $TEMPFILES
+    done
+}
+
+trap clean_up HUP INT TERM ERR
+
+TEMPDIR=/tmp/.gen_pkgsize.$$
+register_tempfile $TEMPDIR
+mkdir -p $TEMPDIR
+
+fatal () {
+    for msg in "${@}"; do
+	echo $msg 1>&2
+    done
+    clean_up
+    exit 1
+}
+
+unpack () {
+    cd $TEMPDIR
+    gzip -dc "$1" | /bin/tar xf -
+}
+
+print_subdir () {
+    cd $TEMPDIR/$3
+    dummy=$(echo */*)
+    echo "$dummy" | grep '\*' > /dev/null
+    if [ $? != 0 ]; then
+	du -sk */* | sed -e "s%^\([0-9]*\)[ 	]*\(.*\)%$1 \1 $2/\2%"
+    else
+	du -sk * | sed -e "s%^\([0-9]*\)[ 	]*\(.*\)%$1 \1 $2/\2%"
+    fi
+}
+
+print_sizes () {
+    pname=`echo "$1" | sed -e 's/\.tar\.gz$//' -e 's/\.tgz$//'`
+    cd $TEMPDIR
+    test ! -d "$pname" && fatal "Cannot find directory \"$pname\" after unpacking \"$1\""
+    basedir=`grep '^BASEDIR=' $pname/pkginfo | cut -f2 -d=`
+    if [ "x$basedir" = x/ ]; then
+	basedir=
+    fi
+    test -d "$pname/reloc" && print_subdir "$pname" "$basedir" "$pname/reloc"
+    test -d "$pname/root" && print_subdir "$pname" "$basedir" "$pname/root"
+}
+
+gen_pkgsize () {
+    echo "Generating .pkgsize in $1"
+    dir_pkgs=$(cd "$1"; find . -name '*.tar.gz' -print -o -name '*.tgz' -print | sed -e 's/^.\///')
+    IFS=" 	
+"
+    sizefile="$1/.pkgsize"
+    test ! -z "$dir_pkgs" && cat /dev/null > "$sizefile"
+    for pkg in $dir_pkgs; do
+	unpack "$1/$pkg" || fatal "Failed to unpack $1/$pkg"
+	print_sizes "$pkg" >> "$sizefile"
+	cd /
+	rm -rf $TEMPDIR
+	mkdir -p $TEMPDIR
+    done
+}
+
+# main ()
+IFS=" 	
+"
+mydir=`pwd`
+for dir in "${@}"; do
+    cd "$mydir"
+    test ! -d "$dir" && continue
+    case "$dir" in
+	/*)
+	    gen_pkgsize "$dir"
+	    ;;
+	*)
+	    gen_pkgsize "$mydir/$dir"
+	    ;;
+    esac
+done
+
+clean_up
+exit 0

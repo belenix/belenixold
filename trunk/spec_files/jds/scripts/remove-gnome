@@ -1,0 +1,368 @@
+#!/bin/ksh
+
+# This version of 'remove-gnome' does not prompt the user when '-q' is
+# present on the command line. This allows the script to be incorporated into
+# other scripts.
+#
+# Modified by Damien Carbery, 19 May 2003.
+# -f option added by Laca, 25 Feb 2004
+# jds support added by Laca, 10 Mar 2004
+
+PKGRM=/usr/sbin/pkgrm
+PKGINFO=/usr/bin/pkginfo
+ADMIN=/tmp/.pkgrm.$$.admin
+PRODREG_SCRIPT=/tmp/prodreg.$$.sed.tmpl
+
+PRODREG_SCRIPT_CREATED=no
+TMP_PRODREG_SCRIPT_CREATED=no
+TMP_PRODREG_CREATED=no
+ADMIN_CREATED=no
+MYNAME="$0"
+MYDIR=`dirname $0`
+MYDIR=`( cd $MYDIR; /usr/bin/pwd )`
+MYNAME=$(basename $0)
+MYARGS="$*"
+QUIET=0
+FORCE=0
+RM_EXTRA_PKGS=1
+
+# List of JDS packages without JDS category. Will be removed if specified
+# category is JDS and the packages are present.
+EXTRA_PKGS_TO_REMOVE="SUNWmozgm SUNWmoznss SUNWmozpsm SUNWgnome-l10ndocument-ja SUNWgnome-l10nmessages-ja SUNWsogm SUNWsom SUNWsoagm SUNWsoam"
+
+
+usage () {
+  echo "$0 [-h|--help|-q|--quiet|-f|--force|--version 2.0|1.4|JDS|JDS<n>|-R rootdir]"
+  echo "Remove GNOME packages."
+  echo "   -h, --help     display this help"
+  echo "   --version x    remove version x (default: 2.0)"
+  echo "   --quiet, -q    don't prompt for confirmation before deletion."
+  echo "   --force, -f    ignore any errors and continue."
+  echo "   -R rootdir     remove packages from an alternative root directory."
+  echo "   --no_extras, -n don't remove extra packages, only jds/gnome ones."
+  exit 1
+}
+
+GNOME_CATEGORY=GNOME2
+GNOME_VERSION=2.0
+version_opt=2.0
+# If the script is called 'remove-jds' the category will include all JDS
+# components.
+if [ "x$MYNAME" = xremove-jds ]; then
+  GNOME_CATEGORY="JDSosol,JDS,JDS2,JDS3,JDS3x,JDS4,JDS5,JDS6,JDS7,JDS8,JDS9,APOC,EVO146,EVO25,GLOW,JAI,JAVAAPPS,MUSCLE,FF15,FIREFOX,TB15,"
+  version_opt=jds
+fi
+
+while [ $# != 0 ]; do
+  case "$1" in
+  --help | -h )
+	usage
+	;;
+  --version )
+	shift
+	if [ $# = 0 ]; then
+	  echo "Error: argument expected after --version"
+	  usage
+	fi
+        case "$1" in
+	1.4 )
+		GNOME_CATEGORY=GNOME
+		GNOME_VERSION=1.4
+		version_opt=1.4
+		;;
+	2.0 )
+		;;
+	JDS|jds)
+                GNOME_VERSION="2.x (JDS)"
+		GNOME_CATEGORY="JDS,JDS2,JDS3,JDS4,JDS5,JDS6,JDS7,JDS8,JDS9,JDS3x,JDSosol"
+		version_opt=jds
+		;;
+	JDS[0-9]|jds[0-9])
+	        jdsrel=`echo $1 | cut -c4-`
+	        GNOME_VERSION="2.x (JDS Release $jdsrel)"
+		GNOME_CATEGORY="JDS$jdsrel"
+		version_opt=$1
+		;;
+	opensolaris)
+	        GNOME_VERSION="OpenSolaris Desktop"
+		GNOME_CATEGORY="JDS3x,JDSosol"
+		version_opt=$1
+		;;
+	* )
+		echo "Error: version should be one of 1.4, 2.0, opensolaris or JDS"
+		usage
+		;;
+	esac
+	;;
+  --quiet | -q )
+	QUIET=1
+	;;
+  --force | -f )
+	FORCE=1
+	;;
+  -R )
+	shift
+	ROOTDIR=$1
+	if [ "x$ROOTDIR" = x ]; then
+	    echo "Option -R requires an argument"
+	    usage
+	fi
+	;;
+  --no_extras | -n )
+	RM_EXTRA_PKGS=0
+	;;
+  * )
+	echo "Error: $1: invalid argument"
+	usage
+	;;
+  esac
+  shift
+done
+
+backup () {
+  if [ -e "$1" ]; then
+    backup "$1~"
+    echo "Saving file $1 as $1~"
+    mv "$1" "$1~" || msg_error "Failed to back up file $1"
+  fi
+}
+
+clean_up () {
+  if [ "x$PRODREG_SCRIPT_CREATED" = xyes ]; then
+    rm -f $PRODREG_SCRIPT
+  fi
+  if [ "x$TMP_PRODREG_SCRIPT_CREATED" = xyes ]; then
+    rm -f $TMP_PRODREG_SCRIPT
+  fi
+  if [ "x$TMP_PRODREG_CREATED" = xyes ]; then
+    rm -f $TMP_PRODREG
+  fi
+  if [ "x$ADMIN_CREATED" = xyes ]; then
+    rm -f $ADMIN
+  fi
+  case "$MYNAME" in
+  /tmp/remove-gnome.copy.* )
+	rm -f $MYNAME
+	;;
+  esac
+}
+
+clean_up_and_abort () {
+  clean_up
+  echo "Interrupted."
+  exit 1
+}
+
+msg_error () {
+  echo $*
+  if [ $FORCE == 0 ]; then
+    echo "Use for -f or --force option to ignore errors."
+    echo "Exiting..."
+    exit 1
+  else
+    WARNINGS=yes
+  fi
+}
+
+msg_noerror () {
+  echo $*
+  exit 0
+}
+
+WARNINGS=no
+msg_warning () {
+  echo $*
+  WARNINGS=yes
+}
+
+/usr/bin/id | /usr/bin/grep '^uid=0(' > /dev/null 2>&1
+USER_IS_ROOT=$?
+
+profiles | fgrep -sx "Software Installation"
+haveinstallprofile=$?
+
+if [ $USER_IS_ROOT != 0 -a $haveinstallprofile != 0 ]; then
+    echo "WARNING: Run this script as root or make sure you have been assigned"
+    echo "the 'Software Installation' profile to be able to uninstall packages."
+    echo "See the user_attr(4) and profiles(1) man pages for more details"
+fi
+
+if [ $FORCE -gt 0 ]; then
+  trap clean_up_and_abort  HUP INT TERM
+else
+  trap clean_up_and_abort  HUP INT TERM ERR
+fi
+
+trap clean_up  QUIT EXIT
+
+case "$MYDIR" in
+*/sbin )
+	cp $MYNAME /tmp/remove-gnome.copy.$$
+	chmod 755 /tmp/remove-gnome.copy.$$
+	exec /tmp/remove-gnome.copy.$$ ${MYARGS} --version $version_opt
+	;;
+esac
+
+backup "$PRODREG_SCRIPT"
+
+cat > $PRODREG_SCRIPT << EOF
+:compid
+/^[ 	]*<compid>/{
+	N
+	/<\/compid>/!b compid
+	/.*<uniquename>@PACKAGE_TO_REMOVE@\n[ 	]*<\/uniquename>.*$/d
+}
+EOF
+PRODREG_SCRIPT_CREATED=yes
+
+TMP_PRODREG_SCRIPT=/tmp/prodreg.$$.sed
+backup $TMP_PRODREG_SCRIPT
+
+backup "$ADMIN"
+cat > $ADMIN << EOF
+mail=
+runlevel=nocheck
+conflict=nocheck
+setuid=nocheck
+action=nocheck
+partial=nocheck
+idepend=nocheck
+rdepend=nocheck
+space=quit
+EOF
+
+ADMIN_CREATED=yes
+
+echo "This script will remove packages belonging to GNOME $GNOME_VERSION"
+echo
+echo "Looking for packages..."
+if [ "x$ROOTDIR" != x ]; then
+    TMP_PKGS=`$PKGINFO -R "$ROOTDIR" -c $GNOME_CATEGORY | grep -v '^JDS[ 	]*CBE'`|| msg_noerror "No packages found."
+else
+    TMP_PKGS=`$PKGINFO -c $GNOME_CATEGORY | grep -v '^JDS[ 	]*CBE'`|| msg_noerror "No packages found."
+fi
+
+# Add JDS extra packages that do not have the JDS category.
+if [ $RM_EXTRA_PKGS -eq 1 ]
+then
+    if [ $version_opt == "jds" ]
+    then
+        # Turn off traps - '$PKGINFO -q $pkg' triggers ERR if $pkg not installed.
+        trap " " HUP INT TERM ERR
+
+        for pkg in $EXTRA_PKGS_TO_REMOVE
+        do
+            # If package is present then add to list to be removed.
+            $PKGINFO -q $pkg
+            if [ $? -eq 0 ]
+            then
+                # Later code expects $PKGINFO style output which contains the
+                # "Category package_name Description"
+                TMP_PKGS="$TMP_PKGS
+GNOME2      $pkg               Dummy description"
+            fi
+        done
+
+        # Restore the original trap triggers.
+        if [ $FORCE -gt 0 ]; then
+          trap clean_up_and_abort  HUP INT TERM
+        else
+          trap clean_up_and_abort  HUP INT TERM ERR
+        fi
+    fi
+fi
+
+if [ $QUIET -eq 0 ]; then
+  ( echo "The following packages were found:"
+    echo "$TMP_PKGS" ) | more
+  echo
+
+  answer=
+
+  while [ "x$answer" = x ]; do
+    echo "Would you like to remove the above packages? (y/n)"
+    read answer
+  done
+
+  if [ "x$answer" != "xy" -a "x$answer" != "xY" ]; then
+    msg_error "Cancelled."
+  fi
+else
+  # Simply list the packages.
+  echo "The following packages were found:"
+  echo "$TMP_PKGS"
+fi
+
+
+# Packages need to be removed and we must be root to do this.
+if [ $USER_IS_ROOT != 0 -a $haveinstallprofile != 0 ]; then
+  msg_error "ERROR: You must be root or have the 'Software Installation' profile to uninstall packages."
+fi
+
+PRODREG=
+# find the productregistry file
+if [ $version_opt = "1.4" ]; then
+    IFS=' 	
+'
+    for prodreg in	/var/sadm/install/productregistry \
+	/var/sadm/install/productregistry.xml; do
+      if [ -s $prodreg ]; then
+	  PRODREG=$prodreg
+      fi
+    done
+
+    if [ -n "$PRODREG" ]; then
+	TMP_PRODREG=/tmp/productregistry.tmp.$$
+
+	backup $TMP_PRODREG
+
+	cp $PRODREG $TMP_PRODREG || \
+		msg_error "Error copying $PRODREG to $TMP_PRODREG"
+	TMP_PRODREG_CREATED=yes
+
+	backup $PRODREG
+	cp $TMP_PRODREG $PRODREG || \
+		msg_error "Error copying $TMP_PRODREG to $PRODREG"
+    fi
+fi
+
+echo "Removing packages..."
+
+ALL_PKGS=`echo "$TMP_PKGS" | /usr/bin/tr '\t' ' ' | \
+	/usr/bin/sed -e 's/  */ /g' | /usr/bin/cut -f2 -d' ' | sort -r`
+ALL_PKGS=`echo $ALL_PKGS`
+
+IFS=' '
+for pkg in $ALL_PKGS; do
+  if [ "x$ROOTDIR" != x ]; then
+    /usr/bin/pfexec $PKGRM -R "$ROOTDIR" -a $ADMIN -n $pkg || \
+	msg_error "ERROR: Failed to remove package $pkg"
+  else
+    /usr/bin/pfexec $PKGRM -a $ADMIN -n $pkg || \
+	msg_error "ERROR: Failed to remove package $pkg"
+  fi
+  if [ -n "$PRODREG" ]; then
+    cp $PRODREG $TMP_PRODREG && \
+      /bin/sed -e "s/@PACKAGE_TO_REMOVE@/$pkg/g" $PRODREG_SCRIPT > $TMP_PRODREG_SCRIPT && \
+      TMP_PRODREG_SCRIPT_CREATED=yes && \
+      /bin/sed -f $TMP_PRODREG_SCRIPT $TMP_PRODREG > $PRODREG ||
+      msg_warning "Warning: Failed to update the product registry file: $PRODREG"
+  fi
+done
+
+if [ "x$WARNINGS" = xyes ]; then
+	echo "Completed with warnings. Some packages could not be removed."
+else
+	echo "Successfully removed all packages."
+fi
+
+if [ -n "$PRODREG" ]; then
+  # Delete backup product registry if unchanged.
+  `/usr/bin/cmp -s $PRODREG $PRODREG~`
+  if [ $? -eq 0 ]; then
+    echo "Product registry unchanged, removing backup file."
+    rm $PRODREG~
+  fi
+
+  /bin/grep '<compid>' $PRODREG > /dev/null 2>&1 || rm -f $PRODREG
+fi

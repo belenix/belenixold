@@ -1,0 +1,182 @@
+#!/usr/perl5/bin/perl
+#
+# Generate report on copyright files
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+use strict;
+use warnings;
+use Cwd;
+use Getopt::Long qw(:config gnu_compat no_auto_abbrev bundling pass_through);
+use File::Basename;
+
+sub usage() {
+    print "report-copyright [options] <spec files...>\n";
+    print "\n";
+    print "Options:\n";
+    print "  -b s, --branch=s\n";
+    print "         Use the s branch for links to copyright files, instead\n";
+    print "         of trunk\n";
+    print "  -r r, --repo=r\n";
+    print "         Use the r repository for links to copyright files,\n";
+    print "         instead of spec-files\n";
+    print "  -h, --help\n";
+    print "         Print this usage information\n";
+}
+
+my @specs;
+my $repo = "spec-files";
+my $branch = "trunk";
+
+sub process_args {
+    my $arg = shift;
+    
+    if ($arg =~ /^-/) {
+	print "Unknown option: $arg\n";
+	print "Try --help for usage.\n";
+	exit (1);
+    }
+
+    push (@specs, $arg);
+}
+
+sub process_options {
+    
+    Getopt::Long::Configure ("bundling");
+      
+    GetOptions ('h|help' => sub { usage (); exit (0); },
+		'b|branch=s' => sub { shift; $branch = shift; $branch = "branches/$branch"; },
+		'r|repo=s' => sub { shift; $repo = shift; },
+		'<>' => \&process_args);
+}
+
+my %owners;
+my %copyright_files;
+
+# like uniq(1)
+sub uniq (@) {
+    my @list = @_;
+    my $prev;
+    if (not @list) {
+	return @list;
+    }
+    $prev = $list[0];
+    my @uniq_list = ($prev);
+    foreach my $str (@list) {
+	next if $str eq $prev;
+	push (@uniq_list, $str);
+	$prev = $str;
+    }
+    return @uniq_list;
+}
+
+sub main() {
+    process_options();
+
+    foreach my $spec (@specs) {
+	next if not defined ($spec);
+	# find the owner from the comments
+	my $RE = '^# [Oo]wner: *.[^ ]*[ 	]*$';
+	my $owner = `grep '$RE' $spec | head -1`;
+	chomp ($owner);
+	if ($owner eq '') {
+	    $owner = 'Unknown';
+	}
+	$owner =~ s/^#\s*[Oo]wner:\s*(\S+)\s*/$1/;
+	$owners{$spec} = $owner;
+
+	# find the copyright file
+	my $cpr = `spectool --with-sun-branding eval '%sunw_copyright' $spec 2>/dev/null`;
+	chomp ($cpr);
+	$copyright_files{$spec} = $cpr;
+    }
+
+    print << "_EOF";
+<html>
+ <head>
+  <title>JDS copyright file report for $branch in $repo</title>
+ </head>
+ <body>
+  <font face="arial,sans">
+  <b>JDS package copyright report for $branch in $repo</b><p>
+  <table border=1 cellspacing=0>
+  <tr><td><b>spec file</b></td><td><b>owner</b></td><td><b>copyright file</b></td></tr>
+_EOF
+
+    my $missing = 0;
+    foreach my $spec (sort @specs) {
+	my $base = basename ($spec);
+	print "<tr><td>$base</td>\n";
+	print "<td><a href=\"http://www.opensolaris.org/viewProfile.jspa?username=$owners{$spec}\">$owners{$spec}</a></td>\n";
+	$base =~ s/\.spec//;
+	if ($copyright_files{$spec} ne "${base}.copyright") {
+	    print "<td bgcolor=#ffaaaa>$copyright_files{$spec}</td>\n";
+	    $missing ++;
+	} else {
+	    print "<td bgcolor=#aaffaa><a href=\"http://src.opensolaris.org/source/xref/jds/${repo}/${branch}/copyright/${copyright_files{$spec}}\">$copyright_files{$spec}</a></td>\n";
+	}
+	print "</tr>\n";
+    }
+
+    my $total = $#specs + 1;
+    my $date = `TZ=GMT date`;
+
+    print << "_EOF";
+  </table><p>
+  $missing package(s) missing copyright file out of $total.
+  <p>
+  <b>Missing copyright files by owner:</b><small>
+  <table border=1 cellspacing=0>
+   <tr><td><b>owner</b></td><td><b>spec files</b></td></tr>
+_EOF
+    foreach my $owner (uniq sort values %owners) {
+	my $first_spec = 1;
+	foreach my $spec (sort @specs) {
+	    next if $owners{$spec} ne $owner;
+	    my $base = basename ($spec);
+	    $base =~ s/\.spec//;
+	    if ($copyright_files{$spec} ne "${base}.copyright") {
+		if ($first_spec) {
+		    print "<tr><td valign=top><a href=\"http://www.opensolaris.org/viewProfile.jspa?username=$owners{$spec}\">$owners{$spec}</a></td>\n";
+		    $first_spec = 0;
+		    print "<td>\n";
+		}
+		print "$base<br>\n";
+	    }
+	}
+	if (not $first_spec) {
+	    print "</td></tr>\n";
+	}
+    }
+    print << "_EOF";
+  </table>
+  <p><i>report generated on $date</i></small>
+  </font>
+ </body>
+</html>
+_EOF
+}
+
+main();
