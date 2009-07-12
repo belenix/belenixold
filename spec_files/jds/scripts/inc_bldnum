@@ -1,0 +1,131 @@
+#!/usr/bin/perl -w
+
+# Increment the tarball build number in Moz/Evo/APOC spec files.
+#
+# Created by Damien Carbery, 25 April 2005.
+
+
+use strict;
+use Getopt::Long;
+use File::Basename;
+use POSIX;    # For strftime.
+
+
+# Display usage information.
+sub Usage
+{
+    my $ScriptName = basename( $0 );
+
+    print << "END_OF_USAGE_INFO";
+Increment the build source tarball number and add %changelog entry.
+Usage: $ScriptName -buildnum num
+
+-buildnum   Specify build number to insert into spec files. (Required)
+-email      Specify email address to be listed in %changelog.
+-help       Display this usage information.
+END_OF_USAGE_INFO
+
+    exit 1;    # Indicate an error.
+}
+
+
+# ####################################
+# Main program.
+# ####################################
+
+
+# Display usage if no arguments.
+Usage if ( $#ARGV == -1 );
+
+my $DisplayHelp = 0;
+my $BuildNum;
+my $Email = 'dermot.mccluskey@sun.com';
+
+# ############################
+# Begin command line parsing.
+# ############################
+#Getopt::Long::Configure( 'pass_through' );    # Ignore unknown options.
+GetOptions( 'buildnum=i'  => \$BuildNum,
+            'email=s'     => \$Email,
+            'help'        => \$DisplayHelp );
+
+Usage if ( $DisplayHelp );
+Usage if ( ! defined $BuildNum );
+
+
+# List of spec files to update.
+my @specfiles = qw / apoc.spec evolution.spec gnome-spell.spec gtkhtml.spec hydrogen.spec libgal.spec libsoup.spec mozilla.spec oxygen2.spec /;
+
+foreach my $file ( @specfiles )
+{
+    # Ensure all the specified files are present, quitting if any aren't.
+    my $MissingFiles = 0;
+    foreach my $file ( @ARGV )
+    {
+        if ( ! -r $file )
+        {
+            print "ERROR: $file is missing or not readable.\n";
+            $MissingFiles++;
+        }
+    }
+    exit 1 if ( $MissingFiles );
+}
+
+
+# Change t_suffix and Release data and add %changelog entry for each file.
+foreach my $file ( @specfiles )
+{
+    if ( open( IN, '<' . $file ) )
+    {
+        if ( open( OUT, '>' . $file . ".$$" ) )
+        {
+            while ( <IN> )
+            {
+                if ( /^(%define t_suffix \D+)(\d+)(\D+)$/ )
+                {
+                    print OUT $1,$BuildNum,$3;
+                }
+                elsif ( /^(Release:\s+)(\d+)(\D+)$/ )
+                {
+                    print OUT $1,(${2}+1),$3;
+                }
+                elsif ( /^%changelog$/ )
+                {
+                    print OUT;
+                    print OUT '* ', strftime("%a %b %d %Y",localtime), " - $Email\n- Bump source tarball to build $BuildNum.\n\n";
+                }
+                else
+                {
+                    print OUT;
+                }
+            }
+
+            close( OUT );
+        }
+        close( IN );
+        rename( $file . ".$$", $file );
+        print "$file - done\n";
+    }
+    else
+    {
+        print "WARNING: Unable to open $file ($!). Skipping.\n";
+    }
+}
+
+# Update ChangeLog too, putting info at the top of the file.
+if ( open( IN, '<' . 'ChangeLog' ) )
+{
+    if ( open( OUT, '>' . 'ChangeLog' . ".$$" ) )
+    {
+        print OUT strftime("%Y-%m-%d",localtime), "  <$Email>\n\n";
+        print OUT "\t* ", join( ' ', @specfiles[0..4] ), "\n\t", join( ' ', @specfiles[5..$#specfiles] ), ":\n\t* Bump source tarballs to build $BuildNum.\n\n";
+        # Just pass-through the rest of the lines.
+        print OUT while ( <IN> );
+        close( OUT );
+    }
+    close( IN );
+    rename( 'ChangeLog'. ".$$", 'ChangeLog' );
+    print "ChangeLog - done\n";
+}
+
+print "\nUse 'cvs diff' to verify changes.\nTo commit changes:\n   cvs commit -m \"Bump source tarballs for Mozilla/Evolution/APOC\"\n";

@@ -1,0 +1,1330 @@
+#!/bin/bash
+
+ARCH=`uname -p`
+if [ $ARCH != "sparc" ]; then
+    ARCH=x86
+fi
+ALL_PRODUCTS="jds=JDS Common Packages
+jds-src=Sources for JDS Common Packages
+gnome=GNOME 2.17 Desktop
+gnome-src=GNOME 2.17 Source
+mozilla=Mozilla 1.7 Web Browser
+mozilla-src=Mozilla Source
+firefox=Firefox Web Browser
+firefox-src=Firefox Source
+thunderbird=Thunderbird Email and News Client
+thunderbird-src=Thunderbird Source
+idn
+idn-src
+evolution=Evolution Email and Calendar
+evolution-src=Evolution Source
+glow=Integrated Collaboration Environment
+jai=Java Advanced Imaging
+jai-iio=Java Advanced Imaging
+java=Java Runtime Environment
+java-src
+javaapps=Java Applications
+javaapps-src=Java Applications Sources
+java3d
+jcs
+jdk=Java Development Kit
+jdic=Java Desktop Integration Components
+jdnc=Java Desktop Network Components
+jinput=Java Controller API
+joal=Java bindings for OpenAL API
+jogl=Java bindings for OpenGL API
+l10n=Globalization Tools
+l10n-src=Globalization Tools Sources
+l10nmessages=Localized Messages
+iiim=Input Method Switcher
+iiim-src=Input Method Switcher Sources
+muscle
+plugins=Third Party Browser Plugins
+plugins-src
+scs-client
+staroffice=StarOffice office suite
+starsuite=StarSuite office suite
+so-sdk=StarOffice Software Development Kit
+updater
+netbeans
+javahelp
+xserver=X.org server
+nodist=Extra packages for JDS developers
+nodist-src=Extra sources for JDS developers
+apoc-daemon=APOC Daemon
+apoc-daemon-src=APOC Daemon Sources
+apoc-sol-$ARCH=APOC Configuration Manager
+apoc-sol-$ARCH-src=APOC Configuration Manager Sources"
+
+ALL_PATCHDIRS="patches-xserver=X server patches
+patches-mozilla=Patches required for the Mozilla Web browser
+patches-gnome=Patches required for the GNOME Desktop"
+
+PKGADD=/usr/sbin/pkgadd
+PATCHADD=/usr/sbin/patchadd
+PKGRM=/usr/sbin/pkgrm
+PKGINFO=/usr/bin/pkginfo
+ADMIN=/tmp/.pkg.$$.admin
+ADMIN_CREATED=no
+
+MYNAME="$0"
+MYDIR=`dirname $0`
+MYDIR=`( cd $MYDIR; pwd )`
+MYNAME=$(basename $0)
+MYARGS="$*"
+LOGFILE=/var/sadm/install/logs/jds-install.log.$$
+INFOFILE=$MYDIR/.pkginfo
+SYSTEM=`uname -s`
+ARCH=`uname -p`
+RELEASE=`uname -r`
+KERNELID=`uname -v`
+
+# ask "question" variable_name "default answer"
+ask () {
+    echo -n "$1"
+    if [ ! -z $3 ]; then
+	echo -n " [$3]: "
+    else
+	echo -n ": "
+    fi
+
+    read -e val
+    if [ "x$val" = x ]; then
+	eval "$2=\"$3\""
+    else
+	eval "$2=\"$val\""
+    fi
+}
+
+# ask_yes_no "question" variable_name "default answer"
+ask_yes_no () {
+    yes_no_repeat=yes
+    while [ $yes_no_repeat = yes ]; do
+	yes_no_repeat=no
+	ask "${@}"
+	eval "the_ans=\"\$$2\""
+	echo "$the_ans" | grep -i "^`l10n_print yes`$" > /dev/null
+	if [ $? = 0 ]; then
+	    eval "$2=yes"
+	    return
+	fi
+	echo "$the_ans" | grep -i "^`l10n_print no`$" > /dev/null
+	if [ $? = 0 ]; then
+	    eval "$2=no"
+	    return
+	fi
+	l10n_print "Please answer yes or no"
+	yes_no_repeat=yes
+    done
+}
+
+get_req () {
+    test -r $INFOFILE && \
+	grep -i "^$1[ 	]*=[ 	]*" $INFOFILE | cut -f2 -d= | tr -d ' 	'
+}
+
+REQ_SYSTEM=`get_req system`
+REQ_ARCH=`get_req arch`
+REQ_RELEASE=`get_req release`
+REQ_KERNELID=`get_req kernelid`
+
+version_lower () {
+    declare -a version1
+    declare -a version2
+    
+    IFS=' '
+    for n in `echo $1 | sed -e 's/Generic/999999/' | tr -cs "[0-9]" "[ *]"`; do
+	version1=(${version1[*]} $n)
+    done
+    for n in `echo $2 | sed -e 's/Generic/999999/' | tr -cs "[0-9]" "[ *]"`; do
+	version2=(${version2[*]} $n)
+    done
+    
+    typeset -i n=0
+    while /bin/true; do
+	if [ -n "${version1[$n]}" ]; then
+	    if [ -n "${version2[$n]}" ]; then
+		if [ ${version1[$n]} -lt ${version2[$n]} ]; then
+		    return 0
+		else
+		    if [ ${version1[$n]} -gt ${version2[$n]} ]; then
+			return 1
+		    fi
+		fi
+	    else
+		return 1
+	    fi
+	else
+	    if [ -n "${version2[$n]}" ]; then
+		return 0
+	    fi
+	    return 1
+	fi
+	typeset n=$n+1
+    done
+}
+
+usage () {
+    echo "%s [options]" "$0"
+    l10n_print "Install the Java Desktop System, GNOME 2.17, Solaris Edition"
+    l10n_print "   -h, --help     display this help"
+    l10n_print "   --quiet, -q    less verbose operation."
+    l10n_print "   --force, -f    ignore any errors and continue."
+    l10n_print "   --ignore, -i   ignore file conflicts and continue."
+    l10n_print "   -n             non-interactive installation."
+    l10n_print "   -R rootdir     install into an alternative root directory."
+    l10n_print "   -p prod1,prod2,..."
+    l10n_print "                  select products for installation"
+    l10n_print "   -a             install all products"
+    l10n_print "   --nopatch      don't install OS patches"
+    l10n_print "   --accept       accept the license terms"
+    l10n_print "   --tmpdir dir   create temporary files in dir instead of /tmp"
+    exit 1
+}
+
+QUIET=no
+FORCE=no
+IGNORE_CONFLICT=no
+INTERACTIVE=yes
+ROOTDIR=
+PRODUCTS=
+NO_PATCHES=no
+BASE_TEMPDIR=/tmp
+LICENSE_ACCEPTED=yes
+
+process_options () {
+    while [ $# != 0 ]; do
+	case "$1" in
+	    --help | -h )
+		usage
+		;;
+	    --quiet | -q )
+		QUIET=yes
+		;;
+	    --force | -f )
+		FORCE=yes
+		;;
+	    --ignore | -i )
+		IGNORE_CONFLICT=yes
+		;;
+	    -R )
+		shift
+		ROOTDIR=$1
+		if [ "x$ROOTDIR" = x ]; then
+		    l10n_print "Option %s requires an argument" "-R"
+		    usage
+		fi
+		;;
+	    -n )
+		INTERACTIVE=no
+		;;
+	    -a )
+		select_all_products
+		unselect_all_srcs
+		unselect_product nodist
+		;;
+	    --accept )
+		LICENSE_ACCEPTED=yes
+		;;
+	    -p )
+		shift
+		PRODUCTS="$1"
+		if [ "x$PRODUCTS" = x ]; then
+		    l10n_print "Option %s requires an argument" "-R"
+		    usage
+		fi
+		;;
+	    --tmpdir )
+		shift
+		BASE_TEMPDIR="$1"
+		if [ "x$BASE_TEMPDIR" = x ]; then
+		    l10n_print "Option %s requires an argument" "--tmpdir"
+		    usage
+		fi
+		;;
+	    --nopatch )
+		NO_PATCHES=yes
+		;;
+	    * )
+		l10n_print "Error: %s: invalid argument" "$1"
+		usage
+		;;
+	esac
+	shift
+    done
+}
+
+logrun () {
+    status_file=/tmp/.command_status.$$
+    rm -f $status_file
+    echo "running $*" >> $LOGFILE
+    echo "*** command output follows ***" >> $LOGFILE
+    if [ "x$QUIET" = xno ]; then
+	( "${@}" 2>&1 ; echo $? > $status_file ) | tee -a $LOGFILE
+    else
+	( "${@}" 2>&1 ; echo $? > $status_file ) >> $LOGFILE
+    fi
+    echo "*** command output ends ***" >> $LOGFILE
+    status=`cat $status_file`
+    rm -f $status_file
+    return $status
+}
+
+backup () {
+    if [ -e "$1" ]; then
+	backup "$1~"
+	l10n_print "Saving file %s as %s~" "$1" "$1"
+	mv "$1" "$1~" || msg_fatal "Failed to back up file %s" "$1"
+    fi
+}
+
+clean_up () {
+    if [ "x$ADMIN_CREATED" = xyes ]; then
+	rm -f $ADMIN
+    fi
+    cd /
+    rm -rf $TEMPDIR
+}
+
+clean_up_and_abort () {
+    clean_up
+    l10n_print "Interrupted."
+    exit 1
+}
+
+TEXTDOMAIN=install-jds
+l10n_print () {
+    l10n_msg=`TEXTDOMAINDIR="$MYDIR"/.install gettext -d "$TEXTDOMAIN" "$1"`
+    shift
+    printf "$l10n_msg\n" "${@}"
+}
+
+msg_fatal () {
+    msg_log "${@}"
+    l10n_print "${@}" 1>&2
+    clean_up
+    exit 1
+}
+
+msg_error () {
+    msg_log "${@}"
+    l10n_print "${@}" 1>&2
+    if [ $FORCE = no ]; then
+	if [ "x$INTERACTIVE" = xyes ]; then
+	    ask_yes_no "`l10n_print 'Would you like to continue?'`" ans \
+		`l10n_print "no"`
+	    if [ "x$ans" = xno ]; then
+		clean_up
+		exit 1
+	    fi
+	    WARNINGS=yes
+	else
+	    clean_up
+	    exit 1
+	fi
+    else
+	WARNINGS=yes
+    fi
+}
+
+msg_log () {
+    test -f $LOGFILE || return
+    log_arg1="$1"
+    shift
+    printf "$log_arg1\n" "${@}" >> $LOGFILE
+}
+
+WARNINGS=no
+msg_warning () {
+    l10n_print "${@}"
+    WARNINGS=yes
+}
+
+# check_disk_space directory minsize(kB)
+check_disk_space () {
+    dir_to_check="$ROOTDIR$1"
+    while [ ! -d $dir_to_check ]; do
+	dir_to_check="`dirname $dir_to_check`"
+    done
+    freespace=`df -k "$dir_to_check" | awk '!/Filesystem/ {print $4}'`
+    if [ $freespace -le $2 ]; then
+	return 1
+    fi
+
+    return 0
+}
+
+# so_disk_space_check prodname
+so_disk_space_check () {
+    # Need large tmp area (>=1GB) for StarOffice/StarSuite installation.
+    check_disk_space $TEMPDIR 1048576 || \
+        msg_error "Your %s directory has less than 1GB free.\nYou need to specify an alternative temp dir with the --tmpdir switch." "$BASE_TEMPDIR"
+}
+
+init () {
+    USER_IS_ROOT=0
+    /usr/bin/id | /usr/bin/grep '^uid=0(' > /dev/null 2>&1
+
+    if [ $? != 0 ]; then
+	msg_fatal "Only root can install this product."
+    fi
+
+    if [ $FORCE = no ]; then
+	trap clean_up_and_abort  HUP INT TERM
+    else
+	trap clean_up_and_abort  HUP INT TERM ERR
+    fi
+
+    trap clean_up  QUIT EXIT
+}
+
+write_admin () {
+    backup "$ADMIN"
+    ADMIN_CREATED=yes
+    cat > $ADMIN << EOF
+mail=
+instance=unique
+runlevel=nocheck
+setuid=nocheck
+action=nocheck
+partial=quit
+idepend=nocheck
+rdepend=nocheck
+space=quit
+EOF
+
+    if [ $IGNORE_CONFLICT = no ]; then
+        cat >> $ADMIN << EOF_2
+conflict=quit
+EOF_2
+    else
+        cat >> $ADMIN << EOF_3
+conflict=nocheck
+EOF_3
+    fi
+}
+
+declare -a MOUNT_POINTS
+declare -a MP_SUMS
+disk_usage_init () {
+    mps=`df -kl | grep '^/' | awk '{print $6}'  | sort -r`
+    IFS=" 	
+"
+    typeset -i i=0
+    for mp in $mps; do
+	MOUNT_POINTS[$i]="$mp"
+	MP_SUMS[$i]=0
+	typeset i=$i+1
+    done
+    MOUNT_POINT_COUNT=$i
+}
+
+# disk_usage_add <dir> <size>
+disk_usage_add () {
+    typeset -i i=0
+    while [ $i -lt $MOUNT_POINT_COUNT ]; do
+	mpname=${MOUNT_POINTS[$i]}
+	case $1 in
+	    ${mpname}* )
+		mpsize=${MP_SUMS[$i]}
+		mpsize=`expr $mpsize + $2`
+		MP_SUMS[$i]=$mpsize
+		break
+		;;
+	esac
+	typeset i=$i+1
+    done
+}
+
+disk_usage_check () {
+    typeset -i i=0
+    while [ $i -lt $MOUNT_POINT_COUNT ]; do
+	mpname=${MOUNT_POINTS[$i]}
+	mpsize=${MP_SUMS[$i]}
+	mpsize=`expr $mpsize + $mpsize`
+	if [ $mpsize -gt 0 ]; then
+	    check_disk_space $mpname $mpsize || \
+		msg_error "Your %s filesystem has less than %s kB free\nYou will not be able to install JDS." "$ROOTDIR$mpname" "$mpsize"
+	fi
+	typeset i=$i+1
+    done
+}
+
+#install_pkgs <dir>
+install_product () {
+    ORDERFILE=$MYDIR/$1/.pkgorder
+    if [ -r $ORDERFILE ]; then
+	export IFS=' '
+	ALL_PKGS=$(echo $(cat $ORDERFILE | sed -e 's/$/.tar.gz/'))
+    else
+	ALL_PKGS=$(cd $MYDIR/$1; find . -name '*.tar.gz' -print -o -name '*.tgz' -print)
+    fi
+
+    if [ -z "$ALL_PKGS" ]; then
+	msg_error "No packages found."
+	return
+    fi
+
+    msg_log "Starting installation of %s at %s" "$1" "`LANG=C LC_ALL=C date`"
+    IFS=' 
+'
+
+    # Remove old Mozilla 1.x packages.
+    if [ $1 == 'firefox' -o $1 == 'thunderbird' ]; then
+        moz_pkgs="SUNWmozspell
+SUNWmozpsm
+SUNWmoznss-devel
+SUNWmoznss
+SUNWmoznspr-devel
+SUNWmozmail
+SUNWmozjs-debugger
+SUNWmozilla-devel
+SUNWmozgm
+SUNWmozdom-inspector
+SUNWmozchat
+SUNWmozilla
+SUNWmoznspr
+SUNWmoznav
+SUNWthunderbird-devel"
+        for moz_pkg in $moz_pkgs; do
+            is_installed "$moz_pkg" && remove_pkg "$moz_pkg"
+        done
+    fi
+
+    # Remove evolution-socs-connect packages as they are incompatible with
+    # evolution-jescs (connector for Java Enterprise System Calendar Server)
+    if [ $1 == 'evolution' ]; then
+        evo_pkgs="SUNWevolution-socs-connect
+SUNWevolution-socs-connect-share"
+        for evo_pkg in $evo_pkgs; do
+            is_installed "$evo_pkg" && remove_pkg "$evo_pkg"
+        done
+    fi
+
+    logrun mkdir -p $TEMPDIR || \
+	msg_fatal "ERROR: Failed to create temporary directory %s" "$TEMPDIR"
+    cd $TEMPDIR
+    for pkg in $ALL_PKGS; do
+	if [ ! -r $MYDIR/$1/$pkg ]; then
+	    msg_error "ERROR: cannot read file %s" "$pkg"
+	    continue
+	fi
+	logrun sh -c "gunzip -c $MYDIR/$1/$pkg | /bin/tar xf -"
+	if [ $? != 0 ]; then
+	    msg_error "ERROR: Failed to unpack %s" "$pkg"
+	    continue
+	fi
+	pkg0=$(basename $pkg)
+	pkg0=$(echo "$pkg0" | sed -e 's/\.tar.gz$//' -e 's/\.tgz$//')
+	if [ ! -d $pkg0 ]; then
+	    msg_error "ERROR: Package %s not found in %s" "$pkg0" "$pkg"
+	    continue
+	fi
+	if [ "x$QUIET" = xno ]; then
+	    l10n_print "Installing package %s" "$pkg0"
+	fi
+	msg_log "Installing package $pkg0"
+	if [ "x$ROOTDIR" != "x" ]; then
+	    logrun $PKGADD -R "$ROOTDIR" -a $ADMIN -n -d $TEMPDIR $pkg0 || \
+		msg_error "ERROR: Failed to install package %s" "$pkg0"
+	else
+	    logrun $PKGADD -a $ADMIN -n -d $TEMPDIR $pkg0 || \
+		msg_error "ERROR: Failed to install package %s" "$pkg0"
+	fi
+	logrun rm -rf $TEMPDIR/$pkg0
+    done
+}
+
+remove_pkg () {
+    if [ "x$QUIET" = xno ]; then
+	l10n_print "Uninstalling %s" "$1"
+    fi
+    msg_log "Uninstalling %s" "$1"
+    if [ "x$ROOTDIR" != x ]; then
+	logrun $PKGRM -R "$ROOTDIR" -a $ADMIN -n "$1"'.*' || \
+	    msg_error "ERROR: Failed to remove package %s" "$1"
+    else
+	logrun $PKGRM -a $ADMIN -n "$1"'.*' || \
+	    msg_error "ERROR: Failed to remove package %s" "$1"
+    fi
+}
+
+is_installed () {
+    $PKGINFO -q "$1.*"
+}
+
+remove_always () {
+    pkgs_to_remove="`cat $MYDIR/$1/.remove-always`"
+
+    IFS=" 	
+"
+    for glob in "$pkgs_to_remove"; do
+	pkgs=$(cd $MYDIR/$1; echo $glob)
+	for pkg in $pkgs; do
+	    pkg=`basename $pkg`
+	    pkg=`basename $pkg .tar.gz`
+	    pkg=`basename $pkg .tgz`
+	    is_installed "$pkg" && remove_pkg "$pkg"
+	done
+    done
+}
+
+remove_if_older () {
+    pkgs_to_remove="`cat $MYDIR/$1/.remove-if-older`"
+
+    IFS=" 	
+"
+    for glob in $pkgs_to_remove; do
+	pkgs=$(cd $MYDIR/$1; echo "$glob")
+	for pkg in $pkgs; do
+	    pkg=`basename $pkg .tar.gz`
+	    pkg=`basename $pkg .tgz`
+	    remove_pkg $pkg
+	done
+    done
+}
+
+main_menu () {
+    while /bin/true; do
+	clear
+	echo ",--------------------------------------------------------------------------"
+	echo "| 1) " `l10n_print "Default Installation"`
+	echo "| 2) " `l10n_print "Custom Installation"`
+        echo "|"
+	echo "| X) " `l10n_print "Exit"`
+	echo "|"
+	ask  '`---> '"`l10n_print 'Please select:'`" "menu_sel" "1"
+	case $menu_sel in
+	    1)
+		if [ "x$PRODUCTS" = x ]; then
+		    select_all_products
+		    unselect_all_srcs
+		    unselect_product nodist
+		fi
+		do_install || return $?
+		break
+		;;
+	    2)
+		custom_menu || return $?
+		;;
+	    x|X)
+		return 2
+		;;
+	    *)
+		l10n_print "Invalid selection"
+		sleep 1
+	esac
+    done
+    return 0
+}
+
+custom_menu () {
+    while /bin/true; do
+	clear
+	echo ",--------------------------------------------------------------------------"
+	echo "| 1) " `l10n_print "Install All Products"`
+	echo "| 2) " `l10n_print "Select Products to Install"`
+	if [ ! -z "$PATCHDIRS" ]; then
+	    echo "| 3) " `l10n_print "Select Patches to Install"`
+	fi
+        echo "|"
+	echo "| I) " `l10n_print "Start Installation"`
+	echo "| X) " `l10n_print "Exit"`
+	echo "|"
+	ask  '`---> '"`l10n_print 'Please select:'`" "menu_sel" "I"
+	case $menu_sel in
+	    1)
+		select_all_products
+		unselect_all_srcs
+		unselect_product nodist
+		select_all_patches
+		do_install || return $?
+		return 1
+		;;
+	    2)
+		select_product_menu || return $?
+		;;
+	    3)  
+		if [ ! -z "$PATCHDIRS" ]; then
+		    select_patchdir_menu || return $?
+		else
+		    l10n_print "Invalid selection"
+		    sleep 1
+		fi
+		;;
+	    i|I)
+		do_install || return $?
+		return 1
+		;;
+	    x|X)
+		return 2
+		;;
+	    *)
+		l10n_print "Invalid selection"
+		sleep 1
+	esac
+    done
+    return 0
+}
+
+so_menu () {
+    while /bin/true; do
+	clear
+	echo ",--------------------------------------------------------------------------"
+	echo "| 1) StarOffice"
+	echo "| 2) StarSuite"
+        echo "|"
+	echo "| X) " `l10n_print "Exit"`
+	echo "|"
+	ask  '`---> '"`l10n_print 'Please select:'`" "menu_sel" "1"
+	case $menu_sel in
+	    1)
+		unselect_product starsuite
+		return 0
+		;;
+	    2)
+		unselect_product staroffice
+		return 0
+		;;
+	    x|X)
+		return 2
+		;;
+	    *)
+		l10n_print "Invalid selection"
+		sleep 1
+	esac
+    done
+    return 0
+}
+
+select_patchdir_menu () {
+    IFS=,
+    while /bin/true; do
+	clear
+	echo ",--------------------------------------------------------------------------"
+	typeset -i N=1
+	
+	for pdir in $PATCHDIRS; do
+	    pname=`echo "$ALL_PATCHDIRS" | grep "^$pdir=" | cut -f2- -d= | cut -c-60`
+	    n=`echo " $N" | sed -e 's/^.*\(..\)$/\1/'`
+	    pn=$(echo $pdir | cut -f2 -d-)
+	    eval "plist=\"\$ALL_${pn}_PATCHES\""
+	    eval "patch_${N}_list=\"$plist\""
+	    patches_are_selected "$plist"
+	    res=$?
+	    if [ $res = 0 ]; then
+		echo "| $n) [x] $pname"
+		eval "patch_${N}_selected=1"
+	    elif [ $res = 1 ]; then
+                echo "| $n) [:] $pname"
+		eval "patch_${N}_selected=0"
+	    else
+                echo "| $n) [ ] $pname"
+		eval "patch_${N}_selected=0"
+	    fi
+            typeset N=$N+1
+	done
+        echo "|"
+	echo "|  A) " `l10n_print "Select All"`
+	echo "|  U) " `l10n_print "Unselect All"`
+	echo "|"
+	echo "|  S) " `l10n_print "Select individual patches"`
+	echo "|  I) " `l10n_print "Start Installation"`
+	echo "|  R) " `l10n_print "Return to previous menu"`
+	echo "|  X) " `l10n_print "Exit"`
+	echo "|"
+	ask  '`---> '"`l10n_print 'Enter item to select/unselect:'`" "menu_sel" "R"
+	case $menu_sel in
+	    i|I)
+		do_install || return $?
+		return 1
+		;;
+	    x|X)
+		return 2
+		;;
+	    r|R)
+		return 0
+		;;
+	    a|A)
+		select_all_patches
+		;;
+	    s|S)
+		select_patch_menu || return $?
+		;;
+	    u|U)
+		PATCHES=
+		;;
+	    *)
+		eval "the_patches=\$patch_${menu_sel}_list"
+		if [ -z "$the_patches" ]; then
+		    l10n_print "Invalid selection"
+		    sleep 1
+		else
+		    eval "is_sel=\$patch_${menu_sel}_selected"
+		    if [ "x$is_sel" = x1 ]; then
+			unselect_patches "$the_patches"
+		    else
+			select_patches "$the_patches"
+		    fi
+		fi
+	esac
+    done
+}
+
+PATCH_INFO_LOADED=no
+load_patch_info () {
+    test "x$PATCH_INFO_LOADED" = "xyes" && return
+    IFS=,
+    for p in $1; do
+	test -z "$p" && continue
+	mkdir -p $TEMPDIR/patchdesc
+	cd $TEMPDIR/patchdesc
+	unzip $MYDIR/$p */README.* > /dev/null 2>&1
+	dummy=`basename $p .zip`
+	pdesc=`grep '^Synopsis:' */README.* | head -1 | cut -f2- -d:` \
+	    > /dev/null 2>&1
+	if [ "x$pdesc" = x ]; then
+	    pdesc="Patch $dummy"
+	fi
+	dummy=`echo $dummy | cut -f1 -d-`
+	eval "PATCH_DESC_${dummy}=\"$pdesc\""
+	cd /
+	rm -rf $TEMPDIR/patchdesc
+	cd $TEMPDIR
+    done
+    PATCH_INFO_LOADED=yes
+}
+
+select_patch_menu () {
+    load_patch_info "$ALL_PATCHES"
+    IFS=,
+    while /bin/true; do
+	clear
+	echo ",--------------------------------------------------------------------------"
+	typeset -i N=1
+	
+	for ps in $ALL_PATCHES; do
+	    test -z "$ps" && continue
+	    pbn=`basename $ps`
+	    pnum=`basename $pbn .zip`
+	    pbn=`echo $pbn | cut -f1 -d-`
+	    eval "pname=\$PATCH_DESC_${pbn}"
+	    pcat=`echo "$ps" | cut -f1 -d/ | cut -f2 -d-`
+	    n=`echo " $N" | sed -e 's/^.*\(..\)$/\1/'`
+	    pn=$(echo $pdir | cut -f2 -d-)
+	    eval "patch_${N}_name=\"$ps\""
+	    patch_is_selected "$ps"
+	    res=$?
+	    if [ $res = 0 ]; then
+		echo "| $n) [x] ($pcat) $pnum: $pname"
+		eval "patch_${N}_selected=1"
+	    else
+                echo "| $n) [ ] ($pcat) $pnum: $pname"
+		eval "patch_${N}_selected=0"
+	    fi
+            typeset N=$N+1
+	done
+        echo "|"
+	echo "|  A) " `l10n_print "Select All"`
+	echo "|  U) " `l10n_print "Unselect All"`
+	echo "|"
+	echo "|  I) " `l10n_print "Start Installation"`
+	echo "|  R) " `l10n_print "Return to previous menu"`
+	echo "|  X) " `l10n_print "Exit"`
+	echo "|"
+	ask  '`---> '"`l10n_print 'Enter item to select/unselect:'`" "menu_sel" "R"
+	case $menu_sel in
+	    i|I)
+		do_install || return $?
+		return 1
+		;;
+	    x|X)
+		return 2
+		;;
+	    r|R)
+		return 0
+		;;
+	    a|A)
+		select_all_patches
+		;;
+	    s|S)
+		select_patch_menu || return $?
+		;;
+	    u|U)
+		PATCHES=
+		;;
+	    *)
+		eval "the_patch=\$patch_${menu_sel}_name"
+		if [ -z "$the_patch" ]; then
+		    l10n_print "Invalid selection"
+		    sleep 1
+		else
+		    eval "is_sel=\$patch_${menu_sel}_selected"
+		    if [ "x$is_sel" = x1 ]; then
+			unselect_patches "$the_patch"
+		    else
+			select_patches "$the_patch"
+		    fi
+		fi
+	esac
+    done
+}
+
+select_product_menu () {
+    IFS=" 	
+"
+    save_PR="$PRODUCTS"
+    select_all_products
+    AP="$PRODUCTS"
+    PRODUCTS="$save_PR"
+    while /bin/true; do
+	clear
+	echo ",--------------------------------------------------------------------------"
+	typeset -i N=1
+	
+	for prod in $AP; do
+	    prodname=`echo "$ALL_PRODUCTS" | grep "^$prod=" | cut -f2- -d= | cut -c-60`
+	    if [ -z "$prodname" ]; then
+		prodname=$prod
+	    fi
+	    n=`echo " $N" | sed -e 's/^.*\(..\)$/\1/'`
+	    eval "prod_${N}_name=\"$prod\""
+	    product_is_selected $prod
+	    if [ $? = 0 ]; then
+		echo "| $n) [x] "`l10n_print "$prodname"`
+		eval "prod_${N}_selected=1"
+	    else
+                echo "| $n) [ ] "`l10n_print "$prodname"`
+		eval "prod_${N}_selected=0"
+	    fi
+            typeset N=$N+1
+	done
+        echo "|"
+	echo "|  A) " `l10n_print "Select All"`
+	echo "|  U) " `l10n_print "Unselect All"`
+	echo "|"
+	echo "|  I) " `l10n_print "Start Installation"`
+	echo "|  R) " `l10n_print "Return to previous menu"`
+	echo "|  X) " `l10n_print "Exit"`
+	echo "|"
+	ask  '`---> '"`l10n_print 'Enter item to select/unselect:'`" "menu_sel" "R"
+	case $menu_sel in
+	    i|I)
+		do_install || return $?
+		return 1
+		;;
+	    x|X)
+		return 2
+		;;
+	    r|R)
+		return 0
+		;;
+	    a|A)
+		select_all_products
+		;;
+	    u|U)
+		PRODUCTS=
+		;;
+	    *)
+		eval "the_name=\$prod_${menu_sel}_name"
+		if [ -z "$the_name" ]; then
+		    l10n_print "Invalid selection"
+		    sleep 1
+		else
+		    eval "is_sel=\$prod_${menu_sel}_selected"
+		    if [ "x$is_sel" = x1 ]; then
+			unselect_product $the_name
+		    else
+			select_product $the_name
+		    fi
+		fi
+	esac
+    done
+}
+
+install_patch () {
+    mkdir -p $TEMPDIR/patchinst || return 1
+    rm -rf $TEMPDIR/patchinst/* || return 1
+    cd $TEMPDIR/patchinst || return 1
+    unzip $MYDIR/$1 > /dev/null 2>&1 || return 1
+    if [ "x$QUIET" = xno ]; then
+	l10n_print "Installing patch %s" "$1"
+    fi
+    IFS=" "
+    if [ "x$ROOTDIR" = x ]; then
+	logrun $PATCHADD * || return 1
+    else
+	logrun $PATCHADD -R "$ROOTDIR" * || return 1
+    fi
+    rm -rf $TEMPDIR/patchinst/* || return 1
+    cd /
+}
+
+do_install_patches () {
+    IFS=,
+    if [ ! -z "$PATCHES" ]; then
+	l10n_print "Installing required patches..."
+    fi
+    for p in $PATCHES; do
+	 test -z "$p" && continue
+         # Skip if patch already applied.
+         patchnum=`basename $p .zip`
+         # Remove 'T' t-patch prefix if present. showrev doesn't show it.
+         patchnum=`echo $patchnum | sed 's/^T//'`
+         if [ -z "`showrev -p | awk '{print $2}' | /usr/bin/grep -s $patchnum`" ]; then
+	     install_patch $p || \
+	      msg_error "Failed to install patch %s" "$p"
+         fi
+    done
+}
+
+do_install () {
+    if [ "x$PRODUCTS" = x -a "x$PATCHES" = x ]; then
+	msg_fatal "No products selected."
+    fi
+    so=ok
+    product_is_selected staroffice && product_is_selected starsuite && \
+	so=not_ok
+    if [ x$so = xnot_ok ]; then
+	if [ "x$INTERACTIVE" = "xyes" ]; then
+	    so_menu || return $?
+	else
+	    msg_fatal "You cannot select both StarOffice and StarSuite"
+	fi
+    fi
+
+    l10n_print "Checking for sufficient disk space..."
+    disk_usage_init
+    IFS=,
+    for prod in $PRODUCTS; do
+	test -z "$prod" && continue
+	if [ ! -r "$prod/.pkgsize" ]; then
+	    msg_warning "WARNING: disk space usage information missing from directory %s" "$prod"
+	    continue
+	fi
+	exec < "$prod/.pkgsize"
+	while read line; do
+	    the_dir=`echo "$line" | cut -f3- -d' '`
+	    the_size=`echo "$line" | cut -f2 -d' '`
+	    disk_usage_add "$ROOTDIR$the_dir" "$the_size"
+	done
+	exec <& 1
+    done
+
+    clear
+    product_is_selected staroffice && so_disk_space_check StarOffice
+    product_is_selected starsuite && so_disk_space_check StarSuite
+
+    disk_usage_check
+
+    l10n_print "Removing older versions of JDS packages..."
+
+    l10n_print "Determining package installation order..."
+
+    backup $LOGFILE
+    echo "JDS Installation Log opened at `LANG=C LC_ALL=C date`" > $LOGFILE
+
+    do_install_patches
+
+    IFS=,
+    for prod in $PRODUCTS; do
+	test -z "$prod" && continue
+	if [ ! -d "$MYDIR/$prod" ]; then
+	    msg_warning "Product %s not found in the install image" "$prod"
+	    continue
+	fi
+	prodname=`echo "$ALL_PRODUCTS" | grep "^$prod=" | cut -f2- -d=`
+        if [ -z "$prodname" ]; then
+            prodname=$prod
+        fi
+	if [ "x$QUIET" = xno ]; then
+	    echo
+	    echo -------------------------------------------------
+	fi
+	lprodname=$(l10n_print "$prodname")
+	l10n_print "Installing Product \"%s\"" "$lprodname"
+	if [ -r "$MYDIR/$prod/.remove-always" ]; then
+	    remove_always $prod
+	fi
+#	if [ -r "$MYDIR/$prod/.remove-if-older" ]; then
+#	    remove_if_older $prod
+#	fi
+	install_product $prod
+    done
+}
+
+product_is_selected () {
+    echo ",$PRODUCTS," | grep ",$1," > /dev/null 2>&1
+}
+
+# Examine LANG variable to determine whether to select StarOffice or StarSuite.
+staroffice_or_starsuite() {
+    if [ -n "$LANG" ]
+    then
+        # Japan, China, Taiwan and Korean get StarSuite.
+        case `echo $LANG | cut -c1,2` in
+            ja|zh|tw|ko) return 0;;
+        esac
+    fi
+
+    # If not set assume it is not Asian and therefore use StarOffice.
+    return 1
+}
+
+select_product () {
+    test -z "$1" && return 1
+    product_is_selected $1
+    if [ $? != 0 ]; then
+	PRODUCTS="$PRODUCTS,$1"
+    fi
+}
+
+unselect_product () {
+    test -z "$1" && return 1
+    product_is_selected $1
+    if [ $? = 0 ]; then
+	PRODUCTS=`echo ",$PRODUCTS," | sed -e "s/,$1,/,/" -e 's/^,//' -e 's/,$//'`
+    fi
+}
+
+unselect_all_srcs () {
+    IFS=" 
+"
+    for src in `echo "$ALL_PRODUCTS" | grep -- '-src$' |  cut -f1 -d=`; do
+	unselect_product $src
+    done
+    for src in `echo "$ALL_PRODUCTS" | grep -- '-src=' |  cut -f1 -d=`; do
+	unselect_product $src
+    done
+}
+
+select_all_products () {
+    IFS=" 
+"
+    PRODUCTS=`echo "$ALL_PRODUCTS" | cut -f1 -d=`
+    PRODUCTS=`echo $PRODUCTS | sed -e 's/ /,/g'`
+    IFS=,
+    for prod in $PRODUCTS; do
+	test ! -d $MYDIR/$prod && unselect_product $prod
+    done
+
+    # Decide between StarOffice and StarSuite and unselect the other if
+    # it is selected.
+# FIXME: Disable for now as it will not be needed on final media.
+#    staroffice_or_starsuite
+#    if [ $? -eq 1 ]
+#    then
+#        product_is_selected starsuite && unselect_product starsuite
+#    else
+#        product_is_selected staroffice && unselect_product staroffice
+#    fi
+    
+}
+
+find_patches () {
+    if [ -r "$MYDIR/$1/.patchorder" ]; then
+	IFS=' 	
+'
+	echo `cat "$MYDIR/$1/.patchorder" | sed -e "s%^%$1/%"` | \
+	    sed -e 's% %,%g'
+	return 0
+    fi
+    dummy=$(cd $MYDIR; echo $1/*.zip)
+    echo "$dummy" | grep '\*' > /dev/null
+    if [ $? != 0 ]; then
+	echo "$dummy" | sed -e 's/ /,/g'
+	return 0
+    else
+	return 1
+    fi
+}
+
+select_all_patches () {
+    IFS=" 
+"
+    PD=`echo "$ALL_PATCHDIRS" | cut -f1 -d=`
+    PD=`echo $PD | sed -e 's/ /,/g'`
+    IFS=,
+    PATCHES=
+    PATCHDIRS=
+    for pd in $PD; do
+	if [ -d $MYDIR/$pd ]; then
+	    dname=`echo "$pd" | cut -f2 -d-`
+	    dummy=`find_patches $pd` &&  PATCHDIRS="$PATCHDIRS,$pd" && \
+		select_patches "$dummy" && \
+	        eval "ALL_${dname}_PATCHES=\"$dummy\""
+	fi
+    done
+    PATCHDIRS=`echo "$PATCHDIRS" | cut -c2-`
+    ALL_PATCHES="$PATCHES"
+}
+
+patch_is_selected () {
+    echo ",$PATCHES," | grep ",$1," > /dev/null 2>&1
+}
+
+select_patches () {
+    test -z "$1" && return 1
+    IFS=,
+    for p in $1; do
+	patch_is_selected $p
+	if [ $? != 0 ]; then
+	    PATCHES="$PATCHES,$p"
+	fi
+    done
+}
+
+unselect_patches () {
+    test -z "$1" && return 1
+    IFS=,
+    for p in $1; do
+	patch_is_selected $p
+	if [ $? = 0 ]; then
+	    PATCHES=`echo ",$PATCHES," | sed -e "s%,$p,%,%" -e 's%^,%%' -e 's%,$%%'`
+	fi
+    done
+}
+
+patches_are_selected () {
+    test -z "$1" && return 2
+    have_selected=no
+    have_unselected=no
+    IFS=,
+    for p in $1; do
+	patch_is_selected $p && have_selected=yes || have_unselected=yes
+    done
+    if [ "x$have_selected" = xyes -a "x$have_unselected" = xyes ]; then
+	return 1
+    fi
+    if [ "x$have_unselected" = xno ]; then
+	return 0
+    fi
+    return 2
+}
+
+disclaimer_screen () {
+    if [ "x$INTERACTIVE" = xyes ]; then
+	l10n_print "You are about to install Sun Java Desktop System, GNOME 2.17.\nThis install will replace any old versions of the following\nproducts you may have installed on your system with the newer\nversion included in JDS: GNOME, Mozilla and Java\nMedia Framework.  It may also replace the installed version\nof Java 1.4.2 if it is older than the version included in JDS."
+    fi
+}
+
+license_screen () {
+    lic_file="$MYDIR/license.txt"
+    if [ ! -z $LC_MESSAGES ] ; then
+	language_territory_locale=$LC_MESSAGES
+    elif [ ! -z $LC_ALL ] ; then
+	language_territory_locale=$LC_ALL
+    elif [ ! -z $LANG ] ; then
+	language_territory_locale=$LANG
+    fi
+    language_terittory=${language_territory_locale%.*}
+    language=${language_territory_locale%_*}
+
+    if [ -f "$MYDIR/.install/$language_territory_locale/license.txt" ]; then
+	lic_file="$MYDIR/.install/$language_territory_locale/license.txt"
+    elif [ -f "$MYDIR/.install/$language_terittory/license.txt" ]; then
+	lic_file="$MYDIR/.install/$language_terittory/license.txt"
+    elif [ -f "$MYDIR/.install/$language/license.txt" ]; then
+	lic_file="$MYDIR/.install/$language/license.txt"
+    fi
+    if [ ! -f "$lic_file" ]; then
+	echo "WARNING: license file missing"
+    fi
+    if [ "x$LICENSE_ACCEPTED" = "xyes" ]; then
+	cat "$lic_file"
+	return
+    fi
+    if [ "x$INTERACTIVE" = xyes ]; then
+	l10n_print "Before installing you must first accept the following license"
+	echo
+	l10n_print "Press [ENTER] to view the license"
+	read dummy
+	more "$lic_file"
+	ask "`l10n_print 'Type \"Accept\" to accept the license\nand install Sun Java Desktop System GNOME 2.17'`" ans_accept
+	echo "$ans_accept" | grep -i "^`l10n_print 'Accept'`$" > /dev/null
+	if [ $? != 0 ]; then
+	    l10n_print "Installation aborted"
+	    exit 1
+	fi
+    else
+	l10n_print "In non-interactive mode, you must use the --accept option\nto accept the license terms"
+	exit 1
+    fi
+}
+
+main () {
+    init
+    process_options "${@}"
+    disclaimer_screen
+    license_screen
+    TEMPDIR=${BASE_TEMPDIR}/install_jds_$$.dir
+    write_admin
+    if [ "x$NO_PATCHES" != "xyes" ]; then
+	select_all_patches
+    fi
+    if [ "x$INTERACTIVE" = "xyes" ]; then
+	if [ -z "$PRODUCTS" ]; then
+	    select_all_products
+	    unselect_all_srcs
+	    unselect_product nodist
+	fi
+	main_menu || return $?
+    else
+	if [ -z "$PRODUCTS" ]; then
+	    select_all_products
+	    unselect_all_srcs
+	    unselect_product nodist
+	    unselect_product starsuite
+	fi
+	do_install || return $?
+    fi
+}
+
+if [ -n "$REQ_SYSTEM" -a "$REQ_SYSTEM" != "$SYSTEM" ]; then
+    l10n_print "This product requires a %s system" "$REQ_SYSTEM"
+    exit 1
+fi
+
+if [ -n "$REQ_ARCH" -a "$REQ_ARCH" != "$ARCH" ]; then
+    l10n_print "This product requires a %s architecture system" "$REQ_ARCH"
+    exit 1
+fi
+
+if [ -n "$REQ_RELEASE" ]; then
+    version_lower $RELEASE $REQ_RELEASE
+    if [ $? = 0 ]; then
+	l10n_print "This product requires OS release %s or later" "$REQ_RELEASE"
+	exit 1
+    fi
+fi
+
+if [ "$RELEASE" = "$REQ_RELEASE" -a -n "$REQ_KERNELID" ]; then
+    version_lower $KERNELID $REQ_KERNELID
+    if [ $? = 0 ]; then
+	l10n_print "This product requires OS build %s or later" "$REQ_KERNELID"
+	l10n_print ""
+	l10n_print "You may choose to continue the installation and risk that"
+	l10n_print "some or all of the functionality may not be available."
+	ask_yes_no "`l10n_print 'Would you like to continue?'`" ans \
+		`l10n_print "no"`
+	if [ "x$ans" = xno ]; then
+		exit 1
+	fi
+    fi
+fi
+
+main "${@}"
+if [ $? = 2 ]; then
+    msg_fatal "Installation aborted"
+fi
+
+if [ "x$WARNINGS" = xyes ]; then
+    l10n_print "Completed with warnings. Some packages may not be installed."
+else
+    l10n_print "Successfully installed all packages."
+fi
+
+l10n_print "Installation log saved in %s" "$LOGFILE"
+
+echo
+l10n_print "You must now reboot your computer before using the Java Desktop System"

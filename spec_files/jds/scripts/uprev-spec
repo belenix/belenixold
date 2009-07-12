@@ -1,0 +1,194 @@
+#!/usr/bin/perl -w
+#
+# uprev-spec - increments by 1 the value of the Release field in spec files
+# 
+# Dermot McCluskey 22-July-2003  Initial Version
+
+
+use strict;
+use warnings;
+use Getopt::Long qw(:config gnu_getopt no_auto_abbrev);
+
+my $exit_val = 0;
+my $verbose = 1;
+my $build = "";
+my @spec_files = ();
+
+
+&main ();
+exit $exit_val;
+
+
+
+sub print_msg ($)
+{
+	($verbose) && print shift;
+}
+
+
+sub set_quiet
+{
+	$verbose = 0;
+}
+
+
+sub process_args ($)
+{
+	push @spec_files, shift;
+}
+
+
+sub process_options
+{
+	Getopt::Long::Configure ("bundling");
+    
+	GetOptions ('q|quiet' => \&set_quiet,
+		'h|help' => \&usage,
+		'build=n' => \$build,
+		'<>' => \&process_args);
+}
+
+
+sub usage (;$)
+{
+	print << "EOF";
+
+uprev-spec - increments by 1 the value of the Release field in spec files
+
+Usage: uprev-spec [options] specs...
+
+options:
+    -q|--quiet:		Silent operation.
+    -h|--help:		Print this help message.
+    --build=n:		If specified, Release will be incremented to at least n
+
+specs...
+    path(s) to spec file(s)
+EOF
+
+	exit 0;
+}
+
+
+sub up_rev ($)
+{
+	my $spec_file = shift;
+	my $spec_file_base = $spec_file;
+	my $temp_file;
+	my $found = 0;
+	my $out;
+
+	# if spec_file contains a leading dir, then split it out
+	if ($spec_file =~ /.+\/(.+)/) {
+		$spec_file_base = $1;
+	}
+
+	$temp_file = "/tmp/$spec_file_base.tmp";
+
+	&print_msg (sprintf ("%-31s ", $spec_file_base));
+
+	if (! -e $spec_file) {
+		&print_msg ("ERROR: no such spec file: $spec_file\n");
+		return 0;
+	}
+
+	if (! -w $spec_file) {
+		&print_msg ("ERROR: unable to write to spec file: $spec_file\n");
+		return 0;
+	}
+
+	if (-e $temp_file) {
+		if (unlink ($temp_file) != 1) {
+			&print_msg ("ERROR: Cannot delete old temp file $temp_file: $!\n");
+			return 0;
+		}
+	}
+
+	if (! open (SPECFILE, $spec_file)) {
+		&print_msg ("ERROR: Cannot read $spec_file: $!\n");
+		return 0;
+	}
+
+	if (! open (TEMPFILE, ">$temp_file")) {
+		&print_msg ("ERROR: Cannot create $temp_file: $!\n");
+		return 0;
+	}
+
+	while (<SPECFILE>) {
+		/^(release\s*:\s*)(\S*)(\s*)$/i && do {
+			my $label = $1;
+			my $rel = $2;
+			my $tail = $3;
+			my $lead = "";
+			my $newrel;
+
+			$found = 1;
+
+			# if Release value does not consist entirely of digits,
+			# then check for leading chars ending with digits
+			if ($rel !~ /^\d+$/) {
+				if ($rel =~ /^(.*\D+)(\d+)$/) {
+					$lead = $1;
+					$rel = $2;
+				} else {
+					&print_msg ("ERROR: non-numeric Release: $rel\n");
+					close (SPECFILE);
+					close (TEMPFILE);
+					return 0;
+				}
+			}
+
+			&print_msg (sprintf ("%7s ", "$lead$rel"));
+			$newrel = $rel + 1;
+
+			if (length ($build) && ($newrel < $build)) {
+				$newrel = $build;
+			}
+
+			&print_msg (sprintf ("%7s ", "$lead$newrel"));
+			print TEMPFILE "$label$lead$newrel$tail";
+			next;
+		};
+
+		# print all other lines unmodified
+		print TEMPFILE $_;
+	}
+
+	close (TEMPFILE);
+	close (SPECFILE);
+
+	if (! $found) {
+		&print_msg ("ERROR: no Release value in spec file\n");
+		return 0;
+	}
+
+	$out = `cp $temp_file $spec_file`;
+
+	if ($?) {
+		&print_msg ("ERROR: \"cp $temp_file $spec_file\": $out");
+		return 0;
+	}
+
+	unlink ($temp_file);
+	&print_msg ("OK\n");
+
+	return 1;
+}
+
+
+sub main
+{
+	&process_options ();
+
+	if (! @spec_files) {
+		&print_msg ("Nothing to do.\n");
+		return;
+	}
+
+	&print_msg ("Spec file			Release	New Rel	Status\n");
+	&print_msg ("===============================	=======	=======	=======\n");
+    
+	foreach (@spec_files) {
+		&up_rev ($_) || $exit_val++;
+	}
+}

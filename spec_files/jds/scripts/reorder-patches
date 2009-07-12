@@ -1,0 +1,153 @@
+#!/bin/bash
+
+get_pnum () {
+    echo $1 | sed -e 's/^\(.*\)-\([0-9][0-9]\)-\(.*\)$/\2/'
+}
+
+get_comp () {
+    echo $1 | sed -e 's/^\(.*\)-\([0-9][0-9]\)-\(.*\)$/\1/'
+}
+
+get_pname () {
+    echo $1 | sed -e 's/^\(.*\)-\([0-9][0-9]\)-\(.*\)$/\3/'
+}
+
+rename () {
+    svn rename $1 $2
+    if [ -f ../base-specs/$3.spec ]; then
+	perl -pi -e "s/Patch(.*):(\s*)$1/Patch\$1:\$2$2/" ../base-specs/$3.spec
+    else
+	echo "WARNING: $3.spec not found"
+    fi
+}
+
+# ask "question" variable_name "default answer"
+ask () {
+    echo -n "$1"
+    if [ ! -z $3 ]; then
+	echo -n " [$3]: "
+    else
+	echo -n ": "
+    fi
+
+    read -e val
+    if [ "x$val" = x ]; then
+	eval "$2=\"$3\""
+    else
+	eval "$2=\"$val\""
+    fi
+}
+
+# ask_yes_no "question" variable_name "default answer"
+ask_yes_no () {
+    yes_no_repeat=yes
+    while [ $yes_no_repeat = yes ]; do
+	yes_no_repeat=no
+	ask "${@}"
+	eval "the_ans=\"\$$2\""
+	case "$the_ans" in
+	    [yY]|[yY][eE][sS] )
+                eval "$2=yes"
+		;;
+ 	    [nN]|[nN][oO] )
+		eval "$2=no"
+		;;
+	    * )
+	        echo "Please answer yes or no"
+		yes_no_repeat=yes
+	esac
+    done
+}
+
+usage () {
+    echo "Usage: $0 [options] [component...]"
+    echo
+    echo "Run this script in the patches subdirectory to reorder"
+    echo "the patch numbers to be continuous and starting from 01"
+    echo
+    echo "If no components are specified, it'll check all of them."
+    echo "It does not change the Patch<n> and %patch<n> numbers"
+    echo "in the spec files, but updates the file names with the"
+    echo "new patch numbers."
+    echo
+    echo "Options:"
+    echo
+    echo "    -f, --force           don't ask for confirmation"
+    echo "    -h, --help            print this usage info"
+}
+
+FORCE=0
+while [ $# -gt 0 ]; do
+    case $1 in
+	-f|--force )
+	    FORCE=1
+	    ;;
+	-h|--help )
+	    usage
+	    exit 0
+	    ;;
+	-* )
+	    echo "Unknown option: $1"
+	    usage
+	    exit 1
+	    ;;
+	* )
+	    break
+    esac
+done
+
+mybasename=$(basename $(pwd))
+
+if [ $mybasename != patches ]; then
+    echo "Run this script in the patches subdirectory"
+    exit 1
+fi
+
+if [ $# -gt 0 ]; then
+    PLIST=
+    for comp in $*; do
+	comp_PLIST=$(eval echo $comp-[0-9][0-9]-*.diff)
+	n_p_1st=$(echo $comp_PLIST | cut -f1 -d' ')
+	if [ -f $n_p_1st ]; then
+	    PLIST="$PLIST $comp_PLIST"
+	else
+	    echo "No patches found for component $comp"
+	fi
+    done
+else
+    PLIST=$(eval echo *-[0-9][0-9]-*.diff)
+fi
+
+prev_comp=xxNoNexx
+patches_renamed=0
+for patch in $PLIST; do
+    comp=`get_comp $patch`
+    pnum=`get_pnum $patch`
+    pname=`get_pname $patch`
+
+    if [ $comp != $prev_comp ]; then
+	ord=01
+	if [ $prev_comp != xxNoNexx -a $patches_renamed = 0 ]; then
+	    echo "No patches need renumbering for component $prev_comp"
+	fi
+	patches_renamed=0
+    else
+	ord=`expr $ord + 1`
+	ord=`echo 0$ord | sed -e 's/.*\(..\)$/\1/'`
+    fi
+
+    if [ $pnum != $ord ]; then
+	if [ $FORCE = 0 ]; then
+	    ask_yes_no "Rename $patch to $comp-$ord-$pname?" ans "yes"
+	    if [ $ans = yes ]; then
+		rename $patch $comp-$ord-$pname $comp
+	    fi
+	else
+	    rename $patch $comp-$ord-$pname $comp
+	fi
+    fi
+    prev_comp=$comp
+done
+if [ $prev_comp != xxNoNexx -a $patches_renamed = 0 ]; then
+    echo "No patches need renumbering for component $prev_comp"
+fi
