@@ -1,0 +1,78 @@
+Spec file extensions quick reference.
+------------------------------------
+
+Solaris specific tags:
+
+    SUNW_BaseDir prefix
+        Define prefix as the value of the BASEDIR tag in the SVr4 package.
+        prefix will be stripped off the beginning of all path names in the
+        %files section, therefore it has to be a real prefix, otherwise it
+	will abort with an error.
+
+    SUNW_ProdName name
+        SUNW_PRODNAME tag in the Solaris pkg.
+    SUNW_ProdVers version
+        SUNW_PRODVERS tag in the Solaris pkg.
+    SUNW_Category cat
+        CATEGORY tag in the Solaris pkg.
+    SUNW_HotLine text
+        HOTLINE tag in the pkginfo file of the SVr4 package. 
+    SUNW_MaxInst num
+        num is the value of the MAXINST tag (maximum number of
+        instances of the pkg allowed to be installed on a system) in
+        the pkginfo file of the SVr4 package. 
+
+    SUNW_Copyright file
+        Define file as the name of the file that contains the copyright
+	information for the package.
+
+
+Special macros:
+
+%include <file>
+
+	 process the contents of %topdir/SPECS/<file> as if they were
+	 copied into this file
+
+%use <name> = <spec-file>
+
+	 Declare that parts of %topdir/SPECS/<spec-file> will be referenced
+	 later in this spec file and call it <name>.
+	 Any macros %define'd before the %use line will also affect
+	 <spec-file> (as if they were copied to the beginning of that file).
+	 E.g. %use gtk = gtk2.spec
+
+%<name>.<def>	   or
+%{<name>.<def>}
+
+	 Reference to a %define'd macro in the spec file called <name>,
+	 as defined by a preceding %use. Gets replaced by the value
+	 of the referenced macro.
+	 E.g. %{gtk._datadir}
+
+%<name>.<tag>	   or
+%{<name>.<tag>}
+
+	 Reference to the value of a <tag> in the spec file called <name>.
+	 Gets replaced by the value of <tag>.
+	 E.g. %{gtk.version}
+
+%<name>.<scriptlet> [-d <directory>]	   or
+%{<name>.<scriptlet>} [-d <directory>]
+
+	 Execute <scriptlet> from the spec file named <name>. If -d <directory>
+	 is used, cd into <directory> before executing the <scriptlet>.
+	 E.g. %gtk.prep
+
+%<name>.<package>.<tag>	    or
+%{<name.<package>.<tag>}
+
+	 Reference to the value of a <tag> in a <package> (subpackage)
+	 in the <name>'d spec file.
+	 E.g. %{gtk.gtk-devel.summary}
+	 Note that is not properly tested yet, use with caution and
+	 let me know if it's broken.
+
+
+--
+Last modified: 2004-01-09 Laca@Sun.Com

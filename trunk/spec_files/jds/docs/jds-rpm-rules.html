@@ -1,0 +1,139 @@
+<h2>JDS RPM Rules</h2>
+
+<style>
+li {padding:3px;}
+</style>
+
+<p>
+The following RPM rules apply for hacking on the JDS sources -
+<p>
+
+<h3>Scripts</h3>
+
+<ul>
+  <li>
+	pre/post-install/remove scripts should never touch files belonging
+	to another package.
+  </li>
+
+  <li>
+	Never add or delete files in pre/post-install scripts. Adding files
+	will result in files in the file system that do not belong to any
+	packages. Removing files will cause the package to fail 
+	verification (rpm --verify) and result in warnings about missing
+	files when you uninstall the package.
+  </li>
+
+  <li>
+	If you change a file in a pre/post-install script, make sure you
+	use 
+	<a href="http://www.rpm.org/max-rpm/s1-rpm-inside-files-list-directives.html#S3-RPM-INSIDE-FLIST-CONFIG-DIRECTIVE">%verify</a>
+	directive to tell RPM not to verify the MD5 checksum, size and
+	modification of that file when running rpm --verify -
+	<blockquote>
+		<tt>%verify (not md5 size mtime) file.conf</tt>
+	</blockquote>
+  </li>
+
+  <li>
+	 The script fragment for registering help docs with scrollkeeper
+	should be "<tt>scrollkeeper-update -q</tt>" and nothing else.
+  </li>
+
+  <li>
+	 Do not use the "j" or "z" flags of tar to uncompress sources 
+	as it's not portable on Solaris. Use 
+	"<tt>bzip2 -dc %SOURCEn | tar xf -</tt>"
+  </li>
+</ul>
+
+<h3>Dependencies</h3>
+
+<ul>
+  <li>
+	When <tt>%pre</tt> and <tt>%post</tt> scripts depend on other 
+	packages (almost always the case), the package has to use 
+	the <tt>PreReq: <i>other-package</i></tt> tag to define that
+	dependency. This tag ensures that other-package is installed 
+	before the package that defines the tag. The Requires tag 
+	only specifies that both packages need to be installed to 
+	get a running system, but the order is not important.
+	<br/><br/>
+	For example, if <tt>%post</tt> calls <tt>scrollkeeper-update</tt>,
+	then the spec file must include "<tt>PreReq: scrollkeeper</tt>".
+  </li>
+
+  <li>
+	 When a previously delivered package obsoleted by new one, and 
+	therefore no longer delivered, the new package has to use the 
+	"Obsoletes" tag to avoid problems with upgrades. If the new 
+	package still provides the old code, also use the "Provides" 
+	tag.  For example, if package <tt>bonobo-activation</tt> is 
+	merged into <tt>libbonobo</tt> put this into <tt>libbonobo.spec</tt> -
+	<pre>
+		%define bonobo_activation_version 2.4.0
+		Obsoletes: bonobo-activation < %{bonobo_activation_version}
+		Provides: bonobo-activation = %{bonobo_activation_version}
+		Obsoletes: bonobo-activation-devel < %{bonobo_activation_version}
+		Provides: bonobo-activation-devel = %{bonobo_activation_version}
+	</pre>
+  </li>
+</ul>
+
+<h3>Files</h3>
+
+<ul>
+  <li>
+	 Always use the most specific directory variable, e.g. 
+	<tt>%_bindir</tt> instead of <tt>%_prefix/bin</tt> and 
+	<tt>%_datadir</tt> instead of <tt>%_prefix/share</tt>.
+  </li>
+
+  <li>
+	 Use the 
+	<tt><a href="http://www.rpm.org/max-rpm/s1-rpm-inside-files-list-directives.html#S3-RPM-INSIDE-FLIST-CONFIG-DIRECTIVE">%config</a></tt>
+	directive for config files.
+  </li>
+
+  <li>
+	Do not include libtool's .la files in the packages. Not even in the 
+	devel package.
+  </li>
+
+  <li>
+	Do not include static libs unless absolutely necessary, in that case, 
+	include it in the devel package.
+  </li>
+
+  <li>
+	Include lib*.so.* in the base package, lib*.so in the -devel package.
+  </li>
+</ul>
+
+<h3>Patches</h3>
+
+<ul>
+  <li>
+	All patches should be p1 (i.e. the files names in the diff start with the 
+	top level source dir and you use <tt>%patchn -p1</tt> in the spec file.
+  </li>
+
+  <li>
+	The patch naming convention should be the following - 
+	<tt>module_name-nn-descriptive_text.diff</tt>, where <tt><i>modules_name</i></tt>
+	is the base name of the spec file without the .spec, <tt><i>nn</i></tt> is the 
+	number of the patch (<tt><i>Patchnn</i></tt> tag in the spec file) and 
+	<tt><i>descriptive_text</i></tt> is a very short description of what the patch 
+	does or why it is needed, e.g.:
+	<blockquote><tt>
+		gst-02-fix-registry-crashes.diff.
+	</tt><blockquote>
+  </li>
+
+  <li>
+	When you remove a patch, make sure that patches with higher numbers are renumbered 
+	(update <tt><i>Patchnn</i></tt> tag in the spec file, rename file, cvs remove 
+	old_file, cvs add new_file). There is a script in the <b>scripts</b> directory to
+	automatically reorder patches - use it carefully if you do so.
+  </li>
+</ul>
