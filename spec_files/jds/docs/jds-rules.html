@@ -1,0 +1,79 @@
+<h2>JDS Rules</h2>
+
+<style>
+li {padding:3px;}
+</style>
+
+<p>
+The following rules apply for hacking on the JDS sources -
+<p>
+
+<ul>
+  <li>
+	All patches that are not branding or vendor specific configuration
+	<b>MUST</b> be submitted upstream to the original community of the
+	component.
+  </li>
+
+  <li>
+	Patches that are rejected by the upstream community are considered
+	<b>broken</b> and should be reworked where possible. Each patch
+	that remains locally increases the maintenance burden for any
+	future work with that component.
+  </li>
+
+  <li>
+	<b>FIXIT@THESOURCE</b>: Find the root cause of the problem and 
+	either fix it yourself, or collaborate to get it fixed. You should
+	not apply a workaround if at all possible. Temporary workarounds are
+	appropriate in some cases, although not something that should be 
+	done long term.
+  </li>
+
+  <li>
+	Patches should be applied within the Linux spec files and <b>MUST</b>
+	work on <b>both</b> Linux and Solaris.
+  </li>
+
+  <li>
+	Avoid using <b>%ifos</b>
+  </li>
+
+  <li>
+	If a patch requires images or other binary files, put those in 
+	ext-sources. Remember to use the -kb CVS option when adding
+	binaries. Where possible other files should be merged into
+	a patch.
+  </li>
+
+  <li>
+	Update %changelog in the spec file for <b>ALL</b> non-trivial 
+	changes and make sure you have a ChangeLog entry to accompany
+	this. There is a ChangeLog in the top level directory, and a
+	ChangeLog in the Solaris directory. Use them as appropriate.
+  </li>
+
+  <li>
+	The commit log message should be the same as what is in the
+	ChangeLog entry. When you go to commit, do not use the -m
+	CVS option, instead wait for the prompt, and cut and paste
+	your ChangeLog entry in it.
+  </li>
+
+  <li>
+	Follow the spec file templates -
+	<blockquote>
+	<dl>
+	  <dt>docs/template.spec</dt>
+          <dd>Linux spec file template</dd>
+
+	  <dt>docs/SUNWtemplate.spec</dt>
+          <dd>Solaris spec file template</dd>
+	</dl>
+	</blockquote>
+  </li>
+
+  <li>
+	Avoid patching patches.
+  </li>
+</ul>

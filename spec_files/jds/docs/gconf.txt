@@ -1,0 +1,167 @@
+How to package gconf schemas
+----------------------------
+
+Background
+
+(Skip this if you are familiar with gconf, schemas, %gconf.xml files.)
+Somewhere between GNOME 2.12 and 2.14 GConf changed the file format of
+its xml backend.  Previously, if you had a key called
+/desktop/gnome/interface/foo, the corresponding value was stored in
+/etc/gconf/gconf.xml.defaults/desktop/gnome/interface/%gconf.xml
+These files were created using gconftool-2 by installing schemas files,
+stored in /etc/gconf/schemas.
+So we had 100s of small xml files, each containing just a few keys/values
+and translations of the key descriptions in all languages.
+This became a performance issue, as it took several seconds to load
+these files when gconfd-2 started.  The new approach is using
+one "merged" xml file that includes all key - value pairs.
+Localisations were split into separate xml files, one for each locale.
+The new files are /etc/gconf/gconf.xml.defaults/%gconf-tree.xml and
+/etc/gconf/gconf.xml.defaults/%gconf-tree-<locale>.xml
+First a program called gconf-merge-tree was used to generate the
+merged xml files from the directory structure.  Once the merged xml
+files were created, gconfd-2 only read those and ignored the directory
+structure.  So we ended up with 2 gconf data bases which could become
+inconsistent.  Fortunately,  gconftool-2 can now install the schemas
+straight into the merged xml files.  So the preferred way to install
+schemas is doing just that.
+
+
+Introduction
+
+In JDS3, we installed the schemas into $RPM_BUILD_ROOT during 'make install'
+and included the generated %gconf.xml files in the -root packages.
+This was kinda broken as it wasn't possible for multiple packages to
+install gconf keys in the same directory as they would have had to
+deliver the same %gconf.xml file with different contents.
+However, the format of the xml database changed to merged xml files
+(see the Background above), so we were forced to change the way we
+deliver gconf data.
+The basic idea is similar to what Linux distributions do: we package the
+schemas files and install/uninstall them using postinstall/preremove
+scripts.  The only difference is that we can't use gconftool-2 directly
+in procedural package scripts because of problems with Live Upgrade and
+Alternate Root installations (see postrun.txt for more details).
+So what we do is, use postrun to run gconftool-2 "as soon as possible".
+The gconftool-2 command will install the schemas into the merged gconf
+files in /etc/gconf/gconf.xml.defaults/%gconf-tree*.xml.
+
+
+Step by step instructions
+
+1) Make sure that each -root sub package that delivers gconf schemas
+   depends on SUNWgnome-config (gconf) and SUNWpostrun.  Add these
+   2 lines to the end of the %package definition:
+
+     Requires: SUNWpostrun-root
+     Requires: SUNWgnome-config
+
+   Example:
+
+     ...
+     %package root
+     Summary:                 %{summary} - / filesystem
+     SUNW_BaseDir:            /
+     %include default-depend.inc
+     Requires: SUNWpostrun-root
+     Requires: SUNWgnome-config
+     ...
+
+2) Make sure that %install does not include the directory based %gconf.xml
+   files.  Note, if you use separate Linux and Solaris spec files and %use,
+   these commands should go in the Linux spec file:
+
+     export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1    
+     make DESTDIR=$RPM_BUILD_ROOT install
+
+   If you do this, the only gconf-related files in $RPM_BUILD_ROOT/etc
+   should be schemas.
+
+   Some more explanations and historical details follow, skip to 3) if you
+   don't care.
+
+   In JDS3 and early JDS4 builds, we installed the schemas explicitely
+   in the Solaris spec files' %install section like this:
+
+     export GCONF_CONFIG_SOURCE=xml::$RPM_BUILD_ROOT%{_sysconfdir}/gconf/gconf.xml.defaults
+     for S in $RPM_BUILD_ROOT/%{_sysconfdir}/gconf/schemas/*.schemas; do
+       %{_bindir}/gconftool-2 --makefile-install-rule $S >/dev/null
+     done
+
+   Then we had to remove the zero-lenght %gconf.xml nodes (for example
+   /etc/gconf/gconf.xml.defaults/apps/%gconf.xml) as they would
+   have otherwise appeared in multiple -root pkgs, which is a violation
+   of the packaging rules:
+
+     chmod -R a+rX $RPM_BUILD_ROOT/%{_sysconfdir}
+     for f in apps/?gconf.xml \
+	      schemas/?gconf.xml \
+	      schemas/apps/?gconf.xml \
+	 ; do
+       test ! -s $RPM_BUILD_ROOT%{_sysconfdir}/gconf/gconf.xml.defaults/$f && \
+	 rm -rf $RPM_BUILD_ROOT%{_sysconfdir}/gconf/gconf.xml.defaults/$f
+     done
+
+   This was really broken, because if the package that includes the removed
+   %gconf.xml files is not installed then the files included in this pkg
+   will not be found by gconfd-2.  Worse, if, by mistake, no package
+   includes some empty %gconf.xml nodes, the leaves won't be found at all.
+
+3) Add a %post and a %preun script that installs/uninstalls the schemas.
+   Note, you need to list the schemas files in the %preun script.
+   In the %post script we always install all schemas available on
+   the system for performance reasons.
+
+     %post root
+     ( echo 'test -x /usr/bin/gconftool-2 || {';
+       echo '  echo "ERROR: gconftool-2 not found"';
+       echo '  exit 1';
+       echo '}';
+       echo 'umask 0022';
+       echo 'GCONF_CONFIG_SOURCE=xml:merged:/etc/gconf/gconf.xml.defaults';
+       echo 'export GCONF_CONFIG_SOURCE';
+       echo '/usr/bin/gconftool-2 --makefile-install-rule %{_sysconfdir}/gconf/schemas/*.schemas'
+     ) | $BASEDIR/var/lib/postrun/postrun -u -c JDS_wait
+
+     %preun root
+     test -x $BASEDIR/var/lib/postrun/postrun || exit 0
+     ( echo 'test -x $PKG_INSTALL_ROOT/usr/bin/gconftool-2 || {';
+       echo '  echo "WARNING: gconftool-2 not found; not uninstalling gconf schemas"';
+       echo '  exit 0';
+       echo '}';
+       echo 'umask 0022';
+       echo 'GCONF_CONFIG_SOURCE=xml:merged:$BASEDIR/etc/gconf/gconf.xml.defaults';
+       echo 'GCONF_BACKEND_DIR=$PKG_INSTALL_ROOT/usr/lib/GConf/2';
+       echo 'LD_LIBRARY_PATH=$PKG_INSTALL_ROOT/usr/lib';
+       echo 'export GCONF_CONFIG_SOURCE GCONF_BACKEND_DIR LD_LIBRARY_PATH';
+       echo 'SDIR=$BASEDIR%{_sysconfdir}/gconf/schemas';
+       echo 'schemas="$SDIR/###FILE1###.schemas';
+       echo '         $SDIR/###FILE2###.schemas';
+       echo '         $SDIR/###FILE3###.schemas';
+     (...)
+       echo '         $SDIR/###FILEn###.schemas"';
+       echo '$PKG_INSTALL_ROOT/usr/bin/gconftool-2 --makefile-uninstall-rule $schemas'
+     ) | $BASEDIR/var/lib/postrun/postrun -i -c JDS -a
+
+4) update %files root (or %files -n SUNWfoo-bar-root), it should look
+   something like this:
+
+     %files root
+     %defattr (0755, root, sys)
+     %attr (0755, root, sys) %dir %{_sysconfdir}
+     %{_sysconfdir}/gconf/schemas/###FILE1###.schemas
+     %{_sysconfdir}/gconf/schemas/###FILE2###.schemas
+     %{_sysconfdir}/gconf/schemas/###FILE3###.schemas
+   (...)
+     %{_sysconfdir}/gconf/schemas/###FILEn###.schemas
+
+   Note: ###FILE1### ... ###FILEn### must match the list of lines in
+   %preun.  Please don't use *.schemas but list each schemas
+   file so that when a new schemas file is added to the source tarball
+   the build will break and we will notice that %post %preun and %files
+   need to be updated.
+
+That's it.  If something is not clear, have questions or need a review,
+feel free to email me at laca@sun.com.
+
+Last updated: 2006-06-02

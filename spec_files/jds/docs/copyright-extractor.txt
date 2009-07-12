@@ -1,0 +1,228 @@
+Contents:
+
+1. The copyright-extractor script
+2. Using the script
+3. Adding copyright files to spec files
+
+-----------------------------------------------------------------------------
+
+1. The copyright-extractor script
+
+The copyright-extractor script can be used to find copyright
+and licensing comments in source files.
+
+The script looks at C, C++, Java, Python, Perl and shell script
+files (based on file name) and finds all comments that appear
+in the file before actual code starts.
+
+Then it finds identical comments.  This works for some modules,
+where standard comment blocks are used, however even in those
+modules, the authors and copyright holders may be different in
+each module.  So the next step is trying to merge the licenses.
+
+Consider these 2 headers:
+
+
+/* ATK -  Accessibility Toolkit
+ * Copyright 2007 Sun Microsystems Inc.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+
+/* ATK -  Accessibility Toolkit
+ * Copyright 2001 Sun Microsystems Inc.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+
+The only difference is the copyright year.  The merged license will
+be:
+
+
+ ATK -  Accessibility Toolkit
+ Copyright 2001 Sun Microsystems Inc.
+
+ Copyright 2007 Sun Microsystems Inc.
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the
+ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ Boston, MA 02111-1307, USA.
+
+
+There are usually bigger differences between comments.  Merging
+only takes place if at least 10 lines match. There may be many more
+authors and copyright holders and additional comments at the end
+of the license comments.  This can sometimes cause weird results.
+In general, the fewer files checked, the better the results.
+In the case of something like SUNWgnome-base-libs, I recommend
+extracting the licenses for each component (atk, glib, gtk, pango,
+cairo, ...) separately and manually merging them.
+
+In all cases, the output must be carefully reviewed, edited
+and the unnecessary lines deleted.
+
+Copyright notices should appear at the beginning of each license
+block (as per Sun guidelines).  When you find copyright notices
+that only differ in the year or the addition of an email address,
+it's safe to merge them.  Examples:
+
+if you find things like this:
+
+  Copyright (C) 2003, 2006 Red Hat, Inc.
+  Copyright (C) 2004, 2005 Red Hat, Inc.
+  Copyright (C) 2003, 2004, 2007 Red Hat, Inc.
+  Copyright (C) 2003, 2004, 2005 Red Hat, Inc.
+  Copyright (C) 2003, 2004 Red Hat, Inc.
+  Copyright (C) 2002-2006 Red Hat Inc.
+  Copyright (C) 2002, 2003, 2006 Red Hat, Inc.
+  Copyright (C) 2002, 2003, 2005 Red Hat Inc.
+  Copyright (C) 2002, 2003, 2004, 2006 Red Hat Inc.
+  Copyright (C) 2002, 2003, 2004, 2005 Red Hat, Inc.
+  Copyright (C) 2002, 2003, 2004 Red Hat Inc.
+  Copyright (C) 2002, 2006 Red Hat Inc.
+  Copyright (C) 2002, 2005 Red Hat Inc.
+  Copyright (C) 2002, 2004 Red Hat Inc.
+  Copyright (C) 2002, 2003 Red Hat, Inc.
+  Copyright (C) 2007 Red Hat Inc.
+  Copyright (C) 2006 Red Hat, Inc.
+  Copyright (C) 2005 Red Hat, Inc.
+  Copyright (C) 2004 Red Hat, Inc.
+  Copyright (C) 2003 Red Hat, Inc.
+  Copyright (C) 2003 Red Hat, Inc.
+
+consolidate this down to:
+
+  Copyright (C) 2002-2007 Red Hat, Inc.
+
+Or in this case:
+
+  Copyright (C) 2007, Jamie McCracken 
+  Copyright (C) 2007, Jamie McCracken <jamiemcc@blueyonder.co.uk>
+ 
+it's enought to keep the latter, it's clearly the same person.
+
+Note that if the source file contains only a reference to a file
+not easily  accessible to the reader of the package copyright file
+(e.g., the example below with a reference to a file that must be
+ftp'ed), you will need to include the text from the COPYING file
+that is referenced:
+
+ /* (C) 1998-2002 Red Hat, Inc. -- Licensing details are in the COPYING
+    file accompanying popt source distributions, available from
+    ftp://ftp.rpm.org/pub/rpm/dist */
+
+If you suspect that something went wrong during the smart
+merge (the output looks bogus) or the merges result in weird
+license texts even if you run the script subdirectory by
+subdirectory, you can use the -r (or --raw) option.  This
+causes the script to only unify identical comments.  In this
+mode does not attempt to do the "smart merge".
+
+There's also -g (or --gpl) option that can be used to detect
+if any of the licenses in the output appears to be LGPL or GPL,
+in which case it puts Sun's standard disclaimer about the choice
+of GPLv2.
+
+The -c (or --copyright-first) option copies the copyright
+statements and author names to the beginning of each license
+block, as required by Sun guidelines.  This option only works
+if the copyright lines don't extent to multiple lines, e.g.
+the following will break badly:
+
+   Copyright (c) yeah Some Company, Inc
+   All rights reserved.
+   Use is subject to license terms.
+
+   Authors:
+	joe.bloggs@some-company.com
+
+The result will be that the Copyright line is moved, but the
+rest of the lines stay where they were.  I would say that
+this option is less that useful.
+
+The -O (or --omitted) option prints the list of files NOT read
+by this script.
+
+
+2. Using the script
+
+The copyright-extractor script is used for creating copyright
+files for SUNW packages.  Since the contributors (who are
+usually copyright owners) and even licenses are subject to
+change, this process needs to be repeated each time we update
+GNOME in Nevada, typically once every 6 months.
+
+The recommended way to run the script is:
+
+    pkgtool prep --download SUNWfoo.spec
+    scripts/copyright-extractor -g /path/to/BUILD/SUNWfoo-version \
+       > copyright.txt
+
+As mentioned earlier, in the case of larger packages, it's
+a good idea and sometimes necessary to run the script for each
+component or ever each subdirectory of larger components:
+
+    scripts/copyright-extractor -g /path/to/BUILD/SUNWfoo-version/libfoo \
+      > copyright.txt
+    scripts/copyright-extractor -g /path/to/BUILD/SUNWfoo-version/libbar \
+      >> copyright.txt
+    ...
+
+Then, review and edit the copyright.txt file to create
+SUNWfoo.copyright.
+
+
+3. Adding copyright files to spec files
+
+Each SUNW spec file needs a copyright file, "base" spec files
+don't need copyright files.
+
+Place the copyright file in spec-files/copyright/
+The naming convention is SUNWpackage-name.copyright.
+Then edit SUNWpackage-name.spec and add
+
+SUNW_Copyright:           %{name}.copyright
+
+in the preamble (i.e. where Name, Version, etc. are). The subpackages
+(-devel, -root, etc.) inherit this setting from the main package
+so you don't need to repeat this line in the %package section.
+
