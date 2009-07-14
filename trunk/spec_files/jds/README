@@ -1,0 +1,9 @@
+Welcome to JDS Development!
+
+This is the source code for the Java Desktop System, JDS. Take some time to read
+through the various pieces of documentation that are available at 
+http://www.opensolaris.org/os/project/jds that will give you some information
+on a wide range of topics, including the bug lifecycle and review process, 
+development guidelines and rationales, and new tasks being worked on. There 
+are also a number of documents available in the 'docs' directory about specific 
+elements of the packaging to be aware of.
