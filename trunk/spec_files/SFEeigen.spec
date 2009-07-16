@@ -20,12 +20,6 @@ BuildRequires: SFEcmake
 BuildRequires: SFEdoxygen
 Requires: SUNWlibm
 
-%package devel
-Summary:                 %{summary} - development files
-SUNW_BaseDir:            %{_basedir}
-%include default-depend.inc
-Requires: %name
-
 %prep
 %if %cc_is_gcc
 %else
@@ -96,5 +90,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/doc/eigen/*
 
 %changelog
+* Thu Jul 16 2009 - moinakg(at)belenix<dot>org
+- Remove unused devel package definition.
 * Mon May 04 2009 - moinakg@belenix.org
 - Initial version.
