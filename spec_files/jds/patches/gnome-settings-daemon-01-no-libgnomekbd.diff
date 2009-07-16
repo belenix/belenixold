@@ -1,0 +1,98 @@
+diff -up gnome-settings-daemon-2.21.5/config.h.in.orig gnome-settings-daemon-2.21.5/config.h.in
+--- gnome-settings-daemon-2.21.5/config.h.in.orig	2008-01-15 13:26:43.000000000 +0000
++++ gnome-settings-daemon-2.21.5/config.h.in	2008-01-21 12:25:36.704295000 +0000
+@@ -92,3 +92,7 @@
+ 
+ /* Define to 1 if the X Window System is missing or not being used. */
+ #undef X_DISPLAY_MISSING
++
++/* Defined when gswitchit is detected */
++#undef HAVE_GSWITCHIT
++
+
+diff -up gnome-settings-daemon-2.21.91/plugins/keyboard/Makefile.am.orig gnome-settings-daemon-2.21.91/plugins/keyboard/Makefile.am
+--- gnome-settings-daemon-2.21.91/plugins/keyboard/Makefile.am.orig	2007-12-24 11:18:49.000000000 +0000
++++ gnome-settings-daemon-2.21.91/plugins/keyboard/Makefile.am	2008-01-21 12:29:15.219936000 +0000
+@@ -7,13 +7,18 @@
+ Gladedir   = $(pkgdatadir)
+ Glade_DATA = modmap-dialog.glade
+ 
++if HAVE_GSWITCHIT
++GSWITCHIT_FILES = \
++	gsd-keyboard-xkb.h      \
++	gsd-keyboard-xkb.c
++endif
++
+ libkeyboard_la_SOURCES = 	\
+ 	gsd-keyboard-plugin.h	\
+ 	gsd-keyboard-plugin.c	\
+ 	gsd-keyboard-manager.h	\
+ 	gsd-keyboard-manager.c	\
+-	gsd-keyboard-xkb.h	\
+-	gsd-keyboard-xkb.c	\
++	$(GSWITCHIT_FILES)	\
+ 	gsd-xmodmap.h		\
+ 	gsd-xmodmap.c		\
+ 	delayed-dialog.h	\
+--- gnome-settings-daemon-2.25.2/plugins/keyboard/gsd-keyboard-manager.c.ori	2008-12-01 11:38:46.000000000 +0000
++++ gnome-settings-daemon-2.25.2/plugins/keyboard/gsd-keyboard-manager.c	2008-12-24 08:00:44.042726771 +0000
+@@ -36,6 +36,7 @@
+ #include <gdk/gdk.h>
+ #include <gdk/gdkx.h>
+ #include <gtk/gtk.h>
++#include <gconf/gconf-client.h>
+ 
+ #ifdef HAVE_X11_EXTENSIONS_XF86MISC_H
+ #  include <X11/extensions/xf86misc.h>
+@@ -48,7 +49,9 @@
+ #include "gnome-settings-profile.h"
+ #include "gsd-keyboard-manager.h"
+ 
++#ifdef HAVE_GSWITCHIT
+ #include "gsd-keyboard-xkb.h"
++#endif
+ #include "gsd-xmodmap.h"
+ 
+ #define GSD_KEYBOARD_MANAGER_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GSD_TYPE_KEYBOARD_MANAGER, GsdKeyboardManagerPrivate))
+@@ -384,9 +387,11 @@
+ 
+         gconf_client_add_dir (client, GSD_KEYBOARD_KEY, GCONF_CLIENT_PRELOAD_ONELEVEL, NULL);
+ 
++#ifdef HAVE_GSWITCHIT
+         /* Essential - xkb initialization should happen before */
+         gsd_keyboard_xkb_set_post_activation_callback ((PostActivationCallback) gsd_load_modmap_files, NULL);
+         gsd_keyboard_xkb_init (client);
++#endif
+ 
+ #ifdef HAVE_X11_EXTENSIONS_XKB_H
+         numlock_xkb_init (manager);
+/jds/bin/diff -uprN gnome-settings-daemon-2.25.90.old/configure.ac gnome-settings-daemon-2.25.90/configure.ac
+--- gnome-settings-daemon-2.25.90.old/configure.ac	2009-02-10 19:09:44.237204000 +0000
++++ gnome-settings-daemon-2.25.90/configure.ac	2009-02-10 19:11:11.738123000 +0000
+@@ -208,9 +208,23 @@ AC_CHECK_X_LIB(Xxf86misc, XF86MiscQueryE
+ AC_SUBST(XF86MISC_LIBS)
+ AC_CHECK_X_HEADERS([X11/extensions/XKB.h])
+ 
+-PKG_CHECK_MODULES(LIBGNOMEKBD, [libgnomekbd >= 2.21.4 libxklavier >= 3.8])
+-AC_SUBST(LIBGNOMEKBD_CFLAGS)
+-AC_SUBST(LIBGNOMEKBD_LIBS)
++AC_ARG_ENABLE(gswitchit,
++       AC_HELP_STRING([--disable-gswitchit],
++                      [Do not build with gswitchit support]),,
++                       enable_gswitchit=yes)
++
++if test x$enable_libxklavier = xyes; then
++    PKG_CHECK_MODULES(LIBGNOMEKBD, [libgnomekbd >= 2.21.4 libxklavier >= 3.3])
++    AC_SUBST(LIBGNOMEKBD_CFLAGS)
++    AC_SUBST(LIBGNOMEKBD_LIBS)
++
++    PKG_CHECK_MODULES(LIBGNOMEKBDUI, [libgnomekbdui >= 2.21])
++    AC_SUBST(LIBGNOMEKBDUI_CFLAGS)
++    AC_SUBST(LIBGNOMEKBDUI_LIBS)
++
++    AC_DEFINE([HAVE_GSWITCHIT], 1, [Defined when gswitchit is detected])
++fi
++AM_CONDITIONAL(HAVE_GSWITCHIT, [test $enable_gswitchit = yes])
+ 
+ dnl ---------------------------------------------------------------------------
+ dnl - Housekeeping plugin stuff

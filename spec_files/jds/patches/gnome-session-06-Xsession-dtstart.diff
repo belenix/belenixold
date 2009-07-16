@@ -1,0 +1,12 @@
+--- gnome-session-2.21.91/data/gnome.desktop.in-orig	2008-02-29 12:26:05.772304000 -0600
++++ gnome-session-2.21.91/data/gnome.desktop.in	2008-02-29 12:29:04.954992000 -0600
+@@ -2,7 +2,7 @@
+ Encoding=UTF-8
+ _Name=GNOME
+ _Comment=This session logs you into GNOME
+-Exec=gnome-session
+-TryExec=gnome-session
++Exec=/usr/bin/dtstart jds
++TryExec=/usr/bin/dtstart
+ Icon=
+ Type=Application

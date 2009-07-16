@@ -1,0 +1,34 @@
+diff -rup ../gnome-settings-daemon-2.23.91/data/desktop_gnome_font_rendering.schemas.in gnome-settings-daemon-2.23.91/data/desktop_gnome_font_rendering.schemas.in
+--- ../gnome-settings-daemon-2.23.91/data/desktop_gnome_font_rendering.schemas.in	2008-09-19 16:02:38.852794484 +0200
++++ gnome-settings-daemon-2.23.91/data/desktop_gnome_font_rendering.schemas.in	2008-09-19 16:03:59.241796681 +0200
+@@ -6,6 +6,7 @@
+ 	    <applyto>/desktop/gnome/font_rendering/dpi</applyto>
+             <owner>gnome</owner>
+ 	    <type>float</type>
++	    <default>96</default>
+             <locale name="C">
+ 	        <short>DPI</short>
+                 <long>
+@@ -19,7 +20,7 @@
+ 	    <applyto>/desktop/gnome/font_rendering/antialiasing</applyto>
+             <owner>gnome</owner>
+ 	    <type>string</type>
+-            <default>grayscale</default>
++            <default>rgba</default>
+             <locale name="C">
+ 	        <short>Antialiasing</short>
+                 <long>
+Only in gnome-settings-daemon-2.23.91/data: desktop_gnome_font_rendering.schemas.in~
+diff -rup ../gnome-settings-daemon-2.23.91/plugins/xsettings/gsd-xsettings-manager.c gnome-settings-daemon-2.23.91/plugins/xsettings/gsd-xsettings-manager.c
+--- ../gnome-settings-daemon-2.23.91/plugins/xsettings/gsd-xsettings-manager.c	2008-09-19 16:02:38.843383015 +0200
++++ gnome-settings-daemon-2.23.91/plugins/xsettings/gsd-xsettings-manager.c	2008-09-19 16:03:21.037940093 +0200
+@@ -267,7 +267,7 @@ get_dpi_from_gconf_or_x_server (GConfCli
+         GConfValue *value;
+         double      dpi;
+ 
+-        value = gconf_client_get_without_default (client, FONT_DPI_KEY, NULL);
++        value = gconf_client_get (client, FONT_DPI_KEY, NULL);
+ 
+         /* If the user has ever set the DPI preference in GConf, we use that.
+          * Otherwise, we see if the X server reports a reasonable DPI value:  some X
+Only in gnome-settings-daemon-2.23.91/plugins/xsettings: gsd-xsettings-manager.c.orig

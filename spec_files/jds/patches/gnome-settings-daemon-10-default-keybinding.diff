@@ -1,0 +1,40 @@
+diff --git a/data/apps_gnome_settings_daemon_keybindings.schemas.in b/data/apps_gnome_settings_daemon_keybindings.schemas.in
+index ac3e312..66a2c51 100644
+--- a/data/apps_gnome_settings_daemon_keybindings.schemas.in
++++ b/data/apps_gnome_settings_daemon_keybindings.schemas.in
+@@ -17,7 +17,7 @@
+             <key>/schemas/apps/gnome_settings_daemon/keybindings/volume_mute</key>
+             <applyto>/apps/gnome_settings_daemon/keybindings/volume_mute</applyto>
+             <type>string</type>
+-            <default>XF86AudioMute</default>
++            <default>SunAudioMute</default>
+             <locale name="C">
+                 <short>Volume mute</short>
+                 <long>Binding to mute the system volume.</long>
+@@ -29,7 +29,7 @@
+             <key>/schemas/apps/gnome_settings_daemon/keybindings/volume_down</key>
+             <applyto>/apps/gnome_settings_daemon/keybindings/volume_down</applyto>
+             <type>string</type>
+-            <default>XF86AudioLowerVolume</default>
++            <default>SunAudioLowerVolume</default>
+             <locale name="C">
+                 <short>Volume down</short>
+                 <long>Binding to lower the system volume.</long>
+@@ -41,7 +41,7 @@
+             <key>/schemas/apps/gnome_settings_daemon/keybindings/volume_up</key>
+             <applyto>/apps/gnome_settings_daemon/keybindings/volume_up</applyto>
+             <type>string</type>
+-            <default>XF86AudioRaiseVolume</default>
++            <default>SunAudioRaiseVolume</default>
+             <locale name="C">
+                 <short>Volume up</short>
+                 <long>Binding to raise the system volume.</long>
+@@ -113,7 +113,7 @@
+             <key>/schemas/apps/gnome_settings_daemon/keybindings/sleep</key>
+             <applyto>/apps/gnome_settings_daemon/keybindings/sleep</applyto>
+             <type>string</type>
+-            <default></default>
++            <default>SunPowerSwitch</default>
+             <locale name="C">
+                 <short>Suspend</short>
+                 <long>Binding to suspend the computer.</long>

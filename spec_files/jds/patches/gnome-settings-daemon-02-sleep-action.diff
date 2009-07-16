@@ -1,0 +1,30 @@
+/jds/bin/diff -uprN gnome-settings-daemon-2.25.90.old/plugins/media-keys/gsd-media-keys-manager.c gnome-settings-daemon-2.25.90/plugins/media-keys/gsd-media-keys-manager.c
+--- gnome-settings-daemon-2.25.90.old/plugins/media-keys/gsd-media-keys-manager.c	2009-02-10 19:14:39.480671000 +0000
++++ gnome-settings-daemon-2.25.90/plugins/media-keys/gsd-media-keys-manager.c	2009-02-10 19:16:18.526468000 +0000
+@@ -254,15 +254,9 @@ execute (GsdMediaKeysManager *manager,
+ }
+ 
+ static void
+-do_sleep_action (char *cmd1,
+-                 char *cmd2)
++do_sleep_action (GsdMediaKeysManager *manager)
+ {
+-        if (g_spawn_command_line_async (cmd1, NULL) == FALSE) {
+-                if (g_spawn_command_line_async (cmd2, NULL) == FALSE) {
+-                        acme_error (_("Couldn't put the machine to sleep.\n"
+-                                        "Verify that the machine is correctly configured."));
+-                }
+-        }
++        execute (manager, "gnome-session-save --shutdown-dialog", FALSE, FALSE);
+ }
+ 
+ static void
+@@ -919,7 +913,7 @@ do_action (GsdMediaKeysManager *manager,
+                 do_mail_action (manager);
+                 break;
+         case SLEEP_KEY:
+-                do_sleep_action (SLEEP_COMMAND, "xset dpms force off");
++                do_sleep_action (manager);
+                 break;
+         case SCREENSAVER_KEY:
+                 if ((cmd = g_find_program_in_path ("gnome-screensaver-command"))) {
