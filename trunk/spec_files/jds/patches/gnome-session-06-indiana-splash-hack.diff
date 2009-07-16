@@ -1,0 +1,97 @@
+diff -rup -x '*.orig' -x '*.rej' -x '*.*~' gnome-session-2.25.91/splash/gnome-session-splash.c ../gnome-session-2.25.91/splash/gnome-session-splash.c
+--- gnome-session-2.25.91/splash/gnome-session-splash.c	2009-02-17 17:52:31.574130870 +0100
++++ ../gnome-session-2.25.91/splash/gnome-session-splash.c	2009-02-17 17:52:10.834139948 +0100
+@@ -270,8 +270,29 @@ setup_splash_window (void)
+         GsmSplashWindow *splash;
+         GdkPixbuf       *background;
+ 
++	display = gdk_display_get_default ();
++	screen = gdk_display_get_default_screen (display);
++
+         /* Create the splash window */
+         background = load_splash_pixbuf ();
++	
++	if (gdk_pixbuf_get_width (background) > gdk_screen_get_width (screen))
++	  {
++	    GdkPixbuf *center = NULL;
++	    int width = gdk_screen_get_width (screen);
++	    int height = gdk_screen_get_height (screen);
++	    int x_offset = (gdk_pixbuf_get_width (background) - width) / 2;
++	    int y_offset = (gdk_pixbuf_get_height (background) - height) / 2;
++	    
++	    center = gdk_pixbuf_new_subpixbuf (background,
++					       x_offset,
++					       y_offset,
++					       width,
++					       height);
++	    g_object_unref (background);
++	    background = center;
++	  }
++ 
+         splash_widget = gsm_splash_window_new (background);
+         splash = (GsmSplashWindow *)splash_widget;
+         if (background)
+diff -rup -x '*.orig' -x '*.rej' -x '*.*~' gnome-session-2.25.91/splash/splash-window.c ../gnome-session-2.25.91/splash/splash-window.c
+--- gnome-session-2.25.91/splash/splash-window.c	2009-02-17 05:44:27.000000000 +0100
++++ ../gnome-session-2.25.91/splash/splash-window.c	2009-02-17 17:52:10.835663194 +0100
+@@ -116,10 +116,8 @@ calc_text_box (GsmSplashWindow *splash)
+ 
+         pango_layout_get_pixel_extents (splash->layout, NULL, &pixel_rect);
+ 
+-        splash->text_box.x = (allocation->x + allocation->width / 2 -
+-                              pixel_rect.width / 2);
+-        splash->text_box.y = (allocation->y + allocation->height -
+-                              pixel_rect.height - SPLASH_LABEL_V_OFFSET);
++	splash->text_box.x = (gdk_pixbuf_get_width (splash->background) / 2) - (pixel_rect.width / 2);
++	splash->text_box.y = (gdk_pixbuf_get_height (splash->background) / 2) - (pixel_rect.height / 2) + 66;
+         splash->text_box.width = pixel_rect.width + 1;
+         splash->text_box.height = pixel_rect.height + 1;
+ }
+@@ -136,7 +134,7 @@ splash_window_expose_event (GtkWidget   
+                 return FALSE;
+         }
+ 
+-        for (l = splash->icons; l; l = l->next) {
++/*        for (l = splash->icons; l; l = l->next) {
+                 SplashIcon *si = l->data;
+ 
+                 if (gdk_rectangle_intersect (&event->area,
+@@ -153,24 +151,24 @@ splash_window_expose_event (GtkWidget   
+                                 GDK_RGB_DITHER_MAX,
+                                 exposed.x, exposed.y);
+                 }
+-        }
++        } */
+ 
++/*
+         if (splash->layout) {
+                 calc_text_box (splash);
+                 if (gdk_rectangle_intersect (&event->area, &splash->text_box, &exposed)) {
+-                        /* drop shadow */
+                         gdk_draw_layout (widget->window,
+                                          widget->style->black_gc,
+                                          splash->text_box.x + 1, splash->text_box.y + 1,
+                                          splash->layout);
+ 
+-                        /* text */
+                         gdk_draw_layout (widget->window,
+                                          widget->style->white_gc,
+                                          splash->text_box.x, splash->text_box.y,
+                                          splash->layout);
+                 }
+         }
++*/
+ 
+         return FALSE;
+ }
+@@ -480,8 +478,8 @@ gsm_splash_window_start (GsmSplashWindow
+ 
+         /* re-draw the old text extents */
+         gtk_widget_queue_draw_area (GTK_WIDGET (splash),
+-                                    splash->text_box.x, splash->text_box.y,
+-                                    splash->text_box.width, splash->text_box.height);
++                                    splash->text_box.x - 10, splash->text_box.y,
++                                    splash->text_box.width + 10, splash->text_box.height);
+ 
+         g_free (splash->cur_text);
+         splash->cur_text = g_strdup (app_name);

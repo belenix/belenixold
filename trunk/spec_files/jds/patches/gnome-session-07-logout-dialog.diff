@@ -1,0 +1,326 @@
+diff -Nur gnome-session-2.23.6-orig/gnome-session/gsm-logout-dialog.c gnome-session-2.23.6/gnome-session/gsm-logout-dialog.c
+--- gnome-session-2.23.6-orig/gnome-session/gsm-logout-dialog.c	2008-08-07 12:32:18.469687950 +0800
++++ gnome-session-2.23.6/gnome-session/gsm-logout-dialog.c	2008-08-07 12:32:53.941874874 +0800
+@@ -26,6 +26,7 @@
+ 
+ #include <glib/gi18n.h>
+ #include <gtk/gtk.h>
++#include <gdk/gdkx.h>
+ 
+ #include "gsm-logout-dialog.h"
+ #include "gsm-power-manager.h"
+@@ -210,11 +211,30 @@
+ }
+ 
+ static gboolean
++vt_is_available (void)
++{
++  Display *xdisplay;
++  GdkDisplay *gdisplay;
++  Atom prop;
++
++  gdisplay = gdk_display_get_default ();
++  xdisplay = gdk_x11_display_get_xdisplay (gdisplay);
++
++  prop = XInternAtom (xdisplay, "XFree86_VT", TRUE);
++
++  return (prop == None ? FALSE : TRUE);
++}
++
++static gboolean
+ gsm_logout_supports_switch_user (GsmLogoutDialog *logout_dialog)
+ {
+         gboolean ret;
+ 
++#if defined(sun) && defined(__SVR4)
++        ret = gdm_is_available () && vt_is_available ();
++#else
+         ret = gsm_consolekit_can_switch_user (logout_dialog->priv->consolekit);
++#endif
+ 
+         return ret;
+ }
+@@ -224,10 +244,14 @@
+ {
+         gboolean ret;
+ 
++#if defined(sun) && defined(__SVR4)
++        ret = gsm_power_manager_can_reboot (logout_dialog->priv->power_manager);
++#else
+         ret = gsm_consolekit_can_restart (logout_dialog->priv->consolekit);
+         if (!ret) {
+                 ret = gdm_supports_logout_action (GDM_LOGOUT_ACTION_REBOOT);
+         }
++#endif
+ 
+         return ret;
+ }
+@@ -237,11 +261,15 @@
+ {
+         gboolean ret;
+ 
++#if defined(sun) && defined(__SVR4)
++        ret = gsm_power_manager_can_shutdown (logout_dialog->priv->power_manager);
++#else
+         ret = gsm_consolekit_can_stop (logout_dialog->priv->consolekit);
+ 
+         if (!ret) {
+                 ret = gdm_supports_logout_action (GDM_LOGOUT_ACTION_SHUTDOWN);
+         }
++#endif
+ 
+         return ret;
+ }
+diff -Nur gnome-session-2.23.6-orig/gnome-session/gsm-manager.c gnome-session-2.23.6/gnome-session/gsm-manager.c
+--- gnome-session-2.23.6-orig/gnome-session/gsm-manager.c	2008-08-07 12:32:18.468966829 +0800
++++ gnome-session-2.23.6/gnome-session/gsm-manager.c	2008-08-07 12:36:16.283146624 +0800
+@@ -694,9 +694,21 @@
+ {
+         GsmConsolekit *consolekit;
+ 
++#if defined(sun) && defined(__SVR4)
++        GsmPowerManager *power_manager;
++
++        power_manager = gsm_get_power_manager ();
++
++        if (gsm_power_manager_can_reboot (power_manager)) {
++                gsm_power_manager_attempt_reboot (power_manager);
++        }
++
++        g_object_unref (power_manager);
++#else
+         consolekit = gsm_get_consolekit ();
+         do_attempt_reboot (consolekit);
+         g_object_unref (consolekit);
++#endif
+ }
+ 
+ static void
+@@ -704,9 +716,21 @@
+ {
+         GsmConsolekit *consolekit;
+ 
++#if defined(sun) && defined(__SVR4)
++        GsmPowerManager *power_manager;
++
++        power_manager = gsm_get_power_manager ();
++
++        if (gsm_power_manager_can_shutdown (power_manager)) {
++                gsm_power_manager_attempt_shutdown (power_manager);
++        }
++
++        g_object_unref (power_manager);
++#else
+         consolekit = gsm_get_consolekit ();
+         do_attempt_shutdown (consolekit);
+         g_object_unref (consolekit);
++#endif
+ }
+ 
+ static void
+@@ -2589,6 +2589,7 @@ gsm_manager_can_shutdown (GsmManager *ma
+         power_manager = gsm_get_power_manager ();
+         *shutdown_available = gsm_consolekit_can_stop (consolekit)
+                               || gsm_consolekit_can_restart (consolekit)
++                              || gsm_power_manager_can_shutdown (power_manager)
+                               || gsm_power_manager_can_suspend (power_manager)
+                               || gsm_power_manager_can_hibernate (power_manager);
+         g_object_unref (consolekit);
+diff -Nur gnome-session-2.23.6-orig/gnome-session/gsm-power-manager.c gnome-session-2.23.6/gnome-session/gsm-power-manager.c
+--- gnome-session-2.23.6-orig/gnome-session/gsm-power-manager.c	2008-08-07 12:32:18.470657410 +0800
++++ gnome-session-2.23.6/gnome-session/gsm-power-manager.c	2008-08-07 12:32:49.365776065 +0800
+@@ -391,6 +391,78 @@
+         return can_hibernate;
+ }
+ 
++gboolean
++gsm_power_manager_can_reboot (GsmPowerManager *manager)
++{
++        GError  *error;
++        gboolean can_reboot;
++
++        error = NULL;
++
++        if (!ensure_gpm_connection (manager, &error)) {
++                g_message ("Could not connect to power manager: %s",
++                           error->message);
++
++                g_error_free (error);
++
++                return FALSE;
++        }
++
++        can_reboot = FALSE;
++
++        if (!dbus_g_proxy_call (manager->priv->gpm_proxy, "CanReboot",
++                                &error,
++                                G_TYPE_INVALID,
++                                G_TYPE_BOOLEAN, &can_reboot, G_TYPE_INVALID)) {
++                if (error != NULL) {
++                        g_message ("Could not ask power manager if user can reboot: %s",
++                                   error->message);
++
++                        g_error_free (error);
++                }
++
++                can_reboot = FALSE;
++        }
++
++        return can_reboot;
++}
++
++gboolean
++gsm_power_manager_can_shutdown (GsmPowerManager *manager)
++{
++        GError  *error;
++        gboolean can_shutdown;
++
++        error = NULL;
++
++        if (!ensure_gpm_connection (manager, &error)) {
++                g_message ("Could not connect to power manager: %s",
++                           error->message);
++
++                g_error_free (error);
++
++                return FALSE;
++        }
++
++        can_shutdown = FALSE;
++
++        if (!dbus_g_proxy_call (manager->priv->gpm_proxy, "CanShutdown",
++                                &error,
++                                G_TYPE_INVALID,
++                                G_TYPE_BOOLEAN, &can_shutdown, G_TYPE_INVALID)) {
++                if (error != NULL) {
++                        g_message ("Could not ask power manager if user can shutdown: %s",
++                                   error->message);
++
++                        g_error_free (error);
++                }
++
++                can_shutdown = FALSE;
++        }
++
++        return can_shutdown;
++}
++
+ void
+ gsm_power_manager_attempt_suspend (GsmPowerManager *manager)
+ {
+@@ -466,6 +538,81 @@
+         }
+ }
+ 
++void
++gsm_power_manager_attempt_reboot (GsmPowerManager *manager)
++{
++        GError *error;
++
++        error = NULL;
++        if (!ensure_gpm_connection (manager, &error)) {
++                g_warning ("Could not connect to power manager: %s",
++                           error->message);
++
++                g_error_free (error);
++
++                return;
++        }
++
++        if (!dbus_g_proxy_call (manager->priv->gpm_proxy, "Reboot",
++                                &error,
++                                G_TYPE_INVALID, G_TYPE_INVALID) &&
++            error != NULL) {
++                GError *call_error;
++
++                g_warning ("Could not ask power manager to reboot: %s",
++                           error->message);
++
++                call_error = g_error_new_literal (GSM_POWER_MANAGER_ERROR,
++                                                  GSM_POWER_MANAGER_ERROR_REBOOTING,
++                                                  error->message);
++
++                g_error_free (error);
++
++                g_signal_emit (G_OBJECT (manager),
++                               signals[REQUEST_FAILED],
++                               0, call_error);
++
++                g_error_free (call_error);
++        }
++}
++
++void
++gsm_power_manager_attempt_shutdown (GsmPowerManager *manager)
++{
++        GError *error;
++
++        error = NULL;
++        if (!ensure_gpm_connection (manager, &error)) {
++                g_warning ("Could not connect to power manager: %s",
++                           error->message);
++
++                g_error_free (error);
++
++                return;
++        }
++
++        if (!dbus_g_proxy_call (manager->priv->gpm_proxy, "Shutdown",
++                                &error,
++                                G_TYPE_INVALID, G_TYPE_INVALID) &&
++            error != NULL) {
++                GError *call_error;
++
++                g_warning ("Could not ask power manager to shutdown: %s",
++                           error->message);
++
++                call_error = g_error_new_literal (GSM_POWER_MANAGER_ERROR,
++                                                  GSM_POWER_MANAGER_ERROR_SHUTDOWNING,
++                                                  error->message);
++
++                g_error_free (error);
++
++                g_signal_emit (G_OBJECT (manager),
++                               signals[REQUEST_FAILED],
++                               0, call_error);
++
++                g_error_free (call_error);
++        }
++}
+ 
+ GsmPowerManager *
+ gsm_get_power_manager (void)
+diff -Nur gnome-session-2.23.6-orig/gnome-session/gsm-power-manager.h gnome-session-2.23.6/gnome-session/gsm-power-manager.h
+--- gnome-session-2.23.6-orig/gnome-session/gsm-power-manager.h	2008-08-07 12:32:18.468173386 +0800
++++ gnome-session-2.23.6/gnome-session/gsm-power-manager.h	2008-08-07 12:35:21.509699117 +0800
+@@ -59,6 +59,8 @@
+ enum _GsmPowerManagerError
+ {
+   GSM_POWER_MANAGER_ERROR_SUSPENDING = 0,
++  GSM_POWER_MANAGER_ERROR_REBOOTING,
++  GSM_POWER_MANAGER_ERROR_SHUTDOWNING,
+   GSM_POWER_MANAGER_ERROR_HIBERNATING
+ };
+ 
+@@ -74,14 +76,18 @@
+ 
+ gboolean           gsm_power_manager_can_hibernate      (GsmPowerManager *manager);
+ 
+-gboolean           gsm_power_manager_can_power_down     (GsmPowerManager *manager);
++gboolean           gsm_power_manager_can_shutdown     (GsmPowerManager *manager);
+ 
+-gboolean           gsm_power_manager_can_restart        (GsmPowerManager *manager);
++gboolean           gsm_power_manager_can_reboot        (GsmPowerManager *manager);
+ 
+ void               gsm_power_manager_attempt_suspend    (GsmPowerManager *manager);
+ 
+ void               gsm_power_manager_attempt_hibernate  (GsmPowerManager *manager);
+ 
++void               gsm_power_manager_attempt_shutdown  (GsmPowerManager *manager);
++
++void               gsm_power_manager_attempt_reboot  (GsmPowerManager *manager);
++
+ G_END_DECLS
+ 
+ #endif /* __GSM_POWER_MANAGER_H__ */
+

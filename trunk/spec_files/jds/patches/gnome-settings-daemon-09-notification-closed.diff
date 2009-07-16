@@ -1,0 +1,25 @@
+--- gnome-settings-daemon-2.25.92/plugins/a11y-keyboard/gsd-a11y-keyboard-manager.c.old	2009-03-27 12:31:35.476346000 +0800
++++ gnome-settings-daemon-2.25.92/plugins/a11y-keyboard/gsd-a11y-keyboard-manager.c	2009-03-27 12:34:36.238370000 +0800
+@@ -445,10 +445,9 @@
+ #ifdef HAVE_LIBNOTIFY
+ static void
+ on_notification_closed (NotifyNotification     *notification,
+-                        int                     reason,
+                         GsdA11yKeyboardManager *manager)
+ {
+-        /* seems to crash if we unref */
++        g_object_unref (manager->priv->notification);
+         manager->priv->notification = NULL;
+ }
+ 
+@@ -1111,8 +1110,8 @@
+ 
+         g_debug ("Stopping a11y_keyboard manager");
+ 
+-        if (manager->priv->status_icon)
+-                gtk_status_icon_set_visible (manager->priv->status_icon, FALSE);
++        if (p->status_icon)
++                gtk_status_icon_set_visible (p->status_icon, FALSE);
+ 
+         if (p->gconf_notify != 0) {
+                 GConfClient *client = gconf_client_get_default ();
