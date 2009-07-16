@@ -17,6 +17,7 @@
 %define        minor      38
 %define        patchlevel 0
 %define src_url http://easynews.dl.sourceforge.net/sourceforge/boost
+%define pythonver    2.6
 
 Name:                SFEboost-gpp
 Summary:             Boost - free peer-reviewed portable C++ source libraries (g++-built)
@@ -41,8 +42,8 @@ SUNW_BaseDir:   %{_basedir}
 %include default-depend.inc
 Requires:       %{name}
 Requires:       SFEicu4c
-Requires:       SUNWPython25
-Requires:       SUNWPython25-devel
+Requires:       SUNWPython26
+Requires:       SUNWPython26-devel
 
 %prep
 %setup -q -c -n %name-%version
@@ -74,8 +75,8 @@ export EXPAT_LIBPATH=%{_prefix}/lib/%{_arch64}
 
 BOOST_ROOT=`pwd`
 TOOLSET=gcc
-PYTHON_VERSION=`%{_prefix}/bin/%{_arch64}/python2.5 -c "import sys; print (\"%%d.%%d\" %% (sys.version_info[0], sys.version_info[1]))"`
-PYTHON_ROOT=`%{_prefix}/bin/%{_arch64}/python2.5 -c "import sys; print sys.prefix"`
+PYTHON_VERSION=`%{_prefix}/bin/%{_arch64}/python%{pythonver} -c "import sys; print (\"%%d.%%d\" %% (sys.version_info[0], sys.version_info[1]))"`
+PYTHON_ROOT=`%{_prefix}/bin/%{_arch64}/python%{pythonver} -c "import sys; print sys.prefix"`
 
 # Overwrite user-config.jam
 cat > user-config.jam <<EOF
@@ -109,8 +110,8 @@ export EXPAT_LIBPATH=%{_prefix}/lib
 
 BOOST_ROOT=`pwd`
 TOOLSET=gcc
-PYTHON_VERSION=`python2.5 -c "import sys; print (\"%%d.%%d\" %% (sys.version_info[0], sys.version_info[1]))"`
-PYTHON_ROOT=`python2.5 -c "import sys; print sys.prefix"`
+PYTHON_VERSION=`python%{pythonver} -c "import sys; print (\"%%d.%%d\" %% (sys.version_info[0], sys.version_info[1]))"`
+PYTHON_ROOT=`python%{pythonver} -c "import sys; print sys.prefix"`
 
 # Overwrite user-config.jam
 cat > user-config.jam <<EOF
@@ -194,6 +195,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/boost/*
 
 %changelog
+* Thu Jul 16 2009 - moinakg(at)belenix<dot>org
+- Build extension for Python2.6 instead of 2.5. 2.6 is being used for KDE 4.
 * Thu May 14 2009 - moinakg@belenix.org
 - Update dependencies.
 - Disable strict aliasing to avoid aliasing problems.

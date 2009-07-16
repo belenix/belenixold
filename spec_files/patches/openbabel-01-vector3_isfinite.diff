@@ -1,0 +1,10 @@
+--- openbabel-2.2.2-64/src/math/vector3.cpp.orig	2009-07-12 23:46:52.082698912 +0530
++++ openbabel-2.2.2-64/src/math/vector3.cpp	2009-07-12 23:47:04.255484071 +0530
+@@ -21,6 +21,7 @@
+ #include <openbabel/babelconfig.h>
+ 
+ #include <iostream>
++#include <math.h>
+ #include <float.h>
+ 
+ #include <openbabel/math/vector3.h>
