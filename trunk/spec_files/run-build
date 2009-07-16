@@ -17,6 +17,14 @@ then
 	exit 0
 fi
 
+if [ "$cmp" = "uninstall" ]
+then
+	pkgtool uninstall-pkgs --nonotify --with-fox \
+	    --without-dt --with-l10n --without-apoc-adapter \
+	    --with-indiana-branding --with-gnu-iconv $specfile
+	exit 0
+fi
+
 export CC=/opt/SUNWspro/bin/cc
 export CXX=/opt/SUNWspro/bin/CC
 unset LDFLAGS CFLAGS CPPFLAGS CXXFLAGS LD_OPTIONS
@@ -65,3 +73,4 @@ then
 	pkgbuild -bb --short-circuit --with-fox --without-dt --with-l10n \
 	    --without-apoc-adapter --with-indiana-branding --with-gnu-iconv $specfile
 fi
+
