@@ -1,0 +1,31 @@
+--- cfitsio-64/drvrfile.c.orig	2009-07-11 14:19:30.583303822 +0530
++++ cfitsio-64/drvrfile.c	2009-07-11 14:21:00.503159859 +0530
+@@ -765,10 +765,13 @@
+ /*--------------------------------------------------------------------------*/
+ int stream_open(char *filename, int rwmode, int *handle)
+ {
++    char *fn;
+     /*
+         read from stdin
+     */
+-    rwmode = (int) filename;  /* suppress unused parameter compiler warning */
++    /* suppress unused parameter compiler warnings */
++    fn = filename;
++    rwmode = 1;
+     *handle = 1;     /*  1 = stdin */   
+ 
+     return(0);
+@@ -776,11 +779,11 @@
+ /*--------------------------------------------------------------------------*/
+ int stream_create(char *filename, int *handle)
+ {
++    char *fn;
+     /*
+         write to stdout
+     */
+-
+-    *handle = (int) filename;  /* suppress unused parameter compiler warning */
++    fn = filename;  /* suppress unused parameter compiler warning */
+     *handle = 2;         /*  2 = stdout */       
+     return(0);
+ }

@@ -1,0 +1,201 @@
+--- libfli1-1.7-64/libfli-sys.h.orig	2009-07-11 23:29:10.253680602 +0530
++++ libfli1-1.7-64/libfli-sys.h	2009-07-11 23:42:14.470934092 +0530
+@@ -78,6 +78,14 @@
+ #define USB_GLOB "/dev/ugen*.0" __STRINGIFY(FLI_USB_CMDENDPOINT)
+ #define SERIAL_GLOB "/dev/dty0*"
+ 
++#elif defined (__sun) || defined(sun)
++
++#define __SYSNAME__ "Solaris"
++#define __LIBFLI_MINOR__ 13
++#define USB_READ_SIZ_MAX 65536
++#define USB_GLOB "/dev/device*"
++#define SERIAL_GLOB "/dev/term/*"
++
+ #else
+ #error "Unknown system"
+ #endif
+--- libfli1-1.7-64/fli_ioctl.h.orig	2009-07-12 10:28:00.351954288 +0530
++++ libfli1-1.7-64/fli_ioctl.h	2009-07-12 10:31:08.297771898 +0530
+@@ -44,7 +44,11 @@
+ #ifndef _FLI_IOCTL_H
+ #define _FLI_IOCTL_H
+ 
++#if defined(sun) || defined(__sun)
++#include <sys/ioccom.h>
++#else
+ #include <asm/ioctl.h>
++#endif
+ 
+ /* 8-bit special value to identify ioctl 'type' */
+ #define FLI_IOCTL_TYPE 'F'
+--- libfli1-1.7-64/fliusb_ioctl.h.orig	2009-07-12 10:32:07.574381053 +0530
++++ libfli1-1.7-64/fliusb_ioctl.h	2009-07-12 10:32:55.924656638 +0530
+@@ -44,11 +44,15 @@
+ #ifndef _FLIUSB_IOCTL_H_
+ #define _FLIUSB_IOCTL_H_
+ 
++#if defined(sun) || defined(__sun)
++#include <sys/ioccom.h>
++#else
+ #include <linux/ioctl.h>
++#endif
+ 
+ /* Structure to describe bulk transfers */
+ typedef struct {
+-  u_int8_t ep;
++  uint8_t ep;
+   void *buf;
+   size_t count;
+   unsigned int timeout;		/* in msec */
+--- libfli1-1.7-64/libfli-debug.c.orig	2009-07-12 10:24:29.690722977 +0530
++++ libfli1-1.7-64/libfli-debug.c	2009-07-12 10:25:02.888318243 +0530
+@@ -48,6 +48,9 @@
+ #include "libfli-libfli.h"
+ 
+ #define LOGPREFIX "libfli"
++#if defined(sun) || defined(__sun)
++#define LOG_PERROR LOG_ERR
++#endif
+ 
+ static char *_loghost = NULL;
+ static flidebug_t _loglevel = FLIDEBUG_NONE;
+--- libfli1-1.7-64/libfli-parport.c.orig	2009-07-12 10:26:15.981387195 +0530
++++ libfli1-1.7-64/libfli-parport.c	2009-07-12 10:28:24.789483591 +0530
+@@ -42,7 +42,11 @@
+ */
+ 
+ #include <sys/ioctl.h>
++#if defined(sun) || defined(__sun)
++#include <sys/param.h>
++#else
+ #include <asm/param.h>
++#endif
+ 
+ #include <errno.h>
+ #include <unistd.h>
+--- libfli1-1.7-64/libfli-parport.h.orig	2009-07-12 10:22:23.623352321 +0530
++++ libfli1-1.7-64/libfli-parport.h	2009-07-12 10:37:20.827425143 +0530
+@@ -48,7 +48,7 @@
+ 
+ #define unix_parportio unix_parportio_linux
+ 
+-#elif defined(__FreeBSD__) || defined(__NetBSD__)
++#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(sun) || defined(__sun)
+ 
+ #define unix_parportio NULL
+ 
+--- libfli1-1.7-64/libfli-serial.c.orig	2009-07-12 10:19:04.138239489 +0530
++++ libfli1-1.7-64/libfli-serial.c	2009-07-12 10:20:05.600805020 +0530
+@@ -78,7 +78,7 @@
+   }
+   gotattr = 1;
+ 
+-  bzero(&new_termios, sizeof(struct termios));
++  memset(&new_termios, 0, sizeof(struct termios));
+   new_termios.c_cflag = CS8 | CREAD | CLOCAL;
+   new_termios.c_cc[VMIN] = 1;
+   new_termios.c_cc[VTIME] = 0;
+--- libfli1-1.7-64/libfli-usb-sys.c.orig	2009-07-12 10:14:43.115264432 +0530
++++ libfli1-1.7-64/libfli-usb-sys.c	2009-07-12 10:17:46.869117449 +0530
+@@ -41,6 +41,8 @@
+ 
+ */
+ 
++#if defined(__linux__)
++
+ #include <linux/version.h>
+ #include <unistd.h>
+ #include <sys/types.h>
+@@ -237,3 +239,51 @@
+ {
+   return 0;
+ }
++
++/*
++ * =============================================================
++ * Null definitions for Solaris at the moment.
++ * =============================================================
++ */
++#else
++
++#include <sys/ioctl.h>
++#include <stdio.h>
++
++#include <errno.h>
++
++#include "libfli-libfli.h"
++#include "libfli-sys.h"
++#include "libfli-usb.h"
++#include "fliusb_ioctl.h"
++
++long
++sun_usb_connect(flidev_t dev, fli_unixio_t *io, char *name)
++{
++  return -ENODEV;
++}
++
++long
++sun_bulktransfer(flidev_t dev, int ep, void *buf, long *len)
++{
++  return -EIO;
++}
++
++long
++sun_bulkwrite(flidev_t dev, void *buf, long *wlen)
++{
++  return -EIO;
++}
++
++long
++sun_bulkread(flidev_t dev, void *buf, long *rlen)
++{
++  return -EIO;
++}
++
++long
++sun_usb_disconnect(flidev_t dev)
++{
++  return (0);
++}
++#endif
+--- libfli1-1.7-64/libfli-usb.h.orig	2009-07-11 23:44:04.004828651 +0530
++++ libfli1-1.7-64/libfli-usb.h	2009-07-12 10:13:14.702026771 +0530
+@@ -60,6 +60,17 @@
+ #define unix_usb_disconnect	bsd_usb_disconnect
+ #define unix_bulktransfer	bsd_bulktransfer
+ 
++#elif defined(sun) || defined(__sun)
++
++/*
++ * Solaris functions are null at the moment.
++ */
++#define unix_bulkwrite          sun_bulkwrite
++#define unix_bulkread           sun_bulkread
++#define unix_usb_connect        sun_usb_connect
++#define unix_usb_disconnect     sun_usb_disconnect
++#define unix_bulktransfer       sun_bulktransfer
++
+ #else
+ #error "Unknown system"
+ #endif
+--- libfli1-1.7-64/libfli.c.orig	2009-07-12 11:14:50.400853038 +0530
++++ libfli1-1.7-64/libfli.c	2009-07-12 11:15:31.103294545 +0530
+@@ -48,6 +48,7 @@
+ #include "libfli-libfli.h"
+ #include "libfli-mem.h"
+ #include "libfli-debug.h"
++#include "libfli-usb.h"
+ 
+ static long devalloc(flidev_t *dev);
+ static long devfree(flidev_t dev);
+@@ -189,8 +190,7 @@
+ #ifdef WIN32
+ long usb_bulktransfer(flidev_t dev, int ep, void *buf, long *len);
+ #else
+-long linux_bulktransfer(flidev_t dev, int ep, void *buf, long *len);
+-#define usb_bulktransfer linux_bulktransfer
++#define usb_bulktransfer unix_bulktransfer
+ #endif
+ 
+ LIBFLIAPI FLIUsbBulkIO(flidev_t dev, int ep, void *buf, long *len)
