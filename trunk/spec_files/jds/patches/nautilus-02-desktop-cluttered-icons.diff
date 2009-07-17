@@ -1,0 +1,15 @@
+--- nautilus-2.10.1/libnautilus-private/nautilus-icon-container.c	2005-02-18 14:27:17.000000000 +0530
++++ nautilus-2.10.1-new/libnautilus-private/nautilus-icon-container.c	2005-05-26 13:54:13.683979288 +0530
+@@ -1340,6 +1340,12 @@ find_empty_location (NautilusIconContain
+ 	/* Start the icon on a grid location */
+ 	snap_position (container, icon, &start_x, &start_y);
+ 
++	while (start_x < 0)
++		start_x += SNAP_SIZE_X;
++
++	while (start_y < 0)
++		start_y += SNAP_SIZE_Y;
++
+ 	icon_position.x0 = start_x;
+ 	icon_position.y0 = start_y;
+ 	icon_position.x1 = icon_position.x0 + icon_width;

@@ -1,0 +1,29 @@
+diff -urN naut.orig/libnautilus-private/nautilus-bookmark.c naut.new/libnautilus-private/nautilus-bookmark.c
+--- naut.orig/libnautilus-private/nautilus-bookmark.c	2008-04-07 13:33:19.366080000 +0100
++++ naut.new/libnautilus-private/nautilus-bookmark.c	2008-04-07 13:55:49.482282000 +0100
+@@ -25,6 +25,7 @@
+ #include <config.h>
+ #include "nautilus-bookmark.h"
+ 
++#include "nautilus-file-private.h"
+ #include "nautilus-file.h"
+ #include <eel/eel-gdk-pixbuf-extensions.h>
+ #include <eel/eel-gtk-extensions.h>
+@@ -607,9 +608,17 @@
+ {
+ 	char *path_name;
+ 	gboolean exists;
++	NautilusFile *file;
+ 
+ 	/* Convert to a path, returning FALSE if not local. */
+ 	if (!g_file_is_native (bookmark->details->location)) {
++		/* It's a remote file, check for its existance */
++		file = nautilus_file_get_existing (bookmark->details->location);
++		if (file == NULL) {
++			/* Remote files does not exist, so return TRUE */
++			return TRUE;
++			}
++		nautilus_file_unref (file);
+ 		return FALSE;
+ 	}
+ 	path_name = g_file_get_path (bookmark->details->location);

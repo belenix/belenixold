@@ -1,0 +1,11 @@
+diff -urN nautilus-open-terminal-0.6/src/Makefile.am nautilus-open-terminal-0.6-hacked/src/Makefile.am
+--- nautilus-open-terminal-0.6/src/Makefile.am	2005-02-25 14:56:20.000000000 +1300
++++ nautilus-open-terminal-0.6-hacked/src/Makefile.am	2005-10-17 14:24:29.766976488 +1300
+@@ -5,7 +5,6 @@
+ 	-I$(top_srcdir)					\
+ 	-I$(top_builddir)				\
+ 	$(WARN_CFLAGS)                                  \
+-	-Werror                                         \
+ 	$(DISABLE_DEPRECATED_CFLAGS)			\
+ 	$(NAUTILUS_CFLAGS)				\
+ 	$(GCONF_CFLAGS)					\

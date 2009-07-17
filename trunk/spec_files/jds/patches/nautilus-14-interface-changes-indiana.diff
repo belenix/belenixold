@@ -1,0 +1,833 @@
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/libnautilus-private/apps_nautilus_preferences.schemas.in nautilus-2.26.2/libnautilus-private/apps_nautilus_preferences.schemas.in
+--- ../nautilus-2.26.2/libnautilus-private/apps_nautilus_preferences.schemas.in	2009-04-15 16:16:49.812236186 +0200
++++ nautilus-2.26.2/libnautilus-private/apps_nautilus_preferences.schemas.in	2009-04-15 16:19:04.094426437 +0200
+@@ -56,7 +56,7 @@
+       <applyto>/apps/nautilus/preferences/always_use_browser</applyto>
+       <owner>nautilus</owner>
+       <type>bool</type>
+-      <default>false</default>
++      <default>true</default>
+       <locale name="C">
+          <short>Enables the classic Nautilus behavior, where all windows are browsers</short>
+          <long>
+@@ -468,11 +468,11 @@
+       <applyto>/apps/nautilus/preferences/desktop_font</applyto>
+       <owner>nautilus</owner>
+       <type>string</type>
+-      <default>Sans 10</default>
++      <default>Sans Book 10</default>
+       <locale name="C">
+          <default><!-- Translators: please note this can choose the size. e.g.
+ "Sans 15". Please do not change "Sans", only change the size if you need to. In
+-most cases, this should be left alone. -->Sans 10</default>
++most cases, this should be left alone. SUN_BRANDING -->Sans Book 10</default>
+          <short>Desktop font</short>
+ 	 <long>
+ 	  The font description used for the icons on the desktop.
+@@ -706,7 +706,7 @@ most cases, this should be left alone. -
+       <applyto>/apps/nautilus/icon_view/default_zoom_level</applyto>
+       <owner>nautilus</owner>
+       <type>string</type>
+-      <default>standard</default>
++      <default>small</default>
+       <locale name="C">
+          <short>Default icon zoom level</short>
+          <long>
+@@ -993,7 +993,7 @@ most cases, this should be left alone. -
+       <applyto>/apps/nautilus/desktop/home_icon_visible</applyto>
+       <owner>nautilus</owner>
+       <type>bool</type>
+-      <default>true</default>
++      <default>false</default>
+       <locale name="C">
+          <short>Home icon visible on desktop</short>
+          <long>
+@@ -1008,7 +1008,7 @@ most cases, this should be left alone. -
+       <applyto>/apps/nautilus/desktop/computer_icon_visible</applyto>
+       <owner>nautilus</owner>
+       <type>bool</type>
+-      <default>true</default>
++      <default>false</default>
+       <locale name="C">
+          <short>Computer icon visible on desktop</short>
+          <long>
+@@ -1023,7 +1023,7 @@ most cases, this should be left alone. -
+       <applyto>/apps/nautilus/desktop/trash_icon_visible</applyto>
+       <owner>nautilus</owner>
+       <type>bool</type>
+-      <default>true</default>
++      <default>false</default>
+       <locale name="C">
+          <short>Trash icon visible on desktop</short>
+          <long>
+@@ -1064,6 +1064,21 @@ most cases, this should be left alone. -
+     </schema>
+ 
+     <schema>
++      <key>/schemas/apps/nautilus/desktop/documents_icon_visible</key>
++      <applyto>/apps/nautilus/desktop/documents_icon_visible</applyto>
++      <owner>nautilus</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++      	<short>Documents icon visible on the desktop</short>
++	<long>
++	  If this is set to true, an icon linking to the documents folder
++	  will be put on the desktop.
++	</long>
++      </locale>
++    </schema>
++
++    <schema>
+       <key>/schemas/apps/nautilus/desktop/computer_icon_name</key>
+       <applyto>/apps/nautilus/desktop/computer_icon_name</applyto>
+       <owner>nautilus</owner>
+@@ -1152,5 +1167,19 @@ most cases, this should be left alone. -
+       </locale>
+     </schema>
+         
++    <schema>
++      <key>/schemas/apps/nautilus/desktop/documents_icon_name</key>
++      <applyto>/apps/nautilus/desktop/documents_icon_name</applyto>
++      <owner>nautilus</owner>
++      <type>string</type>
++      <locale name="C">
++         <short>Desktop documents icon name</short>
++         <long>
++          This name can be set if you want a custom name
++	  for the documents icon on the desktop.
++         </long>
++      </locale>
++    </schema>
++        
+   </schemalist>  
+ </gconfschemafile>
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/libnautilus-private/nautilus-desktop-link-monitor.c nautilus-2.26.2/libnautilus-private/nautilus-desktop-link-monitor.c
+--- ../nautilus-2.26.2/libnautilus-private/nautilus-desktop-link-monitor.c	2009-04-15 16:16:49.826319858 +0200
++++ nautilus-2.26.2/libnautilus-private/nautilus-desktop-link-monitor.c	2009-04-15 16:19:04.095444497 +0200
+@@ -49,6 +49,7 @@ struct NautilusDesktopLinkMonitorDetails
+ 	NautilusDesktopLink *computer_link;
+ 	NautilusDesktopLink *trash_link;
+ 	NautilusDesktopLink *network_link;
++	NautilusDesktopLink *documents_link;
+ 
+ 	gulong mount_id;
+ 	gulong unmount_id;
+@@ -137,6 +138,7 @@ nautilus_desktop_link_monitor_delete_lin
+ 	case NAUTILUS_DESKTOP_LINK_COMPUTER:
+ 	case NAUTILUS_DESKTOP_LINK_TRASH:
+ 	case NAUTILUS_DESKTOP_LINK_NETWORK:
++	case NAUTILUS_DESKTOP_LINK_DOCUMENTS:
+ 		/* just ignore. We don't allow you to delete these */
+ 		break;
+ 	default:
+@@ -348,6 +350,19 @@ desktop_network_visible_changed (gpointe
+ }
+ 
+ static void
++desktop_documents_visible_changed (gpointer callback_data)
++{
++       NautilusDesktopLinkMonitor *monitor;
++
++       monitor = NAUTILUS_DESKTOP_LINK_MONITOR (callback_data);
++
++       update_link_visibility (NAUTILUS_DESKTOP_LINK_MONITOR (callback_data),
++                               &monitor->details->documents_link,
++                               NAUTILUS_DESKTOP_LINK_DOCUMENTS,
++                               NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_VISIBLE);
++}
++
++static void
+ desktop_volumes_visible_changed (gpointer callback_data)
+ {
+ 	NautilusDesktopLinkMonitor *monitor;
+@@ -429,6 +444,12 @@ nautilus_desktop_link_monitor_init (gpoi
+ 					desktop_network_visible_changed,
+ 					monitor);
+ 
++        create_link_and_add_preference (&monitor->details->network_link,
++                                        NAUTILUS_DESKTOP_LINK_DOCUMENTS,
++                                        NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_VISIBLE,
++                                        desktop_documents_visible_changed,
++                                        monitor);
++
+ 	/* Mount links */
+ 
+ 	mounts = g_volume_monitor_get_mounts (monitor->details->volume_monitor);
+@@ -500,6 +521,11 @@ desktop_link_monitor_finalize (GObject *
+ 				    desktop_network_visible_changed,
+ 				    monitor);
+ 
++	remove_link_and_preference (&monitor->details->documents_link,
++				    NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_VISIBLE,
++				    desktop_documents_visible_changed,
++				    monitor);
++
+ 	/* Mounts */
+ 
+ 	g_list_foreach (monitor->details->mount_links, (GFunc)g_object_unref, NULL);
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/libnautilus-private/nautilus-desktop-link.c nautilus-2.26.2/libnautilus-private/nautilus-desktop-link.c
+--- ../nautilus-2.26.2/libnautilus-private/nautilus-desktop-link.c	2009-04-15 16:16:49.821985949 +0200
++++ nautilus-2.26.2/libnautilus-private/nautilus-desktop-link.c	2009-04-15 16:19:04.096338227 +0200
+@@ -158,10 +158,25 @@ network_name_changed (gpointer callback_
+ 	nautilus_desktop_link_changed (link);
+ }
+ 
++static void
++documents_name_changed (gpointer callback_data)
++{
++       NautilusDesktopLink *link;
++
++       link = NAUTILUS_DESKTOP_LINK (callback_data);
++       g_assert (link->details->type == NAUTILUS_DESKTOP_LINK_DOCUMENTS);
++
++
++       g_free (link->details->display_name);
++       link->details->display_name = eel_preferences_get (NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_NAME);
++       nautilus_desktop_link_changed (link);
++}
++
+ NautilusDesktopLink *
+ nautilus_desktop_link_new (NautilusDesktopLinkType type)
+ {
+ 	NautilusDesktopLink *link;
++	gchar *DocumentDirectory;
+ 
+ 	link = NAUTILUS_DESKTOP_LINK (g_object_new (NAUTILUS_TYPE_DESKTOP_LINK, NULL));
+ 
+@@ -218,6 +233,27 @@ nautilus_desktop_link_new (NautilusDeskt
+ 					      link);
+ 		break;
+ 
++	case NAUTILUS_DESKTOP_LINK_DOCUMENTS:
++		link->details->filename = g_strdup ("documents");
++
++		link->details->display_name = eel_preferences_get (NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_NAME);
++
++		DocumentDirectory = nautilus_get_xdg_dir ("DOCUMENTS");
++		link->details->activation_location = g_file_new_for_path (DocumentDirectory);
++
++		/* Create the documents directory if it doesn't already exist */
++		if (!g_file_test (DocumentDirectory, G_FILE_TEST_EXISTS))
++			mkdir (DocumentDirectory, 0755);
++
++		link->details->icon = g_themed_icon_new ("gnome-fs-directory");
++
++		eel_preferences_add_callback (NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_NAME,
++					      documents_name_changed,
++					      link);
++		g_free(DocumentDirectory);
++
++		break;
++
+ 	default:
+ 	case NAUTILUS_DESKTOP_LINK_MOUNT:
+ 		g_assert_not_reached();
+@@ -343,6 +379,7 @@ nautilus_desktop_link_can_rename (Nautil
+ 	return (link->details->type == NAUTILUS_DESKTOP_LINK_HOME ||
+ 		link->details->type == NAUTILUS_DESKTOP_LINK_TRASH ||
+ 		link->details->type == NAUTILUS_DESKTOP_LINK_NETWORK ||
++		link->details->type == NAUTILUS_DESKTOP_LINK_DOCUMENTS ||
+ 		link->details->type == NAUTILUS_DESKTOP_LINK_COMPUTER);
+ }
+ 
+@@ -367,6 +404,10 @@ nautilus_desktop_link_rename (NautilusDe
+ 		eel_preferences_set (NAUTILUS_PREFERENCES_DESKTOP_NETWORK_NAME,
+ 				     name);
+ 		break;
++	case NAUTILUS_DESKTOP_LINK_DOCUMENTS:
++		eel_preferences_set (NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_NAME,
++				     name);
++		break;
+ 	default:
+ 		g_assert_not_reached ();
+ 		/* FIXME: Do we want volume renaming?
+@@ -427,6 +468,12 @@ desktop_link_finalize (GObject *object)
+ 						 link);
+ 	}
+ 
++	if (link->details->type == NAUTILUS_DESKTOP_LINK_DOCUMENTS) {
++		eel_preferences_remove_callback (NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_NAME,
++						 documents_name_changed,
++						 link);
++	}
++
+ 	if (link->details->type == NAUTILUS_DESKTOP_LINK_MOUNT) {
+ 		g_object_unref (link->details->mount);
+ 	}
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/libnautilus-private/nautilus-desktop-link.h nautilus-2.26.2/libnautilus-private/nautilus-desktop-link.h
+--- ../nautilus-2.26.2/libnautilus-private/nautilus-desktop-link.h	2009-04-15 16:16:49.810496666 +0200
++++ nautilus-2.26.2/libnautilus-private/nautilus-desktop-link.h	2009-04-15 16:19:04.096667852 +0200
+@@ -55,7 +55,8 @@ typedef enum {
+ 	NAUTILUS_DESKTOP_LINK_COMPUTER,
+ 	NAUTILUS_DESKTOP_LINK_TRASH,
+ 	NAUTILUS_DESKTOP_LINK_MOUNT,
+-	NAUTILUS_DESKTOP_LINK_NETWORK
++	NAUTILUS_DESKTOP_LINK_NETWORK,
++	NAUTILUS_DESKTOP_LINK_DOCUMENTS
+ } NautilusDesktopLinkType;
+ 
+ GType   nautilus_desktop_link_get_type (void);
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/libnautilus-private/nautilus-global-preferences.c nautilus-2.26.2/libnautilus-private/nautilus-global-preferences.c
+--- ../nautilus-2.26.2/libnautilus-private/nautilus-global-preferences.c	2009-04-15 16:16:49.824374976 +0200
++++ nautilus-2.26.2/libnautilus-private/nautilus-global-preferences.c	2009-04-15 16:19:04.097748578 +0200
+@@ -52,6 +52,7 @@ static gpointer default_home_link_name  
+ static gpointer default_computer_link_name               (void);
+ static gpointer default_trash_link_name                  (void);
+ static gpointer default_network_link_name                (void);
++static gpointer default_documents_link_name              (void);
+ 
+ 
+ /* An enumeration used for installing type specific preferences defaults. */
+@@ -498,7 +499,7 @@ static const PreferenceDefault preferenc
+ 	
+ 	{ NAUTILUS_PREFERENCES_DESKTOP_TRASH_VISIBLE,
+ 	  PREFERENCE_BOOLEAN,
+-	  GINT_TO_POINTER (TRUE)
++	  GINT_TO_POINTER (FALSE)
+ 	},
+ 	
+ 	{ NAUTILUS_PREFERENCES_DESKTOP_TRASH_NAME,
+@@ -514,7 +515,7 @@ static const PreferenceDefault preferenc
+ 
+ 	{ NAUTILUS_PREFERENCES_DESKTOP_NETWORK_VISIBLE,
+ 	  PREFERENCE_BOOLEAN,
+-	  GINT_TO_POINTER (FALSE)
++	  GINT_TO_POINTER (TRUE)
+ 	},
+ 
+ 	{ NAUTILUS_PREFERENCES_DESKTOP_NETWORK_NAME,
+@@ -522,6 +523,18 @@ static const PreferenceDefault preferenc
+ 	  NULL,
+ 	  default_network_link_name, g_free,
+ 	},
++
++        { NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_VISIBLE,
++          PREFERENCE_BOOLEAN,
++          GINT_TO_POINTER (TRUE)
++        },
++
++       { NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_NAME,
++          PREFERENCE_STRING,
++          NULL,
++          default_documents_link_name, g_free,
++        },
++
+ 	{ NAUTILUS_PREFERENCES_DESKTOP_PRIMARY_SCREEN,
+ 	  PREFERENCE_INTEGER,
+ 	  GINT_TO_POINTER (0)
+@@ -590,6 +603,12 @@ default_network_link_name (void)
+ 	return g_strdup (_("Network Servers"));
+ }
+ 
++static gpointer
++default_documents_link_name (void)
++{
++       /* SUN_BRANDING */
++       return g_strdup (_("Documents"));
++}
+ 
+ 
+ /**
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/libnautilus-private/nautilus-global-preferences.h nautilus-2.26.2/libnautilus-private/nautilus-global-preferences.h
+--- ../nautilus-2.26.2/libnautilus-private/nautilus-global-preferences.h	2009-04-15 16:16:49.818773520 +0200
++++ nautilus-2.26.2/libnautilus-private/nautilus-global-preferences.h	2009-04-15 16:19:04.098155506 +0200
+@@ -220,6 +220,8 @@ typedef enum
+ #define NAUTILUS_PREFERENCES_DESKTOP_VOLUMES_VISIBLE	   "desktop/volumes_visible"
+ #define NAUTILUS_PREFERENCES_DESKTOP_NETWORK_VISIBLE       "desktop/network_icon_visible"
+ #define NAUTILUS_PREFERENCES_DESKTOP_NETWORK_NAME          "desktop/network_icon_name"
++#define NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_VISIBLE     "desktop/documents_icon_visible"
++#define NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_NAME        "desktop/documents_icon_name"
+ #define NAUTILUS_PREFERENCES_DESKTOP_PRIMARY_SCREEN        "desktop/primary_screen"
+ 
+ #define NAUTILUS_PREFERENCES_DISABLE_COMMANDLINE           "/desktop/gnome/lockdown/disable_command_line"
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/nautilus-computer.desktop.in.in nautilus-2.26.2/nautilus-computer.desktop.in.in
+--- ../nautilus-2.26.2/nautilus-computer.desktop.in.in	2009-04-15 16:16:49.854903468 +0200
++++ nautilus-2.26.2/nautilus-computer.desktop.in.in	2009-04-15 16:19:04.098469456 +0200
+@@ -1,7 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ _Name=Computer
+-_Comment=Browse all local and remote disks and folders accessible from this computer
++# SUN_BRANDING
++_Comment=Browse all disks and files accessible from this computer
+ TryExec=nautilus
+ Exec=nautilus --no-desktop computer:
+ Icon=computer
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/src/file-manager/fm-icon-container.c nautilus-2.26.2/src/file-manager/fm-icon-container.c
+--- ../nautilus-2.26.2/src/file-manager/fm-icon-container.c	2009-04-15 16:16:49.909184687 +0200
++++ nautilus-2.26.2/src/file-manager/fm-icon-container.c	2009-04-15 16:19:04.099138693 +0200
+@@ -389,6 +389,7 @@ typedef enum {
+ 	SORT_COMPUTER_LINK,
+ 	SORT_HOME_LINK,
+ 	SORT_NETWORK_LINK,
++	SORT_DOCUMENTS_LINK,
+ 	SORT_MOUNT_LINK,
+ 	SORT_OTHER,
+ 	SORT_TRASH_LINK
+@@ -421,6 +422,9 @@ get_sort_category (NautilusFile *file)
+ 			case NAUTILUS_DESKTOP_LINK_NETWORK:
+ 				category = SORT_NETWORK_LINK;
+ 				break;
++                        case NAUTILUS_DESKTOP_LINK_DOCUMENTS:
++                                category = SORT_DOCUMENTS_LINK;
++                                break;
+ 			default:
+ 				category = SORT_OTHER;
+ 				break;
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/src/nautilus-navigation-window-menus.c nautilus-2.26.2/src/nautilus-navigation-window-menus.c
+--- ../nautilus-2.26.2/src/nautilus-navigation-window-menus.c	2009-04-15 16:16:49.902886326 +0200
++++ nautilus-2.26.2/src/nautilus-navigation-window-menus.c	2009-04-15 16:19:04.099762964 +0200
+@@ -791,8 +791,10 @@ static const GtkActionEntry navigation_e
+   /* name, stock id, label */  { "Edit Bookmarks", NULL, N_("_Edit Bookmarks..."),
+                                  "<control>b", N_("Display a window that allows editing the bookmarks in this menu"),
+                                  G_CALLBACK (action_edit_bookmarks_callback) },
+-  /* name, stock id, label */  { "Search", "gtk-find", N_("_Search for Files..."),
+-                                 "<control>F", N_("Locate documents and folders on this computer by name or content"),
++                                 /* SUN_BRANDING */
++                                 { "Search", "gtk-find", N_("F_ind Files"), /* name, stock id, label */
++                                 /* SUN_BRANDING */
++                                 "<control>F", N_("Find files, folders, and documents on your computer"),
+                                  G_CALLBACK (action_search_callback) },
+ 
+ 	{ "TabsPrevious", NULL, N_("_Previous Tab"), "<control>Page_Up",
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/src/nautilus-navigation-window-ui.xml nautilus-2.26.2/src/nautilus-navigation-window-ui.xml
+--- ../nautilus-2.26.2/src/nautilus-navigation-window-ui.xml	2009-04-15 16:16:49.914242382 +0200
++++ nautilus-2.26.2/src/nautilus-navigation-window-ui.xml	2009-04-15 16:19:04.100155154 +0200
+@@ -28,11 +28,13 @@
+ 			<menuitem name="Forward"  action="Forward"/>
+ 	                </placeholder>
+ 	                <separator/>
+-			<menuitem name="Home" action="Home"/>
+ 			<menuitem name="Computer" action="Go to Computer"/>
++			<menuitem name="Desktop" action="Desktop"/>
++			<menuitem name="Documents" action="Documents"/>
+ 			<menuitem name="Go to Templates" action="Go to Templates"/>
+-			<menuitem name="Go to Trash" action="Go to Trash"/>
++			<menuitem name="Go to FileSystem" action="Go to FileSystem"/>
+ 		        <menuitem name="Go to Network" action="Go to Network"/>
++			<menuitem name="Go to Trash" action="Go to Trash"/>
+ 			<menuitem name="Go to Location" action="Go to Location"/>
+ 			<menuitem name="Search" action="Search"/>
+ 			<separator/>
+@@ -69,7 +71,7 @@
+ 	<toolitem name="Reload" action="Reload"/>
+ 	<toolitem name="Restore" action="Restore"/>
+ 	<separator/>
+-	<toolitem name="Home" action="Home"/>
++	<toolitem name="Documents" action="Documents"/>
+ 	<toolitem name="Computer" action="Go to Computer"/>
+ 	<separator/>
+ 	<toolitem name="Search" action="Search"/>
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/src/nautilus-places-sidebar.c nautilus-2.26.2/src/nautilus-places-sidebar.c
+--- ../nautilus-2.26.2/src/nautilus-places-sidebar.c	2009-04-15 16:16:49.900379286 +0200
++++ nautilus-2.26.2/src/nautilus-places-sidebar.c	2009-04-15 16:19:04.101752128 +0200
+@@ -278,7 +278,7 @@ update_places (NautilusPlacesSidebar *si
+ 	GList *volumes;
+ 	GVolume *volume;
+ 	int bookmark_count, index;
+-	char *location, *mount_uri, *name, *desktop_path;
++	char *location, *mount_uri, *name, *desktop_path, *display_name;
+ 	GIcon *icon;
+ 	GFile *root;
+ 	NautilusWindowSlotInfo *slot;
+@@ -290,24 +290,17 @@ update_places (NautilusPlacesSidebar *si
+ 	location = nautilus_window_slot_info_get_current_location (slot);
+ 
+ 	/* add built in bookmarks */
+-	desktop_path = nautilus_get_desktop_directory ();
+-
+-	if (strcmp (g_get_home_dir(), desktop_path) != 0) {
+-		char *display_name;
+-
+-		mount_uri = nautilus_get_home_directory_uri ();
+-		display_name = g_filename_display_basename (g_get_home_dir ());
+-		icon = g_themed_icon_new (NAUTILUS_ICON_HOME);
+-		last_iter = add_place (sidebar, PLACES_BUILT_IN,
+-				       display_name, icon,
+-				       mount_uri, NULL, NULL, NULL, 0);
+-		g_object_unref (icon);
+-		g_free (display_name);
+-		if (eel_strcmp (location, mount_uri) == 0) {
+-			gtk_tree_selection_select_iter (selection, &last_iter);
+-		}	
+-		g_free (mount_uri);
++	mount_uri = "computer:///"; /* No need to strdup */
++	icon = g_themed_icon_new ("gnome-fs-client");
++	last_iter = add_place (sidebar, PLACES_BUILT_IN,
++				/* SUN_BRANDING */
++				_("Computer"), icon,
++				mount_uri, NULL, NULL, NULL, 0);
++	g_object_unref (icon);
++	if (strcmp (location, mount_uri) == 0) {
++		gtk_tree_selection_select_iter (selection, &last_iter);
+ 	}
++	desktop_path = nautilus_get_desktop_directory ();
+ 
+ 	mount_uri = g_filename_to_uri (desktop_path, NULL, NULL);
+ 	icon = g_themed_icon_new (NAUTILUS_ICON_DESKTOP);
+@@ -320,6 +313,31 @@ update_places (NautilusPlacesSidebar *si
+ 	}	
+ 	g_free (mount_uri);
+ 	g_free (desktop_path);
++
++        mount_uri = g_filename_to_uri (nautilus_get_xdg_dir ("DOCUMENTS"), NULL, NULL);
++        icon = g_themed_icon_new ("gnome-fs_directory");
++        display_name = eel_preferences_get (NAUTILUS_PREFERENCES_DESKTOP_DOCUMENTS_NAME);
++        last_iter = add_place (sidebar, PLACES_BUILT_IN,
++                               display_name, icon,
++                               mount_uri, NULL, NULL, NULL, 0);
++        g_free (display_name);
++        g_object_unref (icon);
++        if (strcmp (location, mount_uri) == 0) {
++                gtk_tree_selection_select_iter (selection, &last_iter);
++        }
++        g_free (mount_uri);
++ 
++        mount_uri = "burn:///"; /* No need to strdup */
++        icon = g_themed_icon_new ("gnome-dev-cdrom");
++        last_iter = add_place (sidebar, PLACES_BUILT_IN,
++                               /* SUN_BRANDING */
++                               _("Burn Folder"), icon,
++                               mount_uri, NULL, NULL, NULL, 0);
++        g_object_unref (icon);
++        if (strcmp (location, mount_uri) == 0) {
++                gtk_tree_selection_select_iter (selection, &last_iter);
++        }
++
+ 	
+  	mount_uri = "file:///"; /* No need to strdup */
+ 	icon = g_themed_icon_new (NAUTILUS_ICON_FILESYSTEM);
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/src/nautilus-spatial-window-ui.xml nautilus-2.26.2/src/nautilus-spatial-window-ui.xml
+--- ../nautilus-2.26.2/src/nautilus-spatial-window-ui.xml	2009-04-15 16:16:49.899874200 +0200
++++ nautilus-2.26.2/src/nautilus-spatial-window-ui.xml	2009-04-15 16:19:04.102090304 +0200
+@@ -12,11 +12,14 @@
+ 	</menu>
+         <placeholder name="Other Menus">
+ 	        <menu action="Places">
+-		      <menuitem name="Home" action="Home"/>
+ 		      <menuitem name="Go to Computer" action="Go to Computer"/>
++		      <menuitem name="Desktop" action="Desktop"/>
++		      <menuitem name="Documents" action="Documents"/>
+  		      <menuitem name="Go to Templates" action="Go to Templates"/>
+-		      <menuitem name="Go to Trash" action="Go to Trash"/>
++		      <menuitem name="Go toFileSystemTrash" action="Go to FileSystem"/>
+ 		      <menuitem name="Go to Network" action="Go to Network"/>
++		      <menuitem name="Go to Trash" action="Go to Trash"/>
++		      <separator/>
+ 		      <menuitem name="Search" action="Search"/>
+ 		      <separator/>
+ 		      <placeholder name="Bookmarks Placeholder"/>
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/src/nautilus-spatial-window.c nautilus-2.26.2/src/nautilus-spatial-window.c
+--- ../nautilus-2.26.2/src/nautilus-spatial-window.c	2009-04-15 16:16:49.911842109 +0200
++++ nautilus-2.26.2/src/nautilus-spatial-window.c	2009-04-15 16:19:04.103366430 +0200
+@@ -74,6 +74,11 @@
+ #define SPATIAL_ACTION_CLOSE_ALL_FOLDERS    "Close All Folders"
+ #define MENU_PATH_SPATIAL_BOOKMARKS_PLACEHOLDER	"/MenuBar/Other Menus/Places/Bookmarks Placeholder"
+ 
++#define NETWORK_URI          "network:"
++#define COMPUTER_URI         "computer:"
++#define FILESYSTEM_URI       "file:///"
++#define BURN_CD_URI          "burn:"
++
+ struct _NautilusSpatialWindowDetails {
+ 	GtkActionGroup *spatial_action_group; /* owned by ui_manager */
+ 	char *last_geometry;
+@@ -919,6 +924,111 @@ action_search_callback (GtkAction *actio
+ 	g_free (uri);
+ }
+ 
++static void
++action_desktop_callback (GtkAction *action,
++                      gpointer user_data)
++{
++	NautilusWindow *window;
++	GFile *f;
++
++	window = NAUTILUS_WINDOW (user_data);
++
++        f = nautilus_get_desktop_location ();
++	nautilus_window_go_to (window, f);
++	g_object_unref (f);
++}
++
++static void
++action_documents_callback (GtkAction *action,
++                           gpointer user_data)
++{
++	NautilusWindow *window;
++	GFile *f;
++	char *name;
++
++	window = NAUTILUS_WINDOW (user_data);
++
++	name = nautilus_get_xdg_dir ("DOCUMENTS");
++	f = g_file_new_for_path (name);
++	nautilus_window_go_to (window, f);
++	g_object_unref (f);
++        g_free (name);
++}
++
++static void
++action_go_to_computer_callback (GtkAction *action,
++                                gpointer user_data)
++{
++	NautilusWindow *window;
++	GFile *f;
++
++	window = NAUTILUS_WINDOW (user_data);
++
++	f = g_file_new_for_uri (COMPUTER_URI);
++	nautilus_window_go_to (window, f);
++	g_object_unref (f);
++}
++
++static void
++action_filesystem_callback (GtkAction *action,
++                            gpointer user_data)
++{
++	NautilusWindow *window;
++	GFile *f;
++
++	window = NAUTILUS_WINDOW (user_data);
++
++	f = g_file_new_for_uri (FILESYSTEM_URI);
++	nautilus_window_go_to (window, f);
++	g_object_unref (f);
++}
++
++static void
++action_go_to_network_callback (GtkAction *action,
++                                gpointer user_data)
++{
++	NautilusWindow *window;
++	GFile *f;
++
++	window = NAUTILUS_WINDOW (user_data);
++
++	f = g_file_new_for_uri (NETWORK_URI);
++	nautilus_window_go_to (window, f);
++	g_object_unref (f);
++}
++
++static void
++action_go_to_templates_callback (GtkAction *action,
++                                 gpointer user_data)
++{
++	NautilusWindow *window;
++	char *uri;
++	GFile *f;
++
++	window = NAUTILUS_WINDOW (user_data);
++
++        nautilus_create_templates_directory ();
++        uri = nautilus_get_templates_directory_uri ();
++	f = g_file_new_for_uri (uri);
++	nautilus_window_go_to (window, f);
++	g_object_unref (f);
++	g_free (uri);
++}
++
++static void
++action_go_to_burn_cd_callback (GtkAction *action,
++                               gpointer user_data)
++{
++	NautilusWindow *window;
++	GFile *f;
++
++	window = NAUTILUS_WINDOW (user_data);
++
++	f = g_file_new_for_uri (BURN_CD_URI);
++	nautilus_window_go_to (window, f);
++	g_object_unref (f);
++}
++
+ static const GtkActionEntry spatial_entries[] = {
+   /* name, stock id, label */  { SPATIAL_ACTION_PLACES, NULL, N_("_Places") },
+   /* name, stock id, label */  { SPATIAL_ACTION_GO_TO_LOCATION, NULL, N_("Open _Location..."),
+@@ -936,9 +1046,52 @@ static const GtkActionEntry spatial_entr
+   /* name, stock id, label */  { "Edit Bookmarks", NULL, N_("_Edit Bookmarks..."),
+                                  "<control>b", N_("Display a window that allows editing the bookmarks in this menu"),
+                                  G_CALLBACK (action_edit_bookmarks_callback) },
+-  /* name, stock id, label */  { "Search", "gtk-find", N_("_Search for Files..."),
+-                                 "<control>F", N_("Locate documents and folders on this computer by name or content"),
+-                                 G_CALLBACK (action_search_callback) },
++  /* SUN_BRANDING */
++  { "Search", "gtk-find", N_("F_ind Files"), /* name, stock id, label */
++    /* SUN_BRANDING */
++    "<control>F", N_("Find files, folders, and documents"),     G_CALLBACK (action_search_callback) },
++  { "Desktop", "gnome-fs-desktop",                        /* name, stock id */
++    /* SUN_BRANDING */
++     N_("_Desktop"), NULL,           /* label, accelerator */
++    /* SUN_BRANDING */
++     N_("Go to the Desktop"),                                  /* tooltip */
++     G_CALLBACK (action_desktop_callback) },
++   { "Go to Computer", "gnome-fs-client",                        /* name, stockid */
++    /* SUN_BRANDING */
++     N_("_Computer"), NULL,           /* label, accelerator */
++    /* SUN_BRANDING */
++     N_("Go to the computer location"),                                  /* tooltip */
++     G_CALLBACK (action_go_to_computer_callback) },
++   { "Documents", "gnome-fs-directory",                        /* name, stock id */
++    /* SUN_BRANDING */
++     N_("_Documents"), "<Alt>Home",           /* label, accelerator */
++    /* SUN_BRANDING */
++     N_("Go to the documents folder"),                                  /* tooltip */
++     G_CALLBACK (action_documents_callback) },
++   { "Go to FileSystem", "gnome-dev-harddisk",                        /* name, stock id */
++    /* SUN_BRANDING */
++     N_("File _System"), NULL,           /* label, accelerator */
++    /* SUN_BRANDING */
++     N_("Go to the file system"),                                  /* tooltip */
++     G_CALLBACK (action_filesystem_callback) },
++   { "Go to Network", "gnome-fs-network",                        /* name, stockid */
++    /* SUN_BRANDING */
++     N_("_Network"), NULL,           /* label, accelerator */
++    /* SUN_BRANDING */
++     N_("Go to the network location"),                                  /* tooltip */
++     G_CALLBACK (action_go_to_network_callback) },
++   { "Go to Templates", "stock_new-template",                        /* name, stock id */
++    /* SUN_BRANDING */
++     N_("T_emplates"), NULL,           /* label, accelerator */
++    /* SUN_BRANDING */
++     N_("Go to the templates folder"),                                  /* tooltip */
++     G_CALLBACK (action_go_to_templates_callback) },
++   { "Go to Burn CD", "gnome-dev-cdrom",                        /* name, stock id */
++    /* SUN_BRANDING */
++     N_("_Burn Folder"), NULL,           /* label, accelerator */
++    /* SUN_BRANDING */
++     N_("Go to the CD/DVD Creator"),                                  /* tooltip */
++     G_CALLBACK (action_go_to_burn_cd_callback) },
+ };
+ 
+ static void
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/src/nautilus-window-menus.c nautilus-2.26.2/src/nautilus-window-menus.c
+--- ../nautilus-2.26.2/src/nautilus-window-menus.c	2009-04-15 16:16:49.902777583 +0200
++++ nautilus-2.26.2/src/nautilus-window-menus.c	2009-04-15 16:19:04.104453909 +0200
+@@ -65,6 +65,7 @@
+ 
+ #define NETWORK_URI          "network:"
+ #define COMPUTER_URI         "computer:"
++#define FILESYSTEM_URI       "file:///"
+ #define BURN_CD_URI          "burn:"
+ 
+ /* Struct that stores all the info necessary to activate a bookmark. */
+@@ -264,20 +265,45 @@ action_undo_callback (GtkAction *action,
+ }
+ 
+ static void
+-action_home_callback (GtkAction *action, 
++action_desktop_callback (GtkAction *action, 
+ 		      gpointer user_data) 
+ {
+ 	NautilusWindow *window;
+ 	NautilusWindowSlot *slot;
++	GFile *file;
++	gchar *desktop_uri;
+ 
+ 	window = NAUTILUS_WINDOW (user_data);
+ 	slot = nautilus_window_get_active_slot (window);
+ 
+-	nautilus_window_slot_go_home (slot, 
+-				      should_open_in_new_tab ());
++	desktop_uri = nautilus_get_desktop_directory ();
++	file = g_file_new_for_path (desktop_uri);
++	nautilus_window_slot_go_to (slot, file,
++				    should_open_in_new_tab ());
++	g_object_unref (file);
+ }
+ 
+ static void
++action_documents_callback (GtkAction *action, 
++		      gpointer user_data) 
++{
++	NautilusWindow *window;
++	NautilusWindowSlot *slot;
++	GFile *file;
++	gchar *name;
++
++	window = NAUTILUS_WINDOW (user_data);
++	slot = nautilus_window_get_active_slot (window);
++
++	name = nautilus_get_xdg_dir ("DOCUMENTS");
++	file = g_file_new_for_path (name);
++	nautilus_window_slot_go_to (slot, file,
++				    should_open_in_new_tab ());
++	g_object_unref (file);
++}
++
++
++static void
+ action_go_to_computer_callback (GtkAction *action, 
+ 				gpointer user_data) 
+ {
+@@ -296,6 +322,17 @@ action_go_to_computer_callback (GtkActio
+ }
+ 
+ static void
++action_filesystem_callback (GtkAction *action, 
++		   	    gpointer user_data) 
++{
++	GFile *file;
++	file = g_file_new_for_uri (FILESYSTEM_URI);
++	nautilus_window_go_to (NAUTILUS_WINDOW (user_data),
++			       file);
++	g_object_unref (file);
++}
++
++static void
+ action_go_to_network_callback (GtkAction *action, 
+ 				gpointer user_data) 
+ {
+@@ -866,10 +903,24 @@ static const GtkActionEntry main_entries
+   /* label, accelerator */       N_("Connect to _Server..."), NULL,
+   /* tooltip */                  N_("Connect to a remote computer or shared disk"),
+                                  G_CALLBACK (action_connect_to_server_callback) },
+-  /* name, stock id */         { "Home", NAUTILUS_ICON_HOME,
+-  /* label, accelerator */       N_("_Home Folder"), "<alt>Home",
+-  /* tooltip */                  N_("Open your personal folder"),
+-                                 G_CALLBACK (action_home_callback) },
++  /* name, stock id */         { "Desktop", "gnome-fs-desktop",
++  /* SUN_BRANDING */
++  /* label, accelerator */       N_("_Desktop"), NULL,
++  /* SUN_BRANDING */
++  /* tooltip */                  N_("Go to the Desktop"),
++                                 G_CALLBACK (action_desktop_callback) },
++  /* name, stock id */         { "Documents", "gnome-fs-directory",
++  /* SUN_BRANDING */
++  /* label, accelerator */       N_("_Documents"), "<Alt>Home",
++  /* SUN_BRANDING */
++  /* tooltip */                  N_("Go to the documents folder"),
++                                 G_CALLBACK (action_documents_callback) },
++  /* name, stock id */         { "Go to FileSystem", "gnome-dev-harddisk",
++  /* SUN_BRANDING */
++  /* label, accelerator */       N_("File _System"), NULL,
++  /* SUN_BRANDING */
++  /* tooltip */                  N_("Go to the file system"),
++                                 G_CALLBACK (action_filesystem_callback) },
+   /* name, stock id */         { "Go to Computer", NAUTILUS_ICON_COMPUTER,
+   /* label, accelerator */       N_("_Computer"), NULL,
+   /* tooltip */                  N_("Browse all local and remote disks and folders accessible from this computer"),
+@@ -929,9 +980,6 @@ nautilus_window_initialize_menus (Nautil
+ 	action = gtk_action_group_get_action (action_group, NAUTILUS_ACTION_UP);
+ 	g_object_set (action, "short_label", _("_Up"), NULL);
+ 
+-	action = gtk_action_group_get_action (action_group, NAUTILUS_ACTION_HOME);
+-	g_object_set (action, "short_label", _("_Home"), NULL);
+-
+ 	action = gtk_action_group_get_action (action_group, NAUTILUS_ACTION_SHOW_HIDDEN_FILES);
+ 	g_signal_handlers_block_by_func (action, action_show_hidden_files_callback, window);
+ 	gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action),
+diff -Nrup -x '*.orig' -x '*.rej' -x '*.*~' ../nautilus-2.26.2/src/network-scheme.desktop.in nautilus-2.26.2/src/network-scheme.desktop.in
+--- ../nautilus-2.26.2/src/network-scheme.desktop.in	2009-04-15 16:16:49.900972482 +0200
++++ nautilus-2.26.2/src/network-scheme.desktop.in	2009-04-15 16:19:04.104732903 +0200
+@@ -1,7 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ _Name=Network
+-_Comment=Browse bookmarked and local network locations
++# SUN_BRANDING
++_Comment=Browse computers and files on your local network
+ TryExec=nautilus
+ Exec=nautilus --no-desktop network:
+ Terminal=false

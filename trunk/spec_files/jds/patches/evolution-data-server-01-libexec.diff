@@ -1,0 +1,53 @@
+--- evolution-data-server-2.25.90/src/Makefile.am.orig	Wed Feb  4 13:30:15 2009
++++ evolution-data-server-2.25.90/src/Makefile.am	Wed Feb  4 13:34:22 2009
+@@ -64,9 +64,10 @@
+ endif
+ 
+ install-evolution-data-servers:
+-	$(mkinstalldirs) $(DESTDIR)$(libexecdir)
+-	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) evolution-data-server@EXEEXT@ $(DESTDIR)$(libexecdir)/evolution-data-server-$(BASE_VERSION)@EXEEXT@
++	$(mkinstalldirs) $(DESTDIR)$(libexecdir)/evolution-data-server-$(API_VERSION)
++	$(LIBTOOL) --mode=install $(INSTALL_PROGRAM) evolution-data-server $(DESTDIR)$(libexecdir)/evolution-data-server-$(API_VERSION)/evolution-data-server-$(BASE_VERSION)
+ 
++
+ SERVER_IN_FILE=GNOME_Evolution_DataServer.server.in.in
+ 
+ server_in_files = GNOME_Evolution_DataServer.server.in.in
+--- evolution-data-server-2.25.90/src/GNOME_Evolution_DataServer.server.in.in.orig	Wed Feb  4 13:31:49 2009
++++ evolution-data-server-2.25.90/src/GNOME_Evolution_DataServer.server.in.in	Wed Feb  4 13:32:10 2009
+@@ -2,7 +2,7 @@
+ 
+ <oaf_server iid="OAFIID:GNOME_Evolution_DataServer_BookFactory:@API_VERSION@"
+             type="exe"
+-            location="@LIBEXECDIR_IN_SERVER_FILE@/evolution-data-server-@VERSION@@EXEEXT@">
++            location="@LIBEXECDIR_IN_SERVER_FILE@/evolution-data-server-@API_VERSION@/evolution-data-server-@VERSION@@EXEEXT@">
+ 
+ 	<oaf_attribute name="repo_ids" type="stringv">
+ 		<item value="IDL:GNOME/Evolution/DataServer/BookFactory:@API_VERSION@"/>
+@@ -15,7 +15,7 @@
+ 
+ <oaf_server iid="OAFIID:GNOME_Evolution_DataServer_CalFactory:@API_VERSION@"
+             type="exe"
+-            location="@LIBEXECDIR_IN_SERVER_FILE@/evolution-data-server-@VERSION@@EXEEXT@">
++            location="@LIBEXECDIR_IN_SERVER_FILE@/evolution-data-server-@API_VERSION@/evolution-data-server-@VERSION@@EXEEXT@">
+ 
+ 	<oaf_attribute name="repo_ids" type="stringv">
+ 		<item value="IDL:GNOME/Evolution/DataServer/CalFactory:@API_VERSION@"/>
+@@ -28,7 +28,7 @@
+ 
+ <oaf_server iid="OAFIID:GNOME_Evolution_DataServer_InterfaceCheck"
+             type="exe"
+-            location="@LIBEXECDIR_IN_SERVER_FILE@/evolution-data-server-@VERSION@@EXEEXT@">
++            location="@LIBEXECDIR_IN_SERVER_FILE@/evolution-data-server-@API_VERSION@/evolution-data-server-@VERSION@@EXEEXT@">
+ 
+ 	<oaf_attribute name="repo_ids" type="stringv">
+ 		<item value="IDL:GNOME/Evolution/ServerInterfaceCheck:1.0"/>
+@@ -40,7 +40,7 @@
+ 
+ <oaf_server iid="OAFIID:GNOME_Evolution_DataServer_Logging"
+             type="exe"
+-            location="@LIBEXECDIR_IN_SERVER_FILE@/evolution-data-server-@VERSION@@EXEEXT@">
++            location="@LIBEXECDIR_IN_SERVER_FILE@/evolution-data-server-@API_VERSION@/evolution-data-server-@VERSION@@EXEEXT@">
+ 
+ 	<oaf_attribute name="repo_ids" type="stringv">
+ 		<item value="IDL:GNOME/Evolution/ServerLogging:1.0"/>

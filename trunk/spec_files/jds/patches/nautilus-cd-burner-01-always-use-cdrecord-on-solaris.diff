@@ -1,0 +1,72 @@
+diff -urN SUNWgnome-cd-burner-2.22.0/nautilus-cd-burner-2.22.0/configure.in ncdb.new/configure.in
+--- SUNWgnome-cd-burner-2.22.0/nautilus-cd-burner-2.22.0/configure.in	2007-02-26 21:45:11.000000000 +0000
++++ ncdb.new/configure.in	2007-04-02 11:40:29.515466000 +0100
+@@ -56,6 +56,14 @@ AC_CHECK_FUNC(mkdtemp,
+ AM_CONDITIONAL(MKDTEMP_MISSING, test x$mkdtemp_missing = xtrue)
+ 
+ dnl ===========================================================================
++AC_CANONICAL_HOST
++case "$host" in
++*solaris*)
++       AC_DEFINE(CDRECORD_SUPPORTS_DVD,1,Define to 1 if solaris)
++       ;;
++esac
++
++dnl ===========================================================================
+ dnl Minimum versions of the libraries
+ GLIB_REQUIRED=2.17.4
+ GTK_REQUIRED=2.5.4
+diff -urN SUNWgnome-cd-burner-2.21.5/nautilus-cd-burner-2.21.5/src/nautilus-burn-recorder.c ncdb.new/src/nautilus-burn-recorder.c
+--- SUNWgnome-cd-burner-2.21.5/nautilus-cd-burner-2.21.5/src/nautilus-burn-recorder.c	2007-01-07 17:34:30.000000000 +0000
++++ ncdb.new/src/nautilus-burn-recorder.c	2007-04-02 11:37:13.095764000 +0100
+@@ -166,6 +166,10 @@
+ {
+         GList *l;
+ 
++#ifdef CDRECORD_SUPPORTS_DVD
++	return FALSE;
++#endif
++
+         /* If we cannot burn DVDs, then we don't need growisofs */
+         if (can_burn_dvds (recorder) == FALSE) {
+                 return FALSE;
+@@ -1618,6 +1622,9 @@
+ nautilus_burn_drive_format_needs_growisofs (NautilusBurnDrive    *drive,
+                                             NautilusBurnMediaType type)
+ {
++#ifdef CDRECORD_SUPPORTS_DVD
++	return FALSE;
++#endif
+         if (can_burn_dvds (drive) == FALSE) {
+                 return FALSE;
+         }
+diff -urN SUNWgnome-cd-burner-2.21.5/nautilus-cd-burner-2.21.5/src/ncb-operation.c ncdb.new/src/ncb-operation.c
+--- SUNWgnome-cd-burner-2.21.5/nautilus-cd-burner-2.21.5/src/ncb-operation.c	2007-01-10 22:05:44.000000000 +0000
++++ ncdb.new/src/ncb-operation.c	2007-04-02 11:37:13.095764000 +0100
+@@ -1404,6 +1404,7 @@
+ 
+         graft = nautilus_burn_iso_graft_new (BURN_URI);
+ 
++#ifndef CDRECORD_SUPPORTS_DVD
+         if (nautilus_burn_drive_get_drive_type (drive) != NAUTILUS_BURN_DRIVE_TYPE_FILE
+             && NAUTILUS_BURN_DRIVE_MEDIA_TYPE_IS_DVD (media_type)) {
+                 GList   *l;
+@@ -1431,7 +1432,7 @@
+                 /* Don't remove the files */
+                 nautilus_burn_iso_graft_free (graft, FALSE);
+         } else {
+-
++#endif
+                 res = NAUTILUS_BURN_ISO_RESULT_ERROR;
+ 
+                 temp_paths = get_temp_paths ();
+@@ -1485,7 +1486,9 @@
+ 
+                 track = create_iso_track (filename);
+                 nautilus_burn_iso_graft_free (graft, TRUE);
++#ifndef CDRECORD_SUPPORTS_DVD
+         }
++#endif
+ 
+  done:
+         g_strfreev (temp_paths);

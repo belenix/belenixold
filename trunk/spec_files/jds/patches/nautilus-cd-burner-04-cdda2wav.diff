@@ -1,0 +1,431 @@
+--- nautilus-cd-burner-2.23.90/src/make-iso.c.orig	2008-09-22 18:22:41.902088000 +0800
++++ nautilus-cd-burner-2.23.90/src/make-iso.c	2008-09-22 18:17:42.287745000 +0800
+@@ -833,6 +833,69 @@
+         return TRUE;
+ }
+ 
++static gboolean
++cdda2wav_stderr_line (NautilusBurnProcess *process,
++			const char *line,
++			gpointer    data)
++{
++	NautilusBurnIso *iso = data;
++	int track, percent,start_n;
++	guint64 sector, sectors;
++
++	if (line && iso->priv->debug) {
++		g_print ("cdda2wav stderr: %s", line);
++	}
++
++
++	if (sscanf (line, "%d.(%d),", &track, &sector) == 2 && !(g_strrstr (line, ":"))) {
++		gchar** line_array = g_strsplit (line, ",", 5);
++	 	int i = 0;	
++		while (line_array[i]) {
++			if (sscanf (line_array[i], "%d.(%d)", &track, &sector) == 2) {
++				process->rates = g_list_append (process->rates, GINT_TO_POINTER (sector));
++			}
++			i++;
++		}
++		g_strfreev(line_array);
++	}
++	
++	if (sscanf (line, " lead-out(%d)", &sectors) == 1) {
++		iso->priv->iso_size = sectors;
++		process->rates = g_list_append (process->rates, GINT_TO_POINTER (sectors));
++	}
++
++ 	if (sscanf (line, "100%%  track  %d \'", &start_n) == 1) {
++		process->start_num = (gint64)start_n;
++	}
++
++	if (sscanf (line, "%d%%\\", &percent) == 1) {
++		gdouble fraction = 0.0;
++
++		gint readed, reading, num;
++		if (percent == 100) 
++			num = process->start_num - 1;
++		else
++			num = process->start_num;
++
++		readed = GPOINTER_TO_INT (g_list_nth_data (process->rates, num));
++		reading = GPOINTER_TO_INT (g_list_nth_data (process->rates, num + 1)) - readed;
++		fraction = ((gdouble)percent/100 *reading + readed) / (int)iso->priv->iso_size;
++
++		g_signal_emit (G_OBJECT (iso), nautilus_burn_iso_table_signals [PROGRESS_CHANGED], 0, fraction, (long)(-1));
++	}
++	
++	if (strstr (line, "I/O error.")) {
++		process->result = NAUTILUS_BURN_ISO_RESULT_ERROR;
++		process_error (iso, line);
++	}
++
++	if (process->start_num == g_list_length (process->rates) - 1){
++                process->result = NAUTILUS_BURN_ISO_RESULT_FINISHED;
++	}
++
++        return TRUE;
++}
++
+ /* this is an ugly hack until utf8/iconv support is added into upstream mkisofs */
+ static gboolean
+ ncb_mkisofs_supports_utf8 (void)
+@@ -1359,21 +1422,51 @@
+         GError               *sub_error;
+         GPtrArray            *argv;
+         guint64               iso_size;
+-
++	gchar		     *cdrdao = NULL;
++	gchar		     *cdrecord = NULL;
++ 
+         media_type = nautilus_burn_drive_get_media_type_full (drive,
+                                                               &is_rewritable,
+                                                               &is_blank,
+                                                               &has_data,
+                                                               &_has_audio);
+         if (_has_audio) {
+-                device_arg = g_strdup_printf ("%s", nautilus_burn_drive_get_device (drive));
++		if (cdrdao = g_find_program_in_path ("cdrdao")) {
++                	device_arg = g_strdup_printf ("%s", nautilus_burn_drive_get_device (drive));
+ 
+-                argv = g_ptr_array_new ();
+-                g_ptr_array_add (argv, "cdrdao");
+-                g_ptr_array_add (argv, "disk-info");
+-                g_ptr_array_add (argv, "--device");
+-                g_ptr_array_add (argv, device_arg);
+-                g_ptr_array_add (argv, NULL);
++                	argv = g_ptr_array_new ();
++                	g_ptr_array_add (argv, "cdrdao");
++                	g_ptr_array_add (argv, "disk-info");
++                	g_ptr_array_add (argv, "--device");
++                	g_ptr_array_add (argv, device_arg);
++                	g_ptr_array_add (argv, NULL);
++
++			g_free (cdrdao);
++		} else if (cdrecord = g_find_program_in_path ("cdrecord")) {
++                	device_arg = g_strdup_printf ("-dev=%s", nautilus_burn_drive_get_device (drive));
++
++                	argv = g_ptr_array_new ();
++                	g_ptr_array_add (argv, "cdrecord");
++                	g_ptr_array_add (argv, device_arg);
++                	g_ptr_array_add (argv, "-minfo");
++                	g_ptr_array_add (argv, NULL);
++			
++			g_free(cdrecord);
++		} else {
++		
++			gchar *message = g_strdup_printf (_("No cdrdao and cdrecord were found!")); 
++
++                	g_set_error (error,
++                        	     NAUTILUS_BURN_ISO_ERROR,
++                             	     NAUTILUS_BURN_ISO_ERROR_GENERAL,
++                             	     "%s", message);
++
++                	g_free (message);
++
++                	ret = FALSE;
++
++                	goto cleanup;
++		}
+ 
+         } else {
+                 device_arg = g_strdup_printf ("-dev=%s", nautilus_burn_drive_get_device (drive));
+@@ -1430,8 +1523,10 @@
+                 g_ptr_array_free (argv, TRUE);
+                 argv = NULL;
+         }
+-        g_free (stderr_data);
+-        g_free (device_arg);
++	if (stderr_data)
++        	g_free (stderr_data);
++	if (device_arg)
++        	g_free (device_arg);
+ 
+         if (has_audio != NULL) {
+                 *has_audio = _has_audio;
+@@ -1474,8 +1569,10 @@
+         int                   res;
+         gboolean              has_audio;
+         char                 *filename_arg;
+-        char                 *toc_filename_arg;
++        char                 *toc_filename_arg = NULL;
+         char                 *dev_arg;
++	gchar 		     *cdrdao = NULL;
++	gchar		     *cdrecord = NULL;
+ 
+         if (toc_filename) {
+                 *toc_filename = NULL;
+@@ -1514,8 +1611,6 @@
+                 size = 0;
+         }
+ 
+-        g_free (dirname);
+-
+         if (iso_size > (guint64)size) {
+                 char *message;
+ 
+@@ -1534,26 +1629,84 @@
+ 
+         filename_arg = NULL;
+         dev_arg = NULL;
+-        toc_filename_arg = g_strdup_printf ("%s.toc", filename);
+-        if (toc_filename) {
+-                *toc_filename = g_strdup (toc_filename_arg);
+-        }
++
++	if (cdrdao = g_find_program_in_path ("cdrdao")) {
++        	toc_filename_arg = g_strdup_printf ("%s.toc", filename);
++        	if (toc_filename) {
++               		*toc_filename = g_strdup (toc_filename_arg);
++        	}
++	}
++
+         if (has_audio) {
+-                argv = g_ptr_array_new ();
+-                g_ptr_array_add (argv, "cdrdao");
+-                g_ptr_array_add (argv, "read-cd");
+-                g_ptr_array_add (argv, "--read-raw");
+-                g_ptr_array_add (argv, "--datafile");
+-                g_ptr_array_add (argv, (char *)filename);
+-                g_ptr_array_add (argv, "--device");
+-                g_ptr_array_add (argv, (char *)nautilus_burn_drive_get_device (drive));
+-                g_ptr_array_add (argv, "-v");
+-                g_ptr_array_add (argv, "2");
+-                g_ptr_array_add (argv, (char *)toc_filename_arg);
+-                g_ptr_array_add (argv, NULL);
++		if (cdrdao) {
++               		argv = g_ptr_array_new ();
++                	g_ptr_array_add (argv, "cdrdao");
++                	g_ptr_array_add (argv, "read-cd");
++                	g_ptr_array_add (argv, "--read-raw");
++                	g_ptr_array_add (argv, "--datafile");
++                	g_ptr_array_add (argv, (char *)filename);
++                	g_ptr_array_add (argv, "--device");
++                	g_ptr_array_add (argv, (char *)nautilus_burn_drive_get_device (drive));
++                	g_ptr_array_add (argv, "-v");
++                	g_ptr_array_add (argv, "2");
++                	g_ptr_array_add (argv, (char *)toc_filename_arg);
++                	g_ptr_array_add (argv, NULL);
++
++                	out_watch_func = NULL;
++                	err_watch_func = cdrdao_stderr_line;
++
++			g_free (cdrdao);
++
++		} else if (cdrecord = g_find_program_in_path ("cdrecord")) {
++
++                	dev_arg = g_strdup_printf ("dev=%s", nautilus_burn_drive_get_device (drive));
++
++			char *template = g_strdup_printf ("audio-%s-XXXXXX", g_get_user_name ());
++			char *template_dir = g_build_filename (dirname, template, NULL);
++			g_free (template);
++			char *temp_dir = mkdtemp (template_dir);
++			toc_filename_arg = g_strdup_printf("%s/audio.wav", temp_dir); 
++			g_free (temp_dir);
++
++			if (toc_filename) {
++				*toc_filename = g_strdup (toc_filename_arg);
++			}
++
++			if (iso->priv->filename) {
++				g_free (iso->priv->filename);
++				iso->priv->filename = g_strdup (toc_filename_arg);
++			}
++
++                	argv = g_ptr_array_new ();
++                	g_ptr_array_add (argv, "cdda2wav");
++                	g_ptr_array_add (argv, (char *)dev_arg);
++                	g_ptr_array_add (argv, "-vall");
++                	g_ptr_array_add (argv, "cddb=0");
++               		g_ptr_array_add (argv, "-paranoia");
++                	g_ptr_array_add (argv, "paraopts=minoverlap=10");
++                	g_ptr_array_add (argv, "-B");
++                	g_ptr_array_add (argv, "-Owav");
++                	g_ptr_array_add (argv, (char *)toc_filename_arg);
++                	g_ptr_array_add (argv, NULL);
++
++                	out_watch_func = NULL;
++                	err_watch_func = cdda2wav_stderr_line;
++
++			g_free (cdrecord);
++		} else {
++			gchar *message = g_strdup_printf (_("No cdrdao and cdrecord were found !\n")); 
++
++                	g_set_error (error,
++                        	     NAUTILUS_BURN_ISO_ERROR,
++                             	     NAUTILUS_BURN_ISO_ERROR_GENERAL,
++                             	     "%s", message);
++                	g_free (message);
+ 
+-                out_watch_func = NULL;
+-                err_watch_func = cdrdao_stderr_line;
++                	result = NAUTILUS_BURN_ISO_RESULT_ERROR;
++
++                	goto cleanup;
++
++		}
+         } else {
+ 
+                 filename_arg = g_strdup_printf ("f=%s", filename);
+@@ -1578,7 +1731,9 @@
+         g_ptr_array_free (argv, TRUE);
+         g_free (dev_arg);
+         g_free (filename_arg);
+-        g_free (toc_filename_arg);
++	g_free (dirname);
++	if (toc_filename_arg)
++		g_free (toc_filename_arg);
+ 
+  cleanup:
+ 
+--- nautilus-cd-burner-2.23.90/src/nautilus-burn-recorder.c.orig	2008-09-22 18:23:06.038442000 +0800
++++ nautilus-cd-burner-2.23.90/src/nautilus-burn-recorder.c	2008-09-22 18:18:22.863586000 +0800
+@@ -1306,6 +1306,8 @@
+         char                       *speed_str = NULL;
+         char                       *dev_str   = NULL;
+         char                       *cue_str   = NULL;
++	gchar 			   *cdrdao    = NULL;
++	gchar			   *cdrecord  = NULL;
+         GList                      *l;
+         NautilusBurnProcessLineFunc out_line_func;
+         NautilusBurnProcessLineFunc err_line_func;
+@@ -1347,33 +1349,94 @@
+          * cdrecord supports only integer numbers for the speed. */
+          speed = (int) NAUTILUS_BURN_DRIVE_CD_SPEED (speed);
+ 
+-        if (track->type ==  NAUTILUS_BURN_RECORDER_TRACK_TYPE_CUE) {
+-                argv = g_ptr_array_new ();
+-                g_ptr_array_add (argv, "cdrdao");
+-                g_ptr_array_add (argv, "write");
+-                g_ptr_array_add (argv, "--device");
+-                g_ptr_array_add (argv, (char *)nautilus_burn_drive_get_device (drive));
+-                g_ptr_array_add (argv, "--speed");
+-                speed_str = g_strdup_printf ("%d", speed);
+-                g_ptr_array_add (argv, speed_str);
+-
+-                if (flags & NAUTILUS_BURN_RECORDER_WRITE_DUMMY_WRITE) {
+-                        g_ptr_array_add (argv, "--simulate");
+-                }
+-                if (flags & NAUTILUS_BURN_RECORDER_WRITE_EJECT) {
+-                        g_ptr_array_add (argv, "--eject");
+-                }
+-                if (flags & NAUTILUS_BURN_RECORDER_WRITE_OVERBURN) {
+-                        g_ptr_array_add (argv, "--overburn");
+-                }
+-                g_ptr_array_add (argv, "-v");
+-                g_ptr_array_add (argv, "2");
+-
+-                g_ptr_array_add (argv, track->contents.cue.filename);
+-                g_ptr_array_add (argv, NULL);
++	gchar *dir_name = NULL;
++	int i = 0;
++	GList *list = NULL;
+ 
+-                out_line_func = NULL;
+-                err_line_func = cdrdao_stderr_line;
++        if (track->type ==  NAUTILUS_BURN_RECORDER_TRACK_TYPE_CUE) {
++		if (cdrdao = g_find_program_in_path ("cdrdao")) {
++                	argv = g_ptr_array_new ();
++                	g_ptr_array_add (argv, "cdrdao");
++                	g_ptr_array_add (argv, "write");
++                	g_ptr_array_add (argv, "--device");
++                	g_ptr_array_add (argv, (char *)nautilus_burn_drive_get_device (drive));
++                	g_ptr_array_add (argv, "--speed");
++                	speed_str = g_strdup_printf ("%d", speed);
++                	g_ptr_array_add (argv, speed_str);
++
++                	if (flags & NAUTILUS_BURN_RECORDER_WRITE_DUMMY_WRITE) {
++                       		g_ptr_array_add (argv, "--simulate");
++                	}
++                	if (flags & NAUTILUS_BURN_RECORDER_WRITE_EJECT) {
++                        	g_ptr_array_add (argv, "--eject");
++                	}
++                	if (flags & NAUTILUS_BURN_RECORDER_WRITE_OVERBURN) {
++                        	g_ptr_array_add (argv, "--overburn");
++                	}
++                	g_ptr_array_add (argv, "-v");
++                	g_ptr_array_add (argv, "2");
++
++                	g_ptr_array_add (argv, track->contents.cue.filename);
++                	g_ptr_array_add (argv, NULL);
++
++                	out_line_func = NULL;
++                	err_line_func = cdrdao_stderr_line;
++		
++			g_free (cdrdao);
++
++		} else if (cdrecord = g_find_program_in_path ("cdrecord")) {
++
++			GDir *dir;
++			dev_str = g_strdup_printf ("dev=%s", nautilus_burn_drive_get_device (drive));
++
++			argv = g_ptr_array_new ();
++			g_ptr_array_add (argv, "cdrecord");
++			g_ptr_array_add (argv, dev_str);
++			g_ptr_array_add (argv, "-v");
++			g_ptr_array_add (argv, "-dao");
++			g_ptr_array_add (argv, "-useinfo");
++			g_ptr_array_add (argv, "-text");
++
++                	if (flags & NAUTILUS_BURN_RECORDER_WRITE_DUMMY_WRITE) {
++                        	g_ptr_array_add (argv, "-dummy");
++                	}
++                	if (flags & NAUTILUS_BURN_RECORDER_WRITE_EJECT) {
++                        	g_ptr_array_add (argv, "-eject");
++                	}
++                	if (flags & NAUTILUS_BURN_RECORDER_WRITE_OVERBURN) {
++                       		g_ptr_array_add (argv, "-overburn");
++                	}
++
++			dir_name = g_path_get_dirname (track->contents.cue.filename);
++			dir = g_dir_open (dir_name, 0, NULL);
++			if (dir) {
++				const char *name;
++				while ((name = g_dir_read_name (dir))) {
++					if (g_str_has_suffix (name, ".wav")) {
++						list = g_list_append(list, g_build_filename (dir_name, name, NULL));
++						g_ptr_array_add (argv, (char *)(g_list_nth_data(list, i++)));
++					}
++				}
++				g_dir_close (dir);
++			}
++			g_ptr_array_add (argv, NULL);
++
++			out_line_func = cdrecord_stdout_line;
++			err_line_func = cdrecord_stderr_line;
++	
++		} else {
++
++                        gchar *message = g_strdup_printf (_("No cdrdao and cdrecord were found !\n"));
++
++                        g_set_error (error,
++                                     NAUTILUS_BURN_RECORDER_ERROR,
++                                     NAUTILUS_BURN_RECORDER_ERROR_GENERAL,
++                                     "%s", message);
++                        g_free (message);
++
++                        result = NAUTILUS_BURN_RECORDER_RESULT_ERROR;
++			return result;
++		}
+         } else {
+                 argv = g_ptr_array_new ();
+                 g_ptr_array_add (argv, "cdrecord");
+@@ -1454,6 +1517,18 @@
+         g_free (cue_str);
+         g_free (speed_str);
+         g_free (dev_str);
++
++	if (!cdrdao && cdrecord) {
++		g_free (dir_name);
++		while (list) {
++			g_free (list->data);
++			list = list->next;
++		}
++		g_list_free (list);
++
++		g_free (cdrecord);
++	}
++
+         g_ptr_array_free (argv, TRUE);
+         argv = NULL;
+ 

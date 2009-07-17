@@ -1,0 +1,32 @@
+diff -rup nautilus-open-terminal-0.9/configure.in nautilus-open-terminal-0.9-modif/configure.in
+--- nautilus-open-terminal-0.9/configure.in	2009-01-29 15:17:44.987217110 +0100
++++ nautilus-open-terminal-0.9-modif/configure.in	2009-01-29 15:19:04.084419232 +0100
+@@ -28,6 +28,7 @@ fi
+ 
+ PKG_CHECK_MODULES(NAUTILUS, libnautilus-extension >= $NAUTILUS_REQUIRED glib-2.0 >= $GLIB_REQUIRED)
+ PKG_CHECK_MODULES(GCONF, gconf-2.0)
++PKG_CHECK_MODULES(GNOMEVFS, gnome-vfs-2.0)
+ PKG_CHECK_MODULES(EEL, eel-2.0 > $EEL_REQUIRED)
+ PKG_CHECK_MODULES(GNOMEDESKTOP, gnome-desktop-2.0 >= $LIBGNOME_DESKTOP_REQUIRED)
+ 
+@@ -43,6 +44,9 @@ AC_SUBST(NAUTILUS_LIBS)
+ AC_SUBST(GCONF_CFLAGS)
+ AC_SUBST(GCONF_LIBS)
+ 
++AC_SUBST(GNOMEVFS_CFLAGS)
++AC_SUBST(GNOMEVFS_LIBS)
++
+ AC_SUBST(GNOMEDESKTOP_CFLAGS)
+ AC_SUBST(GNOMEDESKTOP_LIBS)
+ 
+diff -rup nautilus-open-terminal-0.9/src/Makefile.am nautilus-open-terminal-0.9-modif/src/Makefile.am
+--- nautilus-open-terminal-0.9/src/Makefile.am	2009-01-29 15:17:44.987614544 +0100
++++ nautilus-open-terminal-0.9-modif/src/Makefile.am	2009-01-29 15:19:23.501250985 +0100
+@@ -9,6 +9,7 @@ INCLUDES =						\
+ 	$(NAUTILUS_CFLAGS)				\
+ 	$(EEL_CFLAGS)					\
+ 	$(GCONF_CFLAGS)					\
++	$(GNOMEVFS_CFLAGS)				\
+ 	$(GNOMEDESKTOP_CFLAGS)
+ 
+ nautilus_extensiondir=$(NAUTILUS_EXTENSION_DIR)

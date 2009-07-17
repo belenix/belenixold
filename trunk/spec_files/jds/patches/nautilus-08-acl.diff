@@ -1,0 +1,3021 @@
+--- nautilus-2.18.0.1-orig/libnautilus-private/nautilus-directory-async.c	2007-04-10 02:59:55.163189000 +0200
++++ nautilus-2.18.0.1-alo/libnautilus-private/nautilus-directory-async.c	2007-04-03 12:36:03.664915000 +0200
+@@ -2596,7 +2596,7 @@
+ 	gnome_vfs_async_load_directory
+ 		(&directory->details->mime_list_in_progress,
+ 		 uri,
+-		 GNOME_VFS_FILE_INFO_GET_MIME_TYPE,
++		 (GNOME_VFS_FILE_INFO_GET_MIME_TYPE | GNOME_VFS_FILE_INFO_GET_ACL),
+ 		 DIRECTORY_LOAD_ITEMS_PER_CALLBACK,
+ 		 GNOME_VFS_PRIORITY_DEFAULT,
+ 		 mime_list_callback,
+--- nautilus-2.18.0.1-orig/libnautilus-private/nautilus-file.h	2007-04-10 02:59:55.124136000 +0200
++++ nautilus-2.18.0.1-alo/libnautilus-private/nautilus-file.h	2007-04-03 12:36:02.762619000 +0200
+@@ -201,6 +201,15 @@
+ gboolean                nautilus_file_can_get_selinux_context           (NautilusFile                   *file);
+ char *                  nautilus_file_get_selinux_context               (NautilusFile                   *file);
+ 
++/* ACL */
++gboolean                nautilus_file_can_get_acl                       (NautilusFile                   *file);
++gboolean                nautilus_file_can_set_acl                       (NautilusFile                   *file);
++GnomeVFSACL *           nautilus_file_get_acl                           (NautilusFile                   *file);
++GnomeVFSResult                     nautilus_file_set_acl                           (NautilusFile                   *file,
++                                                                        GnomeVFSACL                    *acl,
++                                                                        NautilusFileOperationCallback   callback,
++									 gpointer                        callback_data);
++
+ /* "Capabilities". */
+ gboolean                nautilus_file_can_read                          (NautilusFile                   *file);
+ gboolean                nautilus_file_can_write                         (NautilusFile                   *file);
+--- nautilus-2.18.0.1-orig/libnautilus-private/nautilus-file.c	2007-04-10 02:59:55.240107000 +0200
++++ nautilus-2.18.0.1-alo/libnautilus-private/nautilus-file.c	2007-04-03 12:36:06.206964000 +0200
+@@ -65,6 +65,7 @@
+ #include <libgnomevfs/gnome-vfs-volume.h>
+ #include <libgnomevfs/gnome-vfs-volume-monitor.h>
+ #include <libgnomevfs/gnome-vfs-drive.h>
++#include <libgnomevfs/gnome-vfs-ops.h>
+ #include <glib/gfileutils.h>
+ #include <libnautilus-extension/nautilus-file-info.h>
+ #include <libxml/parser.h>
+@@ -73,6 +74,7 @@
+ #include <sys/time.h>
+ #include <time.h>
+ #include <unistd.h>
++#include <errno.h>
+ 
+ #ifdef HAVE_SELINUX
+ #include <selinux/selinux.h>
+@@ -661,6 +663,30 @@
+ 	return nautilus_directory_get_corresponding_file (file->details->directory);
+ }
+ 
++static GnomeVFSACLPerm
++to_acl_perm (GnomeVFSFilePermissions p)
++{
++	if ((p == GNOME_VFS_PERM_USER_READ)  ||
++	    (p == GNOME_VFS_PERM_GROUP_READ) ||
++	    (p == GNOME_VFS_PERM_OTHER_READ) ||
++	    (p == GNOME_VFS_PERM_ACCESS_READABLE)) 
++		return GNOME_VFS_ACL_READ; 
++
++	if ((p == GNOME_VFS_PERM_USER_WRITE)  ||
++	    (p == GNOME_VFS_PERM_GROUP_WRITE) ||
++	    (p == GNOME_VFS_PERM_OTHER_WRITE) ||
++	    (p == GNOME_VFS_PERM_ACCESS_WRITABLE)) 
++		return GNOME_VFS_ACL_WRITE;
++
++	if ((p == GNOME_VFS_PERM_USER_EXEC)  ||
++	    (p == GNOME_VFS_PERM_GROUP_EXEC) ||
++	    (p == GNOME_VFS_PERM_OTHER_EXEC) ||
++	    (p == GNOME_VFS_PERM_ACCESS_EXECUTABLE)) 
++		return GNOME_VFS_ACL_EXECUTE; 
++	
++	return GNOME_VFS_ACL_PERM_NULL;
++}
++
+ /**
+  * nautilus_file_denies_access_permission:
+  * 
+@@ -681,6 +707,9 @@
+ nautilus_file_denies_access_permission (NautilusFile *file, 
+ 				        GnomeVFSFilePermissions permissions)
+ {
++ 	GList *acls, *iter;	
++ 	GnomeVFSACL *acl;
++
+ 	g_assert (NAUTILUS_IS_FILE (file));
+ 	g_assert (permissions & (GNOME_VFS_PERM_ACCESS_READABLE |
+ 				 GNOME_VFS_PERM_ACCESS_WRITABLE |
+@@ -698,7 +727,10 @@
+ 		return FALSE;
+ 	}
+ 	
+-	return (file->details->info->permissions & permissions) != permissions;
++	if ((file->details->info->permissions & permissions) == permissions)
++		return FALSE;
++
++ 	return TRUE;
+ }
+ 
+ /**
+@@ -3438,6 +3470,134 @@
+ 	return !nautilus_file_info_missing (file, GNOME_VFS_FILE_INFO_FIELDS_PERMISSIONS);
+ }
+ 
++gboolean
++nautilus_file_can_get_acl (NautilusFile *file)
++{
++	return !nautilus_file_info_missing (file, GNOME_VFS_FILE_INFO_FIELDS_ACL);
++}
++
++gboolean                
++nautilus_file_can_set_acl (NautilusFile *file)
++{
++	uid_t user_id;
++
++  	if (!nautilus_file_can_get_acl (file)) { 
++  		return FALSE; 
++  	} 
++
++	/* Check the user. */
++	user_id = geteuid();
++
++	/* Owner is allowed to set group (with restrictions). */
++	if (user_id == (uid_t) file->details->info->uid) {
++		return TRUE;
++	}
++
++	/* Root is also allowed to set group. */
++	if (user_id == 0) {
++		return TRUE;
++	}
++
++	return FALSE;
++}
++
++static void
++set_permissions_callback (GnomeVFSAsyncHandle *handle,
++			  GnomeVFSResult result,
++			  GnomeVFSFileInfo *new_info,
++			  gpointer callback_data)
++{
++	Operation *op;
++
++	op = callback_data;
++	g_assert (handle == op->handle);
++
++	if (result == GNOME_VFS_OK && new_info != NULL) {
++		nautilus_file_update_info (op->file, new_info, op->use_slow_mime);
++	}
++	operation_complete (op, result);
++}
++
++static void
++set_acl_callback (GnomeVFSAsyncHandle *handle,
++		  GnomeVFSResult result,
++		  GnomeVFSFileInfo *new_info,
++		  gpointer callback_data)
++{
++	Operation *op;
++
++	op = callback_data;
++	g_assert (handle == op->handle);
++
++	if (result == GNOME_VFS_OK && new_info != NULL) {
++		if (op->file->details->info->acl != NULL) 
++			g_object_unref (op->file->details->info->acl);
++
++		op->file->details->info->acl = new_info->acl;
++	} 
++
++	operation_complete (op, result);
++}
++
++
++GnomeVFSACL *           
++nautilus_file_get_acl (NautilusFile *file)
++{
++	return nautilus_file_info_missing (file, GNOME_VFS_FILE_INFO_FIELDS_ACL)
++		? NULL : file->details->info->acl;	
++}
++
++// void
++GnomeVFSResult 
++nautilus_file_set_acl (NautilusFile                   *file,
++		       GnomeVFSACL                    *acl,
++		       NautilusFileOperationCallback   callback,
++		       gpointer                        callback_data)
++{
++	Operation *op;
++	GnomeVFSURI *vfs_uri;
++	GnomeVFSFileInfo *partial_file_info;
++	GnomeVFSFileInfoOptions options;
++	GnomeVFSResult re;
++
++	if (!nautilus_file_can_set_acl (file)) {
++		nautilus_file_changed (file);
++		(* callback) (file, GNOME_VFS_ERROR_ACCESS_DENIED, callback_data);
++		return;
++	}
++
++	op = operation_new (file, callback, callback_data);
++	op->use_slow_mime = file->details->got_slow_mime_type;
++
++	options = GNOME_VFS_FILE_INFO_GET_ACL
++		| GNOME_VFS_FILE_INFO_GET_MIME_TYPE
++		| GNOME_VFS_FILE_INFO_FOLLOW_LINKS;
++	if (op->use_slow_mime) {
++		options |= GNOME_VFS_FILE_INFO_FORCE_SLOW_MIME_TYPE;
++	}
++
++	partial_file_info = gnome_vfs_file_info_new ();
++	gnome_vfs_file_info_copy (partial_file_info, file->details->info);
++	partial_file_info->acl = acl;
++	vfs_uri = nautilus_file_get_gnome_vfs_uri (file);	
++#if 0
++	gnome_vfs_async_set_file_info (&op->handle,
++				       vfs_uri, partial_file_info, 
++				       GNOME_VFS_SET_FILE_INFO_ACL,
++				       options,
++				       GNOME_VFS_PRIORITY_DEFAULT,
++				       set_acl_callback, op);	
++#else 
++	re = gnome_vfs_set_file_info_uri (vfs_uri, partial_file_info, 
++					  GNOME_VFS_SET_FILE_INFO_ACL);
++	callback (file, re, callback_data);
++#endif
++	gnome_vfs_file_info_unref (partial_file_info);
++	gnome_vfs_uri_unref (vfs_uri);
++
++	return re;
++}
++
+ /**
+  * nautilus_file_can_set_permissions:
+  * 
+@@ -3486,22 +3646,6 @@
+ 	return file->details->info->permissions;
+ }
+ 
+-static void
+-set_permissions_callback (GnomeVFSAsyncHandle *handle,
+-			  GnomeVFSResult result,
+-			  GnomeVFSFileInfo *new_info,
+-			  gpointer callback_data)
+-{
+-	Operation *op;
+-
+-	op = callback_data;
+-	g_assert (handle == op->handle);
+-
+-	if (result == GNOME_VFS_OK && new_info != NULL) {
+-		nautilus_file_update_info (op->file, new_info, op->use_slow_mime);
+-	}
+-	operation_complete (op, result);
+-}
+ 
+ /**
+  * nautilus_file_set_permissions:
+@@ -3553,6 +3697,7 @@
+ 	}
+ 	/* Change the file-on-disk permissions. */
+ 	partial_file_info = gnome_vfs_file_info_new ();
++	gnome_vfs_file_info_copy(partial_file_info, file->details->info);
+ 	partial_file_info->permissions = new_permissions;
+ 	vfs_uri = nautilus_file_get_gnome_vfs_uri (file);
+ 	gnome_vfs_async_set_file_info (&op->handle,
+--- nautilus-2.18.0.1-orig/libnautilus-private/nautilus-file-private.h	2007-04-10 02:59:55.167442000 +0200
++++ nautilus-2.18.0.1-alo/libnautilus-private/nautilus-file-private.h	2007-04-03 12:36:04.930411000 +0200
+@@ -42,7 +42,8 @@
+ 	(GNOME_VFS_FILE_INFO_FOLLOW_LINKS | \
+ 	 GNOME_VFS_FILE_INFO_GET_MIME_TYPE |	\
+ 	 GNOME_VFS_FILE_INFO_GET_SELINUX_CONTEXT | \
+-	 GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS)
++	 GNOME_VFS_FILE_INFO_GET_ACCESS_RIGHTS | \
++         GNOME_VFS_FILE_INFO_GET_ACL)
+ 
+ /* These are in the typical sort order. Known things come first, then
+  * things where we can't know, finally things where we don't yet know.
+--- nautilus-2.18.0.1-orig/src/file-manager/fm-properties-window.c	2007-04-10 02:59:55.413853000 +0200
++++ nautilus-2.18.0.1-alo/src/file-manager/fm-properties-window.c	2007-04-10 01:41:45.120623000 +0200
+@@ -3,6 +3,7 @@
+ /* fm-properties-window.c - window that lets user modify file properties
+ 
+    Copyright (C) 2000 Eazel, Inc.
++   Copyright (C) 2006 Sun Microsystems, Inc.
+ 
+    The Gnome Library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public License as
+@@ -20,6 +21,7 @@
+    Boston, MA 02111-1307, USA.
+ 
+    Authors: Darin Adler <darin@bentspoon.com>
++            Alvaro Lopez Ortega <alvaro@sun.com>
+ */
+ 
+ #include <config.h>
+@@ -86,6 +88,96 @@
+ 
+ #define ROW_PAD 6
+ 
++                           /* SUN_BRANDING */
++#define DEFAULT_USER_STR   _("Default user")
++                           /* SUN_BRANDING */
++#define DEFAULT_GROUP_STR  _("Default group")
++                           /* SUN_BRANDING */
++#define DEFAULT_OTHERS_STR _("Default others")
++                           /* SUN_BRANDING */
++#define DEFAULT_MASK_STR   _("Default mask")
++                           /* SUN_BRANDING */
++#define MASK_STR           _("Mask")
++
++enum {
++       COL_KIND = 0,
++       COL_ICON,
++       COL_USER,
++       COL_PERM_READ,
++       COL_PERM_WRITE,
++       COL_PERM_EXECUTE,
++       COL_EFFECTIVE,
++       NUM_COLS
++};
++
++enum {
++       COL_USER_ENTRY,
++/*        COL_NEG_USER_ENTRY, */
++       COL_GROUP_ENTRY,
++/*        COL_NEG_GROUP_ENTRY, */
++       NUM_PERM_TYPES
++};
++
++enum {
++       COL_ICON_USER,
++       COL_ICON_NEG_USER,
++       COL_ICON_GROUP,
++       COL_ICON_NEG_GROUP,
++       COL_ICON_MASK,
++       COL_ICON_OTHER,
++       COL_ICON_NEG_OTHER,
++       NUM_COL_ICONS
++};
++
++enum {
++	NFS4_ACL_LIST_USER = 0,
++	NFS4_ACL_LIST_ICON,
++	NFS4_ACL_LIST_TYPE,
++	NFS4_ACL_LIST_KIND,
++	NFS4_ACL_LIST_N_COLUMNS
++};
++
++
++enum {
++	NFS4_PERMISSIONS_SELECTED = 0,
++	NFS4_PERMISSIONS_NAME,
++	NFS4_PERMISSIONS_INCONSISTENT,
++	NFS4_PERMISSIONS_N_COLUMNS
++};
++
++/* SUN_BRANDING */
++#define ACL_NFS4_APPLY_TO_THIS_FOLDER      _("This folder") 
++#define ACL_NFS4_APPLY_TO_CHILD_FOLDERS    _("Child folders")
++#define ACL_NFS4_APPLY_TO_CHILD_FILES      _("Child files")
++#define ACL_NFS4_APPLY_TO_ALL_DESCENDANTS  _("All descendants")
++
++#define ACL_NFS4_TYPE_ALLOW                _("Allow")
++#define ACL_NFS4_TYPE_DENY                 _("Deny")
++
++#define ACL_NFS4_PERM_ADMIN                _("Administration")
++#define ACL_NFS4_PERM_CHANGE_PERM          _("Change Permissions")
++#define ACL_NFS4_PERM_CHANGE_OWNER         _("Change Owner")
++#define ACL_NFS4_PERM_READ                 _("Read")
++#define ACL_NFS4_PERM_READ_ATTRIBUTES      _("Read Attributes")
++#define ACL_NFS4_PERM_READ_EXT_ATTRIBUTES  _("Read Extended Attributes")
++#define ACL_NFS4_PERM_LIST_CONTENTS        _("List Folder Contents (Read Data)")
++#define ACL_NFS4_PERM_TRAVERSE_FOLDER      _("Traverse Folder (Execute File)")
++#define ACL_NFS4_PERM_READ_PERMISSIONS     _("Read Permissions")
++#define ACL_NFS4_PERM_WRITE                _("Write")
++#define ACL_NFS4_PERM_WRITE_ATTRIBUTES     _("Write Attributes")
++#define ACL_NFS4_PERM_WRITE_EXT_ATTRIBUTES _("Write Extended Attributes")
++#define ACL_NFS4_PERM_CREATE_FILES         _("Create Files (Write Data)")
++#define ACL_NFS4_PERM_CREATE_FOLDER        _("Create Folder (Append Data)")
++#define ACL_NFS4_PERM_DELETE               _("Delete")
++#define ACL_NFS4_PERM_DELETE_SUBFOLDERS    _("Delete Subfolders and Files")
++
++#define ACL_NFS4_WHO_OWNER_USER            _("Owner user")
++#define ACL_NFS4_WHO_OWNER_GROUP           _("Owner group")
++#define ACL_NFS4_WHO_USER                  _("User")
++#define ACL_NFS4_WHO_GROUP                 _("Group")
++#define ACL_NFS4_WHO_EVERYBODY             _("Everybody")
++
++
+ static GHashTable *windows;
+ static GHashTable *pending_lists;
+ 
+@@ -127,6 +219,14 @@
+ 	GHashTable *initial_permissions;
+ 	gboolean has_recursive_apply;
+ 
++	GtkWidget *acl_view;
++	GtkWidget *acl_default_view;
++	GHashTable *initial_acl;
++	GdkPixbuf *acl_icons[NUM_COL_ICONS];
++	GtkWidget *acl_buttons;
++	GtkWidget *acl_def_buttons;
++	gboolean   updating_acl_tab;
++
+ 	GList *value_fields;
+ 
+ 	GList *mime_list;
+@@ -1135,6 +1235,362 @@
+ 	return ret;
+ }
+ 
++
++static void
++update_acl_page_add_entry (FMPropertiesWindow *window, GnomeVFSACL *acl) 
++{
++	GList *ace_list;
++	GList *i;
++	GnomeVFSACE *ace;
++	gboolean  mr,mw,mx;
++	gboolean  imr,imw,imx;
++
++	imr = imw = imx = TRUE;
++
++	/* Read the mask
++	 */
++	ace_list = gnome_vfs_acl_get_ace_list (acl);
++
++	mx = mw = mx = TRUE;
++	for (i=ace_list; i; i=i->next) {
++		ace = i->data;
++		if (gnome_vfs_ace_get_kind (ace) == GNOME_VFS_ACL_MASK) {
++			if (gnome_vfs_ace_get_inherance (ace)) {
++				imr = gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_READ);
++				imw = gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_WRITE);
++				imx = gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_EXECUTE);
++			} else {
++				mr = gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_READ);
++				mw = gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_WRITE);
++				mx = gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_EXECUTE);
++			}
++		}
++	}	
++
++	/* Add the ACL entries
++	 */
++	for (i=ace_list; i; i=i->next) {
++		const char            *id;
++		const GnomeVFSACLPerm *perms;
++		GnomeVFSACLKind        kind;
++		gboolean               inherit;
++		gchar                  masked_str[4] = {'-','-','-',0};
++		gboolean               r,w,x;
++		GdkPixbuf              *icon = NULL;		
++
++		GtkTreeIter   iter;
++		GtkTreeModel *model;
++
++		ace      = i->data;
++
++		id       = gnome_vfs_ace_get_id (ace);
++		kind     = gnome_vfs_ace_get_kind (ace);
++		perms    = gnome_vfs_ace_get_perms (ace);
++		inherit  = gnome_vfs_ace_get_inherance (ace);
++
++		r = gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_READ);
++		w = gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_WRITE);
++		x = gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_EXECUTE);
++
++		if (inherit) {
++			if (imr & r) masked_str[0] = 'r';	
++			if (imw & w) masked_str[1] = 'w';	
++			if (imx & x) masked_str[2] = 'x';
++		} else {
++			if (mr & r) masked_str[0] = 'r';	
++			if (mw & w) masked_str[1] = 'w';	
++			if (mx & x) masked_str[2] = 'x';
++		}
++
++		if (inherit)
++			model = gtk_tree_view_get_model (GTK_TREE_VIEW (window->details->acl_default_view));  
++		else 
++			model = gtk_tree_view_get_model (GTK_TREE_VIEW (window->details->acl_view));  
++
++		switch (kind) {
++		case GNOME_VFS_ACL_USER:
++			if (inherit && !id)
++				id = DEFAULT_USER_STR;
++
++			if (id != NULL) {
++				icon = window->details->acl_icons[COL_ICON_USER];
++				gtk_list_store_append (model , &iter);
++				gtk_list_store_set (model, &iter, 
++						    COL_ICON, icon,
++						    COL_KIND, kind, 
++						    COL_USER, id,
++						    COL_PERM_READ, r,
++						    COL_PERM_WRITE, w,
++						    COL_PERM_EXECUTE, x,
++						    COL_EFFECTIVE, masked_str,
++						    -1);
++			}
++			break;
++		case GNOME_VFS_ACL_GROUP:
++			if (inherit && !id)
++				id = DEFAULT_GROUP_STR;
++
++			if (id != NULL) {
++				icon = window->details->acl_icons[COL_ICON_GROUP];
++
++				gtk_list_store_append (model , &iter);
++				gtk_list_store_set (model, &iter, 
++						    COL_ICON, icon,
++						    COL_KIND, kind, 
++						    COL_USER, id, 
++						    COL_PERM_READ, r,
++						    COL_PERM_WRITE, w,
++						    COL_PERM_EXECUTE, x,
++						    COL_EFFECTIVE, masked_str,
++						    -1);
++			}
++			break;
++		case GNOME_VFS_ACL_OTHER:
++			if (inherit && !id)
++				id = DEFAULT_OTHERS_STR;
++
++			if (id != NULL) {
++				icon = window->details->acl_icons[COL_ICON_OTHER];
++
++				gtk_list_store_append (model , &iter);
++				gtk_list_store_set (model, &iter, 
++						    COL_ICON, icon,
++						    COL_KIND, kind, 
++						    COL_USER, id, 
++						    COL_PERM_READ, r,
++						    COL_PERM_WRITE, w,
++						    COL_PERM_EXECUTE, x,
++						    COL_EFFECTIVE, masked_str,
++						    -1);
++			}
++			break;
++		case GNOME_VFS_ACL_MASK:
++			id = (inherit) ? DEFAULT_MASK_STR : MASK_STR;
++
++			icon = window->details->acl_icons[COL_ICON_MASK];
++
++			gtk_list_store_append (model , &iter);
++			gtk_list_store_set (model, &iter, 
++					    COL_ICON, icon,
++					    COL_KIND, kind, 
++					    COL_USER, id, 
++					    COL_PERM_READ, r,
++					    COL_PERM_WRITE, w,
++					    COL_PERM_EXECUTE, x,
++					    COL_EFFECTIVE, masked_str,
++					    -1);
++			break;
++		default:
++			g_error ("Unhandled ACE: kind=%d\n", kind);
++			continue;
++		}
++	}
++
++	gnome_vfs_acl_free_ace_list (ace_list);
++}
++
++static void
++update_acl_page_classic (FMPropertiesWindow *window)
++{
++	GtkTreeModel *model;
++	gboolean      can_set_acl;
++	gboolean      can_get_acl;
++	NautilusFile *file;
++
++	file = get_target_file (window);
++	can_set_acl = nautilus_file_can_set_acl (file);
++	can_get_acl = nautilus_file_can_get_acl (file);
++
++	/* Clean it up
++	 */
++	model = gtk_tree_view_get_model (GTK_TREE_VIEW (window->details->acl_view));  
++	gtk_list_store_clear (GTK_LIST_STORE(model));
++
++	gtk_widget_set_sensitive (window->details->acl_buttons, can_set_acl);
++	
++	if (window->details->acl_default_view) {
++		model = gtk_tree_view_get_model (GTK_TREE_VIEW (window->details->acl_default_view));  
++		gtk_list_store_clear (GTK_LIST_STORE(model));
++
++		gtk_widget_set_sensitive (window->details->acl_def_buttons, can_set_acl);
++	}
++
++	/* Fill it out again
++	 */	
++	if (window->details->initial_acl != NULL && can_get_acl) {
++		GnomeVFSACL  *acl;
++
++		g_hash_table_remove (window->details->initial_acl, file);
++		acl = nautilus_file_get_acl (file);
++		g_hash_table_insert (window->details->initial_acl, file, acl);
++
++		update_acl_page_add_entry (window, acl);
++
++		/* Update the sentitivity of the lists
++		 */
++		gtk_widget_set_sensitive (window->details->acl_view, can_set_acl);		
++
++		if (window->details->acl_default_view)
++			gtk_widget_set_sensitive (window->details->acl_default_view, can_set_acl);		
++	}
++}
++
++static void
++update_acl_nfs4_list_guts (FMPropertiesWindow *window,
++			   GtkTreeView        *acl,
++			   GnomeVFSACL        *file_acl)
++{
++	GList *i;
++	GList *ace_list;
++	GnomeVFSACE *ace;
++	GtkListStore *list_store;
++	GtkTreeIter iter;
++	const gchar *type_str;
++
++	g_assert (GNOME_VFS_IS_ACL(file_acl));
++
++	ace_list = gnome_vfs_acl_get_ace_list (file_acl);
++	list_store = gtk_tree_view_get_model (acl);
++
++	for (i=ace_list; i; i=i->next) {
++		const char      *id;
++		GnomeVFSACLType  type;
++		GnomeVFSACLKind  kind;
++		GdkPixbuf       *icon;		
++
++		ace  = i->data;
++		icon = NULL;
++
++		g_assert (GNOME_VFS_IS_ACE(ace));
++		
++		type = gnome_vfs_ace_get_ace_type(ace);
++		kind = gnome_vfs_ace_get_kind (ace);
++		
++
++		type_str = (type == GNOME_VFS_ACL_DENY) ? ACL_NFS4_TYPE_DENY : ACL_NFS4_TYPE_ALLOW;
++
++		switch (kind) {
++		case GNOME_VFS_ACL_USER:
++			id   = gnome_vfs_ace_get_id (ace);
++			if (type == GNOME_VFS_ACL_DENY) 
++				icon = window->details->acl_icons[COL_ICON_NEG_USER];
++			else
++				icon = window->details->acl_icons[COL_ICON_USER];
++			break;
++		case GNOME_VFS_ACL_GROUP:
++			id   = gnome_vfs_ace_get_id (ace);
++			if (type == GNOME_VFS_ACL_DENY) 
++				icon = window->details->acl_icons[COL_ICON_NEG_GROUP];
++			else
++				icon = window->details->acl_icons[COL_ICON_GROUP];
++			break;
++		case GNOME_VFS_ACL_OTHER:
++			id = g_strdup(_("Others"));
++			if (type == GNOME_VFS_ACL_DENY) 
++				icon = window->details->acl_icons[COL_ICON_NEG_OTHER];
++			else
++				icon = window->details->acl_icons[COL_ICON_OTHER];
++			break;
++		case GNOME_VFS_ACL_MASK:
++			id = g_strdup(_("Mask"));
++			icon = window->details->acl_icons[COL_ICON_MASK];
++			break;
++		case GNOME_VFS_ACL_EVERYONE:
++			id = g_strdup(_("Everyone"));
++			break;
++		case GNOME_VFS_ACL_OWNER_USER:
++			id = g_strdup(_("Owner user")); 
++			if (type == GNOME_VFS_ACL_DENY) 
++				icon = window->details->acl_icons[COL_ICON_NEG_USER];
++			else
++				icon = window->details->acl_icons[COL_ICON_USER];
++			break;
++		case GNOME_VFS_ACL_OWNER_GROUP:
++			id = g_strdup(_("Owner group"));
++			if (type == GNOME_VFS_ACL_DENY) 
++				icon = window->details->acl_icons[COL_ICON_NEG_GROUP];
++			else
++				icon = window->details->acl_icons[COL_ICON_GROUP];
++			break;
++		default:
++			id = g_strdup("UNKNOWN");
++		}
++
++		gtk_list_store_append (list_store , &iter);
++		gtk_list_store_set (list_store, &iter,
++				    NFS4_ACL_LIST_USER, id,
++				    NFS4_ACL_LIST_TYPE, type_str,
++				    NFS4_ACL_LIST_KIND, kind,
++				    -1);
++
++		if (icon != NULL) {
++			gtk_list_store_set (list_store, &iter,
++					    NFS4_ACL_LIST_ICON, icon,
++					    -1);
++		}
++	}
++}
++
++
++static void
++update_acl_nfs4_list (FMPropertiesWindow *window)
++{
++	GtkTreeView  *tree_view;
++	GtkListStore *list_store;
++	NautilusFile *file;
++	GnomeVFSACL  *acl;
++
++	g_assert (FM_IS_PROPERTIES_WINDOW(window));
++
++	/* Get the ACL
++	 */
++	file = get_target_file (window);
++	acl = nautilus_file_get_acl (file);
++
++	/* Clean the list
++	 */
++	tree_view  = g_object_get_data(window, "acl_list_tree_view");
++	list_store = gtk_tree_view_get_model(tree_view);
++	gtk_list_store_clear (list_store);
++
++	update_acl_nfs4_list_guts (window, tree_view, acl);
++}
++
++
++static void
++update_acl_page_nfs4 (FMPropertiesWindow *window)
++{
++	update_acl_nfs4_list (window);
++
++	gtk_widget_set_sensitive (g_object_get_data (window, "ace_props_frame"), FALSE);
++	gtk_widget_set_sensitive (g_object_get_data (window, "acl_list_add_button"), FALSE);
++}
++
++
++static void
++update_acl_page (FMPropertiesWindow *window)
++{
++	GnomeVFSACL       *acl;
++	GnomeVFSACLScheme  acl_scheme;
++	NautilusFile      *file;
++
++	file = get_target_file (window);
++	acl = nautilus_file_get_acl (file);	
++	if (acl == NULL) 
++		return;
++	acl_scheme = gnome_vfs_acl_get_scheme(acl);
++
++	window->details->updating_acl_tab = TRUE;
++
++	if (acl_scheme == GNOME_VFS_ACL_SCHEME_CLASSIC)
++		update_acl_page_classic (window);
++	else 
++		update_acl_page_nfs4 (window);
++
++	window->details->updating_acl_tab = FALSE;
++}
++
++
+ static void
+ properties_window_update (FMPropertiesWindow *window, 
+ 			  GList *files)
+@@ -1179,6 +1633,9 @@
+ 		update_properties_window_icon (GTK_IMAGE (window->details->icon_image));
+ 
+ 		update_name_field (window);
++		if (should_show_acls (window)) {
++			update_acl_page (window);
++		}
+ 
+ 		for (l = window->details->emblem_buttons; l != NULL; l = l->next) {
+ 			emblem_button_update (window, GTK_TOGGLE_BUTTON (l->data));
+@@ -1337,6 +1794,18 @@
+ 	return TRUE;
+ }
+ 
++static gboolean
++file_list_some_directory (GList *file_list)
++{
++	GList *l;
++	for (l = file_list; l != NULL; l = l->next) {
++		if (nautilus_file_is_directory (NAUTILUS_FILE (l->data))) {
++			return TRUE;
++		}
++	}
++	return FALSE;
++}
++
+ static void
+ value_field_update_internal (GtkLabel *label, 
+ 			     GList *file_list)
+@@ -3689,6 +4158,24 @@
+ }
+ 
+ static gboolean
++all_can_get_acl (GList *file_list)
++{
++       GList *l;
++
++       for (l = file_list; l != NULL; l = l->next) {
++               NautilusFile *file;
++               
++               file = NAUTILUS_FILE (l->data);
++               
++               if (!nautilus_file_can_get_acl (file)) {
++                       return FALSE;
++               }
++       }
++
++       return TRUE;
++}
++
++static gboolean
+ all_can_set_permissions (GList *file_list)
+ {
+ 	GList *l;
+@@ -4143,112 +4630,2016 @@
+ 	}
+ }
+ 
+-static void
+-create_permissions_page (FMPropertiesWindow *window)
++static GHashTable *
++get_initial_acl (GList *file_list)
+ {
+-	GtkWidget *vbox, *button, *hbox;
+-	GtkTable *page_table;
+-	char *file_name, *prompt_text;
+-	GList *file_list;
+-	guint last_row;
+-
+-	vbox = create_page_with_vbox (window->details->notebook,
+-				      _("Permissions"));
+-
+-	file_list = window->details->original_files;
+-
+-	window->details->initial_permissions = NULL;
+-	
+-	if (all_can_get_permissions (file_list) && all_can_get_permissions (window->details->target_files)) {
+-		window->details->initial_permissions = get_initial_permissions (window->details->target_files);
+-		window->details->has_recursive_apply = files_has_changable_permissions_directory (window);
+-		
+-		if (!all_can_set_permissions (file_list)) {
+-			add_prompt_and_separator (
+-				GTK_VBOX (vbox), 
+-				_("You are not the owner, so you can't change these permissions."));
+-		}
+-
+-		page_table = GTK_TABLE (gtk_table_new (1, COLUMN_COUNT, FALSE));
+-		window->details->permissions_table = page_table;
+-
+-		apply_standard_table_padding (page_table);
+-		gtk_widget_show (GTK_WIDGET (page_table));
+-		gtk_box_pack_start (GTK_BOX (vbox), 
+-				    GTK_WIDGET (page_table), 
+-				    TRUE, TRUE, 0);
++	GHashTable *ret;
++	GList *l;
+ 
+-		if (eel_preferences_get_boolean (NAUTILUS_PREFERENCES_SHOW_ADVANCED_PERMISSIONS)) {
+-			window->details->advanced_permissions = TRUE;
+-			create_advanced_permissions (window, page_table);
+-		} else {
+-			window->details->advanced_permissions = FALSE;
+-			create_simple_permissions (window, page_table);
+-		}
+-		
+-		gtk_table_set_row_spacing (page_table, page_table->nrows - 1, 18);
+-	
+-		append_title_value_pair
+-			(window, page_table, _("SELinux Context:"), 
+-			 "selinux_context", _("--"),
+-			 FALSE);
+-		append_title_value_pair
+-			(window, page_table, _("Last changed:"), 
+-			 "date_permissions", _("--"),
+-			 FALSE);
++	ret = g_hash_table_new (g_direct_hash,
++				g_direct_equal);
+ 	
+-		if (window->details->has_recursive_apply) {
+-			last_row = append_row (page_table);
+-			hbox = gtk_hbox_new (FALSE, 0);
+-			gtk_widget_show (hbox);
+-			gtk_table_attach (page_table, hbox,
+-					  0, 2,
+-					  last_row, last_row+1,
+-					  GTK_FILL, 0,
+-					  0, 0);
++	for (l = file_list; l != NULL; l = l->next) {
++		GnomeVFSACL *acl;
++		NautilusFile *file;
+ 		
+-			button = gtk_button_new_with_mnemonic (_("Apply permissions to enclosed files"));
+-			gtk_widget_show (button);
+-			gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+-			g_signal_connect (button, "clicked",
+-					  G_CALLBACK (apply_recursive_clicked),
+-					  window);
+-		}
+-	} else {
+-		if (!is_multi_file_window (window)) {
+-			file_name = nautilus_file_get_display_name (get_target_file (window));
+-			prompt_text = g_strdup_printf (_("The permissions of \"%s\" could not be determined."), file_name);
+-			g_free (file_name);
+-		} else {
+-			prompt_text = g_strdup (_("The permissions of the selected file could not be determined."));
+-		}
++		file = NAUTILUS_FILE (l->data);
+ 		
+-		add_prompt (GTK_VBOX (vbox), prompt_text, TRUE);
+-		g_free (prompt_text);
++		acl = nautilus_file_get_acl (file);
++		g_hash_table_insert (ret, file, acl);
+ 	}
++
++	return ret;
+ }
+ 
++
+ static void
+-append_extension_pages (FMPropertiesWindow *window)
++acl_change_callback (NautilusFile *file, GnomeVFSResult result, gpointer callback_data)
+ {
+-	GList *providers;
+-	GList *p;
+-	
+- 	providers = nautilus_module_get_extensions_for_type (NAUTILUS_TYPE_PROPERTY_PAGE_PROVIDER);
+-	
+-	for (p = providers; p != NULL; p = p->next) {
+-		NautilusPropertyPageProvider *provider;
+-		GList *pages;
+-		GList *l;
++       FMPropertiesWindow *window;
++       g_assert (callback_data != NULL);
+ 
+-		provider = NAUTILUS_PROPERTY_PAGE_PROVIDER (p->data);
+-		
+-		pages = nautilus_property_page_provider_get_pages 
+-			(provider, window->details->original_files);
+-		
+-		for (l = pages; l != NULL; l = l->next) {
+-			NautilusPropertyPage *page;
+-			GtkWidget *page_widget;
++       window = FM_PROPERTIES_WINDOW (callback_data);
++       if (GTK_WIDGET (window)->window != NULL &&
++           window->details->long_operation_underway == 1) {
++               /* finished !! */
++               gdk_window_set_cursor (GTK_WIDGET (window)->window, NULL);
++       }
++       window->details->long_operation_underway--;
++       
++       /* Report the error if it's an error. */
++       fm_report_error_setting_permissions (file, result, NULL);
++       g_object_unref (window);
++}
++
++
++static void        
++ace_perm_toggled_cb (GtkCellRendererToggle *cell_renderer,
++		     gchar                 *path,
++		     gpointer               user_data,
++		     GnomeVFSACLPerm        perm,
++		     gboolean               is_default_acl)
++{
++	GtkTreeIter         iter;
++	GtkTreeModel       *model;
++	FMPropertiesWindow *window = user_data;
++
++	gchar *row_id;
++	gboolean perm_val;
++	GnomeVFSACLKind row_kind;
++	int column;
++
++	GList *file_list, *l;
++
++	/* Look for the row
++	 */
++	if (is_default_acl)
++		model = gtk_tree_view_get_model (GTK_TREE_VIEW (window->details->acl_default_view));  
++	else
++		model = gtk_tree_view_get_model (GTK_TREE_VIEW (window->details->acl_view));  
++
++	gtk_tree_model_get_iter_from_string (model, &iter, path);
++
++	switch (perm) {
++	case GNOME_VFS_ACL_READ:
++		column = COL_PERM_READ;
++		break;
++	case GNOME_VFS_ACL_WRITE:	
++		column = COL_PERM_WRITE;
++		break;
++	case GNOME_VFS_ACL_EXECUTE:
++		column = COL_PERM_EXECUTE;
++		break;
++	}
++
++	/* Update the model
++	 */
++	gtk_tree_model_get (model, &iter, 
++			    COL_USER, &row_id, 
++			    COL_KIND, &row_kind,
++			    column,   &perm_val,
++			    -1);
++
++	perm_val = !perm_val;
++
++	/* Update the files
++	 */
++	file_list = window->details->original_files;
++
++	for (l = file_list; l != NULL; l = l->next) {
++		GnomeVFSACL *acl;
++		NautilusFile *file;
++		GList *ace_list, *i;
++
++		file = NAUTILUS_FILE (l->data);
++		acl = nautilus_file_get_acl (file);
++
++		ace_list = gnome_vfs_acl_get_ace_list (acl);
++		for (i=ace_list; i; i=i->next) {
++			const char            *id;
++			GnomeVFSACE           *ace;
++			const GnomeVFSACLPerm *perms;
++			GnomeVFSACLKind        kind;
++			gboolean               inherit;
++			gboolean               default_acl_obj = FALSE;
++
++			ace = i->data;
++
++			id       = gnome_vfs_ace_get_id (ace);
++			kind     = gnome_vfs_ace_get_kind (ace);
++			perms    = gnome_vfs_ace_get_perms (ace);
++			inherit  = gnome_vfs_ace_get_inherance (ace);
++
++			if ((kind != row_kind) || 
++			    (is_default_acl != inherit))
++				continue;
++
++			if ((id == NULL) && 
++			    ((strcmp (row_id, MASK_STR) == 0)          ||
++			     (strcmp (row_id, DEFAULT_MASK_STR) == 0)  ||
++			     (strcmp (row_id, DEFAULT_USER_STR) == 0)  ||
++			     (strcmp (row_id, DEFAULT_GROUP_STR) == 0) ||	
++			     (strcmp (row_id, DEFAULT_OTHERS_STR) == 0)))
++				default_acl_obj = TRUE;
++
++			if (!default_acl_obj) 
++			{
++				if (id && !row_id) 
++					continue;
++				if (!id && row_id) 
++					continue;
++				if (id && row_id && (strcmp (id, row_id) != 0))
++					continue;
++			}
++
++			if (perm_val) {
++				gnome_vfs_ace_add_perm (ace, perm);
++			} else {
++				gnome_vfs_ace_del_perm (ace, perm);
++			}
++
++			g_object_ref (window);
++			nautilus_file_set_acl (file, acl,
++					       acl_change_callback,
++					       window);
++		}
++
++		gnome_vfs_acl_free_ace_list (ace_list);
++	}
++
++	/* Update the model
++	 */
++	gtk_list_store_set (model, &iter,
++			    column, perm_val,
++			    -1);	
++}
++
++static void        
++ace_r_perm_toggled_cb (GtkCellRendererToggle *cell_renderer,
++		       gchar                 *path,
++		       gpointer               user_data)
++{
++	ace_perm_toggled_cb (cell_renderer, path, user_data, GNOME_VFS_ACL_READ, FALSE);
++}
++static void        
++ace_w_perm_toggled_cb (GtkCellRendererToggle *cell_renderer,
++		       gchar                 *path,
++		       gpointer               user_data)
++{
++	ace_perm_toggled_cb (cell_renderer, path, user_data, GNOME_VFS_ACL_WRITE, FALSE);	
++}
++static void        
++ace_x_perm_toggled_cb (GtkCellRendererToggle *cell_renderer,
++		       gchar                 *path,
++		       gpointer               user_data)
++{
++	ace_perm_toggled_cb (cell_renderer, path, user_data, GNOME_VFS_ACL_EXECUTE, FALSE);		
++}
++
++
++static void        
++ace_r_perm_def_toggled_cb (GtkCellRendererToggle *cell_renderer,
++			   gchar                 *path,
++			   gpointer               user_data)
++{
++	ace_perm_toggled_cb (cell_renderer, path, user_data, GNOME_VFS_ACL_READ, TRUE);
++}
++static void        
++ace_w_perm_def_toggled_cb (GtkCellRendererToggle *cell_renderer,
++			   gchar                 *path,
++			   gpointer               user_data)
++{
++	ace_perm_toggled_cb (cell_renderer, path, user_data, GNOME_VFS_ACL_WRITE, TRUE);	
++}
++static void        
++ace_x_perm_def_toggled_cb (GtkCellRendererToggle *cell_renderer,
++			   gchar                 *path,
++			   gpointer               user_data)
++{
++	ace_perm_toggled_cb (cell_renderer, path, user_data, GNOME_VFS_ACL_EXECUTE, TRUE);		
++}
++
++
++static GtkWidget *
++create_acl_page_list (GtkWidget *container,
++		      FMPropertiesWindow *window,
++		      gboolean default_acl_list)
++{
++	GtkListStore      *store;  // GtkTreeModel
++	GtkWidget         *view;
++	GtkCellRenderer   *renderer;
++	GtkTreeViewColumn *col;
++
++	/* Load the icons
++	 */ 
++	window->details->acl_icons[COL_ICON_USER]      = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/user.png", NULL);
++	window->details->acl_icons[COL_ICON_NEG_USER]  = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/user_neg.png", NULL);
++	window->details->acl_icons[COL_ICON_GROUP]     = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/group.png", NULL);
++	window->details->acl_icons[COL_ICON_NEG_GROUP] = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/group_neg.png", NULL);
++	window->details->acl_icons[COL_ICON_MASK]      = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/mask.png", NULL);
++	window->details->acl_icons[COL_ICON_OTHER]     = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/other.png", NULL);
++	window->details->acl_icons[COL_ICON_NEG_OTHER] = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/other_neg.png", NULL);
++		  
++	/* Interface
++	 */
++	view = gtk_tree_view_new ();
++
++	/* The model
++	 */
++	store = gtk_list_store_new (NUM_COLS, 
++				    G_TYPE_INT,       /* Kind: user, group, other */
++				    GDK_TYPE_PIXBUF,  /* Type: user, group, other */
++				    G_TYPE_STRING,    /* ID */
++				    G_TYPE_BOOLEAN,   /* r */
++				    G_TYPE_BOOLEAN,   /* w */
++				    G_TYPE_BOOLEAN,   /* x */
++				    G_TYPE_STRING);   /* Effective */
++
++	gtk_tree_view_set_model (GTK_TREE_VIEW(view), GTK_TREE_MODEL(store));
++        g_object_unref (store);
++
++	/* First column */
++        col = gtk_tree_view_column_new();
++        gtk_tree_view_column_set_title (col, "");
++        gtk_tree_view_column_set_reorderable (col, TRUE);
++        gtk_tree_view_column_set_resizable (col, TRUE);
++        gtk_tree_view_append_column (GTK_TREE_VIEW(view), col);
++
++	renderer = gtk_cell_renderer_pixbuf_new();
++        gtk_tree_view_column_pack_start(col, renderer, FALSE);
++        gtk_tree_view_column_add_attribute(col, renderer, "pixbuf", COL_ICON);
++
++        renderer = gtk_cell_renderer_text_new();
++        gtk_tree_view_column_pack_start(col, renderer, TRUE);
++        gtk_tree_view_column_add_attribute(col, renderer, "text", COL_USER);
++
++	/* READ column */
++	col = gtk_tree_view_column_new();
++        /* SUN_BRANDING */
++        gtk_tree_view_column_set_title (col, _("read"));
++        gtk_tree_view_column_set_reorderable (col, FALSE);
++        gtk_tree_view_append_column (GTK_TREE_VIEW(view), col);
++
++        renderer = gtk_cell_renderer_toggle_new();
++        gtk_tree_view_column_pack_start (col, renderer, TRUE);
++        gtk_tree_view_column_add_attribute (col, renderer, "active", COL_PERM_READ);
++
++	if (default_acl_list)
++		g_signal_connect_object (renderer, "toggled", G_CALLBACK(ace_r_perm_def_toggled_cb), G_OBJECT(window), 0);
++	else
++		g_signal_connect_object (renderer, "toggled", G_CALLBACK(ace_r_perm_toggled_cb), G_OBJECT(window), 0);
++
++
++	/* WRITE column */
++	col = gtk_tree_view_column_new();
++        /* SUN_BRANDING */
++        gtk_tree_view_column_set_title (col, _("write"));
++        gtk_tree_view_column_set_reorderable (col, FALSE);
++        gtk_tree_view_append_column (GTK_TREE_VIEW(view), col);
++
++        renderer = gtk_cell_renderer_toggle_new();
++        gtk_tree_view_column_pack_start (col, renderer, TRUE);
++        gtk_tree_view_column_add_attribute (col, renderer, "active", COL_PERM_WRITE);
++
++	if (default_acl_list)
++		g_signal_connect_object (renderer, "toggled", G_CALLBACK(ace_w_perm_def_toggled_cb), G_OBJECT(window), 0);
++	else
++		g_signal_connect_object (renderer, "toggled", G_CALLBACK(ace_w_perm_toggled_cb), G_OBJECT(window), 0);
++
++	/* EXECUTE column */
++	col = gtk_tree_view_column_new();
++        /* SUN_BRANDING */
++        gtk_tree_view_column_set_title (col, _("exec"));
++        gtk_tree_view_column_set_reorderable (col, FALSE);
++        gtk_tree_view_append_column (GTK_TREE_VIEW(view), col);
++
++        renderer = gtk_cell_renderer_toggle_new();
++        gtk_tree_view_column_pack_start (col, renderer, TRUE);
++	gtk_tree_view_column_add_attribute (col, renderer, "active", COL_PERM_EXECUTE);
++
++	if (default_acl_list)
++		g_signal_connect_object (renderer, "toggled", G_CALLBACK(ace_x_perm_def_toggled_cb), G_OBJECT(window), 0);
++	else
++		g_signal_connect_object (renderer, "toggled", G_CALLBACK(ace_x_perm_toggled_cb), G_OBJECT(window), 0);
++
++	/* Effective */
++        col = gtk_tree_view_column_new();
++        /* SUN_BRANDING */
++        gtk_tree_view_column_set_title(col, _("Effective"));
++        gtk_tree_view_column_set_reorderable(col, FALSE);
++        gtk_tree_view_append_column(GTK_TREE_VIEW(view), col);
++
++        renderer = gtk_cell_renderer_text_new();
++        gtk_tree_view_column_pack_start(col, renderer, TRUE);
++        gtk_tree_view_column_add_attribute(col, renderer, "text", COL_EFFECTIVE);
++
++	gtk_container_add (GTK_CONTAINER(container), view);
++
++	return view;
++}
++
++static void
++acl_add_dialog_response_cb (GtkDialog *dialog,
++			    gint       arg1,
++			    gpointer   user_data)  
++{
++	gchar           *id;
++	GnomeVFSACE     *ace      = GNOME_VFS_ACE(user_data);
++	GnomeVFSACLPerm  perms[4] = {0, 0, 0, 0};
++	guint            iperm    = 0;
++
++	GtkWidget *check_r = g_object_get_data (G_OBJECT(dialog), "check_r");
++	GtkWidget *check_w = g_object_get_data (G_OBJECT(dialog), "check_w");
++	GtkWidget *check_x = g_object_get_data (G_OBJECT(dialog), "check_x");
++	GtkWidget *combo   = g_object_get_data (G_OBJECT(dialog), "combo");
++	GtkWidget *entry   = g_object_get_data (G_OBJECT(dialog), "entry");
++
++	if (arg1 == GTK_RESPONSE_CANCEL)
++		return;
++	
++	/* Kind
++	 */
++	switch (gtk_combo_box_get_active (GTK_COMBO_BOX(combo))) {
++	case COL_USER_ENTRY:
++		gnome_vfs_ace_set_kind (ace, GNOME_VFS_ACL_USER);
++		break;
++/* 	case COL_NEG_USER_ENTRY: */
++/* 		gnome_vfs_ace_set_kind (ace, GNOME_VFS_ACL_USER); */
++/* 		gnome_vfs_ace_set_negative (ace, TRUE); */
++/* 		break; */
++	case COL_GROUP_ENTRY:
++		gnome_vfs_ace_set_kind (ace, GNOME_VFS_ACL_GROUP);
++		break;
++/* 	case COL_NEG_GROUP_ENTRY: */
++/* 		gnome_vfs_ace_set_kind (ace, GNOME_VFS_ACL_GROUP); */
++/* 		gnome_vfs_ace_set_negative (ace, TRUE); */
++/* 		break; */
++	default:
++		break;
++	}
++
++	/* ID
++	 */
++	id = gtk_entry_get_text (GTK_ENTRY(entry));
++	if (id != NULL) {
++		gnome_vfs_ace_set_id (ace, id);
++	} 
++
++	/* Perms
++	 */
++	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(check_r))) {
++		perms[iperm] = GNOME_VFS_ACL_READ;
++		iperm++;
++	}
++	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(check_w))) {
++		perms[iperm] = GNOME_VFS_ACL_WRITE;
++		iperm++;
++	}
++	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(check_x))) {
++		perms[iperm] = GNOME_VFS_ACL_EXECUTE;
++		iperm++;
++	}
++
++	gnome_vfs_ace_set_perms (ace, perms);
++}
++
++
++static GtkWidget *
++build_new_add_acl_dialog  (FMPropertiesWindow *window, GnomeVFSACE *ace)
++{
++	GtkWidget *dialog;
++	GtkWidget *table;
++	GtkWidget *label;
++	GtkWidget *check;
++	GtkWidget *combo;
++	GtkCellRenderer *renderer;
++	GtkListStore *combo_store;
++	GtkWidget *entry;
++	GtkTreeIter iter;
++
++	/* SUN_BRANDING */
++	dialog = gtk_dialog_new_with_buttons (_("Add User/Group"),
++					      GTK_WINDOW(window),
++					      GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
++					      GTK_STOCK_CANCEL,
++					      GTK_RESPONSE_CANCEL,
++					      GTK_STOCK_ADD,
++					      GTK_RESPONSE_ACCEPT,
++					      NULL);
++
++	table = gtk_table_new (2, 6, FALSE);
++
++	/* SUN_BRANDING */
++	label = gtk_label_new (_("User/Group"));
++	gtk_table_attach (GTK_TABLE(table), label, 0, 1, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
++	/* SUN_BRANDING */
++	label = gtk_label_new (_("Name"));
++	gtk_table_attach (GTK_TABLE(table), label, 1, 2, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
++	label = gtk_label_new ("r");
++	gtk_table_attach (GTK_TABLE(table), label, 2, 3, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
++	label = gtk_label_new ("w");
++	gtk_table_attach (GTK_TABLE(table), label, 3, 4, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
++	label = gtk_label_new ("x");
++	gtk_table_attach (GTK_TABLE(table), label, 4, 5, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
++	/* SUN_BRANDING */
++	label = gtk_label_new (_("Effective"));
++	gtk_table_attach (GTK_TABLE(table), label, 5, 6, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
++
++	combo_store = gtk_list_store_new (1, G_TYPE_STRING, NULL);	
++	gtk_list_store_append (combo_store , &iter);
++	/* SUN_BRANDING */
++	gtk_list_store_set (combo_store, &iter, 0, _("User"), -1);
++/* 	gtk_list_store_append (combo_store , &iter); */
++	/* SUN_BRANDING */
++/* 	gtk_list_store_set (combo_store, &iter, 0, _("User negative"), -1); */
++	gtk_list_store_append (combo_store , &iter);
++	/* SUN_BRANDING */
++	gtk_list_store_set (combo_store, &iter, 0, _("Group"), -1);
++/* 	gtk_list_store_append (combo_store , &iter); */
++	/* SUN_BRANDING */
++/* 	gtk_list_store_set (combo_store, &iter, 0, _("Group negative"), -1); */
++
++	combo = gtk_combo_box_new ();
++	g_object_set_data (G_OBJECT(dialog), "combo", combo);
++	renderer = gtk_cell_renderer_text_new ();
++	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT(combo), renderer, TRUE);
++	gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT(combo),	renderer, "text", 0, NULL);
++	gtk_combo_box_set_model (GTK_COMBO_BOX (combo), GTK_TREE_MODEL(combo_store));
++	g_object_unref (G_OBJECT (combo_store));
++	gtk_combo_box_set_active (combo, 0);
++	gtk_table_attach (GTK_TABLE(table), combo, 0, 1, 1, 2, GTK_SHRINK, GTK_SHRINK, 0, 0);
++
++	entry = gtk_entry_new();
++	g_object_set_data (G_OBJECT(dialog), "entry", entry);
++	gtk_entry_set_max_length (GTK_ENTRY(entry), 64);
++	gtk_table_attach (GTK_TABLE(table), entry, 1, 2, 1, 2, GTK_SHRINK, GTK_SHRINK, 0, 0);
++
++	check = gtk_check_button_new();
++	g_object_set_data (G_OBJECT(dialog), "check_r", check);
++	gtk_table_attach (GTK_TABLE(table), check, 2, 3, 1, 2, GTK_SHRINK, GTK_SHRINK, 0, 0);
++	check = gtk_check_button_new();
++	g_object_set_data (G_OBJECT(dialog), "check_w", check);
++	gtk_table_attach (GTK_TABLE(table), check, 3, 4, 1, 2, GTK_SHRINK, GTK_SHRINK, 0, 0);
++	check = gtk_check_button_new();
++	g_object_set_data (G_OBJECT(dialog), "check_x", check);
++	gtk_table_attach (GTK_TABLE(table), check, 4, 5, 1, 2, GTK_SHRINK, GTK_SHRINK, 0, 0);
++
++	label = gtk_label_new (" - - - ");
++	gtk_table_attach (GTK_TABLE(table), label, 5, 6, 1, 2, GTK_SHRINK, GTK_SHRINK, 0, 0);
++
++	gtk_box_pack_start (GTK_BOX (GTK_DIALOG(dialog)->vbox), table, TRUE, TRUE, 0);
++
++	g_signal_connect_object (dialog, "response",
++				 G_CALLBACK (acl_add_dialog_response_cb), 
++				 G_OBJECT (ace), 0);
++
++	return dialog;
++}
++
++static void
++add_acl_callback_generic (GtkWidget *button, gpointer user_data, gboolean inherit)
++{
++	gint                result;
++	GtkWidget          *dialog;
++	GnomeVFSACL        *acl;
++	GnomeVFSACE        *ace;
++	NautilusFile       *file;
++	FMPropertiesWindow *window = user_data;
++	GnomeVFSResult      re;
++
++	ace = gnome_vfs_ace_new (0, NULL, 0, GNOME_VFS_ACL_ALLOW, GNOME_VFS_ACL_SCHEME_CLASSIC);
++
++	dialog = build_new_add_acl_dialog (window, ace);
++	gtk_widget_show_all (dialog);
++
++	result = gtk_dialog_run (dialog);
++	gtk_widget_destroy (dialog);
++
++	if (result == GTK_RESPONSE_CANCEL) {
++		g_object_unref (ace);
++		return;
++	}
++	
++	gnome_vfs_ace_set_inherance (ace, inherit);
++
++	file = get_target_file (window);
++	acl  = nautilus_file_get_acl (file);
++	
++	gnome_vfs_acl_set (acl, ace);
++	g_object_unref (ace);	
++	g_object_ref (window);
++
++	g_object_ref (window);
++	re = nautilus_file_set_acl (file, acl,
++				    acl_change_callback,
++				    window);
++
++	if (re != GNOME_VFS_OK)
++		gnome_vfs_acl_unset (acl, ace);
++
++	update_acl_page (window);
++}
++
++static void
++add_acl_callback (GtkWidget *button, gpointer user_data)
++{
++	add_acl_callback_generic (button, user_data, FALSE);
++}
++
++static void
++add_acl_default_callback (GtkWidget *button, gpointer user_data)
++{
++	add_acl_callback_generic (button, user_data, TRUE);
++}
++
++static void
++del_acl_foreach_selected_generic (GtkTreeModel *model,
++				  GtkTreePath *path,
++				  GtkTreeIter *iter,
++				  gpointer data,
++				  gboolean is_default)
++{
++	GList *l, *i;
++	gchar *row_id;
++	GList *file_list;
++	gboolean row_r, row_w, row_x;
++	GnomeVFSACLKind row_kind;
++	FMPropertiesWindow *window = data;
++
++	/* Extract the information from the row
++	 */
++	gtk_tree_model_get (model, iter, 
++			    COL_USER, &row_id, 
++			    COL_KIND, &row_kind,
++			    COL_PERM_READ, &row_r,
++			    COL_PERM_WRITE, &row_w,
++			    COL_PERM_EXECUTE, &row_x,
++			    -1);
++
++	if (row_kind == GNOME_VFS_ACL_MASK) {
++		return;
++	}
++
++	/* Compare it with the ACEs
++	 */
++	file_list = window->details->original_files;
++
++	for (l = file_list; l != NULL; l = l->next) {
++		GnomeVFSACL *acl;
++		NautilusFile *file;
++		GList *ace_list;
++
++		file = NAUTILUS_FILE (l->data);
++		acl = nautilus_file_get_acl (file);
++
++		ace_list = gnome_vfs_acl_get_ace_list (acl);
++		for (i=ace_list; i; i=i->next) {
++			const char            *id;
++			GnomeVFSACE           *ace;
++			const GnomeVFSACLPerm *perms;
++			GnomeVFSACLKind        kind;
++			gboolean               inherit;
++
++			ace = i->data;
++
++			id       = gnome_vfs_ace_get_id (ace);
++			kind     = gnome_vfs_ace_get_kind (ace);
++			perms    = gnome_vfs_ace_get_perms (ace);
++			inherit  = gnome_vfs_ace_get_inherance (ace);
++
++			if ((kind != row_kind) ||
++			    (inherit != is_default) ||
++			    (row_r != gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_READ)) ||
++			    (row_w != gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_WRITE)) ||
++			    (row_x != gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_EXECUTE))) 
++			{
++				continue;
++			}
++
++			if (id && row_id && (strcmp (id, row_id) == 0)) {
++				gnome_vfs_acl_unset (acl, ace);
++				
++				g_object_ref (window);
++				nautilus_file_set_acl (file, acl,
++						       acl_change_callback,
++						       window);
++			}
++		}
++
++		gnome_vfs_acl_free_ace_list (ace_list);
++	}
++	
++	/* Remove that list row
++	 */
++	gtk_list_store_remove (model, iter);
++}
++
++static void
++del_acl_foreach_selected (GtkTreeModel *model,
++			  GtkTreePath *path,
++			  GtkTreeIter *iter,
++			  gpointer data)
++{
++	del_acl_foreach_selected_generic (model, path, iter, data, FALSE);
++}
++
++static void
++del_acl_default_foreach_selected (GtkTreeModel *model,
++				  GtkTreePath *path,
++				  GtkTreeIter *iter,
++				  gpointer data)
++{
++	del_acl_foreach_selected_generic (model, path, iter, data, TRUE);
++}
++
++
++static void
++remove_acl_callback (GtkWidget *button, gpointer user_data)
++{
++	GtkTreeSelection *selection;
++	FMPropertiesWindow *window = user_data;
++
++	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->details->acl_view));        
++        gtk_tree_selection_selected_foreach (selection, del_acl_foreach_selected, window);
++}
++
++static void
++remove_acl_default_callback (GtkWidget *button, gpointer user_data)
++{
++	GtkTreeSelection *selection;
++	FMPropertiesWindow *window = user_data;
++
++	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (window->details->acl_default_view));        
++        gtk_tree_selection_selected_foreach (selection, del_acl_default_foreach_selected, window);
++}
++
++static GnomeVFSACLScheme
++get_acl_scheme (GList *file_list)
++{
++	GList             *l;
++	GnomeVFSACLScheme  scheme = GNOME_VFS_ACL_SCHEME_CLASSIC;
++
++	for (l = file_list; l != NULL; l = l->next) {
++		GnomeVFSACL       *acl;
++		NautilusFile      *file;
++		GnomeVFSACLScheme  acl_scheme;
++		
++		file = NAUTILUS_FILE (l->data);
++		acl = nautilus_file_get_acl (file);
++
++		acl_scheme = gnome_vfs_acl_get_scheme(acl);
++		if (acl_scheme != GNOME_VFS_ACL_SCHEME_CLASSIC)
++			scheme = acl_scheme;
++	}
++
++	return scheme;
++}
++
++
++static void
++fix_acl_nfs4_tree_status (GtkTreeStore *tree_model, const char *path)
++{
++	gboolean     re;
++	GtkTreeIter  iter;
++	GtkTreeIter  children; 
++	const char  *name;
++	gboolean     selected;
++	gboolean     is_top_level;
++	
++
++	is_top_level = (strchr(path, ':') == NULL);
++
++	/* Handle top level node switchs
++	 */
++	if (is_top_level) {
++		/* Check if the top level is selected
++		 */
++		gtk_tree_model_get_iter_from_string (tree_model, &iter, path);
++		gtk_tree_model_get (tree_model, &iter, 
++				    NFS4_PERMISSIONS_NAME, &name,
++				    NFS4_PERMISSIONS_SELECTED, &selected,
++				    -1);
++
++		/* (Un)Select children
++		 */
++		gtk_tree_model_iter_children (tree_model, &children, &iter);
++		do {
++			gtk_tree_store_set (tree_model, &children, 
++					    NFS4_PERMISSIONS_SELECTED, selected,
++					    -1);
++		} while (gtk_tree_model_iter_next (tree_model, &children));
++	}
++
++
++	/* Set the inconsistent state to top level nodes
++	 */
++ 	gtk_tree_model_get_iter_first (tree_model, &iter); 
++	do {
++		guint nsel;
++		guint nunsel;
++		gboolean top_selected;
++		gboolean inconsistent;
++
++		gtk_tree_model_get (tree_model, &iter, 
++				    NFS4_PERMISSIONS_SELECTED, &top_selected,
++				    -1);
++
++		/* Check children
++		 */
++		nsel   = 0;
++		nunsel = 0;
++
++		re = gtk_tree_model_iter_children (tree_model, &children, &iter);
++		g_assert (re == TRUE);
++
++		do {
++			const char *tmp;
++
++			gtk_tree_model_get (tree_model, &children, 
++					    NFS4_PERMISSIONS_SELECTED, &selected,
++					    -1);
++			if (selected) 
++				nsel++;
++			else 
++				nunsel++;
++ 		} while (gtk_tree_model_iter_next (tree_model, &children));
++
++		/* Set parent consistency
++		 */
++		inconsistent = ((nsel > 0) && (nunsel > 0));
++		gtk_tree_store_set (tree_model, &iter, 
++				    NFS4_PERMISSIONS_INCONSISTENT, inconsistent,
++				    -1);
++
++		/* If there is an unset entry, parent shouldn't be selected.
++		 */
++		gtk_tree_store_set (tree_model, &iter, 
++				    NFS4_PERMISSIONS_SELECTED, (nunsel <= 0),
++				    -1);
++
++	} while (gtk_tree_model_iter_next (tree_model, &iter));
++}
++
++static void
++debug_print_ace_permissions (GnomeVFSACE *ace)
++{
++#define print_perm(s,g) \
++	printf ("  %s/%d: %d\n", s, g, gnome_vfs_ace_check_perm(ace,g));
++	
++	printf ("ACE %p\n", ace);
++	print_perm ("read", GNOME_VFS_ACL_READ);
++	print_perm ("exec", GNOME_VFS_ACL_EXECUTE);
++	print_perm ("write", GNOME_VFS_ACL_WRITE);
++
++	print_perm ("list dir", GNOME_VFS_ACL_LIST_DIRECTORY);
++	print_perm ("add file", GNOME_VFS_ACL_ADD_FILE);
++	print_perm ("append", GNOME_VFS_ACL_APPEND_DATA);
++	print_perm ("add subdir", GNOME_VFS_ACL_ADD_SUBDIRECTORY);
++	print_perm ("read named", GNOME_VFS_ACL_READ_NAMED_ATTRS);
++	print_perm ("write named", GNOME_VFS_ACL_WRITE_NAMED_ATTRS);
++	print_perm ("delete child", GNOME_VFS_ACL_DELETE_CHILD);
++	print_perm ("read attr", GNOME_VFS_ACL_READ_ATTRIBUTES);
++	print_perm ("write attr", GNOME_VFS_ACL_WRITE_ATTRIBUTES);
++	print_perm ("del", GNOME_VFS_ACL_DELETE);
++	print_perm ("read acl", GNOME_VFS_ACL_READ_ACL);
++	print_perm ("write acl", GNOME_VFS_ACL_WRITE_ACL);
++	print_perm ("write owner", GNOME_VFS_ACL_WRITE_OWNER);
++#undef print_perm
++	
++}
++
++
++static void
++set_nfs4_permission_into_ace (FMPropertiesWindow *window,
++			      GnomeVFSACE        *ace)
++{
++	GtkTreeView  *tree_view;
++	GtkTreeModel *model;
++	GtkTreeIter   iter;
++
++	tree_view = g_object_get_data (window, "ace_permissions_tree_view");
++	g_assert (GTK_IS_TREE_VIEW(tree_view));
++	model = gtk_tree_view_get_model (tree_view);  
++
++#define set_perm(p)                       \
++  do {                                    \
++    if (selected) {                       \
++	gnome_vfs_ace_add_perm (ace, p);  \
++    } else 	                          \
++	gnome_vfs_ace_del_perm (ace, p);  \
++  } while(0)
++
++	gtk_tree_model_get_iter_first (model, &iter);
++	do {
++		const char *name;
++		gboolean    selected;
++		GtkTreeIter iter_child;
++
++		gtk_tree_model_get (model, &iter,
++				    NFS4_PERMISSIONS_NAME, &name, 
++				    -1);
++		
++		if (!gtk_tree_model_iter_children (model, &iter_child, &iter))
++			continue;
++
++		if (strcmp (name, ACL_NFS4_PERM_ADMIN) == 0) {			
++			do {
++				gtk_tree_model_get (model, &iter_child, 
++						    NFS4_PERMISSIONS_NAME, &name, 
++						    NFS4_PERMISSIONS_SELECTED, &selected, 
++						    -1);
++
++				if (strcmp (name, ACL_NFS4_PERM_CHANGE_PERM) == 0) {
++					set_perm (GNOME_VFS_ACL_WRITE_ACL);
++				} else if (strcmp (name, ACL_NFS4_PERM_CHANGE_OWNER) == 0) {
++					set_perm (GNOME_VFS_ACL_WRITE_OWNER);
++				}
++			} while (gtk_tree_model_iter_next (model, &iter_child));
++		} else if (strcmp (name, ACL_NFS4_PERM_READ) == 0) {
++			do {
++				gtk_tree_model_get (model, &iter_child, 
++						    NFS4_PERMISSIONS_NAME, &name, 
++						    NFS4_PERMISSIONS_SELECTED, &selected, 
++						    -1);
++
++				if (strcmp (name, ACL_NFS4_PERM_READ_ATTRIBUTES) == 0) {
++					set_perm (GNOME_VFS_ACL_READ_ATTRIBUTES);
++				} else if (strcmp (name, ACL_NFS4_PERM_READ_EXT_ATTRIBUTES) == 0) {
++					set_perm (GNOME_VFS_ACL_READ_NAMED_ATTRS);
++				} else if (strcmp (name, ACL_NFS4_PERM_LIST_CONTENTS) == 0) {
++					set_perm (GNOME_VFS_ACL_READ);
++				} else if (strcmp (name, ACL_NFS4_PERM_TRAVERSE_FOLDER) == 0) {
++					set_perm (GNOME_VFS_ACL_EXECUTE);
++				} else if (strcmp (name, ACL_NFS4_PERM_READ_PERMISSIONS) == 0) {
++					set_perm (GNOME_VFS_ACL_READ_ACL);
++				}
++			} while (gtk_tree_model_iter_next (model, &iter_child));
++
++		} else if (strcmp (name, ACL_NFS4_PERM_WRITE) == 0) {
++			do {
++				gtk_tree_model_get (model, &iter_child, 
++						    NFS4_PERMISSIONS_NAME, &name, 
++						    NFS4_PERMISSIONS_SELECTED, &selected, 
++						    -1);
++
++				if (strcmp (name, ACL_NFS4_PERM_WRITE_ATTRIBUTES) == 0) {
++					set_perm (GNOME_VFS_ACL_WRITE_ATTRIBUTES);
++				} else if (strcmp (name, ACL_NFS4_PERM_WRITE_EXT_ATTRIBUTES) == 0) {
++					set_perm (GNOME_VFS_ACL_WRITE_NAMED_ATTRS);
++				} else if (strcmp (name, ACL_NFS4_PERM_CREATE_FILES) == 0) {
++					set_perm (GNOME_VFS_ACL_ADD_SUBDIRECTORY);
++				} else if (strcmp (name, ACL_NFS4_PERM_CREATE_FOLDER) == 0) {
++					set_perm (GNOME_VFS_ACL_APPEND_DATA);
++				} else if (strcmp (name, ACL_NFS4_PERM_DELETE) == 0) {
++					set_perm (GNOME_VFS_ACL_DELETE);
++				} else if (strcmp (name, ACL_NFS4_PERM_DELETE_SUBFOLDERS) == 0) {
++					set_perm (GNOME_VFS_ACL_DELETE_CHILD);
++				}
++			} while (gtk_tree_model_iter_next (model, &iter_child));			
++		} else {
++			g_error ("Unknown entry: '%s'\n", name?name:"");
++		}
++	} while (gtk_tree_model_iter_next (model, &iter));
++#undef set_perm
++}
++
++
++static void
++set_nfs4_permission_from_ace (FMPropertiesWindow *window,
++			      GnomeVFSACE        *ace)
++{
++	GtkTreeIter   iter;
++	GtkTreeView  *tree_view;
++	GtkTreeModel *model;
++	GnomeVFSACLInherance inherance;
++	GnomeVFSACLType type;
++	GtkWidget    *combo;
++	const char   *name;
++	
++	g_assert (GNOME_VFS_IS_ACE(ace));
++	g_assert (FM_IS_PROPERTIES_WINDOW(window));
++
++	tree_view = g_object_get_data (window, "ace_permissions_tree_view");
++	g_assert (GTK_IS_TREE_VIEW(tree_view));
++
++	gtk_widget_set_sensitive (g_object_get_data (window, "ace_props_frame"), TRUE);
++	gtk_widget_set_sensitive (g_object_get_data (window, "acl_list_add_button"), TRUE);
++
++	/* Set the permissions
++	 */
++	model = gtk_tree_view_get_model (tree_view);  
++	gtk_tree_model_get_iter_first (model, &iter);
++	do {
++		const char *name;
++		GtkTreeIter   iter_child;
++
++		gtk_tree_model_get (model, &iter,
++				    NFS4_PERMISSIONS_NAME, &name, 
++				    -1);
++		
++		if (!gtk_tree_model_iter_children (model, &iter_child, &iter))
++			continue;
++
++		if (strcmp (name, ACL_NFS4_PERM_ADMIN) == 0) {			
++			do {
++				gtk_tree_model_get (model, &iter_child, NFS4_PERMISSIONS_NAME, &name, -1);
++				if (strcmp (name, ACL_NFS4_PERM_CHANGE_PERM) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_WRITE_ACL), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_CHANGE_OWNER) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_WRITE_OWNER), -1);
++				}
++			} while (gtk_tree_model_iter_next (model, &iter_child));
++		} else if (strcmp (name, ACL_NFS4_PERM_READ) == 0) {
++			do {
++				gtk_tree_model_get (model, &iter_child, NFS4_PERMISSIONS_NAME, &name, -1);
++				if (strcmp (name, ACL_NFS4_PERM_READ_ATTRIBUTES) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_READ_ATTRIBUTES), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_READ_EXT_ATTRIBUTES) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_READ_NAMED_ATTRS), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_LIST_CONTENTS) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_READ), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_TRAVERSE_FOLDER) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_EXECUTE), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_READ_PERMISSIONS) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_READ_ACL), -1);
++				}
++			} while (gtk_tree_model_iter_next (model, &iter_child));
++
++		} else if (strcmp (name, ACL_NFS4_PERM_WRITE) == 0) {
++			do {
++				gtk_tree_model_get (model, &iter_child, NFS4_PERMISSIONS_NAME, &name, -1);
++				if (strcmp (name, ACL_NFS4_PERM_WRITE_ATTRIBUTES) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_WRITE_ATTRIBUTES), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_WRITE_EXT_ATTRIBUTES) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_WRITE_NAMED_ATTRS), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_CREATE_FILES) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_ADD_SUBDIRECTORY), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_CREATE_FOLDER) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_APPEND_DATA), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_DELETE) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_DELETE), -1);
++				} else if (strcmp (name, ACL_NFS4_PERM_DELETE_SUBFOLDERS) == 0) {
++					gtk_tree_store_set (model, &iter_child, NFS4_PERMISSIONS_SELECTED,
++							    gnome_vfs_ace_check_perm (ace, GNOME_VFS_ACL_DELETE_CHILD), -1);
++				}
++			} while (gtk_tree_model_iter_next (model, &iter_child));			
++		} else {
++			g_error ("Unknown entry: '%s'\n", name?name:"");
++		}
++
++		fix_acl_nfs4_tree_status (model, ":");
++
++	} while (gtk_tree_model_iter_next (model, &iter));
++
++	/* Set Inherance
++	 */
++	inherance = gnome_vfs_ace_get_inherance (ace);
++	combo     = g_object_get_data (window, "acl_nfs4_inherance_combo");
++
++	model = gtk_combo_box_get_model(combo);	
++	gtk_tree_model_get_iter_first (model, &iter);
++	do {
++		gtk_tree_model_get (model, &iter, 0, &name, -1);
++		if (((!strcmp (name, ACL_NFS4_APPLY_TO_THIS_FOLDER))     && (inherance == GNOME_VFS_ACL_NO_PROPAGATE)) ||
++		    ((!strcmp (name, ACL_NFS4_APPLY_TO_CHILD_FOLDERS))   && (inherance == GNOME_VFS_ACL_DIR_INHERIT))  ||
++		    ((!strcmp (name, ACL_NFS4_APPLY_TO_CHILD_FILES))     && (inherance == GNOME_VFS_ACL_FILE_INHERIT)) ||
++		    ((!strcmp (name, ACL_NFS4_APPLY_TO_ALL_DESCENDANTS)) && (inherance == GNOME_VFS_ACL_INHERIT_ONLY)))
++			gtk_combo_box_set_active_iter (combo, &iter);
++	} while (gtk_tree_model_iter_next (model, &iter));
++
++	/* Set type
++	 */
++	type  = gnome_vfs_ace_get_ace_type (ace);
++	combo = g_object_get_data (window, "acl_nfs4_type_combo");
++
++	model = gtk_combo_box_get_model(combo);	
++	gtk_tree_model_get_iter_first (model, &iter);
++	do {
++		gtk_tree_model_get (model, &iter, 0, &name, -1);
++		if (((!strcmp (name, ACL_NFS4_TYPE_ALLOW)) && (type == GNOME_VFS_ACL_ALLOW)) ||
++		    ((!strcmp (name, ACL_NFS4_TYPE_DENY))  && (type == GNOME_VFS_ACL_DENY)))
++			gtk_combo_box_set_active_iter (combo, &iter);			
++	} while (gtk_tree_model_iter_next (model, &iter));
++}
++
++
++static GnomeVFSACE *
++acl_nfs4_acl_list_get_active_ace (FMPropertiesWindow  *window, 
++				  GnomeVFSACL        **acl_ret,
++				  GList              **ace_list_ret)
++{
++	gint              re;
++	GtkTreeView      *tree_view;
++	GtkTreeModel     *model;
++	GtkTreeSelection *selection;
++	GtkTreeIter       iter;	
++	const char *id;
++	const char *name;
++	const char *type_str;
++	GnomeVFSACLType type;
++	GnomeVFSACLKind kind;
++	NautilusFile *file;
++	GnomeVFSACL  *file_acl;
++	GList *ace_list;
++	GList *i;
++	GnomeVFSACE  *ace;
++	GnomeVFSACE  *the_ace = NULL;
++
++	tree_view = g_object_get_data (window, "acl_list_tree_view");
++	selection = gtk_tree_view_get_selection (tree_view);
++
++	re = gtk_tree_selection_get_selected (selection, &model, &iter);
++	if (!re) {
++		return NULL;
++	}
++
++	gtk_tree_model_get (model, &iter,
++			    NFS4_ACL_LIST_USER, &name,
++			    NFS4_ACL_LIST_TYPE, &type_str,
++			    NFS4_ACL_LIST_KIND, &kind,
++			    -1);		
++	/* Type
++	 */
++	if (strcmp (type_str, ACL_NFS4_TYPE_DENY) == 0) {
++		type = GNOME_VFS_ACL_DENY;
++	} else {
++		type = GNOME_VFS_ACL_ALLOW;
++	}
++
++	/* Look for the right ACE
++	 */
++	file = get_target_file (window);
++	file_acl = nautilus_file_get_acl (file);
++	ace_list = gnome_vfs_acl_get_ace_list (file_acl);
++
++	*acl_ret      = file_acl;
++	*ace_list_ret = ace_list;
++	
++	for (i=ace_list; i; i=i->next) {
++		ace = i->data;
++		g_assert (GNOME_VFS_IS_ACE(ace));
++
++		id = gnome_vfs_ace_get_id (ace);
++
++		if (gnome_vfs_ace_get_ace_type(ace) != type)
++			continue;
++
++		if (gnome_vfs_ace_get_kind (ace) != kind)
++			continue;
++
++		if ((kind == GNOME_VFS_ACL_USER) ||
++		    (kind == GNOME_VFS_ACL_GROUP))
++		{
++			if (strcmp (name, id) != 0)
++				continue;
++		}
++
++		return ace;
++	}
++
++	return NULL;
++}
++
++
++static void
++nfs4_permission_toggled_cb (GtkCellRendererToggle *cellrenderertoggle, 
++			    gchar                 *path, 
++			    FMPropertiesWindow    *window)
++{
++	gint          re;
++	GtkTreeIter   iter;
++	GtkTreeStore *tree_model;
++	GValue        value;
++	gboolean      old;
++	GtkTreeView  *tree_view;
++	NautilusFile *file;
++	GnomeVFSACL  *acl;
++	GnomeVFSACE  *ace;
++	GList        *list;
++
++	g_assert (path != NULL);
++
++	/* Get find the iter
++	 */
++	tree_view = g_object_get_data (window, "ace_permissions_tree_view");
++
++	tree_model = gtk_tree_view_get_model (tree_view);
++	g_return_if_fail (GTK_IS_TREE_MODEL (tree_model));
++
++	re = gtk_tree_model_get_iter_from_string (tree_model, &iter, path);
++	if (re != TRUE) {
++		g_warning ("Couldn't access path %s\n", path);
++		return;
++	}
++
++	/* Read the value
++	 */
++	memset (&value, 0, sizeof(value));
++	gtk_tree_model_get_value (tree_model, 
++				  &iter, 
++				  NFS4_PERMISSIONS_SELECTED, 
++				  &value);
++
++	old = g_value_get_boolean (&value);
++	g_value_unset (&value);
++
++	/* Set the new value
++	 */
++	gtk_tree_store_set (GTK_TREE_STORE(tree_model), &iter, NFS4_PERMISSIONS_SELECTED, !old, -1);
++
++	/* Now that the state has change, check that everething is
++	 * still coherent.
++	 */
++	fix_acl_nfs4_tree_status (tree_model, path);
++
++	/* Apply the changes to the NautilusFile
++	 */
++	file = get_target_file (window);
++
++	ace = acl_nfs4_acl_list_get_active_ace (window, &acl, &list);
++	if (!ace) return;
++
++	set_nfs4_permission_into_ace (window, ace);
++
++	g_object_ref (window);
++	re = nautilus_file_set_acl (file, acl,
++				    acl_change_callback,
++				    window);	
++
++//	gnome_vfs_acl_free_ace_list (list);
++}
++
++
++static void
++acl_nfs4_acl_list_selection_changed_cb (GtkTreeSelection   *selection,
++					FMPropertiesWindow *window)
++{
++	GList        *list;
++	GnomeVFSACL  *acl;
++	GnomeVFSACE  *ace;
++
++	window->details->updating_acl_tab = TRUE;
++
++	g_assert (GTK_IS_TREE_SELECTION(selection));
++	g_assert (FM_IS_PROPERTIES_WINDOW(window));
++
++	ace = acl_nfs4_acl_list_get_active_ace (window, &acl, &list);
++	if (!ace) goto out;
++
++	set_nfs4_permission_from_ace (window, ace);
++	gnome_vfs_acl_free_ace_list (list);
++
++out:
++	window->details->updating_acl_tab = FALSE;
++}
++
++
++static GtkWidget *
++create_acl_nfs4_permission_tree (FMPropertiesWindow *window)
++{
++	GtkTreeView  *tree_view;
++	GtkTreeStore *tree_store;
++	GtkTreeIter   iter;
++	GtkTreeIter   iter_child;
++	GtkTreeViewColumn *column;
++	GtkCellRenderer *checkbox_renderer;
++	GtkCellRenderer *text_renderer;
++	GtkTreeSelection *selection;
++	
++
++	/* Create the tree view widget
++	 */
++	tree_view = gtk_tree_view_new ();
++
++	/* Create the model
++	 */
++	tree_store = gtk_tree_store_new (NFS4_PERMISSIONS_N_COLUMNS, 
++					 G_TYPE_BOOLEAN,
++					 G_TYPE_STRING,
++					 G_TYPE_BOOLEAN);
++
++	gtk_tree_view_set_model (tree_view, GTK_TREE_MODEL(tree_store));
++	g_object_unref (tree_store);
++
++	/* Add a few examples
++	 */
++#define list_add_child(str)                                      \
++	list_add (str, &iter_child, &iter)
++
++#define list_add(str, iter_child, iter)                          \
++	gtk_tree_store_append (tree_store, iter_child, iter);    \
++	gtk_tree_store_set (tree_store, iter_child,              \
++			    NFS4_PERMISSIONS_SELECTED, FALSE,    \
++			    NFS4_PERMISSIONS_NAME, (str),        \
++			    NFS4_PERMISSIONS_INCONSISTENT, FALSE,\
++			    -1)
++
++	list_add (_("Administration"), &iter, NULL);
++	list_add_child (_("Change Permissions"));
++	list_add_child (_("Change Owner"));
++
++	list_add (_("Read"), &iter, NULL);
++	list_add_child (_("Read Attributes"));
++	list_add_child (_("Read Extended Attributes"));
++	list_add_child (_("List Folder Contents (Read Data)"));
++	list_add_child (_("Traverse Folder (Execute File)"));
++	list_add_child (_("Read Permissions"));
++
++
++	list_add (_("Write"), &iter, NULL);
++	list_add_child (_("Write Attributes"));
++	list_add_child (_("Write Extended Attributes"));
++	list_add_child (_("Create Files (Write Data)"));
++	list_add_child (_("Create Folder (Append Data)"));
++	list_add_child (_("Delete"));
++	list_add_child (_("Delete Subfolders and Files"));
++
++#undef list_add
++#undef list_add_child
++
++	/* Add the columns
++	 */
++	text_renderer = gtk_cell_renderer_text_new();
++	checkbox_renderer = gtk_cell_renderer_toggle_new();
++	g_signal_connect (checkbox_renderer, 
++			  "toggled", 
++			  G_CALLBACK(nfs4_permission_toggled_cb), 
++			  window);
++
++	column = gtk_tree_view_column_new_with_attributes (_("Set"), checkbox_renderer,
++							   "active", NFS4_PERMISSIONS_SELECTED,
++							   "inconsistent", NFS4_PERMISSIONS_INCONSISTENT,
++							   NULL);
++	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
++	gtk_tree_view_append_column (tree_view, column);
++
++	column = gtk_tree_view_column_new_with_attributes (_("Permission"), text_renderer,
++							   "text", NFS4_PERMISSIONS_NAME,
++							   NULL);
++	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
++	gtk_tree_view_append_column (tree_view, column);
++
++	
++	/* Final steps
++	 */
++#if 0
++	gtk_tree_view_expand_all (tree_view);
++#endif
++	return GTK_WIDGET(tree_view);
++}
++
++
++static GtkWidget *
++create_acl_nfs4_acl_list (FMPropertiesWindow *window)
++{
++	GtkListStore *list_store;
++	GtkTreeView  *tree_view;
++	GtkCellRenderer *text_renderer;
++	GtkCellRenderer *pixbuf_renderer;
++	GtkTreeViewColumn *column;
++	
++	/* Instance the store and the tree_view
++	 */
++	tree_view = gtk_tree_view_new ();
++	list_store = gtk_list_store_new (NFS4_ACL_LIST_N_COLUMNS,
++					 G_TYPE_STRING,
++					 GDK_TYPE_PIXBUF,
++					 G_TYPE_STRING,
++					 G_TYPE_INT);
++
++	gtk_tree_view_set_model (tree_view, GTK_TREE_MODEL(list_store));
++	g_object_unref (list_store);
++
++	/* Add columns
++	 */
++	text_renderer = gtk_cell_renderer_text_new();
++	pixbuf_renderer = gtk_cell_renderer_pixbuf_new();
++
++        column = gtk_tree_view_column_new();
++        gtk_tree_view_column_set_title (column, _("Name"));
++        gtk_tree_view_column_set_reorderable (column, TRUE);
++        gtk_tree_view_column_set_resizable (column, TRUE);
++        gtk_tree_view_append_column (GTK_TREE_VIEW(tree_view), column);
++
++        gtk_tree_view_column_pack_start(column, pixbuf_renderer, FALSE);
++        gtk_tree_view_column_add_attribute(column, pixbuf_renderer, "pixbuf", NFS4_ACL_LIST_ICON);
++
++        gtk_tree_view_column_pack_start(column, text_renderer, TRUE);
++        gtk_tree_view_column_add_attribute(column, text_renderer, "text", NFS4_ACL_LIST_USER);
++
++
++	text_renderer = gtk_cell_renderer_text_new();
++	column = gtk_tree_view_column_new_with_attributes (_("Type"), text_renderer,
++							   "text", NFS4_ACL_LIST_TYPE,
++							   NULL);
++	gtk_tree_view_column_set_sizing (column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
++	gtk_tree_view_append_column (tree_view, column);
++
++	/* Events
++	 */
++        g_signal_connect_after (G_OBJECT (gtk_tree_view_get_selection(GTK_TREE_VIEW(tree_view))),
++				"changed", G_CALLBACK(acl_nfs4_acl_list_selection_changed_cb), window);
++
++	return GTK_WIDGET(tree_view);
++}
++
++
++static void
++acl_nfs4_inherance_changed_cb (GtkComboBox *widget,
++			       FMPropertiesWindow *window)
++{
++	guint         re;
++	GList        *list;
++	GnomeVFSACL  *acl;
++	GnomeVFSACE  *ace;
++	GnomeVFSACLInherance inherance;
++	const char   *active;
++	NautilusFile *file;
++
++	if (window->details->updating_acl_tab)
++		return;
++
++	file = get_target_file (window);
++
++	ace = acl_nfs4_acl_list_get_active_ace (window, &acl, &list);
++	if (!ace) return;
++
++	active = gtk_combo_box_get_active_text (widget);
++	if (!active) return;
++
++	if (!strcmp (active, ACL_NFS4_APPLY_TO_THIS_FOLDER)) {
++		inherance = GNOME_VFS_ACL_NO_PROPAGATE;
++	} else if (!strcmp (active, ACL_NFS4_APPLY_TO_CHILD_FOLDERS)) {
++		inherance = GNOME_VFS_ACL_DIR_INHERIT;
++	} else if (!strcmp (active, ACL_NFS4_APPLY_TO_CHILD_FILES)) {
++		inherance = GNOME_VFS_ACL_FILE_INHERIT;
++	} else if (!strcmp (active, ACL_NFS4_APPLY_TO_ALL_DESCENDANTS)) {
++		inherance = GNOME_VFS_ACL_INHERIT_ONLY;
++	} else {
++		inherance = GNOME_VFS_ACL_INHERANCE_NULL;
++	}
++
++	gnome_vfs_ace_set_inherance (ace, inherance);
++
++	g_object_ref (window);
++	re = nautilus_file_set_acl (file, acl,
++				    acl_change_callback,
++				    window);
++
++//	gnome_vfs_acl_free_ace_list (list);
++	update_acl_page (window);
++}
++
++
++static void
++build_new_add_acl_nfs4_dialog_who_changed_cb (GtkComboBox *widget,
++					      GtkWidget   *dialog)
++{
++	gboolean    hide;
++	const char *text;
++	GtkWidget  *entry;
++
++	entry = g_object_get_data (dialog, "id_text");
++
++	text = gtk_combo_box_get_active_text(widget);
++	if (!text) return;
++	
++	hide = ((!strcmp(text, ACL_NFS4_WHO_OWNER_USER)) ||
++		(!strcmp(text, ACL_NFS4_WHO_OWNER_GROUP)) ||
++		(!strcmp(text, ACL_NFS4_WHO_EVERYBODY)));
++
++	gtk_widget_set_sensitive (entry, !hide);
++
++	if (hide)
++		gtk_entry_set_text (entry, "");
++}
++
++static GtkWidget *
++build_new_add_acl_nfs4_dialog (FMPropertiesWindow *window)
++{
++	GtkWidget *dialog;
++	GtkWidget *table;
++	GtkWidget *label;
++	GtkWidget *who_combo;
++	GtkWidget *sense_combo;
++	GtkWidget *id;
++
++	dialog = gtk_dialog_new_with_buttons (_("Add User/Group"),
++					      GTK_WINDOW(window),
++					      GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
++					      GTK_STOCK_CANCEL,
++					      GTK_RESPONSE_CANCEL,
++					      GTK_STOCK_ADD,
++					      GTK_RESPONSE_ACCEPT,
++					      NULL);
++
++	table = gtk_table_new (2, 6, FALSE);
++	gtk_box_pack_start (GTK_BOX (GTK_DIALOG(dialog)->vbox), table, TRUE, TRUE, 0);
++
++	label = gtk_label_new (_("Sense"));
++	gtk_table_attach (GTK_TABLE(table), label, 0, 1, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
++
++	label = gtk_label_new (_("Who"));
++	gtk_table_attach (GTK_TABLE(table), label, 1, 2, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
++
++	label = gtk_label_new (_("ID"));
++	gtk_table_attach (GTK_TABLE(table), label, 2, 3, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
++
++	sense_combo = gtk_combo_box_new_text();
++	gtk_combo_box_append_text(sense_combo, ACL_NFS4_TYPE_ALLOW);
++	gtk_combo_box_append_text(sense_combo, ACL_NFS4_TYPE_DENY);
++	gtk_table_attach (GTK_TABLE(table), sense_combo, 0, 1, 1, 2, GTK_SHRINK, GTK_SHRINK, 6, 6);
++
++	who_combo = gtk_combo_box_new_text();
++	gtk_combo_box_append_text(who_combo, ACL_NFS4_WHO_OWNER_USER);
++	gtk_combo_box_append_text(who_combo, ACL_NFS4_WHO_OWNER_GROUP);
++	gtk_combo_box_append_text(who_combo, ACL_NFS4_WHO_USER);
++	gtk_combo_box_append_text(who_combo, ACL_NFS4_WHO_GROUP);
++	gtk_combo_box_append_text(who_combo, ACL_NFS4_WHO_EVERYBODY);
++	gtk_table_attach (GTK_TABLE(table), who_combo, 1, 2, 1, 2, GTK_SHRINK, GTK_SHRINK, 6, 6);
++
++	id = gtk_entry_new();
++	gtk_table_attach (GTK_TABLE(table), id, 2, 3, 1, 2, GTK_SHRINK, GTK_SHRINK, 6, 6);
++
++	/* Initial state
++	 */
++	gtk_combo_box_set_active (who_combo, 0);
++	gtk_combo_box_set_active (sense_combo, 0);
++	gtk_widget_set_sensitive(id, FALSE);
++
++	/* Pointers
++	 */
++	g_object_set_data (dialog, "sense_combo", sense_combo);
++	g_object_set_data (dialog, "who_combo", who_combo);
++	g_object_set_data (dialog, "id_text", id);
++
++	/* Events
++	 */
++	g_signal_connect (G_OBJECT(who_combo), "changed", 
++			  G_CALLBACK(build_new_add_acl_nfs4_dialog_who_changed_cb), dialog);
++
++	return dialog;
++}
++
++static void
++acl_nfs4_add_button_cb (GtkButton *button,
++			FMPropertiesWindow *window)
++{
++	gint                re;
++	gint                result;
++	GnomeVFSACL        *acl;
++	GnomeVFSACE        *ace;
++	NautilusFile       *file;
++	GtkWidget          *dialog;
++
++	GtkWidget          *sense_combo;
++	GtkWidget          *who_combo;
++	const char         *combo_text;
++	gboolean            read_id = FALSE;
++
++	file = get_target_file (window);
++	acl  = nautilus_file_get_acl (file);
++
++	dialog = build_new_add_acl_nfs4_dialog (window);
++	gtk_widget_show_all (dialog);
++	result = gtk_dialog_run (dialog);
++
++	if (result == GTK_RESPONSE_CANCEL) {
++		gtk_widget_destroy (dialog);
++		return;
++	}
++
++	ace = gnome_vfs_ace_new (0, NULL, 0, GNOME_VFS_ACL_ALLOW, GNOME_VFS_ACL_SCHEME_NFS4);
++
++	/* Read Type
++	 */
++	sense_combo = g_object_get_data (dialog, "sense_combo");
++	combo_text = gtk_combo_box_get_active_text (sense_combo);
++	if (!strcmp(combo_text, ACL_NFS4_TYPE_DENY)) 
++		gnome_vfs_ace_set_ace_type (ace, GNOME_VFS_ACL_DENY);
++	else 
++		gnome_vfs_ace_set_ace_type (ace, GNOME_VFS_ACL_ALLOW);
++
++	/* Read Kind
++	 */
++	who_combo = g_object_get_data (dialog, "who_combo");
++	combo_text = gtk_combo_box_get_active_text (who_combo);
++	if (!strcmp(combo_text, ACL_NFS4_WHO_OWNER_USER))
++		gnome_vfs_ace_set_kind (ace, GNOME_VFS_ACL_OWNER_USER);
++	else if (!strcmp(combo_text, ACL_NFS4_WHO_OWNER_GROUP))
++		gnome_vfs_ace_set_kind (ace, GNOME_VFS_ACL_OWNER_GROUP);
++	else if (!strcmp(combo_text, ACL_NFS4_WHO_EVERYBODY))
++		gnome_vfs_ace_set_kind (ace, GNOME_VFS_ACL_EVERYONE);
++	else if (!strcmp(combo_text, ACL_NFS4_WHO_USER)) {
++		gnome_vfs_ace_set_kind (ace, GNOME_VFS_ACL_USER);
++		read_id = TRUE;
++	} else if (!strcmp(combo_text, ACL_NFS4_WHO_GROUP)) {
++		gnome_vfs_ace_set_kind (ace, GNOME_VFS_ACL_GROUP);
++		read_id = TRUE;
++	}
++
++	/* ID
++	 */
++	if (read_id) {
++		GtkWidget *id_text = g_object_get_data (dialog, "id_text");
++		combo_text = gtk_entry_get_text(id_text);
++		if ((combo_text) && strlen(combo_text))
++			gnome_vfs_ace_set_id (ace, combo_text);
++	}
++       
++	gnome_vfs_acl_set (acl, ace);
++	g_object_unref (ace);	
++
++	g_object_ref (window);	
++	re = nautilus_file_set_acl (file, acl,
++				    acl_change_callback,
++				    window);
++
++	if (re != GNOME_VFS_OK)
++		gnome_vfs_acl_unset (acl, ace);
++
++	update_acl_page (window);
++	gtk_widget_destroy (dialog);
++}
++
++static void
++acl_nfs4_del_button_cb (GtkButton *button,
++			FMPropertiesWindow *window)
++{
++	gint          re;
++	GList        *list;
++	GnomeVFSACL  *acl;
++	GnomeVFSACE  *ace;
++	NautilusFile *file;
++
++	file = get_target_file (window);
++
++	ace = acl_nfs4_acl_list_get_active_ace (window, &acl, &list);
++	if (!ace) return;
++
++	gnome_vfs_acl_unset (acl, ace);
++
++	g_object_ref (window);
++	re = nautilus_file_set_acl (file, acl,
++				    acl_change_callback,
++				    window);
++
++//	gnome_vfs_acl_free_ace_list (list);
++	update_acl_page (window);
++}
++
++static void
++acl_nfs4_type_changed_cb (GtkComboBox *widget,
++			  FMPropertiesWindow *window)
++{
++	guint         re;
++	GList        *list;
++	GnomeVFSACL  *acl;
++	GnomeVFSACE  *ace;
++	const char *active;
++	NautilusFile *file;
++	GnomeVFSACLType type;
++
++	if (window->details->updating_acl_tab) {
++		return;
++	}
++
++	file = get_target_file (window);
++
++	ace = acl_nfs4_acl_list_get_active_ace (window, &acl, &list);
++	if (!ace) return;
++
++
++	active = gtk_combo_box_get_active_text (widget);
++	if (!active) return;
++
++	if (!strcmp (active, ACL_NFS4_TYPE_DENY))
++		type = GNOME_VFS_ACL_DENY;
++	else 
++		type = GNOME_VFS_ACL_ALLOW;
++
++
++	gnome_vfs_ace_set_ace_type(ace, type);
++
++	g_object_ref (window);
++	re = nautilus_file_set_acl (file, acl,
++				    acl_change_callback,
++				    window);
++
++//	gnome_vfs_acl_free_ace_list (list);
++	update_acl_page (window);
++}
++
++
++static void
++create_acl_page_nfs4 (FMPropertiesWindow *window)
++{
++	GtkWidget *hpaned;
++	GtkWidget *vbox;
++	GtkWidget *vbox_acl_list;
++	GtkWidget *acl_list;
++	GtkWidget *perms;
++	GtkWidget *props_vbox;
++	GtkWidget *props_hbox;
++	GtkWidget *buttons_hbox;
++	GtkWidget *inherance_combo;
++	GtkWidget *type_combo;
++	GtkWidget *button_add;
++	GtkWidget *button_remove;
++
++	/* Load the icons
++	 */ 
++	window->details->acl_icons[COL_ICON_USER]      = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/user.png", NULL);
++	window->details->acl_icons[COL_ICON_NEG_USER]  = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/user_neg.png", NULL);
++	window->details->acl_icons[COL_ICON_GROUP]     = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/group.png", NULL);
++	window->details->acl_icons[COL_ICON_NEG_GROUP] = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/group_neg.png", NULL);
++	window->details->acl_icons[COL_ICON_MASK]      = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/mask.png", NULL);
++	window->details->acl_icons[COL_ICON_OTHER]     = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/other.png", NULL);
++	window->details->acl_icons[COL_ICON_NEG_OTHER] = gdk_pixbuf_new_from_file (DATADIR"/pixmaps/nautilus/other_neg.png", NULL);
++
++	/* Panel
++	 */
++	hpaned = gtk_hpaned_new ();
++	vbox = create_page_with_vbox (window->details->notebook,
++				      /* SUN_BRANDING */
++				      _("Access List"));
++	gtk_box_pack_start (GTK_BOX (vbox), hpaned, TRUE, TRUE, 0);			
++
++	/* Add ACL 
++	 */
++	acl_list = create_acl_nfs4_acl_list (window);
++		
++	buttons_hbox = gtk_hbox_new(TRUE, 0);
++	button_add    = gtk_button_new_from_stock (GTK_STOCK_ADD);
++	button_remove = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
++	gtk_box_pack_start (GTK_BOX(buttons_hbox), button_add, FALSE, TRUE, 6);
++	gtk_box_pack_end   (GTK_BOX(buttons_hbox), button_remove, FALSE, TRUE, 6);
++
++	vbox_acl_list = gtk_vbox_new(FALSE, 0);
++	gtk_box_pack_start (GTK_BOX(vbox_acl_list), acl_list, TRUE, TRUE, 0);
++	gtk_box_pack_start (GTK_BOX(vbox_acl_list), buttons_hbox, FALSE, FALSE, 6);
++
++	gtk_paned_pack1 (GTK_PANED (hpaned), vbox_acl_list, TRUE, FALSE);
++
++	/* Add the property tree
++	 */
++	inherance_combo = gtk_combo_box_new_text();
++	gtk_combo_box_append_text(inherance_combo, ACL_NFS4_APPLY_TO_THIS_FOLDER);
++	gtk_combo_box_append_text(inherance_combo, ACL_NFS4_APPLY_TO_CHILD_FOLDERS);
++	gtk_combo_box_append_text(inherance_combo, ACL_NFS4_APPLY_TO_CHILD_FILES);
++	gtk_combo_box_append_text(inherance_combo, ACL_NFS4_APPLY_TO_ALL_DESCENDANTS);
++
++	type_combo = gtk_combo_box_new_text();
++	gtk_combo_box_append_text(type_combo, ACL_NFS4_TYPE_ALLOW);
++	gtk_combo_box_append_text(type_combo, ACL_NFS4_TYPE_DENY);
++	
++	props_hbox = gtk_hbox_new(FALSE, 0);
++	gtk_box_pack_start (GTK_BOX(props_hbox), gtk_label_new(_("Apply to")), FALSE, FALSE, 6);
++	gtk_box_pack_start (GTK_BOX(props_hbox), inherance_combo, FALSE, FALSE, 0);
++	gtk_box_pack_end   (GTK_BOX(props_hbox), type_combo, FALSE, FALSE, 0);
++	gtk_box_pack_end   (GTK_BOX(props_hbox), gtk_label_new(_("Type")), FALSE, FALSE, 6);
++	
++	props_vbox = gtk_vbox_new(FALSE, 0);
++	perms = create_acl_nfs4_permission_tree(window);
++	gtk_box_pack_start (GTK_BOX(props_vbox), props_hbox, FALSE, FALSE, 6);
++	gtk_box_pack_start (GTK_BOX(props_vbox), perms, TRUE, TRUE, 0);
++	gtk_box_pack_start (GTK_BOX(props_vbox), buttons_hbox, FALSE, FALSE, 6);
++
++	gtk_paned_pack2 (GTK_PANED (hpaned), props_vbox, TRUE, FALSE);
++
++	window->details->acl_view = perms;
++
++	/* Events
++	 */
++	g_signal_connect (G_OBJECT(type_combo), "changed",
++			  G_CALLBACK(acl_nfs4_type_changed_cb), window);
++	g_signal_connect (G_OBJECT(inherance_combo), "changed",
++			  G_CALLBACK(acl_nfs4_inherance_changed_cb), window);
++
++	g_signal_connect (G_OBJECT(button_add), "clicked",
++			  G_CALLBACK(acl_nfs4_add_button_cb), window);
++	g_signal_connect (G_OBJECT(button_remove), "clicked",
++			  G_CALLBACK(acl_nfs4_del_button_cb), window);
++	
++	/* Store a few pointers
++	 */
++	g_object_set_data (window, "ace_props_frame", props_vbox);
++	g_object_set_data (window, "acl_nfs4_type_combo", type_combo);
++	g_object_set_data (window, "acl_nfs4_inherance_combo", inherance_combo);
++	g_object_set_data (window, "acl_list_tree_view", acl_list);
++	g_object_set_data (window, "acl_list_add_button", button_remove);
++	g_object_set_data (window, "ace_permissions_tree_view", perms);
++	
++	/* Set initial state
++	 */
++	gtk_widget_set_sensitive (props_vbox, FALSE);
++	gtk_widget_set_sensitive (button_remove, FALSE);
++
++	gtk_widget_show_all (vbox);
++}
++
++
++static void
++create_acl_page_classic (FMPropertiesWindow *window)
++{
++	GtkWidget *vbox;
++	GtkWidget *hbox;
++	GtkWidget *button_box;
++	GList     *file_list;
++	GtkWidget *button_add;
++	GtkWidget *button_remove;
++	GtkWidget *empty_label;
++	GtkWidget *scroll;
++	GtkWidget *view;
++	GtkWidget *title;
++	gboolean   dir_found;
++	GtkWidget *panel = NULL;
++	GtkWidget *block;
++
++	dir_found = file_list_some_directory (window->details->target_files);
++
++	vbox = create_page_with_vbox (window->details->notebook,
++				      /* SUN_BRANDING */
++				      _("Access List"));
++	if (dir_found) {
++		panel = gtk_vpaned_new();
++		gtk_box_pack_start (GTK_BOX (vbox), panel, TRUE, TRUE, 0);
++	}
++
++	file_list = window->details->original_files;			
++
++//	if (all_can_get_acl (file_list)) {
++		block = gtk_vbox_new (FALSE, 0);
++
++		window->details->initial_acl = get_initial_acl (window->details->target_files);
++
++		/* SUN_BRANDING */
++		title = gtk_label_new (_("Common ACL"));
++		gtk_label_set_justify (GTK_LABEL(title), GTK_JUSTIFY_LEFT);
++		gtk_box_pack_start (GTK_BOX (block), title, FALSE, FALSE, 0);
++
++		hbox = gtk_hbox_new (FALSE, 0);
++		gtk_container_set_border_width (GTK_CONTAINER (hbox), GNOME_PAD);
++		gtk_box_pack_start (GTK_BOX (block), hbox, TRUE, TRUE, 0);
++
++		/* Left hand column
++		 */
++		scroll = gtk_scrolled_window_new (NULL, NULL);
++		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), 
++						GTK_POLICY_AUTOMATIC,
++						GTK_POLICY_AUTOMATIC);
++
++
++		window->details->acl_view = create_acl_page_list (scroll, window, FALSE);
++		gtk_box_pack_start (GTK_BOX(hbox), GTK_WIDGET(scroll), TRUE, TRUE, 0);
++
++		/* Right hand column
++		 */
++		button_box = gtk_vbox_new (FALSE, 0);
++		window->details->acl_buttons = button_box;
++		button_add    = gtk_button_new_from_stock (GTK_STOCK_ADD);
++		button_remove = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
++		empty_label   = gtk_label_new("");
++
++		g_signal_connect_object (button_add, "clicked",
++					 G_CALLBACK (add_acl_callback),
++					 G_OBJECT (window),
++					 0);
++		g_signal_connect_object (button_remove, "clicked",
++					 G_CALLBACK (remove_acl_callback),
++					 G_OBJECT (window),
++					 0);
++
++		gtk_box_pack_start (GTK_BOX(button_box), button_add, FALSE, FALSE, 0);
++		gtk_box_pack_start (GTK_BOX(button_box), button_remove, FALSE, FALSE, 0);
++		gtk_box_pack_start (GTK_BOX(button_box), empty_label, TRUE, TRUE, 0);
++
++		gtk_box_pack_start (GTK_BOX(hbox), GTK_WIDGET(button_box), FALSE, FALSE, 0);		
++
++		if (panel)
++			gtk_paned_add1 (panel, block);
++		else
++			gtk_box_pack_start (GTK_BOX (vbox), block, TRUE, TRUE, 0);			
++//	}
++
++	/* Default ACLs
++	 */
++	if (dir_found) {
++		block = gtk_vbox_new (FALSE, 0);
++
++		/* SUN_BRANDING */
++		title = gtk_label_new (_("Default ACL"));
++		gtk_label_set_justify (title, GTK_JUSTIFY_LEFT);
++		gtk_box_pack_start (GTK_BOX (block), title, FALSE, FALSE, 0);
++
++		hbox = gtk_hbox_new (FALSE, 0);
++		gtk_container_set_border_width (GTK_CONTAINER (hbox), GNOME_PAD);
++		gtk_box_pack_start (GTK_BOX (block), hbox, TRUE, TRUE, 0);
++
++		scroll = gtk_scrolled_window_new (NULL, NULL);
++		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), 
++						GTK_POLICY_AUTOMATIC,
++						GTK_POLICY_AUTOMATIC);
++		
++		window->details->acl_default_view = create_acl_page_list (scroll, window, TRUE);
++		gtk_box_pack_start (GTK_BOX(hbox), GTK_WIDGET(scroll), TRUE, TRUE, 0);
++
++		/* Right hand column
++		 */
++		button_box    = gtk_vbox_new (FALSE, 0);
++		window->details->acl_def_buttons = button_box;
++		button_add    = gtk_button_new_from_stock (GTK_STOCK_ADD);
++		button_remove = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
++		empty_label   = gtk_label_new("");
++
++		g_signal_connect_object (button_add, "clicked",
++					 G_CALLBACK (add_acl_default_callback),
++					 G_OBJECT (window),
++					 0);
++		g_signal_connect_object (button_remove, "clicked",
++					 G_CALLBACK (remove_acl_default_callback),
++					 G_OBJECT (window),
++					 0);
++
++		gtk_box_pack_start (GTK_BOX(button_box), button_add, FALSE, FALSE, 0);
++		gtk_box_pack_start (GTK_BOX(button_box), button_remove, FALSE, FALSE, 0);
++		gtk_box_pack_start (GTK_BOX(button_box), empty_label, TRUE, TRUE, 0);
++
++		gtk_box_pack_start (GTK_BOX(hbox), GTK_WIDGET(button_box), FALSE, FALSE, 0);		
++
++		gtk_paned_add2 (panel, block);
++	}
++
++	gtk_widget_show_all (vbox);
++}
++
++
++static void
++create_acl_page (FMPropertiesWindow *window)
++{
++	GList             *file_list;
++	GnomeVFSACLScheme  scheme;
++
++	/* Ensure the ACL tab should be shown
++	 */
++	file_list = window->details->original_files;			
++	if (! all_can_get_acl (file_list))
++		return;
++
++	/* Check the ACL type
++	 */
++	scheme = get_acl_scheme (window->details->original_files);
++	if (scheme == GNOME_VFS_ACL_SCHEME_CLASSIC) {
++		create_acl_page_classic (window);
++		return;
++
++	} else if (scheme == GNOME_VFS_ACL_SCHEME_NFS4) {
++		create_acl_page_nfs4 (window);
++		return;
++	} 
++
++	g_error ("Unknown ACL scheme: scheme=%d\n", scheme);
++}
++
++
++static void
++create_permissions_page (FMPropertiesWindow *window)
++{
++	GtkWidget *vbox, *button, *hbox;
++	GtkTable *page_table;
++	char *file_name, *prompt_text;
++	GList *file_list;
++	guint last_row;
++
++	vbox = create_page_with_vbox (window->details->notebook,
++				      _("Permissions"));
++
++	file_list = window->details->original_files;
++
++	window->details->initial_permissions = NULL;
++	
++	if (all_can_get_permissions (file_list) && all_can_get_permissions (window->details->target_files)) {
++		window->details->initial_permissions = get_initial_permissions (window->details->target_files);
++		window->details->has_recursive_apply = files_has_changable_permissions_directory (window);
++		
++		if (!all_can_set_permissions (file_list)) {
++			add_prompt_and_separator (
++				GTK_VBOX (vbox), 
++				_("You are not the owner, so you can't change these permissions."));
++		}
++
++		page_table = GTK_TABLE (gtk_table_new (1, COLUMN_COUNT, FALSE));
++		window->details->permissions_table = page_table;
++
++		apply_standard_table_padding (page_table);
++		gtk_widget_show (GTK_WIDGET (page_table));
++		gtk_box_pack_start (GTK_BOX (vbox), 
++				    GTK_WIDGET (page_table), 
++				    TRUE, TRUE, 0);
++
++		if (eel_preferences_get_boolean (NAUTILUS_PREFERENCES_SHOW_ADVANCED_PERMISSIONS)) {
++			window->details->advanced_permissions = TRUE;
++			create_advanced_permissions (window, page_table);
++		} else {
++			window->details->advanced_permissions = FALSE;
++			create_simple_permissions (window, page_table);
++		}
++		
++		gtk_table_set_row_spacing (page_table, page_table->nrows - 1, 18);
++	
++		append_title_value_pair
++			(window, page_table, _("SELinux Context:"), 
++			 "selinux_context", _("--"),
++			 FALSE);
++		append_title_value_pair
++			(window, page_table, _("Last changed:"), 
++			 "date_permissions", _("--"),
++			 FALSE);
++	
++		if (window->details->has_recursive_apply) {
++			last_row = append_row (page_table);
++			hbox = gtk_hbox_new (FALSE, 0);
++			gtk_widget_show (hbox);
++			gtk_table_attach (page_table, hbox,
++					  0, 2,
++					  last_row, last_row+1,
++					  GTK_FILL, 0,
++					  0, 0);
++		
++			button = gtk_button_new_with_mnemonic (_("Apply permissions to enclosed files"));
++			gtk_widget_show (button);
++			gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
++			g_signal_connect (button, "clicked",
++					  G_CALLBACK (apply_recursive_clicked),
++					  window);
++		}
++	} else {
++		if (!is_multi_file_window (window)) {
++			file_name = nautilus_file_get_display_name (get_target_file (window));
++			prompt_text = g_strdup_printf (_("The permissions of \"%s\" could not be determined."), file_name);
++			g_free (file_name);
++		} else {
++			prompt_text = g_strdup (_("The permissions of the selected file could not be determined."));
++		}
++		
++		add_prompt (GTK_VBOX (vbox), prompt_text, TRUE);
++		g_free (prompt_text);
++	}
++}
++
++static void
++append_extension_pages (FMPropertiesWindow *window)
++{
++	GList *providers;
++	GList *p;
++	
++ 	providers = nautilus_module_get_extensions_for_type (NAUTILUS_TYPE_PROPERTY_PAGE_PROVIDER);
++	
++	for (p = providers; p != NULL; p = p->next) {
++		NautilusPropertyPageProvider *provider;
++		GList *pages;
++		GList *l;
++
++		provider = NAUTILUS_PROPERTY_PAGE_PROVIDER (p->data);
++		
++		pages = nautilus_property_page_provider_get_pages 
++			(provider, window->details->original_files);
++		
++		for (l = pages; l != NULL; l = l->next) {
++			NautilusPropertyPage *page;
++			GtkWidget *page_widget;
+ 			GtkWidget *label;
+ 			
+ 			page = NAUTILUS_PROPERTY_PAGE (l->data);
+@@ -4306,6 +6697,27 @@
+ 	return TRUE;
+ }
+ 
++static gboolean
++should_show_acls (FMPropertiesWindow *window)
++{
++       NautilusFile *file;
++       
++       if (is_multi_file_window (window)) {
++               return FALSE;
++       }
++
++       /* Don't show ACL tab for desktop special icons (trash, etc)
++        * or desktop files. We don't get the open-with menu for these anyway.
++        */
++       file = get_original_file (window);
++       if (file == NULL ||
++           NAUTILUS_IS_DESKTOP_ICON_FILE (file) ||
++           nautilus_file_is_nautilus_link (file)) {
++               return FALSE;
++       }
++       return TRUE;
++}
++
+ static char *
+ get_pending_key (GList *file_list)
+ {
+@@ -4547,6 +6959,12 @@
+ 		create_open_with_page (window);
+ 	}
+ 
++	printf ("should_show_acls (window) %d\n", should_show_acls (window));
++
++	if (should_show_acls (window)) {
++		create_acl_page (window);
++	}
++
+ 	/* append pages from available views */
+ 	append_extension_pages (window);
+ 
+@@ -4799,6 +7217,7 @@
+ {
+ 	FMPropertiesWindow *window;
+ 	GList *l;
++	guint i;
+ 
+ 	window = FM_PROPERTIES_WINDOW (object);
+ 
+@@ -4829,6 +7248,18 @@
+ 		window->details->initial_emblems = NULL;
+ 	}
+ 
++	if (window->details->initial_acl) {
++		g_hash_table_destroy (window->details->initial_acl);
++		window->details->initial_acl = NULL;
++	}
++	
++	for (i = 0; i<NUM_COL_ICONS; i++) {
++		if (window->details->acl_icons[i]) {
++			g_object_unref (window->details->acl_icons[i]);
++			window->details->acl_icons[i] = NULL;
++		}
++	}
++
+ 	g_list_free (window->details->permission_buttons);
+ 	window->details->permission_buttons = NULL;
+ 
+--- nautilus-2.18.0.1-orig/icons/Makefile.am	2007-04-10 02:59:55.100929000 +0200
++++ nautilus-2.18.0.1-alo/icons/Makefile.am	2007-04-03 12:35:58.912379000 +0200
+@@ -14,6 +14,13 @@
+ 	knob.png \
+ 	note-indicator.png \
+ 	thumbnail_frame.png \
++	user.png \
++	user_neg.png \
++	group.png \
++	group_neg.png \
++	mask.png \
++	other.png \
++	other_neg.png \
+ 	$(NULL)
+ 
+ EXTRA_DIST = $(icon_DATA)

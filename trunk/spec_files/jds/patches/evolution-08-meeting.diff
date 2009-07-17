@@ -1,0 +1,13 @@
+Index: evolution-2.21.4/calendar/gui/e-calendar-view.c
+===================================================================
+--- evolution-2.21.4/calendar/gui/e-calendar-view.c	(revision 34305)
++++ evolution-2.21.4-new/calendar/gui/e-calendar-view.c	(working copy)
+@@ -926,6 +926,7 @@
+ 		gboolean retract = FALSE;
+ 
+ 		retract = prompt_retract_dialog (comp, &retract_comment, GTK_WIDGET (cal_view));
++		delete = retract;
+ 		if (retract) {
+ 			GList *users = NULL;
+ 			icalcomponent *icalcomp = NULL, *mod_comp = NULL;
+

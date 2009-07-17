@@ -1,0 +1,13 @@
+--- evolution-data-server-2.26.1/libedataserver/e-iconv.c.orig	2009-04-18 10:59:15.382020516 +0530
++++ evolution-data-server-2.26.1/libedataserver/e-iconv.c	2009-04-18 10:59:34.379533312 +0530
+@@ -26,6 +26,10 @@
+ #include <config.h>
+ #endif
+ 
++#ifndef ICONV_10646
++#define ICONV_10646 "iso-10646"
++#endif /*ICONV_10646*/
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>

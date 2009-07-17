@@ -1,0 +1,60 @@
+--- nautilus-cd-burner-2.21.5/src/nautilus-burn-drive-monitor.c.orig	2007-05-06 14:12:34.497011000 +0800
++++ nautilus-cd-burner-2.21.5/src/nautilus-burn-drive-monitor.c	2007-05-06 14:12:09.958116000 +0800
+@@ -597,13 +597,40 @@
+         NautilusBurnDrive *drive;
+         NautilusBurnDrive *ret;
+         char              *target;
++        char              *raw_device = NULL;
+ 
+         ret = NULL;
+ 
+         g_return_val_if_fail (monitor != NULL, NULL);
+         g_return_val_if_fail (device != NULL, NULL);
+ 
+-        target = resolve_symlink (device);
++       char ** cd_udis;
++       LibHalContext * hal_ctx = monitor->priv->ctx;
++       int num_hal_udis = 0;
++       int i;
++
++       if ((cd_udis = libhal_manager_find_device_string_match ( hal_ctx, "block.device",
++                               device, &num_hal_udis, NULL)) == NULL)
++               goto out;
++       else if (num_hal_udis)
++               for (i = 0; i < num_hal_udis; i++) {
++                       char * udi;
++                       udi = cd_udis[i];
++                       if (libhal_device_query_capability (hal_ctx, udi, "volume", NULL)) {
++                               raw_device = libhal_device_get_property_string (hal_ctx, udi,
++                                               "block.solaris.raw_device", NULL);
++                               libhal_free_string (udi);
++                               if (!raw_device)
++                                       continue;
++                               for (;i < num_hal_udis; i ++)
++                                       libhal_free_string (cd_udis[i]);
++                               break;
++                       }
++               }
++       if (!raw_device)
++               raw_device = g_strdup (device);
++
++        target = resolve_symlink (raw_device);
+         if (target == NULL) {
+                 goto out;
+         }
+@@ -618,13 +645,14 @@
+                  */
+                 if (drive->priv->device != NULL &&
+                    (strcmp (drive->priv->device, target) == 0 ||
+-                    strcmp (drive->priv->device, device) == 0)) {
++                    strcmp (drive->priv->device, raw_device) == 0)) {
+                         ret = nautilus_burn_drive_ref (drive);
+                         break;
+                 }
+         }
+ 
+         g_free (target);
++        g_free (raw_device);
+ 
+  out:
+         return ret;
