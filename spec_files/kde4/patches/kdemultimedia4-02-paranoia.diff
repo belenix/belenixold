@@ -1,0 +1,234 @@
+--- kdemultimedia-4.2.4/cmake/modules/FindCdparanoia.cmake.orig	2009-07-09 20:01:45.626730701 +0530
++++ kdemultimedia-4.2.4/cmake/modules/FindCdparanoia.cmake	2009-07-09 20:19:48.579634740 +0530
+@@ -18,10 +18,10 @@
+ 
+ else (CDPARANOIA_INCLUDE_DIR AND CDPARANOIA_LIBRARIES)
+ 
+-  FIND_PATH(CDPARANOIA_INCLUDE_DIR cdda_interface.h PATH_SUFFIXES cdda cdparanoia)
++  FIND_PATH(CDPARANOIA_INCLUDE_DIR paranoia.h PATH_SUFFIXES cdio)
+ 
+   FIND_LIBRARY(CDPARANOIA_LIBRARY NAMES cdda_paranoia)
+-  FIND_LIBRARY(CDPARANOIA_IF_LIBRARY NAMES cdda_interface)
++  FIND_LIBRARY(CDPARANOIA_IF_LIBRARY NAMES cdio_cdda)
+ 
+   IF (CDPARANOIA_LIBRARY AND CDPARANOIA_IF_LIBRARY)
+     SET(CDPARANOIA_LIBRARIES ${CDPARANOIA_LIBRARY} ${CDPARANOIA_IF_LIBRARY} "-lm")
+--- kdemultimedia-4.2.4/kioslave/audiocd/audiocd.h.orig	2009-07-10 20:28:52.408091444 +0530
++++ kdemultimedia-4.2.4/kioslave/audiocd/audiocd.h	2009-07-10 20:32:46.658756094 +0530
+@@ -29,8 +29,6 @@
+ 
+ class AudioCDEncoder;
+ 
+-struct cdrom_drive;
+-
+ namespace AudioCD {
+ 
+ /**
+@@ -53,7 +51,7 @@
+ 	AudioCDEncoder *encoderFromExtension(const QString& extension);
+ 	AudioCDEncoder *determineEncoder(const QString & filename);
+ 
+-	struct cdrom_drive *findDrive(bool &noPermission);
++	cdrom_drive *findDrive(bool &noPermission);
+ 	void parseURLArgs(const KUrl &);
+ 
+ 	void loadSettings();
+@@ -64,7 +62,7 @@
+ 	 * return false if the parameters are invalid (for instance,
+ 	 * track number which does not exist on this CD)
+ 	 */
+-	bool getSectorsForRequest(struct cdrom_drive * drive,
++	bool getSectorsForRequest(cdrom_drive * drive,
+ 	                          long & firstSector, long & lastSector) const;
+ 
+ 	/**
+@@ -78,7 +76,7 @@
+ 	 * Reads data off the cd and then passes it to an encoder to encode
+ 	 */
+ 	void paranoiaRead(
+-		struct cdrom_drive * drive,
++		cdrom_drive * drive,
+ 		long firstSector,
+ 		long lastSector,
+ 		AudioCDEncoder* encoder,
+@@ -86,8 +84,8 @@
+ 		unsigned long size
+ 	);
+ 
+-	struct cdrom_drive *initRequest(const KUrl &);
+-	uint discid(struct cdrom_drive *);
++	cdrom_drive *initRequest(const KUrl &);
++	uint discid(cdrom_drive *);
+ 
+ 	/**
+ 	 * Add an entry in the KIO directory, using the title you give,
+@@ -102,7 +100,7 @@
+ 	 * this function will do the right thing.
+ 	 */
+ 	void addEntry(const QString& trackTitle, AudioCDEncoder *encoder,
+-	struct cdrom_drive * drive, int trackNo);
++	cdrom_drive * drive, int trackNo);
+ 
+ 	class Private;
+ 	Private * d;
+--- kdemultimedia-4.2.4/kioslave/audiocd/CMakeLists.txt.orig	2009-07-10 20:43:13.462193333 +0530
++++ kdemultimedia-4.2.4/kioslave/audiocd/CMakeLists.txt	2009-07-10 21:26:03.533564469 +0530
+@@ -4,8 +4,17 @@
+ 
+ 
+ MACRO_PUSH_REQUIRED_VARS()
+-SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} /usr/include/cdda)
+-check_struct_member("struct cdrom_drive" "ioctl_device_name" "cdda_interface.h" CDDA_IOCTL_DEVICE_EXISTS)
++
++if (CMAKE_SYSTEM MATCHES "SunOS-5.*")
++    SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} /usr/include/cdio)
++    #check_struct_member("cdrom_drive_t" "cdda_device_name" "cdda.h" CDDA_IOCTL_DEVICE_EXISTS)
++    SET(CDDA_IOCTL_DEVICE_EXISTS 1)
++    add_definitions (-DCD_FRAMESIZE_RAW=CDIO_CD_FRAMESIZE_RAW -Dcdrom_paranoia=cdrom_paranoia_t)
++else (CMAKE_SYSTEM MATCHES "SunOS-5.*")
++    SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} /usr/include/cdda)
++    check_struct_member("struct cdrom_drive" "ioctl_device_name" "cdda_interface.h" CDDA_IOCTL_DEVICE_EXISTS)
++endif (CMAKE_SYSTEM MATCHES "SunOS-5.*")
++
+ MACRO_POP_REQUIRED_VARS()
+ macro_bool_to_01(CDDA_IOCTL_DEVICE_EXISTS HAVE_CDDA_IOCTL_DEVICE)
+ 
+--- kdemultimedia-4.2.4/kioslave/audiocd/audiocd.cpp.orig	2009-07-09 20:04:20.446610681 +0530
++++ kdemultimedia-4.2.4/kioslave/audiocd/audiocd.cpp	2009-07-10 21:31:38.526560688 +0530
+@@ -28,12 +28,11 @@
+ #include <kdemacros.h>
+ extern "C"
+ {
+-	//cdda_interface.h in cdparanoia 10.2 has a member called 'private' which the C++ compiler doesn't like
+ 	#define private _private   
+-	#include <cdda_interface.h>
+-	#include <cdda_paranoia.h>
++	#include <cdda.h>
++	#include <paranoia.h>
+ 	#undef private
+-	void paranoiaCallback(long, int);
++	void paranoiaCallback(long, paranoia_cb_mode_t);
+ 
+ 	KDE_EXPORT int kdemain(int argc, char ** argv);
+ }
+@@ -195,7 +194,7 @@
+ 	return encoderFromExtension(filename.right(len - pos));
+ }
+ 
+-struct cdrom_drive * AudioCDProtocol::initRequest(const KUrl & url)
++cdrom_drive * AudioCDProtocol::initRequest(const KUrl & url)
+ {
+ 	if (url.hasHost())
+ 	{
+@@ -210,14 +209,19 @@
+ 	// Then url parameters can overrule our settings.
+ 	parseURLArgs(url);
+ 
+-	struct cdrom_drive * drive = getDrive();
++	cdrom_drive * drive = getDrive();
+ 	if (0 == drive)
+ 		return 0;
+ 
+ 	// Update our knowledge of the disc
+ #if defined(HAVE_CDDA_IOCTL_DEVICE)
++#if defined(__sun) || defined (__sun__)
++	if (d->cd.deviceName() != drive->cdda_device_name)
++		d->cd.setDevice(drive->cdda_device_name, 50, false);
++#else
+ 	if (d->cd.deviceName() != drive->ioctl_device_name)
+ 		d->cd.setDevice(drive->ioctl_device_name, 50, false);
++#endif
+ #elif defined(__FreeBSD__) || defined(__DragonFly__)
+ 	// FreeBSD's cdparanoia as of january 5th 2006 has rather broken
+ 	// support for non-SCSI devices. Although it finds ATA cdroms just
+@@ -377,7 +381,7 @@
+ 	return drive;
+ }
+ 
+-bool AudioCDProtocol::getSectorsForRequest(struct cdrom_drive * drive, long & firstSector, long & lastSector) const
++bool AudioCDProtocol::getSectorsForRequest(cdrom_drive * drive, long & firstSector, long & lastSector) const
+ {
+ 	if (d->req_allTracks)
+ 	{ // we rip all the tracks of the CD
+@@ -398,7 +402,7 @@
+ 
+ void AudioCDProtocol::get(const KUrl & url)
+ {
+-	struct cdrom_drive * drive = initRequest(url);
++	cdrom_drive * drive = initRequest(url);
+ 	if (!drive)
+ 		return;
+ 
+@@ -486,7 +490,7 @@
+ 
+ void AudioCDProtocol::stat(const KUrl & url)
+ {
+-	struct cdrom_drive * drive = initRequest(url);
++	cdrom_drive * drive = initRequest(url);
+ 	if (!drive)
+ 		return;
+ 
+@@ -561,7 +565,7 @@
+ 
+ void AudioCDProtocol::listDir(const KUrl & url)
+ {
+-	struct cdrom_drive * drive = initRequest(url);
++	cdrom_drive * drive = initRequest(url);
+ 
+ 	// Some error checking before proceeding
+ 	if (!drive)
+@@ -679,7 +683,7 @@
+ 	finished();
+ }
+ 
+-void AudioCDProtocol::addEntry(const QString& trackTitle, AudioCDEncoder *encoder, struct cdrom_drive * drive, int trackNo)
++void AudioCDProtocol::addEntry(const QString& trackTitle, AudioCDEncoder *encoder, cdrom_drive * drive, int trackNo)
+ {
+ 	if(!encoder || !drive)
+ 		return;
+@@ -713,11 +717,11 @@
+ 	return encoder->size(length_seconds);
+ }
+ 
+-struct cdrom_drive *AudioCDProtocol::getDrive()
++cdrom_drive *AudioCDProtocol::getDrive()
+ {
+ 	QByteArray device(QFile::encodeName(d->device));
+ 
+-	struct cdrom_drive * drive = 0;
++	cdrom_drive * drive = 0;
+ 
+ 	if (!device.isEmpty() && device != "/")
+ 		drive = cdda_identify(device, CDDA_MESSAGE_PRINTIT, 0);
+@@ -759,7 +763,7 @@
+ }
+ 
+ void AudioCDProtocol::paranoiaRead(
+-		struct cdrom_drive * drive,
++		cdrom_drive * drive,
+ 		long firstSector,
+ 		long lastSector,
+ 		AudioCDEncoder* encoder,
+@@ -1081,7 +1085,7 @@
+  * The higher the paranoia_read_limited_error the worse the problem is
+  * FYI: PARANOIA_CB_READ & PARANOIA_CB_VERIFY happen continusly when ripping
+  */
+-void paranoiaCallback(long, int function)
++void paranoiaCallback(long, paranoia_cb_mode_t function)
+ {
+ 	switch(function){
+ 		case PARANOIA_CB_VERIFY:
+--- kdemultimedia-4.2.4/kioslave/audiocd/plugins/wav/encodercda.cpp.orig	2009-07-10 21:33:13.180018601 +0530
++++ kdemultimedia-4.2.4/kioslave/audiocd/plugins/wav/encodercda.cpp	2009-07-10 21:34:08.346015362 +0530
+@@ -42,10 +42,7 @@
+ // Remove this by calculating CD_FRAMESIZE_RAW from the frames
+ extern "C"
+ {
+-  //cdda_interface.h in cdparanoia 10.2 has a member called 'private' which the C++ compiler doesn't like
+-  #define private _private
+-  #include <cdda_interface.h>
+-  #undef private
++  #include <cdda.h>
+ }
+ 
+ inline int16_t swap16 (int16_t i)

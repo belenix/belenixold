@@ -16,7 +16,7 @@ Version:                 1.1.2
 License:                 LGPLv2+
 URL:                     http://pim.kde.org/akonadi/
 Source:                  http://download.akonadi-project.org/akonadi-%{version}.tar.bz2
-Patch1:                  akonadi-01-mysql_conf.diff
+#Patch1:                  akonadi-01-mysql_conf.diff
 
 SUNW_BaseDir:            %{_basedir}
 SUNW_Copyright:          %{name}.copyright
@@ -59,9 +59,9 @@ Requires: SUNWmysql5u
 
 %prep
 %setup -q -c -n %name-%version
-cd %{src_dir}-%{version}
-%patch1 -p1
-cd ..
+#cd %{src_dir}-%{version}
+#%patch1 -p1
+#cd ..
 
 %build
 #
@@ -157,6 +157,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Fri Jul 17 2009 - moinakg(at)belenix<dot>org
+- Comment out MySQL config patch for now, appears to cause problems.
 * Sat Jul 04 2009 - moinakg@belenix(dot)org
 - Fix to use proper mysql binary.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org

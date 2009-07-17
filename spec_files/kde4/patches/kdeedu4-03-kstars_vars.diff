@@ -1,0 +1,76 @@
+--- kdeedu-4.2.4/kstars/kstars/ksasteroid.h.orig	2009-07-15 21:51:55.679429934 +0530
++++ kdeedu-4.2.4/kstars/kstars/ksasteroid.h	2009-07-15 21:52:11.700110475 +0530
+@@ -108,7 +108,7 @@
+      *@p M the mean anomaly for the Julian Day
+      */
+     bool getOrbitalElements( long double *_JD, double *_a, double *_e, 
+-                             dms *_i, dms *_w, dms *_N, dms *_M );
++                             dms *_i_, dms *_w_, dms *_N_, dms *_M_ );
+ 
+ 
+     /**This lets other classes like KSPlanetBase access H and G values
+--- kdeedu-4.2.4/kstars/kstars/ksasteroid.cpp.orig	2009-07-15 21:52:28.448137016 +0530
++++ kdeedu-4.2.4/kstars/kstars/ksasteroid.cpp	2009-07-15 21:53:38.910330634 +0530
+@@ -50,17 +50,17 @@
+     P = 365.2568984 * pow(a, 1.5); //period in days
+ }
+ 
+-bool KSAsteroid::getOrbitalElements( long double *_JD, double *_a, double *_e, dms *_i,
+-                                     dms *_w, dms *_N, dms *_M ) {
+-    if( !_JD || !_a || !_e || !_i || !_w || !_N || !_M )
++bool KSAsteroid::getOrbitalElements( long double *_JD, double *_a, double *_e, dms *_i_,
++                                     dms *_w_, dms *_N_, dms *_M_ ) {
++    if( !_JD || !_a || !_e || !_i_ || !_w_ || !_N_ || !_M_ )
+         return false;
+     *_JD = JD;
+     *_a = a;
+     *_e = e;
+-    *_i = i;
+-    *_w = w;
+-    *_N = N;
+-    *_M = M;
++    *_i_ = i;
++    *_w_ = w;
++    *_N_ = N;
++    *_M_ = M;
+     return true;
+ }
+ 
+--- kdeedu-4.2.4/kstars/kstars/kscomet.h.orig	2009-07-15 21:55:25.268532645 +0530
++++ kdeedu-4.2.4/kstars/kstars/kscomet.h	2009-07-15 21:55:54.081838101 +0530
+@@ -88,8 +88,8 @@
+      *
+      *@return true on success, false if one or more pointers were NULL
+      */
+-    bool getOrbitalElements( long double *_JD, double *_q, double *_e, dms *_i,
+-                             dms *_w, dms *_N );
++    bool getOrbitalElements( long double *_JD, double *_q, double *_e, dms *_i_,
++                             dms *_w_, dms *_N_ );
+ 
+     /**
+      *@short Returns the Julian Day of Perihelion passage
+--- kdeedu-4.2.4/kstars/kstars/kscomet.cpp.orig	2009-07-15 21:53:47.570334542 +0530
++++ kdeedu-4.2.4/kstars/kstars/kscomet.cpp	2009-07-15 21:56:42.363017469 +0530
+@@ -66,16 +66,16 @@
+     setLongName( o.name2() );
+ }    
+ 
+-bool KSComet::getOrbitalElements( long double *_JD, double *_q, double *_e, dms *_i,
+-                                  dms *_w, dms *_N ) {
+-    if( !_JD || !_q || !_e || !_i || !_w || !_N )
++bool KSComet::getOrbitalElements( long double *_JD, double *_q, double *_e, dms *_i_,
++                                  dms *_w_, dms *_N_ ) {
++    if( !_JD || !_q || !_e || !_i_ || !_w_ || !_N_ )
+         return false;
+     *_JD = JD;
+     *_q = q;
+     *_e = e;
+-    *_i = i;
+-    *_w = w;
+-    *_N = N;
++    *_i_ = i;
++    *_w_ = w;
++    *_N_ = N;
+     return true;
+ }
+ 

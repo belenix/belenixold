@@ -1,0 +1,11 @@
+--- kdeedu-4.2.4/kalzium/src/kalziumutils.cpp.orig	2009-07-15 00:45:25.269781398 +0530
++++ kdeedu-4.2.4/kalzium/src/kalziumutils.cpp	2009-07-15 00:47:42.134029672 +0530
+@@ -67,7 +67,7 @@
+ 
+ double KalziumUtils::strippedValue( double num )
+ {
+-	if ( !finite( num ) )
++	if ( !isfinite( num ) )
+ 		return num;
+ 
+ 	double power;

@@ -1,0 +1,17 @@
+--- kdemultimedia-4.2.4/libkcompactdisc/CMakeLists.txt.orig	2009-07-09 23:56:44.508599989 +0530
++++ kdemultimedia-4.2.4/libkcompactdisc/CMakeLists.txt	2009-07-10 19:52:35.028270254 +0530
+@@ -52,6 +52,14 @@
+     target_link_libraries(kcompactdisc ${ASOUND_LIBRARY})
+ endif (HAVE_LIBASOUND2)
+ 
++if (CMAKE_SYSTEM MATCHES "SunOS-5.*")
++    FIND_LIBRARY(HAL_LIBRARY NAMES hal)
++    FIND_LIBRARY(HAL_STORAGE_LIBRARY NAMES hal-storage)
++    FIND_LIBRARY(DBUS_LIBRARY NAMES dbus-1)
++    target_link_libraries(kcompactdisc ${HAL_LIBRARY} ${HAL_STORAGE_LIBRARY} ${DBUS_LIBRARY})
++    include_directories("/usr/include/dbus-1.0" "/usr/lib/dbus-1.0/include" "/usr/include/hal")
++endif (CMAKE_SYSTEM MATCHES "SunOS-5.*")
++
+ set_target_properties(kcompactdisc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+ 
+ install(TARGETS kcompactdisc  ${INSTALL_TARGETS_DEFAULT_ARGS} )

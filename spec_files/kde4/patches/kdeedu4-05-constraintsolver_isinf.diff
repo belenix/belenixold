@@ -1,0 +1,28 @@
+--- kdeedu-4.2.4/step/stepcore/constraintsolver.cc.orig	2009-07-15 23:31:17.929218014 +0530
++++ kdeedu-4.2.4/step/stepcore/constraintsolver.cc	2009-07-15 23:33:23.256556610 +0530
+@@ -86,8 +86,8 @@
+     int fminCount = 0;
+     int fmaxCount = 0;
+     for(int i=0; i<nc; ++i) {
+-        if(std::isinf(info->forceMin[i]) != -1) ++fminCount;
+-        if(std::isinf(info->forceMax[i]) != +1) ++fmaxCount;
++        if(isinf(info->forceMin[i]) != -1) ++fminCount;
++        if(isinf(info->forceMax[i]) != +1) ++fmaxCount;
+     }
+ 
+     GmmSparseRowMatrix c(fminCount + fmaxCount, nc);
+@@ -96,12 +96,12 @@
+     int fminIndex = 0;
+     int fmaxIndex = fminCount;
+     for(int i=0; i<nc; ++i) {
+-        if(std::isinf(info->forceMin[i]) != -1) {
++        if(isinf(info->forceMin[i]) != -1) {
+             c.row(fminIndex).w(i, -1);
+             f[fminIndex] = -info->forceMin[i];
+             ++fminIndex;
+         }
+-        if(std::isinf(info->forceMax[i]) != +1) {
++        if(isinf(info->forceMax[i]) != +1) {
+             c.row(fmaxIndex).w(i, 1);
+             f[fmaxIndex] = info->forceMax[i];
+             ++fmaxIndex;

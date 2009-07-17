@@ -1,0 +1,26 @@
+--- kdeedu-4.2.4/step/stepcore/particle.cc.orig	2009-07-16 19:19:29.386717065 +0530
++++ kdeedu-4.2.4/step/stepcore/particle.cc	2009-07-16 19:19:56.063711750 +0530
+@@ -96,8 +96,8 @@
+     _velocityVariance = (kineticEnergyVariance - square(particle()->velocity().norm2()/2) * _massVariance) /
+                         square(particle()->mass()) / 2 *
+                         Vector2d(1,1).cDivide(particle()->velocity().cSquare());
+-    if(!std::isfinite(_velocityVariance[0]) || _velocityVariance[0] < 0 ||
+-       !std::isfinite(_velocityVariance[1]) || _velocityVariance[1]) {
++    if(!isfinite(_velocityVariance[0]) || _velocityVariance[0] < 0 ||
++       !isfinite(_velocityVariance[1]) || _velocityVariance[1]) {
+         _velocityVariance.setZero();
+     }
+ }
+--- kdeedu-4.2.4/step/stepcore/rigidbody.cc.orig	2009-07-16 20:07:35.061410683 +0530
++++ kdeedu-4.2.4/step/stepcore/rigidbody.cc	2009-07-16 20:08:50.099811117 +0530
+@@ -153,8 +153,8 @@
+               _velocityVariance.innerProduct(rigidBody()->velocity().cSquare()) * square(rigidBody()->mass());
+     _velocityVariance = t / square(rigidBody()->mass()) / 2 *
+                         Vector2d(1,1).cDivide(rigidBody()->velocity().cSquare());
+-    if(!std::isfinite(_velocityVariance[0]) || _velocityVariance[0] < 0 ||
+-       !std::isfinite(_velocityVariance[1]) || _velocityVariance[1]) {
++    if(!isfinite(_velocityVariance[0]) || _velocityVariance[0] < 0 ||
++       !isfinite(_velocityVariance[1]) || _velocityVariance[1]) {
+         _velocityVariance.setZero();
+     }
+     // XXX: change angularVelocity here as well
