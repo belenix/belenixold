@@ -1,0 +1,290 @@
+--- kdemultimedia-4.2.4/libkcompactdisc/wmlib/plat_sun.c.orig	2009-07-09 19:45:15.832944800 +0530
++++ kdemultimedia-4.2.4/libkcompactdisc/wmlib/plat_sun.c	2009-07-10 20:09:27.702732768 +0530
+@@ -38,7 +38,6 @@
+ #include <sys/time.h>
+ #include <sys/ioctl.h>
+ 
+-#include <ustat.h>
+ #include <unistd.h>
+ #include <signal.h>
+ #ifdef solbourne
+@@ -63,6 +62,10 @@
+ # endif
+ #endif
+ 
++#include <sys/byteorder.h>
++#include <hal/libhal.h>
++#include <hal/libhal-storage.h>
++
+ #include "include/wm_struct.h"
+ 
+ #define WM_MSG_CLASS WM_MSG_CLASS_PLATFORM
+@@ -113,54 +116,127 @@
+ 
+ #endif /* SYSV && SIGTHAW */
+ 
++static LibHalContext *
++plat_hal_init (void)
++{
++  DBusError error;
++  LibHalContext *hal_ctx = NULL;
++
++  dbus_error_init (&error);
++  if ((hal_ctx = libhal_ctx_new ()) == NULL) {
++     wm_lib_message(WM_MSG_LEVEL_ERROR | WM_MSG_CLASS, "failed to initialize HAL");
++     goto out;
++  }
++  if (!libhal_ctx_set_dbus_connection(hal_ctx,
++      dbus_bus_get (DBUS_BUS_SYSTEM, &error))) {
++
++     wm_lib_message(WM_MSG_LEVEL_ERROR | WM_MSG_CLASS,
++        "DBus connection failed: libhal_ctx_set_dbus_connection: %s %s",
++        error.name, error.message);
++     libhal_ctx_free (hal_ctx);
++     goto out;
++  }
++  if (!libhal_ctx_init(hal_ctx, &error)) {
++    wm_lib_message(WM_MSG_LEVEL_ERROR | WM_MSG_CLASS,
++       "HAL context init failed libhal_ctx_init: %s: %s", error.name, error.message);
++    libhal_ctx_free (hal_ctx);
++    goto out;
++  }
++out:
++  dbus_error_free (&error);
++
++  return (hal_ctx);
++}
++
++static void
++plat_hal_fini (LibHalContext *hal_ctx)
++{
++  DBusError error;
++
++  dbus_error_init (&error);
++  libhal_ctx_shutdown (hal_ctx, &error);
++  libhal_ctx_free (hal_ctx);
++  dbus_error_free (&error);
++}
++
+ /*
+  * find_cdrom
+  *
+  * Determine the name of the CD-ROM device.
+  *
+- * Use the first of /vol/dev/aliases/cdrom0, /dev/rdsk/c0t6d0s2, and /dev/rsr0
+- * that exists.  (Check for /vol/dev/aliases, not cdrom0, since it won't be
+- * there if there's no CD in the drive.)  This is done so a single SunOS 4.x
+- * binary can be used on any 4.x or higher Sun system.
++ * Use HAL to find the CDROm device.
+  */
+ const char*
+ find_cdrom()
+ {
+-  if (access("/vol/dev/aliases", X_OK) == 0)
+-    {
+-      /* Volume manager.  Device might not be there. */
+-      intermittent_dev = 1;
++  DBusError       error;
++  LibHalContext   *hal_ctx;
++  int             i, j, k;
++  char            **drive_udis, **volume_udis;
++  int             num_drives, num_volumes;
++  char            *raw_device, *dev;
++  LibHalDrive     *drive;
++  int             has_audio;
++
++  has_audio = 0;
++  dev = NULL;
++  if ((hal_ctx = plat_hal_init()) == NULL) {
++    fprintf(stderr, "Failed to initialize HAL!\n");
++    return (NULL);
++  }
+ 
+-      /* If vold is running us, it'll tell us the device name. */
+-      sun_cd_device = getenv("VOLUME_DEVICE");
+-      /*
+-      ** the path of the device has to include /dev
+-      ** otherwise we are vulnerable to race conditions
+-      ** Thomas Biege <thomas@suse.de>
+-      */
+-      if (sun_cd_device == NULL ||
+-	  strncmp("/vol/dev/", sun_cd_device, 9) ||
+-	  strstr(sun_cd_device, "/../") )
+-	return "/vol/dev/aliases/cdrom0";
+-      else
+-        return sun_cd_device;
+-    }
+-  else if (access("/dev/rdsk/c0t6d0s2", F_OK) == 0)
+-    {
+-      /* Solaris 2.x w/o volume manager. */
+-      return "/dev/rdsk/c0t6d0s2";
++  drive_udis = libhal_find_device_by_capability(hal_ctx, "storage.cdrom", &num_drives, &error);
++  if (dbus_error_is_set (&error) || drive_udis == NULL) {
++    goto out;
++  }
++
++  for (i = 0; i < num_drives; i++) {
++    raw_device = libhal_device_get_property_string(hal_ctx,
++      drive_udis[i], "block.solaris.raw_device", &error);\
++    dbus_error_free (&error);
++
++    if ((raw_device == NULL) || (strlen (raw_device) == 0)) {
++      libhal_free_string(raw_device);
++      continue;
+     }
+-  else if (access("/dev/rcd0", F_OK) == 0)
+-    {
+-      return "/dev/rcd0";
++
++    /* check for audio disc in this drive */
++    if ((drive = libhal_drive_from_udi (hal_ctx, drive_udis[i])) != NULL) {
++      if ((volume_udis = libhal_drive_find_all_volumes(hal_ctx,
++        drive, &num_volumes)) != NULL) {
++
++        for (k = 0; k < num_volumes; k++) {
++          has_audio = libhal_device_get_property_bool(hal_ctx,
++            volume_udis[k], "volume.disc.has_audio", &error);
++          dbus_error_free (&error);
++          if (has_audio)
++            break;
++        }
++        libhal_free_string_array(volume_udis);
++      }
++      libhal_drive_free(drive);
+     }
+-  else if (access("/dev/rsr0", F_OK) == 0)
+-    return "/dev/rsr0";
+-  else
+-    {
+-      fprintf(stderr, "Could not find a CD device!\n");
+-      return NULL;
++
++    if (has_audio) {
++      dev = strdup(raw_device);
++      libhal_free_string(raw_device);
++      break;
+     }
++    libhal_free_string(raw_device);
++  }
++
++out:
++  libhal_free_string_array (drive_udis);
++  dbus_error_free (&error);
++  plat_hal_fini(hal_ctx);
++
++  if (!has_audio) {
++    fprintf(stderr, "Could not find a CD device!\n");
++    return (NULL);
++
++  } else {
++    return (dev);
++  }
+ } /* find_cdrom() */
+ 
+ /*
+@@ -173,6 +249,16 @@
+   return 0;
+ } /* gen_init() */
+ 
++int gen_scale_volume(int *left, int *right)
++{
++	return 0;
++}
++
++int gen_unscale_volume(int *left, int *right)
++{
++	return 0;
++}
++
+ 
+ /*
+  * Open the CD device and figure out what kind of drive is attached.
+@@ -499,29 +585,19 @@
+  * Eject the current CD, if there is one.
+  */
+ int
+-gen_eject( struct wm_drive *d )cddax
++gen_eject( struct wm_drive *d )
+ {
+-  struct stat	stbuf;
+-  struct ustat	ust;
++  struct stat		stbuf;
+ 
+   if (fstat(d->fd, &stbuf) != 0)
+     return -2;
+ 
+-  /* Is this a mounted filesystem? */
+-  if (ustat(stbuf.st_rdev, &ust) == 0)
+-    return -3;
+-
+   if (ioctl(d->fd, CDROMEJECT))
+     return -1;
+ 
+   /* Close the device if it needs to vanish. */
+   if (intermittent_dev) {
+ 	d->proto.close(d);
+-	/* Also remember to tell the cddaslave since volume
+-	manager switches links around on us */
+-	if (d->cdda_slave > -1) {
+-	  write(d->cdda_slave, "E", 1);
+-	}
+   }
+ 
+   return 0;
+@@ -555,8 +631,6 @@
+   thecd = d;
+ #endif
+ 
+-  CDDARETURN(d) cdda_set_volume(d, left, right);
+-
+   left = (left * (max_volume - min_volume)) / 100 + min_volume;
+   right = (right * (max_volume - min_volume)) / 100 + min_volume;
+ 
+@@ -573,8 +647,6 @@
+ int
+ gen_get_volume( struct wm_drive *d, int *left, int *right )
+ {
+-  CDDARETURN(d) cdda_get_volume(d, left, right);
+-
+   *left = *right = -1;
+ 
+   return (wm_scsi2_get_volume(d, left, right));
+@@ -610,7 +682,6 @@
+ int
+ gen_cdda_init( struct wm_drive *d )
+ {
+-	enable_cdda_controls(1);
+ 	return 0;
+ }
+ 
+@@ -720,8 +791,7 @@
+ 		return -1;
+ 
+ 	/* Hit the end of the CD, probably. */
+-    if ((direction > 0 && d->current_position >= d->ending_position) ||
+-        (direction < 0 && d->current_position < d->starting_position)) {
++    if (d->current_position >= d->ending_position) {
+         block->status = WM_CDM_TRACK_DONE;
+         return 0;
+     }
+@@ -752,7 +822,7 @@
+         }
+     }
+ 
+-	d->current_position = d->current_position + cdda.cdda_length * direction;
++	d->current_position = d->current_position + cdda.cdda_length;
+ 
+ #if 0
+ 	/*
+@@ -912,10 +982,7 @@
+   foo.record.port = port;
+   foo.record.balance = foo.play.balance = AUDIO_MID_BALANCE;
+ 
+-  if (d->cdda_slave > -1)
+-    foo.monitor_gain = 0;
+-  else
+-    foo.monitor_gain = AUDIO_MAX_GAIN;
++  foo.monitor_gain = AUDIO_MAX_GAIN;
+   /*
+    * These next ones are tricky. The voulme will depend on the CD drive
+    * volume (set by the knob on the drive and/or by workman's volume

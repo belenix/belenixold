@@ -1,0 +1,222 @@
+--- kdemultimedia-4.2.4/libkcompactdisc/wmlib/audio/audio_sun.c.orig	2009-07-10 00:54:27.122118513 +0530
++++ kdemultimedia-4.2.4/libkcompactdisc/wmlib/audio/audio_sun.c	2009-07-10 20:02:58.044547876 +0530
+@@ -24,8 +24,10 @@
+ #if defined(sun) || defined(__sun__)
+ 
+ #include "audio.h"
++#include "../include/wm_cdda.h"
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <malloc.h>
+ #include <sys/ioctl.h>
+ #include <sys/audioio.h>
+@@ -34,6 +36,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <signal.h>
++#include <string.h>
+ 
+ #define WM_MSG_CLASS WM_MSG_CLASS_PLATFORM
+ 
+@@ -75,11 +78,13 @@
+ 
+ char *getenv();
+ 
++long dev_audio_convert(unsigned char *rawbuf, long buflen, struct cdda_block *blk);
++
+ /*
+  * Dummy signal handler so writes to /dev/audio will interrupt.
+  */
+ static void
+-dummy( void )
++dummy( int i )
+ {
+ 	signal(SIGALRM, dummy);
+ }
+@@ -87,7 +92,7 @@
+ /*
+  * Initialize the audio device.
+  */
+-void
++int
+ sun_audio_init( void )
+ {
+ 	audio_info_t		info;
+@@ -104,7 +109,7 @@
+ 	if (acdev == NULL)
+ 	{
+ 		perror("Cannot allocate audio control filename");
+-		exit(1);
++		return (1);
+ 	}
+ 	strcpy(acdev, audiodev);
+ 	strcat(acdev, "ctl");
+@@ -113,7 +118,7 @@
+ 	if (aucfd < 0)
+ 	{
+ 		perror(acdev);
+-		exit(1);
++		return (1);
+ 	}
+ 	free(acdev);
+ 
+@@ -121,7 +126,7 @@
+ 	if (aufd < 0)
+ 	{
+ 		perror(audiodev);
+-		exit(1);
++		return (1);
+ 	}
+ 
+ 	signal(SIGALRM, dummy);
+@@ -140,6 +145,7 @@
+ 	info.monitor_gain = 0;
+ 
+ 	if (ioctl(aufd, AUDIO_SETINFO, &info) < 0)
++	{
+ 		if (errno == EINVAL)
+ 		{
+ 			/*
+@@ -156,7 +162,7 @@
+ 			if (ioctl(aufd, AUDIO_SETINFO, &info) < 0)
+ 			{
+ 				perror("Can't set up audio device");
+-				exit(1);
++				return (1);
+ 			}
+ 
+ 			/*
+@@ -167,7 +173,7 @@
+ 			if (ulawmap == NULL)
+ 			{
+ 				perror("malloc");
+-				exit(1);
++				return (1);
+ 			}
+ 			for (linval = 0; linval < 65536; linval++)
+ 				ulawmap[linval] = linear_to_ulaw(linval-32768);
+@@ -177,8 +183,15 @@
+ 		else
+ 		{
+ 			perror(audiodev);
+-			exit(1);
++			return (1);
+ 		}
++	}
++	return (0);
++}
++
++void
++sun_audio_open( void )
++{
+ }
+ 
+ /*
+@@ -216,7 +229,7 @@
+ int
+ sun_audio_close( void )
+ {
+-	wmaudio_stop();
++	sun_audio_stop();
+ 	close(aufd);
+ 	close(aucfd);
+   return 0;
+@@ -236,7 +249,7 @@
+     }
+ 
+     if(setget) {
+-        balance *= AUDIO_RIGHT_BALANCE;
++        *balance *= AUDIO_RIGHT_BALANCE;
+         info.play.balance = *balance / 255;
+         info.play.gain = *volume;
+         if (ioctl(aucfd, AUDIO_SETINFO, &info) < 0) {
+@@ -262,35 +275,35 @@
+ /*
+  * Figure out the most recent status information and send it upstream.
+  */
+-int
+-sun_audio_send_status( void )
+-{
+-	audio_info_t		info;
+-	int			qhead;
+-
+-	/*
+-	 * Now send the most current status information to our parent.
+-	 */
+-	if (ioctl(aucfd, AUDIO_GETINFO, &info) < 0)
+-		perror("AUDIO_GETINFO");
+-	qhead = info.play.eof % QSIZE;
+-
+-	if (qhead != qstart && playing)
+-	{
+-		int	balance;
+-
+-		if (queue[qhead].status != WM_CDM_TRACK_DONE)
+-			queue[qhead].status = WM_CDM_PLAYING;
+-		queue[qhead].volume = info.play.gain;
+-		queue[qhead].balance = (info.play.balance * 255) /
+-					AUDIO_RIGHT_BALANCE;
+-
+-		send_status(queue + qhead);
+-		qstart = -1;
+-	}
+-
+-	return (queue[qhead].status == WM_CDM_TRACK_DONE);
+-}
++//int
++//sun_audio_send_status( void )
++//{
++//	audio_info_t		info;
++//	int			qhead;
++//
++//	/*
++//	 * Now send the most current status information to our parent.
++//	 */
++//	if (ioctl(aucfd, AUDIO_GETINFO, &info) < 0)
++//		perror("AUDIO_GETINFO");
++//	qhead = info.play.eof % QSIZE;
++//
++//	if (qhead != qstart && playing)
++//	{
++//		int	balance;
++//
++//		if (queue[qhead].status != WM_CDM_TRACK_DONE)
++//			queue[qhead].status = WM_CDM_PLAYING;
++//		queue[qhead].volume = info.play.gain;
++//		queue[qhead].balance = (info.play.balance * 255) /
++//					AUDIO_RIGHT_BALANCE;
++//
++//		send_status(queue + qhead);
++//		qstart = -1;
++//	}
++//
++//	return (queue[qhead].status == WM_CDM_TRACK_DONE);
++//}
+ 
+ /*
+  * Play some audio and pass a status message upstream, if applicable.
+@@ -317,7 +330,7 @@
+ 				 * waiting for its queue to drop below a low
+ 				 * water mark.
+ 				 */
+-				wmaudio_send_status();
++				//wmaudio_send_status();
+ 				timerclear(&it.it_interval);
+ 				timerclear(&it.it_value);
+ 				it.it_value.tv_usec = 500000;
+@@ -358,10 +371,10 @@
+ 
+ 	queue[qtail] = *blk;
+ 
+-	if (wmaudio_send_status() < 0)
+-		return (-1);
+-	else
+-		return (0);
++	//if (wmaudio_send_status() < 0)
++	//	return (-1);
++	//else
++	return (0);
+ }
+ 
+ /*
