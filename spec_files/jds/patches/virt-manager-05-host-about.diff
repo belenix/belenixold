@@ -1,0 +1,45 @@
+diff -Nrup virt-manager-0.4.0.mod.4/src/virtManager/engine.py virt-manager-0.4.0.mod.new/src/virtManager/engine.py
+--- virt-manager-0.4.0.mod.4/src/virtManager/engine.py	2008-02-16 16:09:43.586787000 +0800
++++ virt-manager-0.4.0.mod.new/src/virtManager/engine.py	2008-02-16 16:03:04.358674000 +0800
+@@ -220,7 +220,7 @@ class vmmEngine:
+ 
+         if self.connections[uri]["windowHost"] == None:
+             manager = vmmHost(self.get_config(), con)
+-            manager.connect("action-show-help", self._do_show_help)
++            manager.connect("action-show-about", self._do_show_about)
+             self.connections[uri]["windowHost"] = manager
+         self.connections[uri]["windowHost"].show()
+ 
+diff -Nrup virt-manager-0.4.0.mod.4/src/virtManager/host.py virt-manager-0.4.0.mod.new/src/virtManager/host.py
+--- virt-manager-0.4.0.mod.4/src/virtManager/host.py	2008-02-16 16:09:43.588549000 +0800
++++ virt-manager-0.4.0.mod.new/src/virtManager/host.py	2008-02-16 16:05:09.209912000 +0800
+@@ -29,8 +29,8 @@ from virtManager.createnet import vmmCre
+ 
+ class vmmHost(gobject.GObject):
+     __gsignals__ = {
+-        "action-show-help": (gobject.SIGNAL_RUN_FIRST,
+-                               gobject.TYPE_NONE, [str]),
++        "action-show-about": (gobject.SIGNAL_RUN_FIRST,
++                               gobject.TYPE_NONE, []),
+         }
+     def __init__(self, config, conn):
+         self.__gobject_init__()
+@@ -88,7 +88,7 @@ class vmmHost(gobject.GObject):
+         self.window.signal_autoconnect({
+             "on_menu_file_close_activate": self.close,
+             "on_vmm_host_delete_event": self.close,
+-            "on_menu_help_about_activate": self.show_help,
++            "on_menu_help_about_activate": self.show_about,
+             "on_net_add_clicked": self.add_network,
+             "on_net_delete_clicked": self.delete_network,
+             "on_net_stop_clicked": self.stop_network,
+@@ -132,6 +132,9 @@ class vmmHost(gobject.GObject):
+         # From the Details window, show the help document from the Details page
+         self.emit("action-show-help", "virt-manager-host-window")
+ 
++    def show_about(self, src):
++        self.emit("action-show-about")
++
+     def close(self,ignore1=None,ignore2=None):
+         self.window.get_widget("vmm-host").hide()
+         return 1

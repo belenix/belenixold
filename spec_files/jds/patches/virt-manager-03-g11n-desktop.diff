@@ -1,0 +1,48 @@
+diff -urNp virt-manager-0.4.0-orig/configure.ac virt-manager-0.4.0/configure.ac
+--- virt-manager-0.4.0-orig/configure.ac	2007-08-16 18:08:02.674283000 +0900
++++ virt-manager-0.4.0/configure.ac	2007-08-16 18:09:03.100696000 +0900
+@@ -20,6 +20,8 @@ dnl ====================================
+ dnl = End tests for scrollkeeper
+ dnl ====================================
+ 
++AC_PROG_INTLTOOL([0.35.0])
++
+ AC_OUTPUT(Makefile
+           pixmaps/Makefile
+           po/Makefile
+diff -urNp virt-manager-0.4.0-orig/src/Makefile.am virt-manager-0.4.0/src/Makefile.am
+--- virt-manager-0.4.0-orig/src/Makefile.am	2007-08-16 18:08:02.672772000 +0900
++++ virt-manager-0.4.0/src/Makefile.am	2007-08-16 18:09:03.107207000 +0900
+@@ -15,8 +15,9 @@ gladedir = $(pkgdatadir)
+ glade_DATA = $(wildcard $(srcdir)/*.glade)
+ 
+ desktopdir = $(datadir)/applications
+-desktop_SOURCES = $(PACKAGE).desktop.in
++desktop_SOURCES = $(PACKAGE).desktop.in.in
+ desktop_DATA = $(PACKAGE).desktop
++@INTLTOOL_DESKTOP_RULE@
+ 
+ dbusdir = $(datadir)/dbus-1/services
+ dbus_SOURCES = $(PACKAGE).service.in
+@@ -31,7 +32,7 @@ CLEANFILES = $(bin_SCRIPTS) $(desktop_DA
+ EXTRA_DIST = $(bin_SOURCES) $(desktop_SOURCES) $(dbus_SOURCES) $(python_SOURCES) $(glade_DATA) $(libexec_SOURCES) $(schema_SOURCES)
+ 
+ 
+-%.desktop: $(srcdir)/%.desktop.in
++%.desktop.in: $(srcdir)/%.desktop.in.in
+ 	sed -e "s,::PACKAGE::,$(PACKAGE)," -e "s,::ICONDIR::,$(pkgdatadir)/pixmaps," < $< > $@
+ 
+ %.service: $(srcdir)/%.service.in
+diff -urNp virt-manager-0.4.0-orig/src/virt-manager.desktop.in virt-manager-0.4.0/src/virt-manager.desktop.in
+--- virt-manager-0.4.0/src/virt-manager.desktop.in.in.orig	1970-01-01 09:00:00.000000000 +0900
++++ virt-manager-0.4.0/src/virt-manager.desktop.in.in	2007-08-16 18:09:03.121663000 +0900
+@@ -0,0 +1,9 @@
++[Desktop Entry]
++_Name=Virtual Machine Manager
++_Comment=The virtual machine management tool
++Icon=::ICONDIR::/::PACKAGE::-icon.svg
++Exec=::PACKAGE::
++Type=Application
++Terminal=false
++Encoding=UTF-8
++Categories=System;

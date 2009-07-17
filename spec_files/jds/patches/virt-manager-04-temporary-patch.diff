@@ -1,0 +1,595 @@
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virt-manager.desktop.in virt-manager-0.4.0.mod.4/src/virt-manager.desktop.in
+--- virt-manager-0.4.0.mod.1-2-3/src/virt-manager.desktop.in	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virt-manager.desktop.in	2008-05-13 11:33:54.796076000 +0800
+@@ -1,8 +1,8 @@
+ [Desktop Entry]
+ Name=Virtual Machine Manager
+ Comment=The virtual machine management tool
+-Icon=::ICONDIR::/::PACKAGE::-icon.svg
+-Exec=::PACKAGE::
++Icon=/usr/share/virt-manager/pixmaps/virt-manager-icon.svg
++Exec=gksu virt-manager
+ Type=Application
+ Terminal=false
+ Encoding=UTF-8
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virt-manager.desktop.in.in virt-manager-0.4.0.mod.4/src/virt-manager.desktop.in.in
+--- virt-manager-0.4.0.mod.1-2-3/src/virt-manager.desktop.in.in	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virt-manager.desktop.in.in	2008-05-13 11:33:29.555366000 +0800
+@@ -1,8 +1,8 @@
+ [Desktop Entry]
+ _Name=Virtual Machine Manager
+ _Comment=The virtual machine management tool
+-Icon=::ICONDIR::/::PACKAGE::-icon.svg
+-Exec=::PACKAGE::
++Icon=/usr/share/virt-manager/pixmaps/virt-manager-icon.svg
++Exec=gksu virt-manager
+ Type=Application
+ Terminal=false
+ Encoding=UTF-8
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virt-manager.py.in virt-manager-0.4.0.mod.4/src/virt-manager.py.in
+--- virt-manager-0.4.0.mod.1-2-3/src/virt-manager.py.in	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virt-manager.py.in	2008-05-13 11:26:29.600878000 +0800
+@@ -34,6 +34,10 @@ locale.setlocale(locale.LC_ALL, '')
+ gettext.install(gettext_app, gettext_dir)
+ gettext.bindtextdomain(gettext_app, gettext_dir)
+ 
++# Check to see if have root right
++if os.getuid() != 0:
++    raise RuntimeError, "Could not run virt-manager, not root"
++
+ # set up logging
+ vm_dir = os.path.expanduser("~/.virt-manager")
+ if not os.access(vm_dir,os.W_OK):
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virtManager/addhardware.py virt-manager-0.4.0.mod.4/src/virtManager/addhardware.py
+--- virt-manager-0.4.0.mod.1-2-3/src/virtManager/addhardware.py	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virtManager/addhardware.py	2008-02-16 16:09:43.588738000 +0800
+@@ -163,6 +163,13 @@ class vmmAddHardware(gobject.GObject):
+         text = gtk.CellRendererText()
+         network_list.pack_start(text, True)
+         network_list.add_attribute(text, 'text', 1)
++        # since we don't support virtula network,
++	# let's de-active/de-sensitive network, and active device.
++        self.window.get_widget("net-type-network").set_active(False)
++        self.window.get_widget("net-type-network").set_sensitive(False)
++        self.window.get_widget("net-type-device").set_active(True)
++        self.window.get_widget("net-network").set_sensitive(False)
++        self.window.get_widget("net-network").set_active(False)
+ 
+         device_list = self.window.get_widget("net-device")
+         device_model = gtk.ListStore(str)
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virtManager/connection.py virt-manager-0.4.0.mod.4/src/virtManager/connection.py
+--- virt-manager-0.4.0.mod.1-2-3/src/virtManager/connection.py	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virtManager/connection.py	2008-08-28 16:04:10.839933000 +0800
+@@ -26,6 +26,7 @@ from time import time
+ import logging
+ from socket import gethostbyaddr, gethostname
+ import dbus
++import re
+ 
+ from virtManager.domain import vmmDomain
+ from virtManager.network import vmmNetwork
+@@ -100,7 +101,10 @@ class vmmConnection(gobject.GObject):
+             self.hal_iface.connect_to_signal("DeviceRemoved", self._device_removed)
+ 
+             # Find info about all current present media
+-            for path in self.hal_iface.FindDeviceByCapability("net"):
++	    # There is no support for network devices from HAL
++	    # so I have to parse dladm/ifconfig to get the possible information
++	    output0=os.popen("/usr/sbin/dladm show-link -p -o LINK")
++            for path in output0.readlines():
+                 self._device_added(path)
+         except:
+             (type, value, stacktrace) = sys.exc_info ()
+@@ -111,6 +115,71 @@ class vmmConnection(gobject.GObject):
+             self.hal_iface = None
+ 
+     def _device_added(self, path):
++        # Since dladm output format is changed from SNV96,
++        # so I have to change the parsing codes accordingly here.
++        if not self.netdevs.has_key(path):
++            name = path.split('\n')[0]
++            shared = False
++            mac = None
++            bridge = name
++
++            output=os.popen("/sbin/ifconfig -a")
++            line = output.readline()
++            while len(line) != 0 :
++                if line[0] != ' ' and line[0] != ' ' :
++                    if (re.search(name,line) != None) and (re.search("IPv4", line) !=None):
++                        while True:
++                            line = output.readline()
++                            if re.search("ether", line) != None:
++                                mac = line.split(' ')[1]
++                                shared = True
++                                line = output.readline()
++                                break
++                    else:
++                        line = output.readline()
++                else:
++                    line = output.readline()
++
++            dev = vmmNetDevice(self.config, self, name, mac, shared, bridge)
++            self.netdevs[path] = dev
++            self.emit("netdev-added", dev.get_name())
++
++        """
++        # Since clearview is integrated into SNV83, and dladm output format changed,
++        # so I have to change the parsing codes accordingly here.
++        if not self.netdevs.has_key(path):
++            #print "dladm output: " + path
++            name = path.split('"')[1]
++            shared = False
++            mac = None
++            bridge = name
++            #print "name is " + name
++
++            output=os.popen("/sbin/ifconfig -a")
++            line = output.readline()
++            while len(line) != 0 :
++                if line[0] != ' ' and line[0] != ' ' :
++                    if re.search(name,line) != None:
++                        while True:
++                            line = output.readline()
++                            if re.search("ether", line) != None:
++                                mac = line.split(' ')[1]
++                                shared = True
++                                line = output.readline()
++                                break
++                    else:
++                        line = output.readline()
++                else:
++                    line = output.readline()
++
++            dev = vmmNetDevice(self.config, self, name, mac, shared, bridge)
++            self.netdevs[path] = dev
++            self.emit("netdev-added", dev.get_name())
++        """
++
++        """
++        # let's remove these codes, they are Linux special, 
++        # At solaris no HAL support for network to get name/mac
+         obj = self.bus.get_object("org.freedesktop.Hal", path)
+         if obj.QueryCapability("net"):
+             if not self.netdevs.has_key(path):
+@@ -144,11 +213,34 @@ class vmmConnection(gobject.GObject):
+                     logging.error("Unable to determine if device is shared:" +
+                                   str(type) + " " + str(value) + "\n" + \
+                                   traceback.format_exc (stacktrace))
+-
+-                dev = vmmNetDevice(self.config, self, name, mac, shared, bridge)
+-                self.netdevs[path] = dev
+-                self.emit("netdev-added", dev.get_name())
+-
++        """
++        """
++        # These codes used to parse the dladm output at and before SNV82
++        if re.search("legacy",path) == None and re.search("vnic", path) == None:
++            if not self.netdevs.has_key(path):
++                name = path.split(' ')[0]
++                shared = False
++                mac = None
++                bridge = name
++                #print "name is " + name
++
++                output=os.popen("/sbin/ifconfig -a")
++                line = output.readline()
++                while len(line) != 0 :
++                    if line[0] != ' ' and line[0] != ' ' :
++                        if re.search(name,line) != None:
++                            while True:
++                                line = output.readline()
++                                if re.search("ether", line) != None:
++                                    mac = line.split(' ')[1]
++                                    shared = True
++                                    line = output.readline()
++                                    break
++                        else:
++                            line = output.readline()
++                    else:
++                        line = output.readline()
++        """
+     def _device_removed(self, path):
+         if self.netdevs.has_key(path):
+             dev = self.netdevs[path]
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virtManager/console.py virt-manager-0.4.0.mod.4/src/virtManager/console.py
+--- virt-manager-0.4.0.mod.1-2-3/src/virtManager/console.py	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virtManager/console.py	2008-03-19 10:52:13.953187000 +0800
+@@ -433,11 +433,21 @@ class vmmConsole(gobject.GObject):
+             self.window.get_widget("menu-vm-shutdown").set_sensitive(False)
+             self.window.get_widget("menu-vm-save").set_sensitive(False)
+         else:
+-            self.window.get_widget("control-pause").set_sensitive(True)
++            #self.window.get_widget("control-pause").set_sensitive(True)
++            self.window.get_widget("control-pause").set_sensitive(False)
+             self.window.get_widget("control-shutdown").set_sensitive(True)
+-            self.window.get_widget("menu-vm-pause").set_sensitive(True)
++            #self.window.get_widget("menu-vm-pause").set_sensitive(True)
++            self.window.get_widget("menu-vm-pause").set_sensitive(False)
+             self.window.get_widget("menu-vm-shutdown").set_sensitive(True)
+             self.window.get_widget("menu-vm-save").set_sensitive(True)
++            # should be ok directly change save to disable, because only hvm run this console
++            """
++            if vm.is_hvm():
++                self.window.get_widget("menu-vm-save").set_sensitive(False)
++            else:
++                self.window.get_widget("menu-vm-save").set_sensitive(True)
++            """
++
+             if status == libvirt.VIR_DOMAIN_PAUSED:
+                 self.window.get_widget("control-pause").set_active(True)
+                 self.window.get_widget("menu-vm-pause").set_active(True)
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virtManager/create.py virt-manager-0.4.0.mod.4/src/virtManager/create.py
+--- virt-manager-0.4.0.mod.1-2-3/src/virtManager/create.py	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virtManager/create.py	2008-02-16 16:09:43.587916000 +0800
+@@ -205,6 +205,13 @@ class vmmCreate(gobject.GObject):
+         text = gtk.CellRendererText()
+         network_list.pack_start(text, True)
+         network_list.add_attribute(text, 'text', 1)
++        # since we don't support virtula network,
++	# let's de-active/de-sensitive network, and active device.
++        self.window.get_widget("net-type-network").set_active(False)
++        self.window.get_widget("net-type-network").set_sensitive(False)
++        self.window.get_widget("net-type-device").set_active(True)
++        self.window.get_widget("net-network").set_sensitive(False)
++        self.window.get_widget("net-network").set_active(False)
+ 
+         device_list = self.window.get_widget("net-device")
+         device_model = gtk.ListStore(str)
+@@ -290,9 +297,12 @@ class vmmCreate(gobject.GObject):
+             self.window.get_widget("storage-file-backed").set_active(True)
+         self.window.get_widget("storage-partition-address").set_text("")
+         self.window.get_widget("storage-file-address").set_text("")
+-        self.window.get_widget("storage-file-size").set_value(2000)
+-        self.window.get_widget("create-memory-max").set_value(500)
+-        self.window.get_widget("create-memory-startup").set_value(500)
++        #self.window.get_widget("storage-file-size").set_value(2000)
++	# in solaris, in order to create solaris guest, need mini storage about 9G
++        self.window.get_widget("storage-file-size").set_value(9120)
++	#at Solaris, in order to create solaris guest, need at least 1G memory
++        self.window.get_widget("create-memory-max").set_value(1024)
++        self.window.get_widget("create-memory-startup").set_value(1024)
+         self.window.get_widget("create-vcpus").set_value(1)
+         self.window.get_widget("non-sparse").set_active(True)
+         model = self.window.get_widget("pv-media-url").get_model()
+@@ -304,8 +314,9 @@ class vmmCreate(gobject.GObject):
+         self.populate_os_type_model()
+         self.window.get_widget("os-type").set_active(-1)
+ 
+-        model = self.window.get_widget("net-network").get_model()
+-        self.populate_network_model(model)
++        #Since we not support virtual network, let's remove them
++        #model = self.window.get_widget("net-network").get_model()
++        #self.populate_network_model(model)
+         device = self.window.get_widget("net-device").get_model()
+         self.populate_device_model(device)
+         self.install_error = None
+@@ -584,6 +595,8 @@ class vmmCreate(gobject.GObject):
+         net = self.get_config_network()
+         if net[0] == "bridge":
+             guest.nics.append(virtinst.VirtualNetworkInterface(type=net[0], bridge=net[1]))
++	# Ignore: since we don't use bridge at Solaris, so let's just give it None, and virtinst will setup default one.
++        #    guest.nics.append(virtinst.VirtualNetworkInterface(type=net[0], bridge=None))
+         elif net[0] == "network":
+             guest.nics.append(virtinst.VirtualNetworkInterface(type=net[0], network=net[1]))
+         elif net[0] == "user":
+@@ -609,7 +622,14 @@ class vmmCreate(gobject.GObject):
+                     if keytable.keytable.has_key(kt):
+                         keymap = keytable.keytable[kt]
+             f.close
+-        guest.graphics = (True, "vnc", vncport, keymap)
++	# since we have not vnc frame buffer support at the moment,
++	# so can't run graphical console in para-virt
++	# let's miss graphics in guest, so in install_xml miss it
++	# and serial console will run instead of graphical console. zhua
++        if self.get_config_method() == VM_FULLY_VIRT:
++            guest.graphics = (True, "vnc", vncport, keymap)
++        else:
++            guest.graphics = (False, "vnc", vncport, keymap)
+ 
+         logging.debug("Creating a VM " + guest.name + \
+                       "\n  Type: " + guest.type + \
+@@ -661,6 +681,7 @@ class vmmCreate(gobject.GObject):
+         self.connection.tick(noStatsUpdate=True)
+ 
+         if self.config.get_console_popup() == 1:
++	# remove these codes, since we can't make vnc graphical console avialable at Solaris at the moment.
+             # user has requested console on new created vms only
+             vm = self.connection.get_vm(guest.uuid)
+             (gtype, host, port) = vm.get_graphics_console()
+@@ -668,6 +689,7 @@ class vmmCreate(gobject.GObject):
+                 self.emit("action-show-console", self.connection.get_uri(), guest.uuid)
+             else:
+                 self.emit("action-show-terminal", self.connection.get_uri(), guest.uuid)
++            #self.emit("action-show-terminal", self.connection.get_uri(), guest.uuid)
+         self.close()
+ 
+     def do_install(self, guest, asyncjob):
+@@ -753,7 +775,8 @@ class vmmCreate(gobject.GObject):
+         if file != None and len(file) > 0 and not(os.path.exists(file)):
+             self.window.get_widget("storage-file-size").set_sensitive(True)
+             self.window.get_widget("non-sparse").set_sensitive(True)
+-            self.window.get_widget("storage-file-size").set_value(4000)
++	    # in solaris, in order to create solaris guest, need mini storage about 9G
++            self.window.get_widget("storage-file-size").set_value(9120)
+         else:
+             self.window.get_widget("storage-file-size").set_sensitive(False)
+             self.window.get_widget("non-sparse").set_sensitive(False)
+@@ -876,8 +899,6 @@ class vmmCreate(gobject.GObject):
+                     self._validation_error_box(_("Physical Device Required"),
+                                                _("You must select one of the physical devices"))
+                     return False
+-
+-
+         # do this always, since there's no "leaving a notebook page" event.
+         self.window.get_widget("create-back").set_sensitive(True)
+         return True
+@@ -1007,6 +1028,7 @@ class vmmCreate(gobject.GObject):
+ 
+     def populate_device_model(self, model):
+         model.clear()
++        # set the bridge value in create widget
+         for name in self.connection.list_net_device_paths():
+             net = self.connection.get_net_device(name)
+             if net.is_shared():
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virtManager/details.py virt-manager-0.4.0.mod.4/src/virtManager/details.py
+--- virt-manager-0.4.0.mod.1-2-3/src/virtManager/details.py	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virtManager/details.py	2008-03-19 10:51:04.783578000 +0800
+@@ -24,6 +24,7 @@ import libvirt
+ import sparkline
+ import logging
+ import traceback
++import sys
+ 
+ from virtManager.error import vmmErrorDialog
+ from virtManager.addhardware import vmmAddHardware
+@@ -63,8 +64,13 @@ class vmmDetails(gobject.GObject):
+         # Don't allowing changing network/disks for Dom0
+         if self.vm.is_management_domain():
+             self.window.get_widget("add-hardware-button").set_sensitive(False)
+-        else:
+-            self.window.get_widget("add-hardware-button").set_sensitive(True)
++        else: # since we don't use bridge/virtNetwork for network, and also Xen don't support blktap device,
++              # so make Add button unsensitive
++            self.window.get_widget("add-hardware-button").set_sensitive(False)
++        #since we can't add new hardware, so let's also make Remove button unsensitive
++        self.window.get_widget("config-network-remove").set_sensitive(False)
++        self.window.get_widget("config-disk-remove").set_sensitive(False)
++
+ 
+         self.window.get_widget("overview-name").set_text(self.vm.get_name())
+         self.window.get_widget("overview-uuid").set_text(self.vm.get_uuid())
+@@ -120,8 +126,8 @@ class vmmDetails(gobject.GObject):
+         self.vm.connect("resources-sampled", self.refresh_resources)
+         self.window.get_widget("hw-list").get_selection().connect("changed", self.hw_selected)
+ 
+-        self.update_widget_states(vm, vm.status())
+-        self.refresh_resources(vm)
++        self.update_widget_states(self.vm, self.vm.status())
++        self.refresh_resources(self.vm)
+ 
+         self.pixbuf_processor = gtk.gdk.pixbuf_new_from_file(config.get_icon_dir() + "/icon_cpu.png")
+         self.pixbuf_memory = gtk.gdk.pixbuf_new_from_file(config.get_icon_dir() + "/icon_cpu.png")
+@@ -146,6 +152,7 @@ class vmmDetails(gobject.GObject):
+         self.window.get_widget("overview-disk-usage-label").hide()
+         self.network_traffic_graph.hide()
+         dialog.present()
++        self.update_widget_states(self.vm, self.vm.status())
+ 
+     def show_help(self, src):
+         # From the Details window, show the help document from the Details page
+@@ -263,6 +270,7 @@ class vmmDetails(gobject.GObject):
+         self.emit("action-destroy-domain", self.vm.get_connection().get_uri(), self.vm.get_uuid())
+ 
+     def update_widget_states(self, vm, status):
++        self.toggle_toolbar(self.window.get_widget("details-menu-view-toolbar"))
+         self.ignorePause = True
+         if status in [ libvirt.VIR_DOMAIN_SHUTDOWN, libvirt.VIR_DOMAIN_SHUTOFF ] or vm.is_read_only():
+             # apologies for the spaghetti, but the destroy choice is a special case
+@@ -290,15 +298,28 @@ class vmmDetails(gobject.GObject):
+                 self.window.get_widget("details-menu-shutdown").set_sensitive(False)
+                 self.window.get_widget("details-menu-save").set_sensitive(False)
+             else:
+-                self.window.get_widget("control-pause").set_sensitive(True)
++                # since when click Pause, domain will disappear, so disable all Pause
++                # the reason is when pause, libvirt will call hypercall, but now we only have 
++                # 32-bit gtk, so virt-manager run with 32-bit, so libvirt only can call 32-bit hypercal,
++                # and failed, so can't return domain, then disappear, we trying to port 64-bit gtk python libs.
++                self.window.get_widget("control-pause").set_sensitive(False)
++                #self.window.get_widget("control-pause").set_sensitive(True)
+                 self.window.get_widget("control-shutdown").set_sensitive(True)
+-                self.window.get_widget("details-menu-pause").set_sensitive(True)
++                #self.window.get_widget("details-menu-pause").set_sensitive(True)
++                self.window.get_widget("details-menu-pause").set_sensitive(False)
+                 self.window.get_widget("details-menu-shutdown").set_sensitive(True)
+                 self.window.get_widget("details-menu-save").set_sensitive(True)
++                # If HVM, disable save, since currently not ready from xVM.
++                #if vm.is_hvm():
++                #    self.window.get_widget("details-menu-save").set_sensitive(False)
++                #else:
++                #    self.window.get_widget("details-menu-save").set_sensitive(True)
+ 
+                 if status == libvirt.VIR_DOMAIN_PAUSED:
+-                    self.window.get_widget("control-pause").set_active(True)
+-                    self.window.get_widget("details-menu-pause").set_active(True)
++                    #self.window.get_widget("control-pause").set_active(True)
++                    #self.window.get_widget("details-menu-pause").set_active(True)
++                    self.window.get_widget("control-pause").set_active(False)
++                    self.window.get_widget("details-menu-pause").set_active(False)
+                 else:
+                     self.window.get_widget("control-pause").set_active(False)
+                     self.window.get_widget("details-menu-pause").set_active(False)
+@@ -313,6 +334,13 @@ class vmmDetails(gobject.GObject):
+             self.window.get_widget("details-menu-serial").set_sensitive(True)
+         else:
+             self.window.get_widget("details-menu-serial").set_sensitive(False)
++        
++        # if HVM, make graphical console ready, or disable it for PVM. Since currently, graphical console is not available for PVM.
++        if vm.is_hvm():
++            self.window.get_widget("details-menu-graphics").set_sensitive(True)
++        else:
++            self.window.get_widget("details-menu-graphics").set_sensitive(False)
++
+ 
+     def refresh_resources(self, ignore):
+         details = self.window.get_widget("details-pages")
+@@ -474,7 +502,7 @@ class vmmDetails(gobject.GObject):
+             vnic = None
+             if netinfo[0] == "bridge":
+                 vnic = virtinst.VirtualNetworkInterface(type=netinfo[0], bridge=netinfo[1], macaddr=netinfo[3])
+-            elif net[0] == "network":
++            elif netinfo[0] == "network":
+                 vnic = virtinst.VirtualNetworkInterface(type=netinfo[0], network=netinfo[1], macaddr=netinfo[3])
+             else:
+                 vnic = virtinst.VirtualNetworkInterface(type=netinfo[0], macaddr=netinfo[3])
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virtManager/host.py virt-manager-0.4.0.mod.4/src/virtManager/host.py
+--- virt-manager-0.4.0.mod.1-2-3/src/virtManager/host.py	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virtManager/host.py	2008-02-16 16:09:43.588549000 +0800
+@@ -46,6 +46,8 @@ class vmmHost(gobject.GObject):
+         self.window.get_widget("overview-memory").set_text(self.conn.pretty_host_memory_size())
+         self.window.get_widget("overview-cpus").set_text(str(self.conn.host_active_processor_count()))
+         self.window.get_widget("overview-arch").set_text(self.conn.host_architecture())
++        # since we can't support virtual network, so deactive add-net now.
++	self.window.get_widget("net-add").set_sensitive(False)
+ 
+         netListModel = gtk.ListStore(str, str, gtk.gdk.Pixbuf)
+         self.window.get_widget("net-list").set_model(netListModel)
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/virtManager/manager.py virt-manager-0.4.0.mod.4/src/virtManager/manager.py
+--- virt-manager-0.4.0.mod.1-2-3/src/virtManager/manager.py	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/virtManager/manager.py	2008-02-16 16:09:43.587610000 +0800
+@@ -93,6 +93,7 @@ class vmmManager(gobject.GObject):
+ 
+         self.window.get_widget("vm-view").set_active(0)
+ 
++        # right-click menu icon of each menu items
+         self.vmmenu_icons = {}
+         self.vmmenu_icons["run"] = gtk.Image()
+         self.vmmenu_icons["run"].set_from_pixbuf(gtk.gdk.pixbuf_new_from_file_at_size(self.config.get_icon_dir() + "/icon_run.png", 18, 18))
+@@ -106,6 +107,7 @@ class vmmManager(gobject.GObject):
+         self.vmmenu = gtk.Menu()
+         self.vmmenu_items = {}
+ 
++        # menu list when right-click on some domain
+         self.vmmenu_items["run"] = gtk.ImageMenuItem("_Run")
+         self.vmmenu_items["run"].set_image(self.vmmenu_icons["run"])
+         self.vmmenu_items["run"].show()
+@@ -171,10 +173,12 @@ class vmmManager(gobject.GObject):
+             "on_vm_open_clicked": self.open_vm_console,
+             "on_vm_new_clicked": self.show_vm_create,
+             "on_vm_delete_clicked": self.delete_vm,
++	    "on_menu_edit_delete_activate" : self.delete_vm,
+             "on_menu_edit_details_activate": self.show_vm_details,
+             "on_menu_host_details_activate": self.show_host,
+ 
+             "on_vm_view_changed": self.vm_view_changed,
++            # when double-click on some domain from domain-list, run graphical console
+             "on_vm_list_row_activated": self.open_vm_console,
+ 
+             "on_vm_list_button_press_event": self.popup_vm_menu,
+@@ -192,7 +196,7 @@ class vmmManager(gobject.GObject):
+         self.connection.connect("vm-removed", self.vm_removed)
+ 
+         win = self.window.get_widget("vmm-manager")
+-        win.set_title(win.get_title() + " (" + self.connection.get_name() + ")")
++        win.set_title(win.get_title() + " (" + str(self.connection.get_name()) + ")")
+ 
+         # store any error message from the restore-domain callback
+         self.domain_restore_error = ""
+@@ -403,6 +407,10 @@ class vmmManager(gobject.GObject):
+         row[8] = vm.current_memory_percentage()
+         model.row_changed(row.path, row.iter)
+ 
++    # zhua add, used for run serial console to replace graphical console when click open or double clike
++    def open_vm_terminal(self,ignore,ignore2=None,ignore3=None):
++        self.emit("action-show-terminal", self.connection.get_uri(), self.current_vmuuid())
++
+     def current_vm(self):
+         vmlist = self.window.get_widget("vm-list")
+         selection = vmlist.get_selection()
+@@ -431,9 +439,16 @@ class vmmManager(gobject.GObject):
+     def show_vm_create(self,ignore):
+         self.emit("action-show-create", self.connection.get_uri())
+ 
++    # change this function, so when try to open console, at first check if the domain is 0 or not active, 
++    # if so, then don't open any console. If HVM, then open graphical console, if PVM, open serial console.
+     def open_vm_console(self,ignore,ignore2=None,ignore3=None):
+-        self.emit("action-show-console", self.connection.get_uri(), self.current_vmuuid())
+-
++        vm = self.current_vm()
++	if vm.get_id() == 0 or not vm.is_active():
++            return
++        if not vm.is_hvm():
++            self.emit("action-show-terminal", self.connection.get_uri(), self.current_vmuuid())            
++        else: 
++            self.emit("action-show-console", self.connection.get_uri(), self.current_vmuuid())
+ 
+     def vm_selected(self, selection):
+         if selection == None or selection.count_selected_rows() == 0:
+@@ -445,13 +460,19 @@ class vmmManager(gobject.GObject):
+         else:
+             vm = self.current_vm()
+             if vm.is_active():
++                #if select dom0, make Open disable, because can't open any console for dom0.
++                if vm.get_id() == 0:
++                    self.window.get_widget("vm-open").set_sensitive(False)
++                else:
++                    self.window.get_widget("vm-open").set_sensitive(True)
+                 self.window.get_widget("vm-delete").set_sensitive(False)
+                 self.window.get_widget("menu_edit_delete").set_sensitive(False)
+             else:
++                #if select an unactive domaim, make Open disable, because can't open any console for it
++                self.window.get_widget("vm-open").set_sensitive(False)
+                 self.window.get_widget("vm-delete").set_sensitive(True)
+                 self.window.get_widget("menu_edit_delete").set_sensitive(True)
+             self.window.get_widget("vm-details").set_sensitive(True)
+-            self.window.get_widget("vm-open").set_sensitive(True)
+             self.window.get_widget("menu_edit_details").set_sensitive(True)
+ 
+     def popup_vm_menu(self, widget, event):
+@@ -465,6 +486,8 @@ class vmmManager(gobject.GObject):
+                 self.vmmenu_items["resume"].hide()
+                 self.vmmenu_items["resume"].set_sensitive(False)
+                 self.vmmenu_items["shutdown"].set_sensitive(False)
++                # if the domain is domain 0, should disable 'Open' item in right-click menu.
++                self.vmmenu_items["open"].set_sensitive(False)
+             else:
+                 if vm.status() == libvirt.VIR_DOMAIN_SHUTOFF:
+                     self.vmmenu_items["run"].set_sensitive(True)
+@@ -472,12 +495,16 @@ class vmmManager(gobject.GObject):
+                     self.vmmenu_items["resume"].hide()
+                     self.vmmenu_items["resume"].set_sensitive(False)
+                     self.vmmenu_items["shutdown"].set_sensitive(False)
++                    self.vmmenu_items["open"].set_sensitive(False)
+                 elif vm.status() == libvirt.VIR_DOMAIN_RUNNING:
+                     self.vmmenu_items["run"].set_sensitive(False)
+-                    self.vmmenu_items["pause"].set_sensitive(True)
++                    self.vmmenu_items["pause"].show()
++                    self.vmmenu_items["pause"].set_sensitive(False)
++                    #self.vmmenu_items["pause"].set_sensitive(True)
+                     self.vmmenu_items["resume"].hide()
+                     self.vmmenu_items["resume"].set_sensitive(False)
+                     self.vmmenu_items["shutdown"].set_sensitive(True)
++                    self.vmmenu_items["open"].set_sensitive(True)
+                 elif vm.status() == libvirt.VIR_DOMAIN_PAUSED:
+                     self.vmmenu_items["run"].set_sensitive(False)
+                     self.vmmenu_items["pause"].hide()
+@@ -485,6 +512,7 @@ class vmmManager(gobject.GObject):
+                     self.vmmenu_items["resume"].show()
+                     self.vmmenu_items["resume"].set_sensitive(True)
+                     self.vmmenu_items["shutdown"].set_sensitive(True)              
++                    self.vmmenu_items["open"].set_sensitive(False)
+ 
+             if event.button == 3:
+                 self.vmmenu.popup(None, None, None, 0, event.time)
+diff -Nrup virt-manager-0.4.0.mod.1-2-3/src/vmm-open-connection.glade virt-manager-0.4.0.mod.4/src/vmm-open-connection.glade
+--- virt-manager-0.4.0.mod.1-2-3/src/vmm-open-connection.glade	2008-02-15 17:38:58.000000000 +0800
++++ virt-manager-0.4.0.mod.4/src/vmm-open-connection.glade	2008-02-16 16:09:43.589767000 +0800
+@@ -195,7 +195,7 @@
+ 		    <widget class="GtkComboBox" id="type-hypervisor">
+ 		      <property name="visible">True</property>
+ 		      <property name="items" translatable="yes">Xen
+-QEMU</property>
++</property>
+ 		      <property name="add_tearoffs">False</property>
+ 		      <property name="focus_on_click">True</property>
+ 		      <signal name="changed" handler="on_type_hypervisor_changed" last_modification_time="Mon, 19 Feb 2007 22:04:06 GMT"/>

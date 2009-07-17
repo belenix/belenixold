@@ -1,0 +1,12 @@
+--- tsoljdsdevmgr-0.6.4/src/devmgr-dialog.c.orig	2009-03-09 11:42:05.139835697 -0700
++++ tsoljdsdevmgr-0.6.4/src/devmgr-dialog.c	2009-03-09 11:42:29.973764832 -0700
+@@ -276,7 +276,8 @@
+ 	"cdrom",
+ 	"audio",
+ 	"rmdisk",
+-	"lp"
++	"lp",
++	"unknown"
+ };
+ 
+ char *fname[] = {

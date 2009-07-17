@@ -1,0 +1,19 @@
+--- virt-manager-0.2.6-old/src/graphWidgets/Makefile.am	2007-01-10 15:40:48.828149400 +0000
++++ virt-manager-0.2.6/src/graphWidgets/Makefile.am	2007-01-10 15:36:43.206617800 +0000
+@@ -24,7 +24,7 @@
+     sparkline.c \
+     sparkline.h
+ 
+-sparkline_la_CFLAGS = -fPIC -Wall \
++sparkline_la_CFLAGS = \
+     -DUSE_CAIRO=1 \
+     $(PYGTK2_CFLAGS) \
+     $(GTK2_CFLAGS) \
+--- virt-manager-0.2.6-old/po/Makefile.am	2006-12-08 17:34:16.856940000 +0000
++++ virt-manager-0.2.6/po/Makefile.am	2006-12-08 17:36:46.237062000 +0000
+@@ -80,4 +80,4 @@
+ 	done
+ 
+ %.mo: %.po
+-	msgfmt --check -o $@ $<
++	msgfmt -o $@ $<

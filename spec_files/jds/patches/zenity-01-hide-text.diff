@@ -1,0 +1,11 @@
+--- zenity-2.23.3.1.old/src/option.c	2008-08-26 09:16:54.791504000 +0100
++++ zenity-2.23.3.1/src/option.c	2008-08-26 09:16:17.971344000 +0100
+@@ -257,7 +257,7 @@
+     G_OPTION_ARG_NONE,
+     &zenity_entry_hide_text,
+     N_("Hide the entry text"),
+-    N_("TEXT")
++    NULL,
+   },
+   { 
+     NULL 

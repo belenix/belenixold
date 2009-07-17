@@ -1,0 +1,18 @@
+diff -Nrup virt-manager-0.4.0.mod.5/src/virtManager/manager.py virt-manager-0.4.0.mod.6/src/virtManager/manager.py
+--- virt-manager-0.4.0.mod.5/src/virtManager/manager.py	2008-02-15 20:26:11.000000000 +0800
++++ virt-manager-0.4.0.mod.6/src/virtManager/manager.py	2008-03-05 00:04:14.921526000 +0800
+@@ -406,6 +406,14 @@ class vmmManager(gobject.GObject):
+         row[7] = vm.get_memory_pretty()
+         row[8] = vm.current_memory_percentage()
+         model.row_changed(row.path, row.iter)
++        if vm == self.current_vm():
++            if vm.is_active():
++                self.window.get_widget("vm-delete").set_sensitive(False)
++                self.window.get_widget("menu_edit_delete").set_sensitive(False)
++            else:
++                self.window.get_widget("vm-delete").set_sensitive(True)
++                self.window.get_widget("menu_edit_delete").set_sensitive(True)
++
+ 
+     # zhua add, used for run serial console to replace graphical console when click open or double clike
+     def open_vm_terminal(self,ignore,ignore2=None,ignore3=None):

@@ -1,0 +1,11 @@
+--- virt-manager-0.4.0/configure.ac.orig	2008-11-05 12:53:29.715554492 +0900
++++ virt-manager-0.4.0/configure.ac	2008-11-05 12:53:37.486401567 +0900
+@@ -24,7 +24,7 @@ AC_PROG_INTLTOOL([0.35.0])
+ 
+ AC_OUTPUT(Makefile
+           pixmaps/Makefile
+-          po/Makefile
++          po/Makefile.in
+           src/Makefile
+           src/virtManager/Makefile
+           src/vncViewer/Makefile

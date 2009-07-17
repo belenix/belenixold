@@ -1,0 +1,93 @@
+/jds/bin/diff -uprN zenity-2.24.0.old/src/zenity.glade zenity-2.24.0/src/zenity.glade
+--- zenity-2.24.0.old/src/zenity.glade	2009-01-07 19:39:02.374449000 +0000
++++ zenity-2.24.0/src/zenity.glade	2009-01-07 19:40:45.759072000 +0000
+@@ -16,7 +16,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Fri, 27 Dec 2002 19:08:11 GMT"/>
+@@ -177,7 +177,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Fri, 27 Dec 2002 23:24:20 GMT"/>
+@@ -328,7 +328,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Sat, 28 Dec 2002 12:03:54 GMT"/>
+@@ -425,7 +425,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Sat, 28 Dec 2002 12:15:37 GMT"/>
+@@ -550,7 +550,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Sat, 28 Dec 2002 12:34:38 GMT"/>
+@@ -653,7 +653,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Sat, 28 Dec 2002 14:46:29 GMT"/>
+@@ -776,7 +776,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Sat, 28 Dec 2002 15:05:42 GMT"/>
+@@ -902,7 +902,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Sat, 28 Dec 2002 22:19:04 GMT"/>
+@@ -1038,7 +1038,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Sat, 28 Dec 2002 15:05:42 GMT"/>
+@@ -1151,7 +1151,7 @@
+   <property name="skip_pager_hint">False</property>
+   <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+   <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+-  <property name="focus_on_map">False</property>
++  <property name="focus_on_map">True</property>
+   <property name="urgency_hint">False</property>
+   <property name="has_separator">False</property>
+   <signal name="destroy" handler="gtk_main_quit" last_modification_time="Tue, 13 Dec 2005 04:03:21 GMT"/>

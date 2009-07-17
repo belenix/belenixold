@@ -1,0 +1,82 @@
+diff -ur tracker-0.6.90-orig/src/libtracker-common/tracker-file-utils.c tracker-0.6.90/src/libtracker-common/tracker-file-utils.c
+--- tracker-0.6.90-orig/src/libtracker-common/tracker-file-utils.c	2009-02-24 13:33:44.919238000 +0800
++++ tracker-0.6.90/src/libtracker-common/tracker-file-utils.c	2009-02-24 13:35:28.945355000 +0800
+@@ -834,7 +834,6 @@
+ 	user_data_dir = g_getenv ("XDG_DATA_HOME");
+ 
+ 	/* Check the default XDG_DATA_HOME location */
+-	g_message ("  XDG_DATA_HOME is '%s'", user_data_dir);
+ 
+ 	if (user_data_dir && path_has_write_access_or_was_created (user_data_dir)) {
+ 		return TRUE;
+diff -ur tracker-0.6.90-orig/src/libtracker-common/tracker-hal.c tracker-0.6.90/src/libtracker-common/tracker-hal.c
+--- tracker-0.6.90-orig/src/libtracker-common/tracker-hal.c	2009-02-24 13:33:44.914250000 +0800
++++ tracker-0.6.90/src/libtracker-common/tracker-hal.c	2009-02-24 13:42:56.527044000 +0800
+@@ -589,8 +589,6 @@
+ 		return "LIBHAL_DRIVE_TYPE_JAZ";
+ 	case LIBHAL_DRIVE_TYPE_FLASHKEY:
+ 		return "LIBHAL_DRIVE_TYPE_FLASHKEY";
+-	case LIBHAL_DRIVE_TYPE_MO:
+-		return "LIBHAL_DRIVE_TYPE_MO";
+ 	default:
+ 		return "";
+ 	}
+diff -ur tracker-0.6.90-orig/src/tracker-indexer/Makefile.am tracker-0.6.90/src/tracker-indexer/Makefile.am
+--- tracker-0.6.90-orig/src/tracker-indexer/Makefile.am	2009-02-24 13:33:44.966292000 +0800
++++ tracker-0.6.90/src/tracker-indexer/Makefile.am	2009-02-24 13:35:56.192634000 +0800
+@@ -3,7 +3,7 @@
+ SUBDIRS = modules
+ 
+ INCLUDES =								\
+-	-Wall								\
++	-w 								\
+ 	-DSHAREDIR=\""$(datadir)"\"					\
+ 	-DLIBDIR=\""$(libdir)"\"					\
+ 	-DLOCALEDIR=\""$(localedir)"\" 					\
+
+--- tracker-0.6.91/src/libtracker-common/tracker-config.c.old	Sun Mar 22 11:14:46 2009
++++ tracker-0.6.91/src/libtracker-common/tracker-config.c	Sun Mar 22 11:19:08 2009
+@@ -762,6 +762,9 @@
+ 	const gchar  *watch_directory_roots[2] = { NULL, NULL };
+ 	const gchar  *empty_string_list[] = { NULL };
+ 
++        /* disable evolution index till we fix it */
++	const gchar  *disabled_modules_list[] = { "evolution" , NULL };
++
+ 	/* Get default values */
+ 	language = tracker_language_get_default_code ();
+ 
+@@ -872,7 +875,7 @@
+ 
+ 	if (overwrite || !g_key_file_has_key (key_file, GROUP_INDEXING, KEY_DISABLED_MODULES, NULL)) {
+ 		g_key_file_set_string_list (key_file, GROUP_INDEXING, KEY_DISABLED_MODULES,
+-					    empty_string_list, 0);
++					    disabled_modules_list, 1);
+ 		g_key_file_set_comment (key_file, GROUP_INDEXING, KEY_DISABLED_MODULES,
+ 					" List of disabled modules (separator=;)\n"
+ 					" The modules that are indexed are kept in $prefix/lib/tracker/indexer-modules",
+--- tracker-0.6.92-orig/src/libtracker-common/tracker-hal.c	2009-03-30 15:26:10.102900000 +0800
++++ tracker-0.6.92/src/libtracker-common/tracker-hal.c	2009-03-30 16:26:14.714704000 +0800
+@@ -357,16 +357,18 @@
+ 			   libhal_volume_get_device_file (volume));
+ 		g_debug ("  UDI	 : %s",
+ 			   libhal_volume_get_udi (volume));
+-		g_debug ("  Mount point: %s",
+-			   libhal_volume_get_mount_point (volume));
+- 		g_debug ("  UUID	 : %s",
+-			   libhal_volume_get_uuid (volume));
+ 		g_debug ("  Mounted    : %s",
+ 			   libhal_volume_is_mounted (volume) ? "yes" : "no");
++		/* Here the volume probably hasn't been mounted
++		g_debug ("  Mount point: %s",
++			   libhal_volume_get_mount_point (volume));
+ 		g_debug ("  File system: %s",
+ 			   libhal_volume_get_fstype (volume));
+ 		g_debug ("  Label	 : %s",
+ 			   libhal_volume_get_label (volume));
++ 		g_debug ("  UUID	 : %s",
++			   libhal_volume_get_uuid (volume));
++		*/
+ 
+ 		hal_device_add (hal, volume);
+ 		libhal_volume_free (volume);
