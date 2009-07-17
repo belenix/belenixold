@@ -1,0 +1,22 @@
+diff -r 00ef42e8b458 calendar/base/content/migration.js
+--- a/calendar/base/content/migration.js	Sun Mar 22 19:45:02 2009 -0700
++++ b/calendar/base/content/migration.js	Tue Mar 24 13:34:11 2009 +0800
+@@ -277,17 +277,17 @@ var gDataMigrator = {
+                            .getService(Components.interfaces.nsIWindowMediator);
+         var win = wm.getMostRecentWindow("Calendar:MigrationWizard");
+         if (win) {
+             win.focus();
+         } else {
+             openDialog(url, "migration", "centerscreen,chrome,resizable=no", DMs);
+         }
+ #else
+-        openDialog(url, "migration", "modal,centerscreen,chrome,resizable=no", DMs);
++        openDialog(url, "migration", "modal,centerscreen,chrome,resizable=no,width=500,height=400", DMs);
+ #endif
+     },
+ 
+     /**
+      * Checks to see if we can find any traces of an older moz-cal program.
+      * This could be either the old calendar-extension, or Sunbird 0.2.  If so,
+      * it offers to move that data into our new storage format.  Also, if we're
+      * if we're Lightning, it will disable the old calendar extension, since it

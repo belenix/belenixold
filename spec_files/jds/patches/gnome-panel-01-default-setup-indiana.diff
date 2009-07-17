@@ -1,0 +1,527 @@
+/jds/bin/diff -uprN gnome-panel-2.25.91.old/gnome-panel/panel-default-setup.entries gnome-panel-2.25.91/gnome-panel/panel-default-setup.entries
+--- gnome-panel-2.25.91.old/gnome-panel/panel-default-setup.entries	2009-02-18 12:21:51.516708000 +0000
++++ gnome-panel-2.25.91/gnome-panel/panel-default-setup.entries	2009-02-18 12:43:49.436966000 +0000
+@@ -30,11 +30,20 @@
+             <string>menu_bar</string>
+           </value>
+           <value>
++            <string>home_launcher</string>
++          </value>
++          <value>
+             <string>browser_launcher</string>
+           </value>
+           <value>
+             <string>email_launcher</string>
+           </value>
++          <value>
++            <string>ips_launcher</string>
++          </value>
++          <value>
++            <string>terminal_launcher</string>
++          </value>
+         </list>
+       </value>
+     </entry>
+@@ -47,7 +56,7 @@
+       <value>
+         <list type="string">
+           <value>
+-            <string>window_menu</string>
++            <string>netstatus_applet</string>
+           </value>
+           <value>
+             <string>clock</string>
+@@ -64,6 +73,9 @@
+           <value>
+             <string>workspace_switcher</string>
+           </value>
++          <value>
++            <string>trash</string>
++          </value>
+         </list>
+       </value>
+     </entry>
+@@ -88,7 +100,7 @@
+       <key>toplevels/top_panel/size</key>
+       <schema_key>/schemas/apps/panel/toplevels/size</schema_key>
+       <value>
+-        <int>24</int>
++        <int>28</int>
+       </value>
+     </entry>
+ 
+@@ -108,13 +120,37 @@
+     <entry><key>toplevels/top_panel/hide_delay</key><schema_key>/schemas/apps/panel/toplevels/hide_delay</schema_key></entry>
+     <entry><key>toplevels/top_panel/unhide_delay</key><schema_key>/schemas/apps/panel/toplevels/unhide_delay</schema_key></entry>
+     <entry><key>toplevels/top_panel/auto_hide_size</key><schema_key>/schemas/apps/panel/toplevels/auto_hide_size</schema_key></entry>
+-    <entry><key>toplevels/top_panel/background/type</key><schema_key>/schemas/apps/panel/toplevels/background/type</schema_key></entry>
++    <entry>
++      <key>toplevels/top_panel/background/type</key>
++      <schema_key>/schemas/apps/panel/toplevels/background/type</schema_key>
++      <value>
++        <string>image</string>
++     </value>
++    </entry>
+     <entry><key>toplevels/top_panel/background/color</key><schema_key>/schemas/apps/panel/toplevels/background/color</schema_key></entry>
+     <entry><key>toplevels/top_panel/background/opacity</key><schema_key>/schemas/apps/panel/toplevels/background/opacity</schema_key></entry>
+-    <entry><key>toplevels/top_panel/background/image</key><schema_key>/schemas/apps/panel/toplevels/background/image</schema_key></entry>
+-    <entry><key>toplevels/top_panel/background/fit</key><schema_key>/schemas/apps/panel/toplevels/background/fit</schema_key></entry>
+-    <entry><key>toplevels/top_panel/background/stretch</key><schema_key>/schemas/apps/panel/toplevels/background/stretch</schema_key></entry>
+-    <entry><key>toplevels/top_panel/background/rotate</key><schema_key>/schemas/apps/panel/toplevels/background/rotate</schema_key></entry>
++    <entry>
++      <key>toplevels/top_panel/background/image</key>
++      <schema_key>/schemas/apps/panel/toplevels/background/image</schema_key>
++      <value>
++        <string>/usr/share/gnome-panel/pixmaps/top-panel-image.png</string>
++      </value>
++    </entry>
++    <entry><key>toplevels/top_panel/background/fit</key><schema_key>/schemas/apps/panel/toplevels/background/fit</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
++     <entry><key>toplevels/top_panel/background/stretch</key><schema_key>/schemas/apps/panel/toplevels/background/stretch</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
++    <entry><key>toplevels/top_panel/background/rotate</key><schema_key>/schemas/apps/panel/toplevels/background/rotate</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
+ 
+   <!-- Bottom Panel -->
+ 
+@@ -136,7 +172,7 @@
+       <key>toplevels/bottom_panel/size</key>
+       <schema_key>/schemas/apps/panel/toplevels/size</schema_key>
+       <value>
+-        <int>24</int>
++        <int>28</int>
+       </value>
+     </entry>
+     <entry>
+@@ -162,13 +198,37 @@
+     <entry><key>toplevels/bottom_panel/hide_delay</key><schema_key>/schemas/apps/panel/toplevels/hide_delay</schema_key></entry>
+     <entry><key>toplevels/bottom_panel/unhide_delay</key><schema_key>/schemas/apps/panel/toplevels/unhide_delay</schema_key></entry>
+     <entry><key>toplevels/bottom_panel/auto_hide_size</key><schema_key>/schemas/apps/panel/toplevels/auto_hide_size</schema_key></entry>
+-    <entry><key>toplevels/bottom_panel/background/type</key><schema_key>/schemas/apps/panel/toplevels/background/type</schema_key></entry>
++    <entry>
++      <key>toplevels/bottom_panel/background/type</key>
++      <schema_key>/schemas/apps/panel/toplevels/background/type</schema_key>
++      <value>
++        <string>image</string>
++      </value>
++    </entry>
+     <entry><key>toplevels/bottom_panel/background/color</key><schema_key>/schemas/apps/panel/toplevels/background/color</schema_key></entry>
+     <entry><key>toplevels/bottom_panel/background/opacity</key><schema_key>/schemas/apps/panel/toplevels/background/opacity</schema_key></entry>
+-    <entry><key>toplevels/bottom_panel/background/image</key><schema_key>/schemas/apps/panel/toplevels/background/image</schema_key></entry>
+-    <entry><key>toplevels/bottom_panel/background/fit</key><schema_key>/schemas/apps/panel/toplevels/background/fit</schema_key></entry>
+-    <entry><key>toplevels/bottom_panel/background/stretch</key><schema_key>/schemas/apps/panel/toplevels/background/stretch</schema_key></entry>
+-    <entry><key>toplevels/bottom_panel/background/rotate</key><schema_key>/schemas/apps/panel/toplevels/background/rotate</schema_key></entry>
++    <entry>
++      <key>toplevels/bottom_panel/background/image</key>
++      <schema_key>/schemas/apps/panel/toplevels/background/image</schema_key>
++      <value>
++        <string>/usr/share/gnome-panel/pixmaps/bottom-panel-image.png</string>
++      </value>
++    </entry>
++    <entry><key>toplevels/bottom_panel/background/fit</key><schema_key>/schemas/apps/panel/toplevels/background/fit</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
++    <entry><key>toplevels/bottom_panel/background/stretch</key><schema_key>/schemas/apps/panel/toplevels/background/stretch</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
++    <entry><key>toplevels/bottom_panel/background/rotate</key><schema_key>/schemas/apps/panel/toplevels/background/rotate</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
+ 
+   <!-- Menu Bar -->
+ 
+@@ -218,6 +278,60 @@
+     <entry><key>objects/menu_bar/launcher_location</key><schema_key>/schemas/apps/panel/objects/launcher_location</schema_key></entry>
+     <entry><key>objects/menu_bar/action_type</key><schema_key>/schemas/apps/panel/objects/action_type</schema_key></entry>
+ 
++  <!-- Home Launcher -->
++
++    <entry>
++      <key>objects/home_launcher/object_type</key>
++      <schema_key>/schemas/apps/panel/objects/object_type</schema_key>
++      <value>
++        <string>launcher-object</string>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/home_launcher/toplevel_id</key>
++      <schema_key>/schemas/apps/panel/objects/toplevel_id</schema_key>
++      <value>
++        <string>top_panel</string>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/home_launcher/position</key>
++      <schema_key>/schemas/apps/panel/objects/position</schema_key>
++      <value>
++        <int>1</int>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/home_launcher/panel_right_stick</key>
++      <schema_key>/schemas/apps/panel/objects/panel_right_stick</schema_key>
++      <value>
++        <bool>false</bool>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/home_launcher/locked</key>
++      <schema_key>/schemas/apps/panel/objects/locked</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/home_launcher/launcher_location</key>
++      <schema_key>/schemas/apps/panel/objects/launcher_location</schema_key>
++      <value>
++        <string>nautilus-home.desktop</string>
++      </value>
++    </entry>
++
++    <entry><key>objects/home_launcher/bonobo_iid</key><schema_key>/schemas/apps/panel/objects/bonobo_iid</schema_key></entry>
++    <entry><key>objects/home_launcher/attached_toplevel_id</key><schema_key>/schemas/apps/panel/objects/attached_toplevel_id</schema_key> </entry>
++    <entry><key>objects/home_launcher/tooltip</key><schema_key>/schemas/apps/panel/objects/tooltip</schema_key></entry>
++    <entry><key>objects/home_launcher/use_custom_icon</key><schema_key>/schemas/apps/panel/objects/use_custom_icon</schema_key></entry>
++    <entry><key>objects/home_launcher/custom_icon</key><schema_key>/schemas/apps/panel/objects/custom_icon</schema_key></entry>
++    <entry><key>objects/home_launcher/use_menu_path</key><schema_key>/schemas/apps/panel/objects/use_menu_path</schema_key></entry>
++    <entry><key>objects/home_launcher/menu_path</key><schema_key>/schemas/apps/panel/objects/menu_path</schema_key></entry>
++    <entry><key>objects/home_launcher/action_type</key><schema_key>/schemas/apps/panel/objects/action_type</schema_key></entry>
++
+   <!-- Browser Launcher -->
+ 
+     <entry>
+@@ -238,7 +352,7 @@
+       <key>objects/browser_launcher/position</key>
+       <schema_key>/schemas/apps/panel/objects/position</schema_key>
+       <value>
+-        <int>1</int>
++        <int>2</int>
+       </value>
+     </entry>
+     <entry>
+@@ -259,7 +373,7 @@
+       <key>objects/browser_launcher/launcher_location</key>
+       <schema_key>/schemas/apps/panel/objects/launcher_location</schema_key>
+       <value>
+-        <string>epiphany.desktop</string>
++        <string>firefox.desktop</string>
+       </value>
+     </entry>
+ 
+@@ -292,7 +406,7 @@
+       <key>objects/email_launcher/position</key>
+       <schema_key>/schemas/apps/panel/objects/position</schema_key>
+       <value>
+-        <int>2</int>
++        <int>3</int>
+       </value>
+     </entry>
+     <entry>
+@@ -313,7 +427,7 @@
+       <key>objects/email_launcher/launcher_location</key>
+       <schema_key>/schemas/apps/panel/objects/launcher_location</schema_key>
+       <value>
+-        <string>evolution.desktop</string>
++        <string>thunderbird.desktop</string>
+       </value>
+     </entry>
+ 
+@@ -326,59 +440,174 @@
+     <entry><key>objects/email_launcher/menu_path</key><schema_key>/schemas/apps/panel/objects/menu_path</schema_key></entry>
+     <entry><key>objects/email_launcher/action_type</key><schema_key>/schemas/apps/panel/objects/action_type</schema_key></entry>
+ 
+-  <!-- Window Menu Applet -->
++  <!-- Package Manager Launcher -->
++
++    <entry>
++      <key>objects/ips_launcher/object_type</key>
++      <schema_key>/schemas/apps/panel/objects/object_type</schema_key>
++      <value>
++        <string>launcher-object</string>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/ips_launcher/toplevel_id</key>
++      <schema_key>/schemas/apps/panel/objects/toplevel_id</schema_key>
++      <value>
++        <string>top_panel</string>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/ips_launcher/position</key>
++      <schema_key>/schemas/apps/panel/objects/position</schema_key>
++      <value>
++        <int>4</int>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/ips_launcher/panel_right_stick</key>
++      <schema_key>/schemas/apps/panel/objects/panel_right_stick</schema_key>
++      <value>
++        <bool>false</bool>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/ips_launcher/locked</key>
++      <schema_key>/schemas/apps/panel/objects/locked</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/ips_launcher/launcher_location</key>
++      <schema_key>/schemas/apps/panel/objects/launcher_location</schema_key>
++      <value>
++        <string>packagemanager.desktop</string>
++      </value>
++    </entry>
++
++    <entry><key>objects/ips_launcher/bonobo_iid</key><schema_key>/schemas/apps/panel/objects/bonobo_iid</schema_key></entry>
++    <entry><key>objects/ips_launcher/attached_toplevel_id</key><schema_key>/schemas/apps/panel/objects/attached_toplevel_id</schema_key> </entry>
++    <entry><key>objects/ips_launcher/tooltip</key><schema_key>/schemas/apps/panel/objects/tooltip</schema_key></entry>
++    <entry><key>objects/ips_launcher/use_custom_icon</key><schema_key>/schemas/apps/panel/objects/use_custom_icon</schema_key></entry>
++    <entry><key>objects/ips_launcher/custom_icon</key><schema_key>/schemas/apps/panel/objects/custom_icon</schema_key></entry>
++    <entry><key>objects/ips_launcher/use_menu_path</key><schema_key>/schemas/apps/panel/objects/use_menu_path</schema_key></entry>
++    <entry><key>objects/ips_launcher/menu_path</key><schema_key>/schemas/apps/panel/objects/menu_path</schema_key></entry>
++    <entry><key>objects/ips_launcher/action_type</key><schema_key>/schemas/apps/panel/objects/action_type</schema_key></entry>
++
++  <!-- Terminal Launcher -->
+ 
+     <entry>
+-      <key>applets/window_menu/object_type</key>
++      <key>objects/terminal_launcher/object_type</key>
++      <schema_key>/schemas/apps/panel/objects/object_type</schema_key>
++      <value>
++        <string>launcher-object</string>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/terminal_launcher/toplevel_id</key>
++      <schema_key>/schemas/apps/panel/objects/toplevel_id</schema_key>
++      <value>
++        <string>top_panel</string>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/terminal_launcher/position</key>
++      <schema_key>/schemas/apps/panel/objects/position</schema_key>
++      <value>
++        <int>5</int>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/terminal_launcher/panel_right_stick</key>
++      <schema_key>/schemas/apps/panel/objects/panel_right_stick</schema_key>
++      <value>
++        <bool>false</bool>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/terminal_launcher/locked</key>
++      <schema_key>/schemas/apps/panel/objects/locked</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
++    <entry>
++      <key>objects/terminal_launcher/launcher_location</key>
++      <schema_key>/schemas/apps/panel/objects/launcher_location</schema_key>
++      <value>
++        <string>gnome-terminal.desktop</string>
++      </value>
++    </entry>
++
++    <entry><key>objects/terminal_launcher/bonobo_iid</key><schema_key>/schemas/apps/panel/objects/bonobo_iid</schema_key></entry>
++    <entry><key>objects/terminal_launcher/attached_toplevel_id</key><schema_key>/schemas/apps/panel/objects/attached_toplevel_id</schema_key> </entry>
++    <entry><key>objects/terminal_launcher/tooltip</key><schema_key>/schemas/apps/panel/objects/tooltip</schema_key></entry>
++    <entry><key>objects/terminal_launcher/use_custom_icon</key><schema_key>/schemas/apps/panel/objects/use_custom_icon</schema_key></entry>
++    <entry><key>objects/terminal_launcher/custom_icon</key><schema_key>/schemas/apps/panel/objects/custom_icon</schema_key></entry>
++    <entry><key>objects/terminal_launcher/use_menu_path</key><schema_key>/schemas/apps/panel/objects/use_menu_path</schema_key></entry>
++    <entry><key>objects/terminal_launcher/menu_path</key><schema_key>/schemas/apps/panel/objects/menu_path</schema_key></entry>
++    <entry><key>objects/terminal_launcher/action_type</key><schema_key>/schemas/apps/panel/objects/action_type</schema_key></entry>
++
++  <!-- Netstatus Applet -->
++
++    <entry>
++      <key>applets/netstatus_applet/object_type</key>
+       <schema_key>/schemas/apps/panel/objects/object_type</schema_key>
+       <value>
+         <string>bonobo-applet</string>
+       </value>
+     </entry>
+     <entry>
+-      <key>applets/window_menu/toplevel_id</key>
++      <key>applets/netstatus_applet/toplevel_id</key>
+       <schema_key>/schemas/apps/panel/objects/toplevel_id</schema_key>
+       <value>
+         <string>top_panel</string>
+       </value>
+     </entry>
+     <entry>
+-      <key>applets/window_menu/position</key>
++      <key>applets/netstatus_applet/position</key>
+       <schema_key>/schemas/apps/panel/objects/position</schema_key>
+       <value>
+-        <int>0</int>
++        <int>2</int>
+       </value>
+     </entry>
+     <entry>
+-      <key>applets/window_menu/panel_right_stick</key>
++      <key>applets/netstatus_applet/panel_right_stick</key>
+       <schema_key>/schemas/apps/panel/objects/panel_right_stick</schema_key>
+       <value>
+         <bool>true</bool>
+       </value>
+     </entry>
+     <entry>
+-      <key>applets/window_menu/locked</key>
++      <key>applets/netstatus_applet/locked</key>
+       <schema_key>/schemas/apps/panel/objects/locked</schema_key>
+       <value>
+         <bool>true</bool>
+       </value>
+     </entry>
+     <entry>
+-      <key>applets/window_menu/bonobo_iid</key>
++      <key>applets/netstatus_applet/bonobo_iid</key>
+       <schema_key>/schemas/apps/panel/objects/bonobo_iid</schema_key>
+       <value>
+-        <string>OAFIID:GNOME_WindowMenuApplet</string>
++        <string>OAFIID:GNOME_NetstatusApplet</string>
+       </value>
+     </entry>
++    <entry>
++      <key>applets/netstatus_applet/prefs/track_active_interface</key>
++      <schema_key>/schemas/apps/netstatus_applet/prefs/track_active_interface</schema_key>
++      <value>
++        <bool>true</bool>
++       </value>
++     </entry>
+ 
+-    <entry><key>applets/window_menu/attached_toplevel_id</key><schema_key>/schemas/apps/panel/objects/attached_toplevel_id</schema_key> </entry>
+-    <entry><key>applets/window_menu/tooltip</key><schema_key>/schemas/apps/panel/objects/tooltip</schema_key></entry>
+-    <entry><key>applets/window_menu/use_custom_icon</key><schema_key>/schemas/apps/panel/objects/use_custom_icon</schema_key></entry>
+-    <entry><key>applets/window_menu/custom_icon</key><schema_key>/schemas/apps/panel/objects/custom_icon</schema_key></entry>
+-    <entry><key>applets/window_menu/use_menu_path</key><schema_key>/schemas/apps/panel/objects/use_menu_path</schema_key></entry>
+-    <entry><key>applets/window_menu/menu_path</key><schema_key>/schemas/apps/panel/objects/menu_path</schema_key></entry>
+-    <entry><key>applets/window_menu/launcher_location</key><schema_key>/schemas/apps/panel/objects/launcher_location</schema_key></entry>
+-    <entry><key>applets/window_menu/action_type</key><schema_key>/schemas/apps/panel/objects/action_type</schema_key></entry>
++    <entry><key>applets/netstatus_applet/attached_toplevel_id</key><schema_key>/schemas/apps/panel/objects/attached_toplevel_id</schema_key> </entry>
++    <entry><key>applets/netstatus_applet/tooltip</key><schema_key>/schemas/apps/panel/objects/tooltip</schema_key></entry>
++    <entry><key>applets/netstatus_applet/use_custom_icon</key><schema_key>/schemas/apps/panel/objects/use_custom_icon</schema_key></entry>
++    <entry><key>applets/netstatus_applet/custom_icon</key><schema_key>/schemas/apps/panel/objects/custom_icon</schema_key></entry>
++    <entry><key>applets/netstatus_applet/use_menu_path</key><schema_key>/schemas/apps/panel/objects/use_menu_path</schema_key></entry>
++    <entry><key>applets/netstatus_applet/menu_path</key><schema_key>/schemas/apps/panel/objects/menu_path</schema_key></entry>
++    <entry><key>applets/netstatus_applet/launcher_location</key><schema_key>/schemas/apps/panel/objects/launcher_location</schema_key></entry>
++    <entry><key>applets/netstatus_applet/action_type</key><schema_key>/schemas/apps/panel/objects/action_type</schema_key></entry>
+ 
+   <!-- Clock Applet -->
+ 
+@@ -400,7 +629,7 @@
+       <key>applets/clock/position</key>
+       <schema_key>/schemas/apps/panel/objects/position</schema_key>
+       <value>
+-        <int>2</int>
++        <int>0</int>
+       </value>
+     </entry>
+     <entry>
+@@ -616,7 +845,7 @@
+       <key>applets/workspace_switcher/position</key>
+       <schema_key>/schemas/apps/panel/objects/position</schema_key>
+       <value>
+-        <int>0</int>
++        <int>1</int>
+       </value>
+     </entry>
+     <entry>
+@@ -650,6 +879,60 @@
+     <entry><key>applets/workspace_switcher/launcher_location</key><schema_key>/schemas/apps/panel/objects/launcher_location</schema_key></entry>
+     <entry><key>applets/workspace_switcher/action_type</key><schema_key>/schemas/apps/panel/objects/action_type</schema_key></entry>
+ 
++  <!-- Trash Applet -->
++
++    <entry>
++      <key>applets/trash/object_type</key>
++      <schema_key>/schemas/apps/panel/objects/object_type</schema_key>
++      <value>
++        <string>bonobo-applet</string>
++      </value>
++    </entry>
++    <entry>
++      <key>applets/trash/toplevel_id</key>
++      <schema_key>/schemas/apps/panel/objects/toplevel_id</schema_key>
++      <value>
++        <string>bottom_panel</string>
++      </value>
++    </entry>
++    <entry>
++      <key>applets/trash/position</key>
++      <schema_key>/schemas/apps/panel/objects/position</schema_key>
++      <value>
++        <int>0</int>
++      </value>
++    </entry>
++    <entry>
++      <key>applets/trash/panel_right_stick</key>
++      <schema_key>/schemas/apps/panel/objects/panel_right_stick</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
++    <entry>
++      <key>applets/trash/locked</key>
++      <schema_key>/schemas/apps/panel/objects/locked</schema_key>
++      <value>
++        <bool>true</bool>
++      </value>
++    </entry>
++    <entry>
++      <key>applets/trash/bonobo_iid</key>
++      <schema_key>/schemas/apps/panel/objects/bonobo_iid</schema_key>
++      <value>
++        <string>OAFIID:GNOME_Panel_TrashApplet</string>
++      </value>
++    </entry>
++
++    <entry><key>applets/trash/attached_toplevel_id</key><schema_key>/schemas/apps/panel/objects/attached_toplevel_id</schema_key> </entry>
++    <entry><key>applets/trash/tooltip</key><schema_key>/schemas/apps/panel/objects/tooltip</schema_key></entry>
++    <entry><key>applets/trash/use_custom_icon</key><schema_key>/schemas/apps/panel/objects/use_custom_icon</schema_key></entry>
++    <entry><key>applets/trash/custom_icon</key><schema_key>/schemas/apps/panel/objects/custom_icon</schema_key></entry>
++    <entry><key>applets/trash/use_menu_path</key><schema_key>/schemas/apps/panel/objects/use_menu_path</schema_key></entry>
++    <entry><key>applets/trash/menu_path</key><schema_key>/schemas/apps/panel/objects/menu_path</schema_key></entry>
++    <entry><key>applets/trash/launcher_location</key><schema_key>/schemas/apps/panel/objects/launcher_location</schema_key></entry>
++    <entry><key>applets/trash/action_type</key><schema_key>/schemas/apps/panel/objects/action_type</schema_key></entry>
++
+   </entrylist>
+ 
+ </gconfentryfile>
+/jds/bin/diff -uprN gnome-panel-2.25.91.old/icons/Makefile.am gnome-panel-2.25.91/icons/Makefile.am
+--- gnome-panel-2.25.91.old/icons/Makefile.am	2009-02-18 12:21:51.813990000 +0000
++++ gnome-panel-2.25.91/icons/Makefile.am	2009-02-18 12:44:35.300855000 +0000
+@@ -7,6 +7,8 @@ gegl_DATA = 				\
+ 	gnome-gegl2-2.png		\
+ 	gnome-gegl2.png			\
+ 	world_map-960.png		\
++	top-panel-image.png		\
++	bottom-panel-image.png	\
+ 	$(NULL)
+ 
+ EXTRA_DIST = $(gegl_DATA)

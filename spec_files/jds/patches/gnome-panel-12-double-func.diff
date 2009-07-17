@@ -1,0 +1,10 @@
+--- gnome-panel-2.23.6.old/gnome-panel/gnome-desktop-item-edit.c	2008-08-06 15:20:25.240876000 +0100
++++ gnome-panel-2.23.6/gnome-panel/gnome-desktop-item-edit.c	2008-08-06 15:21:16.699897000 +0100
+@@ -18,7 +18,6 @@
+ #include "applet.h"
+ GSList *panel_applet_list_applets (void) { return NULL; }
+ #include "panel-gconf.h"
+-GConfClient *panel_gconf_get_client (void) { return NULL; }
+ #include "panel-config-global.h"
+ gboolean panel_global_config_get_tooltips_enabled (void) { return FALSE; }
+ #include "panel-lockdown.h"

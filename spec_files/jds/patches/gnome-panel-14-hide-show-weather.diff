@@ -1,0 +1,197 @@
+--- gnome-panel-2.23.91.old/applets/clock/clock.c	2008-09-02 00:01:53.000000000 +0100
++++ gnome-panel-2.23.91/applets/clock/clock.c	2008-09-04 14:35:24.388395000 +0100
+@@ -150,6 +150,8 @@
+ 	GtkWidget *minutes_spin;
+ 	GtkWidget *seconds_spin;
+ 	GtkWidget *set_time_button;
++	GtkWidget *show_weather_toggle;
++	GtkWidget *show_temperature_toggle;
+ 
+ 	GtkListStore *cities_store;
+         GtkWidget *cities_section;
+@@ -236,6 +238,7 @@
+ 				  ClockData         *cd);
+ 
+ static void edit_hide (GtkWidget *unused, ClockData *cd);
++static void update_show_weather_toggles (ClockData *cd);
+ static gboolean edit_delete (GtkWidget *unused, GdkEvent *event, ClockData *cd);
+ static void save_cities_store (ClockData *cd);
+ 
+@@ -1980,23 +1983,53 @@
+ static void
+ update_panel_weather (ClockData *cd)
+ {
+-        if (cd->show_weather)
+-                gtk_widget_show (cd->panel_weather_icon);
+-        else
+-                gtk_widget_hide (cd->panel_weather_icon);
++    if (cd->show_weather)
++        gtk_widget_show (cd->panel_weather_icon);
++    else
++        gtk_widget_hide (cd->panel_weather_icon);
++
++    if (cd->show_temperature)
++        gtk_widget_show (cd->panel_temperature_label);
++    else
++        gtk_widget_hide (cd->panel_temperature_label);
+ 
+-        if (cd->show_temperature)
+-                gtk_widget_show (cd->panel_temperature_label);
+-        else
+-                gtk_widget_hide (cd->panel_temperature_label);
++    if ((cd->show_weather || cd->show_temperature) &&
++        g_list_length (cd->locations) > 0) {
++        ClockLocation *loc = NULL;
++        GList *locations, *l;
++        gboolean current_found = FALSE;
++        
++        /* Need to process locations, if there is no current
++           location then hide the weather/temparature on panel */
+ 
+-	if ((cd->show_weather || cd->show_temperature) &&
+-	    g_list_length (cd->locations) > 0)
+-                gtk_widget_show (cd->weather_obox);
+-        else
+-                gtk_widget_hide (cd->weather_obox);
++        locations = cd->locations;
++
++        for (l = locations; l; l = l->next) {
++            loc = l->data;
++            if (clock_location_is_current (loc)) {
++                current_found = TRUE;
++                break;
++            }
++        }
++        if (current_found == FALSE) {
++            /* There is no current location so hide the obox */
++            gtk_widget_hide(cd->weather_obox);
++        } else {
++            gtk_widget_show(cd->weather_obox);
++        }
++    } else {
++               gtk_widget_hide (cd->weather_obox);
++    }
++
++    if (g_list_length (cd->locations) <= 0) {
++        if (cd->panel_weather_icon)
++            gtk_image_set_from_pixbuf (GTK_IMAGE (cd->panel_weather_icon),
++                                       NULL);
++        if (cd->panel_temperature_label)
++            gtk_label_set_text (GTK_LABEL (cd->panel_temperature_label), "");
++    }
+ 
+-	gtk_widget_queue_resize (cd->applet);
++    gtk_widget_queue_resize (cd->applet);
+ }
+ 
+ static void
+@@ -2092,19 +2125,7 @@
+ 	ClockLocation *loc;
+ 	glong id;
+ 
+-	if (!cd->locations) {
+-		if (cd->weather_obox)
+-			gtk_widget_hide (cd->weather_obox);
+-		if (cd->panel_weather_icon)
+-			gtk_image_set_from_pixbuf (GTK_IMAGE (cd->panel_weather_icon),
+-						   NULL);
+-		if (cd->panel_temperature_label)
+-			gtk_label_set_text (GTK_LABEL (cd->panel_temperature_label),
+-					    "");
+-	} else {
+-		if (cd->weather_obox)
+-			gtk_widget_show (cd->weather_obox);
+-	}
++    update_panel_weather (cd);
+ 
+ 	for (l = cd->locations; l; l = l->next) {
+ 		loc = l->data;
+@@ -3177,12 +3198,25 @@
+ }
+ 
+ static void
++update_show_weather_toggles(ClockData *cd)
++{
++        if (g_list_length (cd->locations) <= 0) {
++            gtk_widget_set_sensitive (cd->show_weather_toggle, FALSE);
++            gtk_widget_set_sensitive (cd->show_temperature_toggle, FALSE);
++        } else {
++            gtk_widget_set_sensitive (cd->show_weather_toggle, TRUE);
++            gtk_widget_set_sensitive (cd->show_temperature_toggle, TRUE);
++        }
++}
++
++static void
+ edit_hide (GtkWidget *unused, ClockData *cd)
+ {
+         GtkWidget *edit_window = glade_xml_get_widget (cd->glade_xml, "edit-location-window");
+ 
+         gtk_widget_hide (edit_window);
+         edit_clear (cd);
++        update_show_weather_toggles (cd);
+ }
+ 
+ static gboolean
+@@ -3239,6 +3273,7 @@
+         ClockLocation *loc = NULL;
+ 
+         gtk_tree_model_get (model, iter, COL_CITY_LOC, &loc, -1);
++
+ 	cd->locations = g_list_remove (cd->locations, loc);
+ 	g_object_unref (loc);
+ 
+@@ -3253,6 +3288,9 @@
+         GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (cd->prefs_locations));
+ 
+         gtk_tree_selection_selected_foreach (sel, remove_tree_row, cd);
++
++        update_panel_weather (cd);
++        update_show_weather_toggles (cd);
+ }
+ 
+ static void
+@@ -3462,16 +3500,24 @@
+                           G_CALLBACK (set_show_seconds_cb), cd);
+ 
+ 	/* Set the "Show weather" checkbox */
+-	widget = glade_xml_get_widget (cd->glade_xml, "weather_check");
+-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), cd->show_weather);
+-	g_signal_connect (widget, "toggled",
+-                          G_CALLBACK (set_show_weather_cb), cd);
++	cd->show_weather_toggle = glade_xml_get_widget (cd->glade_xml,
++                                                    "weather_check");
++	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (cd->show_weather_toggle),
++                                  cd->show_weather);
++	g_signal_connect (cd->show_weather_toggle, "toggled",
++                      G_CALLBACK (set_show_weather_cb), cd);
+ 
+ 	/* Set the "Show temperature" checkbox */
+-	widget = glade_xml_get_widget (cd->glade_xml, "temperature_check");
+-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), cd->show_temperature);
+-	g_signal_connect (widget, "toggled",
+-                          G_CALLBACK (set_show_temperature_cb), cd);
++	cd->show_temperature_toggle = glade_xml_get_widget (cd->glade_xml,
++                                                        "temperature_check");
++	gtk_toggle_button_set_active (
++                    GTK_TOGGLE_BUTTON (cd->show_temperature_toggle),
++                    cd->show_temperature);
++	g_signal_connect (cd->show_temperature_toggle, "toggled",
++                      G_CALLBACK (set_show_temperature_cb), cd);
++
++    /* If No Locations then cannot show/hide weather/temperature */
++    update_show_weather_toggles (cd);
+ 
+ 	/* Fill the Cities list */
+ 	widget = glade_xml_get_widget (cd->glade_xml, "cities_list");
+@@ -3536,8 +3582,10 @@
+         GtkTreeSelection *selection;
+         GWeatherLocation *world;
+ 
+-        if (cd->prefs_window)
++        if (cd->prefs_window) {
++                update_show_weather_toggles (cd);
+                 return;
++        }
+ 
+         cd->prefs_window = glade_xml_get_widget (cd->glade_xml, "prefs-window");
+ 

@@ -1,0 +1,75 @@
+diff --git a/gfx/thebes/src/gfxPangoFonts.cpp b/gfx/thebes/src/gfxPangoFonts.cpp
+--- a/gfx/thebes/src/gfxPangoFonts.cpp
++++ b/gfx/thebes/src/gfxPangoFonts.cpp
+@@ -940,6 +940,15 @@
+         (g_object_get_qdata(G_OBJECT(aContext), GetFontGroupQuark()));
+ }
+ 
++#if PANGO_VERSION_CHECK(1,23,0)
++static gfxPangoFontGroup *
++GetFontGroup(gpointer aContext)
++{
++    return static_cast<gfxPangoFontGroup*>
++        (g_object_get_qdata(G_OBJECT(aContext), GetFontGroupQuark()));
++}
++#endif
++
+ /**
+  * gfxFcPangoFontSet:
+  *
+@@ -1796,6 +1805,30 @@
+     FcDefaultSubstitute(aPattern);
+ }
+ 
++#if PANGO_VERSION_CHECK(1,23,0)
++// context_substitute is departured API.
++// From 1.23, use fontset_key_subtitute.
++static void
++gfx_pango_font_map_fontset_key_substitute(PangoFcFontMap *fontmap,
++                                          PangoFcFontsetKey *fontsetkey,
++                                          FcPattern *pattern)
++{
++    const PangoFontDescription *desc = pango_fc_fontset_key_get_description(fontsetkey);
++    double size = pango_font_description_get_size(desc) / FLOAT_PANGO_SCALE;
++    gfxPangoFontGroup *fontGroup = GetFontGroup(pango_fc_fontset_key_get_context_key(fontsetkey));
++    PRBool usePrinterFont = fontGroup && fontGroup->GetStyle()->printerFont;
++    PrepareSortPattern(pattern, size, 1.0, usePrinterFont);
++}
++
++// create_font API changes from 1.23
++static PangoFcFont *
++gfx_pango_font_map_create_font(PangoFcFontMap *fontmap,
++                               PangoFcFontKey *fontkey)  
++{
++    return PANGO_FC_FONT(g_object_new(GFX_TYPE_PANGO_FC_FONT,
++                                      "pattern", pango_fc_font_key_get_pattern(fontkey), NULL));
++}
++#else
+ static void
+ gfx_pango_font_map_context_substitute(PangoFcFontMap *fontmap,
+                                       PangoContext *context,
+@@ -1818,6 +1851,7 @@
+     return PANGO_FC_FONT(g_object_new(GFX_TYPE_PANGO_FC_FONT,
+                                       "pattern", pattern, NULL));
+ }
++#endif
+ 
+ static void
+ gfx_pango_font_map_class_init(gfxPangoFontMapClass *klass)
+@@ -1836,9 +1870,14 @@
+     // context_key_* virtual functions are only necessary if we want to
+     // dynamically respond to changes in the screen cairo_font_options_t.
+ 
+-    // context_substitute and get_font are not likely to be used but
+-    //   implemented because the class makes them available.
++    // context_substitute (fontset_key_substitute from 1.23) and
++    // create_font are not likely to be used but implemented
++    // because the class makes them available.
++#if PANGO_VERSION_CHECK(1,23,0)
++    fcfontmap_class->fontset_key_substitute = gfx_pango_font_map_fontset_key_substitute;
++#else
+     fcfontmap_class->context_substitute = gfx_pango_font_map_context_substitute;
++#endif
+     fcfontmap_class->create_font = gfx_pango_font_map_create_font;
+ }
+ 

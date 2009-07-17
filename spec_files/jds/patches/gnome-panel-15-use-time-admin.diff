@@ -1,0 +1,64 @@
+--- gnome-panel-2.23.91.old/applets/clock/clock.c	2008-09-04 17:20:23.958671000 +0100
++++ gnome-panel-2.23.91/applets/clock/clock.c	2008-09-04 17:20:15.059454000 +0100
+@@ -40,6 +40,7 @@
+ #include <sys/time.h>
+ #include <math.h>
+ #include <locale.h>
++#include <stdlib.h>
+ 
+ #include <panel-applet.h>
+ #include <panel-applet-gconf.h>
+@@ -1852,14 +1853,16 @@
+ static void
+ run_time_settings (GtkWidget *unused, ClockData *cd)
+ {
+-	ensure_time_settings_window_is_created (cd);
+-	fill_time_settings_window (cd);
+-
+-	update_set_time_button (cd);
+-
+-	gtk_window_present (GTK_WINDOW (cd->set_time_window));
+-
+-        refresh_clock_timeout (cd);
++    /* Launch time-admin to set the timezone/and system time */
++    /* This is a Solaris specific workaround as we don't have PolicyKit */
++    /* To determine if user has permissions */
++    gchar *time_admin = g_find_program_in_path ("time-admin");
++
++    if (time_admin) {
++        system (time_admin);
++        g_free (time_admin);
++    }
++    refresh_clock_timeout (cd);
+ }
+ 
+ static void
+--- gnome-panel-2.23.91.old/applets/clock/set-timezone-dummy.c	2008-09-04 17:20:24.068472000 +0100
++++ gnome-panel-2.23.91/applets/clock/set-timezone-dummy.c	2008-09-04 17:16:34.592801000 +0100
+@@ -23,14 +23,24 @@
+ gint
+ can_set_system_timezone (void)
+ {
+-	return 0;
++    /* Workaround for Solaris as PolicyKit does not exist */
++    gchar *time_admin = g_find_program_in_path ("time-admin");
++    gint ret_val = 0;
++
++    if (time_admin)
++	    ret_val = 1;
++
++    g_free (time_admin);
++
++	return (ret_val);
+ }
+ 
+ 
+ gint
+ can_set_system_time (void)
+ {
+-	return 0;
++    /* Workaround for Solaris as PolicyKit does not exist */
++    return (can_set_system_timezone ());
+ }
+ 
+ void
