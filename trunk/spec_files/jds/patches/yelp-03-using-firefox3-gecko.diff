@@ -1,0 +1,24 @@
+--- yelp-2.23.1/m4/gecko.m4.old	2008-06-17 11:26:44.976272000 +0800
++++ yelp-2.23.1/m4/gecko.m4	2008-06-17 11:37:51.050702000 +0800
+@@ -70,6 +70,9 @@
+ 		elif $PKG_CONFIG --exists $lizard-unstable; then
+ 			gecko_cv_gecko=$lizard
+ 			break;
++         	elif $PKG_CONFIG --exist $lizard; then
++	                gecko_cv_gecko=$lizard
++	                break;
+ 		fi
+ 	done
+ fi
+--- yelp-2.23.1/src/yelp-gecko-utils.cpp.old	2008-06-18 00:01:04.174673000 +0800
++++ yelp-2.23.1/src/yelp-gecko-utils.cpp	2008-06-19 13:43:45.555230000 +0800
+@@ -27,9 +27,6 @@
+ 
+ #include <nsStringAPI.h>
+ 
+-#ifdef HAVE_GECKO_1_9
+-#include <gtkmozembed_glue.cpp>
+-#endif
+ 
+ #include <gtkmozembed.h>
+ #include <gtkmozembed_internal.h>

@@ -1,0 +1,38 @@
+--- virt-manager-0.4.0/src/virtManager/serialcon.py	2008-01-21 22:27:00.964332000 +0800
++++ virt-manager-0.4.0.mod.1-2-3/src/virtManager/serialcon.py	2009-02-10 16:17:37.411540000 +0800
+@@ -23,6 +23,7 @@ import os
+ import gobject
+ import termios
+ import tty
++import pty
+ 
+ class vmmSerialConsole:
+     def __init__(self, config, vm):
+@@ -37,7 +38,9 @@ class vmmSerialConsole:
+ 	self.terminal = vte.Terminal()
+ 	self.terminal.set_cursor_blinks(True)
+ 	self.terminal.set_emulation("xterm")
+-	self.terminal.set_font_from_string("fixed 10")
++	#self.terminal.set_font_from_string("fixed 10")
++        #Change the code mode to monospace, so the display is look better
++	self.terminal.set_font_from_string("monospace 10")
+ 	self.terminal.set_scrollback_lines(1000)
+ 	self.terminal.set_audible_bell(False)
+ 	self.terminal.set_visible_bell(True)
+@@ -82,11 +85,13 @@ class vmmSerialConsole:
+     def opentty(self):
+         if self.ptyio != None:
+             self.closetty()
+-        pty = self.vm.get_serial_console_tty()
++        ipty = self.vm.get_serial_console_tty()
+ 
+-        if pty == None:
++        if ipty == None:
+             return
+-        self.ptyio = os.open(pty, os.O_RDWR | os.O_NONBLOCK | os.O_NOCTTY)
++	# delete, because it can't run at Solaris correctly.
++        #self.ptyio = os.open(pty, os.O_RDWR | os.O_NONBLOCK | os.O_NOCTTY) 
++	self.ptyio = pty.slave_open(ipty)
+         self.ptysrc = gobject.io_add_watch(self.ptyio, gobject.IO_IN | gobject.IO_ERR | gobject.IO_HUP, self.display_data)
+ 
+         # Save term settings & set to raw mode

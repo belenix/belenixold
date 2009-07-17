@@ -1,0 +1,11 @@
+--- yelp-2.23.2/yelp.desktop.in.in.orig 2008-08-21 21:05:51.000000000 +0100
++++ yelp-2.23.2/yelp.desktop.in.in      2008-08-22 03:55:24.354049863 +0100
+@@ -1,6 +1,7 @@
+ [Desktop Entry]
+ _Name=Help
+-_Comment=Get help with GNOME
++# SUN_BRANDING
++_Comment=Browse and search GNOME and OpenSolaris documentation
+ OnlyShowIn=GNOME;
+ Exec=yelp
+ Icon=help-browser

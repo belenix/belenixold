@@ -1,0 +1,15 @@
+--- tsoljdslabel-0.6.2/Xsession.tjds.bak	2008-07-21 16:40:43.656911000 +0800
++++ tsoljdslabel-0.6.2/Xsession.tjds	2008-07-21 16:41:08.314030000 +0800
+@@ -38,12 +38,4 @@
+     echo "$0: dbus-launch not found."
+ fi
+ 
+-# Use ssh-agent if available.
+-#
+-if [ -x "/usr/bin/ssh-agent" ] && [ -z "$SSH_AUTH_SOCK" ]; then
+-    command="/usr/bin/ssh-agent -- $command"
+-else
+-    echo "$0: ssh-agent not found."
+-fi
+-
+ exec $command

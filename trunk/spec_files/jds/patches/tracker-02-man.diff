@@ -1,0 +1,557 @@
+--- tracker-0.6.6/docs/tracker-applet.1.old	2008אב‏  7ות 31ו·ׂ אףף 14:52:32
++++ tracker-0.6.6/docs/manpages/tracker-applet.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,4 +1,6 @@
++'\" te
+ .TH tracker-applet 1 "November, 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
+ 
+ .SH NAME
+ tracker-applet \- The tracker tray-icon and on-click-search-entry
+@@ -19,3 +21,24 @@
+ .SH SEE ALSO
+ .BR tracker-search-tool (1),
+ .BR trackerd (1).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
++
+--- tracker-0.6.6/docs/tracker-extract.1.old	2008אב‏  7ות 31ו·ׂ אףף 14:53:08
++++ tracker-0.6.6/docs/manpages/tracker-extract.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,4 +1,7 @@
++'\" te
++
+ .TH tracker-extract 1 "July 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
+ 
+ .SH NAME
+ tracker-extract \- extract metadata from file and display them.
+@@ -14,3 +17,23 @@
+ 
+ .SH SEE ALSO
+ .BR trackerd (1)
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-files.1.old	2008אב‏  7ות 31ו·ׂ אףף 14:55:13
++++ tracker-0.6.6/docs/manpages/tracker-files.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,4 +1,7 @@
++'\" te
+ .TH tracker-files 1 "July 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
++
+
+ .SH NAME
+ tracker-files \- Return files filtered by the mime type or their category
+@@ -27,4 +31,24 @@
+
+ .SH SEE ALSO
+ .BR trackerd (1),
+ .BR tracker-services (1).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-meta-folder.1.old	2008אב‏  7ות 31ו·ׂ אףף 15:27:17
++++ tracker-0.6.6/docs/manpages/tracker-meta-folder.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,36 +1,59 @@
++'\" te
+ .TH tracker-meta-folder 1 "July, 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
++
+
+ .SH NAME
+ tracker-meta-folder \- return list of files indexed by tracker for a
+ folder with their value for the selected properties
+ 
+ .SH SYNOPSIS
+ .B tracker-meta-folder
+ \-p FOLDER [Properties]
+
+ .SH DESCRIPTION
+ .B tracker-meta-folder
+ shows in stdout the list of files and their values for the selected
+ properties indexed by tracker and stored under the
+ folder provided as parameter. 
+ 
+ .SH OPTIONS
+ .TP
+ \-p FOLDER
+ The path you are asking for.
+ 
+ .TP
+ PROPERTIES
+ A list of properties to show per file. For more information on valid
+ properties see
+ .BR tracker-services (1).
+ 
+ .SH EXAMPLES
+ .TP
+ The mimetypes of all the files in the test/ folder:
+ .BR
+ $ tracker-meta-folder /x/y/test File:Mime
+ 
+ .SH SEE ALSO
+ .BR trackerd (1).
+ .BR tracker-services (1)
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-preferences.1.old	2008אב‏  7ות 31ו·ׂ אףף 15:27:28
++++ tracker-0.6.6/docs/manpages/tracker-preferences.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,5 +1,8 @@
++'\" te
+ .TH tracker-preferences 1 "November, 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
+ 
++
+ .SH NAME
+ tracker-preferences \- Preferences editor for trackerd
+ 
+@@ -15,3 +18,23 @@
+ .SH SEE ALSO
+ .BR tracker-search-tool (1),
+ .BR trackerd (1).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-query.1.old	2008אב‏  7ות 31ו·ׂ אףף 15:27:39
++++ tracker-0.6.6/docs/manpages/tracker-query.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,4 +1,6 @@
++'\" te
+ .TH tracker-query 1 "July 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
+ 
+ .SH NAME
+ tracker-query \- command line tool to query tracker database 
+@@ -34,3 +36,23 @@
+ .SH SEE ALSO
+ .BR trackerd (1),
+ .BR tracker-services (1).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-search.1.old	2008אב‏  7ות 31ו·ׂ אףף 15:27:49
++++ tracker-0.6.6/docs/manpages/tracker-search.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,4 +1,7 @@
++'\" te
+ .TH tracker-search 1 "July 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
++
+
+ .SH NAME
+ tracker-search \- command line tool to search documents indexed by
+@@ -41,3 +43,23 @@
+ .BR trackerd (1),
+ .BR tracker-search-tool (1),
+ .BR tracker-services (1).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-search-tool.1.old	2008אב‏  7ות 31ו·ׂ אףף 15:28:04
++++ tracker-0.6.6/docs/manpages/tracker-search-tool.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,5 +1,8 @@
++'\" te
+ .TH tracker-search-tool 1 "July, 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
+ 
++
+ .SH NAME
+ tracker-search-tool \- Gnome Tracker Search Tool
+ 
+@@ -56,3 +59,23 @@
+ .PP
+ This manual page was written by Michael Biebl <biebl@debian.org>,
+ for the Debian project (but may be used by others).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-services.7.old	2008אב‏  7ות 31ו·ׂ אףף 15:28:16
++++ tracker-0.6.6/docs/manpages/tracker-services.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:43
+@@ -1,5 +1,7 @@
++'\" te
+ .TH tracker-services 1 "July 2007" GNU "Conventions"
++...\" LSARC 2008/375 Meta Tracker
+
+ .SH NAME
+ tracker-services \- shows service types and propeties available in trackerd
+
+@@ -77,3 +79,23 @@
+ .BR tracker-search-tool (1),
+ .BR tracker-query (1),
+ .BR tracker-files (1).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-stats.1.old	2008אב‏  7ות 31ו·ׂ אףף 15:28:34
++++ tracker-0.6.6/docs/manpages/tracker-stats.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,5 +1,8 @@
++'\" te
+ .TH tracker-stats 1 "July 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
+ 
++
+ .SH NAME
+ tracker-stats\- command line tool that provides statistics on files
+ indexed by
+@@ -22,3 +25,23 @@
+ .BR trackerd (1),
+ .BR tracker-status (1),
+ .BR tracker-services (7).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-status.1.old	2008אב‏  7ות 31ו·ׂ אףף 15:28:46
++++ tracker-0.6.6/docs/manpages/tracker-status.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,5 +1,8 @@
++'\" te
+ .TH tracker-status 1 "July 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
+ 
++
+ .SH NAME
+ tracker-status\- command line tool that reports the trackerd status
+ 
+@@ -15,3 +18,23 @@
+ .SH SEE ALSO
+ .BR trackerd (1),
+ .BR tracker-stats (1)
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-tag.1.old	2008אב‏  7ות 31ו·ׂ אףף 15:28:56
++++ tracker-0.6.6/docs/manpages/tracker-tag.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,4 +1,7 @@
++'\" te
+ .TH tracker-tag 1 "July 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
++
+
+ .SH NAME
+ tracker-tag \- command line tool for setting and searching tags/keywords
+@@ -43,3 +46,23 @@
+ .PP
+ This manual page was written by Michael Biebl <biebl@debian.org>,
+ for the Debian project (but may be used by others).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker-thumbnailer.1.old	2008אב‏  7ות 31ו·ׂ אףף 15:29:09
++++ tracker-0.6.6/docs/manpages/tracker-thumbnailer.1	2008אב‏  7ות 31ו·ׂ אףף 15:29:28
+@@ -1,5 +1,8 @@
++'\" te
+ .TH tracker-thumbnailer 1 "July, 2007" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
+ 
++
+ .SH NAME
+ tracker-thumbnailer \- create freedesktop.org compliant thumbnails (Deprecated)
+ 
+@@ -56,3 +59,23 @@
+ .PP
+ This manual page was written by Michael Biebl <biebl@debian.org>,
+ for the Debian project (but may be used by others).
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+diff -ur tracker-0.6.91-orig/docs/manpages/trackerd.1
+tracker-0.6.91/docs/manpages/trackerd.1
+--- tracker-0.6.91-orig/docs/manpages/trackerd.1	2009-03-16
+14:03:12.818534000 +0800
++++ tracker-0.6.91/docs/manpages/trackerd.1	2009-03-16 14:46:36.692378000
++0800
+@@ -1,4 +1,6 @@
++'\" te
+ .TH trackerd 1 "Jan 2008" GNU "User Commands"
++...\" LSARC 2008/375 Meta Tracker
+ 
+ .SH NAME
+ trackerd \- indexer daemon for tracker search tool
+@@ -95,6 +97,11 @@
+ needs a
+ .BR dbus-daemon(1)
+ to be running within your current session.
++.PP
++Please check tracker releasenotes on solaris platform on
++.PP
++\fBhttp://opensolaris\&.org/os/project/jds/tasks/MetaTracker/\fR\&.
++
+ 
+ .SH SEE ALSO
+ .BR tracker-applet (1),
+@@ -109,3 +116,23 @@
+ .BR tracker-info (1),
+ .BR tracker-status (1),
+ .BR tracker-services (1)
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+--- tracker-0.6.6/docs/tracker.cfg.5.old	2008-10-13 15:19:22.999069000 +0800
++++ tracker-0.6.6/docs/manpages/tracker.cfg.5	2008-10-13 15:21:42.667625000 +0800
+@@ -1,4 +1,6 @@
++'\" te
+ .TH tracker.cfg 5 "July 2007" GNU "Configuration Files"
++...\" LSARC 2008/375 Meta Tracker
+ 
+ .SH NAME
+ tracker.cfg \- configuration file for the trackerd search daemon
+@@ -230,3 +232,23 @@
+ 
+ .SH SEE ALSO
+ .BR tracker(1)
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWdesktop-search
++_
++Interface stability^Volatile
++
++.TE
++.sp
++

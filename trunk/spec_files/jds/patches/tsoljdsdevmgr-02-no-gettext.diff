@@ -1,0 +1,20 @@
+--- tsoljdsdevmgr-0.6.2/src/devmgr-dialog.c.orig	2008-03-15 01:25:18.000000000 +0900
++++ tsoljdsdevmgr-0.6.2/src/devmgr-dialog.c	2008-08-05 17:56:29.879885000 +0900
+@@ -963,7 +963,7 @@ workspace_changed_callback(WnckScreen *s
+   	sprintf(message, _("<b>%s</b> does not have allocation capabilities--see user_attr(4)"),
+                 User[current_user].p.pw_name);
+   else
+-	sprintf(message, _(""));
++	sprintf(message, "");
+ 
+   gtk_label_set_markup (GTK_LABEL (alloc_label), message);
+ 
+@@ -2310,7 +2310,7 @@ devmgr_dialog_instance_init (DevMgrDialo
+   		sprintf(message, _("<b>%s</b> does not have allocation capabilities--see user_attr(4)"),
+ 			User[current_user].p.pw_name);
+ 	else
+-		sprintf(message, _(""), User[current_user].p.pw_name);
++		sprintf(message, "%s", User[current_user].p.pw_name);
+ 
+ 	gtk_label_set_markup (GTK_LABEL (alloc_label), message);
+ 	

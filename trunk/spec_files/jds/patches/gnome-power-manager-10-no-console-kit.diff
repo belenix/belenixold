@@ -1,0 +1,32 @@
+--- gnome-power-manager-2.24.4/src/egg-console-kit.c	2008-11-17 18:03:36.000000000 +0800
++++ gnome-power-manager-2.24.4-new/src/egg-console-kit.c	2009-03-02 17:08:15.218805233 +0800
+@@ -70,11 +70,11 @@ G_DEFINE_TYPE (EggConsoleKit, egg_consol
+ gboolean
+ egg_console_kit_is_local (EggConsoleKit *console)
+ {
+-	gboolean ret = FALSE;
+-	gboolean value = FALSE;
++	gboolean ret = TRUE;
++	gboolean value = TRUE;
+ 	GError *error = NULL;
+ 
+-	g_return_val_if_fail (EGG_IS_CONSOLE_KIT (console), FALSE);
++	g_return_val_if_fail (EGG_IS_CONSOLE_KIT (console), TRUE);
+ 
+ 	/* maybe console kit does not know about our session */
+ 	if (console->priv->proxy_session == NULL) {
+@@ -105,11 +105,11 @@ out:
+ gboolean
+ egg_console_kit_is_active (EggConsoleKit *console)
+ {
+-	gboolean ret = FALSE;
+-	gboolean value = FALSE;
++	gboolean ret = TRUE;
++	gboolean value = TRUE;
+ 	GError *error = NULL;
+ 
+-	g_return_val_if_fail (EGG_IS_CONSOLE_KIT (console), FALSE);
++	g_return_val_if_fail (EGG_IS_CONSOLE_KIT (console), TRUE);
+ 
+ 	/* maybe console kit does not know about our session */
+ 	if (console->priv->proxy_session == NULL) {
