@@ -1,0 +1,875 @@
+--- system-tools-backends-1.4.2.orig/users-conf.in	Mon Jan  2 23:48:06 2006
++++ system-tools-backends-1.4.2/users-conf.in	Fri Nov 14 13:54:34 2008
+@@ -47,6 +47,8 @@
+ # pw: modifying users/groups and user/group data on FreeBSD.
+ 
+ 
++use Authen::PAM;
++
+ BEGIN {
+   $SCRIPTSDIR = "@scriptsdir@";
+   if ($SCRIPTSDIR =~ /^@scriptsdir[@]/)
+@@ -74,6 +76,7 @@
+               "mandrake-7.1", "mandrake-7.2", "mandrake-9.0", "mandrake-9.1", "mandrake-9.2",
+               "mandrake-10.0", "mandrake-10.1",
+               "debian-2.2", "debian-3.0", "debian-sarge",
++               "nexenta-1.0", "solaris-2.11",
+               "suse-7.0", "suse-9.0", "suse-9.1", "turbolinux-7.0",
+               "slackware-8.0.0", "slackware-8.1", "slackware-9.0.0", "slackware-9.1.0", "slackware-10.0.0", "slackware-10.1.0", "slackware-10.2.0",
+               "freebsd-4", "freebsd-5", "freebsd-6",
+@@ -93,6 +96,7 @@
+ @passwd_names =     ( "/etc/passwd" );
+ @shadow_names =     ( "/etc/shadow", "/etc/master.passwd" );
+ @group_names =      ( "/etc/group" );
++@rbac_names =       ( "/etc/user_attr" ); # Files that will be changed by RBAC commands
+ @login_defs_names = ( "/etc/login.defs", "/etc/adduser.conf" );
+ @shell_names =      ( "/etc/shells" );
+ @skel_dir =         ( "/usr/share/skel", "/etc/skel" );
+@@ -111,13 +115,18 @@
+ $cmd_gpasswd  = &gst_file_locate_tool ("gpasswd");	
+ $cmd_chfn     = &gst_file_locate_tool ("chfn");
+ $cmd_pw       = &gst_file_locate_tool ("pw");
++$cmd_profiles = &gst_file_locate_tool ("profiles");
++$cmd_roles    = &gst_file_locate_tool ("roles");
+ 
+ # --- Mapping constants --- #
+ 
+ %users_prop_map = ();
++
++sub get_users_prop_array
++{
+ @users_prop_array = ();
+ 
+-if ($$tool{"platform"} eq "Linux")
++if ($$tool{"system"} eq "Linux")
+ {
+   @users_prop_array = (
+     "key", 0,
+@@ -138,6 +147,29 @@
+     "is_shadow", 15,
+     "", "");
+ }
++if ($$tool{"system"} eq "SunOS")
++{
++  @users_prop_array = (
++    "key", 0,
++    "login", 1,
++    "password", 2,
++    "uid", 3,
++    "gid", 4,
++    "comment", 5,
++    "home", 6,
++    "shell", 7,
++    "last_mod", 8, # Read shadow (5) for these.
++    "passwd_min_life", 9,
++    "passwd_max_life", 10,
++    "passwd_exp_warn", 11,
++    "passwd_exp_disable", 12,
++    "passwd_disable", 13,
++    "reserved", 14,
++    "is_shadow", 15,
++    "rbac", 16,
++    "role", 17,
++    "", "");
++}
+ else
+ {
+   @users_prop_array = (
+@@ -157,6 +189,7 @@
+   $users_prop_map {$users_prop_array[$i]} = $users_prop_array[$i + 1];
+   $users_prop_map {$users_prop_array[$i + 1]} = $users_prop_array[$i];
+ }
++}
+ 
+ %groups_prop_map = ();
+ @groups_prop_array = (
+@@ -193,6 +226,66 @@
+ %login_defs_prop_map = ();
+ %profiles_prop_map = ();
+ 
++sub read_rbac() {
++  return unless ( $gst_dist =~ /^solaris/ );
++
++  my ($hash) = @_;
++  my ($buffer, $line, $profile, $description, $dummy);
++  my ($user, $attr);
++  my (%rbac, %rbac_profiles, %role, %rbac_roles);
++
++  %rbac=();
++  %rbac_profiles=();
++  %rbac_roles=();
++
++  $buffer = &gst_file_buffer_load("/etc/security/prof_attr"); 
++  foreach $line ( @$buffer ) {
++    # Skip comments, blank lines and the "All" special profile.
++    next if ( $line =~ /^#|^\s*$|^All:/ );
++
++    ($profile, $dummy, $dummy, $description, $dummy ) = split(/:/, $line, 5);
++    $rbac_profiles{$profile} = &gst_xml_quote($description);
++  }
++
++  $rbac{"rbac_profiles"} = \%rbac_profiles;
++
++  $$hash{"rbacdb"} = \%rbac;
++
++  $buffer = &gst_file_buffer_load("/etc/user_attr");
++  foreach $line ( @$buffer ) {
++    # Skip comments, blank lines.
++    next if ( $line =~ /^#|^\s*$/ );
++
++    ($user, $dummy, $dummy, $dummy, $attr) = split(/:/, $line, 5);
++    $rbac_roles{$user} = &gst_xml_quote($user) if ( $attr =~ /type=role/ );
++  }
++
++  $role{"rbac_roles"} = \%rbac_roles;
++
++  $$hash{"roledb"} = \%role;
++}
++
++sub read_rbac_default_profiles
++{
++  return unless ( $gst_dist =~ /^solaris/ );
++
++  my ($buffer, $line, $dummy, @def_prof, $def_prof_ref);
++  $buffer = &gst_file_buffer_load("/etc/security/policy.conf");
++  foreach $line ( @$buffer ) {
++    chomp $line;
++    if ( $line =~ /^PROFS_GRANTED=/ )
++      {
++        ($dummy, $def_line) = split(/=/, $line, 2);
++        @def_prof = split (/,/, $def_line);
++        foreach ( @def_prof ) {
++          $def_prof_ref->{$_} = 1;
++        }
++        return $def_prof_ref;
++      }
++    next;
++  }
++}
++
+ sub get_login_defs_prop_array
+ {
+   my @prop_array;
+@@ -315,6 +408,30 @@
+   }
+ }
+ 
++my $nexenta_logindefs_defaults = {
++  'login_defs'  => 0, # Open Solaris doesn't have a login.defs file.
++  'shell'       => '/bin/bash',
++  'group'       => 'users',
++  'skel_dir'    => '/etc/skel/',
++  'home_prefix' => '/export/home/$user',
++  'gmin'        => 1000,
++  'gmax'        => 2147483647, # Based on MAXUID from sys/param.h
++  'umin'        => 100,
++  'umax'        => 2147483647, # Based on MAXUID from sys/param.h
++};
++
++my $solaris_logindefs_defaults = {
++  'login_defs'  => 0, # Open Solaris doesn't have a login.defs file.
++  'shell'       => '/bin/bash',
++  'group'       => 'users',
++  'skel_dir'    => '/etc/skel/',
++  'home_prefix' => '/export/home/$user',
++  'gmin'        => 1000,
++  'gmax'        => 2147483647, # Based on MAXUID from sys/param.h
++  'umin'        => 100,
++  'umax'        => 2147483647, # Based on MAXUID from sys/param.h
++};
++
+ my $rh_logindefs_defaults = {
+   'shell'       => '/bin/bash',
+   'group'       => '$user',
+@@ -362,6 +479,8 @@
+   'debian-2.2'      => $rh_logindefs_defaults,
+   'debian-3.0'      => $rh_logindefs_defaults,
+   'debian-sarge'    => $rh_logindefs_defaults,
++  'nexenta-1.0'    => $nexenta_logindefs_defaults,
++  'solaris-2.11'    => $solaris_logindefs_defaults,
+   'vine-3.0'        => $rh_logindefs_defaults,
+   'vine-3.1'        => $rh_logindefs_defaults,
+   'gentoo'	        => $gentoo_logindefs_defaults,
+@@ -419,7 +538,8 @@
+ 	my ($a1, $a2) = @_;
+ 	my $i;
+ 	
+-	return -1 if ($#$a1 != $#$a2);
++  return 0 if ( ( $#$a1 < 0 || $#$a2 < 0 ) && $#$a1 == $#$a2 );
++	return -1 if ($#$a1 != $#$a2 || $#$a1 < 0 || $#$a2 < 0 );
+ 	
+ 	for ($i = 0; $i <= $#$a1; $i++) {
+ 	  if (ref ($$a1[$i]) eq "ARRAY") { # see if this is a reference.
+@@ -453,6 +573,7 @@
+   &read_passwd_shadow (\%hash);
+   &read_profiledb     (\%hash);
+   &read_shells        (\%hash);
++  &read_rbac          (\%hash) if ( $gst_dist =~ /^solaris/);
+ 
+   return \%hash;
+ }
+@@ -553,11 +674,11 @@
+   }
+   else
+   {
+-    # Put safe defaults for distros/OS that don't have any defaults file
+-    $logindefs->{"umin"} = '1000';
+-    $logindefs->{"umax"} = '60000';
+-    $logindefs->{"gmin"} = '1000';
+-    $logindefs->{"gmax"} = '60000';
++    # Put safe defaults for distros/OS that don't have any defaults set
++    $logindefs->{"umin"} = '1000' unless ($logindefs->{"umin"});
++    $logindefs->{"umax"} = '60000' unless ($logindefs->{"umax"});
++    $logindefs->{"gmin"} = '1000' unless ($logindefs->{"gmin"});
++    $logindefs->{"gmax"} = '60000' unless ($logindefs->{"gmax"});
+   }
+ }
+ 
+@@ -602,6 +723,7 @@
+   my ($ifh, @users, %users_hash, $passwd_last_modified);
+   my (@line, $copy, %tmphash);
+   my $login_pos = $users_prop_map{"login"};
++  #my (%users_rbac_profiles);
+   my $i = 0;
+ 
+   # Find the passwd file.
+@@ -660,7 +782,36 @@
+ 
+     &gst_file_close ($ifh);
+   }
++  if ($gst_dist =~ /^solaris/ ) {
++    my $rbac_pos = $users_prop_map{"rbac"};
++    my $role_pos = $users_prop_map{"role"};
++    my ($fd);
++    foreach $user (@users) {
++      my @profiles;
++      my @roles, $tmproles;
++      my $logname = $$user[1];
+ 
++      my $command = $cmd_profiles . " " . $logname;
++      $fd = &gst_file_run_pipe_read( $command );
++      @profiles = <$fd>;
++      &gst_file_close($fd);
++      # $users_rbac_profiles{$logname} = \@profiles;
++      chomp( @profiles );
++      @{$tmphash{$logname}}[$rbac_pos] = \@profiles;
++
++      $command = $cmd_roles . " " . $logname;
++      $fd = &gst_file_run_pipe_read( $command );
++      $tmproles = <$fd>;
++      &gst_file_close($fd);
++      chomp( $tmproles );
++      next if ($tmproles eq "No roles");
++      @roles = split ',', $tmproles, -1;
++      @{$tmphash{$logname}}[$role_pos] = \@roles;
++
++    }
++    #$$hash{"users_rbac_profiles"} = \%users_rbac_profiles;
++  }
++
+   $$hash{"users"}      = \@users;
+   $$hash{"users_hash"} = \%users_hash;
+   $$hash{"passwd_last_modified"} = $passwd_last_modified;
+@@ -740,7 +891,40 @@
+   push (@shells, "/bin/false") if (stat ("/bin/false"));
+   
+   $ifh = &gst_file_open_read_from_names(@shell_names);
+-  return unless $ifh;
++  unless ($ifh)
++  {
++     if ($gst_dist =~ /solaris/)
++     {
++       push (@shells, "/bin/bash") if (stat ("/bin/bash"));
++       push (@shells, "/bin/csh") if (stat ("/bin/csh"));
++       push (@shells, "/bin/jsh") if (stat ("/bin/jsh"));
++       push (@shells,  "/bin/ksh") if (stat ("/bin/ksh"));
++       push (@shells,  "/bin/pfcsh") if (stat ("/bin/pfcsh"));
++       push (@shells, "/bin/pfksh") if (stat ("/bin/pfksh"));
++       push (@shells, "/bin/pfsh") if (stat ("/bin/pfsh"));
++       push (@shells, "/bin/sh") if (stat ("/bin/sh"));
++       push (@shells, "/bin/tcsh") if (stat ("/bin/tcsh"));
++       push (@shells, "/bin/zsh") if (stat ("/bin/zsh"));
++       push (@shells, "/bin/jsh") if (stat ("/bin/jsh"));
++       push (@shells, "/sbin/jsh") if (stat ("/sbin/jsh"));
++       push (@shells, "/sbin/pfsh") if (stat ("/sbin/pfsh"));
++       push (@shells, "/sbin/sh") if (stat ("/sbin/sh"));
++       push (@shells, "/usr/bin/bash") if (stat ("/usr/bin/bash"));
++       push (@shells, "/usr/bin/csh") if (stat ("/usr/bin/csh"));
++       push (@shells, "/usr/bin/jsh") if (stat ("/usr/bin/jsh"));
++       push (@shells, "/usr/bin/ksh") if (stat ("/usr/bin/ksh"));
++       push (@shells, "/usr/bin/pfcsh") if (stat ("/usr/bin/pfcsh"));
++       push (@shells, "/usr/bin/pfksh") if (stat ("/usr/bin/pfksh"));
++       push (@shells, "/usr/bin/pfsh") if (stat ("/usr/bin/pfsh"));
++       push (@shells, "/usr/bin/sh") if (stat ("/usr/bin/sh"));
++       push (@shells, "/usr/bin/tcsh") if (stat ("/usr/bin/tcsh"));
++       push (@shells, "/usr/bin/zsh") if (stat ("/usr/bin/zsh"));
++       push (@shells, "/usr/xpg4/bin/sh") if (stat ("/usr/xpg4/bin/sh"));
++       $$hash{"shelldb"} = \@shells;
++     }
++     return;
++  }
++  
+ 
+   while (<$ifh>)
+   {
+@@ -879,6 +1063,11 @@
+   {
+     $command = "$cmd_pw usermod -n " . $username . " -c \'" . $comment . "\'";
+   }
++  elsif ($gst_dist =~ /^solaris/)
++  {
++    ($fname, $office, $office_phone, $home_phone) = @line;
++    $command = "$cmd_usermod" . " -c \'" . $fname . "\' " . $username; 
++  }
+   else
+   {
+     ($fname, $office, $office_phone, $home_phone) = @line;
+@@ -886,7 +1075,7 @@
+     $fname = "-f \'" . $fname . "\'";
+     $home_phone = "-h \'" . $home_phone . "\'";
+ 
+-    if ($gst_dist =~ /^debian/  || $gst_dist =~ /^archlinux/)
++    if ($gst_dist =~ /^debian/  || $gst_dist =~ /^archlinux/ || $gst_dist =~ /^nexenta/)
+     {
+       $office = "-r \'" . $office . "\'";
+       $office_phone = "-w \'" . $office_phone . "\'";
+@@ -903,6 +1092,30 @@
+   &gst_file_run ($command);
+ }
+ 
++$service = "passwd";
++$username = "";
++$newpassword = "";
++
++sub my_conv_func {
++  my @res;
++  while ( @_ ) {
++      my $code = shift;
++      my $msg = shift;
++      my $ans = "";
++
++      $ans = $username if ($code == PAM_PROMPT_ECHO_ON() );
++      if ($code == PAM_PROMPT_ECHO_OFF() ) {
++        $ans = $newpassword;
++        $ans = $newpassword;
++
++      }
++
++      push @res, (PAM_SUCCESS(),$ans);
++  }
++  push @res, PAM_SUCCESS();
++  return @res;
++}
++
+ sub add_user
+ {
+ 	my ($data) = @_;
+@@ -932,6 +1145,56 @@
+     print $pwdpipe $$data[$users_prop_map{"password"}];
+     &gst_file_close ($pwdpipe);
+   }
++  elsif ($gst_dist =~ /^nexenta/)
++  {
++    my $pwdpipe;
++    $home_parents = $$data[$users_prop_map{"home"}];
++    $home_parents =~ s/\/+[^\/]+\/*$//;
++    &gst_file_run ("$tool_mkdir -p $home_parents");
++
++    $command = "$cmd_useradd" . " -d \'" . $$data[$users_prop_map{"home"}] .
++     "\' -g \'"    . $$data[$users_prop_map{"gid"}] .
++     "\' -s \'"    . $$data[$users_prop_map{"shell"}] .
++     "\' -u \'"    . $$data[$users_prop_map{"uid"}] .
++     "\' \'"       . $$data[$users_prop_map{"login"}] . "\'";
++    &gst_file_run ($command);
++    &gst_file_run("echo " . $$data[$users_prop_map{"login"}] . ":" . $$data[$users_prop_map{"password"}] . " | chpasswd -e");
++  }
++  elsif ($gst_dist =~ /^solaris/)
++  {
++    $home_parents = $$data[$users_prop_map{"home"}];
++    $home_parents =~ s/\/+[^\/]+\/*$//;
++    &gst_file_run ("$tool_mkdir -p $home_parents");
++
++    $command = "$cmd_useradd";
++    if ($$data[$users_prop_map{"rbac"}] ne undef ) {
++      my (@profiles, $old_user_profiles, $new_user_profiles );
++      $new_user_profiles = $$data[$users_prop_map{"rbac"}];
++      @profiles = ();
++      push( @profiles, @$new_user_profiles );
++      if ( $#profiles >= 0 ) {
++        my $profiles_str = "";
++        my $def_profiles = read_rbac_default_profiles();
++        foreach ( @profiles ) {
++          next if ( exists ($def_profiles->{$_}) );
++          $profiles_str .= ',' unless ( $profiles_str eq "" );
++          $profiles_str .= $_;
++        }
++        $command .= " -P \'" . $profiles_str . "\'";
++      }
++    }
++
++    $command .= " -d \'" . $$data[$users_prop_map{"home"}] .
++     "\' -g \'"    . $$data[$users_prop_map{"gid"}] .
++     "\' -m -s \'"    . $$data[$users_prop_map{"shell"}] .
++     "\' -u \'"    . $$data[$users_prop_map{"uid"}] .
++     "\' \'"       . $$data[$users_prop_map{"login"}] . "\'";
++    &gst_file_run ($command);
++    $username = $$data[$users_prop_map{"login"}];
++    $newpassword = $$data[$users_prop_map{"password"}];
++    ref($pamh = new Authen::PAM($service, $username, \&my_conv_func));
++    $pamh->pam_chauthtok(PAM_NO_AUTHTOK_CHECK());
++  }
+   else
+   {
+     $home_parents = $$data[$users_prop_map{"home"}];
+@@ -967,9 +1230,109 @@
+      " -H 0"; # pw(8) reads password from STDIN
+ 
+     $pwdpipe = &gst_file_run_pipe($command, $GST_FILE_WRITE);
+-    print $pwdpipe $$data[$users_prop_map{"password"}];
++    print $pwdpipe $$new_data[$users_prop_map{"password"}];
+     &gst_file_close ($pwdpipe);
+   }
++  elsif ($gst_dist =~ /^nexenta/)
++  {
++    $command = "$cmd_usermod" . " -d \'" . $$new_data[$users_prop_map{"home"}] .
++     "\' -g \'" . $$new_data[$users_prop_map{"gid"}] .
++     "\' -l \'" . $$new_data[$users_prop_map{"login"}] .
++     "\' -s \'" . $$new_data[$users_prop_map{"shell"}] .
++     "\' -u \'" . $$new_data[$users_prop_map{"uid"}] .
++     "\' \'" . $$old_data[$users_prop_map{"login"}] . "\'";
++    &gst_file_run ($command);
++    &gst_file_run("echo " . $$new_data[$users_prop_map{"login"}] . ":" . $$new_data[$users_prop_map{"password"}] . " | chpasswd -e");
++  }
++  elsif ($gst_dist =~ /^solaris/)
++  {
++    $command = "$cmd_usermod" ;
++
++    $command .= " -u \'" . $$new_data[$users_prop_map{"uid"}] . "\'"
++        if ( $$new_data[$users_prop_map{"uid"}] ne $$old_data[$users_prop_map{"uid"}]  );
++    $command .= " -g \'" . $$new_data[$users_prop_map{"gid"}] . "\'"
++        if ( $$new_data[$users_prop_map{"gid"}] ne $$old_data[$users_prop_map{"gid"}]  );
++    $command .= " -d \'" . $$new_data[$users_prop_map{"home"}] . "\'"
++        if ( $$new_data[$users_prop_map{"home"}] ne $$old_data[$users_prop_map{"home"}]  );
++    $command .= " -s \'" . $$new_data[$users_prop_map{"shell"}] . "\'"
++        if ( $$new_data[$users_prop_map{"shell"}] ne $$old_data[$users_prop_map{"shell"}]  );
++
++    if ($$new_data[$users_prop_map{"rbac"}] ne undef ) {
++      my (@profiles, $old_user_profiles, $new_user_profiles );
++      $old_user_profiles = $$old_data[$users_prop_map{"rbac"}];
++      $new_user_profiles = $$new_data[$users_prop_map{"rbac"}];
++      @profiles = ();
++      if ( $old_user_profiles eq undef ) {
++        # All new profiles, so just use directly
++        &gst_report("RBAC profiles created for ". $$old_data[$users_prop_map{"login"}] );
++        push( @profiles, @$new_user_profiles );
++      }
++      else {
++        my @sorted_old_user_profiles = sort(@$old_user_profiles);
++        my @sorted_new_user_profiles = sort(@$new_user_profiles);
++        if ( &arr_cmp_recurse( \@sorted_new_user_profiles, \@sorted_old_user_profiles) ) {
++          &gst_report("RBAC profiles changed for ". $$old_data[$users_prop_map{"login"}] );
++          push( @profiles, @$new_user_profiles ); # Copy unsorted list
++        }
++      }
++      if ( $#profiles >= 0 ) {
++        my $profiles_str = "";
++        my $def_profiles = read_rbac_default_profiles();
++        foreach ( @profiles ) {
++          next if ( exists ($def_profiles->{$_}) );
++          $profiles_str .= ',' unless ( $profiles_str eq "" );
++          $profiles_str .= $_;
++        }
++        $command .= " -P \'" . $profiles_str . "\'";
++      }
++    }
++
++    if ($$new_data[$users_prop_map{"role"}] ne undef ) {
++      my (@roles, $old_user_roles, $new_user_roles );
++      $old_user_roles = $$old_data[$users_prop_map{"role"}];
++      $new_user_roles = $$new_data[$users_prop_map{"role"}];
++      @roles = ();
++      if ( $old_user_roles eq undef ) {
++        # All new roles, so just use directly
++        &gst_report("RBAC roles created for ". $$old_data[$users_prop_map{"login"}] );
++        push( @roles, @$new_user_roles );
++      }
++      else {
++        my @sorted_old_user_roles = sort(@$old_user_roles);
++        my @sorted_new_user_roles = sort(@$new_user_roles);
++        if ( &arr_cmp_recurse( \@sorted_new_user_roles, \@sorted_old_user_roles) ) {
++          &gst_report("RBAC roles changed for ". $$old_data[$users_prop_map{"login"}] );
++          push( @roles, @$new_user_roles ); # Copy unsorted list
++        }
++      }
++      if ( $#roles >= 0 ) {
++        my $roles_str = "";
++        foreach ( @roles ) {
++          $roles_str .= ',' unless ( $roles_str eq "" );
++          $roles_str .= $_;
++        }
++        $command .= " -R \'" . $roles_str . "\'";
++      } else {
++        $command .= " -R \'\'";
++      }
++    }
++
++    # If there's nothing to change, then don't... 
++    if ( $command ne $cmd_usermod ) {
++        $command .= " \'" . $$old_data[$users_prop_map{"login"}] . "\'";
++        &gst_file_run ($command);
++    }
++    $username = $$old_data[$users_prop_map{"login"}];
++    $oldpassword = $$old_data[$users_prop_map{"password"}];
++    $newpassword = $$new_data[$users_prop_map{"password"}];
++    # Should only change password if old and new differ - this is especially
++    # important since the old password is usually the "crypted" one!! Only if
++    # it's different has a user entered a clear string here.
++    if ( $newpassword ne undef && $newpassword ne $oldpassword ) {
++        ref($pamh = new Authen::PAM($service, $username, \&my_conv_func));
++        $pamh->pam_chauthtok(PAM_NO_AUTHTOK_CHECK());
++    }
++  }
+   else
+   {
+     $command = "$cmd_usermod" . " -d \'" . $$new_data[$users_prop_map{"home"}] .
+@@ -1026,8 +1389,24 @@
+ 
+     foreach $user (@$u)
+     {
+-      $command = "$cmd_gpasswd -a \'" . $user .
+-        "\' " . $$data[$groups_prop_map{"name"}];
++      if ($gst_dist =~ /^solaris/)
++      {
++        my ($groups, @a);
++        $command = "groups \'" . $user . "\'";
++        $groups = &gst_file_run_backtick ($command);
++        chomp ($groups);
++        @a = split (/ /, $groups);
++        $groups = join (',', @a);
++
++        $command = "$cmd_usermod -G " . $groups . "," .
++                $$data[$groups_prop_map{"name"}] .  " " .
++                $user . " ";
++      }
++      else
++      {
++        $command = "$cmd_gpasswd -a \'" . $user .
++          "\' " . $$data[$groups_prop_map{"name"}];
++      }
+       &gst_file_run ($command);
+     }
+   }
+@@ -1052,10 +1431,18 @@
+   }
+   else
+   {
+-    $command = "$cmd_groupmod -g \'" . $$new_data[$groups_prop_map{"gid"}] .
+-      "\' -n \'" . $$new_data[$groups_prop_map{"name"}] . "\' " .
+-      "\'" . $$old_data[$groups_prop_map{"name"}] . "\'";
+-  
++    if ( $$new_data[$groups_propmap{"name"}] eq $$old_data[$group_prop_map{"name"}] )
++    {
++      $command = "$cmd_groupmod -g \'" . $$new_data[$groups_prop_map{"gid"}] .
++        "\' \'" . $$old_data[$groups_prop_map{"name"}] . "\'";
++    }
++    else
++    {
++      $command = "$cmd_groupmod -g \'" . $$new_data[$groups_prop_map{"gid"}] .
++        "\' -n \'" . $$new_data[$groups_prop_map{"name"}] . "\' " .
++        "\'" . $$old_data[$groups_prop_map{"name"}] . "\'";
++    }
++
+     &gst_file_run ($command);
+ 	
+     # Let's see if the users that compose the group have changed.
+@@ -1069,25 +1456,62 @@
+       $max_o = $#$o;
+       for ($i = 0, $j = 0; $i <= &max ($max_n, $max_o); ) {
+         $r = $$n[$i] cmp $$o[$j];
+-        $r *= -1 if (($$o[$j] eq "") || ($$n[$i] eq ""));
+ 
+-        if ($r < 0) { # add this user to the group.
+-          $command = "$cmd_gpasswd -a \'" . $$n[$i] . "\' \'" . 
+-            $$new_data[$groups_prop_map{"name"}] . "\'";
++        if ($r > 0) { # add this user to the group.
++          if ($gst_dist =~ /^solaris/)
++          {
++            my ($groups, @a);
++            $command = "groups \'" . $$n[$i] . "\'";
++            $groups = &gst_file_run_backtick ($command);
++            chomp ($groups);
++            @a = split (/ /, $groups);
++            $groups = join (',', @a);
++
++            $command = "$cmd_usermod -G " . $groups . "," .
++                $$new_data[$groups_prop_map{"name"}] .  " " .
++                $$n[$i] . " ";
++          }
++          else
++          {
++            $command = "$cmd_gpasswd -a " . $$n[$i] . " " .  $$new_data[$groups_prop_map{"name"}] . " ";
++          }
+           $i ++;
+-				
++
+           &gst_file_run ($command);
+-			  } elsif ($r > 0) { # delete the user from the group.
+-          $command = "$cmd_gpasswd -d \'" . $$o[$j] . "\' \'" . 
+-            $$new_data[$groups_prop_map{"name"}] . "\'";
++        } elsif ($r < 0) { # delete the user from the group.
++          if ($gst_dist =~ /^solaris/)
++          {
++            my ($groups, @a, $k);
++            $command = "groups \'" . $$o[$j] . "\'";
++            $groups = &gst_file_run_backtick ($command);
++            chomp ($groups);
++            @a = split (/ /, $groups);
++            for ($k = 0; $k < $#a + 1; $k++)
++            {
++              if ($a[$k] eq $$new_data[$groups_prop_map{"name"}])
++              {
++                splice (@a, $k, 1);
++                last;
++              }
++            }
++            $groups = join (',', @a);
++
++            $command = "$cmd_usermod -G " . $groups . " " .
++                $$o[$j] . " ";
++          }
++          else
++          {
++            $command = "$cmd_gpasswd -d \'" . $$o[$j] . "\' \'" .
++              $$new_data[$groups_prop_map{"name"}] . "\'";
++          }
+           $j ++;
+-				
++
+           &gst_file_run ($command);
+-			  } else { # The information is the same. Go to next tuple.
++        } else { # The information is the same. Go to next tuple.
+           $i ++; $j ++;
+-			  }	
+-		  }	
+-	  }
++        }
++      }
++    }
+   }
+ }
+ 
+@@ -1204,8 +1628,11 @@
+ 		elsif ($$tree[0] eq "group_last_modified") { &xml_parse_group_last_modified ($$tree[1], $hash); }
+ 		elsif ($$tree[0] eq "userdb") { &xml_parse_userdb ($$tree[1], $hash); }
+ 		elsif ($$tree[0] eq "groupdb") { &xml_parse_groupdb ($$tree[1], $hash); }
++		elsif ($$tree[0] eq "use_md5")  { }
+ 		elsif ($$tree[0] eq "shelldb")  { }
+ 		elsif ($$tree[0] eq "profiledb")  { &xml_parse_profiledb ($$tree[1], $hash); }
++		elsif ($$tree[0] eq "rbacdb")  { } # if rbacdb is there ignore, can't be changed.
++                elsif ($$tree[0] eq "roledb")  { } # if roledb is there ignore, can't be changed.
+ 		else
+ 		{
+ 		  &gst_report ("xml_unexp_tag", $$tree[0]);
+@@ -1268,19 +1695,61 @@
+ 
+ 	while (@$tree)
+ 	{
+-		if ($users_prop_map{$$tree[0]} ne undef)
++		if ($users_prop_map{$$tree[0]} ne undef && $$tree[0] ne "rbac" && $$tree[0] ne "role" )
+ 		{
+ 		  $line[$users_prop_map{$$tree[0]}] = &gst_xml_unquote($$tree[1][2]);
+ 		}
+-		else
+-		{
+-		  &gst_report ("xml_unexp_tag", $$tree[0]);
+-		}
+-		
+-		shift @$tree;
+-		shift @$tree;
+-	}
++    elsif ($$tree[0] eq "rbac")
++    {
++      my $rbac = $$tree[1]; # rbac children
++      shift @$rbac; # Skip attributes
++      my $rbac_profiles = $$rbac[1]; # rbac children
++      shift @$rbac_profiles; # Skip attributes
+ 
++      my @user_profiles;
++      # my $users_rbac_profiles = $$hash{"users_rbac_profiles"};
++
++      # if ( $users_rbac_profiles eq undef ) { # Allocate a new one if none exists
++      #  my %dummy = ();
++      #  $users_rbac_profiles = \%dummy;
++      #  $$hash{"users_rbac_profiles"} = $users_rbac_profiles;
++      #}
++
++      while (@$rbac_profiles) {
++        my $profile = $$rbac_profiles[1][2];
++        push(@user_profiles, $profile );
++        shift( @$rbac_profiles );
++        shift( @$rbac_profiles );
++      }
++      #$$users_rbac_profiles{ $line[$users_prop_map{"login"}] } = \@user_profiles;
++      #XXX Here
++		  $line[$users_prop_map{$$tree[0]}] = \@user_profiles;
++    }
++    elsif ($$tree[0] eq "role")
++    {
++      my $role = $$tree[1]; # role children
++      shift @$role; # Skip attributes
++      my $role_lists = $$role[1]; # role children
++      shift @$role_lists; # Skip attributes
++
++      my @user_roles;
++
++      while (@$role_lists) {
++	my $role = $$role_lists[1][2];
++	push(@user_roles, $role );
++	shift( @$role_lists );
++	shift( @$role_lists );
++      }
++      $line[$users_prop_map{$$tree[0]}] = \@user_roles;
++    }
++    else
++    {
++      &gst_report ("xml_unexp_tag", $$tree[0]);
++    }
++      shift @$tree;
++      shift @$tree;
++    }
++
+   $$users_hash{sprintf ("%06d", $line[0])} = [@line];
+   push (@$users, [@line]);
+ }	
+@@ -1323,6 +1792,7 @@
+ 		  if ($$tree[0] eq "users") { $line[$groups_prop_map{$$tree[0]}] = $$tree[1]; }
+ 			else { $line[$groups_prop_map{$$tree[0]}] = $$tree[1][2]; }
+ 		}
++		elsif ($$tree[0] eq "allows_to") { }
+ 		else
+ 		{
+ 		  &gst_report ("xml_unexp_tag", $$tree[0]);
+@@ -1487,11 +1957,20 @@
+   my ($hash) = @_;
+   my ($key, $value, $i, $j, $k);
+   my ($passwd_last_modified, $users, $desc);
++  # my ($users_rbac_profiles);
++  my ($rbac, $rbac_profiles, $role, $rbac_roles);
+ 
+   $passwd_last_modified = $$hash{"passwd_last_modified"};
+   $users = $$hash{"users"};
+   $group_last_modified = $$hash{"group_last_modified"};
+   $groups = $$hash{"groups"};
++  if ( $gst_dist =~ /^solaris/ ) {
++    $rbac = $$hash{"rbacdb"};
++    $rbac_profiles = $$rbac{"rbac_profiles"};
++    $role = $$hash{"roledb"};
++    $rbac_roles = $$role{"rbac_roles"};
++    # $users_rbac_profiles = $$hash{"users_rbac_profiles"};
++  }
+ 
+   &gst_xml_print_begin ();
+ 
+@@ -1519,8 +1998,35 @@
+ 	  &gst_xml_container_enter ('user');
+ 		for ($j = 0; $j < ($#users_prop_array - 1) / 2; $j++)
+     {
+-      &gst_xml_print_pcdata ($users_prop_map{$j}, $$i[$j]);
++      if ( $users_prop_map{$j} eq "rbac" && $gst_dist =~ /^solaris/ ) {
++        my ($user_profiles);
++        &gst_xml_container_enter ('rbac');
++        &gst_xml_container_enter ('rbac_profiles');
++        # $user_profiles = $$users_rbac_profiles{$$i[1]};
++        $user_profiles = $$i[$j];
++        foreach $prof ( @$user_profiles ) {
++          &gst_xml_print_pcdata ("rbac_profile", $prof);
++        }
++        &gst_xml_container_leave ();
++        &gst_xml_container_leave ();
++      }
++      elsif ( $users_prop_map{$j} eq "role" && $gst_dist =~ /^solaris/ ) {
++        my ($user_roles);
++        &gst_xml_container_enter ('role');
++        &gst_xml_container_enter ('rbac_roles');
++        # $user_profiles = $$users_rbac_profiles{$$i[1]};
++        $user_roles = $$i[$j];
++        foreach $role ( @$user_roles ) {
++          &gst_xml_print_pcdata ("rbac_role", $role);
++        }
++        &gst_xml_container_leave ();
++        &gst_xml_container_leave ();
++      }
++      else {
++        &gst_xml_print_pcdata ($users_prop_map{$j}, $$i[$j]);
++      }
+ 		}
++
+ 		&gst_xml_container_leave ();
+ 	}
+ 	&gst_xml_container_leave ();
+@@ -1559,9 +2065,47 @@
+ 		&gst_xml_container_leave ();
+ 	}
+ 	&gst_xml_container_leave ();
+-  &gst_xml_print_vspace ();
+ 
+-  &gst_xml_print_end ();
++    if ( $gst_dist =~ /^solaris/ ) {
++      &gst_xml_print_vspace ();
++
++      &gst_xml_print_comment ('Now the RBAC Profiles');
++      &gst_xml_print_vspace ();
++        
++      &gst_xml_container_enter ('rbacdb');
++      &gst_xml_container_enter ('rbac_profiles');
++
++      foreach $prof ( sort keys %$rbac_profiles )
++      {
++        &gst_xml_print_vspace ();
++        &gst_xml_container_enter ('rbac_profile');
++        &gst_xml_print_pcdata ('name', $prof );
++        &gst_xml_print_pcdata ('description', $$rbac_profiles{$prof} );
++        &gst_xml_container_leave ();
++      }
++      &gst_xml_container_leave ();
++      &gst_xml_container_leave ();
++      &gst_xml_print_vspace ();
++
++      &gst_xml_print_comment ('Now the ROLE');
++      &gst_xml_print_vspace ();
++
++      &gst_xml_container_enter ('roledb');
++      &gst_xml_container_enter ('rbac_roles');
++
++      foreach $role ( sort keys %$rbac_roles )
++      {
++    	&gst_xml_print_vspace ();
++    	&gst_xml_container_enter ('rbac_role');
++    	&gst_xml_print_pcdata ('role', $role );
++    	&gst_xml_container_leave ();
++      }
++      &gst_xml_container_leave ();
++      &gst_xml_container_leave ();
++      &gst_xml_print_vspace ();
++    }
++
++    &gst_xml_print_end ();
+ }
+ 
+ 
+@@ -1590,6 +2134,7 @@
+     &gst_file_backup ($_) foreach (@passwd_names);
+     &gst_file_backup ($_) foreach (@shadow_names);
+     &gst_file_backup ($_) foreach (@group_names);
++    &gst_file_backup ($_) foreach (@rbac_names);
+ 
+     &write_profiledb ($hash);
+     &write_group_passwd ($hash);
+@@ -1627,6 +2172,7 @@
+ $tool = &gst_init ($name, $version, $description, $directives, @ARGV);
+ &gst_platform_ensure_supported ($tool, @platforms);
+ 
++&get_users_prop_array ();
+ &get_login_defs_prop_array ();
+ &get_profiles_prop_array   ();
+ 

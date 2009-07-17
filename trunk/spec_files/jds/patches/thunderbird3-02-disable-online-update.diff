@@ -1,0 +1,12 @@
+--- mozilla/modules/libpref/src/init/all.js.old2	2008-12-11 13:54:56.706528166 +0800
++++ mozilla/modules/libpref/src/init/all.js	2008-12-11 13:55:25.960932386 +0800
+@@ -51,7 +51,8 @@
+ pref("keyword.enabled", false);
+ pref("general.useragent.locale", "chrome://global/locale/intl.properties");
+ 
+-pref("general.config.obscure_value", 13); // for MCD .cfg files
++pref("general.config.filename","thunderbird.cfg");
++pref("general.config.obscure_value", 0); // for MCD .cfg files
+ 
+ pref("general.warnOnAboutConfig", true);
+ 

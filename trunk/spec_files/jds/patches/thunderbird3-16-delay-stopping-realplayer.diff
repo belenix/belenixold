@@ -1,0 +1,31 @@
+diff --git a/layout/generic/nsObjectFrame.cpp b/layout/generic/nsObjectFrame.cpp
+--- a/layout/generic/nsObjectFrame.cpp
++++ b/layout/generic/nsObjectFrame.cpp
+@@ -1892,23 +1892,26 @@ GetMIMEType(nsIPluginInstance *aPluginIn
+   return "";
+ }
+ #endif
+ 
+ static PRBool
+ DoDelayedStop(nsPluginInstanceOwner *aInstanceOwner, PRBool aDelayedStop)
+ {
+   // Don't delay stopping QuickTime (bug 425157), Flip4Mac (bug 426524),
+-  // XStandard (bug 430219), CMISS Zinc (bug 429604). ARM Flash (454756)
++  // XStandard (bug 430219), CMISS Zinc (bug 429604). ARM Flash (454756),
++  // RealPlayer/Helix (bug 451007).
+   if (aDelayedStop
+ #ifndef XP_WIN
+       && !aInstanceOwner->MatchPluginName("QuickTime")
+       && !aInstanceOwner->MatchPluginName("Flip4Mac")
+       && !aInstanceOwner->MatchPluginName("XStandard plugin")
+       && !aInstanceOwner->MatchPluginName("CMISS Zinc Plugin")
++      && !aInstanceOwner->MatchPluginName("RealPlayer")
++      && !aInstanceOwner->MatchPluginName("Helix")
+ #endif
+ #if defined(XP_UNIX) && defined(__arm__)
+       && !aInstanceOwner->MatchPluginName("Shockwave Flash")
+ #endif
+       ) {
+     nsCOMPtr<nsIRunnable> evt = new nsStopPluginRunnable(aInstanceOwner);
+     NS_DispatchToCurrentThread(evt);
+     return PR_TRUE;

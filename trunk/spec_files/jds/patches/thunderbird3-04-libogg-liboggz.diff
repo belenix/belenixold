@@ -1,0 +1,129 @@
+--- mozilla/media/liboggz/README_MOZILLA.old	2009-02-27 14:09:43.328672939 +0800
++++ mozilla/media/liboggz/README_MOZILLA	2009-02-27 14:16:16.572038295 +0800
+@@ -14,3 +14,6 @@
+ http://trac.annodex.net/ticket/431
+ 
+ endian.patch is applied to fix bug 452698.
++
++The oggz_off_t.patch fixes a compile error on Solaris see bug 449754
++for details
+--- mozilla/media/liboggz/include/oggz/oggz_off_t_generated.h.old	2009-02-27 14:10:05.456649268 +0800
++++ mozilla/media/liboggz/include/oggz/oggz_off_t_generated.h	2009-02-27 14:16:16.578662552 +0800
+@@ -59,7 +59,7 @@
+ 
+ #include <sys/types.h>
+ 
+-#ifdef __APPLE__
++#if defined(__APPLE__) || defined(SOLARIS)
+ typedef off_t oggz_off_t;
+ #else
+ typedef loff_t oggz_off_t;
+--- mozilla/media/liboggz/update.sh.old	2009-02-27 14:11:42.497106984 +0800
++++ mozilla/media/liboggz/update.sh	2009-02-27 14:16:16.579064845 +0800
+@@ -44,3 +44,4 @@
+ patch -p4 <seek.patch
+ patch -p4 <warning.patch
+ patch -p4 <endian.patch
++patch -p3 <oggz_off_t.patch
+--- mozilla/media/liboggz/oggz_off_t.patch.old	2009-02-27 14:10:26.256613056 +0800
++++ mozilla/media/liboggz/oggz_off_t.patch	2009-02-27 14:16:16.578875860 +0800
+@@ -0,0 +1,12 @@
++diff -r 070e364189c8 media/liboggz/include/oggz/oggz_off_t_generated.h
++--- a/media/liboggz/include/oggz/oggz_off_t_generated.h	Wed Nov 26 09:04:13 2008 -0600
+++++ b/media/liboggz/include/oggz/oggz_off_t_generated.h	Thu Nov 27 17:56:54 2008 +0800
++@@ -59,7 +59,7 @@
++ 
++ #include <sys/types.h>
++ 
++-#ifdef __APPLE__
+++#if defined(__APPLE__) || defined(SOLARIS)
++ typedef off_t oggz_off_t;
++ #else
++ typedef loff_t oggz_off_t;
+--- mozilla/media/libogg/int-types.patch.old	2009-02-27 14:08:52.800290896 +0800
++++ mozilla/media/libogg/int-types.patch	2009-02-27 14:16:16.564639611 +0800
+@@ -0,0 +1,20 @@
++--- include/ogg/config_types.h.old	2008-11-10 15:24:49.465597010 +0800
+++++ include/ogg/config_types.h	2008-11-10 15:25:19.249016710 +0800
++@@ -3,9 +3,15 @@
++ 
++ /* these are filled in by configure */
++ typedef int16_t ogg_int16_t;
++-typedef u_int16_t ogg_uint16_t;
++ typedef int32_t ogg_int32_t;
++-typedef u_int32_t ogg_uint32_t;
++ typedef int64_t ogg_int64_t;
++ 
+++#ifdef SOLARIS
+++typedef uint16_t ogg_uint16_t;
+++typedef uint32_t ogg_uint32_t;
+++#else
+++typedef u_int16_t ogg_uint16_t;
+++typedef u_int32_t ogg_uint32_t;
+++#endif
+++
++ #endif
+--- mozilla/media/libogg/update.sh.old	2009-02-27 14:09:19.648423953 +0800
++++ mozilla/media/libogg/update.sh	2009-02-27 14:16:16.564805779 +0800
+@@ -11,3 +11,4 @@
+ cp $1/src/bitwise.c ./src/ogg_bitwise.c
+ cp $1/src/framing.c ./src/ogg_framing.c
+ cp $1/AUTHORS ./AUTHORS
++patch -p0 < int-types.patch
+--- mozilla/media/libogg/README_MOZILLA.old	2009-02-27 14:07:42.800031930 +0800
++++ mozilla/media/libogg/README_MOZILLA	2009-02-27 14:16:16.560372242 +0800
+@@ -2,3 +2,7 @@
+ distribution using the update.sh script. The only changes made were
+ those applied by update.sh and the addition/upate of Makefile.in files
+ for the Mozilla build system.
++
++The int-types.patch address a bug that config_types.h generated from
++Linux platform can't be used on OpenSolaris directly see Mozilla bug
++449754
+--- mozilla/media/libogg/include/ogg/config_types.h.old	2009-02-27 14:08:03.872108738 +0800
++++ mozilla/media/libogg/include/ogg/config_types.h	2009-02-27 14:16:16.564440957 +0800
+@@ -3,9 +3,15 @@
+ 
+ /* these are filled in by configure */
+ typedef int16_t ogg_int16_t;
+-typedef u_int16_t ogg_uint16_t;
+ typedef int32_t ogg_int32_t;
+-typedef u_int32_t ogg_uint32_t;
+ typedef int64_t ogg_int64_t;
+ 
++#ifdef SOLARIS
++typedef uint16_t ogg_uint16_t;
++typedef uint32_t ogg_uint32_t;
++#else
++typedef u_int16_t ogg_uint16_t;
++typedef u_int32_t ogg_uint32_t;
++#endif
++
+ #endif
+--- mozilla/media/libtheora/lib/Makefile.in.old	2009-02-27 14:12:08.977240726 +0800
++++ mozilla/media/libtheora/lib/Makefile.in	2009-02-27 14:16:16.579666238 +0800
+@@ -49,9 +49,11 @@
+ 
+ ifeq ($(findstring 86,$(OS_TEST)), 86)
+ ifneq ($(OS_ARCH),WINNT)
++ifneq ($(OS_ARCH),SunOS)
+ DEFINES += -DOC_X86ASM -DUSE_ASM
+ endif
+ endif
++endif
+ 
+ VPATH		:= $(srcdir) $(srcdir)/dec
+ 
+--- mozilla/media/libvorbis/lib/os.h.old	2009-02-27 14:12:34.961367585 +0800
++++ mozilla/media/libvorbis/lib/os.h	2009-02-27 14:16:45.588079308 +0800
+@@ -26,6 +26,10 @@
+ 
+ #include "misc.h"
+ 
++#ifdef SOLARIS
++#define HAVE_ALLOCA_H
++#endif
++
+ #ifndef _V_IFDEFJAIL_H_
+ #  define _V_IFDEFJAIL_H_
+ 

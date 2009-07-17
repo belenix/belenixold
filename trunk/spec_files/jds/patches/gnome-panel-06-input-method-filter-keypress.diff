@@ -1,0 +1,15 @@
+--- gnome-panel-2.23.90.old/gnome-panel/panel-run-dialog.c	2008-08-26 11:46:53.053231000 +0100
++++ gnome-panel-2.23.90/gnome-panel/panel-run-dialog.c	2008-08-26 11:47:42.058768000 +0100
+@@ -1434,6 +1434,12 @@
+ 	char             *temp;
+ 	int               pos, tmp;
+ 
++	/* commit the string when IM is enabled */
++	if (GTK_ENTRY (entry)->editable && event->type == GDK_KEY_PRESS && event->length > 0) {
++		if (gtk_im_context_filter_keypress (GTK_ENTRY (entry)->im_context, event))
++			return TRUE;
++	}
++
+ 	if (event->type != GDK_KEY_PRESS)
+ 		return FALSE;
+ 

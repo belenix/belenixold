@@ -1,0 +1,28 @@
+diff --git a/gfx/thebes/src/gfxPangoFonts.cpp b/gfx/thebes/src/gfxPangoFonts.cpp
+--- a/gfx/thebes/src/gfxPangoFonts.cpp
++++ b/gfx/thebes/src/gfxPangoFonts.cpp
+@@ -1324,18 +1324,24 @@ gfxFcPangoFontSet::SortPreferredFonts()
+                 truncateMarker = font;
+             }
+             break;
+         }
+     }
+ 
+     FcFontSet *sets[1] = { fontSet };
+     FcResult result;
++#ifdef SOLARIS
++    // Get around a crash of FcFontSetSort when FcConfig is NULL
++    fontSet.own(FcFontSetSort(FcConfigGetCurrent(), sets, 1, mSortPattern,
++                              FcFalse, NULL, &result));
++#else
+     fontSet.own(FcFontSetSort(NULL, sets, 1, mSortPattern,
+                               FcFalse, NULL, &result));
++#endif
+ 
+     if (truncateMarker != NULL && fontSet) {
+         nsAutoRef<FcFontSet> truncatedSet(FcFontSetCreate());
+ 
+         for (int f = 0; f < fontSet->nfont; ++f) {
+             FcPattern *font = fontSet->fonts[f];
+             if (font == truncateMarker)
+                 break;

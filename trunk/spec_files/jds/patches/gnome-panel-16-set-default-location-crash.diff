@@ -1,0 +1,14 @@
+/jds/bin/diff -uprN gnome-panel-2.26.0.old/applets/clock/set-timezone-dummy.c gnome-panel-2.26.0/applets/clock/set-timezone-dummy.c
+--- gnome-panel-2.26.0.old/applets/clock/set-timezone-dummy.c	2009-04-03 11:17:20.594675000 +0100
++++ gnome-panel-2.26.0/applets/clock/set-timezone-dummy.c	2009-04-03 11:31:35.108557000 +0100
+@@ -83,7 +83,9 @@ set_system_timezone_async (const gchar  
+ 					     "Timezone setting is not supported");
+ 		callback (d, error);
+ 
+-		g_error_free (error);
++        /* This is freed in make_current_cb(), called via callback() above. */
++        /* Freeing this here causes race condition and core */
++		/* g_error_free (error); */
+ 	}
+ 
+ 	if (notify)
