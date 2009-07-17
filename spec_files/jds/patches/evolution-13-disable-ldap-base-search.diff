@@ -1,0 +1,12 @@
+--- /export/home/norman/packages/SOURCES/evolution-2.26.1.1/addressbook/gui/component/addressbook-config.c	2009-04-13 12:57:00.000000000 +0800
++++ evolution-2.26.1.1/addressbook/gui/component/addressbook-config.c	2009-04-27 15:58:20.642690000 +0800
+@@ -913,8 +913,7 @@
+ 	gtk_entry_set_text((GtkEntry *)sdialog->search_filter, lud && lud->lud_filter ? lud->lud_filter : "");
+ 	g_signal_connect (sdialog->search_filter, "changed",  G_CALLBACK (search_filter_changed_cb), sdialog);
+ 
+-	g_signal_connect (glade_xml_get_widget(gui, "rootdn-button"), "clicked",
+-			  G_CALLBACK(query_for_supported_bases), sdialog);
++	gtk_widget_set_sensitive (glade_xml_get_widget(gui, "rootdn-button"), FALSE);
+ 
+ 	if (lud)
+ 		ldap_free_urldesc (lud);

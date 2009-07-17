@@ -1,0 +1,495 @@
+--- evolution-2.11.92/e-util/e-pilot-util.h.orig	2007-09-04 14:38:08.510039000 +0800
++++ evolution-2.11.92/e-util/e-pilot-util.h	2007-09-04 12:53:17.507014000 +0800
+@@ -26,8 +26,8 @@
+ #ifndef E_PILOT_UTIL_H
+ #define E_PILOT_UTIL_H
+ 
+-char *e_pilot_utf8_to_pchar (const char *string);
+-char *e_pilot_utf8_from_pchar (const char *string);
++char *e_pilot_utf8_to_pchar   (const char *string, const char *pilot_charset);
++char *e_pilot_utf8_from_pchar (const char *string, const char *pilot_charset);
+ 
+ ESource *e_pilot_get_sync_source (ESourceList *source_list);
+ void e_pilot_set_sync_source (ESourceList *source_list, ESource *source);
+--- evolution-2.11.92/e-util/e-pilot-util.c.orig	2007-09-04 14:38:21.974457000 +0800
++++ evolution-2.11.92/e-util/e-pilot-util.c	2007-09-04 12:53:17.507609000 +0800
+@@ -29,16 +29,19 @@
+ #include "e-pilot-util.h"
+ 
+ char *
+-e_pilot_utf8_to_pchar (const char *string)
++e_pilot_utf8_to_pchar (const char *string, const char *pilot_charset)
+ {
+ 	char *pstring = NULL;
+ 	int res;
+ 
+ 	if (!string)
+ 		return NULL;
+-
+-	res = convert_ToPilotChar ("UTF-8", string, strlen (string), &pstring);
+ 
++#ifdef PILOT_LINK_0_12
++	res = convert_ToPilotChar_WithCharset ("UTF-8", string, strlen (string), &pstring, pilot_charset);
++#else
++	res = convert_ToPilotChar ("UTF-8", string, strlen (string), &pstring);
++#endif
+ 	if (res != 0)
+ 		pstring = strdup (string);
+ 
+@@ -46,16 +49,20 @@
+ }
+ 
+ char *
+-e_pilot_utf8_from_pchar (const char *string)
++e_pilot_utf8_from_pchar (const char *string, const char *pilot_charset)
+ {
+ 	char *ustring = NULL;
+ 	int res;
+ 
+ 	if (!string)
+ 		return NULL;
+
++#ifdef	PILOT_LINK_0_12
++	res = convert_FromPilotChar_WithCharset ("UTF-8", string, strlen (string), &ustring, pilot_charset);
++#else
+ 	res = convert_FromPilotChar ("UTF-8", string, strlen (string), &ustring);
+-
++#endif
++
+ 	if (res != 0)
+ 		ustring = strdup (string);
+
+--- evolution-2.11.92/calendar/conduits/todo/todo-conduit.c.orig	2007-09-04 14:39:59.848275000 +0800
++++ evolution-2.11.92/calendar/conduits/todo/todo-conduit.c	2007-09-04 14:29:18.650419000 +0800
+@@ -66,6 +66,8 @@
+ #define WARN g_warning
+ #define INFO g_message
+ 
++gchar *pilot_charset = NULL;
++
+ typedef struct _EToDoLocalRecord EToDoLocalRecord;
+ typedef struct _EToDoConduitCfg EToDoConduitCfg;
+ typedef struct _EToDoConduitGui EToDoConduitGui;
+@@ -708,19 +710,19 @@
+ 	}
+
+ 	/*Category support*/
+-	e_pilot_local_category_to_remote(&(local->local.category), comp, &(ctxt->ai.category));
++	e_pilot_local_category_to_remote(&(local->local.category), comp, &(ctxt->ai.category), pilot_charset);
+ 
+ 	/* STOP: don't replace these with g_strdup, since free_ToDo
+ 	   uses free to deallocate */
+ 	e_cal_component_get_summary (comp, &summary);
+ 	if (summary.value)
+-		local->todo->description = e_pilot_utf8_to_pchar (summary.value);
++		local->todo->description = e_pilot_utf8_to_pchar (summary.value, pilot_charset);
+ 
+ 	e_cal_component_get_description_list (comp, &d_list);
+ 	if (d_list) {
+ 		description = (ECalComponentText *) d_list->data;
+ 		if (description && description->value)
+-			local->todo->note = e_pilot_utf8_to_pchar (description->value);
++			local->todo->note = e_pilot_utf8_to_pchar (description->value, pilot_charset);
+ 		else
+ 			local->todo->note = NULL;
+ 	} else {
+@@ -862,12 +864,12 @@
+ 
+ 	e_cal_component_set_last_modified (comp, &now);
+ 
+-	summary.value = txt = e_pilot_utf8_from_pchar (todo.description);
++	summary.value = txt = e_pilot_utf8_from_pchar (todo.description, pilot_charset);
+ 	e_cal_component_set_summary (comp, &summary);
+ 	free (txt);
+ 
+ 	/*Category support*/
+-	e_pilot_remote_category_to_local(remote->category, comp, &(ai->category));
++	e_pilot_remote_category_to_local(remote->category, comp, &(ai->category), pilot_charset);
+ 
+ 	/* The iCal description field */
+ 	if (!todo.note) {
+@@ -876,7 +878,7 @@
+ 		GSList l;
+ 		ECalComponentText text;
+ 
+-		text.value = txt = e_pilot_utf8_from_pchar (todo.note);
++		text.value = txt = e_pilot_utf8_from_pchar (todo.note, pilot_charset);
+ 		text.altrep = NULL;
+ 		l.data = &text;
+ 		l.next = NULL;
+@@ -1002,6 +1004,13 @@
+	ctxt->dbi = dbi;
+	ctxt->client = NULL;
+ 
++#ifdef PILOT_LINK_0_12
++	if(NULL == dbi->pilotInfo->pilot_charset)
++		pilot_charset = NULL;
++	else
++		pilot_charset = g_strdup(dbi->pilotInfo->pilot_charset);
++#endif
++
+ 	/* Get the timezone */
+ 	ctxt->timezone = get_default_timezone ();
+ 	if (ctxt->timezone == NULL)
+@@ -1163,7 +1172,8 @@
+ 	if (e_cal_get_changes (ctxt->client, change_id, &changed, NULL))
+ 		e_cal_free_change_list (changed);
+ 	g_free (change_id);
+-
++	if (pilot_charset)
++		g_free (pilot_charset);	
+ 	LOG (g_message ( "---------------------------------------------------------\n" ));
+ 
+ 	return 0;
+--- evolution-2.11.92/calendar/conduits/calendar/calendar-conduit.c.orig	2007-09-04 14:39:32.303878000 +0800
++++ evolution-2.11.92/calendar/conduits/calendar/calendar-conduit.c	2007-09-04 14:27:32.615346000 +0800
+@@ -61,6 +61,8 @@
+ #define WARN g_warning
+ #define INFO g_message
+ 
++gchar *pilot_charset = NULL;
++
+ #define PILOT_MAX_ADVANCE 99
+ 
+ typedef struct _ECalLocalRecord ECalLocalRecord;
+@@ -941,19 +943,19 @@
+ 	}
+ 
+ 	/*Category support*/
+-	e_pilot_local_category_to_remote(&(local->local.category), comp, &(ctxt->ai.category));
++	e_pilot_local_category_to_remote(&(local->local.category), comp, &(ctxt->ai.category), pilot_charset);
+ 
+ 	/* STOP: don't replace these with g_strdup, since free_Appointment
+ 	   uses free to deallocate */
+ 	e_cal_component_get_summary (comp, &summary);
+ 	if (summary.value)
+-		local->appt->description = e_pilot_utf8_to_pchar (summary.value);
++		local->appt->description = e_pilot_utf8_to_pchar (summary.value, pilot_charset);
+ 
+ 	e_cal_component_get_description_list (comp, &d_list);
+ 	if (d_list) {
+ 		description = (ECalComponentText *) d_list->data;
+ 		if (description && description->value)
+-			local->appt->note = e_pilot_utf8_to_pchar (description->value);
++			local->appt->note = e_pilot_utf8_to_pchar (description->value, pilot_charset);
+ 		else
+ 			local->appt->note = NULL;
+ 	} else {
+@@ -1231,12 +1233,12 @@
+ 
+ 	e_cal_component_set_last_modified (comp, &now);
+ 
+-	summary.value = txt = e_pilot_utf8_from_pchar (appt.description);
++	summary.value = txt = e_pilot_utf8_from_pchar (appt.description, pilot_charset);
+ 	e_cal_component_set_summary (comp, &summary);
+ 	free (txt);
+ 
+ 	/*Category support*/
+-	e_pilot_remote_category_to_local(remote->category, comp, category);
++	e_pilot_remote_category_to_local(remote->category, comp, category, pilot_charset);
+ 
+ 	/* The iCal description field */
+ 	if (!appt.note) {
+@@ -1245,7 +1247,7 @@
+ 		GSList l;
+ 		ECalComponentText text;
+ 
+-		text.value = txt = e_pilot_utf8_from_pchar (appt.note);
++		text.value = txt = e_pilot_utf8_from_pchar (appt.note, pilot_charset);
+ 		text.altrep = NULL;
+ 		l.data = &text;
+ 		l.next = NULL;
+@@ -1500,6 +1502,12 @@
+	LOG (g_message ( "pre_sync: Calendar Conduit v.%s", CONDUIT_VERSION ));
+ 
+	ctxt->dbi = dbi;
++#ifdef PILOT_LINK_0_12
++	if(NULL == dbi->pilotInfo->pilot_charset)
++		pilot_charset = NULL;
++	else
++		 pilot_charset = g_strdup(dbi->pilotInfo->pilot_charset);
++#endif
+	ctxt->client = NULL;
+ 
+ 	/* Get the timezone */
+@@ -1685,6 +1693,8 @@
+ 	if (e_cal_get_changes (ctxt->client, change_id, &changed, NULL))
+ 		e_cal_free_change_list (changed);
+ 	g_free (change_id);
++	if (pilot_charset)
++		g_free (pilot_charset);
+ 
+ 	LOG (g_message ( "---------------------------------------------------------\n" ));
+ 
+--- evolution-2.11.92/calendar/conduits/common/libecalendar-common-conduit.h.orig	2007-09-04 14:40:55.393610000 +0800
++++ evolution-2.11.92/calendar/conduits/common/libecalendar-common-conduit.h	2007-09-04 14:33:46.502635000 +0800
+@@ -6,6 +6,6 @@
+ 
+ 
+ int e_pilot_add_category_if_possible(char *cat_to_add, struct CategoryAppInfo *category);
+-void e_pilot_local_category_to_remote(int * pilotCategory, ECalComponent *comp, struct CategoryAppInfo *category);
+-void e_pilot_remote_category_to_local(int   pilotCategory, ECalComponent *comp, struct CategoryAppInfo *category);
++void e_pilot_local_category_to_remote(int * pilotCategory, ECalComponent *comp, struct CategoryAppInfo *category, char *pilot_charset);
++void e_pilot_remote_category_to_local(int   pilotCategory, ECalComponent *comp, struct CategoryAppInfo *category, char *pilot_charset);
+ 
+--- evolution-2.11.92/calendar/conduits/common/libecalendar-common-conduit.c.orig	2007-09-04 14:41:06.009463000 +0800
++++ evolution-2.11.92/calendar/conduits/common/libecalendar-common-conduit.c	2007-09-04 14:33:15.741973000 +0800
+@@ -122,7 +122,7 @@
+ /*
+  *conversion from an evolution category to a palm category
+  */
+-void e_pilot_local_category_to_remote(int * pilotCategory, ECalComponent *comp, struct CategoryAppInfo *category)
++void e_pilot_local_category_to_remote(int * pilotCategory, ECalComponent *comp, struct CategoryAppInfo *category, char *pilot_charset)
+ {
+ 	GSList *c_list = NULL;
+ 	char * category_string;
+@@ -130,7 +130,7 @@
+ 	e_cal_component_get_categories_list (comp, &c_list);
+ 	if (c_list) {
+ 		//list != 0, so at least 1 category is assigned
+-		category_string = e_pilot_utf8_to_pchar((const char *)c_list->data);
++		category_string = e_pilot_utf8_to_pchar((const char *)c_list->data, pilot_charset);
+ 		if (c_list->next != 0) {
+ 			LOG (g_message ("Note: item has more categories in evolution, first chosen"));
+ 		}
+@@ -158,13 +158,13 @@
+ /*
+  *conversion from a palm category to an evolution category
+  */
+-void e_pilot_remote_category_to_local(int pilotCategory, ECalComponent *comp, struct CategoryAppInfo *category)
++void e_pilot_remote_category_to_local(int pilotCategory, ECalComponent *comp, struct CategoryAppInfo *category, char *pilot_charset)
+ {
+ 	char *category_string = NULL;
+ 
+ 	if (pilotCategory != 0) {
+ 		/* pda has category assigned */
+-		category_string = e_pilot_utf8_from_pchar(category->name[pilotCategory]);
++		category_string = e_pilot_utf8_from_pchar(category->name[pilotCategory], pilot_charset);
+ 
+ 		LOG(g_message("Category: %s\n", category_string));
+
+--- evolution-2.11.92/calendar/conduits/memo/memo-conduit.c.orig	2007-09-04 16:30:46.586050000 +0800
++++ evolution-2.11.92/calendar/conduits/memo/memo-conduit.c	2007-09-04 16:33:09.458512000 +0800
+@@ -64,6 +64,8 @@
+ #define WARN g_warning
+ #define INFO g_message
+ 
++gchar *pilot_charset = NULL;
++
+ typedef struct _EMemoLocalRecord EMemoLocalRecord;
+ typedef struct _EMemoConduitCfg EMemoConduitCfg;
+ typedef struct _EMemoConduitGui EMemoConduitGui;
+@@ -576,7 +578,7 @@
+ 	}
+ 
+ 	/*Category support*/
+-	e_pilot_local_category_to_remote(&(local->local.category), comp, &(ctxt->ai.category));
++	e_pilot_local_category_to_remote(&(local->local.category), comp, &(ctxt->ai.category), pilot_charset);
+ 
+ 	/* STOP: don't replace these with g_strdup, since free_Memo
+ 	   uses free to deallocate */
+@@ -585,7 +587,7 @@
+ 	if (d_list) {
+ 		description = (ECalComponentText *) d_list->data;
+ 		if (description && description->value){
+-			local->memo->text = e_pilot_utf8_to_pchar (description->value);
++			local->memo->text = e_pilot_utf8_to_pchar (description->value, pilot_charset);
+ 		}
+ 		else{
+ 			local->memo->text = NULL;
+@@ -691,7 +693,7 @@
+ 	e_cal_component_set_last_modified (comp, &now);
+ 
+ 	/*Category support*/
+-	e_pilot_remote_category_to_local(remote->category, comp, &(ai->category));
++	e_pilot_remote_category_to_local(remote->category, comp, &(ai->category),pilot_charset);
+ 
+ 	/* The iCal description field */
+ 	if (!memo.text) {
+@@ -725,10 +727,10 @@
+ 
+ 		}
+ 
+-		sumText.value = txt3 = e_pilot_utf8_from_pchar(txt2);
++		sumText.value = txt3 = e_pilot_utf8_from_pchar(txt2, pilot_charset);
+ 		sumText.altrep = NULL;
+ 
+-		text.value = txt = e_pilot_utf8_from_pchar (memo.text);
++		text.value = txt = e_pilot_utf8_from_pchar (memo.text, pilot_charset);
+ 		text.altrep = NULL;
+ 		l.data = &text;
+ 		l.next = NULL;
+@@ -809,6 +811,13 @@
+ 	ctxt->dbi = dbi;
+ 	ctxt->client = NULL;
+ 
++#ifdef PILOT_LINK_0_12
++	if(NULL == dbi->pilotInfo->pilot_charset)
++		pilot_charset = NULL;
++	else
++		pilot_charset = g_strdup(dbi->pilotInfo->pilot_charset);
++#endif
++
+ 	if (start_calendar_server (ctxt) != 0) {
+ 		WARN(_("Could not start evolution-data-server"));
+ 		gnome_pilot_conduit_error (conduit, _("Could not start evolution-data-server"));
+@@ -976,7 +985,8 @@
+ 	if (e_cal_get_changes (ctxt->client, change_id, &changed, NULL))
+ 		e_cal_free_change_list (changed);
+ 	g_free (change_id);
+-
++	if (pilot_charset)
++		g_free (pilot_charset);
+ 	LOG (g_message ( "---------------------------------------------------------\n" ));
+ 
+ 	return 0;
+--- evolution-2.11.92/calendar/conduits/todo/todo-conduit.c.orig	2007-09-04 16:53:12.036377000 +0800
++++ evolution-2.11.92/calendar/conduits/todo/todo-conduit.c	2007-09-04 16:53:32.082613000 +0800
+@@ -433,9 +433,9 @@
+ 		    todo.priority,
+ 		    todo.complete,
+ 		    todo.description ?
+-		    e_pilot_utf8_from_pchar(todo.description) : "",
++		    e_pilot_utf8_from_pchar(todo.description, pilot_charset) : "",
+ 		    todo.note ?
+-		    e_pilot_utf8_from_pchar(todo.note) : "",
++		    e_pilot_utf8_from_pchar(todo.note, pilot_charset) : "",
+ 		    remote->category);
+ 
+ 	free_ToDo (&todo);
+--- evolution-2.25.5/addressbook/conduit/address-conduit.c.orig	Wed Jan 21 17:05:16 2009
++++ evolution-2.25.5/addressbook/conduit/address-conduit.c	Wed Jan 21 17:03:31 2009
+@@ -68,6 +68,8 @@
+ #define INFO g_message
+ #define PILOT_MAX_CATEGORIES 16
+ 
++gchar *pilot_charset = NULL;
++
+ enum {
+ 	LABEL_WORK,
+ 	LABEL_HOME,
+@@ -263,12 +265,12 @@
+ 	c_list = e_contact_get (contact, E_CONTACT_CATEGORY_LIST);
+ 	if (c_list) {
+ 		/* remember the first category */
+-		first_category = e_pilot_utf8_to_pchar((const char *)c_list->data);
++		first_category = e_pilot_utf8_to_pchar((const char *)c_list->data, pilot_charset);
+ 	}
+ 	l = c_list;
+ 	while(l && *pilotCategory == 0) {
+ 		//list != 0, so at least 1 category is assigned
+-		category_string = e_pilot_utf8_to_pchar((const char *)l->data);
++		category_string = e_pilot_utf8_to_pchar((const char *)l->data, pilot_charset);
+ 		for (i=0; i < PILOT_MAX_CATEGORIES; i++) {
+ 			/* only 15 chars + nul in palm category name */
+ 			if (strncmp(category_string,category->name[i], 15) == 0) {
+@@ -306,7 +308,7 @@
+ 	if (pilotCategory != 0) {
+ 		/* pda has category assigned */
+ 		category_string = e_pilot_utf8_from_pchar(
+-		    category->name[pilotCategory]);
++		    category->name[pilotCategory], pilot_charset);
+ 
+ 		LOG(g_message("PDA Category: %s\n", category_string));
+ 
+@@ -941,7 +943,7 @@
+ 	char *text = NULL;
+ 
+ 	if (address.entry[entry])
+-		text = e_pilot_utf8_from_pchar (address.entry[entry]);
++		text = e_pilot_utf8_from_pchar (address.entry[entry], pilot_charset);
+ 
+ 	e_contact_set (contact, field, text);
+ 
+@@ -952,7 +954,7 @@
+ get_entry_text (struct Address address, int entry)
+ {
+ 	if (address.entry[entry])
+-		return e_pilot_utf8_from_pchar (address.entry[entry]);
++		return e_pilot_utf8_from_pchar (address.entry[entry], pilot_charset);
+ 
+ 	return NULL;
+ }
+@@ -1114,10 +1116,10 @@
+ 	/*Category support*/
+ 	e_pilot_local_category_to_remote(&(local->local.category), contact, &(ctxt->ai.category));
+ 
+-	local->addr->entry[entryFirstname] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_GIVEN_NAME));
+-	local->addr->entry[entryLastname] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_FAMILY_NAME));
+-	local->addr->entry[entryCompany] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_ORG));
+-	local->addr->entry[entryTitle] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_TITLE));
++	local->addr->entry[entryFirstname] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_GIVEN_NAME), pilot_charset);
++	local->addr->entry[entryLastname] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_FAMILY_NAME), pilot_charset);
++	local->addr->entry[entryCompany] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_ORG), pilot_charset);
++	local->addr->entry[entryTitle] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_TITLE), pilot_charset);
+ 
+ 	/* See if the default has something in it */
+ 	if ((address = e_contact_get (contact, ctxt->cfg->default_address))) {
+@@ -1143,13 +1145,13 @@
+ 			add = g_strdup (address->street);
+ 			LOG (g_warning ("Address has only one line: [%s]\n", add));
+ 		}
+-		local->addr->entry[entryAddress] = e_pilot_utf8_to_pchar (add);
++		local->addr->entry[entryAddress] = e_pilot_utf8_to_pchar (add, pilot_charset);
+ 		g_free (add);
+ 
+-		local->addr->entry[entryCity] = e_pilot_utf8_to_pchar (address->locality);
+-		local->addr->entry[entryState] = e_pilot_utf8_to_pchar (address->region);
+-		local->addr->entry[entryZip] = e_pilot_utf8_to_pchar (address->code);
+-		local->addr->entry[entryCountry] = e_pilot_utf8_to_pchar (address->country);
++		local->addr->entry[entryCity] = e_pilot_utf8_to_pchar (address->locality, pilot_charset);
++		local->addr->entry[entryState] = e_pilot_utf8_to_pchar (address->region, pilot_charset);
++		local->addr->entry[entryZip] = e_pilot_utf8_to_pchar (address->code, pilot_charset);
++		local->addr->entry[entryCountry] = e_pilot_utf8_to_pchar (address->country, pilot_charset);
+ 
+ 		e_contact_address_free (address);
+ 	}
+@@ -1170,7 +1172,7 @@
+ 			phone_str = e_contact_get_const (contact, priority[i]);
+ 			if (phone_str && *phone_str) {
+ 				clear_entry_text (*local->addr, phone);
+-				local->addr->entry[phone] = e_pilot_utf8_to_pchar (phone_str);
++				local->addr->entry[phone] = e_pilot_utf8_to_pchar (phone_str, pilot_charset);
+ 				local->addr->phoneLabel[phone - entryPhone1] = priority_label[i];
+ 				phone++;
+ 			}
+@@ -1219,13 +1221,13 @@
+ 
+ 			if (phone_str && *phone_str) {
+ 				clear_entry_text (*local->addr, i);
+-				local->addr->entry[i] = e_pilot_utf8_to_pchar (phone_str);
++				local->addr->entry[i] = e_pilot_utf8_to_pchar (phone_str, pilot_charset);
+ 			}
+ 		}
+ 	}
+ 
+ 	/* Note */
+-	local->addr->entry[entryNote] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_NOTE));
++	local->addr->entry[entryNote] = e_pilot_utf8_to_pchar (e_contact_get_const (contact, E_CONTACT_NOTE), pilot_charset);
+ }
+ 
+ static void
+@@ -1506,6 +1508,13 @@
+ 
+ 	ctxt->dbi = dbi;
+ 
++#ifdef PILOT_LINK_0_12
++	if(NULL == dbi->pilotInfo->pilot_charset)
++		pilot_charset = NULL;
++	else
++		pilot_charset = g_strdup(dbi->pilotInfo->pilot_charset);
++#endif
++
+ 	if (ctxt->cfg->source) {
+ 		ctxt->ebook = e_book_new (ctxt->cfg->source, NULL);
+ 	} else {
+@@ -1662,7 +1671,8 @@
+ 	if (e_book_get_changes (ctxt->ebook, change_id, &changed, NULL))
+ 		e_book_free_change_list (changed);
+ 	g_free (change_id);
+-
++	if (pilot_charset)
++		g_free (pilot_charset);
+ 	LOG (g_message ( "---------------------------------------------------------\n" ));
+ 
+ 	return 0;

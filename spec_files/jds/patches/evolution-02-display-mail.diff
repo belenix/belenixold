@@ -1,0 +1,18 @@
+--- evolution-2.8.0/mail/em-folder-browser.c.orig	2006-10-10 13:35:47.525901000 +0800
++++ evolution-2.8.0/mail/em-folder-browser.c	2006-10-10 13:37:36.030849000 +0800
+@@ -606,6 +606,7 @@
+ 
+ void em_folder_browser_show_preview(EMFolderBrowser *emfb, gboolean state)
+ {
++#if 0
+ 	if ((emfb->view.preview_active ^ state) == 0
+ 	    || emfb->view.list == NULL) {
+ 		if (state && emfb->priv->scope_restricted && emfb->view.list->cursor_uid && *(emfb->view.list->cursor_uid)) {
+@@ -625,6 +625,7 @@
+ 
+ 		return;
+ 	}
++#endif
+ 
+ 	emfb->view.preview_active = state;
+ 

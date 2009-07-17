@@ -1,0 +1,44 @@
+--- nautilus-cd-burner-2.22.0/src/nautilus-burn-drive.c.bak	2008-05-16 17:36:53.167745000 +0800
++++ nautilus-cd-burner-2.22.0/src/nautilus-burn-drive.c	2008-05-16 17:36:39.179548000 +0800
+@@ -43,6 +43,10 @@
+ #include <scsi/sg.h>
+ #endif /* __linux__ */
+ 
++#ifdef sun
++#include <sys/dkio.h>
++#endif /* sun */
++
+ #ifdef __FreeBSD__
+ #include <sys/cdio.h>
+ #include <sys/cdrio.h>
+@@ -799,6 +803,13 @@
+ 
+         g_return_val_if_fail (drive != NULL, FALSE);
+ 
++#ifdef sun
++       if (drive->priv->media_udi != NULL) {
++		cmd = g_strdup_printf ("gnome-mount --block --eject --no-ui --hal-udi=%s", drive->priv->media_udi);
++	} else {
++		cmd = g_strdup ("eject cdrom");
++	}
++#else
+         if (drive->priv->device == NULL) {
+                 return FALSE;
+         }
+@@ -808,6 +819,7 @@
+ #else
+         cmd = g_strdup_printf ("eject %s", drive->priv->device);
+ #endif
++#endif
+ 
+         res = g_spawn_command_line_sync (cmd, NULL, NULL, NULL, NULL);
+         g_free (cmd);
+@@ -1463,7 +1475,7 @@
+                 return status & CDC_OPEN_TRAY;
+         }
+ #else
+-        return FALSE;
++	return TRUE;
+ #endif
+ }
+ 

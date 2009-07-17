@@ -1,0 +1,85 @@
+--- /usr/tmp/clean/nautilus-open-terminal-0.8/configure.in	2007-03-04 11:17:18.000000000 +0000
++++ nautilus-open-terminal-0.8/configure.in	2007-11-22 08:59:51.403899000 +0000
+@@ -28,6 +28,7 @@
+ 
+ PKG_CHECK_MODULES(NAUTILUS, libnautilus-extension >= $NAUTILUS_REQUIRED glib-2.0 >= $GLIB_REQUIRED)
+ PKG_CHECK_MODULES(GCONF, gconf-2.0)
++PKG_CHECK_MODULES(EEL, eel-2.0 > $EEL_REQUIRED)
+ PKG_CHECK_MODULES(GNOMEDESKTOP, gnome-desktop-2.0 >= $LIBGNOME_DESKTOP_REQUIRED)
+ 
+ PKG_CHECK_MODULES(GLIB_RECENT, glib-2.0 >= 2.13.3,
+--- /usr/tmp/clean/nautilus-open-terminal-0.8/src/Makefile.am	2007-11-22 09:21:32.047963000 +0000
++++ nautilus-open-terminal-0.8/src/Makefile.am	2007-11-22 09:03:49.334410000 +0000
+@@ -7,6 +7,7 @@
+ 	$(WARN_CFLAGS)                                  \
+ 	$(DISABLE_DEPRECATED_CFLAGS)			\
+ 	$(NAUTILUS_CFLAGS)				\
++	$(EEL_CFLAGS)					\
+ 	$(GCONF_CFLAGS)					\
+ 	$(GNOMEDESKTOP_CFLAGS)
+ 
+@@ -21,4 +22,4 @@
+ 	open-terminal.c
+ 
+ libnautilus_open_terminal_la_LDFLAGS = -module -avoid-version
+-libnautilus_open_terminal_la_LIBADD  = $(NAUTILUS_LIBS) $(GNOMEVFS_LIBS) $(GCONF_LIBS) $(GNOMEDESKTOP_LIBS)
++libnautilus_open_terminal_la_LIBADD  = $(NAUTILUS_LIBS) $(EEL_LIBS) $(GNOMEVFS_LIBS) $(GCONF_LIBS) $(GNOMEDESKTOP_LIBS)
+--- /usr/tmp/clean/nautilus-open-terminal-0.8/src/nautilus-open-terminal.c	2007-02-28 21:52:02.000000000 +0000
++++ nautilus-open-terminal-0.8/src/nautilus-open-terminal.c	2007-11-22 09:16:13.878336000 +0000
+@@ -36,6 +36,7 @@
+ #include <gconf/gconf-client.h>
+ #include <libgnome/gnome-desktop-item.h>
+ #include <libgnomevfs/gnome-vfs-utils.h>
++#include <eel/eel-preferences.h>
+ 
+ #include <errno.h>
+ #include <fcntl.h>
+@@ -57,6 +58,10 @@
+ 	FILE_INFO_OTHER
+ } TerminalFileInfo;
+ 
++#define NAUTILUS_PREFERENCES_DISABLE_COMMANDLINE	"/desktop/gnome/lockdown/disable_command_line"
++
++static gboolean disable_command_line;
++
+ static TerminalFileInfo
+ get_terminal_file_info (NautilusFileInfo *file_info)
+ {
+@@ -365,6 +370,9 @@
+ 	NautilusMenuItem *item;
+ 	TerminalFileInfo  terminal_file_info;
+ 
++	if (disable_command_line) {
++		return NULL;
++	}
+ 	terminal_file_info = get_terminal_file_info (file_info);
+ 	switch (terminal_file_info) {
+ 		case FILE_INFO_LOCAL:
+@@ -393,6 +401,10 @@
+ 	NautilusMenuItem *item;
+ 	TerminalFileInfo  terminal_file_info;
+ 
++	if (disable_command_line) {
++		return NULL;
++	}
++
+ 	if (g_list_length (files) != 1 ||
+ 	    (!nautilus_file_info_is_directory (files->data) &&
+ 	     nautilus_file_info_get_file_type (files->data) != G_FILE_TYPE_SHORTCUT &&
+@@ -433,8 +445,16 @@
+ }
+ 
+ static void
++disable_command_line_notify (gboolean *val)
++{
++	*val = eel_preferences_get_boolean(NAUTILUS_PREFERENCES_DISABLE_COMMANDLINE);
++}
++
++static void
+ nautilus_open_terminal_class_init (NautilusOpenTerminalClass *class)
+ {
++	disable_command_line = eel_preferences_get_boolean(NAUTILUS_PREFERENCES_DISABLE_COMMANDLINE);
++	eel_preferences_add_callback(NAUTILUS_PREFERENCES_DISABLE_COMMANDLINE, disable_command_line_notify, &disable_command_line);
+ }
+ 
+ GType

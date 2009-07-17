@@ -1,0 +1,87 @@
+diff -ur nautilus-2.15.91/libnautilus-private/apps_nautilus_preferences.schemas.in nautilus-2.15.91-hacked/libnautilus-private/apps_nautilus_preferences.schemas.in
+--- nautilus-2.15.91/libnautilus-private/apps_nautilus_preferences.schemas.in	Thu Jun 15 17:38:40 2006
++++ nautilus-2.15.91-hacked/libnautilus-private/apps_nautilus_preferences.schemas.in	Mon Aug 21 16:15:45 2006
+@@ -866,6 +866,22 @@
+          </long>
+       </locale>
+     </schema>
++
++    <schema>
++      <key>/schemas/apps/nautilus/desktop/primary_screen</key>
++      <applyto>/apps/nautilus/desktop/primary_screen</applyto>
++      <owner>nautilus</owner>
++      <type>int</type>
++      <default>0</default>
++      <locale name="C">
++         <short>Primary magnification screen</short>
++         <long>
++         This screen can be set if you want to have a screen other
++         than screen 0 as the default screen, while working with
++         magnifier.
++         </long>
++      </locale>
++    </schema>
+         
+   </schemalist>  
+ </gconfschemafile>
+diff -ur nautilus-2.21.5/libnautilus-private/nautilus-global-preferences.c nautilus-2.21.5-hacked/libnautilus-private/nautilus-global-preferences.c
+--- nautilus-2.21.5/libnautilus-private/nautilus-global-preferences.c	Sat Jul 22 01:18:56 2006
++++ nautilus-2.21.5-hacked/libnautilus-private/nautilus-global-preferences.c	Mon Aug 21 16:15:45 2006
+@@ -483,6 +483,10 @@
+ 	  NULL,
+ 	  default_network_link_name, g_free,
+ 	},
++	{ NAUTILUS_PREFERENCES_DESKTOP_PRIMARY_SCREEN,
++	  PREFERENCE_INTEGER,
++	  GINT_TO_POINTER (0)
++	},
+ 
+ 	{ NAUTILUS_PREFERENCES_MEDIA_AUTOMOUNT,
+ 	  PREFERENCE_BOOLEAN,
+diff -ur nautilus-2.19.4/libnautilus-private/nautilus-global-preferences.h nautilus-2.19.4-hacked/libnautilus-private/nautilus-global-preferences.h
+--- nautilus-2.19.4/libnautilus-private/nautilus-global-preferences.h	Sat Jul 22 01:18:56 2006
++++ nautilus-2.19.4-hacked/libnautilus-private/nautilus-global-preferences.h	Mon Aug 21 16:18:18 2006
+@@ -188,6 +188,7 @@
+ #define NAUTILUS_PREFERENCES_DESKTOP_VOLUMES_VISIBLE	   "desktop/volumes_visible"
+ #define NAUTILUS_PREFERENCES_DESKTOP_NETWORK_VISIBLE       "desktop/network_icon_visible"
+ #define NAUTILUS_PREFERENCES_DESKTOP_NETWORK_NAME          "desktop/network_icon_name"
++#define NAUTILUS_PREFERENCES_DESKTOP_PRIMARY_SCREEN        "desktop/primary_screen"
+ 
+ void nautilus_global_preferences_init                      (void);
+ char *nautilus_global_preferences_get_default_folder_viewer_preference_as_iid (void);
+diff -ur nautilus-2.15.91/src/file-manager/fm-icon-view.c nautilus-2.15.91-hacked/src/file-manager/fm-icon-view.c
+--- nautilus-2.15.91/src/file-manager/fm-icon-view.c	Mon Aug  7 18:34:31 2006
++++ nautilus-2.15.91-hacked/src/file-manager/fm-icon-view.c	Mon Aug 21 16:15:45 2006
+@@ -471,7 +471,8 @@
+ should_show_file_on_screen (FMDirectoryView *view, NautilusFile *file)
+ {
+ 	char *screen_string;
+-	int screen_num;
++        char default_screen_string[8];
++        int screen_num, default_screen_num;
+ 	FMIconView *icon_view;
+ 	GdkScreen *screen;
+ 
+@@ -480,10 +481,21 @@
+ 	if (!fm_directory_view_should_show_file (view, file)) {
+ 		return FALSE;
+ 	}
++
++        /* Get the primary magnification screen in multi-head setup */
++        if (icon_view->details->num_screens > 1) {
++                default_screen_num = eel_preferences_get_integer (NAUTILUS_PREFERENCES_DESKTOP_PRIMARY_SCREEN);
++ 
++        /* single head setup. So, default screen is 0 */
++        } else {
++                default_screen_num = 0;
++        }
++ 
++        sprintf (default_screen_string, "%d", default_screen_num);
+ 	
+ 	/* Get the screen for this icon from the metadata. */
+ 	screen_string = nautilus_file_get_metadata
+-		(file, NAUTILUS_METADATA_KEY_SCREEN, "0");
++		(file, NAUTILUS_METADATA_KEY_SCREEN, default_screen_string);
+ 	screen_num = atoi (screen_string);
+ 	g_free (screen_string);
+ 	screen = gtk_widget_get_screen (GTK_WIDGET (view));

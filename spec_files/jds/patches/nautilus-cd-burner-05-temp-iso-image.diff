@@ -1,0 +1,21 @@
+--- nautilus-cd-burner-2.25.3/src/ncb-operation.c.orig	2009-02-20 15:27:31.372439000 +0800
++++ nautilus-cd-burner-2.25.3/src/ncb-operation.c	2009-02-20 15:29:20.395335000 +0800
+@@ -1153,6 +1153,7 @@
+ 
+         track = NULL;
+         filename = NULL;
++	toc_filename = NULL;
+         temp_paths = NULL;
+ 
+         operation->priv->cancel = CANCEL_MAKE_ISO;
+@@ -1256,6 +1257,10 @@
+                 operation->priv->iso = NULL;
+         }
+ 
++	if (iso_filename == NULL && g_file_test (filename, G_FILE_TEST_EXISTS)) {
++		ncb_operation_temp_files_add (operation, g_strdup (filename));
++	}
++
+         g_strfreev (temp_paths);
+         g_free (toc_filename);
+         g_free (filename);

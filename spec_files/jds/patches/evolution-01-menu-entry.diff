@@ -1,0 +1,21 @@
+--- evolution-2.21.1/data/evolution.desktop.in.in.orig	2007-06-06 11:51:53.171236024 +0100
++++ evolution-2.21.1/data/evolution.desktop.in.in	2007-06-06 11:53:02.186443499 +0100
+@@ -1,13 +1,15 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+-_Name=Evolution Mail and Calendar
++# SUN_BRANDING
++_Name=Evolution Mail, News and Calendar
+ _GenericName=Groupware Suite
+-_Comment=Manage your email, contacts and schedule
++# SUN_BRANDING
++_Comment=Read email and newsgroups, and schedule meetings and appointments
+ Exec=evolution
+ Icon=evolution
+ Terminal=false
+ Type=Application
+-Categories=GNOME;GTK;Office;Email;Calendar;ContactManagement;X-Red-Hat-Base;
++Categories=GNOME;GTK;Network;Email;Calendar;ContactManagement;X-Red-Hat-Base;
+ StartupNotify=true
+ X-GNOME-Bugzilla-Bugzilla=GNOME
+ X-GNOME-Bugzilla-Product=Evolution

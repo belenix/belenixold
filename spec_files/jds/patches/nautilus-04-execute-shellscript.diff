@@ -1,0 +1,34 @@
+--- nautilus-2.21.1/libnautilus-private/nautilus-file.c-orig	2008-01-03 18:35:19.308752000 -0600
++++ nautilus-2.21.1/libnautilus-private/nautilus-file.c	2008-01-03 18:38:31.413662000 -0600
+@@ -5819,10 +5819,31 @@ nautilus_file_get_file_info_error (Nauti
+ gboolean
+ nautilus_file_contains_text (NautilusFile *file)
+ {
++	const gchar *script_mime_types[]= {
++		"application/x-shellscript",
++		"application/x-perl",
++		"application/x-python",
++		"application/x-csh",
++		"application/x-ruby",
++		NULL
++	};
++	const gchar **it;
++
+ 	if (file == NULL) {
+ 		return FALSE;
+ 	}
+ 
++	if (file->details == NULL || file->details->mime_type == NULL) {
++		return FALSE;
++	}
++
++	it = script_mime_types;
++	while (*it) {
++		if (! strcmp (file->details->mime_type, *it))
++			return TRUE;
++		it ++;
++	}
++
+ 	/* All text files inherit from text/plain */
+ 	return nautilus_file_is_mime_type (file, "text/plain");
+ }

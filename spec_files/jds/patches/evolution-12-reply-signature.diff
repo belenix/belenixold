@@ -1,0 +1,20 @@
+Index: evolution/composer/e-msg-composer.c
+===================================================================
+--- evolution/composer/e-msg-composer.c	(revision 36449)
++++ evolution/composer/e-msg-composer.c	(working copy)
+@@ -1401,12 +1401,12 @@
+ 			g_free (tmp);
+ 		} else {
+ 			/* No signature set */
+-			body = g_strdup_printf ("<!--+GtkHTML:<DATA class=\"ClueFlow\" key=\"signature\" value=\"1\">-->"
++			body = g_strdup_printf ("</br></br><!--+GtkHTML:<DATA class=\"ClueFlow\" key=\"signature\" value=\"1\">-->"
+ 					"<!--+GtkHTML:<DATA class=\"ClueFlow\" key=\"signature_name\" value=\"uid:Noname\">-->"
+-					"<TABLE WIDTH=\"100%%\" CELLSPACING=\"0\" CELLPADDING=\"0\"><TR><TD> </TD></TR></TABLE>%s", text);
++					"<TABLE WIDTH=\"100%%\" CELLSPACING=\"0\" CELLPADDING=\"0\"></TABLE>%s", text);
+ 		}
+ 	} else {
+-		body = g_strdup (text);
++		body = g_strdup_printf ("</br>%s", text);
+ 	}
+ 
+ 	gtkhtml_editor_set_text_html (GTKHTML_EDITOR (composer), body, -1);
