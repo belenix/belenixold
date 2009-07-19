@@ -1,0 +1,171 @@
+--- /usr/tmp/clean/avahi-0.6.22/avahi-python/Makefile.am	Mon Sep 24 22:11:29 2007
++++ avahi-0.6.22/avahi-python/Makefile.am	Tue Dec 18 08:48:40 2007
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir)
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ EXTRA_DIST = \
+ 	avahi-bookmarks.in
+ 
+--- /usr/tmp/clean/avahi-0.6.12/avahi-utils/Makefile.am	2005-11-16 22:36:56.000000000 +0000
++++ avahi-0.6.12/avahi-utils/Makefile.am	2006-08-22 09:34:47.937663000 +0100
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir)
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ if HAVE_DBUS
+ 
+ bin_PROGRAMS = avahi-browse avahi-resolve avahi-publish avahi-set-host-name
+--- /usr/tmp/clean/avahi-0.6.12/avahi-common/Makefile.am	2006-04-24 22:01:32.000000000 +0100
++++ avahi-0.6.12/avahi-common/Makefile.am	2006-08-22 09:35:52.013532000 +0100
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir)
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ avahi_commonincludedir=$(includedir)/avahi-common
+ 
+ avahi_commoninclude_HEADERS = \
+--- /usr/tmp/clean/avahi-0.6.23/avahi-discover-standalone/Makefile.am	2008-06-18 00:13:44.000000000 +0100
++++ avahi-0.6.23/avahi-discover-standalone/Makefile.am	2008-06-25 14:01:51.336793000 +0100
+@@ -22,9 +22,6 @@
+ interfaces = \
+         avahi-discover.glade
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ if HAVE_GTK
+ if  HAVE_GLIB
+ bin_PROGRAMS = \
+--- /usr/tmp/clean/avahi-0.6.12/avahi-client/Makefile.am	2006-03-01 23:27:45.000000000 +0000
++++ avahi-0.6.12/avahi-client/Makefile.am	2006-08-22 09:37:26.320792000 +0100
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir)
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ if HAVE_DBUS
+ 
+ avahi_clientincludedir=$(includedir)/avahi-client
+--- /usr/tmp/clean/avahi-0.6.12/avahi-compat-libdns_sd/Makefile.am	2005-11-25 01:19:31.000000000 +0000
++++ avahi-0.6.12/avahi-compat-libdns_sd/Makefile.am	2006-08-22 09:38:37.573278000 +0100
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir)
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ if HAVE_DBUS
+ if ENABLE_COMPAT_LIBDNS_SD
+ 
+--- /usr/tmp/clean/avahi-0.6.12/avahi-dnsconfd/Makefile.am	2005-09-25 21:34:48.000000000 +0100
++++ avahi-0.6.12/avahi-dnsconfd/Makefile.am	2006-08-22 09:39:43.587928000 +0100
+@@ -28,9 +28,6 @@
+ 	-DAVAHI_SOCKET=\"$(avahi_socket)\" \
+ 	-DAVAHI_DNSCONF_SCRIPT=\"$(pkgsysconfdir)/avahi-dnsconfd.action\"
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ sbin_PROGRAMS = avahi-dnsconfd
+ 
+ avahi_dnsconfd_SOURCES = main.c 
+--- /usr/tmp/clean/avahi-0.6.12/avahi-daemon/Makefile.am	2006-03-01 23:51:22.000000000 +0000
++++ avahi-0.6.12/avahi-daemon/Makefile.am	2006-08-22 09:40:28.041468000 +0100
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir)
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ if HAVE_LIBDAEMON
+ if HAVE_XML
+ 
+--- /usr/tmp/clean/avahi-0.6.12/avahi-glib/Makefile.am	2005-10-19 01:10:29.000000000 +0100
++++ avahi-0.6.12/avahi-glib/Makefile.am	2006-08-22 09:41:03.362768000 +0100
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir)
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ if HAVE_GLIB
+ 
+ avahiglibincludedir=$(includedir)/avahi-glib
+--- /usr/tmp/clean/avahi-0.6.12/avahi-compat-howl/Makefile.am	2005-11-25 01:19:31.000000000 +0000
++++ avahi-0.6.12/avahi-compat-howl/Makefile.am	2006-08-22 09:41:49.972884000 +0100
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir)
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ SUBDIRS = . samples
+ 
+ if HAVE_DBUS
+--- /usr/tmp/clean/avahi-0.6.12/avahi-compat-howl/samples/Makefile.am	2005-11-20 15:02:38.000000000 +0000
++++ avahi-0.6.12/avahi-compat-howl/samples/Makefile.am	2006-08-22 09:42:37.591297000 +0100
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir) -I$(top_srcdir)/avahi-compat-howl/include
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ if HAVE_DBUS
+ if ENABLE_COMPAT_HOWL
+ 
+--- /usr/tmp/clean/avahi-0.6.23/avahi-core/Makefile.am	2008-06-23 23:22:38.000000000 +0100
++++ avahi-0.6.23/avahi-core/Makefile.am	2008-06-25 14:06:43.632972000 +0100
+@@ -19,9 +19,6 @@
+ 
+ AM_CFLAGS=-I$(top_srcdir)
+ 
+-# This cool debug trap works on i386/gcc only
+-AM_CFLAGS+='-DDEBUG_TRAP=__asm__("int $$3")'
+-
+ avahiincludedir=$(includedir)/avahi-core
+ 
+ avahiinclude_HEADERS = \
+@@ -41,14 +38,12 @@
+ 	conformance-test \
+ 	avahi-reflector \
+ 	dns-test \
+-	dns-spin-test \
+ 	timeeventq-test \
+ 	hashmap-test \
+ 	querier-test \
+ 	update-test
+ 
+ TESTS = \
+-	dns-spin-test \
+ 	dns-test \
+ 	hashmap-test
+ endif
+@@ -147,11 +142,6 @@
+ dns_test_CFLAGS = $(AM_CFLAGS)
+ dns_test_LDADD = $(AM_LDADD) ../avahi-common/libavahi-common.la
+ 
+-dns_spin_test_SOURCES = \
+-	dns-spin-test.c
+-dns_spin_test_CFLAGS = $(AM_CFLAGS)
+-dns_spin_test_LDADD = $(AM_LDADD) libavahi-core.la
+-
+ timeeventq_test_SOURCES = \
+ 	timeeventq-test.c \
+ 	timeeventq.h timeeventq.c \

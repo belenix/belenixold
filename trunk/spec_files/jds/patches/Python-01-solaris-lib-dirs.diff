@@ -1,0 +1,128 @@
+--- Python-2.4.3/setup.py.patch1	2006-03-23 14:07:46.000000000 -0500
++++ Python-2.4.3/setup.py	2006-09-14 22:12:55.808430000 -0400
+@@ -239,9 +239,10 @@
+         return sys.platform
+ 
+     def detect_modules(self):
+-        # Ensure that /usr/local is always used
+-        add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+-        add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
++        if sys.platform != 'sunos5':
++            # Ensure that /usr/local is always used
++            add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
++            add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+ 
+         # Add paths to popular package managers on OS X/darwin
+         if sys.platform == "darwin":
+@@ -268,7 +269,7 @@
+         # be assumed that no additional -I,-L directives are needed.
+         lib_dirs = self.compiler.library_dirs + [
+             '/lib64', '/usr/lib64',
+-            '/lib', '/usr/lib',
++            '/lib', '/usr/lib'
+             ]
+         inc_dirs = self.compiler.include_dirs + ['/usr/include']
+         exts = []
+@@ -452,11 +453,23 @@
+         exts.append( Extension('_csv', ['_csv.c']) )
+ 
+         # socket(2)
++	socket_libs = []
++        if self.compiler.find_library_file(lib_dirs,
++                                           'socket'):
++            socket_libs.append('socket')
++        if self.compiler.find_library_file(lib_dirs,
++                                           'nsl'):
++            socket_libs.append('nsl')
++        if self.compiler.find_library_file(lib_dirs,
++                                           'resolv'):
++            socket_libs.append('resolv')
+         exts.append( Extension('_socket', ['socketmodule.c'],
+-                               depends = ['socketmodule.h']) )
++                               depends = ['socketmodule.h'],
++                               libraries = socket_libs) )
+         # Detect SSL support for the socket module (via _ssl)
+         ssl_incs = find_file('openssl/ssl.h', inc_dirs,
+-                             ['/usr/local/ssl/include',
++                             ['/usr/sfw/include',
++                              '/usr/local/ssl/include',
+                               '/usr/contrib/ssl/include/'
+                              ]
+                              )
+@@ -465,8 +478,13 @@
+                                ['/usr/kerberos/include'])
+             if krb5_h:
+                 ssl_incs += krb5_h
++	if sys.maxint == 2147483647L:
++	    sfw_libdir = '/usr/sfw/lib';
++	else:
++	    sfw_libdir = '/usr/sfw/lib/64';
+         ssl_libs = find_library_file(self.compiler, 'ssl',lib_dirs,
+-                                     ['/usr/local/ssl/lib',
++                                     [sfw_libdir,
++                                      '/usr/local/ssl/lib',
+                                       '/usr/contrib/ssl/lib/'
+                                      ] )
+ 
+@@ -475,6 +493,7 @@
+             exts.append( Extension('_ssl', ['_ssl.c'],
+                                    include_dirs = ssl_incs,
+                                    library_dirs = ssl_libs,
++                                   runtime_library_dirs = ssl_libs,
+                                    libraries = ['ssl', 'crypto'],
+                                    depends = ['socketmodule.h']), )
+ 
+@@ -985,15 +1004,25 @@
+ 
+         # Assume we haven't found any of the libraries or include files
+         # The versions with dots are used on Unix, and the versions without
+-        # dots on Windows, for detection by cygwin.
++        # dots on Windows, for detection by cygwin. 
++	added_lib_dirs = []
++	tcl_tk_lib_dirs = ['/usr/sfw/lib']
++	tcl_tk_inc_dirs = ['/usr/sfw/include']
+         tcllib = tklib = tcl_includes = tk_includes = None
+         for version in ['8.5', '85', '8.4', '84', '8.3', '83', '8.2',
+                         '82', '8.1', '81', '8.0', '80']:
+-            tklib = self.compiler.find_library_file(lib_dirs, 'tk' + version)
+-            tcllib = self.compiler.find_library_file(lib_dirs, 'tcl' + version)
++            tklib = self.compiler.find_library_file(lib_dirs, 'tk' + version, tcl_tk_lib_dirs)
++            tcllib = self.compiler.find_library_file(lib_dirs, 'tcl' + version, tcl_tk_lib_dirs)
+             if tklib and tcllib:
+                 # Exit the loop when we've found the Tcl/Tk libraries
+                 break
++            tklib = self.compiler.find_library_file(tcl_tk_lib_dirs, 'tk' + version)
++            tcllib = self.compiler.find_library_file(tcl_tk_lib_dirs, 'tcl' + version)
++            if tklib and tcllib:
++		# found the libs in a non-standard dir
++		added_lib_dirs.append(os.path.dirname(tcllib))
++                # Exit the loop when we've found the Tcl/Tk libraries
++                break
+ 
+         # Now check for the header files
+         if tklib and tcllib:
+@@ -1009,6 +1038,7 @@
+             for dir in inc_dirs:
+                 tcl_include_sub += [dir + os.sep + "tcl" + dotversion]
+                 tk_include_sub += [dir + os.sep + "tk" + dotversion]
++	    tcl_include_sub += tcl_tk_inc_dirs
+             tk_include_sub += tcl_include_sub
+             tcl_includes = find_file('tcl.h', inc_dirs, tcl_include_sub)
+             tk_includes = find_file('tk.h', inc_dirs, tk_include_sub)
+@@ -1020,7 +1050,7 @@
+ 
+         # OK... everything seems to be present for Tcl/Tk.
+ 
+-        include_dirs = [] ; libs = [] ; defs = [] ; added_lib_dirs = []
++        include_dirs = [] ; libs = [] ; defs = []
+         for dir in tcl_includes + tk_includes:
+             if dir not in include_dirs:
+                 include_dirs.append(dir)
+@@ -1073,6 +1103,7 @@
+                         include_dirs = include_dirs,
+                         libraries = libs,
+                         library_dirs = added_lib_dirs,
++                        runtime_library_dirs = added_lib_dirs
+                         )
+         self.extensions.append(ext)
+ 

@@ -1,0 +1,81 @@
+--- avahi-0.6.23/avahi-python/avahi-discover/Makefile.am.orig	2009-01-20 09:09:39.885614610 +0900
++++ avahi-0.6.23/avahi-python/avahi-discover/Makefile.am	2009-01-20 09:10:19.564241801 +0900
+@@ -48,10 +48,11 @@ if HAVE_DBM
+ pythonscripts += \
+ 	avahi-discover
+ desktop_DATA += avahi-discover.desktop
++@INTLTOOL_DESKTOP_RULE@
+ avahi_discover_PYTHON += __init__.py SimpleGladeApp.py
+ endif
+ 
+-avahi-discover.desktop: avahi-discover.desktop.in
++avahi-discover.desktop.in: avahi-discover.desktop.in.in
+ 	sed -e 's,@bindir\@,$(bindir),g' $< > $@
+ 
+ avahi-discover: avahi-discover.in
+--- avahi-0.6.23/avahi-python/avahi-discover/avahi-discover.desktop.in.in.orig	2009-01-20 09:09:20.444848513 +0900
++++ avahi-0.6.23/avahi-python/avahi-discover/avahi-discover.desktop.in.in	2009-01-20 09:09:33.278310858 +0900
+@@ -0,0 +1,12 @@
++[Desktop Entry]
++Version=1.0
++Encoding=UTF-8
++_Name=Avahi Zeroconf Browser
++_Comment=Browse for Zeroconf services available on your network
++Exec=@bindir@/avahi-discover
++Terminal=false
++Type=Application
++Icon=network-wired
++Categories=GNOME;Application;System;
++StartupNotify=false
++GenericName=
+--- avahi-0.6.23/avahi-ui/Makefile.am.orig	2009-01-20 08:53:09.486678400 +0900
++++ avahi-0.6.23/avahi-ui/Makefile.am	2009-01-20 08:54:27.023229477 +0900
+@@ -70,14 +70,16 @@ install-exec-local:
+ 		$(LN_S) bssh bvnc && \
+ 		$(LN_S) bssh bshell
+ 
+-bssh.desktop: bssh.desktop.in
++bssh.desktop.in: bssh.desktop.in.in
+ 	sed -e 's,@bindir\@,$(bindir),g' $< > $@
+ 
+-bvnc.desktop: bvnc.desktop.in
++bvnc.desktop.in: bvnc.desktop.in.in
+ 	sed -e 's,@bindir\@,$(bindir),g' $< > $@
+ 
+ endif # HAVE_GLIB
+ endif
+ endif
+ 
++@INTLTOOL_DESKTOP_RULE@
++
+ CLEANFILES = $(desktop_DATA)
+--- avahi-0.6.23/avahi-ui/bvnc.desktop.in.in.orig	2009-01-20 08:52:19.688074614 +0900
++++ avahi-0.6.23/avahi-ui/bvnc.desktop.in.in	2009-01-20 08:52:14.570970389 +0900
+@@ -0,0 +1,12 @@
++[Desktop Entry]
++Version=1.0
++Encoding=UTF-8
++_Name=Avahi VNC Server Browser
++_Comment=Browse for Zeroconf-enabled VNC Servers
++Exec=@bindir@/bvnc
++Terminal=false
++Type=Application
++Icon=network-wired
++Categories=GNOME;Application;Network;
++StartupNotify=false
++GenericName=
+--- avahi-0.6.23/avahi-ui/bssh.desktop.in.in.orig	2009-01-20 08:51:46.718876131 +0900
++++ avahi-0.6.23/avahi-ui/bssh.desktop.in.in	2009-01-20 08:51:35.330721384 +0900
+@@ -0,0 +1,12 @@
++[Desktop Entry]
++Version=1.0
++Encoding=UTF-8
++_Name=Avahi SSH Server Browser
++_Comment=Browse for Zeroconf-enabled SSH Servers
++Exec=@bindir@/bssh
++Terminal=false
++Type=Application
++Icon=network-wired
++Categories=GNOME;Application;Network;
++StartupNotify=false
++GenericName=

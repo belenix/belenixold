@@ -1,0 +1,96 @@
+--- /usr/tmp/clean/avahi-0.6.12/avahi-core/server.c	2006-06-21 22:51:19.000000000 +0100
++++ avahi-0.6.12/avahi-core/server.c	2006-08-21 10:49:46.941313000 +0100
+@@ -1064,7 +1064,9 @@
+     
+     s->state = state;
+ 
++#ifndef HAVE_BONJOUR
+     avahi_interface_monitor_update_rrs(s->monitor, 0);
++#endif
+     
+     if (s->callback)
+         s->callback(s, state, s->userdata);
+@@ -1201,9 +1203,11 @@
+     server_set_state(s, AVAHI_SERVER_REGISTERING);
+     s->n_host_rr_pending ++; /** Make sure that the state isn't changed tp AVAHI_SERVER_RUNNING too early */
+ 
++#ifndef HAVE_BONJOUR
+     register_hinfo(s);
+     register_browse_domain(s);
+     avahi_interface_monitor_update_rrs(s->monitor, 0);
++#endif
+ 
+     s->n_host_rr_pending --;
+     
+@@ -1330,6 +1334,10 @@
+     else
+         avahi_server_config_init(&s->config);
+ 
++#ifdef HAVE_BONJOUR
++    s->need_service_cleanup = 0;
++    s->cleanup_time_event = NULL;
++#else
+     if ((e = setup_sockets(s)) < 0) {
+         if (error)
+             *error = e;
+@@ -1340,6 +1348,7 @@
+         return NULL;
+     }
+     
++#endif
+     s->n_host_rr_pending = 0;
+     s->need_entry_cleanup = 0;
+     s->need_group_cleanup = 0;
+@@ -1384,6 +1393,12 @@
+         s->local_service_cookie = (uint32_t) rand() * (uint32_t) rand();
+     } while (s->local_service_cookie == AVAHI_SERVICE_COOKIE_INVALID);
+ 
++#ifdef HAVE_BONJOUR
++    AVAHI_LLIST_HEAD_INIT(AvahiService, s->services);
++    s->wide_area_lookup_engine = NULL;
++    s->multicast_lookup_engine = NULL;
++    s->monitor = NULL;
++#else
+     if (s->config.enable_wide_area) {
+         s->wide_area_lookup_engine = avahi_wide_area_engine_new(s);
+         avahi_wide_area_set_servers(s->wide_area_lookup_engine, s->config.wide_area_servers, s->config.n_wide_area_servers);
+@@ -1394,6 +1409,7 @@
+     
+     s->monitor = avahi_interface_monitor_new(s);
+     avahi_interface_monitor_sync(s->monitor);
++#endif
+ 
+     register_localhost(s);
+     register_stuff(s);
+@@ -1428,7 +1444,8 @@
+     while(s->entries)
+         avahi_entry_free(s, s->entries);
+ 
+-    avahi_interface_monitor_free(s->monitor);
++    if (s->monitor)
++        avahi_interface_monitor_free(s->monitor);
+ 
+     while (s->groups)
+         avahi_entry_group_free(s, s->groups);
+@@ -1441,7 +1458,8 @@
+ 
+     if (s->wide_area_lookup_engine)
+         avahi_wide_area_engine_free(s->wide_area_lookup_engine);
+-    avahi_multicast_lookup_engine_free(s->multicast_lookup_engine);
++    if (s->multicast_lookup_engine)
++        avahi_multicast_lookup_engine_free(s->multicast_lookup_engine);
+ 
+     avahi_time_event_queue_free(s->time_event_queue);
+     
+@@ -1477,6 +1495,11 @@
+ 
+     avahi_server_config_free(&s->config);
+ 
++#ifdef HAVE_BONJOUR
++    if (s->cleanup_time_event)
++        avahi_time_event_free(s->cleanup_time_event);
++#endif 
++
+     avahi_free(s);
+ }
+ 

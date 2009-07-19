@@ -1,0 +1,11 @@
+--- Python-2.4.4/Lib/webbrowser.py	2005-09-15 15:29:38.000000000 +0800
++++ Python-2.4.4/Lib/webbrowser.py.mod	2008-11-25 15:33:00.531544611 +0800
+@@ -277,7 +277,7 @@ if os.environ.get("TERM") or os.environ.
+ 
+     # X browsers have more in the way of options
+     if os.environ.get("DISPLAY"):
+-        _tryorder = ["galeon", "skipstone",
++        _tryorder = ["galeon", "skipstone", "firefox",
+                      "mozilla-firefox", "mozilla-firebird", "mozilla", "netscape",
+                      "kfm", "grail"] + _tryorder
+ 
