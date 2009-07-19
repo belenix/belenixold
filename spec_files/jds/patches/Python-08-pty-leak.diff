@@ -1,0 +1,11 @@
+--- Python/Lib/pty.py	Sun Aug  1 20:55:18 2004
++++ Python/Lib/pty.py.new	Tue Jan 30 20:48:33 2007
+@@ -117,6 +117,8 @@
+         os.dup2(slave_fd, STDERR_FILENO)
+         if (slave_fd > STDERR_FILENO):
+             os.close (slave_fd)
++    else:
++       os.close(slave_fd)
+ 
+     # Parent and child process.
+     return pid, master_fd

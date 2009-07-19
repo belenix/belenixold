@@ -1,0 +1,17 @@
+diff -urN avahi-0.6.23/avahi-daemon/avahi-dbus.conf.in ../SUNWavahi-bridge-dsd-0.6.23.hacked/avahi-0.6.23/avahi-daemon/avahi-dbus.conf.in
+--- avahi-0.6.23/avahi-daemon/avahi-dbus.conf.in	2008-06-18 00:13:44.000000000 +0100
++++ ../SUNWavahi-bridge-dsd-0.6.23.hacked/avahi-0.6.23/avahi-daemon/avahi-dbus.conf.in	2009-03-06 17:15:26.694436872 +0000
+@@ -16,12 +16,7 @@
+     <allow send_destination="org.freedesktop.Avahi"/>
+     <allow receive_sender="org.freedesktop.Avahi"/>
+ 
+-    <deny send_interface="org.freedesktop.Avahi.Server" send_member="SetHostName"/>
++    <deny send_destination="org.freedesktop.Avahi" send_interface="org.freedesktop.Avahi.Server" send_member="SetHostName?"/>
+   </policy>
+ 
+-  <!-- Allow everything, including access to SetHostName to users of the group "@AVAHI_PRIV_ACCESS_GROUP@" -->
+-  <policy group="@AVAHI_PRIV_ACCESS_GROUP@">
+-    <allow send_destination="org.freedesktop.Avahi"/>
+-    <allow receive_sender="org.freedesktop.Avahi"/>
+-  </policy>
+ </busconfig>

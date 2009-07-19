@@ -1,0 +1,14 @@
+--- Python-2.4.4/Include/pyport.h.orig	2008-02-04 20:36:04.962673898 +1300
++++ Python-2.4.4/Include/pyport.h	2008-02-04 20:36:23.745132109 +1300
+@@ -376,11 +376,6 @@
+ in platform-specific #ifdefs.
+ **************************************************************************/
+ 
+-#ifdef SOLARIS
+-/* Unchecked */
+-extern int gethostname(char *, int);
+-#endif
+-
+ #ifdef __BEOS__
+ /* Unchecked */
+ /* It's in the libs, but not the headers... - [cjh] */

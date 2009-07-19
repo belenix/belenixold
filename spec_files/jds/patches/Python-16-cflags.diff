@@ -1,0 +1,11 @@
+--- Python-2.4.4/configure.in.cflags	2009-01-23 21:18:10.960345928 +1300
++++ Python-2.4.4/configure.in	2009-01-23 21:20:22.970785393 +1300
+@@ -899,6 +899,8 @@
+ 	# environment?
+         Darwin*)
+ 	    ;;
++	SunOS*)
++	    ;;
+         *)
+ 	    BASECFLAGS="$BASECFLAGS -OPT:Olimit=0"
+ 	    ;;

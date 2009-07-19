@@ -1,0 +1,34 @@
+--- Python-2.4.4/Lib/encodings/aliases.py.orig	2008-11-26 16:44:32.748754000 +0900
++++ Python-2.4.4/Lib/encodings/aliases.py	2008-11-26 16:44:48.866481000 +0900
+@@ -73,6 +73,7 @@ aliases = {
+ 
+     # cp1251 codec
+     '1251'               : 'cp1251',
++    'ansi_1251'          : 'cp1251',
+     'windows_1251'       : 'cp1251',
+ 
+     # cp1252 codec
+@@ -217,6 +218,7 @@ aliases = {
+     'u_jis'              : 'euc_jp',
+ 
+     # euc_kr codec
++    '5601'               : 'euc_kr',
+     'euckr'              : 'euc_kr',
+     'korean'             : 'euc_kr',
+     'ksc5601'            : 'euc_kr',
+@@ -446,6 +448,7 @@ aliases = {
+     'shiftjis'           : 'shift_jis',
+     'sjis'               : 'shift_jis',
+     's_jis'              : 'shift_jis',
++    'pck'                : 'shift_jis',
+ 
+     # shift_jis_2004 codec
+     'shiftjis2004'       : 'shift_jis_2004',
+@@ -465,6 +468,7 @@ aliases = {
+     'tis_620_0'          : 'tis_620',
+     'tis_620_2529_0'     : 'tis_620',
+     'tis_620_2529_1'     : 'tis_620',
++    'tis620.2533'        : 'tis_620',
+     'iso_ir_166'         : 'tis_620',
+ 
+     # utf_16 codec

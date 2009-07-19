@@ -1,0 +1,39 @@
+--- /usr/tmp/clean/avahi-0.6.22/configure.ac	2007-12-17 15:35:51.000000000 +0000
++++ avahi-0.6.22/configure.ac	2008-06-06 08:54:18.794453000 +0100
+@@ -148,6 +148,17 @@
+ ACX_PTHREAD(,AC_MSG_ERROR([Missing POSIX Threads support]))
+ 
+ #
++# Check for dns_sd.h
++#
++AC_CHECK_HEADER(dns_sd.h,
++HAVE_BONJOUR=yes
++AC_DEFINE([HAVE_BONJOUR],[],[Support for Bonjour])
++, [], [
++])
++
++AM_CONDITIONAL(HAVE_BONJOUR, [ test x"$HAVE_BONJOUR" = xyes ])
++
++#
+ # Check for netlink.h
+ #
+ AC_CHECK_HEADER(linux/netlink.h,
+@@ -396,13 +407,16 @@
+     AC_DEFINE([HAVE_KQUEUE], 1, [Enable BSD kqueue() usage])
+ fi
+ 
+-AM_GNU_GETTEXT([external])
+-
+ IT_PROG_INTLTOOL([0.35.0])
+ GETTEXT_PACKAGE=avahi
+ AC_SUBST([GETTEXT_PACKAGE])
+ AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[Gettext package])
+ AM_GLIB_GNU_GETTEXT
++USE_INCLUDED_LIBINTL=no
++AC_SUBST(USE_INCLUDED_LIBINTL)
++BUILD_INCLUDED_LIBINTL=no
++AC_SUBST(BUILD_INCLUDED_LIBINTL)
++
+ 
+ avahilocaledir='${prefix}/${DATADIRNAME}/locale'
+ AC_SUBST(avahilocaledir)

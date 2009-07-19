@@ -1,0 +1,23 @@
+--- Python-2.4.2/Lib/distutils/sysconfig.py	2005-01-06 15:16:03.000000000 -0800
++++ Python-2.4.2-new/Lib/distutils/sysconfig.py	2006-08-24 05:33:41.133317000 -0700
+@@ -149,16 +149,10 @@
+         (cc, cxx, opt, basecflags, ccshared, ldshared, so_ext) = \
+             get_config_vars('CC', 'CXX', 'OPT', 'BASECFLAGS', 'CCSHARED', 'LDSHARED', 'SO')
+ 
+-        if os.environ.has_key('CC'):
+-            cc = os.environ['CC']
+-        if os.environ.has_key('CXX'):
+-            cxx = os.environ['CXX']
+-        if os.environ.has_key('LDSHARED'):
+-            ldshared = os.environ['LDSHARED']
+-        if os.environ.has_key('CPP'):
+-            cpp = os.environ['CPP']
+-        else:
+-            cpp = cc + " -E"           # not always
++        # On Solaris, we must always use pycc/pyCC, which will then look up
++        # $CC and $CXX
++        cpp = cc + " -E"
++
+         if os.environ.has_key('LDFLAGS'):
+             ldshared = ldshared + ' ' + os.environ['LDFLAGS']
+         if basecflags:
