@@ -1,0 +1,50 @@
+diff -ruN totem-2.25.2.orig/data/mime-type-list.txt totem-2.25.2/data/mime-type-list.txt
+--- totem-2.25.2.orig/data/mime-type-list.txt	2008-09-01 20:44:34.283787179 +0100
++++ totem-2.25.2/data/mime-type-list.txt	2008-09-01 20:47:35.482490427 +0100
+@@ -16,7 +14,6 @@ application/x-quicktimeplayer
+ application/x-shorten
+ application/x-smil
+ application/xspf+xml
+-audio/3gpp
+ audio/ac3
+ audio/AMR
+ audio/AMR-WB
+--- totem-2.24.0-orig/data/handlers.sh	Fri Sep 19 13:43:46 2008
++++ totem-2.24.0/data/handlers.sh	Wed Oct  8 17:02:54 2008
+@@ -29,7 +29,12 @@
+ 
+ 	KEY="command"
+ 	TYPE="string";
+-	DEFAULT="totem \"%s\"";
++	if [ "$i" = "icyx" ];
++	then
++		DEFAULT="";
++	else	
++		DEFAULT="totem \"%s\"";
++	fi
+ 	schema;
+ 
+ 	KEY="needs_terminal"
+diff -ruN totem-2.25.90.orig/data/mime-type-list.txt totem-2.25.90/data/mime-type-list.txt
+--- totem-2.25.90.orig/data/mime-type-list.txt	2009-02-05 21:55:25.443775979 +0000
++++ totem-2.25.90/data/mime-type-list.txt	2009-02-05 21:57:55.961954328 +0000
+@@ -4,11 +4,9 @@
+ application/smil
+ application/smil+xml
+ application/vnd.ms-wpl
+-application/vnd.rn-realmedia
+ application/x-extension-m4a
+ application/x-extension-mp4
+ application/x-flac
+-application/x-flash-video
+ application/x-matroska
+ application/x-netshow-channel
+ application/x-ogg
+@@ -27,7 +25,6 @@
+ audio/mpegurl
+ audio/ogg
+ audio/prs.sid
+-audio/vnd.rn-realaudio
+ audio/x-ape
+ audio/x-flac
+ audio/x-gsm

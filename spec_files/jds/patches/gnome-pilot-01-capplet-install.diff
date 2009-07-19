@@ -1,0 +1,11 @@
+--- gnome-pilot-2.0.15/capplet/gpilotd-control-applet.desktop.in.in.orig	2006-12-04 17:51:54.223429099 +0800
++++ gnome-pilot-2.0.15/capplet/gpilotd-control-applet.desktop.in.in	2006-12-04 17:52:28.329347817 +0800
+@@ -7,7 +7,7 @@
+ Terminal=false
+ StartupNotify=true
+ Type=Application
+-Categories=GNOME;GTK;Settings;HardwareSettings;
++Categories=Application;Utility;
+ X-GNOME-Bugzilla-Bugzilla=GNOME
+ X-GNOME-Bugzilla-Product=gnome-pilot
+ X-GNOME-Bugzilla-Component=capplet

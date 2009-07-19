@@ -1,0 +1,16 @@
+--- pygtksourceview-2.3.0/configure.ac.orig	2008-08-11 14:12:55.622359773 +0100
++++ pygtksourceview-2.3.0/configure.ac	2008-08-11 14:14:42.446061961 +0100
+@@ -115,13 +115,8 @@
+ AC_MSG_CHECKING(for pygtk codegen)
+ CODEGENDIR=`$PKG_CONFIG --variable=codegendir pygtk-2.0`
+ echo $CODEGENDIR
+-if test -f $CODEGENDIR/codegen.py; then
+ 	CODEGEN=$CODEGENDIR/codegen.py
+ 	AC_MSG_RESULT(yes)
+-else
+-	AC_MSG_RESULT(no)
+-	AC_MSG_ERROR([Error: codegen not found (should be shipped with pygtk!)])
+-fi
+ AC_SUBST(CODEGEN)
+ 
+ JH_ADD_CFLAG([-Wall])

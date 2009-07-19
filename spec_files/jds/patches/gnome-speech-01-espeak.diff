@@ -1,0 +1,16 @@
+diff -u -r gnome-speech-0.4.21.orig/configure.in gnome-speech-0.4.21/configure.in
+--- gnome-speech-0.4.21.orig/configure.in	2008-08-03 11:01:25.000000000 -0400
++++ gnome-speech-0.4.21/configure.in	2008-08-14 20:49:39.797765000 -0400
+@@ -257,10 +257,10 @@
+ 
+ if test x$build_espeak != xno ; then
+     if test x$with_espeak_dir != x ; then
+-        espeak_LIBS="-L$with_espeak_dir/lib -lespeak"
++        espeak_LIBS="-L$with_espeak_dir/lib -lespeak -lCstd -lCrun -lm"
+         espeak_INCLUDES="$with_espeak_dir/include/espeak"
+     else
+-        AC_CHECK_LIB(espeak, espeak_Synth, espeak_LIBS=-lespeak)
++        AC_CHECK_LIB(espeak, espeak_Synth, espeak_LIBS="-lespeak -lCstd -lCrun -lm",, -lCstd -lCrun -lm)
+         espeak_INCLUDES="/usr/include/espeak"
+     fi
+     AC_SUBST(espeak_LIBS)

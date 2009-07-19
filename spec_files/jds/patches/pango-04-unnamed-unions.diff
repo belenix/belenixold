@@ -1,0 +1,20 @@
+--- ../i386/pango-1.21.5/pango/pango-language.c	2008-08-20 21:47:11.000000000 +0200
++++ pango-1.21.5/pango/pango-language.c	2008-08-27 15:07:58.087058230 +0200
+@@ -487,7 +487,7 @@
+ #define LANGUAGE(id, source, sample) char POOLSTRFIELD(__LINE__)[sizeof(sample)];
+ #include "pango-language-sample-table.h"
+ #undef LANGUAGE
+-  };
++  } blah;
+   const char str[1];
+ } lang_pool = { {
+     "",
+@@ -496,7 +496,7 @@
+ #undef LANGUAGE
+ } };
+ static const LangInfo lang_texts[] = {
+-#define LANGUAGE(id, source, sample) {G_STRINGIFY(id),	G_STRUCT_OFFSET(union _LangPool, POOLSTRFIELD(__LINE__))},
++#define LANGUAGE(id, source, sample) {G_STRINGIFY(id),	G_STRUCT_OFFSET(union _LangPool, blah.POOLSTRFIELD(__LINE__))},
+ #include "pango-language-sample-table.h"
+ #undef LANGUAGE
+   /* One extra entry with no final comma, to make it C89-happy */

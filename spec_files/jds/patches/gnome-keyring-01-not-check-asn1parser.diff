@@ -1,0 +1,12 @@
+--- gnome-keyring-2.26.0/configure.in.orig	2009-03-16 14:13:33.614828000 +0800
++++ gnome-keyring-2.26.0/configure.in	2009-03-16 14:13:55.268825000 +0800
+@@ -382,9 +382,6 @@
+ DAEMON_LIBS="$DAEMON_LIBS $LIBTASN1_LIBS"
+ 
+ AC_PATH_PROG(ASN1PARSER, asn1Parser, no)
+-if test "$ASN1PARSER" = "no" ; then
+-	AC_MSG_ERROR(asn1Parser tool is not installed)
+-fi
+ 
+ # --------------------------------------------------------------------
+ # Debug mode

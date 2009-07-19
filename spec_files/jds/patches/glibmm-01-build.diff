@@ -1,0 +1,23 @@
+--- examples/compose/main.cc.orig	2008-02-14 18:01:55.520757000 +0800
++++ examples/compose/main.cc	2008-02-14 18:02:22.188034000 +0800
+@@ -36,9 +36,6 @@
+     << std::endl
+     << ustring::compose("%2 is greater than %1.", a, b)
+     << std::endl
+-    << ustring::compose("%1 € are %3 %% of %2 €.", a, b,
+-                        ustring::format(std::fixed, std::setprecision(1), a / b * 100.0))
+-    << std::endl
+     << ustring::compose("a : b = [%1|%2]",
+                         ustring::format(std::setfill(L'a'), std::setw(i), ""),
+                         ustring::format(std::setfill(L'b'), std::setw(40 - i), ""))
+--- tests/glibmm_ustring_compose/main.cc.orig	2008-08-07 17:29:05.299259187 +0800
++++ tests/glibmm_ustring_compose/main.cc	2008-08-07 17:27:57.073869820 +0800
+@@ -19,7 +19,7 @@
+   int i = 1;
+   std::cout << Glib::ustring::compose("Compose strings: %1 and %2", 'f', &i) << std::endl;
+ 
+-  std::cout << Glib::ustring::compose("%1 is lower than 0x%2.", 12, Glib::ustring::format(std::hex, 16)) << std::endl;
++  //std::cout << Glib::ustring::compose("%1 is lower than 0x%2.", 12, Glib::ustring::format(std::hex, 16)) << std::endl;
+ 
+   //TODO: More tests.
+ 

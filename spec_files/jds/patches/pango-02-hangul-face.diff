@@ -1,0 +1,42 @@
+/jds/bin/diff -uprN pango-1.23.0.old/modules/hangul/hangul-fc.c pango-1.23.0/modules/hangul/hangul-fc.c
+--- pango-1.23.0.old/modules/hangul/hangul-fc.c	2009-02-13 14:22:05.450858000 +0000
++++ pango-1.23.0/modules/hangul/hangul-fc.c	2009-02-13 14:24:57.597923000 +0000
+@@ -403,7 +403,9 @@ hangul_engine_shape (PangoEngineShape *e
+ 		     const PangoAnalysis *analysis G_GNUC_UNUSED,
+ 		     PangoGlyphString *glyphs)
+ {
+-  int n_chars = g_utf8_strlen (text, length);
++  PangoFcFont *fc_font;
++  FT_Face face;
++  int n_chars;
+   int n_glyphs;
+   int i;
+   const char *p, *start;
+@@ -411,6 +413,18 @@ hangul_engine_shape (PangoEngineShape *e
+   int n_jamos;
+   gunichar prev = 0;
+ 
++  g_return_if_fail (font != NULL);
++  g_return_if_fail (text != NULL);
++  g_return_if_fail (length >= 0);
++  g_return_if_fail (analysis != NULL);
++
++  fc_font = PANGO_FC_FONT (font);
++  face = pango_fc_font_lock_face (fc_font);
++  if (!face)
++    return;
++
++  n_chars = g_utf8_strlen (text, length);
++
+   n_glyphs = 0;
+   start = p = text;
+   n_jamos = 0;
+@@ -458,6 +472,8 @@ hangul_engine_shape (PangoEngineShape *e
+   else if (n_jamos > 0)
+     render_syllable (font, start, n_jamos, glyphs, &n_glyphs,
+ 		     start - text);
++
++  pango_fc_font_unlock_face (fc_font);
+ }
+ 
+ static void

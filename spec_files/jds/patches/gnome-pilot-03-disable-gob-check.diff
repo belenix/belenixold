@@ -1,0 +1,11 @@
+--- gnome-pilot-2.0.15/configure.in.orig	2006-11-28 13:52:42.671641000 +0800
++++ gnome-pilot-2.0.15/configure.in	2006-11-28 13:54:26.400932000 +0800
+@@ -195,8 +195,6 @@
+ 	else
+ 		AC_MSG_ERROR([GOB2 not found and the gob outputfiles are not present, check http://www.5z.com/jirka/gob.html and read the HACKING file])
+ 	fi
+-else
+-	GOB2_CHECK(2.0.3)
+ fi
+ 
+ dnl ***********

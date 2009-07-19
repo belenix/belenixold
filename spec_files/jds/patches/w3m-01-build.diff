@@ -1,0 +1,33 @@
+--- w3m-0.5.2/config.h.in.orig	2008-06-04 17:03:20.180510000 +0900
++++ w3m-0.5.2/config.h.in	2008-06-04 17:04:15.659338000 +0900
+@@ -46,6 +46,7 @@
+ /* Define to 1 if translation of program messages to the user's
+    native language is requested. */
+ #undef ENABLE_NLS
++#undef GETTEXT_PACKAGE
+ 
+ #undef USE_COLOR
+ #undef USE_ANSI_COLOR
+--- w3m-0.5.2/configure.ac.orig	2008-06-03 20:56:01.086624000 +0900
++++ w3m-0.5.2/configure.ac	2008-06-04 16:57:18.118944000 +0900
+@@ -42,7 +42,19 @@ AC_DEFINE_UNQUOTED(W3M_TARGET, $W3M_TARG
+ 
+ AC_W3M_M17N
+ if test x$enable_messagel10n = xno; then
+- AM_GNU_GETTEXT([external])
++ AM_GLIB_GNU_GETTEXT([external])
++
++ GETTEXT_PACKAGE=w3m
++ AC_SUBST(GETTEXT_PACKAGE)
++ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
++
++ install_sh='$(SHELL) $(top_builddir)/install-sh'
++ AC_SUBST(install_sh)
++
++ LIBGC=
++ LIBINTL=
++ AC_SUBST(LIBGC)
++ AC_SUBST(LIBINTL)
+ fi
+ 
+ NLSTARGET=""

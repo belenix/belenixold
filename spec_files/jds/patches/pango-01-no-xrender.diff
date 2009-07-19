@@ -1,0 +1,11 @@
+--- pango-1.19.4/configure.in.orig	2007-03-06 08:04:13.203326000 +0000
++++ pango-1.19.4/configure.in	2007-03-06 08:04:30.133821000 +0000
+@@ -242,7 +242,7 @@
+ # Checks for Xft/XRender
+ #
+ if $have_x && $have_freetype ; then
+-  PKG_CHECK_MODULES(XFT, xft >= 2.0.0 xrender, have_xft=true, AC_MSG_RESULT([no]))
++  PKG_CHECK_MODULES(XFT, xft >= 2.0.0, have_xft=true, AC_MSG_RESULT([no]))
+ fi
+ if $have_xft ; then
+   AC_DEFINE(HAVE_XFT, 1, [Have Xft library])
