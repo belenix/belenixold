@@ -1,0 +1,44 @@
+diff -x '*.out' -x '*.*~' -x '*.orig' -x '*.rej' -rupN metacity-2.25.34/src/compositor/compositor-xrender.c ../metacity-2.25.34/src/compositor/compositor-xrender.c
+--- metacity-2.25.34/src/compositor/compositor-xrender.c	2008-12-02 08:49:47.000000000 +0100
++++ ../metacity-2.25.34/src/compositor/compositor-xrender.c	2008-12-11 14:02:44.296812000 +0100
+@@ -22,7 +22,6 @@
+  */
+ 
+ #define _GNU_SOURCE
+-#define _XOPEN_SOURCE 500 /* for usleep() */
+ 
+ #include <config.h>
+ 
+diff -x '*.out' -x '*.*~' -x '*.orig' -x '*.rej' -rupN metacity-2.25.34/src/core/util.c ../metacity-2.25.34/src/core/util.c
+--- metacity-2.25.34/src/core/util.c	2008-12-02 08:49:46.000000000 +0100
++++ ../metacity-2.25.34/src/core/util.c	2008-12-11 14:03:21.304366000 +0100
+@@ -23,7 +23,6 @@
+  */
+ 
+ #define _GNU_SOURCE
+-#define _POSIX_C_SOURCE 200112L /* for fdopen() */
+ 
+ #include <config.h>
+ #include "util.h"
+diff -x '*.out' -x '*.*~' -x '*.orig' -x '*.rej' -rupN metacity-2.25.34/src/tools/metacity-mag.c ../metacity-2.25.34/src/tools/metacity-mag.c
+--- metacity-2.25.34/src/tools/metacity-mag.c	2008-12-02 08:49:47.000000000 +0100
++++ ../metacity-2.25.34/src/tools/metacity-mag.c	2008-12-11 14:02:48.151967000 +0100
+@@ -20,7 +20,6 @@
+  */
+ 
+ #define _GNU_SOURCE
+-#define _XOPEN_SOURCE 600 /* C99 -- for rint() */
+ 
+ #include <gtk/gtk.h>
+ #include <gdk/gdkx.h>
+diff -x '*.out' -x '*.*~' -x '*.orig' -x '*.rej' -rupN metacity-2.25.34/src/ui/preview-widget.c ../metacity-2.25.34/src/ui/preview-widget.c
+--- metacity-2.25.34/src/ui/preview-widget.c	2008-12-11 14:04:14.436208000 +0100
++++ ../metacity-2.25.34/src/ui/preview-widget.c	2008-12-11 14:02:51.450575000 +0100
+@@ -22,7 +22,6 @@
+  */
+ 
+ #define _GNU_SOURCE
+-#define _XOPEN_SOURCE 600 /* for the maths routines over floats */
+ 
+ #include <math.h>
+ #include <config.h>

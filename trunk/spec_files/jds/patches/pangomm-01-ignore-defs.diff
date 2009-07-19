@@ -1,0 +1,22 @@
+--- pangomm-2.13.5/tools/Makefile.am.orig	2008-07-24 14:04:50.297067184 +0800
++++ pangomm-2.13.5/tools/Makefile.am	2008-07-24 14:05:07.198478304 +0800
+@@ -1,7 +1,7 @@
+ 
+ include $(top_srcdir)/tools/Makefile_list_of_sources.am_fragment
+ 
+-SUBDIRS = m4 extra_defs_gen
++SUBDIRS = m4 
+ 
+ EXTRA_DIST = Makefile_list_of_sources.am_fragment README TODO
+ 
+diff -ruN pangomm-2.14.0.orig/configure.in pangomm-2.14.0/configure.in
+--- pangomm-2.14.0.orig/configure.in	2009-01-09 17:21:19.468348000 +0000
++++ pangomm-2.14.0/configure.in	2009-01-09 17:22:18.378741300 +0000
+@@ -258,7 +258,6 @@
+ 
+   tools/Makefile
+     tools/m4/Makefile
+-    tools/extra_defs_gen/Makefile
+ 
+   MSVC_Net2005/Makefile
+     MSVC_Net2005/gendef/Makefile

@@ -1,0 +1,35 @@
+--- gnome-pilot-2.0.15/capplet/gnome-pilot-ddialog.c.orig	2006-12-18 17:24:30.417298000 +0800
++++ gnome-pilot-2.0.15/capplet/gnome-pilot-ddialog.c	2006-12-18 17:25:28.183241000 +0800
+@@ -181,6 +181,7 @@
+ 
+ #ifdef PILOT_LINK_0_12
+ 	/* usb: (libusb) pseudo-device is available from pilot-link 0.12.0 */
++	gtk_toggle_button_set_active ((GtkToggleButton *) priv->device_usb, TRUE);
+ 	priv->libusb_list = NULL;
+ 	priv->libusb_label = gtk_list_item_new_with_label ("usb:");
+ 	gtk_widget_show(priv->libusb_label);
+--- gnome-pilot-2.0.15/capplet/util.c.orig	2006-12-18 18:54:50.602152000 +0800
++++ gnome-pilot-2.0.15/capplet/util.c	2006-12-18 18:55:47.149971000 +0800
+@@ -249,9 +249,9 @@
+ 	GPilotDevice *device = g_new0 (GPilotDevice, 1);
+ 	
+ 	device->name = next_cradle_name (state);
+-	device->port = g_strdup ("/dev/pilot");
++	device->port = g_strdup ("usb:");
+ 	device->speed = speedList[DEFAULT_SPEED_INDEX];
+-	device->type = PILOT_DEVICE_SERIAL;
++	device->type = PILOT_DEVICE_USB_VISOR;
+ 	device->timeout = 2;
+ 	
+ 	return device;
+--- gnome-pilot-2.0.16/capplet/gnome-pilot-druid.c.orig	2008-02-27 15:43:06.062317000 +0800
++++ gnome-pilot-2.0.16/capplet/gnome-pilot-druid.c	2008-02-27 15:51:07.970416000 +0800
+@@ -422,6 +422,8 @@
+ 	str = next_cradle_name (priv->state);
+ 	gtk_entry_set_text (GTK_ENTRY (priv->device_name), str);
+ 	g_free (str);
++	gtk_toggle_button_set_active ((GtkToggleButton *)priv->device_usb, TRUE);
++	gtk_entry_set_text (GTK_ENTRY (priv->device_port), g_strdup ("usb:"));
+ 	set_widget_visibility_by_type(gpd,
+ 	    (GTK_TOGGLE_BUTTON(priv->device_network)->active ||
+ 		GTK_TOGGLE_BUTTON(priv->device_bluetooth)->active) ?

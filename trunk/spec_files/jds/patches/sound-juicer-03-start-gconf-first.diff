@@ -1,0 +1,26 @@
+--- /tmp/sj-main.c	2009-04-03 18:01:08.516894238 +0800
++++ sound-juicer-2.26.0/src/sj-main.c	2009-04-03 18:02:22.047349000 +0800
+@@ -1672,17 +1672,18 @@
+     bacon_message_connection_set_callback (connection, on_message_received, NULL);
+   }
+ 
+-  brasero_media_library_start ();
+-
+-  metadata = sj_metadata_getter_new ();
+-  g_signal_connect (metadata, "metadata", G_CALLBACK (metadata_cb), NULL);
+-
+   gconf_client = gconf_client_get_default ();
+   if (gconf_client == NULL) {
+     g_warning (_("Could not create GConf client.\n"));
+     exit (1);
+   }
+ 
++
++  brasero_media_library_start ();
++
++  metadata = sj_metadata_getter_new ();
++  g_signal_connect (metadata, "metadata", G_CALLBACK (metadata_cb), NULL);
++
+   upgrade_gconf ();
+ 
+   gconf_client_add_dir (gconf_client, GCONF_ROOT, GCONF_CLIENT_PRELOAD_RECURSIVE, NULL);

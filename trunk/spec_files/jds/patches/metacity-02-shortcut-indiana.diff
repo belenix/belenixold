@@ -1,0 +1,21 @@
+/jds/bin/diff -uprN metacity-2.25.34.old/src/include/all-keybindings.h metacity-2.25.34/src/include/all-keybindings.h
+--- metacity-2.25.34.old/src/include/all-keybindings.h	2009-02-04 19:41:55.786546000 +0000
++++ metacity-2.25.34/src/include/all-keybindings.h	2009-02-04 19:42:55.184135000 +0000
+@@ -338,7 +338,7 @@ keybind (move_to_workspace_down, handle_
+          META_MOTION_DOWN, BINDING_PER_WINDOW, "<Control><Shift><Alt>Down",
+         _("Move window one workspace down"))
+ 
+-keybind (raise_or_lower, handle_raise_or_lower, 0, BINDING_PER_WINDOW, NULL,
++keybind (raise_or_lower, handle_raise_or_lower, 0, BINDING_PER_WINDOW, "F15",
+         _("Raise window if it's covered by another window, otherwise lower it"))
+ keybind (raise, handle_raise, 0, BINDING_PER_WINDOW, NULL,
+         _("Raise window above other windows"))
+@@ -346,7 +346,7 @@ keybind (lower, handle_lower, 0, BINDING
+         _("Lower window below other windows"))
+ 
+ keybind (maximize_vertically, handle_maximize_vertically, 0,
+-        BINDING_PER_WINDOW, NULL,
++        BINDING_PER_WINDOW, "<Shift><Alt>F10",
+         _("Maximize window vertically"))
+ 
+ keybind (maximize_horizontally, handle_maximize_horizontally, 0,

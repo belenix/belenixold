@@ -1,0 +1,83 @@
+diff -urN glib.orig/gmodule/gmodule-dl.c glib.new/gmodule/gmodule-dl.c
+--- glib.orig/gmodule/gmodule-dl.c	2006-11-01 15:24:13.863431000 +0000
++++ glib.new/gmodule/gmodule-dl.c	2006-11-01 15:30:45.508553000 +0000
+@@ -30,6 +30,8 @@
+ #include "config.h"
+ 
+ #include <dlfcn.h>
++#include <string.h>
++#include <limits.h>
+ 
+ /* Perl includes <nlist.h> and <link.h> instead of <dlfcn.h> on some systmes? */
+ 
+@@ -88,6 +90,22 @@
+   return msg;
+ }
+ 
++static gboolean
++g_tsol_is_multi_label_session (void)
++{
++        static int trusted = -1;
++
++        if (trusted < 0) {
++		if (getenv("TRUSTED_SESSION")) {
++			trusted = 1;
++		} else { 
++			trusted = 0;
++		}
++	}
++
++	return trusted ? TRUE : FALSE;
++}
++
+ static gpointer
+ _g_module_open (const gchar *file_name,
+ 		gboolean     bind_lazy,
+@@ -118,7 +118,46 @@
+      performed immediately in all dynamic dependencies */
+   bind_lazy = 1;
+   #endif
+-  
++
++  if (g_tsol_is_multi_label_session()) {
++     Dl_serinfo     _info, *info = &_info;
++     Dl_serpath     *path;
++     uint_t         cnt;
++     gboolean       found = FALSE;
++
++     if (strstr(file_name, "../")) 
++     {
++        g_module_set_error("relative paths in module names are not allowed");
++        return NULL;
++     } 
++     else
++     {
++       /* determine search path count and required buffer size */
++       dlinfo(RTLD_SELF, RTLD_DI_SERINFOSIZE, (void *)info);
++       /* allocate new buffer and initialize */
++       info = malloc(_info.dls_size);
++       info->dls_size = _info.dls_size;
++       info->dls_cnt = _info.dls_cnt;
++
++       /* obtain sarch path information */
++       dlinfo(RTLD_SELF, RTLD_DI_SERINFO, (void *)info);
++
++       path = &info->dls_serpath[0];
++       for (cnt = 1; cnt <= info->dls_cnt; cnt++, path++) {
++         if (strncmp(file_name, path->dls_name, strlen(path->dls_name)) == 0)
++	   found = TRUE;
++       }
++
++       if ( ! found &&
++            strncmp(file_name, "/usr/lib/", strlen("/usr/lib/")) &&
++            strncmp(file_name, "/usr/sfw/lib/", strlen("/usr/sfw/lib/")))
++       {
++         g_module_set_error("module is not in a trusted directory");
++         return NULL;
++       }
++    }
++  }
++
+   handle = dlopen (file_name,
+ 		   (bind_local ? 0 : RTLD_GLOBAL) | (bind_lazy ? RTLD_LAZY : RTLD_NOW));
+   if (!handle)

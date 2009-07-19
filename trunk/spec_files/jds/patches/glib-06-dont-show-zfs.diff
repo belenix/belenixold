@@ -1,0 +1,10 @@
+--- /usr/tmp/clean/glib-2.17.6/gio/gunixmounts.c	2008-08-04 18:21:29.000000000 +0100
++++ glib-2.17.6/gio/gunixmounts.c	2008-08-15 08:38:40.388340000 +0100
+@@ -275,6 +275,7 @@
+     "usbfs",
+     "nfsd",
+     "rpc_pipefs",
++    "zfs",
+     NULL
+   };
+   const char *ignore_devices[] = {

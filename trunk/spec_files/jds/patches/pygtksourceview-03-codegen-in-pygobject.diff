@@ -1,0 +1,11 @@
+--- pygtksourceview-2.3.0/configure.ac.orig	2008-08-26 08:10:00.801032637 +0100
++++ pygtksourceview-2.3.0/configure.ac	2008-08-26 08:10:16.223598895 +0100
+@@ -119,7 +119,7 @@
+ 
+ dnl codegen
+ AC_MSG_CHECKING(for pygtk codegen)
+-CODEGENDIR=`$PKG_CONFIG --variable=codegendir pygtk-2.0`
++CODEGENDIR=`$PKG_CONFIG --variable=codegendir pygobject-2.0`
+ echo $CODEGENDIR
+ 	CODEGEN=$CODEGENDIR/codegen.py
+ 	AC_MSG_RESULT(yes)

@@ -1,0 +1,50 @@
+--- pygtksourceview-2.0.0/Makefile.am.orig	2007-10-07 15:07:27.540907063 +0100
++++ pygtksourceview-2.0.0/Makefile.am	2007-10-07 15:08:22.752016163 +0100
+@@ -39,9 +39,9 @@
+ 	(cd $(srcdir)\
+ 	&& $(PYTHON) $(CODEGEN) \
+ 	    --override $*.override \
+-	    --register @PYGTK_DATADIR@/pygtk/2.0/defs/gdk-types.defs \
+-	    --register @PYGTK_DATADIR@/pygtk/2.0/defs/pango-types.defs \
+-	    --register @PYGTK_DATADIR@/pygtk/2.0/defs/gtk-types.defs \
++	    --register @PYGTK_DEFSDIR@/gdk-types.defs \
++	    --register @PYGTK_DEFSDIR@/pango-types.defs \
++	    --register @PYGTK_DEFSDIR@/gtk-types.defs \
+ 		--prefix py$* $*.defs) > gen-$*.c \
+ 	    && cp gen-$*.c $*.c \
+ 	    && rm -f gen-$*.c
+--- pygtksourceview-2.1.0/docs/Makefile.am.orig	2007-10-17 14:01:13.173895268 +0100
++++ pygtksourceview-2.1.0/docs/Makefile.am	2007-10-17 14:01:45.718234596 +0100
+@@ -3,8 +3,8 @@
+ REF_VERSION = $(PYGTKSOURCEVIEW_MAJOR_VERSION).$(PYGTKSOURCEVIEW_MINOR_VERSION)
+ FULL_VERSION = $(REF_VERSION).$(PYGTKSOURCEVIEW_MICRO_VERSION)
+ 
+-HTML_STYLE = $(PYGOBJECT_DATADIR)/pygobject/xsl/ref-html-style.xsl
+-PDF_STYLE = $(PYGOBJECT_DATADIR)/pygobject/xsl/pdf-style.xsl
++HTML_STYLE = $(PYGOBJECT_XSLFILES)/ref-html-style.xsl
++PDF_STYLE = $(PYGOBJECT_XSLFILES)/pdf-style.xsl
+ 
+ XMLFILES = 							\
+     reference/gtksourceview2-ref.xml				\
+--- pygtksourceview-2.0.0/configure.ac.orig	2007-10-17 15:07:19.674559330 +0100
++++ pygtksourceview-2.0.0/configure.ac	2007-10-17 15:08:40.104547809 +0100
+@@ -71,6 +71,9 @@
+ PYGOBJECT_DATADIR=`$PKG_CONFIG --variable=datadir pygobject-2.0`
+ AC_SUBST(PYGOBJECT_DATADIR)
+ 
++PYGOBJECT_XSLFILES=`$PKG_CONFIG --variable=xslfiles pygobject-2.0`
++AC_SUBST(PYGOBJECT_XSLFILES)
++
+ PYGOBJECT_FIXXREF="$PYTHON `$PKG_CONFIG --variable=fixxref pygobject-2.0`"
+ AC_SUBST(PYGOBJECT_FIXXREF)
+ 
+@@ -110,6 +113,9 @@
+ 
+ AC_SUBST(PYGTK_DATADIR)
+ 
++PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
++AC_SUBST(PYGTK_DEFSDIR)
++
+ 
+ dnl codegen
+ AC_MSG_CHECKING(for pygtk codegen)

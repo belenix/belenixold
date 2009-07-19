@@ -1,0 +1,20 @@
+--- metacity-2.15.13/src/effects.h.orig	2006-07-26 12:31:04.971674000 +0100
++++ metacity-2.15.13/src/effects.h	2006-07-26 12:32:27.913875000 +0100
+@@ -71,11 +71,16 @@
+ 
+ typedef struct
+ {
+-    
++#ifdef __sun
++  char x;  /* Sun's forte compiler does not line empty structs. */
++#endif
+ } MetaCloseEffect;
+ 
+ typedef struct
+ {
++#ifdef __sun
++  char x;  /* Sun's forte compiler does not line empty structs. */
++#endif
+ } MetaFocusEffect;
+ 
+ struct MetaEffect

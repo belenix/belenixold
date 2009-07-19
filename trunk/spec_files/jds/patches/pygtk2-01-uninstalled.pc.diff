@@ -1,0 +1,48 @@
+--- pygtk-2.9.0/configure.ac.orig	Wed Apr  5 12:08:40 2006
++++ pygtk-2.9.0/configure.ac	Wed Apr  5 12:10:24 2006
+@@ -369,6 +369,7 @@
+ AC_CONFIG_FILES(
+   Makefile
+   pygtk-2.0.pc
++  pygtk-2.0-uninstalled.pc
+   pygtk-codegen-2.0
+   gtk/Makefile
+   docs/Makefile
+--- /dev/null	2005-10-27 18:34:42.000000000 -0400
++++ pygtk-2.7.4/pygtk-2.0-uninstalled.pc.in	2005-10-27 18:26:08.995301000 -0400
+@@ -0,0 +1,21 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++includedir=@includedir@
++datarootdir=@datarootdir@
++datadir=@datadir@
++pyexecdir=@pyexecdir@
++
++# you can use the --variable=pygtkincludedir argument to
++# pkg-config to get this value.  You might want to use this to
++# install additional headers.
++pygtkincludedir=${includedir}/pygtk-2.0
++
++# same here.  Useful when calling the code generator in addon packages.
++defsdir=${pc_top_builddir}/${pcfiledir}
++codegendir=${pc_top_builddir}/${pcfiledir}/codegen
++
++Name: PyGTK
++Description: Python bindings for GTK+ and related libraries
++Requires: pygobject-2.0
++Version: @VERSION@
++Cflags: -I${pc_top_builddir}/${pcfiledir}/. @THREADING_CFLAGS@
+--- pygtk-2.9.3/gtk/gtkunixprint.override.orig	2006-07-27 18:15:04.469619000 +0100
++++ pygtk-2.9.3/gtk/gtkunixprint.override	2006-07-27 18:15:11.900304000 +0100
+@@ -105,11 +105,7 @@
+     if (pyg_error_check(&error))
+         return NULL;
+ 
+-#if PYCAIRO_VERSION_HEX >= 0x1010600
+     return PycairoSurface_FromSurface(surface, NULL);
+-#else
+-    return PycairoSurface_FromSurface(surface, NULL, NULL);
+-#endif
+ }
+ %%
+ override gtk_print_job_send kwargs

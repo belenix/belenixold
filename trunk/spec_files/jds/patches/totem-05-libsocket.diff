@@ -1,0 +1,12 @@
+--- totem-2.25.1/configure.in.ori	2008-12-25 10:32:33.970705504 +0000
++++ totem-2.25.1/configure.in	2008-12-25 10:33:47.798717675 +0000
+@@ -271,6 +271,9 @@ PKG_CHECK_EXISTS([
+   $ISO_CODES
+   gnome-icon-theme >= $GNOMEICON_REQS])
+ 
++dnl Check for bind in libsocket (needed on Solaris)
++AC_CHECK_LIB(socket, bind)
++
+ dnl *************************
+ dnl X11 related functionality
+ dnl *************************
