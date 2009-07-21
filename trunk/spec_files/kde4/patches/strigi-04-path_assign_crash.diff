@@ -1,0 +1,40 @@
+--- strigi-0.6.4/src/streamanalyzer/endanalyzers/helperendanalyzer.cpp.orig	2009-07-20 22:13:10.539898813 +0530
++++ strigi-0.6.4/src/streamanalyzer/endanalyzers/helperendanalyzer.cpp	2009-07-20 22:14:16.858256136 +0530
+@@ -62,24 +62,23 @@
+ 
+     // make a vector with all the paths
+     vector<string> paths;
+-    string path;
+     if (getenv("PATH")) {
+-        path.assign(getenv("PATH"));
+-    }
+-    string::size_type start = 0;
+-    string::size_type end = path.find(':');
+-    while (end != string::npos) {
+-        if (path[start] == '/') {
+-            paths.push_back(path.substr(start, end-start));
++        string path(getenv("PATH"));
++        string::size_type start = 0;
++        string::size_type end = path.find(':');
++        while (end != string::npos) {
++            if (path[start] == '/') {
++                paths.push_back(path.substr(start, end-start));
++            }
++            start = end + 1;
++            end = path.find(':', start);
++        }
++        if (start < path.size() && path[start] == '/') {
++            paths.push_back(path.substr(start));
+         }
+-        start = end + 1;
+-        end = path.find(':', start);
+-    }
+-    if (start < path.size() && path[start] == '/') {
+-        paths.push_back(path.substr(start));
+     }
+ 
+-    string exepath = findPath("pdftotext", paths);
++    string exepath(findPath("pdftotext", paths));
+     if (exepath.length()) {
+         HelperRecord* h = new HelperRecord();
+         h->magic = (unsigned char*)"%PDF-1.";
