@@ -1,6 +1,14 @@
---- strigi-0.6.4/src/streamanalyzer/endanalyzers/helperendanalyzer.cpp.orig	2009-07-20 22:13:10.539898813 +0530
-+++ strigi-0.6.4/src/streamanalyzer/endanalyzers/helperendanalyzer.cpp	2009-07-20 22:14:16.858256136 +0530
-@@ -62,24 +62,23 @@
+--- strigi-0.6.4/src/streamanalyzer/endanalyzers/helperendanalyzer.cpp.orig	Tue Jul 21 00:11:32 2009
++++ strigi-0.6.4/src/streamanalyzer/endanalyzers/helperendanalyzer.cpp	Tue Jul 21 00:09:37 2009
+@@ -38,6 +38,7 @@
+ #include <errno.h>
+ #include <sys/stat.h>
+ #include <stdlib.h>
++#include <string.h>
+ 
+ using namespace Strigi;
+ using namespace std;
+@@ -62,29 +63,28 @@
  
      // make a vector with all the paths
      vector<string> paths;
@@ -22,19 +30,75 @@
 +            }
 +            start = end + 1;
 +            end = path.find(':', start);
-+        }
-+        if (start < path.size() && path[start] == '/') {
-+            paths.push_back(path.substr(start));
          }
 -        start = end + 1;
 -        end = path.find(':', start);
--    }
++        if (start < path.size() && path[start] == '/') {
++            paths.push_back(path.substr(start));
++        }
+     }
 -    if (start < path.size() && path[start] == '/') {
 -        paths.push_back(path.substr(start));
-     }
+-    }
  
 -    string exepath = findPath("pdftotext", paths);
-+    string exepath(findPath("pdftotext", paths));
-     if (exepath.length()) {
+-    if (exepath.length()) {
++    string *exepath = findPath("pdftotext", paths);
++    if (exepath->length()) {
          HelperRecord* h = new HelperRecord();
          h->magic = (unsigned char*)"%PDF-1.";
+         h->magicsize = 7;
+-        h->arguments.push_back(exepath);
++        h->arguments.push_back(*exepath);
+         h->arguments.push_back("-enc");
+         h->arguments.push_back("UTF-8");
+         h->arguments.push_back("%s");
+@@ -92,6 +92,7 @@
+         h->readfromstdin = false;
+         helpers.push_back(h);
+     }
++    delete exepath;
+     // this  does not work atm because it requires help programs itself
+ /*    exepath = findPath("wvWare", paths);
+     if (exepath.length()) {
+@@ -105,19 +106,23 @@
+         helpers.push_back(h);
+     }*/
+ }
+-std::string
++std::string *
+ HelperProgramConfig::findPath(const std::string& exe,
+         const std::vector<std::string>& paths) const {
+     struct stat s;
++    string *path;
++
+     for (uint i=0; i<paths.size(); ++i) {
+-        string path(paths[i]);
+-        path += '/';
+-        path += exe;
+-        if (stat(path.c_str(), &s) == 0 && S_ISREG(s.st_mode)) {
++        path = new string(paths[i]);
++        *path += '/';
++        *path += exe;
++
++        if (stat(path->c_str(), &s) == 0) {
+             return path;
+         }
++        delete path;
+     }
+-    return "";
++    return new string("");
+ }
+ HelperProgramConfig::~HelperProgramConfig() {
+     vector<HelperRecord*>::const_iterator i;
+--- strigi-0.6.4/src/streamanalyzer/endanalyzers/helperendanalyzer.h.orig	Tue Jul 21 00:11:41 2009
++++ strigi-0.6.4/src/streamanalyzer/endanalyzers/helperendanalyzer.h	Tue Jul 21 00:05:06 2009
+@@ -30,7 +30,7 @@
+ private:
+     std::vector<HelperRecord*> helpers;
+ 
+-    std::string findPath(const std::string& exe,
++    std::string *findPath(const std::string& exe,
+         const std::vector<std::string>& paths) const;
+ public:
+     HelperProgramConfig();
