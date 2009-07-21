@@ -24,6 +24,7 @@ Source2:	         strigi-daemon.desktop
 Patch1:		         strigi-01-0.6.2-multilib.patch
 Patch2:		         strigi-02-gcc44.patch
 Patch3:                  strigi-03-0.6.4-root-crash.patch
+Patch4:                  strigi-04-path_assign_crash.diff
 
 
 SUNW_BaseDir:            /
@@ -83,6 +84,7 @@ cd %{src_dir}-%{version}
 %patch1 -p1
 %patch2 -p0
 %patch3 -p1
+%patch4 -p1
 cd ..
 
 %ifarch amd64 sparcv9
@@ -256,5 +258,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Tue Jul 21 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
+- Fix a crash caused by returning a local std::string object to the caller. This
+- was making dolphin unhappy.
 * Fri May 29 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version.
