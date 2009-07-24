@@ -1,0 +1,124 @@
+--- nss-3.12.3/mozilla/security/coreconf/SunOS5.11_i86pc.mk.orig	2008-02-19 23:24:51.073625408 +0530
++++ nss-3.12.3/mozilla/security/coreconf/SunOS5.11_i86pc.mk	2008-02-20 00:21:58.847606116 +0530
+@@ -35,7 +35,7 @@
+ #
+ # ***** END LICENSE BLOCK *****
+ 
+-SOL_CFLAGS	= -D_SVID_GETTOD
++SOL_CFLAGS	= -D_SVID_GETTOD -I/usr/include/mps
+ 
+ include $(CORE_DEPTH)/coreconf/SunOS5.mk
+ 
+@@ -51,3 +51,9 @@
+ endif
+ 
+ OS_LIBS += -lthread -lnsl -lsocket -lposix4 -ldl -lc
++
++ifeq ($(USE_64),1)
++    DSO_LDOPTS += -L/usr/lib/mps/amd64 -R/usr/lib/mps/amd64
++else
++    DSO_LDOPTS += -L/usr/lib/mps -R/usr/lib/mps
++endif
+--- nss-3.12.3/mozilla/security/coreconf/SunOS5.mk.orig	Wed Jul 22 21:55:33 2009
++++ nss-3.12.3/mozilla/security/coreconf/SunOS5.mk	Wed Jul 22 21:55:49 2009
+@@ -161,7 +161,7 @@
+ ifdef NS_USE_GCC
+ 	DSO_CFLAGS += -fPIC
+ else
+-	DSO_CFLAGS += -KPIC
++	DSO_CFLAGS += -KPIC -features=extensions
+ endif
+ 
+ NOSUCHFILE   = /solaris-rm-f-sucks
+--- nss-3.12.3/mozilla/security/nss/lib/freebl/sha-fast-amd64-sun.s.orig	Thu Jul 23 00:16:24 2009
++++ nss-3.12.3/mozilla/security/nss/lib/freebl/sha-fast-amd64-sun.s	Thu Jul 23 00:16:37 2009
+@@ -1952,7 +1952,7 @@
+ SHA1_NewContext:
+ .LFB8:
+ 	movl	$248, %edi
+-	jmp	PORT_Alloc_Util@PLT
++	jmp	PORT_Alloc_stub@PLT
+ .LFE8:
+ 	.size	SHA1_NewContext, .-SHA1_NewContext
+ 	.align 16
+@@ -1987,7 +1987,7 @@
+ 	movq	(%rsp), %rbx
+ 	movq	8(%rsp), %r12
+ 	leave
+-	jmp	PORT_Free_Util@PLT
++	jmp	PORT_Free_stub@PLT
+ .LFE9:
+ 	.size	SHA1_DestroyContext, .-SHA1_DestroyContext
+ 	.align 16
+@@ -2137,6 +2137,6 @@
+ SHA1_TraceState:
+ .LFB16:
+ 	movl	$-5992, %edi
+-	jmp	PORT_SetError_Util@PLT
++	jmp	PORT_SetError_stub@PLT
+ .LFE16:
+ 	.size	SHA1_TraceState, .-SHA1_TraceState
+--- nss-3.12.3/mozilla/security/nss/lib/freebl/blapit.h.orig	Fri Jul 24 00:20:34 2009
++++ nss-3.12.3/mozilla/security/nss/lib/freebl/blapit.h	Fri Jul 24 00:20:56 2009
+@@ -190,8 +190,18 @@
+ struct SHA256ContextStr     ;
+ struct SHA512ContextStr     ;
+ struct AESKeyWrapContextStr ;
+-struct SEEDContextStr       ;	
+ 
++typedef struct seed_key_st {
++    PRUint32 data[32];
++} SEED_KEY_SCHEDULE;
++
++struct SEEDContextStr {
++    unsigned char iv[SEED_BLOCK_SIZE];
++    SEED_KEY_SCHEDULE ks;
++    int mode;
++    unsigned int encrypt;
++};
++
+ typedef struct DESContextStr        DESContext;
+ typedef struct RC2ContextStr        RC2Context;
+ typedef struct RC4ContextStr        RC4Context;
+--- nss-3.12.3/mozilla/security/nss/lib/freebl/seed.h.orig	Fri Jul 24 00:26:39 2009
++++ nss-3.12.3/mozilla/security/nss/lib/freebl/seed.h	Fri Jul 24 00:26:51 2009
+@@ -124,19 +124,6 @@
+ extern "C" {
+ #endif
+ 
+-typedef struct seed_key_st {
+-    PRUint32 data[32];
+-} SEED_KEY_SCHEDULE;
+-
+-
+-
+-struct SEEDContextStr {
+-    unsigned char iv[SEED_BLOCK_SIZE];
+-    SEED_KEY_SCHEDULE ks;
+-    int mode;
+-    unsigned int encrypt;
+-};
+-
+ void SEED_set_key(const unsigned char rawkey[SEED_KEY_LENGTH], 
+                   SEED_KEY_SCHEDULE *ks);
+ 
+--- nss-3.12.3/mozilla/security/nss/lib/freebl/seed.c.orig	Fri Jul 24 00:33:00 2009
++++ nss-3.12.3/mozilla/security/nss/lib/freebl/seed.c	Fri Jul 24 00:32:42 2009
+@@ -49,6 +49,17 @@
+ #include "seed.h"
+ #include "secerr.h"
+ 
++/*typedef struct seed_key_st {
++    PRUint32 data[32];
++} SEED_KEY_SCHEDULE;
++
++struct SEEDContextStr {
++    unsigned char iv[SEED_BLOCK_SIZE];
++    SEED_KEY_SCHEDULE ks;
++    int mode;
++    unsigned int encrypt;
++};*/
++
+ static const seed_word SS[4][256] = {	
+     {
+         0x2989a1a8, 0x05858184, 0x16c6d2d4, 0x13c3d3d0, 

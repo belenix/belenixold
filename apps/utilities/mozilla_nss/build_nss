@@ -3,7 +3,6 @@
 . ./versions
 gpatch -p0 --fuzz=0 < nss-${nss_ver}.diff
 cd nss-${nss_ver}/mozilla/security/nss/
-USE_64=1 NSPR_LIB_DIR=/usr/lib/mps/amd64 gmake build_coreconf build_dbm all
-NSPR_LIB_DIR=/usr/lib/mps gmake build_coreconf build_dbm all
-USE_64=1 NSPR_LIB_DIR=/usr/lib/mps/amd64 gmake package
-
+FREEBL_NO_DEPEND=1 BUILD_OPT=1 USE_64=1 NSPR_LIB_DIR=/usr/lib/mps/amd64 gmake build_coreconf build_dbm all
+FREEBL_NO_DEPEND=1 BUILD_OPT=1 NSPR_LIB_DIR=/usr/lib/mps gmake build_coreconf build_dbm all
+FREEBL_NO_DEPEND=1 BUILD_OPT=1 USE_64=1 NSPR_LIB_DIR=/usr/lib/mps/amd64 gmake package
