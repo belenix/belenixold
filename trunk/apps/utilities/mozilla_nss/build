@@ -1,7 +1,10 @@
 #!/bin/sh
 
-./download_tarballs
+sh ./download_tarballs
 
-./build_nspr
-./build_nss
+PATH=/opt/SUNWspro/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
+export PATH
+
+#sh ./build_nspr
+sh ./build_nss
 
