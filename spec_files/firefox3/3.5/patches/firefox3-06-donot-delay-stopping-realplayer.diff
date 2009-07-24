@@ -1,0 +1,20 @@
+diff --git a/layout/generic/nsObjectFrame.cpp b/layout/generic/nsObjectFrame.cpp
+--- a/layout/generic/nsObjectFrame.cpp
++++ b/layout/generic/nsObjectFrame.cpp
+@@ -1898,6 +1898,7 @@
+ {
+   // Don't delay stopping QuickTime (bug 425157), Flip4Mac (bug 426524),
+   // XStandard (bug 430219), CMISS Zinc (bug 429604).
++  // RealPlayer/Helix (bug 451007).
+   if (aDelayedStop
+ #if !(defined XP_WIN || defined MOZ_X11)
+       && !aInstanceOwner->MatchPluginName("QuickTime")
+@@ -1904,6 +1905,8 @@
+       && !aInstanceOwner->MatchPluginName("Flip4Mac")
+       && !aInstanceOwner->MatchPluginName("XStandard plugin")
+       && !aInstanceOwner->MatchPluginName("CMISS Zinc Plugin")
++      && !aInstanceOwner->MatchPluginName("RealPlayer")
++      && !aInstanceOwner->MatchPluginName("Helix")
+ #endif
+       ) {
+     nsCOMPtr<nsIRunnable> evt = new nsStopPluginRunnable(aInstanceOwner);

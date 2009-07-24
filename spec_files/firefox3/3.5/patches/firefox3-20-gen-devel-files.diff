@@ -1,0 +1,20 @@
+--- mozilla/browser/installer/Makefile.in.old1	2008-12-04 15:14:38.944240997 +0800
++++ mozilla/browser/installer/Makefile.in	2008-12-04 15:16:49.568765114 +0800
+@@ -110,3 +110,5 @@
+ ifdef INSTALLER_DIR
+ 	$(MAKE) -C $(INSTALLER_DIR)
+ endif
++
++libs:: make-sdk
+--- mozilla/toolkit/library/Makefile.in.old1	2008-12-04 15:14:58.896349370 +0800
++++ mozilla/toolkit/library/Makefile.in	2008-12-04 15:15:59.616574362 +0800
+@@ -181,7 +181,8 @@
+ export:: $(RDF_UTIL_SRC_CPPSRCS) $(INTL_UNICHARUTIL_UTIL_CPPSRCS)
+ 	$(INSTALL) $^ .
+ 
+-EXTRA_DSO_LDOPTS += $(LIBS_DIR) $(EXTRA_DSO_LIBS)
++EXTRA_DSO_LDOPTS += $(LIBS_DIR) $(EXTRA_DSO_LIBS) $(MKSHLIB_FORCE_ALL) $(LIBXUL_DIST)/lib/$(LIB_PREFIX)xpcomglue_s.$(LIB_SUFFIX) $(MKSHLIB_UNFORCE_ALL)
++
+ 
+ ifdef MOZ_ENABLE_LIBXUL
+ include $(srcdir)/libxul-rules.mk
