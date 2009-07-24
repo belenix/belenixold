@@ -122,3 +122,39 @@
  static const seed_word SS[4][256] = {	
      {
          0x2989a1a8, 0x05858184, 0x16c6d2d4, 0x13c3d3d0, 
+--- nss-3.12.3/mozilla/security/nss/pkg/solaris/SUNWtls/prototype_com.orig	2009-07-24 19:59:12.783051188 +0530
++++ nss-3.12.3/mozilla/security/nss/pkg/solaris/SUNWtls/prototype_com	2009-07-24 19:59:26.604153301 +0530
+@@ -64,6 +64,7 @@
+ d none usr/lib/mps 755 root bin
+ d none usr/lib/mps/secv1 755 root bin
+ f none usr/lib/mps/libnss3.so 755 root bin
++f none usr/lib/mps/libnssutil3.so 755 root bin
+ f none usr/lib/mps/libsmime3.so 755 root bin
+ f none usr/lib/mps/libssl3.so 755 root bin
+ f none usr/lib/mps/libnssckbi.so 755 root bin
+--- nss-3.12.3/mozilla/security/nss/pkg/solaris/SUNWtls/prototype_i386.orig	2009-07-24 19:59:45.975717007 +0530
++++ nss-3.12.3/mozilla/security/nss/pkg/solaris/SUNWtls/prototype_i386	2009-07-24 20:00:37.669907448 +0530
+@@ -73,6 +73,7 @@
+ #64#d none usr/lib/mps/amd64 755 root bin
+ #64#d none usr/lib/mps/secv1/amd64 755 root bin
+ #64#f none usr/lib/mps/amd64/libnss3.so 755 root bin
++#64#f none usr/lib/mps/amd64/libnssutil3.so 755 root bin
+ #64#f none usr/lib/mps/amd64/libsmime3.so 755 root bin
+ #64#f none usr/lib/mps/amd64/libssl3.so 755 root bin
+ #64#f none usr/lib/mps/amd64/libnssckbi.so 755 root bin
+--- nss-3.12.3/mozilla/security/nss/pkg/solaris/SUNWtlsd/prototype.orig	2009-07-24 22:08:15.959877549 +0530
++++ nss-3.12.3/mozilla/security/nss/pkg/solaris/SUNWtlsd/prototype	2009-07-24 22:07:36.963223152 +0530
+@@ -151,6 +151,7 @@
+ f none usr/include/mps/secpkcs5.h 0644 root bin
+ f none usr/include/mps/secpkcs7.h 0644 root bin
+ f none usr/include/mps/secport.h 0644 root bin
++f none usr/include/mps/utilrename.h 0644 root bin
+ #f none usr/include/mps/secrng.h 0644 root bin
+ #f none usr/include/mps/secrngt.h 0644 root bin
+ f none usr/include/mps/shsign.h 0644 root bin
+@@ -159,3 +160,5 @@
+ f none usr/include/mps/sslerr.h 0644 root bin
+ f none usr/include/mps/sslproto.h 0644 root bin
+ f none usr/include/mps/sslt.h 0644 root bin
++f none usr/include/mps/nsslowhash.h 0644 root bin
++f none usr/include/mps/nssutil.h 0644 root bin
