@@ -1,0 +1,7 @@
+--- firefox/browser/installer/unix/packages-static.old	2009-02-04 11:44:59.752650899 +0800
++++ firefox/browser/installer/unix/packages-static	2009-02-04 11:41:35.252872330 +0800
+@@ -383,3 +383,4 @@
+ ; [Extensions]
+ ;
+ bin/components/libnkgnomevfs.so
++bin/components/libmozapoc.so

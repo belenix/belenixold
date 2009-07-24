@@ -1,0 +1,39 @@
+--- mozilla-1.9.1/layout/build/Makefile.in.orig	Mon May 25 13:55:10 2009
++++ mozilla-1.9.1/layout/build/Makefile.in	Mon May 25 13:55:34 2009
+@@ -150,11 +150,8 @@
+ ifdef MOZ_OGG
+ SHARED_LIBRARY_LIBS 	+= \
+ 	$(DEPTH)/media/libfishsound/src/libfishsound/$(LIB_PREFIX)fishsound.$(LIB_SUFFIX) \
+-	$(DEPTH)/media/libogg/src/$(LIB_PREFIX)ogg.$(LIB_SUFFIX) \
+ 	$(DEPTH)/media/liboggplay/src/liboggplay/$(LIB_PREFIX)oggplay.$(LIB_SUFFIX) \
+ 	$(DEPTH)/media/liboggz/src/liboggz/$(LIB_PREFIX)oggz.$(LIB_SUFFIX) \
+-	$(DEPTH)/media/libtheora/lib/$(LIB_PREFIX)theora.$(LIB_SUFFIX) \
+-	$(DEPTH)/media/libvorbis/lib/$(LIB_PREFIX)vorbis.$(LIB_SUFFIX) \
+ 	$(NULL)
+ endif
+ 
+--- mozilla-1.9.1/toolkit/library/Makefile.in.orig	Mon May 25 13:56:45 2009
++++ mozilla-1.9.1/toolkit/library/Makefile.in	Fri May 22 19:30:37 2009
+@@ -253,7 +253,7 @@
+ endif
+ 
+ ifeq ($(OS_ARCH),SunOS)
+-EXTRA_DSO_LDOPTS += -lelf -ldemangle -lCstd
++EXTRA_DSO_LDOPTS += -lvorbis -ltheora -logg -lelf -ldemangle -lCstd
+ endif
+ 
+ ifeq ($(OS_ARCH),WINNT)
+--- mozilla-1.9.1/toolkit/toolkit-tiers.mk.orig	Mon May 25 13:53:16 2009
++++ mozilla-1.9.1/toolkit/toolkit-tiers.mk	Fri May 22 21:01:02 2009
+@@ -115,11 +115,8 @@
+ ifdef MOZ_OGG
+ tier_gecko_dirs += \
+ 		media/libfishsound \
+-		media/libogg \
+ 		media/liboggplay \
+ 		media/liboggz \
+-		media/libtheora \
+-		media/libvorbis \
+ 		$(NULL)
+ endif
+ 

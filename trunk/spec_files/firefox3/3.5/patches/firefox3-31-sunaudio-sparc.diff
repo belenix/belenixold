@@ -1,0 +1,22 @@
+diff -r 5a8a199bd62a media/libsydneyaudio/src/sydney_audio_sunaudio.c
+--- a/media/libsydneyaudio/src/sydney_audio_sunaudio.c	Tue Apr 28 01:37:02 2009 +0200
++++ b/media/libsydneyaudio/src/sydney_audio_sunaudio.c	Tue Apr 28 18:40:54 2009 +0800
+@@ -114,17 +114,17 @@ sa_stream_create_pcm(
+   if (_s == NULL) 
+     return SA_ERROR_INVALID;
+ 
+   *_s = NULL;
+ 
+   if (mode != SA_MODE_WRONLY) 
+     return SA_ERROR_NOT_SUPPORTED;
+ 
+-  if (format != SA_PCM_FORMAT_S16_LE) 
++  if (format != SA_PCM_FORMAT_S16_LE && format != SA_PCM_FORMAT_S16_BE) 
+     return SA_ERROR_NOT_SUPPORTED;
+ 
+   /*
+    * Allocate the instance and required resources.
+    */
+   if ((s = malloc(sizeof(sa_stream_t))) == NULL) 
+     return SA_ERROR_OOM;
+ 

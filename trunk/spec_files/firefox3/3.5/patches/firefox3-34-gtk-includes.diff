@@ -1,0 +1,15 @@
+diff -ruN firefox.orig/widget/src/gtk2/nsNativeKeyBindings.cpp firefox/widget/src/gtk2/nsNativeKeyBindings.cpp
+--- firefox.orig/widget/src/gtk2/nsNativeKeyBindings.cpp	2009-07-19 00:25:17.588636142 +0100
++++ firefox/widget/src/gtk2/nsNativeKeyBindings.cpp	2009-07-19 00:27:08.519481790 +0100
+@@ -42,10 +42,7 @@
+ #include "nsGtkKeyUtils.h"
+ #include "nsGUIEvent.h"
+ 
+-#include <gtk/gtkentry.h>
+-#include <gtk/gtktextview.h>
+-#include <gtk/gtkbindings.h>
+-#include <gtk/gtkmain.h>
++#include <gtk/gtk.h>
+ #include <gdk/gdkkeysyms.h>
+ #include <gdk/gdkevents.h>
+ 

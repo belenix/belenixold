@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# This is a wrapper of pkg-config to simulate nspr-config/nss-config.
+# Usage: nspr-nss-config nspr [--version] [--libs] [--cflags]
+#     or nspr-nss-config nss  [--version] [--libs] [--cflags]
+
+if test $# -eq 0; then
+  exit 1
+fi
+
+program_name=$1
+shift
+
+if test "$program_name" != "nspr" && test "$program_name" != "nss"; then
+  exit 1
+fi
+
+if test "$program_name" = "nspr"; then
+  modversion=4.8.0
+  cflags='-I/usr/include/mps'
+  libs='-L/usr/lib/mps -R/usr/lib/mps -lnspr4 -lplc4 -lplds4'
+fi
+
+if test "$program_name" = "nss"; then
+  modversion=3.12.3
+  cflags='-I/usr/include/mps'
+  libs='-L/usr/lib/mps -R/usr/lib/mps -lnss3 -lnssutil3 -lsoftokn3 -lplc4 -lplds4 -lnspr4 -lssl3 -lfreebl3 -lnssckbi -lsmime3'
+fi
+
+while test $# -gt 0; do
+  case $1 in
+    --version)
+    echo_version=yes
+    ;;
+    --cflags)
+    echo_cflags=yes
+    ;;
+    --libs)
+    echo_libs=yes
+    ;;
+  esac
+  shift
+done
+
+if test "$echo_version" = "yes"; then
+  echo $modversion
+fi
+
+if test "$echo_cflags" = "yes"; then
+  echo $cflags
+fi
+
+if test "$echo_libs" = "yes"; then
+  echo $libs
+fi

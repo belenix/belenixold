@@ -1,0 +1,101 @@
+--- mozilla/xpcom/components/nsComponentManager.cpp.old	2009-02-04 14:12:38.803146859 +0800
++++ mozilla/xpcom/components/nsComponentManager.cpp	2009-02-04 14:12:53.523429846 +0800
+@@ -47,6 +47,7 @@
+  * 04/20/2000       IBM Corp.      Added PR_CALLBACK for Optlink use in OS2
+  */
+ #include <stdlib.h>
++#include "plstr.h"
+ #include "nscore.h"
+ #include "nsISupports.h"
+ #include "nspr.h"
+@@ -110,6 +111,8 @@
+ // 512K is big enough to allow for some future growth in the registry.
+ #define BIG_REGISTRY_BUFLEN   (512*1024)
+ 
++static PRBool apocRead = PR_FALSE;
++
+ // Common Key Names
+ const char classIDKeyName[]="classID";
+ const char classesKeyName[]="contractID";
+@@ -1089,6 +1092,7 @@
+                  PRUint32 number,
+                  void *arg)
+ {
++    static char apocCIDString[UID_STRING_LENGTH] = "{833fbe65-5a14-4634-8387-fcf47e24c9ca}";
+     char *contractID   = ((nsContractIDTableEntry*)hdr)->mContractID;
+     nsFactoryEntry *factoryEntry = ((nsContractIDTableEntry*)hdr)->mFactoryEntry;
+ 
+@@ -1103,7 +1107,22 @@
+ 
+     char cidString[UID_STRING_LENGTH];
+     GetIDString(factoryEntry->mCid, cidString);
+-    PR_fprintf(fd, "%s,%s\n", contractID, cidString); // what if this fails?
++
++    // cid,contract_id,type,class_name,inproc_server
++    // Because libmozapoc.so shares a same contractID (@mozilla.org/preferences-service;1)
++    // with libpref.so. To prevent libpref.so from bundling to that contractID
++    // do the following tricky operation.
++    const char* location = factoryEntry->mLocationKey;
++
++    if (apocRead && contractID && location
++        && !strcmp(contractID,"@mozilla.org/preferences-service;1")
++        && !strcmp(location,"rel:libpref.so"))
++    {
++        PR_fprintf(fd, "%s,%s\n", contractID, apocCIDString);
++    } else {
++        PR_fprintf(fd, "%s,%s\n", contractID, cidString); // what if this fails?
++    }
++
+     return PL_DHASH_NEXT;
+ }
+ 
+@@ -1113,6 +1132,9 @@
+               PRUint32 number,
+               void *arg)
+ {
++    static char apocCIDString[UID_STRING_LENGTH] = "{833fbe65-5a14-4634-8387-fcf47e24c9ca}";
++    static PRBool prefRead = PR_FALSE;
++
+     nsFactoryEntry *factoryEntry = ((nsFactoryTableEntry*)hdr)->mFactoryEntry;
+     PRFileDesc* fd = ((PersistentWriterArgs*)arg)->mFD;
+     nsTArray<nsLoaderdata> *loaderData = ((PersistentWriterArgs*)arg)->mLoaderData;
+@@ -1154,6 +1176,22 @@
+     const char* location = factoryEntry->mLocationKey;
+ 
+     // cid,contract_id,type,class_name,inproc_server
++    // Because libmozapoc.so shares a same contractID (@mozilla.org/preferences-service;1)
++    // with libpref.so. To prevent libpref.so from bundling to that contractID 
++    // do the following tricky operation.
++    if (location
++        && !strcmp(location,"rel:libmozapoc.so"))
++    {
++        apocRead = PR_TRUE;
++        if (!prefRead) {
++            if (contractID)
++                PR_Free(contractID);
++            if (className)
++                PR_Free(className);
++            return PL_DHASH_NEXT;
++        }
++    }
++
+     PR_fprintf(fd,
+                "%s,%s,%s,%s,%s\n",
+                cidString,
+@@ -1162,6 +1200,16 @@
+                (className  ? className  : ""),
+                (location   ? location   : ""));
+ 
++    if (contractID && location 
++        && !strcmp(contractID,"@mozilla.org/preferences-service;1")
++        && !strcmp(location,"rel:libpref.so"))
++    {
++        prefRead = PR_TRUE;
++        if (apocRead)
++             PR_fprintf(fd, "%s,%s,%s,%s,%s\n", 
++               apocCIDString, (contractID ? contractID : ""), "", "", "rel:libmozapoc.so"); 
++    }
++
+     if (contractID)
+         PR_Free(contractID);
+     if (className)
