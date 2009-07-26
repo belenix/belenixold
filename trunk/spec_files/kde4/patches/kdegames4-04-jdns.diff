@@ -1,0 +1,14 @@
+--- kdegames-4.2.4/ksirk/ksirk/iris/src/jdns/jdns_sys.c.orig	2009-07-26 00:09:11.445578007 +0530
++++ kdegames-4.2.4/ksirk/ksirk/iris/src/jdns/jdns_sys.c	2009-07-26 00:20:44.812305408 +0530
+@@ -683,6 +683,11 @@
+ # define JDNS_MODERN_RES_API
+ #endif
+ 
++#if defined(sun) || defined(__sun)
++# define JDNS_MODERN_RES_API
++# define USE_EXTEXT
++#endif
++
+ #ifndef JDNS_MODERN_RES_API
+ typedef int (*res_init_func)();
+ static int my_res_init()

@@ -20,10 +20,11 @@
 
 Name:                    SFExulrunner
 Summary:                 XUL Runtime for Gecko Applications
-Version:                 1.9.1
+Version:                 1.9.1.1pre
+%define tarball_version  1.9.1
 URL:                     http://developer.mozilla.org/En/XULRunner
 #Source:                  http://releases.mozilla.org/pub/mozilla.org/xulrunner/releases/%{version}/source/xulrunner-%{version}-source.tar.bz2
-Source:                  http://www.belenix.org/binfiles/xulrunner-1.9.1-source.tar.bz2
+Source:                  http://www.belenix.org/binfiles/xulrunner-%{tarball_version}-source.tar.bz2
 Source1:                 xulrunner-mozconfig
 Source2:                 xulrunner-find
 %define tarball_dir mozilla
@@ -36,6 +37,8 @@ Patch4:                  xulrunner-04-ps-pdf-simplify-operators.diff
 Patch7:                  xulrunner-07-SunOS5.mk.diff
 Patch8:                  xulrunner-08-toolkit-Makefile.in.diff
 Patch9:                  xulrunner-09-configure.diff
+Patch10:                 xulrunner-10-nanojit_regnames.diff
+Patch11:                 xulrunner-11-bool_weirdo.diff
 
 License:                 MPLv1.1 or GPLv2+ or LGPLv2+
 SUNW_BaseDir:            /
@@ -110,6 +113,8 @@ rm -f configure
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
+%patch11 -p1
 rm -f .mozconfig
 cp %{SOURCE1} .mozconfig
 cd ../..
@@ -151,9 +156,9 @@ accel=x86
 #export CFLAGS="%optflags -I/usr/include/mps"
 #export CXXFLAGS="%cxx_optflags -I/usr/include/mps"
 #export LDFLAGS="%_ldflags -L/usr/lib -R/usr/lib -L/usr/lib/mps -R/usr/lib/mps %{gnu_lib_path} %{sfw_lib_path}"
-export CFLAGS="%optflags"
-export CXXFLAGS="%cxx_optflags"
-export LDFLAGS="%_ldflags -L/usr/lib -R/usr/lib %{gnu_lib_path} %{sfw_lib_path}"
+export CFLAGS="%optflags %{gnu_lib_path}"
+export CXXFLAGS="%cxx_optflags %{gnu_lib_path}"
+#export LDFLAGS="%_ldflags -L/usr/lib -R/usr/lib %{gnu_lib_path} %{sfw_lib_path}"
 export LIBDIR='%{_libdir}'
 
 gmake -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
@@ -186,8 +191,6 @@ rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 install -m 0555 dist/sdk/bin/regxpcom ${RPM_BUILD_ROOT}%{_libdir}/xulrunner-%{version}
 cp -rL dist/include/* $RPM_BUILD_ROOT%{_includedir}/xulrunner-%{version}
 cp -rL dist/include/string/* $RPM_BUILD_ROOT%{_includedir}/xulrunner-%{version}/stable
-cp $RPM_BUILD_ROOT%{_includedir}/xulrunner-%{version}/js/jsconfig.h \
-   $RPM_BUILD_ROOT%{_includedir}/xulrunner-%{version}/js/jsversion.h
 
 find $RPM_BUILD_ROOT%{_includedir} -type f -name "*.h" | xargs chmod 644
 find $RPM_BUILD_ROOT%{_datadir}/idl -type f -name "*.idl" | xargs chmod 644
@@ -259,6 +262,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jul 26 2009 - moinakg<at>belenix(dot)org
+- Bump to recent SVN version to get TraceMonkey JIT engine.
 * Tue Jul 07 2009 - moinakg(at)belenix<dot>org
 - Upgrade to 1.9.1 from current mozilla svn.
 * Mon Jun 29 2009 - moinakg@belenix.org

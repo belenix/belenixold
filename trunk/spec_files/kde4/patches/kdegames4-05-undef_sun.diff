@@ -1,0 +1,13 @@
+--- kdegames-4.2.4/kspaceduel/structs.h.orig	2009-07-26 08:54:20.650603680 +0530
++++ kdegames-4.2.4/kspaceduel/structs.h	2009-07-26 08:59:35.358226516 +0530
+@@ -20,6 +20,10 @@
+ 
+ #include <klocalizedstring.h>
+ 
++#ifdef sun
++#undef sun
++#endif
++
+ struct SConfig
+ {
+    double gamespeed,gravity,acc,energyNeed,sunEnergy,rotationSpeed,

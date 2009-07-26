@@ -1,0 +1,11 @@
+--- mozilla/modules/plugin/base/public/nptypes.h.orig	2009-07-19 14:23:11.741775589 +0530
++++ mozilla/modules/plugin/base/public/nptypes.h	2009-07-19 14:23:40.226581277 +0530
+@@ -58,7 +58,7 @@
+   #include <inttypes.h>
+ 
+   #ifndef __cplusplus
+-    typedef int bool;
++    #define bool   int
+     #define true   1
+     #define false  0
+   #endif
