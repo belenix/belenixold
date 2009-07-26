@@ -1,0 +1,11 @@
+--- gettext-0.17/gettext-tools/configure.orig	2009-07-25 13:00:03.083504965 +0530
++++ gettext-0.17/gettext-tools/configure	2009-07-25 13:00:16.537853502 +0530
+@@ -40829,7 +40829,7 @@
+   return 0;
+ }
+ _ACEOF
+-for ac_lib in '' sec; do
++for ac_lib in ''; do
+   if test -z "$ac_lib"; then
+     ac_res="none required"
+   else

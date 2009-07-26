@@ -1,0 +1,50 @@
+diff -ur kdegames-4.2.2/ksirk/ksirk/kgamewin.cpp kdegames-4.2.2-ksirk-rh#486380/ksirk/ksirk/kgamewin.cpp
+--- kdegames-4.2.2/ksirk/ksirk/kgamewin.cpp	2009-02-26 15:27:43.000000000 +0100
++++ kdegames-4.2.2-ksirk-rh#486380/ksirk/ksirk/kgamewin.cpp	2009-04-09 00:41:24.000000000 +0200
+@@ -132,6 +132,7 @@
+   m_downarrow(0),
+   m_leftarrow(0),
+   m_rightarrow(0),
++  m_reinitializingGame(false),
+   m_newGameDialog(0),
+   m_stateBeforeNewGame(GameAutomaton::INVALID),
+   m_stackWidgetBeforeNewGame(-1),
+diff -ur kdegames-4.2.2/ksirk/ksirk/kgamewin.h kdegames-4.2.2-ksirk-rh#486380/ksirk/ksirk/kgamewin.h
+--- kdegames-4.2.2/ksirk/ksirk/kgamewin.h	2009-02-26 15:27:43.000000000 +0100
++++ kdegames-4.2.2-ksirk-rh#486380/ksirk/ksirk/kgamewin.h	2009-04-09 00:39:57.000000000 +0200
+@@ -1113,6 +1113,7 @@
+   bool m_networkGame;
+   int m_port;
+   uint m_newPlayersNumber;
++  bool m_reinitializingGame;
+ 
+   NewGameDialogImpl* m_newGameDialog;
+ 
+diff -ur kdegames-4.2.2/ksirk/ksirk/kgamewinslots.cpp kdegames-4.2.2-ksirk-rh#486380/ksirk/ksirk/kgamewinslots.cpp
+--- kdegames-4.2.2/ksirk/ksirk/kgamewinslots.cpp	2009-02-26 15:27:43.000000000 +0100
++++ kdegames-4.2.2-ksirk-rh#486380/ksirk/ksirk/kgamewinslots.cpp	2009-04-09 00:42:57.000000000 +0200
+@@ -75,7 +75,7 @@
+   QPointF mousePosition;
+   Country *mouseLocalisation;
+ 
+-  if (m_frame == 0)
++  if (m_frame == 0 || m_reinitializingGame)
+   {
+     return;
+   }
+@@ -952,6 +952,7 @@
+ {
+   kDebug() << nbPlayers << skin << nbNetworkPlayers << useGoals;
+   m_automaton->setGameStatus(KGame::End);
++  m_reinitializingGame = true;
+   m_automaton->removeAllPlayers();
+ 
+   showMap();
+@@ -961,6 +962,7 @@
+   m_automaton->savedState(GameLogic::GameAutomaton::INVALID);
+   m_automaton->setNetworkPlayersNumber(m_automaton->networkGameType()==GameAutomaton::None?0:nbNetworkPlayers);
+   m_automaton->finishSetupPlayersNumberAndSkin(skin, m_automaton->networkGameType(), nbPlayers);
++  m_reinitializingGame = false;
+ 
+   if (m_automaton->networkGameType()==GameAutomaton::Jabber && m_jabberClient && m_jabberClient->isConnected())
+   {

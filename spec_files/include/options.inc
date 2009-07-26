@@ -28,6 +28,12 @@
 %define debug_build %option_with_debug
 
 #
+# Option: --without-moz-nss-nspr
+#
+%define option_with_moz_nss_nspr %{?!_without_moz_nss_nspr:1}%{?_without_moz_nss_nspr:0}
+%define option_without_moz_nss_nspr %{?_without_moz_nss_nspr:1}%{?!_without_moz_nss_nspr:0}
+
+#
 # Option: --without-gtk-doc
 #
 # use --without-gtk-doc to disable building gtk-docs (it takes quite

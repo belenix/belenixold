@@ -1,0 +1,82 @@
+--- kdegames-4.2.4/kpat/patsolve/memory.h.orig	2009-07-25 22:57:27.061761723 +0530
++++ kdegames-4.2.4/kpat/patsolve/memory.h	2009-07-25 22:58:04.907695893 +0530
+@@ -36,7 +36,7 @@
+ class MemoryManager
+ {
+ public:
+-    enum inscode { NEW, FOUND, ERR };
++    enum inscode { _NEW_, _FOUND, _ERROR };
+ 
+     unsigned char *new_from_block(size_t s);
+     void init_clusters(void);
+--- kdegames-4.2.4/kpat/patsolve/memory.cpp.orig	2009-07-25 22:58:37.007394559 +0530
++++ kdegames-4.2.4/kpat/patsolve/memory.cpp	2009-07-25 22:58:59.852976172 +0530
+@@ -28,7 +28,7 @@
+ 	t = *tree;
+ 	if (t == NULL) {
+ 		*tree = n;
+-		return NEW;
++		return _NEW_;
+ 	}
+ 	while (1) {
+ 		tkey = (quint8 *)t + sizeof(TREE);
+@@ -39,13 +39,13 @@
+ 		if (c < 0) {
+ 			if (t->left == NULL) {
+ 				t->left = n;
+-				return NEW;
++				return _NEW_;
+ 			}
+ 			t = t->left;
+ 		} else {
+ 			if (t->right == NULL) {
+ 				t->right = n;
+-				return NEW;
++				return _NEW_;
+ 			}
+ 			t = t->right;
+ 		}
+@@ -55,7 +55,7 @@
+ 	If the new path to this position was shorter, record the new depth
+ 	so we can prune the original path. */
+ 
+-        return FOUND;
++        return _FOUND;
+ }
+ 
+ /* Given a cluster number, return a tree.  There are 14^4 possible
+--- kdegames-4.2.4/kpat/patsolve/patsolve.cpp.orig	2009-07-25 22:59:18.408631101 +0530
++++ kdegames-4.2.4/kpat/patsolve/patsolve.cpp	2009-07-25 23:00:05.790939084 +0530
+@@ -1008,20 +1008,20 @@
+ 
+ 	TREELIST *tl = mm->cluster_tree(k);
+ 	if (tl == NULL) {
+-		return MemoryManager::ERR;
++		return MemoryManager::_ERROR;
+ 	}
+ 
+ 	/* Create a compact position representation. */
+ 
+ 	TREE *newtree = pack_position();
+ 	if (newtree == NULL) {
+-		return MemoryManager::ERR;
++		return MemoryManager::_ERROR;
+ 	}
+         Total_generated++;
+ 
+         MemoryManager::inscode i2 = mm->insert_node(newtree, d, &tl->tree, node);
+ 
+-	if (i2 != MemoryManager::NEW) {
++	if (i2 != MemoryManager::_NEW_) {
+ 		mm->give_back_block((quint8 *)newtree);
+ 	}
+ 
+@@ -1045,7 +1045,7 @@
+ 		depth = parent->depth + 1;
+ 	}
+         MemoryManager::inscode i = insert(&cluster, depth, &node);
+-        if (i == MemoryManager::NEW) {
++        if (i == MemoryManager::_NEW_) {
+                 Total_positions++;
+                 depth_sum += depth;
+         } else

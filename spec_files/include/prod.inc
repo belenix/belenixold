@@ -6,7 +6,7 @@
 SUNW_ProdName:             SpecFilesExtra
 SUNW_ProdVers:             1.0
 
-%define default_pkg_version 2.18.0
+%define default_pkg_version 2.26.0
 %define jds_version         JDSosol
 %define default_category   SFE,application
 %define support_level      unsupported
@@ -25,6 +25,7 @@ Vendor:			   http://pkgbuild.sf.net/spec-files-extra
 %define xfce_pkg_version 4.4.2
 %define xfce_src_url http://www.us.xfce.org/archive/xfce-%{xfce_pkg_version}/src
 %define xfce_banding OSOL
+%define restart_fmri $BASEDIR/share/desktop-cache/restart_fmri
 
 
 # ChangeLog:

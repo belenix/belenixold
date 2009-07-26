@@ -1,0 +1,15 @@
+diff -ur kdegames-4.2.2/ksirk/ksirk/kgamewinslots.cpp kdegames-4.2.2-ksirk-kde#187235/ksirk/ksirk/kgamewinslots.cpp
+--- kdegames-4.2.2/ksirk/ksirk/kgamewinslots.cpp	2009-02-26 15:27:43.000000000 +0100
++++ kdegames-4.2.2-ksirk-kde#187235/ksirk/ksirk/kgamewinslots.cpp	2009-04-04 17:58:43.000000000 +0200
+@@ -132,6 +132,11 @@
+           && (mousePos.x() >= 0) && (mousePos.x() <= m_frame-> viewport()->width()))
+     )
+   )
++  // safety check for NULL arrow pointers, can happen with Qt 4.5
++  if (m_uparrow == 0 || m_downarrow == 0 || m_leftarrow == 0 || m_rightarrow == 0)
++  {
++    return;
++  }
+   if (currentWidget() != 0)
+   {
+     m_timer.start(200);

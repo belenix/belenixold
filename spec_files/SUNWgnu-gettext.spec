@@ -13,6 +13,16 @@ Source:              ftp://ftp.gnu.org/pub/gnu/gettext/gettext-%{version}.tar.gz
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 #Patch1:              gettext-01-vasprintf.diff
+
+#
+# Disable acl_trivial usage from libsec for now. libsec brings in libidmap which
+# brings in libldap which brings in system NSS/NSPR compiled using Studio.
+# XULRunner and related tools built using Gcc and using a different NSS/NSPR
+# will get confused when linked with GNU Gettext if there are 2 different NSS/NSPR
+# linked into the same executable image built using different compilers. The
+# typical result will be a crash!
+#
+Patch2:              gettext-02-disable-acl_trivial.diff
 %include default-depend.inc
 Requires: SUNWpostrun
 
@@ -32,9 +42,10 @@ Requires:                %{name}
 
 %prep
 %setup -q -c -n %name-%version
-#cd gettext-%{version}
+cd gettext-%{version}
 #%patch1 -p1
-#cd ..
+%patch2 -p1
+cd ..
 
 %ifarch amd64 sparcv9
 cp -pr gettext-%{version} gettext-%{version}-64
@@ -56,8 +67,8 @@ export CFLAGS32="%optflags"
 export CFLAGS64="%optflags64"
 export CXXFLAGS32="%cxx_optflags"
 export CXXFLAGS64="%cxx_optflags64"
-export LDFLAGS32="%_ldflags -lsec"
-export LDFLAGS64="%_ldflags -lsec"
+export LDFLAGS32="%_ldflags"
+export LDFLAGS64="%_ldflags"
 
 %ifarch amd64 sparcv9
 
@@ -189,6 +200,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Jul 26 2009 - moinakg<at>belenix(dot)org
+- Avoid linking with libsec to avoid bringing in system NSS/NSPR.
 * Tue May 12 2009 - moinakg@belenix.org
 - Bump version to 0.17.
 - Rename package to satisfy dependencies.

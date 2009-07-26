@@ -7,7 +7,8 @@
 
 Name:                    SFEgoogle-gadgets
 Summary:                 Google Gadgets - a platform for running desktop gadgets.
-Version:                 0.10.5
+Version:                 0.11.0
+License:                 ASL 2.0
 Source:                  http://google-gadgets-for-linux.googlecode.com/files/google-gadgets-for-linux-%{version}.tar.bz2
 URL:                     http://code.google.com/p/google-gadgets-for-linux/
 
@@ -17,7 +18,7 @@ Patch1:                  google-gadgets-01-solaris-build.diff
 # Enable Qt4 check on Solaris
 Patch2:                  google-gadgets-02-configure.ac.diff
 
-Patch3:                  google-gadgets-03-linux-process.cc.diff
+Patch4:                  google-gadgets-04-gecko_version.diff
 
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
@@ -97,7 +98,7 @@ Requires: SFExulrunner-devel
 %setup -q -n google-gadgets-for-linux-%{version}
 %patch1 -p0
 %patch2 -p1
-%patch3 -p1
+%patch4 -p1
 
 %build
 export CXXFLAGS="-O3 -march=pentium4 -fno-omit-frame-pointer -D_REENTRANT -D__EXTENSIONS__ -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_POSIX_PTHREAD_SEMANTICS"
@@ -177,9 +178,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/ggl-qt
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/libggadget-qt*
+%{_libdir}/libggadget-web*
 %dir %attr (0755, root, bin) %{_libdir}/google-gadgets
 %dir %attr (0755, root, bin) %{_libdir}/google-gadgets/modules
 %{_libdir}/google-gadgets/modules/qt*.so
+%{_libdir}/google-gadgets/modules/html*.so
+%{_libdir}/google-gadgets/modules/web*.so
+%{_libdir}/google-gadgets/modules/soup*.so
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, other) %{_datadir}/applications
 %{_datadir}/applications/*qt.desktop
@@ -209,6 +214,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/google-gadgets/include/*
 
 %changelog
+* Sun Jul 26 2009 - moinakg<at>belenix(dot)org
+- Bump version to get new features. Add patch to use latest XULRunner.
 * Sat Jul 04 2009 - moinakg@belenix(dot)org
 - Start using XULRunner for the smjs module.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org

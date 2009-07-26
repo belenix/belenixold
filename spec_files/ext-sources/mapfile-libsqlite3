@@ -32,6 +32,9 @@ sqlite_3.5.16 {
 	sqlite3_backup_finish;
 	sqlite3_backup_step;
 	sqlite3_backup_init;
+	sqlite3_initialize;
+	sqlite3_config;
+	sqlite3_shutdown;
 
     local:
 	*;
