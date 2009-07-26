@@ -34,6 +34,9 @@ Patch3:         cups-03-cups.pc.patch
 Patch4:         cups-06-cupsd.conf.in.patch
 Patch5:         cups-07-scf-active.patch
 Patch6:         cups-08-usb-hack.patch
+%if %cc_is_gcc
+Patch7:         cups-09-sharedlib.diff
+%endif
 
 SUNW_BaseDir:	%{_basedir}
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
@@ -77,13 +80,9 @@ gpatch -p0 --fuzz=0 < %{PATCH3}
 gpatch -p0 --fuzz=0 < %{PATCH4}
 gpatch -p0 --fuzz=0 < %{PATCH5}
 gpatch -p0 --fuzz=0 < %{PATCH6}
-#%patch0 -p0
-#%patch1 -p0
-#%patch2 -p0
-#%patch3 -p0
-#%patch4 -p0
-#%patch5 -p0
-#%patch6 -p0
+%if %cc_is_gcc
+gpatch -p0 --fuzz=0 < %{PATCH7}
+%endif
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -207,8 +206,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{cupsdata}
 %{cupsdata}/man
 %{_datadir}/cups
-%{_datadir}/locale
 %defattr (-, root, other)
+%{_datadir}/locale
 %{_datadir}/applications
 %{_datadir}/icons
 
@@ -222,7 +221,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files root
 %defattr (-, root, sys)
-%{_sysconfdir}
 %dir %attr (0755, root, sys) %{_localstatedir}
 %dir %attr (0755, root, sys) %{_localstatedir}/svc
 %dir %attr (0755, root, sys) %{_localstatedir}/svc/manifest
@@ -238,6 +236,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0644, %{cups_user}, %{cups_group}) %{_localstatedir}/log/cups
 %dir %attr (0644, %{cups_user}, %{cups_group}) %{_localstatedir}/cache
 %dir %attr (0644, %{cups_user}, %{cups_group}) %{_localstatedir}/cache/cups/rss
+%dir %attr (0755, root, sys) %{_sysconfdir}
+%{_sysconfdir}/cups
+
+%defattr (-, root, bin)
+%{_sysconfdir}/dbus-1
 
 %files doc
 %defattr (-, root, bin)
@@ -246,6 +249,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sun Jul 26 2009 - moinakg<at>belenix(dot)org
+- Update DSOFLAGS to use -shared instead of -G libker flag for Gcc
+- to avoid main function in shared lib!
 * Wed Apr 15 2009 - moinakg@belenix.org
 - Merge Patches and build changes from SFW gate.
 * Tue Mar 18 2008 - moinakg@gmail.com
