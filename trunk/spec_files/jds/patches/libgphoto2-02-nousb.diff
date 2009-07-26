@@ -1,0 +1,19 @@
+--- libgphoto2-2.4.0/libgphoto2_port/libgphoto2_port.pc.in-orig	2007-07-31 16:54:55.501951000 -0500
++++ libgphoto2-2.4.0/libgphoto2_port/libgphoto2_port.pc.in	2007-07-31 16:55:04.461691000 -0500
+@@ -9,6 +9,6 @@ Name: libgphoto2_port
+ Description: Device-independent access to serial, USB, and other ports
+ URL: http://gphoto.org/proj/libgphoto2/
+ Version: @VERSION@
+-Requires: libusb >= 0.1.11
++#Requires: libusb >= 0.1.11
+ Libs: -L${libdir} -lgphoto2_port -lm
+ Cflags: -I${includedir}/gphoto2
+--- libgphoto2-2.4.0/libgphoto2_port/libgphoto2_port-uninstalled.pc.in-orig	2007-11-28 17:44:41.653630000 -0600
++++ libgphoto2-2.4.0/libgphoto2_port/libgphoto2_port-uninstalled.pc.in	2007-11-28 17:45:11.762955000 -0600
+@@ -15,6 +15,5 @@ Name: libgphoto2_port
+ Description: Library for easy access to digital cameras
+ URL: http://gphoto.org/proj/libgphoto2/
+ Version: @VERSION@
+-Requires: libusb >= 0.1.11
+ Libs: ${pcfiledir}/libgphoto2_port/libgphoto2_port.la -lm
+ Cflags: -I${pcfiledir}/@srcdir@

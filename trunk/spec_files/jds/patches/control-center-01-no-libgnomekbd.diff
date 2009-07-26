@@ -1,0 +1,133 @@
+diff -up gnome-control-center-2.21.5/capplets/keyboard/Makefile.am.orig gnome-control-center-2.21.5/capplets/keyboard/Makefile.am
+--- gnome-control-center-2.21.5/capplets/keyboard/Makefile.am.orig	2008-01-15 00:56:42.000000000 +0000
++++ gnome-control-center-2.21.5/capplets/keyboard/Makefile.am	2008-01-18 14:00:59.749645000 +0000
+@@ -3,10 +3,8 @@ cappletname = keyboard
+ 
+ bin_PROGRAMS = gnome-keyboard-properties
+ 
+-gnome_keyboard_properties_SOURCES = \
+-	gnome-keyboard-properties.c \
+-	gnome-keyboard-properties-a11y.c \
+-	gnome-keyboard-properties-a11y.h \
++if HAVE_GSWITCHIT
++GSWITCHIT_FILES = \
+ 	gnome-keyboard-properties-xkb.c \
+ 	gnome-keyboard-properties-xkbmc.c \
+ 	gnome-keyboard-properties-xkblt.c \
+@@ -14,6 +12,13 @@ gnome_keyboard_properties_SOURCES = \
+ 	gnome-keyboard-properties-xkbot.c \
+ 	gnome-keyboard-properties-xkbpv.c \
+ 	gnome-keyboard-properties-xkb.h
++endif
++
++gnome_keyboard_properties_SOURCES = \
++	gnome-keyboard-properties.c \
++	gnome-keyboard-properties-a11y.c \
++	gnome-keyboard-properties-a11y.h \
++	$(GSWITCHIT_FILES)
+ 
+ gnome_keyboard_properties_LDADD = $(GNOMECC_CAPPLETS_LIBS) $(LIBGNOMEKBDUI_LIBS)
+ 
+
+diff -u gnome-control-center-2.19.91/config.h.in.orig gnome-control-center-2.19.91/config.h.in
+--- gnome-control-center-2.19.91/config.h.in.orig	2007-08-28 17:28:50.000000000 +0100
++++ gnome-control-center-2.19.91/config.h.in	2007-09-04 16:30:11.113054000 +0100
+@@ -113,3 +113,7 @@
+ 
+ /* Define to 1 if the X Window System is missing or not being used. */
+ #undef X_DISPLAY_MISSING
++
++/* Defined when gswitchit is detected */
++#undef HAVE_GSWITCHIT
++
+
+--- gnome-control-center-2.23.5/configure.in.orig	2008-07-25 11:08:05.709407202 +0100
++++ gnome-control-center-2.23.5/configure.in	2008-07-25 11:09:26.314977963 +0100
+@@ -181,13 +181,21 @@
+ dnl ==============
+ dnl gswitchit
+ dnl ==============
+-PKG_CHECK_MODULES(LIBGNOMEKBD, [libgnomekbd >= 2.21.4.1 libxklavier >= 3.6])
+-AC_SUBST(LIBGNOMEKBD_CFLAGS)
+-AC_SUBST(LIBGNOMEKBD_LIBS)
+-
+-PKG_CHECK_MODULES(LIBGNOMEKBDUI, [libgnomekbdui >= 2.21])
+-AC_SUBST(LIBGNOMEKBDUI_CFLAGS)
+-AC_SUBST(LIBGNOMEKBDUI_LIBS)
++AC_ARG_ENABLE(gswitchit,
++       AC_HELP_STRING([--disable-gswitchit],
++                      [Do not build with gswitchit support]),,
++                       enable_gswitchit=yes)
++
++if test x$enable_libxklavier = xyes; then
++    PKG_CHECK_MODULES(LIBGNOMEKBD, [libgnomekbd >= 2.21.4.1 libxklavier >= 3.6])
++    AC_SUBST(LIBGNOMEKBD_CFLAGS)
++    AC_SUBST(LIBGNOMEKBD_LIBS)
++
++    PKG_CHECK_MODULES(LIBGNOMEKBDUI, [libgnomekbdui >= 2.21])
++    AC_SUBST(LIBGNOMEKBDUI_CFLAGS)
++    AC_SUBST(LIBGNOMEKBDUI_LIBS)
++fi
++AM_CONDITIONAL(HAVE_GSWITCHIT, [test $enable_gswitchit = yes])
+ 
+ dnl ==============================================
+ dnl About-me
+--- gnome-control-center-2.25.92/capplets/keyboard/gnome-keyboard-properties.c.ori	2009-03-13 11:02:22.202010618 +0000
++++ gnome-control-center-2.25.92/capplets/keyboard/gnome-keyboard-properties.c	2009-03-13 11:09:14.248747056 +0000
+@@ -37,7 +37,9 @@
+ #include "capplet-stock-icons.h"
+ 
+ #include "gnome-keyboard-properties-a11y.h"
++#ifdef HAVE_GSWITCHIT
+ #include "gnome-keyboard-properties-xkb.h"
++#endif
+ 
+ enum {
+ 	RESPONSE_APPLY = 1,
+@@ -184,7 +186,9 @@
+ 	g_signal_connect (WID ("keyboard_dialog"), "response",
+ 			  (GCallback) dialog_response, changeset);
+ 
++#ifdef HAVE_GSWITCHIT
+ 	setup_xkb_tabs (dialog, changeset);
++#endif
+ 	setup_a11y_tabs (dialog, changeset);
+ }
+ 
+@@ -243,18 +247,35 @@
+ 	changeset = NULL;
+ 	dialog = create_dialog ();
+ 	setup_dialog (dialog, changeset);
++#ifndef HAVE_GSWITCHIT
++  /* Do not display Layout tabs if libxklavier is not enabled */
++  gtk_notebook_remove_page (GTK_NOTEBOOK (WID ("keyboard_notebook")), 1);
++#endif
+ 	if (switch_to_typing_break_page) {
++#ifdef HAVE_GSWITCHIT
+ 		gtk_notebook_set_current_page (GTK_NOTEBOOK
+ 					       (WID
+ 						("keyboard_notebook")),
+ 					       4);
++#else
++                gtk_notebook_set_current_page (GTK_NOTEBOOK
++                                              (WID
++                                              ("keyboard_notebook")),
++                                               3);
++#endif
+ 	}
+ 	else if (switch_to_a11y_page) {
++#ifdef HAVE_GSWITCHIT
+ 		gtk_notebook_set_current_page (GTK_NOTEBOOK
+ 					       (WID
+ 						("keyboard_notebook")),
+ 					       2);
+-
++#else
++                gtk_notebook_set_current_page (GTK_NOTEBOOK
++                                              (WID
++                                              ("keyboard_notebook")),
++                                              1);
++#endif
+ 	}
+ 
+ 	capplet_set_icon (WID ("keyboard_dialog"),

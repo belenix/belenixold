@@ -1,0 +1,19 @@
+--- gnome-vfs-2.23.0/libgnomevfs/gnome-vfs-init.c-orig	2008-09-23 20:43:47.203219000 -0500
++++ gnome-vfs-2.23.0/libgnomevfs/gnome-vfs-init.c	2008-09-23 20:45:45.459702000 -0500
+@@ -63,8 +63,16 @@ static gboolean
+ ensure_dot_gnome_exists (void)
+ {
+ 	gboolean retval = TRUE;
++	gboolean create_dirs;
+ 	gchar *dirname;
+ 
++	/* If the user does not have a writable HOME directory, then
++	   avoid creating the directory. */
++	create_dirs = (g_access (g_get_home_dir(), W_OK) == 0);
++
++        if (create_dirs != TRUE)
++		return TRUE;
++
+ 	dirname = g_build_filename (g_get_home_dir (), ".gnome2", NULL);
+ 
+ 	if (!g_file_test (dirname, G_FILE_TEST_EXISTS)) {

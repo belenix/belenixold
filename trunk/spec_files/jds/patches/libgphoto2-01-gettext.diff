@@ -1,0 +1,38 @@
+--- libgphoto2-2.4.5/configure.ac-orig	2009-04-03 22:05:21.674484000 -0500
++++ libgphoto2-2.4.5/configure.ac	2009-04-03 22:05:44.885721000 -0500
+@@ -225,11 +225,13 @@ dnl ------------------------------------
+ 
+ ALL_LINGUAS="da de es eu fr hu it ja nl pl ru sv uk vi zh_CN"
+ GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_CURRENT_MIN}],[The gPhoto Team],[${MAIL_GPHOTO_TRANSLATION}])
+-AM_GNU_GETTEXT_VERSION([0.14.1])
+-AM_GNU_GETTEXT([external])
++AM_GLIB_GNU_GETTEXT
++USE_INCLUDED_LIBINTL=no
++AC_SUBST(USE_INCLUDED_LIBINTL)
++BUILD_INCLUDED_LIBINTL=no
++AC_SUBST(BUILD_INCLUDED_LIBINTL)
+ AM_PO_SUBDIRS()
+ AM_ICONV()
+-GP_GETTEXT_FLAGS()
+ 
+ dnl FIXME: We have to make sure this works first
+ dnl AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
+--- libgphoto2-2.4.5/libgphoto2_port/configure.ac-orig	2009-04-03 22:05:55.991193000 -0500
++++ libgphoto2-2.4.5/libgphoto2_port/configure.ac	2009-04-03 22:06:12.083002000 -0500
+@@ -117,11 +117,13 @@ dnl AC_SUBST(USE_INCLUDED_LIBINTL)
+ 
+ GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT_MIN}],[Lutz Mueller and others],[${MAIL_GPHOTO_TRANSLATION}])
+ ALL_LINGUAS="cs da de fr es eu it ja nl pl pt_BR ru sk sv uk vi zh_CN zh_TW"
+-AM_GNU_GETTEXT_VERSION([0.14.1])
+-AM_GNU_GETTEXT([external])
++AM_GLIB_GNU_GETTEXT
++USE_INCLUDED_LIBINTL=no
++AC_SUBST(USE_INCLUDED_LIBINTL)
++BUILD_INCLUDED_LIBINTL=no
++AC_SUBST(BUILD_INCLUDED_LIBINTL)
+ AM_PO_SUBDIRS()
+ AM_ICONV()
+-GP_GETTEXT_FLAGS()
+ 
+ AC_SUBST([localedir],["\$(datadir)/locale"])
+ AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""

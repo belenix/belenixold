@@ -1,0 +1,22 @@
+Index: seahorse/libseahorse/seahorse-view.c
+===================================================================
+--- seahorse/libseahorse/seahorse-view.c	(revision 2692)
++++ seahorse/libseahorse/seahorse-view.c	(working copy)
+@@ -80,7 +80,7 @@
+                                  SeahorseCommands *commands)
+ {
+ 	g_return_if_fail (SEAHORSE_VIEW_GET_INTERFACE (self)->register_commands);
+-	return SEAHORSE_VIEW_GET_INTERFACE (self)->register_commands (self, pred, commands);
++	SEAHORSE_VIEW_GET_INTERFACE (self)->register_commands (self, pred, commands);
+ }
+ 
+ void
+@@ -88,7 +88,7 @@
+                            const gchar *ui_definition, GtkActionGroup *actions)
+ {
+ 	g_return_if_fail (SEAHORSE_VIEW_GET_INTERFACE (self)->register_ui);
+-	return SEAHORSE_VIEW_GET_INTERFACE (self)->register_ui (self, pred, ui_definition, actions);
++	SEAHORSE_VIEW_GET_INTERFACE (self)->register_ui (self, pred, ui_definition, actions);
+ }
+ 
+ static void 

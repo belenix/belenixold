@@ -1,0 +1,39 @@
+--- gphoto2-2.4.2.old/doc/gphoto2.1	2008-07-31 16:27:26.906098000 +0100
++++ gphoto2-2.4.2/doc/gphoto2.1	2008-08-01 12:03:09.678368000 +0100
+@@ -1,3 +1,4 @@
++'\" te
+ .\"     Title: gphoto2
+ .\"    Author: The gPhoto2 Team
+ .\" Generator: DocBook XSL Stylesheets v1.71.1 <http://docbook.sf.net/>
+@@ -578,6 +579,26 @@
+ is given, the time counter is reset to the value given by the
+ \fB\-I|\-\-interval\fR option. Note that the camera will need some time (from 50ms to a few seconds) to actually capture the image.
+ .RE
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWgnome-camera
++_
++Interface stability^Volatile
++
++.TE
++.sp
++
+ .SH "SEE ALSO"
+ .PP
+ 
+@@ -670,3 +691,4 @@
+ .RS 4
+ \%http://www.teaser.fr/~hfiguiere/linux/digicam.html
+ .RE
++...\" LSARC 2001/201 GNOME 2.X on Solaris

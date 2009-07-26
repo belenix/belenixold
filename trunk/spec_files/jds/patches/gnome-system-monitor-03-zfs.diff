@@ -1,0 +1,24 @@
+--- gnome-system-monitor-2.25.91.mod/src/sysinfo.cpp	2009-03-04 10:18:54.373979000 +0800
++++ gnome-system-monitor-2.25.91.mod.2/src/sysinfo.cpp	2009-03-04 12:30:47.058390000 +0800
+@@ -118,6 +118,13 @@ namespace {
+ 
+     void load_disk_info()
+     {
++       glibtop_fsusage usage;
++
++       /* Now opensolaris is using ZFS, so we check / is ok */
++       glibtop_get_fsusage(&usage, "/");
++       this->free_space_bytes = usage.bavail * usage.block_size;
++
++/*
+       glibtop_mountentry *entries;
+       glibtop_mountlist mountlist;
+ 
+@@ -139,6 +146,7 @@ namespace {
+       }
+ 
+       g_free(entries);
++*/
+     }
+ 
+ 
