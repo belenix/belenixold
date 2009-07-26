@@ -1,0 +1,11 @@
+--- config-scripts/cups-sharedlibs.m4.orig	2009-07-26 16:43:40.348821408 +0530
++++ config-scripts/cups-sharedlibs.m4	2009-07-26 16:43:56.058039455 +0530
+@@ -24,7 +24,7 @@
+ 			LIBCUPS="libcups.so.2"
+ 			LIBCUPSIMAGE="libcupsimage.so.2"
+ 			DSO="\$(CC)"
+-			DSOFLAGS="$DSOFLAGS -Wl,-h,\`basename \$@\` -G \$(OPTIM)"
++			DSOFLAGS="$DSOFLAGS -Wl,-h,\`basename \$@\` -shared \$(OPTIM)"
+ 			;;
+ 		HP-UX*)
+ 			case "$uarch" in
