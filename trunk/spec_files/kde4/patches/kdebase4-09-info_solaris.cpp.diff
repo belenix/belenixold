@@ -1,6 +1,93 @@
---- kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp.orig	2009-07-07 00:06:39.641858485 +0530
-+++ kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp	2009-07-07 00:25:43.620376026 +0530
-@@ -325,13 +325,12 @@
+--- kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp.orig	2009-07-18 21:45:46.948013137 +0530
++++ kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp	2009-07-18 21:46:20.481537202 +0530
+@@ -7,6 +7,9 @@
+ #include "config-infocenter.h"
+ 
+ #include <QTreeWidgetItemIterator>
++#include <QProcess>
++#include <QDebug>
++#include <QRegExp>
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -26,6 +29,9 @@
+ #include <libdevinfo.h>
+ #endif /* HAVE_LIBDEVINFO_H */
+ 
++#define MNTTAB "/etc/mnttab"
++#define INTR_PROG "/usr/bin/show_interrupts"
++
+ bool GetInfo_CPU(QTreeWidget* tree) {
+ 
+ 	kstat_ctl_t *kctl;
+@@ -127,8 +133,64 @@
+ 	return true;
+ }
+ 
+-bool GetInfo_IRQ(QTreeWidget*) {
+-	return false;
++bool GetInfo_IRQ(QTreeWidget *tree) {
++	int num = 0;
++	/*
++	 *  set up column headers
++	 */
++	QStringList headers;
++	headers << i18n("IRQ") << i18n("Vector") << i18n("IPL") << i18n("Bus") \
++	        << i18n("Trigger") << i18n("Type") << i18n("CPU") << i18n("Share") \
++	        << i18n("APIC/INT#") << i18n("ISR(s)");
++	tree->setHeaderLabels(headers);
++
++	QProcess si;
++	si.start(INTR_PROG);
++
++	if (si.waitForStarted()) {
++		si.waitForFinished();
++		QByteArray sout = si.readAllStandardOutput();
++		QList<QByteArray> lines = sout.split('\n');
++		QRegExp rx(QString("[ ]+"));
++
++		foreach (QByteArray line, lines) {
++			if (num == 0) {
++				num++;
++				continue;
++			}
++			QStringList fields = QString(line).split(rx);
++			int sz = fields.size();
++
++			QStringList lst;
++			if (sz >= 10) {
++				if (fields.at(3) == "Lvl" || fields.at(3) == "Edg") {
++					lst << fields.at(0) << fields.at(1) << fields.at(2) \
++					    << "-" << fields.at(3) << fields.at(4) \
++					    << fields.at(5) << fields.at(6) << fields.at(7);
++				} else {
++					lst << fields.at(0) << fields.at(1) << fields.at(2) \
++					    << fields.at(3) << fields.at(4) << fields.at(5) \
++					    << fields.at(6) << fields.at(7) << fields.at(8);
++				}
++				if (sz > 10) {
++					QByteArray ary;
++					for (int i = 9; i < sz; i++) {
++						ary += fields.at(i).toAscii();
++						ary += " ";
++					}
++					lst << QString(ary);
++				} else {
++					lst << fields.at(9);
++				}
++			}
++			new QTreeWidgetItem(tree, lst);
++		}
++	} else {
++		qDebug() << "Failed to run " << INTR_PROG;
++	}
++
++        tree->sortItems(0, Qt::AscendingOrder);
++	return true;
+ }
+ 
+ bool GetInfo_DMA(QTreeWidget*) {
+@@ -325,13 +387,12 @@
  			result = *it;
  		}
  		if( result == NULL ) {
@@ -17,7 +104,7 @@
  		}
  		else {
  			/*
-@@ -458,10 +457,10 @@
+@@ -458,10 +519,10 @@
  	else
  	nodeResult = type;
  
