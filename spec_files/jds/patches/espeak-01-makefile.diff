@@ -1,0 +1,39 @@
+--- espeak-1.37-source/src/Makefile-orig	2008-08-08 20:04:39.001556000 -0500
++++ espeak-1.37-source/src/Makefile	2008-08-08 20:04:42.246443000 -0500
+@@ -15,7 +15,7 @@ LIB_VERSION = 1
+ LIBTAG = $(LIB_VERSION).$(RELEASE)
+ 
+ # Use SONAME_OPT=-Wl,h, on Solaris
+-SONAME_OPT=-Wl,-soname,
++SONAME_OPT=-h 
+ 
+ # Use EXTRA_LIBS=-lm on Solaris
+ EXTRA_LIBS =
+@@ -60,15 +60,15 @@ libespeak_SOURCES = speak_lib.cpp compil
+ 
+ SRCS1=$(speak_SOURCES)
+ OBJS1=$(patsubst %.cpp,%.o,$(SRCS1))
+-LIBS1=-lstdc++ $(LIB_AUDIO) -lpthread $(EXTRA_LIBS)
++LIBS1=$(LIB_AUDIO) -lpthread $(EXTRA_LIBS)
+ 
+ SRCS2=$(libespeak_SOURCES)
+ OBJS2=$(patsubst %.cpp,x_%.o,$(SRCS2))
+-LIBS2=-lstdc++ $(LIB_AUDIO) -lpthread
++LIBS2=$(LIB_AUDIO) -lpthread
+ 
+ SRCS3 = espeak.cpp
+ OBJS3=$(patsubst %.cpp,%.o,$(SRCS3))
+-LIBS3=-lstdc++ -L . -lespeak
++LIBS3=-L . -lespeak
+ 
+ CXXFLAGS=-O2
+ 
+@@ -92,7 +92,7 @@ x_%.o: %.cpp
+ 	-I. -D LIBRARY -c -fno-exceptions  $<  -o x_$*.o
+ 
+ $(LIB_NAME): $(OBJS2)
+-	$(CXX) -shared $(SONAME_OPT)$(LIB_NAME).$(LIB_VERSION) -o $@ $(OBJS2) $(LIBS2)
++	$(CXX) -G $(SONAME_OPT)$(LIB_NAME).$(LIB_VERSION) -o $@ $(OBJS2) $(LIBS2)
+ 
+ $(STATIC_LIB_NAME): $(OBJS2)
+ 	$(AR) cqs $(STATIC_LIB_NAME) $(OBJS2)

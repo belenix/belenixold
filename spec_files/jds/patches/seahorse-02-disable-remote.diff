@@ -1,0 +1,58 @@
+Index: seahorse/src/seahorse-key-manager.ui
+===================================================================
+--- seahorse/src/seahorse-key-manager.ui	(revision 2692)
++++ seahorse/src/seahorse-key-manager.ui	(working copy)
+@@ -17,10 +17,6 @@
+ 			<separator/>
+ 			<menuitem action="app-preferences"/>
+ 		</menu>
+-		<menu name="Remote" action="remote-menu">
+-			<menuitem action="remote-find"/>
+-			<menuitem action="remote-sync"/>
+-		</menu>
+ 		<menu name="View" action="view-menu">
+ 			<menuitem action="view-type"/>
+ 			<menuitem action="view-expires"/>
+@@ -39,7 +35,6 @@
+ 			<toolitem action="show-properties"/>
+ 			<toolitem action="file-export"/>
+ 			<toolitem action="key-sign"/>
+-			<toolitem action="remote-find"/>
+ 		</placeholder>
+ 	</toolbar>
+ 	
+Index: seahorse/src/seahorse-key-manager.c
+===================================================================
+--- seahorse/src/seahorse-key-manager.c	(revision 2692)
++++ seahorse/src/seahorse-key-manager.c	(working copy)
+@@ -626,7 +626,6 @@
+ {
+ 	g_return_if_fail (SEAHORSE_IS_KEY_MANAGER (self));
+ 	g_return_if_fail (GTK_IS_ACTION (action));
+-	seahorse_keyserver_search_show (seahorse_viewer_get_window (SEAHORSE_VIEWER (self)));
+ }
+ 
+ static void 
+@@ -640,7 +639,6 @@
+ 	objects = seahorse_viewer_get_selected_objects (SEAHORSE_VIEWER (self));
+ 	if (objects == NULL)
+ 		objects = seahorse_context_find_objects (NULL, 0, 0, SEAHORSE_LOCATION_LOCAL);
+-	seahorse_keyserver_sync_show (objects, seahorse_viewer_get_window (SEAHORSE_VIEWER (self)));
+ 	g_list_free (objects);
+ }
+ #endif
+Index: seahorse/src/seahorse-keyserver-results.ui
+===================================================================
+--- seahorse/src/seahorse-keyserver-results.ui	(revision 2692)
++++ seahorse/src/seahorse-keyserver-results.ui	(working copy)
+@@ -13,9 +13,6 @@
+ 		<menu name="Edit" action="edit-menu">
+ 			<menuitem action="edit-export-clipboard"/>
+ 		</menu>
+-		<menu name="Remote" action="remote-menu">
+-			<menuitem action="remote-find"/>
+-		</menu>
+ 		<menu name="Help" action="help-menu">
+ 			<menuitem action="help-show"/>
+ <!--		<menuitem action="app-about"/> -->
+ 

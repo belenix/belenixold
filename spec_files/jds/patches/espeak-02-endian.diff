@@ -1,0 +1,29 @@
+diff -ur espeak-1.37-source.orig//src/wave_sada.cpp espeak-1.37-source/src/wave_sada.cpp
+--- espeak-1.37-source.orig//src/wave_sada.cpp	Fri Aug 29 06:55:34 2008
++++ espeak-1.37-source/src/wave_sada.cpp	Fri Aug 29 07:03:49 2008
+@@ -188,6 +188,25 @@
+     SHOW_TIME("wave_write > my_callback_is_output_enabled: no!");
+     return 0;
+   }
++
++#if defined(BYTE_ORDER) && BYTE_ORDER == BIG_ENDIAN
++  {
++    // BIG-ENDIAN, swap the order of bytes in each sound sample
++    int c;
++    char *out_ptr;
++    char *out_end;
++    out_ptr = (char *)theMono16BitsWaveBuffer;
++    out_end = out_ptr + theSize;
++    while(out_ptr < out_end)
++    {
++      c = out_ptr[0];
++      out_ptr[0] = out_ptr[1];
++      out_ptr[1] = c;
++      out_ptr += 2;
++    }
++  }
++#endif
++
+   num = write((int) theHandler, theMono16BitsWaveBuffer, theSize);
+ 
+   // Keep track of the total number of samples sent -- we use this in 

@@ -1,0 +1,22 @@
+--- gphoto2-2.1.6/configure-ac.orig	2006-12-19 19:43:00.093701000 -0600
++++ gphoto2-2.1.6/configure.ac	2006-12-19 19:43:08.193920000 -0600
+@@ -63,11 +63,16 @@ dnl i18n support
+ dnl ---------------------------------------------------------------------------
+ GP_GETTEXT_HACK([],[Lutz Müller and others],[${MAIL_GPHOTO_TRANSLATION}])
+ ALL_LINGUAS="az cs da de en_GB es eu fi fr hu it ja nb nl pa pl pt_BR ro ru rw sk sl sr sv uk vi zh_CN zh_TW"
+-AM_GNU_GETTEXT_VERSION([0.14.1])
+-AM_GNU_GETTEXT([external])
++GETTEXT_PACKAGE=gphoto2
++AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [Package Name for Gettext])
++AC_SUBST(GETTEXT_PACKAGE)
++AM_GLIB_GNU_GETTEXT
++USE_INCLUDED_LIBINTL=no
++AC_SUBST(USE_INCLUDED_LIBINTL)
++BUILD_INCLUDED_LIBINTL=no
++AC_SUBST(BUILD_INCLUDED_LIBINTL)
+ AM_PO_SUBDIRS()
+ AM_ICONV()
+-GP_GETTEXT_FLAGS()
+ 
+ dnl We cannot use AC_DEFINE_UNQUOTED() for these definitions, as
+ dnl we require make to do insert the proper $(datadir) value

@@ -1,0 +1,36 @@
+--- seahorse-2.24.1/libseahorse/seahorse-util.c.bak	2008-11-04 14:10:38.041894000 +0800
++++ seahorse-2.24.1/libseahorse/seahorse-util.c	2008-11-04 14:14:47.755592000 +0800
+@@ -716,7 +716,7 @@
+ 
+ 	if (g_ascii_strcasecmp (mime, "application/pgp-encrypted") == 0 ||
+ 	    g_ascii_strcasecmp (mime, "application/pgp-keys") == 0)
+-		return SEAHORSE_PGP;
++		return SEAHORSE_SSH;
+     
+ #ifdef WITH_SSH 
+ 	/* TODO: For now all PEM keys are treated as SSH keys */
+diff -ur seahorse-2.24.1-old/libseahorse/seahorse-util.c seahorse-2.24.1/libseahorse/seahorse-util.c
+--- seahorse-2.24.1-old/libseahorse/seahorse-util.c	2008-11-04 21:01:22.713814000 +0800
++++ seahorse-2.24.1/libseahorse/seahorse-util.c	2008-11-04 21:03:31.107813000 +0800
+@@ -260,6 +260,9 @@
+ 	while (g_input_stream_read_all (input, buffer, size, &nread, NULL, NULL) && nread == size)
+ 		string = g_string_append_len (string, buffer, nread);
+ 
++	if (nread > 0)
++		string = g_string_append_len (string, buffer, nread);
++
+ 	if (len)
+ 		*len = string->len;
+     
+diff -ur seahorse-2.24.1-old/ssh/seahorse-ssh-key-data.c seahorse-2.24.1/ssh/seahorse-ssh-key-data.c
+--- seahorse-2.24.1-old/ssh/seahorse-ssh-key-data.c	2008-11-04 21:01:22.638151000 +0800
++++ seahorse-2.24.1/ssh/seahorse-ssh-key-data.c	2008-11-04 21:02:25.888474000 +0800
+@@ -255,6 +255,8 @@
+                 
+                 if (!(secret_cb) (secdata, arg))
+                     break;
++				if (!*l)
++					break;
+             }
+         }
+         

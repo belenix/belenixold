@@ -1,0 +1,14 @@
+--- /export/home/jdsbuild/packages/BUILD/SUNWgnome-system-monitor-2.16.1/gnome-system-monitor-2.16.1/gnome-system-monitor.desktop.in.in	2006-07-13 20:24:47.000000000 +0100
++++ gnome-system-monitor-2.16.1/gnome-system-monitor.desktop.in.in	2006-11-15 18:03:24.851546000 +0000
+@@ -1,7 +1,9 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+-_Name=System Monitor
+-_Comment=View current processes and monitor system state
++# SUN_BRANDING
++_Name=Performance Monitor
++# SUN_BRANDING
++_Comment=Monitor disk, memory and CPU usage of running processes
+ TryExec=gnome-system-monitor
+ Exec=gnome-system-monitor
+ Icon=utilities-system-monitor

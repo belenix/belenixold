@@ -1,0 +1,138 @@
+diff -up gnome-control-center-2.19.92/capplets/appearance/appearance-font.c.orig gnome-control-center-2.19.92/capplets/appearance/appearance-font.c
+--- gnome-control-center-2.19.92/capplets/appearance/appearance-font.c.orig	2007-09-03 09:45:26.000000000 +0100
++++ gnome-control-center-2.19.92/capplets/appearance/appearance-font.c	2007-09-05 16:10:45.631990000 +0100
+@@ -346,6 +346,104 @@ typedef struct {
+ 
+ static GSList *font_pairs = NULL;
+ 
++#ifdef FT_CONFIG_ADD_FULL_HINTING
++static gboolean 
++display_full_hinting_dialog (GConfClient  *client,
++                 GtkWidget *parent, 
++			     FontPair *pair, 
++			     const char *key, 
++			     const char *value)
++{
++  gboolean display_dialog = FALSE;
++  gboolean antialiasing_changed = FALSE;
++
++  if (pair && (pair->antialiasing != ANTIALIAS_NONE) && (pair->hinting == HINT_FULL))
++    {
++      display_dialog = TRUE;
++      antialiasing_changed = TRUE;
++    }
++
++  if (key && value)
++    {
++      Hinting hinting;
++      Antialiasing antialiasing;
++
++      if ((strcmp (key, FONT_HINTING_KEY) == 0) && (strcmp (value, "full") == 0))
++	{
++      font_render_get_gconf (client, &antialiasing, &hinting);
++	  if (antialiasing != ANTIALIAS_NONE)
++	      display_dialog = TRUE;
++	}
++      if ((strcmp (key, FONT_ANTIALIASING_KEY) == 0) && (strcmp (value, "none") != 0))
++	{  /* check if hinting is set to full  (monochrome case for example)*/
++      font_render_get_gconf (client, &antialiasing, &hinting);
++	  if (hinting == HINT_FULL && antialiasing == ANTIALIAS_NONE)
++	    {
++	      display_dialog = TRUE;
++	      antialiasing_changed = TRUE;
++	    }
++	}
++    }
++
++  if (display_dialog) 
++    {
++      gint result;
++      Hinting hinting;
++      Antialiasing antialiasing;
++      GtkWidget *dialog;
++      static gboolean displayed_and_rejected = FALSE;
++  
++ 
++      font_render_get_gconf (client, &antialiasing, &hinting);
++
++      /*if the hinting is already set to FULL don't ask again */
++      if (hinting == HINT_FULL && 
++	  ((antialiasing == ANTIALIAS_GRAYSCALE) || (antialiasing == ANTIALIAS_RGBA))) 
++	  return TRUE;
++      
++      if (hinting == HINT_FULL && antialiasing == ANTIALIAS_NONE && !antialiasing_changed)
++	  return TRUE;
++
++      dialog = gtk_message_dialog_new (GTK_WINDOW(gtk_widget_get_toplevel (parent)),
++				       GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
++				       GTK_MESSAGE_QUESTION,
++				       GTK_BUTTONS_OK_CANCEL,
++				       NULL);
++
++      gtk_window_set_title (GTK_WINDOW (dialog), "License Agreement");
++
++      gtk_message_dialog_set_markup (GTK_MESSAGE_DIALOG (dialog),
++				     "Enabling full hinting may require "
++				     "a license from Apple Computer. "
++				     "If you have obtained such a license or "
++				     "have determined that you do not need "
++				     "one, click Ok to activate full hinting."
++				     "\n\nFurther information available at :\n"
++				     "http://freetype.sourceforge.net/"
++				     "patents.html");
++
++
++      result = gtk_dialog_run (GTK_DIALOG (dialog));
++
++      gtk_widget_destroy (dialog);
++
++      switch (result)
++	{
++	case GTK_RESPONSE_CANCEL:
++	  displayed_and_rejected = TRUE;
++	  return FALSE;
++	  break;
++	default:
++	  break;
++	}
++    }
++
++  return TRUE;
++}
++#endif
++
++
++
+ static void
+ font_render_load (GConfClient *client)
+ {
+@@ -392,7 +490,12 @@ font_radio_toggled (GtkToggleButton *tog
+ {
+   GConfClient *client = gconf_client_get_default ();
+ 
++#ifdef FT_CONFIG_ADD_FULL_HINTING  
++  if (!in_change && 
++	    display_full_hinting_dialog (client, GTK_WIDGET (toggle_button), pair, NULL, NULL)) {
++#else
+   if (!in_change) {
++#endif	    
+     gconf_client_set_string (client, FONT_ANTIALIASING_KEY,
+ 			     gconf_enum_to_string (antialias_enums, pair->antialiasing),
+ 			     NULL);
+@@ -632,7 +735,14 @@ enum_item_toggled (GtkToggleButton *togg
+ {
+   EnumGroup *group = item->group;
+ 
+-  if (!in_change) {
++#ifdef FT_CONFIG_ADD_FULL_HINTING	
++  if (!in_change && 
++	  display_full_hinting_dialog (group->client, GTK_WIDGET(toggle_button), NULL,
++					 group->gconf_key,
++					 gconf_enum_to_string (group->enums, item->value))) {
++#else
++  if (!in_change) {  
++#endif	  
+     gconf_client_set_string (group->client, group->gconf_key,
+ 			     gconf_enum_to_string (group->enums, item->value),
+ 			     NULL);
+
