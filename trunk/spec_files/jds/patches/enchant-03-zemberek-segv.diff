@@ -1,0 +1,15 @@
+--- enchant-1.4.2/src/zemberek/zemberek_provider.cpp.orig	2009-01-13 10:43:51.355274468 +0900
++++ enchant-1.4.2/src/zemberek/zemberek_provider.cpp	2009-01-13 10:49:15.930766869 +0900
+@@ -72,6 +72,12 @@ zemberek_provider_request_dict(EnchantPr
+     if (!checker)
+ 	return NULL;
+ 
++    int result = checker->checkWord("test");
++    if(result == -1) {
++    	delete checker;
++    	return NULL;
++    }
++
+     EnchantDict* dict = g_new0(EnchantDict, 1);
+     dict->user_data = (void *) checker;
+     dict->check = zemberek_dict_check;

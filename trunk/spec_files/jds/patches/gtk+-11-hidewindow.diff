@@ -1,0 +1,21 @@
+--- gtk+-2.13.5/gdk/gdkwindow.c.origi	2008-08-11 19:50:47.374792000 +0800
++++ gtk+-2.13.5/gdk/gdkwindow.c	2008-08-11 19:51:27.953827000 +0800
+@@ -423,7 +422,7 @@
+       private->redirect = NULL;
+     }
+   
+-  show = GDK_WINDOW_IMPL_GET_IFACE (private->impl)->reparent (window, new_parent, x, y);
++  GDK_WINDOW_IMPL_GET_IFACE (private->impl)->reparent (window, new_parent, x, y);
+ 
+   /* Inherit parent redirect if we don't have our own */
+   if (private->parent && private->redirect == NULL)
+@@ -432,8 +431,7 @@
+       apply_redirect_to_children (private, private->redirect);
+     }
+ 
+-  if (show)
+-    gdk_window_show (window);
++  
+ }
+ 
+ static void

@@ -1,0 +1,91 @@
+diff -ru libvisual-0.4.0.orig/libvisual/lv_math.c libvisual-0.4.0/libvisual/lv_math.c
+--- libvisual-0.4.0.orig/libvisual/lv_math.c	2006-02-14 04:54:08.000000000 +0800
++++ libvisual-0.4.0/libvisual/lv_math.c	2008-11-27 13:18:19.777232000 +0800
+@@ -117,8 +117,8 @@
+ 
+ #if defined(VISUAL_ARCH_X86) || defined(VISUAL_ARCH_X86_64)
+ 		__asm __volatile
+-			("\n\t movq %[multiplier], %%mm0"
+-			 :: [multiplier] "m" (*packed_multiplier));
++			("\n\t movq %0, %%mm0"
++			 :: "m" (*packed_multiplier));
+ 
+ 		while (n > 14) {
+ 			__asm __volatile
+@@ -241,8 +241,8 @@
+ 
+ #if defined(VISUAL_ARCH_X86) || defined(VISUAL_ARCH_X86_64)
+ 		__asm __volatile
+-			("\n\t movq %[adder], %%mm0"
+-			 :: [adder] "m" (*packed_adder));
++			("\n\t movq %0, %%mm0"
++			 :: "m" (*packed_adder));
+ 
+ 		while (n > 14) {
+ 			__asm __volatile
+@@ -365,8 +365,8 @@
+ 
+ #if defined(VISUAL_ARCH_X86) || defined(VISUAL_ARCH_X86_64)
+ 		__asm __volatile
+-			("\n\t movq %[substracter], %%mm0"
+-			 :: [substracter] "m" (*packed_substracter));
++			("\n\t movq %0, %%mm0"
++			 :: "m" (*packed_substracter));
+ 
+ 		while (n > 14) {
+ 			__asm __volatile
+@@ -669,8 +669,8 @@
+ 
+ #if defined(VISUAL_ARCH_X86) || defined(VISUAL_ARCH_X86_64)
+ 		__asm __volatile
+-			("\n\t movq %[multiplier], %%mm0"
+-			 :: [multiplier] "m" (*packed_multiplier));
++			("\n\t movq %0, %%mm0"
++			 :: "m" (*packed_multiplier));
+ 
+ 		while (n > 6) {
+ 			__asm __volatile
+@@ -739,8 +739,8 @@
+ 
+ #if defined(VISUAL_ARCH_X86) || defined(VISUAL_ARCH_X86_64)
+ 		__asm __volatile
+-			("\n\t movq %[multiplier], %%mm0"
+-			 :: [multiplier] "m" (*packed_multiplier));
++			("\n\t movq %0, %%mm0"
++			 :: "m" (*packed_multiplier));
+ 
+ 		while (n > 14) {
+ 			__asm __volatile
+@@ -826,13 +826,13 @@
+ 
+ #if defined(VISUAL_ARCH_X86) || defined(VISUAL_ARCH_X86_64)
+ 		__asm __volatile
+-			("\n\t movq %[multiplier], %%mm0"
+-			 "\n\t movq %[normalise_mul], %%mm6"
+-			 "\n\t movq %[adder], %%mm7"
+-
+-			 :: [multiplier] "m" (*packed_multiplier),
+-			 [normalise_mul] "m" (*packed_normalise_mul),
+-			 [adder] "m" (*packed_adder));
++			("\n\t movq %0, %%mm0"
++			 "\n\t movq %1, %%mm6"
++			 "\n\t movq %2, %%mm7"
++
++			 :: "m" (*packed_multiplier),
++			 "m" (*packed_normalise_mul),
++			 "m" (*packed_adder));
+ 
+ 		while (n > 4) {
+ 			__asm __volatile
+diff -ru libvisual-0.4.0.orig/libvisual/lv_time.h libvisual-0.4.0/libvisual/lv_time.h
+--- libvisual-0.4.0.orig/libvisual/lv_time.h	2006-02-06 02:45:57.000000000 +0800
++++ libvisual-0.4.0/libvisual/lv_time.h	2008-11-27 13:15:41.250934000 +0800
+@@ -104,7 +104,7 @@
+ static inline void visual_timer_tsc_get (uint32_t *lo, uint32_t *hi)
+ {
+ #if defined(VISUAL_ARCH_X86) || defined(VISUAL_ARCH_X86_64)
+-	__asm __volatile
++	__asm __volatile__
+ 		("\n\t cpuid"
+ 		 "\n\t rdtsc"
+ 		 "\n\t movl %%edx, %0"

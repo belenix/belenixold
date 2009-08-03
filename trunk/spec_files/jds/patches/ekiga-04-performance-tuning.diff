@@ -1,0 +1,143 @@
+--- ./src/gui/main.cpp.ori	2007-11-21 14:55:04.510963000 +0800
++++ ./src/gui/main.cpp	2007-11-21 18:59:10.577455000 +0800
+@@ -2599,6 +2599,7 @@
+   GdkPixbuf *framepixbuf = NULL;
+   GdkPixbuf *nzlsrc_pic = NULL;
+   GdkPixbuf *tmpframe = NULL;
++  GdkPixbuf *tmp_pixbuf = NULL;
+ 
+ #ifdef HAS_SDL
+   Uint32 rmask, gmask, bmask, amask = 0;
+@@ -2700,6 +2701,10 @@
+   video_frame_rwidth = video_frame_width;
+   video_frame_rheight = video_frame_height;
+ 
++  if (video_frame_rwidth == 1 && display_type == BOTH_SIDE) {
++    return;
++   }
++
+   /* Update the display selection in the main and in the video popup menus */
+   gtk_radio_menu_select_with_id (mw->main_menu, "local_video", display_type);
+ 
+@@ -2757,7 +2762,7 @@
+ 				  lf_width * 3, 
+ 				  NULL, NULL);
+ 
+-    if (!display_both_incrusted)
++    if (!display_both_incrusted && !display_both_side)
+       /* scale the local image to the full available space, or,
+        * if BOTH_SIDE: full_space/2 on X axis */ 
+       zlsrc_pic =
+@@ -2766,7 +2771,7 @@
+ 				 video_frame_rheight,
+ 				 bilinear_filtering?GDK_INTERP_BILINEAR:GDK_INTERP_NEAREST);
+ 
+-    else
++    else if (!display_both_side)
+       /* scale the local image to the requested small size
+        * for BOTH_INCRUSTED */
+       zlsrc_pic =
+@@ -2775,6 +2780,35 @@
+ 				 (int) (video_frame_rheight * incr_lratio),
+ 				 bilinear_filtering?GDK_INTERP_BILINEAR:GDK_INTERP_NEAREST);
+ 
++      else {
++        /* scale the local image to the right part of video frame for BOTH_SIDE */
++        tmp_pixbuf =
++	  gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
++                          video_frame_rwidth,
++                          video_frame_rheight);
++
++        zrsrc_pic =
++          gdk_pixbuf_new_subpixbuf (tmp_pixbuf,
++                                    0, 0,
++                                    video_frame_rwidth / 2,
++                                    video_frame_rheight);
++  
++        zlsrc_pic =
++          gdk_pixbuf_new_subpixbuf (tmp_pixbuf,
++                                    video_frame_rwidth / 2, 0,
++                                    video_frame_rwidth / 2,
++                                    video_frame_rheight);
++     
++        gdk_pixbuf_scale (lsrc_pic, zlsrc_pic,
++                          0, 0,
++                          video_frame_rwidth / 2,
++                          video_frame_rheight,
++                          0, 0,
++                          lzoom, lzoom,
++                          bilinear_filtering?GDK_INTERP_BILINEAR:GDK_INTERP_NEAREST);
++
++     } 
++
+     g_object_unref (lsrc_pic);
+ 
+ 
+@@ -2792,11 +2826,21 @@
+     }
+     /* scale the remote image to the full available space, or,
+      * if BOTH_SIDE: full_space/2 on X axis */
++    if (!display_both_side)
+     zrsrc_pic =
+       gdk_pixbuf_scale_simple (rsrc_pic,
+ 			       display_both_side?video_frame_rwidth / 2:video_frame_rwidth,
+ 			       video_frame_rheight,
+ 			       bilinear_filtering?GDK_INTERP_BILINEAR:GDK_INTERP_NEAREST);
++    else
++      gdk_pixbuf_scale (rsrc_pic, zrsrc_pic,
++                        0, 0,
++                        video_frame_rwidth / 2,
++                        video_frame_rheight,
++                        0, 0,
++                        rzoom, rzoom,
++                        bilinear_filtering?GDK_INTERP_BILINEAR:GDK_INTERP_NEAREST);
++
+ 
+     g_object_unref (rsrc_pic);
+   }
+@@ -2935,25 +2979,6 @@
+ 
+     if (zlsrc_pic && zrsrc_pic) {
+ 
+-      GdkPixbuf *tmp_pixbuf = 
+-	gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8, 
+-			video_frame_rwidth, 
+-			video_frame_rheight);
+-
+-      gdk_pixbuf_copy_area (zrsrc_pic,
+-			    0, 0,
+-			    video_frame_rwidth / 2,
+-			    video_frame_rheight,
+-			    tmp_pixbuf,
+-			    0, 0);
+-
+-      gdk_pixbuf_copy_area (zlsrc_pic,
+-			    0, 0,
+-			    video_frame_rwidth / 2,
+-			    video_frame_rheight,
+-			    tmp_pixbuf,
+-			    video_frame_rwidth / 2, 0);
+-
+       gtk_image_set_from_pixbuf (GTK_IMAGE (mw->main_video_image), 
+ 				 GDK_PIXBUF (tmp_pixbuf));
+       g_object_unref (zrsrc_pic);
+--- ./ekiga.schemas.in.in.ori	2007-11-21 14:48:47.508280000 +0800
++++ ./ekiga.schemas.in.in	2007-11-21 18:48:41.130388000 +0800
+@@ -173,7 +173,7 @@
+       <owner>Ekiga</owner>
+       <type>list</type>
+       <list_type>string</list_type>
+-      <default>[SpeexWide-20.6k=1,iLBC-13k3=1,GSM-06.10=1,MS-GSM=1,SpeexNarrow-8k=1,G.711-uLaw-64k=1,G.711-ALaw-64k=1]</default>
++      <default>[G.711-ulaw-64k=1,SpeexWide-20.6k=0,iLBC-13k3=1,GSM-06.10=1,MS-GSM=1,SpeexNarrow-8k=1,G.711-ALaw-64k=1]</default>
+       <locale name="C">
+ 	<short>The Audio Codecs List</short>
+ 	<long>The Audio Codecs List</long>
+@@ -217,7 +217,7 @@
+       <applyto>/apps/@PACKAGE_NAME@/codecs/audio/enable_echo_cancelation</applyto>
+       <owner>Ekiga</owner>
+       <type>bool</type>
+-      <default>true</default>
++      <default>false</default>
+       <locale name="C">
+ 	<short>Enable echo cancelation</short>
+ 	<long>If enabled, use echo cancelation</long>

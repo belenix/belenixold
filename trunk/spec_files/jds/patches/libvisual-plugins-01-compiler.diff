@@ -1,0 +1,365 @@
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins and libvisual-plugins-0.4.0/plugins
+Common subdirectories: libvisual-plugins-0.4.0.orig/po and libvisual-plugins-0.4.0/po
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor and libvisual-plugins-0.4.0/plugins/actor
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/input and libvisual-plugins-0.4.0/plugins/input
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/morph and libvisual-plugins-0.4.0/plugins/morph
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force and libvisual-plugins-0.4.0/plugins/actor/G-Force
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/JESS and libvisual-plugins-0.4.0/plugins/actor/JESS
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/bumpscope and libvisual-plugins-0.4.0/plugins/actor/bumpscope
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/corona and libvisual-plugins-0.4.0/plugins/actor/corona
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/gdkpixbuf and libvisual-plugins-0.4.0/plugins/actor/gdkpixbuf
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/gstreamer and libvisual-plugins-0.4.0/plugins/actor/gstreamer
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/infinite and libvisual-plugins-0.4.0/plugins/actor/infinite
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/jakdaw and libvisual-plugins-0.4.0/plugins/actor/jakdaw
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/lv_analyzer and libvisual-plugins-0.4.0/plugins/actor/lv_analyzer
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/lv_gltest and libvisual-plugins-0.4.0/plugins/actor/lv_gltest
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/lv_scope and libvisual-plugins-0.4.0/plugins/actor/lv_scope
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/madspin and libvisual-plugins-0.4.0/plugins/actor/madspin
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/nastyfft and libvisual-plugins-0.4.0/plugins/actor/nastyfft
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/oinksie and libvisual-plugins-0.4.0/plugins/actor/oinksie
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/pseudotoad_flower and libvisual-plugins-0.4.0/plugins/actor/pseudotoad_flower
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/Common and libvisual-plugins-0.4.0/plugins/actor/G-Force/Common
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/GForceColorMaps and libvisual-plugins-0.4.0/plugins/actor/G-Force/GForceColorMaps
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/GForceCommon and libvisual-plugins-0.4.0/plugins/actor/G-Force/GForceCommon
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/GForceDeltaFields and libvisual-plugins-0.4.0/plugins/actor/G-Force/GForceDeltaFields
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/GForceParticles and libvisual-plugins-0.4.0/plugins/actor/G-Force/GForceParticles
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/GForceWaveShapes and libvisual-plugins-0.4.0/plugins/actor/G-Force/GForceWaveShapes
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/NotWorkingWaveShapes and libvisual-plugins-0.4.0/plugins/actor/G-Force/NotWorkingWaveShapes
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/docs and libvisual-plugins-0.4.0/plugins/actor/G-Force/docs
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/unix and libvisual-plugins-0.4.0/plugins/actor/G-Force/unix
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/Common/GeneralTools and libvisual-plugins-0.4.0/plugins/actor/G-Force/Common/GeneralTools
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/Common/UI and libvisual-plugins-0.4.0/plugins/actor/G-Force/Common/UI
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/Common/io and libvisual-plugins-0.4.0/plugins/actor/G-Force/Common/io
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/Common/math and libvisual-plugins-0.4.0/plugins/actor/G-Force/Common/math
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/Common/GeneralTools/Headers and libvisual-plugins-0.4.0/plugins/actor/G-Force/Common/GeneralTools/Headers
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/Common/UI/Headers and libvisual-plugins-0.4.0/plugins/actor/G-Force/Common/UI/Headers
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/Common/io/Headers and libvisual-plugins-0.4.0/plugins/actor/G-Force/Common/io/Headers
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/Common/math/Headers and libvisual-plugins-0.4.0/plugins/actor/G-Force/Common/math/Headers
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/GForceCommon/Headers and libvisual-plugins-0.4.0/plugins/actor/G-Force/GForceCommon/Headers
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/unix/Headers and libvisual-plugins-0.4.0/plugins/actor/G-Force/unix/Headers
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/unix/libmfl and libvisual-plugins-0.4.0/plugins/actor/G-Force/unix/libmfl
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/actor/G-Force/unix/libvisual and libvisual-plugins-0.4.0/plugins/actor/G-Force/unix/libvisual
+diff -ru libvisual-plugins-0.4.0.orig/plugins/actor/JESS/renderer.c libvisual-plugins-0.4.0/plugins/actor/JESS/renderer.c
+--- libvisual-plugins-0.4.0.orig/plugins/actor/JESS/renderer.c	Mon Feb  6 02:47:26 2006
++++ libvisual-plugins-0.4.0/plugins/actor/JESS/renderer.c	Tue Nov 25 14:32:08 2008
+@@ -396,18 +396,18 @@
+ 			for (pix = priv->pixel; pix < (uint8_t *) bmax-1; pix += 8)
+ 			{
+ 				__asm __volatile
+-					("\n\t movq %[pix1], %%mm0"
+-					 "\n\t movq %[pix2], %%mm1"
+-					 "\n\t movq %[pix3], %%mm2"
++					("\n\t movq %0, %%mm0"
++					 "\n\t movq %1, %%mm1"
++					 "\n\t movq %2, %%mm2"
+ 					 "\n\t paddb %%mm0, %%mm1"
+-					 "\n\t movq %[pix4], %%mm3"
++					 "\n\t movq %3, %%mm3"
+ 					 "\n\t paddb %%mm2, %%mm1"
+ 					 "\n\t paddb %%mm3, %%mm1"
+-					 "\n\t movq %%mm1, %[pix1]"
+-					 :: [pix1] "m" (*pix)
+-					 , [pix2] "m" (*(pix + 1))
+-					 , [pix3] "m" (*(pix + priv->resx))
+-					 , [pix4] "m" (*(pix + priv->resx + 1)));
++					 "\n\t movq %%mm1, %0"
++					 :: "m" (*pix)
++					 , "m" (*(pix + 1))
++					 , "m" (*(pix + priv->resx))
++					 , "m" (*(pix + priv->resx + 1)));
+ 
+ 			}
+ 
+@@ -434,18 +434,18 @@
+ 			for (pix = priv->pixel; pix < (uint8_t *) bmax-4; )
+ 			{
+ 				__asm __volatile
+-					("\n\t movq %[pix1], %%mm0"
+-					 "\n\t movq %[pix2], %%mm1"
+-					 "\n\t movq %[pix3], %%mm2"
++					("\n\t movq %0, %%mm0"
++					 "\n\t movq %1, %%mm1"
++					 "\n\t movq %2, %%mm2"
+ 					 "\n\t paddb %%mm0, %%mm1"
+-					 "\n\t movq %[pix4], %%mm3"
++					 "\n\t movq %3, %%mm3"
+ 					 "\n\t paddb %%mm2, %%mm1"
+ 					 "\n\t paddb %%mm3, %%mm1"
+-					 "\n\t movq %%mm1, %[pix1]"
+-					 :: [pix1] "m" (*pix)
+-					 , [pix2] "m" (*(pix + 4))
+-					 , [pix3] "m" (*(pix + priv->pitch))
+-					 , [pix4] "m" (*(pix + pitch_4)));
++					 "\n\t movq %%mm1, %0"
++					 :: "m" (*pix)
++					 , "m" (*(pix + 4))
++					 , "m" (*(pix + priv->pitch))
++					 , "m" (*(pix + pitch_4)));
+ 				
+ 				pix += 8;
+ 			}
+diff -ru libvisual-plugins-0.4.0.orig/plugins/actor/bumpscope/bump_scope.c libvisual-plugins-0.4.0/plugins/actor/bumpscope/bump_scope.c
+--- libvisual-plugins-0.4.0.orig/plugins/actor/bumpscope/bump_scope.c	Mon Feb  6 02:47:26 2006
++++ libvisual-plugins-0.4.0/plugins/actor/bumpscope/bump_scope.c	Tue Nov 25 14:32:18 2008
+@@ -59,14 +59,14 @@
+ 		while(i -= 4)
+ 		{
+ 			__asm __volatile
+-				("\n\t movd %[dest], %%mm0"
+-				 "\n\t movd %[pix2], %%mm1"
++				("\n\t movd %0, %%mm0"
++				 "\n\t movd %1, %%mm1"
+ 				 "\n\t punpcklbw %%mm6, %%mm0"
+-				 "\n\t movd %[pix3], %%mm2"
++				 "\n\t movd %2, %%mm2"
+ 				 "\n\t punpcklbw %%mm6, %%mm1"
+-				 "\n\t movd %[pix4], %%mm3"
++				 "\n\t movd %3, %%mm3"
+ 				 "\n\t punpcklbw %%mm6, %%mm2"
+-				 "\n\t movd %[pix5], %%mm4"
++				 "\n\t movd %4, %%mm4"
+ 				 "\n\t punpcklbw %%mm6, %%mm3"
+ 				 "\n\t paddw %%mm1, %%mm2"
+ 				 "\n\t punpcklbw %%mm6, %%mm4"
+@@ -74,12 +74,12 @@
+ 				 "\n\t paddw %%mm2, %%mm4"
+ 				 "\n\t psrlw $2, %%mm4"
+ 				 "\n\t packuswb %%mm6, %%mm4"
+-				 "\n\t movd %%mm4, %[dest]"
+-				 :: [dest] "m" (*(iptr))
+-				 , [pix2] "m" (*(iptr - bpl))
+-				 , [pix3] "m" (*(iptr - 1))
+-				 , [pix4] "m" (*(iptr + 1))
+-				 , [pix5] "m" (*(iptr + bpl)));
++				 "\n\t movd %%mm4, %0"
++				 :: "m" (*(iptr))
++				 , "m" (*(iptr - bpl))
++				 , "m" (*(iptr - 1))
++				 , "m" (*(iptr + 1))
++				 , "m" (*(iptr + bpl)));
+ 
+ 			iptr += 4;
+ 		}
+diff -ru libvisual-plugins-0.4.0.orig/plugins/actor/oinksie/gfx-blur.c libvisual-plugins-0.4.0/plugins/actor/oinksie/gfx-blur.c
+--- libvisual-plugins-0.4.0.orig/plugins/actor/oinksie/gfx-blur.c	Mon Feb  6 02:47:26 2006
++++ libvisual-plugins-0.4.0/plugins/actor/oinksie/gfx-blur.c	Tue Nov 25 14:32:13 2008
+@@ -38,19 +38,19 @@
+ 
+ 		/* Prepare substraction register */
+ 		__asm __volatile
+-			("\n\t movd %[fade], %%mm3"
+-			 "\n\t movd %[fade], %%mm4"
++			("\n\t movd %0, %%mm3"
++			 "\n\t movd %0, %%mm4"
+ 			 "\n\t psllq $32, %%mm3"
+ 			 "\n\t por %%mm4, %%mm3"
+-			 :: [fade] "m" (fadeflag));
++			 :: "m" (fadeflag));
+ 
+ 
+ 		for (i = 0; i < priv->screen_size; i += 8) {
+ 			__asm __volatile
+-				("\n\t movq %[buf], %%mm0"
++				("\n\t movq %0, %%mm0"
+ 				 "\n\t psubsb %%mm3, %%mm0"
+-				 "\n\t movq %%mm0, %[buf]"
+-				 :: [buf] "m" (*buf));
++				 "\n\t movq %%mm0, %0"
++				 :: "m" (*buf));
+ 		}
+ 
+ 		__asm __volatile
+@@ -95,12 +95,12 @@
+ 
+ 		for (i = 0; i < scrsh; i += 4) {
+ 			__asm __volatile
+-				("\n\t movd %[buf], %%mm0"
+-				 "\n\t movd %[add1], %%mm1"
++				("\n\t movd %0, %%mm0"
++				 "\n\t movd %1, %%mm1"
+ 				 "\n\t punpcklbw %%mm6, %%mm0"
+-				 "\n\t movd %[add2], %%mm2"
++				 "\n\t movd %2, %%mm2"
+ 				 "\n\t punpcklbw %%mm6, %%mm1"
+-				 "\n\t movd %[add3], %%mm3"
++				 "\n\t movd %3, %%mm3"
+ 				 "\n\t punpcklbw %%mm6, %%mm2"
+ 				 "\n\t paddw %%mm1, %%mm0"
+ 				 "\n\t punpcklbw %%mm6, %%mm3"
+@@ -108,21 +108,21 @@
+ 				 "\n\t paddw %%mm3, %%mm0"
+ 				 "\n\t psrlw $2, %%mm0"
+ 				 "\n\t packuswb %%mm6, %%mm0"
+-				 "\n\t movd %%mm0, %[buf]"
+-				 :: [buf] "m" (*(buf + i))
+-				 , [add1] "m" (*(buf + i + priv->screen_width))
+-				 , [add2] "m" (*(buf + i + priv->screen_width + 1))
+-				 , [add3] "m" (*(buf + i + priv->screen_width - 1)));
++				 "\n\t movd %%mm0, %0"
++				 :: "m" (*(buf + i))
++				 , "m" (*(buf + i + priv->screen_width))
++				 , "m" (*(buf + i + priv->screen_width + 1))
++				 , "m" (*(buf + i + priv->screen_width - 1)));
+ 		}
+ 
+ 		for (i = priv->screen_size - 1; i > scrsh; i -= 4) {
+ 			__asm __volatile
+-				("\n\t movd %[buf], %%mm0"
+-				 "\n\t movd %[add1], %%mm1"
++				("\n\t movd %0, %%mm0"
++				 "\n\t movd %1, %%mm1"
+ 				 "\n\t punpcklbw %%mm6, %%mm0"
+-				 "\n\t movd %[add2], %%mm2"
++				 "\n\t movd %2, %%mm2"
+ 				 "\n\t punpcklbw %%mm6, %%mm1"
+-				 "\n\t movd %[add3], %%mm3"
++				 "\n\t movd %3, %%mm3"
+ 				 "\n\t punpcklbw %%mm6, %%mm2"
+ 				 "\n\t paddw %%mm1, %%mm0"
+ 				 "\n\t punpcklbw %%mm6, %%mm3"
+@@ -130,11 +130,11 @@
+ 				 "\n\t paddw %%mm3, %%mm0"
+ 				 "\n\t psrlw $2, %%mm0"
+ 				 "\n\t packuswb %%mm6, %%mm0"
+-				 "\n\t movd %%mm0, %[buf]"
+-				 :: [buf] "m" (*(buf + i))
+-				 , [add1] "m" (*(buf + i - priv->screen_width))
+-				 , [add2] "m" (*(buf + i - priv->screen_width + 1))
+-				 , [add3] "m" (*(buf + i - priv->screen_width - 1)));
++				 "\n\t movd %%mm0, %0"
++				 :: "m" (*(buf + i))
++				 , "m" (*(buf + i - priv->screen_width))
++				 , "m" (*(buf + i - priv->screen_width + 1))
++				 , "m" (*(buf + i - priv->screen_width - 1)));
+ 		}
+ 
+ 		__asm __volatile
+@@ -172,12 +172,12 @@
+ 
+ 		for (i = scrsh; i > 0; i -= 4) {
+ 			__asm __volatile
+-				("\n\t movd %[buf], %%mm0"
+-				 "\n\t movd %[add1], %%mm1"
++				("\n\t movd %0, %%mm0"
++				 "\n\t movd %1, %%mm1"
+ 				 "\n\t punpcklbw %%mm6, %%mm0"
+-				 "\n\t movd %[add2], %%mm2"
++				 "\n\t movd %2, %%mm2"
+ 				 "\n\t punpcklbw %%mm6, %%mm1"
+-				 "\n\t movd %[add3], %%mm3"
++				 "\n\t movd %3, %%mm3"
+ 				 "\n\t punpcklbw %%mm6, %%mm2"
+ 				 "\n\t paddw %%mm1, %%mm0"
+ 				 "\n\t punpcklbw %%mm6, %%mm3"
+@@ -185,21 +185,21 @@
+ 				 "\n\t paddw %%mm3, %%mm0"
+ 				 "\n\t psrlw $2, %%mm0"
+ 				 "\n\t packuswb %%mm6, %%mm0"
+-				 "\n\t movd %%mm0, %[buf]"
+-				 :: [buf] "m" (*(buf + i))
+-				 , [add1] "m" (*(buf + i + priv->screen_width))
+-				 , [add2] "m" (*(buf + i + priv->screen_width + 1))
+-				 , [add3] "m" (*(buf + i + priv->screen_width - 1)));
++				 "\n\t movd %%mm0, %0"
++				 :: "m" (*(buf + i))
++				 , "m" (*(buf + i + priv->screen_width))
++				 , "m" (*(buf + i + priv->screen_width + 1))
++				 , "m" (*(buf + i + priv->screen_width - 1)));
+ 		}
+ 
+ 		for (i = scrsh; i < priv->screen_size - 2; i += 4) {
+ 			__asm __volatile
+-				("\n\t movd %[buf], %%mm0"
+-				 "\n\t movd %[add1], %%mm1"
++				("\n\t movd %0, %%mm0"
++				 "\n\t movd %1, %%mm1"
+ 				 "\n\t punpcklbw %%mm6, %%mm0"
+-				 "\n\t movd %[add2], %%mm2"
++				 "\n\t movd %2, %%mm2"
+ 				 "\n\t punpcklbw %%mm6, %%mm1"
+-				 "\n\t movd %[add3], %%mm3"
++				 "\n\t movd %3, %%mm3"
+ 				 "\n\t punpcklbw %%mm6, %%mm2"
+ 				 "\n\t paddw %%mm1, %%mm0"
+ 				 "\n\t punpcklbw %%mm6, %%mm3"
+@@ -207,11 +207,11 @@
+ 				 "\n\t paddw %%mm3, %%mm0"
+ 				 "\n\t psrlw $2, %%mm0"
+ 				 "\n\t packuswb %%mm6, %%mm0"
+-				 "\n\t movd %%mm0, %[buf]"
+-				 :: [buf] "m" (*(buf + i))
+-				 , [add1] "m" (*(buf + i - priv->screen_width))
+-				 , [add2] "m" (*(buf + i - priv->screen_width + 1))
+-				 , [add3] "m" (*(buf + i - priv->screen_width - 1)));
++				 "\n\t movd %%mm0, %0"
++				 :: "m" (*(buf + i))
++				 , "m" (*(buf + i - priv->screen_width))
++				 , "m" (*(buf + i - priv->screen_width + 1))
++				 , "m" (*(buf + i - priv->screen_width - 1)));
+ 		}
+ 
+ 		__asm __volatile
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/input/alsa and libvisual-plugins-0.4.0/plugins/input/alsa
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/input/debug and libvisual-plugins-0.4.0/plugins/input/debug
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/input/esd and libvisual-plugins-0.4.0/plugins/input/esd
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/input/jack and libvisual-plugins-0.4.0/plugins/input/jack
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/input/mplayer and libvisual-plugins-0.4.0/plugins/input/mplayer
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/morph/alphablend and libvisual-plugins-0.4.0/plugins/morph/alphablend
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/morph/flash and libvisual-plugins-0.4.0/plugins/morph/flash
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/morph/slide and libvisual-plugins-0.4.0/plugins/morph/slide
+Common subdirectories: libvisual-plugins-0.4.0.orig/plugins/morph/tentacle and libvisual-plugins-0.4.0/plugins/morph/tentacle
+diff -ru libvisual-plugins-0.4.0.orig/plugins/morph/alphablend/morph_alphablend.c libvisual-plugins-0.4.0/plugins/morph/alphablend/morph_alphablend.c
+--- libvisual-plugins-0.4.0.orig/plugins/morph/alphablend/morph_alphablend.c	Sat Jan 28 04:19:18 2006
++++ libvisual-plugins-0.4.0/plugins/morph/alphablend/morph_alphablend.c	Tue Nov 25 14:32:23 2008
+@@ -217,11 +217,11 @@
+ 
+ 	for (i = size; i > 4; i -= 4) {
+ 		__asm __volatile
+-			("\n\t movd %[alpha], %%mm3"
+-			 "\n\t movd %[src2], %%mm0"
++			("\n\t movd %3, %%mm3"
++			 "\n\t movd %2, %%mm0"
+ 			 "\n\t psllq $32, %%mm3"
+-			 "\n\t movd %[alpha], %%mm2"
+-			 "\n\t movd %[src1], %%mm1"
++			 "\n\t movd %3, %%mm2"
++			 "\n\t movd %1, %%mm1"
+ 			 "\n\t por %%mm3, %%mm2"
+ 			 "\n\t punpcklbw %%mm6, %%mm0"  /* interleaving dest */
+ 			 "\n\t punpcklbw %%mm6, %%mm1"  /* interleaving source */
+@@ -230,7 +230,7 @@
+ 			 "\n\t psrlw $8, %%mm0"         /* / 256 */
+ 			 "\n\t paddb %%mm1, %%mm0"      /* + dest */
+ 			 "\n\t packuswb %%mm0, %%mm0"
+-			 "\n\t movd %%mm0, %[dest]"
++			 "\n\t movd %%mm0, %0"
+ 			 : [dest] "=m" (*(dest + i))
+ 			 : [src1] "m" (*(src1 + i))
+ 			 , [src2] "m" (*(src2 + i))
+@@ -288,12 +288,12 @@
+ 
+ 	for (i = 0; i < size; i += 4) {
+ 		__asm __volatile
+-			("\n\t movd %[src2], %%mm0"
+-			 "\n\t movd %[alpha], %%mm2"
+-			 "\n\t movd %[src1], %%mm1"
++			("\n\t movd %2, %%mm0"
++			 "\n\t movd %3, %%mm2"
++			 "\n\t movd %1, %%mm1"
+ 			 "\n\t psllq $32, %%mm2"
+-			 "\n\t movd %[alpha], %%mm3"
+-			 "\n\t movd %[alpha], %%mm4"
++			 "\n\t movd %3, %%mm3"
++			 "\n\t movd %3, %%mm4"
+ 			 "\n\t psllq $16, %%mm3"
+ 			 "\n\t por %%mm4, %%mm2"
+ 			 "\n\t punpcklbw %%mm6, %%mm0"  /* interleaving dest */
+@@ -304,7 +304,7 @@
+ 			 "\n\t psrlw $8, %%mm0"         /* / 256 */
+ 			 "\n\t paddb %%mm1, %%mm0"      /* + dest */
+ 			 "\n\t packuswb %%mm0, %%mm0"
+-			 "\n\t movd %%mm0, %[dest]"
++			 "\n\t movd %%mm0, %0"
+ 			 : [dest] "=m" (*(dest + i))
+ 			 : [src1] "m" (*(src1 + i))
+ 			 , [src2] "m" (*(src2 + i))

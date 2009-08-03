@@ -1,0 +1,28 @@
+--- gtk+-2.16.1/gdk-pixbuf/pixops/pixops.c-orig	2009-04-22 20:11:21.324978000 -0500
++++ gtk+-2.16.1/gdk-pixbuf/pixops/pixops.c	2009-04-22 20:12:06.223070000 -0500
+@@ -217,10 +217,7 @@ _pixops_use_medialib ()
+            * For x86 processors use of libumem conflicts with
+            * mediaLib, so avoid using it.
+            */
+-          if ((dlsym (RTLD_DEFAULT, "umem_alloc") != NULL) ||
+-              (dlsym (RTLD_PROBE,   "umem_alloc") != NULL) ||
+-              (dlsym (RTLD_NEXT,    "umem_alloc") != NULL) ||
+-              (dlsym (RTLD_SELF,    "umem_alloc") != NULL))
++          if (dlsym (RTLD_PROBE,   "umem_alloc") != NULL)
+             {
+               use_medialib = FALSE;
+               return;
+--- gtk+-2.16.1/gdk/gdkmedialib.c-orig	2009-04-22 20:12:30.095375000 -0500
++++ gtk+-2.16.1/gdk/gdkmedialib.c	2009-04-22 20:12:47.732642000 -0500
+@@ -104,10 +104,7 @@ _gdk_use_medialib (void)
+             * For x86 processors use of libumem conflicts with
+             * mediaLib, so avoid using it.
+             */
+-           if ((dlsym (RTLD_DEFAULT, "umem_alloc") != NULL) ||
+-               (dlsym (RTLD_PROBE,   "umem_alloc") != NULL) ||
+-               (dlsym (RTLD_NEXT,    "umem_alloc") != NULL) ||
+-               (dlsym (RTLD_SELF,    "umem_alloc") != NULL))
++           if (dlsym (RTLD_PROBE,   "umem_alloc") != NULL)
+              {
+                return FALSE;
+              }

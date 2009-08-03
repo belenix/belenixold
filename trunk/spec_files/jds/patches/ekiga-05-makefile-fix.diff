@@ -1,0 +1,29 @@
+--- ekiga-3.0.1/src/Makefile.am.orig	2009-04-24 09:07:30.315462936 +0530
++++ ekiga-3.0.1/src/Makefile.am	2009-04-24 09:09:41.731695502 +0530
+@@ -171,7 +171,7 @@
+             echo "#define EKIGA_REVISION $(SVN_REVISION)" > revision.h; \
+           fi \
+         else \
+-          if !(test -e "./revision.h"); then\
++          if [ ! -e "./revision.h" ]; then\
+             echo "#define EKIGA_REVISION \"unknown\"" > revision.h; \
+           fi \
+         fi)
+@@ -190,4 +190,4 @@
+ CLEANFILES = \
+ 	$(service_DATA)
+ 
+-DISTCLEANFILES = src/revision.h
+\ No newline at end of file
++DISTCLEANFILES = src/revision.h
+--- ekiga-3.0.1/src/Makefile.in.orig	2009-04-24 09:31:55.481580549 +0530
++++ ekiga-3.0.1/src/Makefile.in	2009-04-24 09:32:16.087630911 +0530
+@@ -1210,7 +1210,7 @@
+             echo "#define EKIGA_REVISION $(SVN_REVISION)" > revision.h; \
+           fi \
+         else \
+-          if !(test -e "./revision.h"); then\
++          if [ ! -e "./revision.h" ]; then\
+             echo "#define EKIGA_REVISION \"unknown\"" > revision.h; \
+           fi \
+         fi)

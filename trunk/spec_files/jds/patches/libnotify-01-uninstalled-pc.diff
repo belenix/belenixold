@@ -1,0 +1,21 @@
+--- libnotify-0.4.5/configure.ac-orig	2009-01-20 17:39:42.592468000 -0600
++++ libnotify-0.4.5/configure.ac	2009-01-20 17:39:58.251226000 -0600
+@@ -132,6 +132,7 @@ AC_CONFIG_FILES([
+ Makefile
+ docs/Makefile
+ docs/reference/Makefile
++libnotify-uninstalled.pc
+ libnotify.pc
+ libnotify/Makefile
+ tests/Makefile
+--- /dev/null	2009-01-20 17:41:02.000000000 -0600
++++ libnotify-0.4.5/libnotify-uninstalled.pc.in	2009-01-20 17:39:35.092677000 -0600
+@@ -0,0 +1,8 @@
++
++Name: libnotify
++Description: Notifications Library
++Requires:
++Version: @VERSION@
++Libs: ${pc_top_builddir}/${pcfiledir}/libnotify/libnotify.la
++Cflags: -I${pc_top_builddir}/${pcfiledir}
++

@@ -1,0 +1,135 @@
+diff -ru libvisual-0.4.0.orig/libvisual/lv_types.h libvisual-0.4.0/libvisual/lv_types.h
+--- libvisual-0.4.0.orig/libvisual/lv_types.h	Tue Feb 14 04:54:08 2006
++++ libvisual-0.4.0/libvisual/lv_types.h	Tue Nov 25 14:15:26 2008
+@@ -30,6 +30,11 @@
+ #include <stdint.h>
+ #else
+ #include <sys/types.h>
++
++#if defined(__sun__) || defined(__sun)
++#include <inttypes.h>
++#endif
++
+ #endif /* !VISUAL_OS_WIN32 */
+ 
+ VISUAL_BEGIN_DECLS
+@@ -38,7 +43,7 @@
+ 
+ #define VISUAL_TABLESIZE(table)			(sizeof (table) / sizeof (table[0]))
+ 
+-#if !defined(VISUAL_OS_WIN32)
++#if !defined(VISUAL_OS_WIN32) && !defined(__sun__) && !defined(__sun)
+ #ifndef uint8_t
+ #define uint8_t		u_int8_t
+ #endif
+@@ -50,7 +55,7 @@
+ #ifndef uint32_t
+ #define uint32_t	u_int32_t
+ #endif
+-#endif /* !VISUAL_OS_WIN32 */
++#endif /* !VISUAL_OS_WIN32 && !__sun__ && !__sun */
+ 
+ VISUAL_END_DECLS
+ 
+diff -ru libvisual-0.4.0.orig/libvisual/lv_video_simd.c libvisual-0.4.0/libvisual/lv_video_simd.c
+--- libvisual-0.4.0.orig/libvisual/lv_video_simd.c	Mon Feb  6 02:45:57 2006
++++ libvisual-0.4.0/libvisual/lv_video_simd.c	Tue Nov 25 14:15:31 2008
+@@ -140,60 +140,60 @@
+ 				  * Adding colors together. (Thread #7)
+ 				  */
+ 
+-				"#1\n\t movd %[fracu], %%mm4"   /* mm4 = [ 0 | 0 | 0x10 | fracU ] */
+-				"#2\n\t movd %[fracv], %%mm6"   /* mm6 = [ 0 | 0 | 0x10 | fracV ] */
++				"# 1\n\t movd %[fracu], %%mm4"   /* mm4 = [ 0 | 0 | 0x10 | fracU ] */
++				"# 2\n\t movd %[fracv], %%mm6"   /* mm6 = [ 0 | 0 | 0x10 | fracV ] */
+ 
+-				"#1\n\t punpcklwd %%mm4, %%mm4" /* mm4 = [ 0x10 | 0x10 | fracU | fracU ] */
+-				"#2\n\t movq      %%mm6, %%mm3"
++				"# 1\n\t punpcklwd %%mm4, %%mm4" /* mm4 = [ 0x10 | 0x10 | fracU | fracU ] */
++				"# 2\n\t movq      %%mm6, %%mm3"
+ 
+-				"#1\n\t pxor      %%mm5, %%mm5"
+-				"#2\n\t punpckldq %%mm6, %%mm6" /* mm6 = [ 0x10 | fracv | 0x10 | fracV ] */ 
+-				"#3\n\t movq %[pixel_u], %%mm0" /* mm0 = [ col[0] | col[2] ] */
++				"# 1\n\t pxor      %%mm5, %%mm5"
++				"# 2\n\t punpckldq %%mm6, %%mm6" /* mm6 = [ 0x10 | fracv | 0x10 | fracV ] */ 
++				"# 3\n\t movq %[pixel_u], %%mm0" /* mm0 = [ col[0] | col[2] ] */
+ 
+-				"#1\n\t punpckldq %%mm4, %%mm5" /* mm5 = [ fracU | fracU | 0 | 0 ] */
+-				"#2\n\t punpcklwd %%mm7, %%mm3" /* mm3 = [ 0    | 0x10  | 0    | fracV ] */
+-				"#3\n\t movq      %%mm0, %%mm2"
++				"# 1\n\t punpckldq %%mm4, %%mm5" /* mm5 = [ fracU | fracU | 0 | 0 ] */
++				"# 2\n\t punpcklwd %%mm7, %%mm3" /* mm3 = [ 0    | 0x10  | 0    | fracV ] */
++				"# 3\n\t movq      %%mm0, %%mm2"
+ 
+-				"#1\n\t psubusw   %%mm5, %%mm4" /* mm4 = [ 0x10-fracU | 0x10-fracU | fracU | fracU ] */
+-				"#2\n\t punpckldq %%mm3, %%mm3" /* mm3 = [ 0    | fracV | 0    | fracV ] */
+-				"#4\n\t movq %[pixel_l], %%mm1" /* mm1 = [ col[1] | col[3] ] */
++				"# 1\n\t psubusw   %%mm5, %%mm4" /* mm4 = [ 0x10-fracU | 0x10-fracU | fracU | fracU ] */
++				"# 2\n\t punpckldq %%mm3, %%mm3" /* mm3 = [ 0    | fracV | 0    | fracV ] */
++				"# 4\n\t movq %[pixel_l], %%mm1" /* mm1 = [ col[1] | col[3] ] */
+ 
+-				"#2\n\t pslld     $16,   %%mm3" /* mm3 = [ fracV | 0 | fracV | 0 ] */
+-				"#3\n\t punpcklbw %%mm7, %%mm0" /* mm0 = [ col[0] unpacked ] */
++				"# 2\n\t pslld     $16,   %%mm3" /* mm3 = [ fracV | 0 | fracV | 0 ] */
++				"# 3\n\t punpcklbw %%mm7, %%mm0" /* mm0 = [ col[0] unpacked ] */
+ 
+-				"#2\n\t psubusw   %%mm3, %%mm6" /* mm6 = [ 0x10-fracV | fracV | 0x10-fracV | fracV ] */
+-				"#4\n\t movq      %%mm1, %%mm3"
++				"# 2\n\t psubusw   %%mm3, %%mm6" /* mm6 = [ 0x10-fracV | fracV | 0x10-fracV | fracV ] */
++				"# 4\n\t movq      %%mm1, %%mm3"
+ 
+-				"#C\n\t pmullw    %%mm6, %%mm4" /* mm4 = [ coef[0]|coef[1]|coef[2]|coef[3] ] */
+-				"#5\n\t movq      %%mm4, %%mm5"
++				"# C\n\t pmullw    %%mm6, %%mm4" /* mm4 = [ coef[0]|coef[1]|coef[2]|coef[3] ] */
++				"# 5\n\t movq      %%mm4, %%mm5"
+ 
+-				"#4\n\t punpcklbw %%mm7, %%mm1" /* mm1 = [ col[1] unpacked ] */
+-				"#6\n\t punpckhwd %%mm4, %%mm4" /* mm4 = [ coef[1]|coef[1]|coef[0]|coef[0] ] */
++				"# 4\n\t punpcklbw %%mm7, %%mm1" /* mm1 = [ col[1] unpacked ] */
++				"# 6\n\t punpckhwd %%mm4, %%mm4" /* mm4 = [ coef[1]|coef[1]|coef[0]|coef[0] ] */
+ 
+-				"#3\n\t punpckhbw %%mm7, %%mm2" /* mm2 = [ col[2] unpacked ] */
+-				"#5\n\t punpcklwd %%mm5, %%mm5" /* mm5 = [ coef[2]|coef[2]|coef[3]|coef[3] ] */
++				"# 3\n\t punpckhbw %%mm7, %%mm2" /* mm2 = [ col[2] unpacked ] */
++				"# 5\n\t punpcklwd %%mm5, %%mm5" /* mm5 = [ coef[2]|coef[2]|coef[3]|coef[3] ] */
+ 
+-				"#4\n\t punpckhbw %%mm7, %%mm3" /* mm3 = [ col[3] unpacked ] */
+-				"#5\n\t movq      %%mm5, %%mm6"
++				"# 4\n\t punpckhbw %%mm7, %%mm3" /* mm3 = [ col[3] unpacked ] */
++				"# 5\n\t movq      %%mm5, %%mm6"
+ 
+-				"#6\n\t movq      %%mm4, %%mm7"
+-				"#5\n\t punpcklwd %%mm6, %%mm6" /* mm6 = [ coef[3]|coef[3]|coef[3]|coef[3] ] */
++				"# 6\n\t movq      %%mm4, %%mm7"
++				"# 5\n\t punpcklwd %%mm6, %%mm6" /* mm6 = [ coef[3]|coef[3]|coef[3]|coef[3] ] */
+ 
+-				"#6\n\t punpcklwd %%mm7, %%mm7" /* mm6 = [ coef[1]|coef[1]|coef[1]|coef[1] ] */
+-				"#5\n\t pmullw    %%mm6, %%mm3" /* mm3 = [ coef[3] * col[3] unpacked ] */
++				"# 6\n\t punpcklwd %%mm7, %%mm7" /* mm6 = [ coef[1]|coef[1]|coef[1]|coef[1] ] */
++				"# 5\n\t pmullw    %%mm6, %%mm3" /* mm3 = [ coef[3] * col[3] unpacked ] */
+ 
+-				"#5\n\t punpckhwd %%mm5, %%mm5" /* mm5 = [ coef[2]|coef[2]|coef[2]|coef[2] ] */
+-				"#6\n\t pmullw    %%mm7, %%mm1" /* mm1 = [ coef[1] * col[1] unpacked ] */
++				"# 5\n\t punpckhwd %%mm5, %%mm5" /* mm5 = [ coef[2]|coef[2]|coef[2]|coef[2] ] */
++				"# 6\n\t pmullw    %%mm7, %%mm1" /* mm1 = [ coef[1] * col[1] unpacked ] */
+ 
+-				"#5\n\t pmullw    %%mm5, %%mm2" /* mm2 = [ coef[2] * col[2] unpacked ] */
+-				"#6\n\t punpckhwd %%mm4, %%mm4" /* mm4 = [ coef[0]|coef[0]|coef[0]|coef[0] ] */
++				"# 5\n\t pmullw    %%mm5, %%mm2" /* mm2 = [ coef[2] * col[2] unpacked ] */
++				"# 6\n\t punpckhwd %%mm4, %%mm4" /* mm4 = [ coef[0]|coef[0]|coef[0]|coef[0] ] */
+ 
+-				"#6\n\t pmullw    %%mm4, %%mm0" /* mm0 = [ coef[0] * col[0] unpacked ] */
+-				"#7\n\t paddw     %%mm2, %%mm3"
+-				"#7\n\t paddw     %%mm1, %%mm0"
++				"# 6\n\t pmullw    %%mm4, %%mm0" /* mm0 = [ coef[0] * col[0] unpacked ] */
++				"# 7\n\t paddw     %%mm2, %%mm3"
++				"# 7\n\t paddw     %%mm1, %%mm0"
+ 
+-				"#7\n\t paddw     %%mm3, %%mm0"
+-				"#7\n\t psrlw     $8,    %%mm0"
++				"# 7\n\t paddw     %%mm3, %%mm0"
++				"# 7\n\t psrlw     $8,    %%mm0"
+ 
+ 				/* Unpacking the resulting pixel */
+ 				"\n\t packuswb  %%mm7, %%mm0"

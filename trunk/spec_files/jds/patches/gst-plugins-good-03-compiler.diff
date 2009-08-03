@@ -1,0 +1,118 @@
+--- gst-plugins-good-0.10.11/gst/goom/xmmx.c.orig	Wed Nov 26 16:29:44 2008
++++ gst-plugins-good-0.10.11/gst/goom/xmmx.c	Wed Nov 26 16:40:44 2008
+@@ -58,9 +58,9 @@
+   ratiox.d[0] = buffratio;
+   ratiox.d[1] = buffratio;
+ 
+-  asm volatile ("\n\t movq  %[ratio], %%mm6" "\n\t pslld $16,      %%mm6"       /* mm6 = [rat16=buffratio<<16 | rat16=buffratio<<16] */
++  asm volatile ("\n\t movq  %0, %%mm6" "\n\t pslld $16,      %%mm6"       /* mm6 = [rat16=buffratio<<16 | rat16=buffratio<<16] */
+       "\n\t pxor  %%mm7,    %%mm7"      /* mm7 = 0 */
+-      ::[ratio] "m" (ratiox));
++      :: "m" (ratiox));
+ 
+   loop = 0;
+ 
+@@ -74,12 +74,12 @@
+      * modified = mm0,mm1,mm2
+      */
+ 
+-    asm volatile ("#1 \n\t movq 0(%[brutS]), %%mm0" "#1 \n\t movq 0(%[brutD]), %%mm1" "#1 \n\t psubd   %%mm0, %%mm1"    /* mm1 = D - S */
+-        "#1 \n\t movq    %%mm1, %%mm2"  /* mm2 = D - S */
+-        "#1 \n\t pslld     $16, %%mm1" "#1 \n\t pmullw  %%mm6, %%mm2" "#1 \n\t pmulhuw %%mm6, %%mm1" "#1 \n\t pslld   $16,   %%mm0" "#1 \n\t paddd   %%mm2, %%mm1"      /* mm1 = (D - S) * buffratio >> 16 */
+-        "#1 \n\t paddd   %%mm1, %%mm0"  /* mm0 = S + mm1 */
+-        "#1 \n\t psrld   $16,   %%mm0"::[brutS] "r" (&brutS[loop]),
+-        [brutD] "r" (&brutD[loop])
++    asm volatile ("# 1 \n\t movq 0(%0), %%mm0" "# 1 \n\t movq 0(%1), %%mm1" "# 1 \n\t psubd   %%mm0, %%mm1"    /* mm1 = D - S */
++        "# 1 \n\t movq    %%mm1, %%mm2"  /* mm2 = D - S */
++        "# 1 \n\t pslld     $16, %%mm1" "# 1 \n\t pmullw  %%mm6, %%mm2" "# 1 \n\t pmulhuw %%mm6, %%mm1" "# 1 \n\t pslld   $16,   %%mm0" "# 1 \n\t paddd   %%mm2, %%mm1"      /* mm1 = (D - S) * buffratio >> 16 */
++        "# 1 \n\t paddd   %%mm1, %%mm0"  /* mm0 = S + mm1 */
++        "# 1 \n\t psrld   $16,   %%mm0"::"r" (&brutS[loop]),
++        "r" (&brutD[loop])
+         );                      /* mm0 = S */
+ 
+     /*
+@@ -89,17 +89,17 @@
+      * modified : mm0,mm1,mm2
+      */
+     asm volatile
+-        ("#1 \n\t movq %[prevXY], %%mm1" "#1 \n\t pcmpgtd %%mm0,  %%mm1"
++        ("# 1 \n\t movq %0, %%mm1" "# 1 \n\t pcmpgtd %%mm0,  %%mm1"
+         /* mm0 en X contient (idem pour Y) :
+          *   1111 si prevXY > px
+          *   0000 si prevXY <= px */
+ #ifdef STRICT_COMPAT
+-        "#1 \n\t movq      %%mm1, %%mm2"
+-        "#1 \n\t punpckhdq %%mm2, %%mm2"
+-        "#1 \n\t punpckldq %%mm1, %%mm1" "#1 \n\t pand      %%mm2, %%mm0"
++        "# 1 \n\t movq      %%mm1, %%mm2"
++        "# 1 \n\t punpckhdq %%mm2, %%mm2"
++        "# 1 \n\t punpckldq %%mm1, %%mm1" "#1 \n\t pand      %%mm2, %%mm0"
+ #endif
+-        "#1 \n\t pand %%mm1, %%mm0"     /* on met a zero la partie qui deborde */
+-        ::[prevXY] "m" (prevXY));
++        "# 1 \n\t pand %%mm1, %%mm0"     /* on met a zero la partie qui deborde */
++        :: "m" (prevXY));
+ 
+     /* Thread #2
+      * pre :  mm0 : clipped position on screen
+@@ -110,14 +110,14 @@
+      * modif : eax,esi
+      */
+     __asm__ __volatile__ ("#2 \n\t movd %%mm0,%%esi"
+-        "#2 \n\t movq %%mm0,%%mm1"
+-        "#2 \n\t andl $15,%%esi"
+-        "#2 \n\t psrlq $32,%%mm1"
+-        "#2 \n\t shll $6,%%esi"
+-        "#2 \n\t movd %%mm1,%%eax"
+-        "#2 \n\t addl %[precalCoef],%%esi"
+-        "#2 \n\t andl $15,%%eax"
+-        "#2 \n\t movd (%%esi,%%eax,4),%%mm3"::[precalCoef]
++        "# 2 \n\t movq %%mm0,%%mm1"
++        "# 2 \n\t andl $15,%%esi"
++        "# 2 \n\t psrlq $32,%%mm1"
++        "# 2 \n\t shll $6,%%esi"
++        "# 2 \n\t movd %%mm1,%%eax"
++        "# 2 \n\t addl %0,%%esi"
++        "# 2 \n\t andl $15,%%eax"
++        "# 2 \n\t movd (%%esi,%%eax,4),%%mm3"::
+         "g" (precalCoef):"eax", "esi");
+ 
+     /*
+@@ -140,21 +140,22 @@
+      *
+      * modif : eax, esi
+      */
+-    __asm__ __volatile__ ("#2 \n\t psrld $4, %%mm0" "#2 \n\t psrld $4, %%mm1"   /* PERTEDEC = $4 */
+-        "#4 \n\t movd %%mm1,%%eax"
+-        "#3 \n\t movq %%mm3,%%mm5"
+-        "#4 \n\t mull %[prevX]"
+-        "#4 \n\t movd %%mm0,%%esi"
+-        "#3 \n\t punpcklbw %%mm5, %%mm3"
+-        "#4 \n\t addl %%esi, %%eax"
+-        "#3 \n\t movq %%mm3, %%mm4"
+-        "#3 \n\t movq %%mm3, %%mm5"
+-        "#4 \n\t movl %[expix1], %%esi"
+-        "#3 \n\t punpcklbw %%mm5, %%mm3"
+-        "#4 \n\t movq (%%esi,%%eax,4),%%mm0"
+-        "#3 \n\t punpckhbw %%mm5, %%mm4"
+-        "#4 \n\t addl %[prevX],%%eax"
+-        "#4 \n\t movq (%%esi,%%eax,4),%%mm2"::[expix1] "g" (expix1)
++    __asm__ __volatile__ ("# 2 \n\t psrld $4, %%mm0" "# 2 \n\t psrld $4, %%mm1"   /* PERTEDEC = $4 */
++        "# 4 \n\t movd %%mm1,%%eax"
++        "# 3 \n\t movq %%mm3,%%mm5"
++        "# 4 \n\t mull %1"
++        "# 4 \n\t movd %%mm0,%%esi"
++        "# 3 \n\t punpcklbw %%mm5, %%mm3"
++        "# 4 \n\t addl %%esi, %%eax"
++        "# 3 \n\t movq %%mm3, %%mm4"
++        "# 3 \n\t movq %%mm3, %%mm5"
++        "# 4 \n\t movl %0, %%esi"
++        "# 3 \n\t punpcklbw %%mm5, %%mm3"
++        "# 4 \n\t movq (%%esi,%%eax,4),%%mm0"
++        "# 3 \n\t punpckhbw %%mm5, %%mm4"
++        "# 4 \n\t addl %1,%%eax"
++        "# 4 \n\t movq (%%esi,%%eax,4),%%mm2"::[expix1] "g" (expix1)
++ 
+         ,[prevX] "g" (prevX)
+         :"eax", "esi");
+ 

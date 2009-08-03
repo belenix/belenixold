@@ -1,0 +1,43 @@
+diff -urN gnome-media-2.20.0/vu-meter/reclevel.desktop.in.in gnome-media-2.20.0-hacked/vu-meter/reclevel.desktop.in.in
+--- gnome-media-2.20.0/vu-meter/reclevel.desktop.in.in	2006-01-30 09:16:56.000000000 +1300
++++ gnome-media-2.20.0-hacked/vu-meter/reclevel.desktop.in.in	2006-05-05 16:04:19.058215000 +1200
+@@ -6,4 +6,5 @@
+ Icon=gnome-reclevel
+ Terminal=false
+ Type=Application
++NoDisplay=true
+ Categories=GNOME;GTK;AudioVideo;Monitor;
+diff -urN gnome-media-2.18.0/vu-meter/vumeter.desktop.in.in gnome-media-2.18.0-hacked/vu-meter/vumeter.desktop.in.in
+--- gnome-media-2.18.0/vu-meter/vumeter.desktop.in.in	2006-01-30 09:16:56.000000000 +1300
++++ gnome-media-2.18.0-hacked/vu-meter/vumeter.desktop.in.in	2006-05-05 16:04:07.635913000 +1200
+@@ -7,6 +7,7 @@
+ StartupNotify=true
+ Terminal=false
+ Type=Application
++NoDisplay=true
+ Categories=GNOME;GTK;AudioVideo;Monitor;
+ X-GNOME-Bugzilla-Bugzilla=GNOME
+ X-GNOME-Bugzilla-Product=gnome-media
+diff -ur gnome-media-2.23.3-orig/gst-mixer/gnome-volume-control.desktop.in.in gnome-media-2.23.3/gst-mixer/gnome-volume-control.desktop.in.in
+--- gnome-media-2.23.3-orig/gst-mixer/gnome-volume-control.desktop.in.in	2008-07-09 17:46:06.524618637 +0800
++++ gnome-media-2.23.3/gst-mixer/gnome-volume-control.desktop.in.in	2008-07-09 17:46:45.310608032 +0800
+@@ -1,7 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ _Name=Volume Control
+-_Comment=Adjust the volume level
++# SUN_BRANDING
++_Comment=Adjust volume levels and speaker balance
+ Exec=gnome-volume-control
+ Icon=multimedia-volume-control
+ StartupNotify=true
+@@ -9,7 +9,8 @@
+ X-Info=Gnome Mixer
+ Terminal=false
+ Type=Application
+-Categories=GNOME;GTK;AudioVideo;Settings;HardwareSettings;
++# SUN_BRANDING
++Categories=GNOME;GTK;Settings;
+ X-GNOME-DocPath=gst-mixer/gnome-volume-control.xml
+ X-GNOME-Bugzilla-Bugzilla=GNOME
+ X-GNOME-Bugzilla-Product=gnome-media

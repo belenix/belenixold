@@ -1,0 +1,18 @@
+--- gst-plugins-base-0.10.22/configure.ac-orig	2009-01-19 20:30:20.954742000 -0600
++++ gst-plugins-base-0.10.22/configure.ac	2009-01-19 20:30:44.539161000 -0600
+@@ -67,8 +67,13 @@ AC_SUBST(ACLOCAL_AMFLAGS, "-I m4 -I comm
+ 
+ dnl set up gettext
+ dnl the version check needs to stay here because autopoint greps for it
+-AM_GNU_GETTEXT_VERSION([0.17])
+-AM_GNU_GETTEXT([external])
++ALL_LINGUAS="cs de es fr hu it ja ko pl pt_BR ru sv zh_CN zh_HK zh_TW"
++AM_GLIB_GNU_GETTEXT
++AC_PROG_INTLTOOL
++USE_INCLUDED_LIBINTL=no
++AC_SUBST(USE_INCLUDED_LIBINTL)
++BUILD_INCLUDED_LIBINTL=no
++AC_SUBST(BUILD_INCLUDED_LIBINTL)
+ AG_GST_GETTEXT([gst-plugins-base-$GST_MAJORMINOR])
+ 
+ dnl *** check for arguments to configure ***

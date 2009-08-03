@@ -1,0 +1,11 @@
+--- enchant-1.4.2/src/zemberek/zemberek_provider.cpp.old	2008-11-19 14:59:32.474471000 +0800
++++ enchant-1.4.2/src/zemberek/zemberek_provider.cpp	2008-11-19 15:01:19.857697000 +0800
+@@ -65,7 +65,7 @@
+ }
+ 
+ static EnchantDict*
+-zemberek_provider_request_dict(EnchantProvider *me, const char *tag)
++zemberek_provider_request_dict(EnchantProvider *me, const char * const tag)
+ {
+     Zemberek* checker = new Zemberek();
+ 

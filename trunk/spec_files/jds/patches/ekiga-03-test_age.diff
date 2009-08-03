@@ -1,0 +1,15 @@
+Index: ekiga/src/gui/conf.cpp
+===================================================================
+--- ekiga/src/gui/conf.cpp	(revision 7283)
++++ ekiga/src/gui/conf.cpp	(working copy)
+@@ -177,8 +177,10 @@
+   /* Check the config is ok */
+   conf_test = gm_conf_get_int (GENERAL_KEY "gconf_test_age");
+   
++#ifndef SOLARIS  
+   if (conf_test != SCHEMA_AGE) 
+     return FALSE;
++#endif    
+ 
+   return TRUE;
+ }

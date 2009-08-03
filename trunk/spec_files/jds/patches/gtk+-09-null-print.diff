@@ -1,0 +1,14 @@
+--- gtk+-2.11.5/gtk/gtkiconfactory.c.orig	2007-07-11 16:08:18.586404000 +0800
++++ gtk+-2.11.5/gtk/gtkiconfactory.c	2007-07-11 16:09:14.046179000 +0800
+@@ -1468,8 +1468,9 @@
+   if (!tmp_pixbuf)
+     {
+       g_warning ("Error loading theme icon '%s' for stock: %s", 
+-                 icon_source->source.icon_name, error->message);
+-      g_error_free (error);
++                 icon_source->source.icon_name, error && error->message?error->message:"NULL");
++      if (error)
++          g_error_free (error);
+       return NULL;
+     }
+   

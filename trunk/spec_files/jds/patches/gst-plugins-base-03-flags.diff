@@ -1,0 +1,55 @@
+--- gst-plugins-base-0.10.22/gst-libs/gst/interfaces/mixer.h-orig	Mon Mar  3 14:29:51 2008
++++ gst-plugins-base-0.10.22/gst-libs/gst/interfaces/mixer.h	Thu Feb  5 09:36:12 2009
+@@ -87,9 +87,15 @@
+  * @GST_MIXER_FLAG_NONE: No flags
+  * @GST_MIXER_FLAG_AUTO_NOTIFICATIONS: The mixer implementation automatically sends
+  *    notification messages.
++ * @GST_MIXER_FLAG_HAS_WHITELIST: The mixer implementation flags tracks that should
++ *    be displayed by default (whitelisted).
++ *
++ * @GST_MIXER_FLAG_GROUPING: The mixer implementation will leave some controls
++ *    marked without either input or output.  Controls marked as input or
++ *    output should be grouped with input & output sliders, even if they
++ *    are options or bare switches.
+  * 
+- * Flags for supported features. Whether the element automatically sends 
+- * notifications on the bus is the only one for now. 
++ * Flags for supported features.
+  *
+  * Since: 0.10.14
+  */
+@@ -96,7 +102,9 @@
+ typedef enum
+ {
+   GST_MIXER_FLAG_NONE                = 0,
+-  GST_MIXER_FLAG_AUTO_NOTIFICATIONS  = (1<<0)
++  GST_MIXER_FLAG_AUTO_NOTIFICATIONS  = (1<<0),
++  GST_MIXER_FLAG_HAS_WHITELIST       = (1<<1),
++  GST_MIXER_FLAG_GROUPING            = (1<<2),
+ } GstMixerFlags;
+ 
+ struct _GstMixerClass {
+--- gst-plugins-base-0.10.22/gst-libs/gst/interfaces/mixertrack.h-orig	Wed Jun  4 12:42:03 2008
++++ gst-plugins-base-0.10.22/gst-libs/gst/interfaces/mixertrack.h	Thu Feb  5 09:33:31 2009
+@@ -64,6 +64,9 @@
+  * @GST_MIXER_TRACK_MASTER: this mixer track is likely to be the master control
+  * @GST_MIXER_TRACK_SOFTWARE: mixer track's' volume control is implemented
+  *     in software (as opposed to a hardware control)
++ * @GST_MIXER_TRACK_NO_RECORD: input track lacks support for recordable
++ * @GST_MIXER_TRACK_NO_MUTE: play track doesn't support mute 
++ * @GST_MIXER_TRACK_WHITELIST: track should be displayed "by default" in apps
+  *
+  * Mixer track flags.
+  */
+@@ -73,7 +76,10 @@
+   GST_MIXER_TRACK_MUTE   = (1<<2),
+   GST_MIXER_TRACK_RECORD = (1<<3),
+   GST_MIXER_TRACK_MASTER = (1<<4),
+-  GST_MIXER_TRACK_SOFTWARE = (1<<5)
++  GST_MIXER_TRACK_SOFTWARE = (1<<5),
++  GST_MIXER_TRACK_NO_RECORD = (1<<6),
++  GST_MIXER_TRACK_NO_MUTE = (1<<7),
++  GST_MIXER_TRACK_WHITELIST = (1<<8),
+ } GstMixerTrackFlags;
+ 
+ #define GST_MIXER_TRACK_HAS_FLAG(channel, flag) \

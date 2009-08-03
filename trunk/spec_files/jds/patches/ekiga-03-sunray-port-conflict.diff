@@ -1,0 +1,57 @@
+--- ekiga-2.0.3/src/endpoints/manager.cpp.old	2006-11-09 13:35:29.753351000 +0800
++++ ekiga-2.0.3/src/endpoints/manager.cpp	2006-11-09 14:26:11.441035000 +0800
+@@ -1592,14 +1592,20 @@
+     gnomemeeting_threads_leave ();
+     
+     h323EP->RemoveListener (NULL);
+-    if (!h323EP->StartListener (iface, port)) {
+-
+-      gnomemeeting_threads_enter ();
+-      dialog = gnomemeeting_error_dialog (GTK_WINDOW (main_window), _("Error while starting the listener for the H.323 protocol"), _("You will not be able to receive incoming H.323 calls. Please check that no other program is already running on the port used by Ekiga."));
+-      if (gtk_window_is_active (GTK_WINDOW (druid)))
+-	gtk_widget_set_parent (dialog, druid);
+-      gnomemeeting_threads_leave ();
+-    }
++    //Port conflict occured when multiple ekiga instances or DTUs connected with the same SunRay server
++    //since H.323 uses 1720 as default listen port and SIP uses 5060
++    //This patch is trying to find the available one in the 10 continous ports from the default
++    for (int i = 0 ; i < 10 ; i++)
++      if (h323EP->StartListener (iface, port++)) {
++        break;
++      }
++      else if (i >= 9) { 
++        gnomemeeting_threads_enter ();
++        dialog = gnomemeeting_error_dialog (GTK_WINDOW (main_window), _("Error while starting the listener for the H.323 protocol"), _("You will not be able to receive incoming H.323 calls. Please check that no other program is already running on the port used by Ekiga."));
++        if (gtk_window_is_active (GTK_WINDOW (druid)))
++	        gtk_widget_set_parent (dialog, druid);
++        gnomemeeting_threads_leave ();
++      }
+   }
+ 
+   if (sipEP) {
+@@ -1609,14 +1615,17 @@
+     gnomemeeting_threads_leave ();
+     
+     sipEP->RemoveListener (NULL);
+-    if (!sipEP->StartListener (iface, port)) {
+-      
+-      gnomemeeting_threads_enter ();
+-      dialog = gnomemeeting_error_dialog (GTK_WINDOW (main_window), _("Error while starting the listener for the SIP protocol"), _("You will not be able to receive incoming SIP calls. Please check that no other program is already running on the port used by Ekiga."));
+-      if (gtk_window_is_active (GTK_WINDOW (druid)))
+-	gtk_widget_set_parent (dialog, druid);
+-      gnomemeeting_threads_leave ();
+-    }
++    for (int i = 0 ; i < 10 ; i++)
++      if (sipEP->StartListener (iface, port++)) {
++        break;
++      }
++      else if (i >= 9) {
++        gnomemeeting_threads_enter ();
++        dialog = gnomemeeting_error_dialog (GTK_WINDOW (main_window), _("Error while starting the listener for the SIP protocol"), _("You will not be able to receive incoming SIP calls. Please check that no other program is already running on the port used by Ekiga."));
++        if (gtk_window_is_active (GTK_WINDOW (druid)))
++	        gtk_widget_set_parent (dialog, druid);
++        gnomemeeting_threads_leave ();
++      }
+   }
+ 
+   g_free (iface);

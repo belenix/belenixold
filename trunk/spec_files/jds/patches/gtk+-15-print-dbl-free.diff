@@ -1,0 +1,11 @@
+--- gtk+-2.14.1/modules/printbackends/lpr/gtkprintbackendlpr.c.org	2008-09-22 18:41:49.225536000 +0800
++++ gtk+-2.14.1/modules/printbackends/lpr/gtkprintbackendlpr.c	2008-09-22 18:40:53.412409000 +0800
+@@ -289,8 +289,6 @@
+       lpr_print_cb (GTK_PRINT_BACKEND_LPR (ps->backend), 
+ 		    error, user_data);
+ 
+-      if (error)
+-	g_error_free (error);
+ 
+       if (error != NULL)
+         {
