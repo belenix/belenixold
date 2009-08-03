@@ -1,0 +1,50 @@
+Index: ekiga/configure.ac
+===================================================================
+--- ekiga/configure.ac	(revision 7064)
++++ ekiga/configure.ac	(working copy)
+@@ -314,12 +314,21 @@
+ 
+   dnl Checking for the library presence
+   LIBS_save="$LIBS"
+-  LIBS="${LIBS} -L${with_ldap_dir}/${libname}/ -llber"
++
++  if test "x${gm_platform}" != "xsolaris"; then
++  	LIBS="${LIBS} -L${with_ldap_dir}/${libname}/ -llber"
++  else
++  	LIBS="${LIBS} -L${with_ldap_dir}/${libname}/"
++  fi
+   AC_CHECK_LIB(ldap, main, ldap_libs="yes", ldap_libs="no")
+   LIBS="${LIBS_save}"
+ 
+   if test "x${ldap_libs}" != "xno"; then
+-  	LDAP_LIBS="-llber -lldap"
++        if test "x${gm_platform}" != "xsolaris"; then
++  		LDAP_LIBS="-lldap -llber"
++	else
++		LDAP_LIBS="-lldap"
++	fi
+   	if test "x${with_ldap_dir}" != "x/usr"; then
+   		LDAP_LIBS="-L${with_ldap_dir}/${libname} $LDAP_LIBS"
+   	fi
+Index: ekiga/lib/engine/addressbook/ldap/ldap-book.cpp
+===================================================================
+--- ekiga/lib/engine/addressbook/ldap/ldap-book.cpp	(revision 7064)
++++ ekiga/lib/engine/addressbook/ldap/ldap-book.cpp	(working copy)
+@@ -375,9 +375,17 @@
+   updated.emit ();
+ 
+   ldap_uri = g_strdup_printf ("ldap://%s:%d", hostname.c_str (), port);
++#ifdef SOLARIS  
++  ldap_context = ldap_init ( hostname.c_str(), port);
++#else  
+   result = ldap_initialize (&ldap_context, ldap_uri);
++#endif  
+   g_free (ldap_uri);
++#ifdef SOLARIS
++  if (ldap_context == NULL) {
++#else  
+   if (result != LDAP_SUCCESS) {
++#endif  
+ 
+     status = std::string (_("Could not initialize server"));
+     updated.emit ();

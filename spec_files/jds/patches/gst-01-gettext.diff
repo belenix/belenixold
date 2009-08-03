@@ -1,0 +1,18 @@
+--- gstreamer-0.10.22/configure.ac-orig	2009-01-19 20:28:01.308323000 -0600
++++ gstreamer-0.10.22/configure.ac	2009-01-19 20:28:34.193246000 -0600
+@@ -63,8 +63,13 @@ AC_SUBST(ACLOCAL_AMFLAGS, "-I common/m4"
+ 
+ dnl set up gettext
+ dnl the version check needs to stay here because autopoint greps for it
+-AM_GNU_GETTEXT_VERSION([0.17])
+-AM_GNU_GETTEXT([external])
++ALL_LINGUAS="cs de es fr hu it ja ko pl pt_BR ru sv zh_CN zh_HK zh_TW"
++AM_GLIB_GNU_GETTEXT
++AC_PROG_INTLTOOL
++USE_INCLUDED_LIBINTL=no
++AC_SUBST(USE_INCLUDED_LIBINTL)
++BUILD_INCLUDED_LIBINTL=no
++AC_SUBST(BUILD_INCLUDED_LIBINTL)
+ AG_GST_GETTEXT([gstreamer-$GST_MAJORMINOR])
+ 
+ dnl *** check for arguments to configure ***

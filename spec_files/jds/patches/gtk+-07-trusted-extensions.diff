@@ -1,0 +1,12 @@
+diff -ruN gtk+-2.8.17/gdk/x11/gdkmain-x11.c ../SUNWgnome-base-libs-2.14.1.hacked/gtk+-2.8.17/gdk/x11/gdkmain-x11.c
+--- gtk+-2.8.17/gdk/x11/gdkmain-x11.c	2005-07-07 20:05:33.000000000 +0100
++++ ../SUNWgnome-base-libs-2.14.1.hacked/gtk+-2.8.17/gdk/x11/gdkmain-x11.c	2006-06-12 17:20:06.819470000 +0100
+@@ -598,6 +598,8 @@
+ {
+   if (error->error_code)
+     {
++      if (error->error_code == 3)
++        return 1;
+       if (_gdk_error_warnings)
+ 	{
+ 	  gchar buf[64];

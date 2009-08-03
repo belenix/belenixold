@@ -1,0 +1,16 @@
+--- ekiga-2.0.2/ekiga.desktop.in.in.orig	2006-10-11 17:29:48.651519000 +0100
++++ ekiga-2.0.2/ekiga.desktop.in.in	2006-10-11 17:30:24.435722000 +0100
+@@ -1,9 +1,11 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+-_Name=Ekiga Softphone
++# SUN_BRANDING
++_Name=Video Conference
+ TryExec=@PACKAGE_NAME@
+ _GenericName=IP Telephony, VoIP and Video Conferencing
+-_Comment=Talk to people over the Internet
++# SUN_BRANDING
++_Comment=Chat to friends and colleagues using a webcam
+ StartupNotify=true
+ Exec=@PACKAGE_NAME@
+ Icon=@PACKAGE_NAME@

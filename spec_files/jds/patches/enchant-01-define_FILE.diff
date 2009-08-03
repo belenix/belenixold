@@ -1,0 +1,81 @@
+--- enchant-1.4.2/src/myspell/affixmgr.hxx	Tue May  6 04:19:18 2008
++++ enchant-1.4.2-new//src/myspell/affixmgr.hxx	Fri Oct 31 18:12:50 2008
+@@ -2,11 +2,11 @@
+ #define _AFFIXMGR_HXX_
+ 
+ #ifdef MOZILLA_CLIENT
++#include <stdio.h>
++#else
+ #ifdef __SUNPRO_CC // for SunONE Studio compiler
+ using namespace std;
+ #endif
+-#include <stdio.h>
+-#else
+ #include <cstdio>
+ #endif
+ 
+--- enchant-1.4.2/src/myspell/atypes.hxx	Tue May  6 04:19:18 2008
++++ enchant-1.4.2-new//src/myspell/atypes.hxx	Fri Oct 31 18:04:33 2008
+@@ -1,6 +1,8 @@
+ #ifndef _ATYPES_HXX_
+ #define _ATYPES_HXX_
+ 
++#include <stdio.h>
++
+ #ifndef HUNSPELL_WARNING
+ #ifdef HUNSPELL_WARNING_ON
+ #define HUNSPELL_WARNING fprintf
+--- enchant-1.4.2/src/myspell/hunzip.cxx	Tue May  6 04:19:18 2008
++++ enchant-1.4.2-new//src/myspell/hunzip.cxx	Fri Oct 31 18:13:39 2008
+@@ -1,4 +1,7 @@
+ #ifndef MOZILLA_CLIENT
++#ifdef __SUNPRO_CC
++using namespace std;
++#endif
+ #include <cstdlib>
+ #include <cstring>
+ #include <cstdio>
+diff -ur enchant-1.4.2/src/myspell/hunzip.hxx enchant-1.4.2-new//src/myspell/hunzip.hxx
+--- enchant-1.4.2/src/myspell/hunzip.hxx	Tue May  6 04:19:17 2008
++++ enchant-1.4.2-new//src/myspell/hunzip.hxx	Fri Oct 31 18:05:33 2008
+@@ -12,6 +12,8 @@
+ #define MSG_MEMORY "error: %s: missing memory\n"
+ #define MSG_KEY    "error: %s: missing or bad password\n"
+ 
++#include <stdio.h>
++
+ struct bit {
+     unsigned char c[2];
+     int v[2];
+diff -ur enchant-1.4.2/src/myspell/phonet.cxx enchant-1.4.2-new//src/myspell/phonet.cxx
+--- enchant-1.4.2/src/myspell/phonet.cxx	Tue May  6 04:19:17 2008
++++ enchant-1.4.2-new//src/myspell/phonet.cxx	Fri Oct 31 18:14:35 2008
+@@ -28,6 +28,9 @@
+ */
+ 
+ #ifndef MOZILLA_CLIENT
++#ifdef __SUNPRO_CC
++using namespace std;
++#endif
+ #include <cstdlib>
+ #include <cstring>
+ #include <cstdio>
+diff -ur enchant-1.4.2/src/myspell/w_char.hxx enchant-1.4.2-new//src/myspell/w_char.hxx
+--- enchant-1.4.2/src/myspell/w_char.hxx	Tue May  6 04:19:18 2008
++++ enchant-1.4.2-new//src/myspell/w_char.hxx	Fri Oct 31 18:04:51 2008
+@@ -4,7 +4,7 @@
+ #ifdef WIN32
+ typedef struct {
+ #else
+-typedef struct __attribute__ ((packed)) {
++typedef struct {
+ #endif
+     unsigned char l;
+     unsigned char h;
+--- enchant-1.4.2/tests/Makefile.am	2008-05-06 04:19:20.000000000 +0800
++++ enchant-1.4.2-new/tests/Makefile.am	2008-10-31 18:29:17.344700595 +0800
+@@ -1,4 +1,4 @@
+-INCLUDES=-I$(top_srcdir)/src $(ENCHANT_CFLAGS) $(CXX_WARN_CFLAGS)
++INCLUDES=-I$(top_srcdir)/src $(ENCHANT_CFLAGS)
+ 
+ EXTRA_DIST=test.pwl ispell.in

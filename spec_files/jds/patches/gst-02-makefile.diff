@@ -1,0 +1,24 @@
+--- gstreamer-0.10.22/configure.ac-orig	2009-01-22 14:31:06.940699000 -0600
++++ gstreamer-0.10.22/configure.ac	2009-01-22 14:33:25.249101000 -0600
+@@ -455,6 +455,10 @@ AC_CHECK_LIB(dl, dladdr,
+    LIBS="$LIBS -ldl")
+ CFLAGS="$save_cflags"
+ 
++dnl *** checks for socket and nsl libraries ***
++AC_CHECK_FUNC(socket,,[AC_CHECK_LIB(socket,socket)])
++AC_CHECK_FUNC(gethostbyname,,[AC_CHECK_LIB(nsl,gethostbyname)])
++
+ dnl check for inet_aton()
+ save_libs="$LIBS"
+ AC_CHECK_FUNC(inet_aton, ,
+--- gstreamer-0.10.22/gst/Makefile.am-orig	2009-01-22 14:38:48.101778000 -0600
++++ gstreamer-0.10.22/gst/Makefile.am	2009-01-22 14:40:28.662654000 -0600
+@@ -135,7 +135,7 @@ libgstreamer_@GST_MAJORMINOR@_la_LIBADD 
+ 	$(XML_LIBS)
+ 
+ libgstreamer_@GST_MAJORMINOR@_la_LDFLAGS =		\
+-	$(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
++	$(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS) $(LIBM)
+ 
+ libgstreamer_@GST_MAJORMINOR@includedir = $(includedir)/gstreamer-@GST_MAJORMINOR@/gst
+ 

@@ -1,0 +1,33 @@
+diff -urN -x '*.orig' gtk+-2.12.9/configure.in ../../SUNWgnome-base-libs-2.22.0.hacked/i386/gtk+-2.12.9/configure.in
+--- gtk+-2.12.9/configure.in	2008-03-14 16:26:36.852293000 +0000
++++ ../../SUNWgnome-base-libs-2.22.0.hacked/i386/gtk+-2.12.9/configure.in	2008-03-24 22:11:56.462699000 +0000
+@@ -1611,6 +1611,8 @@
+ 
+ AM_CONDITIONAL(HAVE_PAPI, test $have_papi = yes)
+ 
++AM_CONDITIONAL(HAVE_PAPI_CUPS, test $have_papi = yes && test "x$CUPS_CONFIG" != "xno")
++
+ gtk_save_cppflags="$CPPFLAGS"
+ CPPFLAGS="$CPPFLAGS $GTK_DEP_CFLAGS"
+ 			  
+diff -urN -x '*.orig' gtk+-2.13.1/gtk/Makefile.am ../../SUNWgnome-base-libs-2.22.0.hacked/i386/gtk+-2.13.1/gtk/Makefile.am
+--- gtk+-2.13.1/gtk/Makefile.am	2008-03-14 16:26:36.872653000 +0000
++++ ../../SUNWgnome-base-libs-2.22.0.hacked/i386/gtk+-2.13.1/gtk/Makefile.am	2008-03-24 22:17:38.526709000 +0000
+@@ -10,6 +10,9 @@
+ SUBDIRS = theme-bits . tests
+ DIST_SUBDIRS=theme-bits tests
+ 
++if HAVE_PAPI_CUPS
++GTK_PRINT_BACKENDS=file,lpr,papi,cups
++else
+ if HAVE_CUPS
+ GTK_PRINT_BACKENDS=file,cups
+ else
+@@ -22,6 +25,7 @@
+ GTK_PRINT_BACKENDS=file,lpr
+ endif
+ endif
++endif
+ 
+ INCLUDES =						\
+ 	-DG_LOG_DOMAIN=\"Gtk\"				\

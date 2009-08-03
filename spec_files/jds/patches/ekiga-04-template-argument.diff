@@ -1,0 +1,26 @@
+Index: ekiga/lib/engine/framework/runtime.h
+===================================================================
+--- ekiga/lib/engine/framework/runtime.h	(revision 7064)
++++ ekiga/lib/engine/framework/runtime.h	(working copy)
+@@ -41,9 +41,9 @@
+ 
+ #include "services.h"
+ 
+-template<typename data_type>
+-static void emit_signal_in_main_helper1 (sigc::signal<void, data_type> sign,
+-                                         data_type data)
++template<typename data_type1, typename data_type2>
++static void emit_signal_in_main_helper1 (data_type1 sign,
++                                         data_type2 data)
+ {
+   sign.emit (data);
+ }
+@@ -96,7 +96,7 @@
+     void emit_signal_in_main (sigc::signal<void, data_type> sign,
+                               data_type data)
+       {
+-        run_in_main (sigc::bind (sigc::ptr_fun (emit_signal_in_main_helper1<data_type>), sign, data));
++        run_in_main (sigc::bind (sigc::ptr_fun (emit_signal_in_main_helper1<sigc::signal<void, data_type>, data_type>), sign, data));
+       }
+   };
+ 

@@ -1,0 +1,26 @@
+--- gnome-media-2.24.0.1/gst-mixer/src/element.c	2009-03-02 18:20:19.000000000 -0800
++++ gnome-media-2.24.0.1/gst-mixer/src/element.c	2009-03-05 14:19:30.549644843 -0800
+@@ -233,7 +233,7 @@
+     { NULL, NULL, NULL, NULL, FALSE, 0, 5, 1,
+       gnome_volume_control_track_add_recording },
+     { NULL, NULL, NULL, NULL, FALSE, 0, 1, 3,
+-      gnome_volume_control_track_add_switch },
++      gnome_volume_control_track_add_playback },
+     { NULL, NULL, NULL, NULL, FALSE, 0, 1, 3,
+       gnome_volume_control_track_add_option }
+   };
+--- gnome-media-2.24.0.1/gst-mixer/src/track.c	2009-03-02 18:20:19.000000000 -0800
++++ gnome-media-2.24.0.1/gst-mixer/src/track.c	2009-03-05 14:27:36.081555914 -0800
+@@ -395,12 +395,6 @@
+ 					       GTK_ORIENTATION_VERTICAL,
+ 					       mixer, track, l_sep, r_sep);
+ 
+-  /* switch exception (no sliders) */
+-  if (track->num_channels == 0) {
+-    gnome_volume_control_track_put_switch (table, tab_pos, ctrl);
+-    return ctrl;
+-  }
+-
+   ctrl->sliderbox = gnome_volume_control_volume_new (ctrl->mixer,
+ 						     ctrl->track, 6);
+   gtk_table_attach (GTK_TABLE (table), ctrl->sliderbox,
