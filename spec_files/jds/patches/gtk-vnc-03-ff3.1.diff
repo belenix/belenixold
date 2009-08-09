@@ -1,0 +1,206 @@
+diff -r d68935d582f0 configure.ac
+--- a/configure.ac	Sun Dec 07 19:56:56 2008 +0000
++++ b/configure.ac	Tue Dec 16 18:23:23 2008 +0800
+@@ -215,6 +215,8 @@
+ if test "x$enable_plugin" = "xyes"; then
+     dnl Check for Netscape Portable Runtime development package.
+     PKG_CHECK_MODULES(NSPR, nspr >= $NSPR_REQUIRED)
++    AC_SUBST(NSPR_CFLAGS)
++    AC_SUBST(NSPR_LIBS)
+     dnl Check for Firefox plugin package (also includes NSPR cflags/libs).
+     PKG_CHECK_MODULES(FIREFOX_PLUGIN,
+                      firefox-plugin >= $FIREFOX_PLUGIN_REQUIRED, ,[
+diff -r d68935d582f0 plugin/Makefile.am
+--- a/plugin/Makefile.am	Sun Dec 07 19:56:56 2008 +0000
++++ b/plugin/Makefile.am	Tue Dec 16 18:23:23 2008 +0800
+@@ -7,12 +7,14 @@
+ 	gtk-vnc-plugin.c gtk-vnc-plugin.h npshell.c npunix.c
+ gtk_vnc_plugin_la_LIBADD = \
+ 	../src/libgtk-vnc-1.0.la @GTK_LIBS@ \
++	@NSPR_LIBS@ \
+ 	@FIREFOX_PLUGIN_LIBS@
+ gtk_vnc_plugin_la_LDFLAGS = \
+ 	-module -avoid-version
+ gtk_vnc_plugin_la_CFLAGS = \
+ 	-I$(top_srcdir)/src @GTK_CFLAGS@ \
+-	@FIREFOX_PLUGIN_CFLAGS@ @WARNING_CFLAGS@ @WERROR_CFLAGS@
++	@NSPR_CFLAGS@ @FIREFOX_PLUGIN_CFLAGS@ \
++	@WARNING_CFLAGS@ @WERROR_CFLAGS@
+ 
+ all-local: gtk-vnc-plugin.so
+ 
+diff -r d68935d582f0 plugin/gtk-vnc-plugin.c
+--- a/plugin/gtk-vnc-plugin.c	Sun Dec 07 19:56:56 2008 +0000
++++ b/plugin/gtk-vnc-plugin.c	Tue Dec 16 18:23:23 2008 +0800
+@@ -165,7 +165,7 @@
+ GtkVNCXSetWindow (NPP instance, NPWindow *window)
+ {
+   PluginInstance *This;
+-  NPSetWindowCallbackStruct *ws_info;
++  struct NPSetWindowCallbackStruct *ws_info;
+ 
+   if (instance == NULL)
+     return NPERR_INVALID_INSTANCE_ERROR;
+@@ -177,7 +177,7 @@
+   if (This == NULL)
+     return NPERR_INVALID_INSTANCE_ERROR;
+ 
+-  ws_info = (NPSetWindowCallbackStruct *)window->ws_info;
++  ws_info = (struct NPSetWindowCallbackStruct *)window->ws_info;
+ 
+   /* Mozilla likes to re-run its greatest hits */
+   if (window == This->window &&
+@@ -275,7 +275,7 @@
+ 
+ static NPWindow windowlessWindow;
+ 
+-int16
++int16_t
+ GtkVNCXHandleEvent(NPP instance, void *event)
+ {
+   XGraphicsExposeEvent exposeEvent;
+diff -r d68935d582f0 plugin/gtk-vnc-plugin.h
+--- a/plugin/gtk-vnc-plugin.h	Sun Dec 07 19:56:56 2008 +0000
++++ b/plugin/gtk-vnc-plugin.h	Tue Dec 16 18:23:23 2008 +0800
+@@ -45,10 +45,10 @@
+ #define PLUGIN_DESCRIPTION  "VNC (remote desktop) viewer plugin"
+ 
+ typedef struct {
+-  uint16 mode;
++  uint16_t mode;
+   NPWindow *window;
+-  int32 x, y;
+-  uint32 width, height;
++  int32_t x, y;
++  uint32_t width, height;
+ 
+   NPP instance;
+   NPBool pluginsHidden;
+@@ -61,7 +61,7 @@
+ 
+ extern NPError GtkVNCXSetWindow (NPP instance, NPWindow* window);
+ extern NPError GtkVNCDestroyWindow (NPP instance);
+-extern int16 GtkVNCXHandleEvent (NPP instance, void* event);
++extern int16_t GtkVNCXHandleEvent (NPP instance, void* event);
+ 
+ #ifdef ENABLE_DEBUG
+ static inline void
+diff -r d68935d582f0 plugin/npshell.c
+--- a/plugin/npshell.c	Sun Dec 07 19:56:56 2008 +0000
++++ b/plugin/npshell.c	Tue Dec 16 18:23:23 2008 +0800
+@@ -81,7 +81,7 @@
+ #include <string.h>
+ 
+ #include <npapi.h>
+-#include <npupp.h>
++#include <nspr.h>
+ 
+ #include "gtk-vnc-plugin.h"
+ 
+diff -r d68935d582f0 plugin/npunix.c
+--- a/plugin/npunix.c	Sun Dec 07 19:56:56 2008 +0000
++++ b/plugin/npunix.c	Tue Dec 16 18:23:23 2008 +0800
+@@ -55,7 +55,7 @@
+ 
+ #include <stdio.h>
+ #include <npapi.h>
+-#include <npupp.h>
++#include <npfunctions.h>
+ 
+ #include <glib.h>               /* just for G_GNUC_UNUSED */
+ 
+@@ -132,14 +132,14 @@
+ 
+ NPError
+ NPN_PostURL(NPP instance, const char* url, const char* window,
+-         uint32 len, const char* buf, NPBool file)
++         uint32_t len, const char* buf, NPBool file)
+ {
+     return CallNPN_PostURLProc(gNetscapeFuncs.posturl, instance,
+                     url, window, len, buf, file);
+ }
+ 
+ NPError
+-NPN_PostURLNotify(NPP instance, const char* url, const char* window, uint32 len,
++NPN_PostURLNotify(NPP instance, const char* url, const char* window, uint32_t len,
+                   const char* buf, NPBool file, void* notifyData)
+ {
+     return CallNPN_PostURLNotifyProc(gNetscapeFuncs.posturlnotify,
+@@ -161,8 +161,8 @@
+                     type, window, stream_ptr);
+ }
+ 
+-int32
+-NPN_Write(NPP instance, NPStream* stream, int32 len, void* buffer)
++int32_t
++NPN_Write(NPP instance, NPStream* stream, int32_t len, void* buffer)
+ {
+     return CallNPN_WriteProc(gNetscapeFuncs.write, instance,
+                     stream, len, buffer);
+@@ -188,7 +188,7 @@
+ }
+ 
+ void*
+-NPN_MemAlloc(uint32 size)
++NPN_MemAlloc(uint32_t size)
+ {
+     return CallNPN_MemAllocProc(gNetscapeFuncs.memalloc, size);
+ }
+@@ -198,7 +198,7 @@
+     CallNPN_MemFreeProc(gNetscapeFuncs.memfree, ptr);
+ }
+ 
+-uint32 NPN_MemFlush(uint32 size)
++uint32_t NPN_MemFlush(uint32_t size)
+ {
+     return CallNPN_MemFlushProc(gNetscapeFuncs.memflush, size);
+ }
+@@ -267,8 +267,8 @@
+  ***********************************************************************/
+ 
+ static NPError
+-Private_New(NPMIMEType pluginType, NPP instance, uint16 mode,
+-        int16 argc, char* argn[], char* argv[], NPSavedData* saved)
++Private_New(NPMIMEType pluginType, NPP instance, uint16_t mode,
++        int16_t argc, char* argn[], char* argv[], NPSavedData* saved)
+ {
+     NPError ret;
+     PLUGINDEBUGSTR("New");
+@@ -295,7 +295,7 @@
+ static NPError
+ Private_NewStream(NPP instance G_GNUC_UNUSED, NPMIMEType type G_GNUC_UNUSED,
+                   NPStream* stream G_GNUC_UNUSED,
+-                  NPBool seekable G_GNUC_UNUSED, uint16* stype G_GNUC_UNUSED)
++                  NPBool seekable G_GNUC_UNUSED, uint16_t* stype G_GNUC_UNUSED)
+ {
+     NPError err = NPERR_NO_ERROR;
+     PLUGINDEBUGSTR("NewStream");
+@@ -303,7 +303,7 @@
+     return err;
+ }
+ 
+-static int32
++static int32_t
+ Private_WriteReady(NPP instance, NPStream* stream)
+ {
+     unsigned int result;
+@@ -312,8 +312,8 @@
+     return result;
+ }
+ 
+-static int32
+-Private_Write(NPP instance, NPStream* stream, int32 offset, int32 len,
++static int32_t
++Private_Write(NPP instance, NPStream* stream, int32_t offset, int32_t len,
+         void* buffer)
+ {
+     unsigned int result;
+@@ -375,7 +375,7 @@
+ }
+ #endif
+ 
+-static int16 
++static int16_t 
+ Private_HandleEvent(NPP instance, void* event)
+ {
+     return NPP_HandleEvent(instance, event);

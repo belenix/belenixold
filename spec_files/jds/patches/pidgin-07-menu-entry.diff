@@ -1,0 +1,13 @@
+diff -ur pidgin-2.4.3-orig//pidgin.desktop.in pidgin-2.4.3//pidgin.desktop.in
+--- pidgin-2.4.3-orig//pidgin.desktop.in	Wed Jul  2 08:46:24 2008
++++ pidgin-2.4.3//pidgin.desktop.in	Thu Aug 21 14:11:49 2008
+@@ -2,7 +2,8 @@
+ Encoding=UTF-8
+ _Name=Pidgin Internet Messenger
+ _GenericName=Internet Messenger
+-_Comment=Send instant messages over multiple protocols
++# SUN_BRANDING
++_Comment=Send instant messages to contacts on Jabber, MSN, Yahoo and other networks
+ Exec=pidgin
+ Icon=pidgin
+ StartupNotify=true

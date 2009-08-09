@@ -1,0 +1,59 @@
+/jds/bin/diff -uprN gnome-desktop-2.25.3.old/libgnome-desktop/gnome-rr.c gnome-desktop-2.25.3/libgnome-desktop/gnome-rr.c
+--- gnome-desktop-2.25.3.old/libgnome-desktop/gnome-rr.c	2009-01-08 13:35:56.834705000 +0000
++++ gnome-desktop-2.25.3/libgnome-desktop/gnome-rr.c	2009-01-08 13:40:31.739553000 +0000
+@@ -449,9 +450,33 @@ fill_out_screen_info (Display *xdisplay,
+ static ScreenInfo *
+ screen_info_new (GnomeRRScreen *screen, GError **error)
+ {
+-    ScreenInfo *info = g_new0 (ScreenInfo, 1);
+-    
++    GTimeVal	cur_time_val;
++    gint64	cur, prev;
++
+     g_assert (screen != NULL);
++
++    if ( screen->info != NULL ) {
++        g_get_current_time(&cur_time_val);
++        cur = (gint64) cur_time_val.tv_sec * G_USEC_PER_SEC + cur_time_val.tv_usec;
++        prev =(gint64) screen->last_update_time.tv_sec * G_USEC_PER_SEC + screen->last_update_time.tv_usec;
++
++        /* Only referesh the info after 2 seconds have elapsed since last
++         * update, otherwise it will cause a lot of extra probing on the X
++         * server.
++         */
++        if (((cur - prev) < 0) || ((cur - prev) > 2000000)) {
++            screen->last_update_time = cur_time_val;
++        }
++        else {
++            /* Don't return any update, which should result in caller using
++             * existing data 
++             */
++            g_warning("Call to screen_info_new is too frequent, skipping...");
++            return( NULL );
++        }
++    }
++
++    ScreenInfo *info = g_new0 (ScreenInfo, 1);
+     
+     info->outputs = NULL;
+     info->crtcs = NULL;
+@@ -553,6 +578,9 @@ gnome_rr_screen_new (GdkScreen *gdk_scre
+ 	screen->randr_event_base = event_base;
+ 	
+ 	screen->info = screen_info_new (screen, error);
++
++    /* Initialize the last udpate time */
++    g_get_current_time (&(screen->last_update_time));
+ 	
+ 	if (!screen->info) {
+ 	    g_free (screen);
+--- gnome-desktop-2.26.0/libgnome-desktop/gnome-rr-private.h.ori	2009-03-17 08:06:05.955978124 +0000
++++ gnome-desktop-2.26.0/libgnome-desktop/gnome-rr-private.h	2009-03-17 08:07:12.576608678 +0000
+@@ -34,6 +34,7 @@
+     
+     GnomeRRScreenChanged	callback;
+     gpointer			data;
++    GTimeVal			last_update_time;
+ };
+ 
+ #endif

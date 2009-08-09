@@ -1,0 +1,11 @@
+--- gnome-applets-2.24.0.1.orig/drivemount/drive-button.c	2008-09-29 11:05:55.434062644 +0100
++++ gnome-applets-2.24.0.1/drivemount/drive-button.c	2008-09-29 11:08:02.284301004 +0100
+@@ -724,7 +724,7 @@
+ 
+ 	mount = g_volume_get_mount (self->volume);
+ 	if (!mount)
+-	    return FALSE;
++	    return;
+ 
+ 	file = g_mount_get_root (mount);
+ 	g_object_unref (mount);

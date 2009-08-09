@@ -1,0 +1,11 @@
+--- pkgconfig-0.12.0/parse.c	Sat Feb  2 11:15:23 2002
++++ pkgconfig-0.12.0.new/parse.c	Mon Apr 14 21:53:11 2003
+@@ -986,7 +986,7 @@ try_command (const char *command)
+ #ifdef G_OS_WIN32
+   munged = g_strdup_printf ("%s > NUL", command);
+ #else
+-  munged = g_strdup_printf ("%s > /dev/null 2>&1", command);
++  munged = g_strdup_printf ("sh -c '%s' > /dev/null 2>&1", command);
+ #endif
+   
+   status = system (munged);

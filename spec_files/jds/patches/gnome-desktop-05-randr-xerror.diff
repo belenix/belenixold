@@ -1,0 +1,29 @@
+diff -up gnome-desktop-2.23.6/libgnome-desktop/gnome-rr.c.orig gnome-desktop-2.23.6/libgnome-desktop/gnome-rr.c
+--- gnome-desktop-2.23.6/libgnome-desktop/gnome-rr.c.orig	2008-08-04 21:43:05.000000000 +0100
++++ gnome-desktop-2.23.6/libgnome-desktop/gnome-rr.c	2008-08-14 10:58:26.300146070 +0100
+@@ -468,10 +468,24 @@ gnome_rr_screen_set_size (GnomeRRScreen 
+ 			  int       mm_width,
+ 			  int       mm_height)
+ {
++    gint errcode = 0;
++
+     g_return_if_fail (screen != NULL);
+     
++    /* As a temporary fix to work around an issue in X where this call is
++     * succeeding yet still generating an XError, we will trap any such error,
++     * and write out a warning - better than crashing g-s-d.
++     */
++    gdk_error_trap_push();
++
+     XRRSetScreenSize (screen->xdisplay, screen->xroot,
+ 		      width, height, mm_width, mm_height);
++
++    gdk_flush (); /* Get XErrors now, if any */
++
++    if ( (errcode = gdk_error_trap_pop()) != 0 ) {
++        g_warning( G_STRLOC ": XRRSetScreenSize generated an XError: %d", errcode );
++    }
+ }
+ 
+ void
+

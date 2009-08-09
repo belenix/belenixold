@@ -1,0 +1,11 @@
+--- gtk-vnc-0.3.7/src/vncdisplay.c.orig	2008-11-28 10:02:45.914304943 +0900
++++ gtk-vnc-0.3.7/src/vncdisplay.c	2008-11-28 12:19:30.045807946 +0900
+@@ -2361,7 +2361,7 @@ void vnc_display_client_cut_text(VncDisp
+ {
+ 	g_return_if_fail (VNC_IS_DISPLAY (obj));
+ 
+-	gvnc_client_cut_text(obj->priv->gvnc, text, strlen (text));
++	gvnc_client_cut_text(obj->priv->gvnc, text, strlen (text) + 1);
+ }
+ 
+ void vnc_display_set_lossy_encoding(VncDisplay *obj, gboolean enable)

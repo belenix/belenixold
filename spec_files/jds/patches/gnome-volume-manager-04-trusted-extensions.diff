@@ -1,0 +1,39 @@
+--- gnome-volume-manager-2.22.5/src/manager.c.orig	2008-04-28 16:57:25.545891868 +0100
++++ gnome-volume-manager-2.22.5/src/manager.c	2008-04-28 16:59:56.968133689 +0100
+@@ -4101,6 +4101,21 @@
+ };
+ 
+ 
++static gboolean
++is_trusted_multi_label_session (void)
++{
++	static int trusted = -1;
++
++	if (trusted < 0) {
++		if (getenv ("TRUSTED_SESSION")) {
++			trusted = 1;
++		} else {
++			trusted = 0;
++		}
++	}
++	return trusted ? TRUE : FALSE;
++}
++
+ int
+ main (int argc, char **argv)
+ {
+@@ -4115,7 +4130,13 @@
+ 	
+ 	ctx = g_option_context_new (PACKAGE);
+ 	g_option_context_add_main_entries (ctx, options, NULL);
+-	
++
++	if (is_trusted_multi_label_session ()) {
++		fprintf (stdout, "gnome-volume-manager not yet supported in "
++				 "a Trusted GNOME session\n");
++		exit (0);
++	}	
++
+ 	program = gnome_program_init (PACKAGE, VERSION, LIBGNOMEUI_MODULE, argc, argv,
+ 				      GNOME_PARAM_GOPTION_CONTEXT, ctx, GNOME_PARAM_NONE);
+ 	

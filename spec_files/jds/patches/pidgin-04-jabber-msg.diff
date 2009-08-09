@@ -1,0 +1,11 @@
+--- pidgin-2.3.0/libpurple/protocols/jabber/jabber.c	2007-11-25 03:05:56.000000000 +0800
++++ pidgin-2.3.0-my/libpurple/protocols/jabber/jabber.c	2007-12-06 11:17:22.050609000 +0800
+@@ -181,6 +181,8 @@
+ {
+ 	PurpleConnectionError reason = PURPLE_CONNECTION_ERROR_NETWORK_ERROR;
+ 	char *msg = jabber_parse_error(js, packet, &reason);
++	if (!msg)
++		return;
+ 
+ 	purple_connection_error_reason (js->gc, reason, msg);
+ 

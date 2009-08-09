@@ -1,0 +1,62 @@
+--- pidgin-ori/libpurple/account.c-ori	2007-08-27 14:59:30.308555000 +0800
++++ pidgin/libpurple/account.c	2007-08-27 15:00:01.196954000 +0800
+@@ -689,6 +689,9 @@
+ 	char *name = NULL;
+ 	char *data;
+ 
++  if (!node)
++    return NULL;
++
+ 	child = xmlnode_get_child(node, "protocol");
+ 	if (child != NULL)
+ 		protocol_id = xmlnode_get_data(child);
+--- pidgin-ori/pidgin/gtkblist.c-ori	2007-08-27 15:02:39.684347000 +0800
++++ pidgin/pidgin/gtkblist.c	2007-08-27 15:02:43.117117000 +0800
+@@ -4930,11 +4930,14 @@
+ #endif
+ 
+ 	gtk_tooltips_force_window (tooltips);
++	if (tooltips->tip_window)
++	{
+ #if GTK_CHECK_VERSION(2, 12, 0)
+-	gtk_widget_set_name (tooltips->tip_window, "gtk-tooltips");
++		gtk_widget_set_name (tooltips->tip_window, "gtk-tooltips");
+ #endif
+-	gtk_widget_ensure_style (tooltips->tip_window);
+-	style = gtk_widget_get_style (tooltips->tip_window);
++		gtk_widget_ensure_style (tooltips->tip_window);
++		style = gtk_widget_get_style (tooltips->tip_window);
++	}
+ 
+ 	gtkblist->changing_style = TRUE;
+ 	gtk_widget_set_style (gtkblist->headline_hbox, style);
+--- pidgin-ori/pidgin/pidginstock.c	2007-08-30 09:37:50.656130000 +0800
++++ pidgin/pidgin/pidginstock.c	2007-08-30 09:38:11.935367000 +0800
+@@ -276,6 +276,9 @@
+         guchar *pixdest;
+         guchar a;
+ 
++        if (!src)
++          return;
++
+         has_alpha = gdk_pixbuf_get_has_alpha (src);
+         if (!has_alpha)
+           return;
+@@ -323,6 +326,8 @@
+ 		return;
+ 
+ 	pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
++	if (!pixbuf)
++    		return;
+ 	if (translucent)
+ 		do_alphashift(pixbuf, pixbuf);
+ 
+@@ -356,6 +361,8 @@
+ 		if (!filename)
+ 			return;
+ 		pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
++		if (!pixbuf)
++			return;
+ 		if (translucent)
+ 			do_alphashift(pixbuf, pixbuf);
+ 		source = gtk_icon_source_new();

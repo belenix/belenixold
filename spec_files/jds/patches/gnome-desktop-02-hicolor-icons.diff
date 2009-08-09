@@ -1,0 +1,11 @@
+--- gnome-desktop-2.10.1/pixmaps/Makefile.am	2005-03-22 23:17:58.000000000 -1200
++++ gnome-desktop-2.10.1-hacked/pixmaps/Makefile.am	2005-05-02 16:33:18.396990128 -1200
+@@ -74,4 +74,7 @@
+ 	gnome-background-pattern.png		\
+ 	gnome-set-time.png
+ 
+-EXTRA_DIST = $(pixmap_DATA)
++icondir   = $(datadir)/icons/hicolor/48x48/apps
++icon_DATA = gnome-logo-icon-transparent.png
++
++EXTRA_DIST = $(pixmap_DATA) $(icon_DATA)

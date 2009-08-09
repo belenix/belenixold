@@ -1,0 +1,26 @@
+--- /dev/null	2006-12-20 17:41:06.000000000 +0800
++++ gaim/pidgin-uninstalled.pc.in	2006-12-22 16:32:46.308280000 +0800
+@@ -0,0 +1,13 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++datadir=@datadir@
++sysconfdir=@sysconfdir@
++ 
++Name: Pidgin
++Description: Pidgin is a GTK2-based instant messenger application.
++Version: @VERSION@
++Requires: glib-2.0
++Cflags: -I${pc_top_builddir}/${pcfiledir}/libpurple -I${pc_top_builddir}/${pcfiledir}/pidgin
++Libs: ${pc_top_builddir}/${pcfiledir}/libpurple/libpurple.la
+--- gaim-orig/configure.ac.orig	2006-12-22 16:35:42.870514000 +0800
++++ gaim/configure.ac	2006-12-22 16:35:02.633637000 +0800
+@@ -2026,6 +2026,7 @@
+ 
+ AC_OUTPUT([Makefile
+ 		   Doxyfile
++		   pidgin-uninstalled.pc
+ 		   doc/Makefile
+ 		   doc/pidgin.1
+ 		   doc/finch.1

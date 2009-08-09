@@ -1,0 +1,13 @@
+diff -ur gnome-volume-manager-2.22.5-orig/gnome-volume-properties.desktop.in gnome-volume-manager-2.22.5/gnome-volume-properties.desktop.in
+--- gnome-volume-manager-2.22.5-orig/gnome-volume-properties.desktop.in	2008-07-09 19:44:12.875684196 +0800
++++ gnome-volume-manager-2.22.5/gnome-volume-properties.desktop.in	2008-07-09 19:45:52.058248488 +0800
+@@ -1,7 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ _Name=Removable Drives and Media
+-_Comment=Configure management of removable drives and media
++# SUN_BRANDING
++_Comment=Choose what happens when external devices are connected
+ Icon=drive-optical
+ Exec=gnome-volume-properties
+ Terminal=false

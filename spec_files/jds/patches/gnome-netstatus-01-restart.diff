@@ -1,0 +1,954 @@
+--- gnome-netstatus-2.26.0/src/gnome-netstatus.glade.orig	2009-03-08 05:25:52.000000000 +0000
++++ gnome-netstatus-2.26.0/src/gnome-netstatus.glade	2009-03-18 10:17:17.001619505 +0000
+@@ -1374,6 +1374,230 @@
+ 	      <property name="type">tab</property>
+ 	    </packing>
+ 	  </child>
++
++	  <child>
++	    <widget class="GtkVBox" id="vbox3">
++	      <property name="border_width">12</property>
++	      <property name="visible">True</property>
++	      <property name="homogeneous">False</property>
++	      <property name="spacing">18</property>
++
++	      <child>
++		<widget class="GtkVBox" id="vbox5">
++		  <property name="visible">True</property>
++		  <property name="homogeneous">False</property>
++		  <property name="spacing">6</property>
++
++		  <child>
++		    <widget class="GtkLabel" id="label59">
++		      <property name="visible">True</property>
++		      <property name="label" translatable="yes">You may need to restart ths connection if you want to connect to a different network, or if you are experiencing connection problems.</property>
++		      <property name="use_underline">False</property>
++		      <property name="use_markup">False</property>
++		      <property name="justify">GTK_JUSTIFY_LEFT</property>
++		      <property name="wrap">True</property>
++		      <property name="selectable">False</property>
++		      <property name="xalign">0</property>
++		      <property name="yalign">0.5</property>
++		      <property name="xpad">0</property>
++		      <property name="ypad">0</property>
++		    </widget>
++		    <packing>
++		      <property name="padding">0</property>
++		      <property name="expand">True</property>
++		      <property name="fill">True</property>
++		    </packing>
++		  </child>
++		</widget>
++		<packing>
++		  <property name="padding">0</property>
++		  <property name="expand">False</property>
++		  <property name="fill">True</property>
++		</packing>
++	      </child>
++
++	      <child>
++		<widget class="GtkHBox" id="restart_hbox">
++		  <property name="visible">True</property>
++		  <property name="homogeneous">False</property>
++		  <property name="spacing">0</property>
++
++		  <child>
++		    <widget class="GtkLabel" id="label65">
++		      <property name="visible">True</property>
++		      <property name="label" translatable="yes"></property>
++		      <property name="use_underline">False</property>
++		      <property name="use_markup">False</property>
++		      <property name="justify">GTK_JUSTIFY_LEFT</property>
++		      <property name="wrap">False</property>
++		      <property name="selectable">False</property>
++		      <property name="xalign">0.5</property>
++		      <property name="yalign">0.5</property>
++		      <property name="xpad">0</property>
++		      <property name="ypad">0</property>
++		    </widget>
++		    <packing>
++		      <property name="padding">0</property>
++		      <property name="expand">True</property>
++		      <property name="fill">True</property>
++		    </packing>
++		  </child>
++
++		  <child>
++		    <widget class="GtkVBox" id="vbox6">
++		      <property name="visible">True</property>
++		      <property name="homogeneous">False</property>
++		      <property name="spacing">0</property>
++
++		      <child>
++			<widget class="GtkButton" id="restart_button">
++			  <property name="visible">True</property>
++			  <property name="can_focus">True</property>
++			  <property name="relief">GTK_RELIEF_NORMAL</property>
++
++			  <child>
++			    <widget class="GtkAlignment" id="alignment3">
++			      <property name="visible">True</property>
++			      <property name="xalign">0.5</property>
++			      <property name="yalign">0.5</property>
++			      <property name="xscale">0</property>
++			      <property name="yscale">0</property>
++
++			      <child>
++				<widget class="GtkHBox" id="hbox15">
++				  <property name="visible">True</property>
++				  <property name="homogeneous">False</property>
++				  <property name="spacing">2</property>
++
++				  <child>
++				    <widget class="GtkImage" id="restart_button_image">
++				      <property name="visible">True</property>
++				      <property name="stock">gtk-refresh</property>
++				      <property name="icon_size">4</property>
++				      <property name="xalign">0.5</property>
++				      <property name="yalign">0.5</property>
++				      <property name="xpad">0</property>
++				      <property name="ypad">0</property>
++				    </widget>
++				    <packing>
++				      <property name="padding">0</property>
++				      <property name="expand">False</property>
++				      <property name="fill">False</property>
++				    </packing>
++				  </child>
++
++				  <child>
++				    <widget class="GtkLabel" id="restart_button_label">
++				      <property name="visible">True</property>
++				      <property name="label" translatable="yes">_Restart</property>
++				      <property name="use_underline">True</property>
++				      <property name="use_markup">False</property>
++				      <property name="justify">GTK_JUSTIFY_LEFT</property>
++				      <property name="wrap">False</property>
++				      <property name="selectable">False</property>
++				      <property name="xalign">0.5</property>
++				      <property name="yalign">0.5</property>
++				      <property name="xpad">0</property>
++				      <property name="ypad">0</property>
++				    </widget>
++				    <packing>
++				      <property name="padding">0</property>
++				      <property name="expand">False</property>
++				      <property name="fill">False</property>
++				    </packing>
++				  </child>
++				</widget>
++			      </child>
++			    </widget>
++			  </child>
++			</widget>
++			<packing>
++			  <property name="padding">0</property>
++			  <property name="expand">False</property>
++			  <property name="fill">False</property>
++			</packing>
++		      </child>
++
++		      <child>
++			<widget class="GtkLabel" id="label70">
++			  <property name="visible">True</property>
++			  <property name="label" translatable="yes"></property>
++			  <property name="use_underline">False</property>
++			  <property name="use_markup">False</property>
++			  <property name="justify">GTK_JUSTIFY_LEFT</property>
++			  <property name="wrap">False</property>
++			  <property name="selectable">False</property>
++			  <property name="xalign">0.5</property>
++			  <property name="yalign">0.5</property>
++			  <property name="xpad">0</property>
++			  <property name="ypad">0</property>
++			</widget>
++			<packing>
++			  <property name="padding">0</property>
++			  <property name="expand">True</property>
++			  <property name="fill">True</property>
++			</packing>
++		      </child>
++		    </widget>
++		    <packing>
++		      <property name="padding">0</property>
++		      <property name="expand">False</property>
++		      <property name="fill">False</property>
++		    </packing>
++		  </child>
++		</widget>
++		<packing>
++		  <property name="padding">0</property>
++		  <property name="expand">True</property>
++		  <property name="fill">False</property>
++		</packing>
++	      </child>
++
++	      <child>
++		<widget class="GtkLabel" id="label69">
++		  <property name="visible">True</property>
++		  <property name="label" translatable="yes"></property>
++		  <property name="use_underline">False</property>
++		  <property name="use_markup">False</property>
++		  <property name="justify">GTK_JUSTIFY_LEFT</property>
++		  <property name="wrap">False</property>
++		  <property name="selectable">False</property>
++		  <property name="xalign">0.5</property>
++		  <property name="yalign">0.5</property>
++		  <property name="xpad">0</property>
++		  <property name="ypad">0</property>
++		</widget>
++		<packing>
++		  <property name="padding">0</property>
++		  <property name="expand">True</property>
++		  <property name="fill">True</property>
++		</packing>
++	      </child>
++	    </widget>
++	    <packing>
++	      <property name="tab_expand">False</property>
++	      <property name="tab_fill">True</property>
++	    </packing>
++	  </child>
++
++	  <child>
++	    <widget class="GtkLabel" id="restart_tab_label">
++	      <property name="visible">True</property>
++	      <property name="label" translatable="yes">Restart</property>
++	      <property name="use_underline">False</property>
++	      <property name="use_markup">False</property>
++	      <property name="justify">GTK_JUSTIFY_LEFT</property>
++	      <property name="wrap">False</property>
++	      <property name="selectable">False</property>
++	      <property name="xalign">0.5</property>
++	      <property name="yalign">0.5</property>
++	      <property name="xpad">0</property>
++	      <property name="ypad">0</property>
++	    </widget>
++	    <packing>
++	      <property name="type">tab</property>
++	    </packing>
++	  </child>
+ 	</widget>
+ 	<packing>
+ 	  <property name="padding">0</property>
+
+--- gnome-netstatus-2.26.0/src/netstatus-dialog.c.orig	2009-03-08 05:25:52.000000000 +0000
++++ gnome-netstatus-2.26.0/src/netstatus-dialog.c	2009-03-18 10:17:17.003073396 +0000
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2003 Sun Microsystems, Inc.
++ * Copyright (C) 2003-2004 Sun Microsystems, Inc.
+  * Copyright (C) 2004 Red Hat Inc.
+  *
+  * This program is free software; you can redistribute it and/or
+@@ -36,6 +36,27 @@
+ #define NETWORK_CONFIG_TOOL_DIR "/apps/netstatus_applet"
+ #define NETWORK_CONFIG_TOOL_KEY NETWORK_CONFIG_TOOL_DIR "/config_tool"
+ 
++static const gchar * IFRESTART_TAB_LABLE_NAME        = "restart_tab_label";
++static const gchar * IFRESTART_TAB_BUTTON_NAME       = "restart_button";
++static const gchar * IFRESTART_TAB_BUTTON_LABEL_NAME = "restart_button_label";
++static const gchar * IFRESTART_TAB_BUTTON_IMAGE_NAME = "restart_button_image";
++static const gchar * IFRESTART_TAB_HBOX_NAME         = "restart_hbox";
++
++static const gchar * IFRESTART_TAB_BUTTON_LABEL_RESTART = "_Restart";
++static const gchar * IFRESTART_TAB_BUTTON_LABEL_STOP    = "_Stop";
++
++static const gchar * IFRESTART_WINDOW_TITLE_FORMAT = "%s: %s";
++static const gchar * IFRESTART_WINDOW_TITLE = "Restartin Connection";
++
++static const gchar * IFRESTART_PROGRESS_FORMAT = "<b>%s</b>: <i>%s</i>";
++static const gchar * IFRESTART_PROGRESS = "Progress";
++static const gchar * IFRESTART_PROGRESS_BEGIN = "Click Restart to begin";
++static const gchar * IFRESTART_PROGRESS_RESTARTING = "Restarting...";
++static const gchar * IFRESTART_PROGRESS_COMPLETE = "Complete";
++static const gchar * IFRESTART_PROGRESS_FAILED = "Failed, click here for details";
++static const gchar * IFRESTART_WARNING = "Warning";
++static const gchar * IFRESTART_WARNING_NOLO = "Cannot restart this connection";
++
+ static const char *network_config_tools[] = {
+   "network-admin --configure %i",
+   "redhat-config-network",
+@@ -81,6 +102,11 @@ typedef struct
+   GtkWidget      *dev_type;
+   GtkWidget      *dev_addr;
+ 
++  GtkWidget      *restart_button;
++  GtkWidget      *restart_button_image;
++  GtkWidget      *restart_button_label;
++  GtkWidget      *restart_progress_expander;
++
+   guint           iface_list_monitor;
+   int             n_ifaces;
+ } NetstatusDialogData;
+@@ -313,6 +339,46 @@ netstatus_dialog_update_device_support (
+ }
+ 
+ static void
++netstatus_dialog_update_restart_button (NetstatusDialogData *data)
++{
++  GtkWidget *  widget;
++  gchar *      string;
++  const char * ifname;
++
++  if (data->restart_button == NULL)
++    return;
++
++  /* Disable restart button for nothing and loopback interface */
++  ifname = netstatus_iface_get_name (data->iface);
++  if ((ifname != NULL) && (strcmp (ifname, "lo")))
++    {
++      gtk_widget_set_sensitive (data->restart_button, TRUE);
++
++      /* Set "Press button to restart" progress message */
++      string = g_strdup_printf (IFRESTART_PROGRESS_FORMAT, 
++        _(IFRESTART_PROGRESS), _(IFRESTART_PROGRESS_BEGIN));
++    }
++  else
++    {
++      gtk_widget_set_sensitive (data->restart_button, FALSE);
++
++      /* Set "Cannot restart this connection" progress message */
++      string = g_strdup_printf (IFRESTART_PROGRESS_FORMAT, 
++        _(IFRESTART_WARNING), _(IFRESTART_WARNING_NOLO));
++    }
++    gtk_expander_set_label (
++      GTK_EXPANDER (data->restart_progress_expander), string);
++    g_free (string);
++
++    /* Clean up the output of the last restart */
++    widget = gtk_bin_get_child (GTK_BIN (data->restart_progress_expander));
++    if (widget != NULL)
++      {
++        gtk_label_set_text (GTK_LABEL (widget), "");
++      }
++}
++
++static void
+ netstatus_dialog_iface_state_changed (NetstatusIface      *iface,
+ 				      GParamSpec          *pspec,
+ 				      NetstatusDialogData *data)
+@@ -345,6 +411,7 @@ netstatus_dialog_iface_name_changed (Net
+ {
+   netstatus_dialog_update_name (data);
+   netstatus_dialog_update_signal_strength (data);
++  netstatus_dialog_update_restart_button (data);
+ }
+ 
+ static void
+@@ -364,6 +431,136 @@ netstatus_dialog_set_iface_name (Netstat
+ }
+ 
+ static void
++netstatus_dialog_restart_state_changed (
++  NetstatusIface *iface, NetstatusDialogData *data)
++{
++  GtkWidget * widget;
++  gchar *     string;
++
++  g_return_if_fail (data != NULL);
++  g_return_if_fail (data->iface != NULL);
++
++  if (netstatus_iface_restart_inprogress (data->iface))
++    {
++      /* The restart is in progress */
++      const char * ifname;
++
++      /* Save the current network interface name */
++      ifname = netstatus_iface_get_name (data->iface);
++      g_return_if_fail (ifname != NULL);
++
++      /* Disable network interface change */
++      gtk_widget_set_sensitive (data->name, FALSE);
++
++      /* Set the restart button to Stop */
++      gtk_image_set_from_stock (GTK_IMAGE (data->restart_button_image), 
++        GTK_STOCK_STOP, GTK_ICON_SIZE_BUTTON);
++      gtk_label_set_text_with_mnemonic (GTK_LABEL (data->restart_button_label), 
++        _(IFRESTART_TAB_BUTTON_LABEL_STOP));
++
++      /* Set dialog window title */
++      string = g_strdup_printf (IFRESTART_WINDOW_TITLE_FORMAT, 
++        _(IFRESTART_WINDOW_TITLE), ifname);
++      gtk_window_set_title (GTK_WINDOW (data->dialog), string);
++      g_free (string);
++
++      /* Set the progress message */
++      string = g_strdup_printf (IFRESTART_PROGRESS_FORMAT, 
++        _(IFRESTART_PROGRESS), _(IFRESTART_PROGRESS_RESTARTING));
++      gtk_expander_set_label (
++        GTK_EXPANDER (data->restart_progress_expander), string);
++      g_free (string);
++
++      /* Clean up the output of the script */
++      widget = gtk_bin_get_child (GTK_BIN (data->restart_progress_expander));
++      if (widget != NULL)
++        {
++          gtk_label_set_text (GTK_LABEL (widget), "");
++        }
++    }
++  else
++    {
++      /* The restart is completed */
++      gint state;
++
++      /* Set the restart button to Restart */
++      gtk_image_set_from_stock (GTK_IMAGE (data->restart_button_image), 
++        GTK_STOCK_REFRESH, GTK_ICON_SIZE_BUTTON);
++      gtk_label_set_text_with_mnemonic (GTK_LABEL (data->restart_button_label), 
++        _(IFRESTART_TAB_BUTTON_LABEL_RESTART));
++
++      /* Enable network interface change */
++      gtk_widget_set_sensitive (data->name, TRUE);
++
++      /* Restore dialog window title */
++      netstatus_dialog_update_name (data);
++
++      /* Set the progress message */
++      state = netstatus_iface_restart_get_status (data->iface);
++      if (state == 0)
++        {
++          /* Restart has been completed successfully */
++          string = g_strdup_printf (IFRESTART_PROGRESS_FORMAT, 
++            _(IFRESTART_PROGRESS), _(IFRESTART_PROGRESS_COMPLETE));
++        }
++      else if (state > 0)
++        {
++          /* Restart has failed */
++          string = g_strdup_printf (IFRESTART_PROGRESS_FORMAT, 
++            _(IFRESTART_PROGRESS), _(IFRESTART_PROGRESS_FAILED));
++        }
++      else
++        {
++          /* No restart has been completed or started yet */
++          string = g_strdup_printf (IFRESTART_PROGRESS_FORMAT, 
++            _(IFRESTART_PROGRESS), _(IFRESTART_PROGRESS_BEGIN));
++        }
++      gtk_expander_set_label (
++        GTK_EXPANDER (data->restart_progress_expander), string);
++      g_free (string);
++
++      /* Set the output of the script */
++      widget = gtk_bin_get_child (GTK_BIN (data->restart_progress_expander));
++      if (widget != NULL)
++        {
++          string = netstatus_iface_restart_get_output (data->iface);
++          switch (state)
++            {
++              case 9:     /* canceled by "Stop" button */
++              case 3072:  /* canceled by root password dialog */
++                string = _("Connection restart has been stopped.");
++                break;
++
++              case 19:    /* there is no ifrestart script */
++                string = _("Cannot find ifrestart script.");
++                break;
++
++              default:
++                break;
++            }
++          gtk_label_set_text (GTK_LABEL (widget), string);
++        }
++    }
++}
++
++static void
++netstatus_dialog_restart (GtkWidget *button, NetstatusDialogData *data)
++{
++  g_return_if_fail (data != NULL);
++
++  if (netstatus_iface_restart_inprogress (data->iface))
++    {
++      /* Interrupt the network interface restart */
++      netstatus_iface_restart_interrupt (data->iface);
++    }
++  else
++    {
++      /* Spawn the network interface restart */
++      netstatus_iface_restart (data->iface);
++    }
++}
++
++static void
+ netstatus_dialog_response (GtkWidget *dialog,
+ 			   int        response)
+ {
+@@ -441,7 +638,11 @@ netstatus_dialog_destroy (GtkWidget *dia
+   data->iface_list_monitor = 0;
+ 
+   if (data->iface)
+-    g_object_unref (data->iface);
++    {
++      g_signal_handlers_disconnect_matched (
++        data->iface, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, (gpointer) data);
++      g_object_unref (data->iface);
++    }
+   data->iface = NULL;
+ 
+   g_free (data);
+@@ -711,6 +912,85 @@ netstatus_dialog_iface_list_monitor (Net
+   return TRUE;
+ }
+ 
++static void
++netstatus_dialog_setup_restart_tab (NetstatusDialogData *data, GladeXML *xml)
++{
++  GtkWidget * widget;
++
++  g_return_if_fail (data != NULL);
++  g_return_if_fail (xml != NULL);
++
++  /* Network interface restart tab */
++  if (netstatus_iface_restart_available (data->iface))
++    {
++      /* Restart button */
++      data->restart_button = glade_xml_get_widget (xml, IFRESTART_TAB_BUTTON_NAME);
++      if (data->restart_button != NULL)
++        {
++          /* Button image */
++          data->restart_button_image = glade_xml_get_widget (
++            xml, IFRESTART_TAB_BUTTON_IMAGE_NAME);
++          /* Button label */
++          data->restart_button_label = glade_xml_get_widget (
++            xml, IFRESTART_TAB_BUTTON_LABEL_NAME);
++          /* Clicked signal handler */
++          g_signal_connect (G_OBJECT (data->restart_button), "clicked", 
++            G_CALLBACK (netstatus_dialog_restart), (gpointer) data);
++        }
++      /* Add progress expander */
++      widget = glade_xml_get_widget (xml, IFRESTART_TAB_HBOX_NAME);
++      if (widget != NULL)
++        {
++          gtk_box_set_spacing (GTK_BOX (widget), 2);
++          data->restart_progress_expander = gtk_expander_new ("");
++          gtk_expander_set_use_markup (
++            GTK_EXPANDER (data->restart_progress_expander), TRUE);
++          gtk_box_pack_start (GTK_BOX (widget), 
++            data->restart_progress_expander, FALSE, FALSE, 0);
++          gtk_box_reorder_child (GTK_BOX (widget),
++            data->restart_progress_expander, 0);
++          widget = gtk_label_new ("");
++          gtk_label_set_selectable (GTK_LABEL (widget), TRUE);
++          gtk_container_add (
++            GTK_CONTAINER (data->restart_progress_expander), widget);
++          gtk_widget_show_all (data->restart_progress_expander);
++        }
++
++      netstatus_dialog_restart_state_changed (data->iface, data);
++      netstatus_dialog_update_restart_button (data);
++
++      g_signal_connect (
++        data->iface, NETSTATUS_IFACE_SIGNAL_RESTART_STATE,
++        G_CALLBACK (netstatus_dialog_restart_state_changed), data);
++    }
++  else
++    {
++      GtkNotebook * notebook;
++      const gchar * name;
++      gint          idx;
++
++      /* Remove the restart tab */
++      notebook = GTK_NOTEBOOK (glade_xml_get_widget (xml, "notebook1"));
++      if (notebook != NULL)
++        {
++          for (idx = 0; idx < gtk_notebook_get_n_pages (notebook); idx++)
++            {
++              widget = gtk_notebook_get_nth_page (notebook, idx);
++              widget = gtk_notebook_get_tab_label (notebook, widget);
++              if (widget != NULL)
++                {
++                  name   = gtk_widget_get_name (widget);
++                  if (!strcmp (name, IFRESTART_TAB_LABLE_NAME))
++                    {
++                      gtk_notebook_remove_page (notebook, idx);
++                      break;
++                    }
++                }
++            }
++        }
++    }
++}
++
+ GtkWidget *
+ netstatus_dialog_new (NetstatusIface *iface)
+ {
+@@ -771,6 +1051,7 @@ netstatus_dialog_new (NetstatusIface *if
+   netstatus_dialog_setup_inet4_support (data, xml);
+   netstatus_dialog_setup_device_support (data, xml);
+   netstatus_dialog_setup_configure_button (data, xml);
++  netstatus_dialog_setup_restart_tab (data, xml);
+ 
+   data->iface_list_monitor = g_timeout_add (2 * 1000,
+ 					    (GSourceFunc) netstatus_dialog_iface_list_monitor,
+
+--- gnome-netstatus-2.12.0/src/netstatus-iface.c.foo	2005-03-14 22:34:06.000000000 +0800
++++ gnome-netstatus-2.12.0/src/netstatus-iface.c	2006-10-19 17:01:26.105983000 +0800
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2003 Sun Microsystems, Inc.
++ * Copyright (C) 2003-2004 Sun Microsystems, Inc.
+  * Copyright (C) 2004 Red Hat Inc.
+  *
+  * This program is free software; you can redistribute it and/or
+@@ -40,6 +40,8 @@
+ #endif /* HAVE_SYS_SOCKIO_H */
+ #include <sys/param.h>
+ #include <sys/socket.h>
++#include <sys/types.h>
++#include <signal.h>
+ #include <net/if.h>
+ #include <net/if_arp.h>
+ #include <netinet/in.h>
+@@ -55,6 +57,9 @@
+ #define NETSTATUS_IFACE_POLLS_IN_ERROR   10   /* no. of polls in error before increasing delay */
+ #define NETSTATUS_IFACE_ERROR_POLL_DELAY 5000 /* delay to use when in error state */
+ 
++#define NETSTATUS_IFACE_RESTART_SCRIPT_TESTFLAGS (G_FILE_TEST_EXISTS | G_FILE_TEST_IS_SYMLINK | G_FILE_TEST_IS_EXECUTABLE)
++static const gchar * NETSTATUS_IFACE_RESTART_SCRIPT = "/usr/bin/ifrestart";
++
+ enum
+ {
+   PROP_0,
+@@ -66,6 +71,12 @@
+   PROP_ERROR
+ };
+ 
++enum
++{
++  RESTART_STATE,
++  LAST_SIGNAL
++};
++
+ struct _NetstatusIfacePrivate
+ {
+   char           *name;
+@@ -80,6 +91,13 @@
+ 
+   guint           error_polling : 1;
+   guint           is_wireless : 1;
++
++  gchar          *restart_output;
++  GPid            restart_pid;
++  gint            restart_status;
++  GIOChannel     *restart_outioc;
++  GIOChannel     *restart_errioc;
++  guint           restart_cwsource;
+ };
+ 
+ static void     netstatus_iface_instance_init   (NetstatusIface      *iface,
+@@ -96,10 +114,11 @@
+ 						 GParamSpec          *pspec);
+ static gboolean netstatus_iface_monitor_timeout (NetstatusIface      *iface);
+ static void     netstatus_iface_init_monitor    (NetstatusIface      *iface);
+-
++static gboolean netstatus_iface_restart_collect_output (NetstatusIface *iface);
+ 
+ 
+ static GObjectClass *parent_class;
++static guint netstatus_iface_signals[LAST_SIGNAL] = { 0 };
+ 
+ GType
+ netstatus_iface_get_type (void)
+@@ -136,6 +155,11 @@
+   iface->priv = g_new0 (NetstatusIfacePrivate, 1);
+   
+   iface->priv->state = NETSTATUS_STATE_DISCONNECTED;
++
++  iface->priv->restart_status  = -1;    /* never restarted */
++  iface->priv->restart_output  = NULL;
++  iface->priv->restart_outioc  = NULL;
++  iface->priv->restart_errioc  = NULL;
+ }
+ 
+ static void
+@@ -199,6 +223,15 @@
+ 						       _("The current error condition"),
+ 						       NETSTATUS_TYPE_G_ERROR,
+ 						       G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
++
++  netstatus_iface_signals[RESTART_STATE] = g_signal_new (
++    NETSTATUS_IFACE_SIGNAL_RESTART_STATE, 
++    G_TYPE_FROM_CLASS (gobject_class),
++    G_SIGNAL_RUN_CLEANUP | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
++    G_STRUCT_OFFSET (NetstatusIfaceClass, restart_complete),
++    NULL, /* accumulator */
++    NULL, /* accumulator data */
++    g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
+ }
+ 
+ static void
+@@ -221,6 +254,11 @@
+   g_free (iface->priv->name);
+   iface->priv->name = NULL;
+ 
++  netstatus_iface_restart_collect_output (iface);
++  if (iface->priv->restart_output != NULL)
++    g_free (iface->priv->restart_output);
++  iface->priv->restart_output = NULL;
++
+   g_free (iface->priv);
+   iface->priv = NULL;
+ 
+@@ -1256,3 +1294,221 @@
+ 
+   return interfaces;
+ }
++
++/*
++ * Returns TRUE if the ifrestart script is installed.
++ */
++gboolean
++netstatus_iface_restart_available (NetstatusIface *iface)
++{
++  g_return_val_if_fail ((iface != NULL), FALSE);
++  g_return_val_if_fail (NETSTATUS_IS_IFACE (iface), FALSE);
++
++  return g_file_test (
++    NETSTATUS_IFACE_RESTART_SCRIPT, NETSTATUS_IFACE_RESTART_SCRIPT_TESTFLAGS);
++}
++
++/*
++ * Returns TRUE if the restart in progress.
++ */
++gboolean
++netstatus_iface_restart_inprogress (NetstatusIface *iface)
++{
++  g_return_val_if_fail ((iface != NULL), FALSE);
++  g_return_val_if_fail (NETSTATUS_IS_IFACE (iface), FALSE);
++  g_return_val_if_fail ((iface->priv != NULL), 0);
++
++  return (iface->priv->restart_status == -2);
++}
++
++/*
++ * Sets the interface restart status and emmits the signal.
++ */
++static void 
++netstatus_iface_restart_set_status (
++  NetstatusIface *iface, gint status)
++{
++  g_return_if_fail (iface != NULL);
++  g_return_if_fail (NETSTATUS_IS_IFACE (iface));
++  g_return_if_fail (iface->priv != NULL);
++
++  /* Restart process exit status */
++  iface->priv->restart_status = status;
++
++  /* Emit restart complete signal */
++  g_signal_emit (iface, 
++    netstatus_iface_signals[RESTART_STATE], 0);
++}
++
++/*
++ * Collect output and release IOChannels.
++ * This method returns TRUE if the error output was empty.
++ */
++static gboolean
++netstatus_iface_restart_collect_output (NetstatusIface *iface)
++{
++  gchar *  outstr  = NULL;
++  gsize    outsize = 0;
++  gchar *  errstr  = NULL;
++  gsize    errsize = 0;
++  GError * error   = NULL;
++
++  g_return_val_if_fail ((iface != NULL), FALSE);
++  g_return_val_if_fail (NETSTATUS_IS_IFACE (iface), FALSE);
++  g_return_val_if_fail ((iface->priv != NULL), FALSE);
++
++  /* Release stdout channel */
++  if (iface->priv->restart_outioc != NULL)
++    {
++      g_io_channel_read_to_end (iface->priv->restart_outioc,
++        &outstr, &outsize, &error);
++      g_io_channel_shutdown (iface->priv->restart_outioc, FALSE, &error);
++      g_io_channel_unref (iface->priv->restart_outioc);
++      iface->priv->restart_outioc = NULL;
++    }
++  /* Release stderr channel */
++  if (iface->priv->restart_errioc != NULL)
++    {
++      g_io_channel_read_to_end (iface->priv->restart_errioc,
++        &errstr, &errsize, &error);
++      g_io_channel_shutdown (iface->priv->restart_errioc, FALSE, &error);
++      g_io_channel_unref (iface->priv->restart_errioc);
++      iface->priv->restart_errioc = NULL;
++    }
++  /* Release the last interface restart output */
++  if (iface->priv->restart_output != NULL)
++    g_free (iface->priv->restart_output);
++  iface->priv->restart_output == NULL;
++  /* New restart output */
++  if (errsize != 0)
++    {
++      iface->priv->restart_output = g_strdup (errstr);
++    }
++  else if (outsize != 0)
++    {
++      iface->priv->restart_output = g_strdup (outstr);
++    }
++  if (outstr != NULL)
++    g_free (outstr);
++  if (errstr != NULL)
++    g_free (errstr);
++
++  return (errsize == 0);
++}
++
++/*
++ * Interface restart completition routine.
++ */
++static void 
++netstatus_iface_restart_complete (
++  GPid pid, gint status, NetstatusIface *iface)
++{
++  g_return_if_fail (iface != NULL);
++  g_return_if_fail (NETSTATUS_IS_IFACE (iface));
++  g_return_if_fail (iface->priv != NULL);
++
++  iface->priv->restart_cwsource = 0;
++
++  /* Release the output and error IOChannels */
++  if (netstatus_iface_restart_collect_output (iface))
++    {
++      netstatus_iface_restart_set_status (iface, status);
++    }
++  else
++    {
++      netstatus_iface_restart_set_status (iface, (status == 0)? 9999: status);
++    }
++}
++
++/*
++ * Initiates the restart for current interface and returns pid of 
++ * the restart process. Returns 0 if the restart fails.
++ */
++GPid
++netstatus_iface_restart (NetstatusIface *iface)
++{
++  gchar *   argv[3];
++  gint      out_fd;
++  gint      err_fd;
++  gboolean  result;
++  GError *  error = NULL;
++
++  g_return_val_if_fail ((iface != NULL), 0);
++  g_return_val_if_fail (NETSTATUS_IS_IFACE (iface), 0);
++  g_return_val_if_fail ((iface->priv != NULL), 0);
++  g_return_val_if_fail ((netstatus_iface_restart_inprogress (iface) == FALSE), 0);
++  g_return_val_if_fail ((netstatus_iface_get_name (iface) != NULL), 0);
++
++  /* Release the last interface restart output */
++  iface->priv->restart_outioc  = NULL;
++  iface->priv->restart_errioc  = NULL;
++  if (iface->priv->restart_output != NULL)
++    g_free (iface->priv->restart_output);
++  iface->priv->restart_output  = NULL;
++  netstatus_iface_restart_set_status (iface, -2);    /* is restarting */
++  argv[0] = g_strdup (NETSTATUS_IFACE_RESTART_SCRIPT);
++  argv[1] = g_strdup (netstatus_iface_get_name (iface));
++  argv[2] = NULL;
++  result = g_spawn_async_with_pipes (
++    NULL, argv, NULL, G_SPAWN_DO_NOT_REAP_CHILD,
++    NULL, NULL, 
++    &(iface->priv->restart_pid), 
++    NULL, &(out_fd), &(err_fd), 
++    &error);
++  g_free (argv[1]);
++  g_free (argv[0]);
++  if (result == FALSE)
++    {
++      /* Clean up on unsuccessful spawn */
++      netstatus_iface_restart_complete (0, G_SPAWN_ERROR_FAILED, iface);
++      return 0;
++    }
++
++  iface->priv->restart_outioc = g_io_channel_unix_new (out_fd);
++  iface->priv->restart_errioc = g_io_channel_unix_new (err_fd);
++  /* Set up the completition routine */
++  iface->priv->restart_cwsource = g_child_watch_add (iface->priv->restart_pid,
++    (GChildWatchFunc)netstatus_iface_restart_complete, iface);
++
++  return iface->priv->restart_pid;
++}
++
++/*
++ * Returns the process exit status of the last interface restart.
++ */
++gint
++netstatus_iface_restart_get_status (NetstatusIface  *iface)
++{
++  g_return_val_if_fail ((iface != NULL), -1);
++  g_return_val_if_fail (NETSTATUS_IS_IFACE (iface), -1);
++  g_return_val_if_fail ((iface->priv != NULL), -1);
++
++  return iface->priv->restart_status;
++}
++
++/*
++ * Returns an output of the last interface restart. 
++ */
++G_CONST_RETURN gchar *
++netstatus_iface_restart_get_output (NetstatusIface *iface)
++{
++  g_return_val_if_fail ((iface != NULL), "");
++  g_return_val_if_fail (NETSTATUS_IS_IFACE (iface), "");
++  g_return_val_if_fail ((iface->priv != NULL), "");
++
++  return (iface->priv->restart_output)? iface->priv->restart_output: "";
++}
++
++/*
++ * Interrupts the restart
++ */
++void
++netstatus_iface_restart_interrupt (NetstatusIface *iface)
++{
++  g_return_if_fail (iface != NULL);
++  g_return_if_fail (NETSTATUS_IS_IFACE (iface));
++  g_return_if_fail (iface->priv != NULL);
++  g_return_if_fail (netstatus_iface_restart_inprogress (iface) == TRUE);
++
++  kill (iface->priv->restart_pid, SIGKILL);
++}
+--- gnome-netstatus-2.12.0/src/netstatus-iface.h.foo	2004-07-06 01:04:56.000000000 +0800
++++ gnome-netstatus-2.12.0/src/netstatus-iface.h	2006-10-19 17:01:26.106785000 +0800
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2003 Sun Microsystems, Inc.
++ * Copyright (C) 2003-2004 Sun Microsystems, Inc.
+  * Copyright (C) 2004 Red Hat Inc.
+  *
+  * This program is free software; you can redistribute it and/or
+@@ -39,6 +39,8 @@
+ #define NETSTATUS_IS_IFACE_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), NETSTATUS_TYPE_IFACE))
+ #define NETSTATUS_IFACE_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), NETSTATUS_TYPE_IFACE, NetstatusIfaceClass))
+ 
++#define NETSTATUS_IFACE_SIGNAL_RESTART_STATE "restart_state"
++
+ typedef struct _NetstatusIface        NetstatusIface;
+ typedef struct _NetstatusIfaceClass   NetstatusIfaceClass;
+ typedef struct _NetstatusIfacePrivate NetstatusIfacePrivate;
+@@ -53,6 +55,8 @@
+ struct _NetstatusIfaceClass
+ {
+   GObjectClass parent_class;
++
++  void (*restart_complete) (GObject *iface);
+ };
+ 
+ GList *                netstatus_list_interface_names        (GError         **error);
+@@ -86,6 +90,13 @@
+ 							      char           **hw_addr);
+ gboolean               netstatus_iface_get_is_loopback       (NetstatusIface  *iface);
+ 
++gboolean               netstatus_iface_restart_available (NetstatusIface  *iface);
++gboolean               netstatus_iface_restart_inprogress (NetstatusIface  *iface);
++GPid                   netstatus_iface_restart (NetstatusIface  *iface);
++gint                   netstatus_iface_restart_get_status (NetstatusIface  *iface);
++G_CONST_RETURN gchar * netstatus_iface_restart_get_output (NetstatusIface  *iface);
++void                   netstatus_iface_restart_interrupt (NetstatusIface  *iface);
++
+ G_END_DECLS
+ 
+ #endif /* __NETSTATUS_IFACE_H__ */
