@@ -1,0 +1,54 @@
+--- gdm-2.20.1/configure.ac.orig	2007-10-16 06:45:02.000000000 +0900
++++ gdm-2.20.1/configure.ac	2008-04-09 16:12:38.747448000 +0900
+@@ -127,6 +127,15 @@ else
+ fi
+ AC_SUBST(LANG_CONFIG_FILE)
+     
++AC_ARG_WITH(greeter-im,
++  [  --with-greeter-im=[yes/no/your_module] Enables GTK_IM_MODULE for greeter default=[yes]],,
++  with_greeter_im=yes)
++if test x$with_greeter_im = xno; then
++  AC_DEFINE_UNQUOTED(GREETER_IM_MODULE, "gtk-im-context-simple", [Define GTK_IM_MODULE=gtk-im-context-simple for greeter])
++elif test x$with_greeter_im != xyes; then
++  AC_DEFINE_UNQUOTED(GREETER_IM_MODULE, "$with_greeter_im", [Define GTK_IM_MODULE=your_module for greeter])
++fi
++
+ AC_PATH_PROG(CONSOLE_HELPER,consolehelper,no)
+ if test "x$CONSOLE_HELPER" = "xno" ; then
+   if test "x$enable_console_helper" = "xyes" ; then
+--- gdm-2.20.1/daemon/slave.c.orig	2008-04-17 22:53:09.116722000 +0900
++++ gdm-2.20.1/daemon/slave.c	2008-04-18 02:03:24.275326000 +0900
+@@ -2703,6 +2703,10 @@ gdm_slave_greeter (void)
+ 			  GDM_GREETER_PROTOCOL_VERSION, TRUE);
+ 		g_setenv ("GDM_VERSION", VERSION, TRUE);
+ 
++#ifdef GREETER_IM_MODULE
++		g_setenv ("GTK_IM_MODULE", GREETER_IM_MODULE, TRUE);
++#endif
++
+ 		pwent = getpwnam (gdmuser);
+ 		if G_LIKELY (pwent != NULL) {
+ 			/* Note that usually this doesn't exist */
+@@ -3922,7 +3926,12 @@ session_child_run (struct passwd *pwent,
+ 	 * to here in the above code if we can't find gnome-session */
+ 	if (strcmp (session, GDM_SESSION_FAILSAFE_XTERM) == 0) {
+ 		gchar *test_exec;
+-		gchar *geometry = g_strdup_printf (" -geometry 80x24-%d-%d",
++		gchar *geometry = g_strdup_printf (" -geometry 80x24-%d-%d"
++	/* We disable IM until fonts are configured by default. */
++#ifdef __sun
++		                                   " -xrm \"XTerm*openIm: false\""
++#endif
++		                                   " -xrm \"XTerm*scrollBar: true\"",
+ 						   d->lrh_offsetx,
+ 						   d->lrh_offsety);
+ 		test_exec = find_prog ("xterm");
+--- gdm-2.20.4/config.h.in.orig	2008-04-09 17:03:00.768969000 +0900
++++ gdm-2.20.4/config.h.in	2008-04-09 17:04:09.369255000 +0900
+@@ -324,3 +324,6 @@
+ 
+ /* Compatibility type */
+ #undef socklen_t
++
++/* Define GTK_IM_MODULE=your_module for greeter */
++#undef GREETER_IM_MODULE

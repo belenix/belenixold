@@ -1,0 +1,169 @@
+Index: gui/gdmwm.c
+===================================================================
+--- gui/gdmwm.c	(revision 6634)
++++ gui/gdmwm.c	(working copy)
+@@ -30,8 +30,6 @@
+ #include <X11/Xatom.h>
+ #ifdef HAVE_XFREE_XINERAMA
+ #include <X11/extensions/Xinerama.h>
+-#elif HAVE_SOLARIS_XINERAMA
+-#include <X11/extensions/xinerama.h>
+ #endif
+ 
+ #include "gdmwm.h"
+Index: acconfig.h
+===================================================================
+--- acconfig.h	(revision 6634)
++++ acconfig.h	(working copy)
+@@ -33,7 +33,6 @@
+ #undef HAVE_SETRESUID
+ #undef HAVE_SHADOW
+ #undef HAVE_SMF_CONTRACTS
+-#undef HAVE_SOLARIS_XINERAMA
+ #undef HAVE_STPCPY
+ #undef HAVE_SYS_SOCKIO_H
+ #undef HAVE_SYS_VT_H
+Index: daemon/slave.c
+===================================================================
+--- daemon/slave.c	(revision 6634)
++++ daemon/slave.c	(working copy)
+@@ -69,8 +69,6 @@
+ 
+ #ifdef HAVE_XFREE_XINERAMA
+ #include <X11/extensions/Xinerama.h>
+-#elif HAVE_SOLARIS_XINERAMA
+-#include <X11/extensions/xinerama.h>
+ #endif
+ 
+ #if defined (CAN_USE_SETPENV) && defined (HAVE_USERSEC_H)
+@@ -1061,53 +1059,6 @@
+ 
+ 		XFree (xscreens);
+ 	} else
+-#elif HAVE_SOLARIS_XINERAMA
+-		/* This code from GDK, Copyright (C) 2002 Sun Microsystems, Inc. */
+-		int opcode;
+-	int firstevent;
+-	int firsterror;
+-	int n_monitors = 0;
+-
+-	gboolean have_xinerama = FALSE;
+-	have_xinerama = XQueryExtension (display->dsp,
+-					 "XINERAMA",
+-					 &opcode,
+-					 &firstevent,
+-					 &firsterror);
+-
+-	if (have_xinerama) {
+-
+-		int result;
+-		XRectangle monitors[MAXFRAMEBUFFERS];
+-		unsigned char  hints[16];
+-		int xineramascreen;
+-
+-		result = XineramaGetInfo (display->dsp, 0, monitors, hints, &n_monitors);
+-		/* Yes I know it should be Success but the current implementation
+-		 * returns the num of monitor
+-		 */
+-		if G_UNLIKELY (result <= 0)
+-			gdm_fail ("Xinerama active, but <= 0 screens?");
+-
+-		if (n_monitors <= gdm_daemon_config_get_value_int (GDM_KEY_XINERAMA_SCREEN))
+-			gdm_daemon_config_set_value_int (GDM_KEY_XINERAMA_SCREEN, 0);
+-
+-		xineramascreen = gdm_daemon_config_get_value_int (GDM_KEY_XINERAMA_SCREEN);
+-		display->screenx = monitors[xineramascreen].x;
+-		display->screeny = monitors[xineramascreen].y;
+-		display->screenwidth = monitors[xineramascreen].width;
+-		display->screenheight = monitors[xineramascreen].height;
+-
+-		display->lrh_offsetx =
+-			DisplayWidth (display->dsp,
+-				      DefaultScreen (display->dsp))
+-			- (display->screenx + display->screenwidth);
+-		display->lrh_offsety =
+-			DisplayHeight (display->dsp,
+-				       DefaultScreen (display->dsp))
+-			- (display->screeny + display->screenheight);
+-
+-	} else
+ #endif
+ 		{
+ 			display->screenx = 0;
+Index: configure.ac
+===================================================================
+--- configure.ac	(revision 6634)
++++ configure.ac	(working copy)
+@@ -682,7 +682,7 @@
+ #
+ # X11 Xinerama extension
+ #
+-# Check for Xinerama extension (Solaris impl or Xfree impl)
++# Check for Xinerama extension (Xfree impl)
+ xinerama_save_cppflags="$CPPFLAGS"
+ CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+ 
+@@ -699,47 +699,22 @@
+ ALL_X_LIBS="$X_LIBS $X_PRE_LIBS -lX11 $X_EXTRA_LIBS"
+ 
+ if test ! x$with_xinerama = xno ; then
+-  case "$host" in
+-    *-*-solaris*)
+-	# Check for solaris
+-	use_solaris_xinerama=yes
+-	AC_CHECK_LIB(Xext, XineramaGetInfo,
+-                     use_solaris_xinerama=yes, use_solaris_xinerama=no,
+-                     $ALL_X_LIBS)
+-	if test "x$use_solaris_xinerama" = "xyes"; then
+-            AC_CHECK_HEADER(X11/extensions/xinerama.h,
+-                            if test -z "`echo $ALL_X_LIBS | grep "\-lXext" 2> /dev/null`"; then
+- 				X_EXTRA_LIBS="-lXext $X_EXTRA_LIBS"
+-                            fi
+-                            AC_DEFINE(HAVE_SOLARIS_XINERAMA)
+-                            AC_DEFINE(HAVE_XINERAMA)
+-		     	    XINERAMA_LIBS=""
+-		     	    XINERAMA_SUPPORT=yes,
+-                            use_solaris_xinerama=no,
+-                            [#include <X11/Xlib.h>])
+-	fi
+-        AC_MSG_CHECKING(for Xinerama support on Solaris)
+-	AC_MSG_RESULT($use_solaris_xinerama);
+-	;;
+-    *)
+-      	# Check for XFree
+-	use_xfree_xinerama=yes
+-	AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
+-            [AC_CHECK_HEADER(X11/extensions/Xinerama.h,
+-                             if test -z "`echo $ALL_X_LIBS | grep "\-lXext" 2> /dev/null`"; then
+-  				 X_EXTRA_LIBS="-lXext $X_EXTRA_LIBS"
+-                             fi
+-                             AC_DEFINE(HAVE_XFREE_XINERAMA)
+-                             AC_DEFINE(HAVE_XINERAMA)
+-		     	     XINERAMA_LIBS="-lXinerama"
+-		     	     XINERAMA_SUPPORT=yes,
+-                             use_xfree_xinerama=no,
+-                             [#include <X11/Xlib.h>])],
+-            use_xfree_xinerama=no, -lXext $ALL_X_LIBS)
+-	AC_MSG_CHECKING(for Xinerama support on XFree86)
+-	AC_MSG_RESULT($use_xfree_xinerama);
+-	;;
+-  esac
++  # Check for XFree
++  use_xfree_xinerama=yes
++  AC_CHECK_LIB(Xinerama, XineramaQueryExtension,
++     [AC_CHECK_HEADER(X11/extensions/Xinerama.h,
++                      if test -z "`echo $ALL_X_LIBS | grep "\-lXext" 2> /dev/null`"; then
++                        X_EXTRA_LIBS="-lXext $X_EXTRA_LIBS"
++                      fi
++                      AC_DEFINE(HAVE_XFREE_XINERAMA)
++                      AC_DEFINE(HAVE_XINERAMA)
++                      XINERAMA_LIBS="-lXinerama"
++                      XINERAMA_SUPPORT=yes,
++                      use_xfree_xinerama=no,
++                      [#include <X11/Xlib.h>])],
++     use_xfree_xinerama=no, -lXext $ALL_X_LIBS)
++  AC_MSG_CHECKING(for Xinerama support on XFree86)
++  AC_MSG_RESULT($use_xfree_xinerama);
+ fi
+ 
+ AC_SUBST(XINERAMA_LIBS)

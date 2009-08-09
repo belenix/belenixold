@@ -1,0 +1,12 @@
+--- gtkam-0.1.16.1-old/gtkam.desktop.in	2009-04-01 15:52:20.401330000 +0800
++++ gtkam-0.1.16.1/gtkam.desktop.in	2009-04-01 15:58:23.002248000 +0800
+@@ -1,6 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+-_Name=Gtkam Digital Camera Browser
++# SUN_BRANDING
++_Name=Digital Camera Browser
++#_SUN_BRANDING
+ _Comment=Browse and download images from an attached digital camera
+ Exec=gtkam
+ Icon=gtkam-camera.png

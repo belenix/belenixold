@@ -1,0 +1,12 @@
+diff -urN libgnomeprintui-2.12.1/libgnomeprintui/gpaui/gpa-transport-selector.c ../SUNWgnome-print-2.14.0.hacked/libgnomeprintui-2.12.1/libgnomeprintui/gpaui/gpa-transport-selector.c
+--- libgnomeprintui-2.12.1/libgnomeprintui/gpaui/gpa-transport-selector.c	2005-03-24 17:49:12.000000000 +0100
++++ ../SUNWgnome-print-2.14.0.hacked/libgnomeprintui-2.12.1/libgnomeprintui/gpaui/gpa-transport-selector.c	2006-04-25 18:25:24.355899000 +0100
+@@ -423,7 +423,7 @@
+ 			g_free (def);
+ 	}
+ 
+-	if (pos <= 1)
++	if (pos < 1)
+ 		gtk_widget_hide (ts->combo);
+ 	else
+ 		gtk_widget_show (ts->combo);

@@ -1,0 +1,11 @@
+--- libgnomeprint-sun-1.116.1/installer/Makefile.am.ori	2008-05-06 11:32:21.290910409 +0100
++++ libgnomeprint-sun-1.116.1/installer/Makefile.am	2008-05-06 11:34:57.128038044 +0100
+@@ -18,7 +18,7 @@
+ 
+ libgnomeprint_2_0_font_install_LDADD = \
+ 	$(LIBGNOMEPRINT_LIBS) \
+-	$(INTLLIBS) -lpopt
++	$(INTLLIBS) -lpopt -lm
+ 
+ EXTRA_DIST = README.installer
+ 

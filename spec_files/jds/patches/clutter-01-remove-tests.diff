@@ -1,0 +1,27 @@
+--- clutter-0.8.2/Makefile.am.orig	2008-11-26 19:55:06.463330561 +0800
++++ clutter-0.8.2/Makefile.am	2008-11-26 19:55:28.268964788 +0800
+@@ -1,12 +1,12 @@
+ NULL =
+ 
+-SUBDIRS = clutter tests po
++SUBDIRS = clutter po
+ 
+ if BUILD_GTK_DOC
+ SUBDIRS += doc
+ endif
+ 
+-DIST_SUBDIRS = clutter tests doc po
++DIST_SUBDIRS = clutter doc po
+ 
+ pcfiles = \
+ 	clutter-$(CLUTTER_API_VERSION).pc \
+--- clutter-0.8.2/configure.ac.orig	2008-11-26 19:55:14.871471314 +0800
++++ clutter-0.8.2/configure.ac	2008-11-26 19:55:51.997416682 +0800
+@@ -662,7 +662,6 @@
+         clutter/cogl/gles/Makefile
+         clutter/json/Makefile
+         clutter/pango/Makefile
+-        tests/Makefile
+         doc/Makefile
+         doc/reference/Makefile
+         doc/reference/clutter/Makefile

@@ -1,0 +1,10 @@
+--- gegl-0.0.20/examples/Makefile.am.orig	2008-11-21 15:02:22.704926000 +0800
++++ gegl-0.0.20/examples/Makefile.am	2008-11-21 15:02:46.316369000 +0800
+@@ -24,5 +24,5 @@
+ 	@DEP_LIBS@ @GTK_LIBS@ @BABL_LIBS@ @PNG_LIBS@
+ 
+ %: %.c $(GEGLHEADERS)
+-	$(LIBTOOL) --mode=compile $(CC) $< -c -o $@.lo $(INCLUDES) -DHAVE_CONFIG_H
+-	$(LIBTOOL) --mode=link    $(CC) $@.lo -o $@ $(AM_LDFLAGS)
++	$(LIBTOOL) --mode=compile $(CC) $< -c -o $@.lo $(INCLUDES) -$(CFLAGS) -DHAVE_CONFIG_H
++	$(LIBTOOL) --mode=link    $(CC) $@.lo -o $@ $(AM_LDFLAGS) $(CFLAGS)

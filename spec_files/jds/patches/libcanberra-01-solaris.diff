@@ -1,0 +1,60 @@
+--- libcanberra-0.10/configure.ac-orig	2008-10-13 09:08:45.888690000 -0500
++++ libcanberra-0.10/configure.ac	2008-10-13 09:09:08.413216000 -0500
+@@ -19,7 +19,7 @@
+ # License along with libcanberra. If not, see
+ # <http://www.gnu.org/licenses/>.
+ 
+-AC_PREREQ(2.63)
++AC_PREREQ(2.61)
+ 
+ AC_INIT([libcanberra],[0.12],[mzyvopnaoreen (at) 0pointer (dot) de])
+ AC_CONFIG_SRCDIR([src/common.c])
+@@ -57,40 +57,15 @@ AC_USE_SYSTEM_EXTENSIONS
+ 
+ AC_PROG_CXX
+ 
+-DESIRED_FLAGS="-Wall -W -Wextra -pedantic -pipe -Wno-long-long -Winline -Wvla -Wno-overlength-strings -Wunsafe-loop-optimizations -Wundef -Wformat=2 -Wlogical-op -Wsign-compare -Wpacked -Wformat-security -Wmissing-include-dirs -Wformat-nonliteral -Wold-style-definition -Wpointer-arith -Winit-self -Wdeclaration-after-statement -Wfloat-equal -Wmissing-declarations -Wmissing-prototypes -Wstrict-prototypes -Wredundant-decls -Wmissing-noreturn -Wshadow -Wendif-labels -Wstrict-aliasing=2 -Wcast-align -Wwrite-strings -Winline -Wno-unused-parameter -ffast-math -Wp,-D_FORTIFY_SOURCE=2 -fno-common -fdiagnostics-show-option"
+-
+-for flag in $DESIRED_FLAGS ; do
+-  CC_CHECK_CFLAGS([$flag], [CFLAGS="$CFLAGS $flag"])
+-done
+-
+ #### libtool stuff ####
+-LT_PREREQ(2.2)
+-LT_INIT([dlopen win32-dll disable-static])
+-
+-dnl Unfortunately, even up to libtool 2.2.6a there is no way to know
+-dnl exactly which version of libltdl is present in the system, so we
+-dnl just assume that it's a working version as long as we have the
+-dnl library and the header files.
+-dnl
+-dnl As an extra safety device, check for lt_dladvise_init() which is
+-dnl only implemented in libtool 2.x, and refine as we go if we have
+-dnl refined requirements.
+-dnl
+-dnl Check the header files first since the system may have a
+-dnl libltdl.so for runtime, but no headers, and we want to bail out as
+-dnl soon as possible.
+-dnl
+-dnl We don't need any special variable for this though, since the user
+-dnl can give the proper place to find libltdl through the standard
+-dnl variables like LDFLAGS and CPPFLAGS.
+-
+-AC_CHECK_HEADER([ltdl.h],
+-    [AC_CHECK_LIB([ltdl], [lt_dladvise_init], [LIBLTDL=-lltdl], [LIBLTDL=])],
+-    [LIBLTDL=])
+-
+-AS_IF([test "x$LIBLTDL" = "x"],
+-    [AC_MSG_ERROR([Unable to find libltdl.])])
+-AC_SUBST([LIBLTDL])
++AC_LTDL_ENABLE_INSTALL
++AC_LIBLTDL_INSTALLABLE
++AC_LIBTOOL_DLOPEN
++AC_LIBTOOL_WIN32_DLL
++AC_PROG_LIBTOOL
++AC_SUBST(LTDLINCL)
++AC_SUBST(LIBLTDL)
++AC_CONFIG_SUBDIRS(libltdl)
+ 
+ #### Determine build environment ####
+ 

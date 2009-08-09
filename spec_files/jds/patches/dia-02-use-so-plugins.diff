@@ -1,0 +1,12 @@
+/jds/bin/diff -uprN dia-0.96.1.old/lib/plug-ins.c dia-0.96.1/lib/plug-ins.c
+--- dia-0.96.1.old/lib/plug-ins.c	2008-10-24 11:46:07.505578000 +0100
++++ dia-0.96.1/lib/plug-ins.c	2008-10-24 11:46:18.513340000 +0100
+@@ -52,7 +52,7 @@
+ #  define USING_LIBTOOL 0
+ #else
+ /* this one should work on any platform where libtool is used to compile dia */
+-#  define PLUG_IN_EXT ".la"
++#  define PLUG_IN_EXT ".so"
+ #  define PLUG_IN_EXT_LEN 3
+ #  define USING_LIBTOOL 1
+ #endif

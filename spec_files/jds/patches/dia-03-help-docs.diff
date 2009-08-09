@@ -1,0 +1,65 @@
+/jds/bin/diff -uprN dia-0.96.1.old/doc/en/usage-layers.xml dia-0.96.1/doc/en/usage-layers.xml
+--- dia-0.96.1.old/doc/en/usage-layers.xml	2008-10-31 14:08:50.432797000 +0000
++++ dia-0.96.1/doc/en/usage-layers.xml	2008-10-31 14:11:32.402676000 +0000
+@@ -26,7 +26,7 @@
+       </para>
+     </tip>
+     <para>
+-      Each new diagram comes with the default layer labelled “Background”. Of course you can change its name and settings to customize it to your needs as you can do with any other layer.
++      Each new diagram comes with the default layer labelled Background. Of course you can change its name and settings to customize it to your needs as you can do with any other layer.
+     </para>
+     <para>
+       You can use layers to create overlay slide show by drawing each incremental slide in a
+/jds/bin/diff -uprN dia-0.96.1.old/xmldocs.make dia-0.96.1/xmldocs.make
+--- dia-0.96.1.old/xmldocs.make	2008-10-31 20:46:54.279787000 +0000
++++ dia-0.96.1/xmldocs.make	2008-10-31 20:47:27.014803000 +0000
+@@ -37,9 +37,9 @@
+ # This variable (docdir) specifies where the documents should be installed.
+ # This default value should work for most packages.
+ if HAVE_GNOME
+-docdir = $(datadir)/gnome/help/$(docname)/$(lang)
++helpdir = $(datadir)/gnome/help/$(docname)/$(lang)
+ else
+-docdir = $(datadir)/help/$(docname)/$(lang)
++helpdir = $(datadir)/help/$(docname)/$(lang)
+ endif
+ 
+ # **********  You should not have to edit below this line  **********
+@@ -67,15 +67,15 @@ app-dist-hook:
+ 	fi
+ 
+ install-data-local: omf
+-	$(mkinstalldirs) $(DESTDIR)$(docdir)
++	$(mkinstalldirs) $(DESTDIR)$(helpdir)
+ 	for file in $(xml_files); do \
+-	  cp $(srcdir)/$$file $(DESTDIR)$(docdir); \
++	  cp $(srcdir)/$$file $(DESTDIR)$(helpdir); \
+ 	done
+ 	if test "$(figdir)"; then \
+-	  $(mkinstalldirs) $(DESTDIR)$(docdir)/$(figdir); \
++	  $(mkinstalldirs) $(DESTDIR)$(helpdir)/$(figdir); \
+ 	  for file in $(srcdir)/$(figdir)/*.png; do \
+ 	    basefile=`echo $$file | sed -e  's,^.*/,,'`; \
+-	    $(INSTALL_DATA) $$file $(DESTDIR)$(docdir)/$(figdir)/$$basefile; \
++	    $(INSTALL_DATA) $$file $(DESTDIR)$(helpdir)/$(figdir)/$$basefile; \
+ 	  done \
+ 	fi
+ 
+@@ -87,13 +87,13 @@ uninstall-local-doc:
+ 	-if test "$(figdir)"; then \
+ 	  for file in $(srcdir)/$(figdir)/*.png; do \
+ 	    basefile=`echo $$file | sed -e  's,^.*/,,'`; \
+-	    rm -f $(DESTDIR)$(docdir)/$(figdir)/$$basefile; \
++	    rm -f $(DESTDIR)$(helpdir)/$(figdir)/$$basefile; \
+ 	  done; \
+-	  rmdir $(DESTDIR)$(docdir)/$(figdir); \
++	  rmdir $(DESTDIR)$(helpdir)/$(figdir); \
+ 	fi
+ 	-for file in $(xml_files); do \
+-	  rm -f $(DESTDIR)$(docdir)/$$file; \
++	  rm -f $(DESTDIR)$(helpdir)/$$file; \
+ 	done
+-	-rmdir $(DESTDIR)$(docdir)
++	-rmdir $(DESTDIR)$(helpdir)
+ 
+ clean-local: clean-local-omf

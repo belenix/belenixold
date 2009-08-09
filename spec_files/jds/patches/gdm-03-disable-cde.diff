@@ -1,0 +1,13 @@
+--- gdm-2.20.5/config/CDE.desktop.in-orig	2008-05-01 19:27:12.589569000 -0500
++++ gdm-2.20.5/config/CDE.desktop.in	2008-05-01 19:27:37.378093000 -0500
+@@ -3,6 +3,10 @@ Encoding=UTF-8
+ _Name=Common Desktop Environment (CDE)
+ _Comment=This session logs you into CDE
+ Exec=/usr/dt/bin/Xsession
++# The CDE session is no longer supported in the default session list.  To
++# re-enable, remove the following Hidden=true line.
++#
++Hidden=true
+ # no icon yet, only the top three are currently used
+ Icon=
+ Type=Application

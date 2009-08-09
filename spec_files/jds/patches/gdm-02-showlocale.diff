@@ -1,0 +1,287 @@
+--- gdm-2.20.4/config/gdm.conf.in-orig	2008-03-10 18:39:42.277539000 -0500
++++ gdm-2.20.4/config/gdm.conf.in	2008-03-10 18:39:57.104993000 -0500
+@@ -498,6 +498,10 @@ GraphicalThemedColor=#76848F
+ # the last session the user used.  If off, we will be in 'switchdesk' mode
+ # where the session saving stuff is disabled in GDM
+ #ShowLastSession=true
++# Show the Locale names in language chooser box.
++# This is useful for users who want to log into GNOME with locale names instead
++# of localized names.
++ShowLocaleInLangBox=true
+ # Always use 24 hour clock no matter what the locale.
+ #Use24Clock=auto
+ # Do not show any visible feedback in the password field. This is standard for
+--- gdm-2.19.4/daemon/gdm-daemon-config-entries.h.orig	2007-07-23 10:41:05.922754000 +0900
++++ gdm-2.19.4/daemon/gdm-daemon-config-entries.h	2007-07-23 10:42:54.998331000 +0900
+@@ -208,6 +208,7 @@ typedef enum {
+ 	GDM_ID_SHOW_GNOME_FAILSAFE,
+ 	GDM_ID_SHOW_XTERM_FAILSAFE,
+ 	GDM_ID_SHOW_LAST_SESSION,
++	GDM_ID_SHOW_LOCALE_IN_LANG_BOX,
+ 	GDM_ID_SYSTEM_COMMANDS_IN_MENU,
+ 	GDM_ID_ALLOW_LOGOUT_ACTIONS,
+ 	GDM_ID_RBAC_SYSTEM_COMMAND_KEYS,
+@@ -479,6 +480,7 @@ static const GdmConfigEntry gdm_daemon_c
+ 	{ GDM_CONFIG_GROUP_GREETER, "ShowGnomeFailsafeSession", GDM_CONFIG_VALUE_BOOL, "true", GDM_ID_SHOW_GNOME_FAILSAFE },
+ 	{ GDM_CONFIG_GROUP_GREETER, "ShowXtermFailsafeSession", GDM_CONFIG_VALUE_BOOL, "true", GDM_ID_SHOW_XTERM_FAILSAFE },
+ 	{ GDM_CONFIG_GROUP_GREETER, "ShowLastSession", GDM_CONFIG_VALUE_BOOL, "true", GDM_ID_SHOW_LAST_SESSION },
++	{ GDM_CONFIG_GROUP_GREETER, "ShowLocaleInLangBox", GDM_CONFIG_VALUE_BOOL, "true", GDM_ID_SHOW_LOCALE_IN_LANG_BOX },
+ 
+ 	{ GDM_CONFIG_GROUP_CUSTOM_CMD, "CustomCommand0", GDM_CONFIG_VALUE_STRING, NULL, GDM_ID_NONE },
+ 	{ GDM_CONFIG_GROUP_CUSTOM_CMD, "CustomCommandLabel0", GDM_CONFIG_VALUE_STRING, "Custom_0", GDM_ID_NONE },
+--- gdm-2.19.4/daemon/gdm-daemon-config-keys.h.orig	2007-07-23 10:41:34.327547000 +0900
++++ gdm-2.19.4/daemon/gdm-daemon-config-keys.h	2007-07-23 10:42:55.004830000 +0900
+@@ -200,6 +200,7 @@ G_BEGIN_DECLS
+ #define GDM_KEY_SHOW_GNOME_FAILSAFE "greeter/ShowGnomeFailsafeSession=true"
+ #define GDM_KEY_SHOW_XTERM_FAILSAFE "greeter/ShowXtermFailsafeSession=true"
+ #define GDM_KEY_SHOW_LAST_SESSION "greeter/ShowLastSession=true"
++#define GDM_KEY_SHOW_LOCALE_IN_LANG_BOX "greeter/ShowLocaleInLangBox=true"
+ /* END LEGACY KEYS */
+ 
+ /* Notification protocol */
+--- gdm-2.19.4/docs/C/gdm.xml.orig	2007-07-23 10:41:57.379233000 +0900
++++ gdm-2.19.4/docs/C/gdm.xml	2007-07-23 10:42:55.039318000 +0900
+@@ -3866,6 +3866,16 @@ gdm:.my.domain
+           </varlistentry>        
+ 
+           <varlistentry>
++            <term>ShowLocaleInLangBox</term>
++            <listitem>
++              <synopsis>ShowLocaleInLangBox=true</synopsis>
++              <para>
++                Should the greeter show the locale names in the language box.
++              </para>
++            </listitem>
++          </varlistentry>        
++
++          <varlistentry>
+             <term>SoundOnLogin</term>
+             <listitem>
+               <synopsis>SoundOnLogin=true</synopsis>
+--- gdm-2.19.4/gui/gdmlanguages.c.orig	2007-07-23 10:36:35.641343000 +0900
++++ gdm-2.19.4/gui/gdmlanguages.c	2007-07-23 10:42:55.048381000 +0900
+@@ -35,6 +35,7 @@
+ #include "gdmlanguages.h"
+ 
+ #include "gdm-socket-protocol.h"
++#include "gdm-daemon-config-keys.h"
+ 
+ #define LAST_LANGUAGE "Last"
+ #define DEFAULT_LANGUAGE "Default"
+@@ -795,6 +796,90 @@ gdm_lang_check_language (const char *old
+ }
+ 
+ static void
++text_column_clicked (GtkTreeViewColumn *column, gpointer data)
++{
++  gint clicked_column_id = GPOINTER_TO_INT (data);
++  gint sorted_column_id;
++  GtkSortType order;
++
++  if (gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (lang_model),
++                                            &sorted_column_id,
++                                            &order) == TRUE &&
++      sorted_column_id == clicked_column_id)
++    {
++      order = (order == GTK_SORT_ASCENDING) ? GTK_SORT_DESCENDING : GTK_SORT_ASCENDING;
++      gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (lang_model),
++                                            clicked_column_id,
++                                            order);
++    }
++  else
++    {
++      gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (lang_model),
++                                            clicked_column_id,
++                                            GTK_SORT_ASCENDING);
++    }
++}
++
++static void
++columns_new (GtkWidget *tv)
++{
++  GtkTreeViewColumn *column;
++  int n_column = 0;
++
++  // Text column
++  column = gtk_tree_view_column_new_with_attributes ("",
++                                                     gtk_cell_renderer_text_new (),
++                                                     "text", TRANSLATED_NAME_COLUMN,
++                                                     NULL);
++  gtk_tree_view_column_set_clickable (column, TRUE);
++  gtk_tree_view_insert_column (GTK_TREE_VIEW (tv),
++                               column,
++                               n_column++);
++  g_signal_connect (column,
++                    "clicked",
++                    G_CALLBACK (text_column_clicked),
++                    GINT_TO_POINTER (TRANSLATED_NAME_COLUMN));
++
++  // Text column
++  column = gtk_tree_view_column_new_with_attributes ("",
++                                                     gtk_cell_renderer_text_new (),
++                                                     "markup",
++                                                     UNTRANSLATED_NAME_COLUMN,
++                                                     NULL);
++  gtk_tree_view_column_set_clickable (column, TRUE);
++  gtk_tree_view_insert_column (GTK_TREE_VIEW (tv),
++                               column,
++                               n_column++);
++  g_signal_connect (column,
++                    "clicked",
++                    G_CALLBACK (text_column_clicked),
++                    GINT_TO_POINTER (UNTRANSLATED_NAME_COLUMN));
++
++  // Text column
++  column = gtk_tree_view_column_new_with_attributes ("",
++                                                     gtk_cell_renderer_text_new (),
++                                                     "text",
++                                                     LOCALE_COLUMN,
++                                                     NULL);
++  gtk_tree_view_column_set_clickable (column, TRUE);
++  gtk_tree_view_insert_column (GTK_TREE_VIEW (tv),
++                               column,
++                               n_column++);
++  if (gdm_config_get_bool (GDM_KEY_SHOW_LOCALE_IN_LANG_BOX))
++    {
++      gtk_tree_view_column_set_visible (column, TRUE);
++    }
++  else
++    {
++      gtk_tree_view_column_set_visible (column, FALSE);
++    }
++  g_signal_connect (column,
++                    "clicked",
++                    G_CALLBACK (text_column_clicked),
++                    GINT_TO_POINTER (LOCALE_COLUMN));
++}
++
++static void
+ selection_changed (GtkTreeSelection *selection,
+ 		   gpointer          data)
+ {
+@@ -879,20 +964,11 @@ gdm_lang_setup_treeview (void)
+       /* FIXME: we should handle this better, but things really look
+        * bad if we aren't always LTR */
+       gtk_widget_set_direction (tv, GTK_TEXT_DIR_LTR);
+-      gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tv), FALSE);
+-      gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tv),
+-					       GTK_DIALOG_MODAL,
+-					       NULL,
+-					       gtk_cell_renderer_text_new (),
+-					       "text", TRANSLATED_NAME_COLUMN,
+-					       NULL);
+-      gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tv),
+-					       GTK_DIALOG_MODAL,
+-					       NULL,
+-					       gtk_cell_renderer_text_new (),
+-					       "markup",
+-					       UNTRANSLATED_NAME_COLUMN,
+-					       NULL);
++      gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tv), TRUE);
++      gtk_tree_view_set_reorderable (GTK_TREE_VIEW (tv), TRUE);
++
++      columns_new (tv);
++
+       swindow = gtk_scrolled_window_new (NULL, NULL);
+       gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (swindow), GTK_SHADOW_IN);
+       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swindow),
+@@ -902,7 +978,8 @@ gdm_lang_setup_treeview (void)
+       gtk_box_pack_start (GTK_BOX (main_vbox),
+ 			  swindow, TRUE, TRUE, 0);
+       gtk_window_set_default_size (GTK_WINDOW (dialog),
+-				   MIN (400, gdm_wm_screen.width),
++				   MIN (gdm_config_get_bool (GDM_KEY_SHOW_LOCALE_IN_LANG_BOX) ? 480 : 400,
++				        gdm_wm_screen.width),
+ 				   MIN (600, gdm_wm_screen.height));
+       g_signal_connect (G_OBJECT (gtk_tree_view_get_selection (GTK_TREE_VIEW (tv))),
+ 			"changed",
+@@ -922,23 +999,34 @@ gdm_lang_ask_restart (gchar *language)
+ {
+ 	gchar *firstmsg;
+ 	gchar *secondmsg;
++	gchar *name;
+ 	gchar *login;
+ 	gint response = GTK_RESPONSE_NO;
+ 
+ 	if (always_restart)
+ 		return GTK_RESPONSE_YES;
+ 
++	if (strcmp (language, DEFAULT_LANGUAGE) == 0)
++	  name = g_strdup (_("System Default"));
++	else
++	  name = gdm_lang_name (language,
++				FALSE /* never_encoding */,
++				TRUE /* no_group */,
++				TRUE /* untranslated */,
++				TRUE /* markup */);
++
+ 	login = _("the login screen");
+ 	firstmsg = g_strdup_printf (_("Do you wish to restart %s with the chosen language?"),
+ 	                            login);
+ 	secondmsg = g_strdup_printf (_("You will restart %s with the %s locale."),
+ 	                             login,
+-	                             language);
++	                             name);
+ 
+ 	response = gdm_wm_query_dialog (firstmsg, secondmsg, _("_Yes"), _("_No"), FALSE);
+ 
+ 	g_free (firstmsg);
+ 	g_free (secondmsg);
++	g_free (name);
+ 
+ 	return response;
+ }
+--- gdm-2.19.4/gui/gdmlogin.c.orig	2007-07-23 10:42:17.630370000 +0900
++++ gdm-2.19.4/gui/gdmlogin.c	2007-07-23 10:42:55.060828000 +0900
+@@ -2905,6 +2905,7 @@ gdm_read_config (void)
+ 	gdm_config_get_bool   (GDM_KEY_SHOW_GNOME_FAILSAFE);
+ 	gdm_config_get_bool   (GDM_KEY_SHOW_LAST_SESSION);
+ 	gdm_config_get_bool   (GDM_KEY_SHOW_XTERM_FAILSAFE);
++	gdm_config_get_bool   (GDM_KEY_SHOW_LOCALE_IN_LANG_BOX);
+ 	gdm_config_get_bool   (GDM_KEY_SOUND_ON_LOGIN);
+ 	gdm_config_get_bool   (GDM_KEY_SYSTEM_MENU);
+ 	gdm_config_get_bool   (GDM_KEY_TIMED_LOGIN_ENABLE);
+@@ -2989,6 +2990,7 @@ gdm_reread_config (int sig, gpointer dat
+ 	    gdm_config_reload_bool   (GDM_KEY_SHOW_GNOME_FAILSAFE) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_SHOW_LAST_SESSION) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_SHOW_XTERM_FAILSAFE) ||
++	    gdm_config_reload_bool   (GDM_KEY_SHOW_LOCALE_IN_LANG_BOX) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_SYSTEM_MENU) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_TIMED_LOGIN_ENABLE) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_TITLE_BAR) ||
+--- gdm-2.19.4/gui/greeter/greeter.c.orig	2007-07-23 10:42:30.485571000 +0900
++++ gdm-2.19.4/gui/greeter/greeter.c	2007-07-23 10:42:55.068669000 +0900
+@@ -913,6 +913,7 @@ gdm_read_config (void)
+ 	gdm_config_get_bool   (GDM_KEY_TIMED_LOGIN_ENABLE);
+ 	gdm_config_get_bool   (GDM_KEY_GRAPHICAL_THEME_RAND);
+ 	gdm_config_get_bool   (GDM_KEY_SHOW_LAST_SESSION);
++	gdm_config_get_bool   (GDM_KEY_SHOW_LOCALE_IN_LANG_BOX);
+ 	gdm_config_get_bool   (GDM_KEY_ALLOW_ROOT);
+ 	gdm_config_get_bool   (GDM_KEY_ALLOW_REMOTE_ROOT);
+ 	gdm_config_get_bool   (GDM_KEY_SOUND_ON_LOGIN);
+@@ -1005,6 +1006,7 @@ greeter_reread_config (int sig, gpointer
+ 	    gdm_config_reload_bool   (GDM_KEY_TIMED_LOGIN_ENABLE) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_GRAPHICAL_THEME_RAND) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_SHOW_LAST_SESSION) ||
++	    gdm_config_reload_bool   (GDM_KEY_SHOW_LOCALE_IN_LANG_BOX) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_ALLOW_ROOT) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_ALLOW_REMOTE_ROOT) ||
+ 	    gdm_config_reload_bool   (GDM_KEY_ADD_GTK_MODULES) ||
+--- gdm-2.20.1/common/gdm-common.c.orig	2008-09-03 18:05:23.291095000 +0900
++++ gdm-2.20.1/common/gdm-common.c	2008-09-03 18:07:13.596365000 +0900
+@@ -279,12 +279,12 @@ gboolean
+ ve_locale_exists (const char *loc)
+ {
+ 	gboolean ret;
+-	char *old = g_strdup (setlocale (LC_MESSAGES, NULL));
+-	if (setlocale (LC_MESSAGES, loc) != NULL)
++	char *old = g_strdup (setlocale (LC_CTYPE, NULL));
++	if (setlocale (LC_CTYPE, loc) != NULL)
+ 		ret = TRUE;
+ 	else
+ 		ret = FALSE;
+-	setlocale (LC_MESSAGES, old);
++	setlocale (LC_CTYPE, old);
+ 	g_free (old);
+ 	return ret;
+ }

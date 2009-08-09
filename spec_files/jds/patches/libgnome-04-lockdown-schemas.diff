@@ -1,0 +1,40 @@
+--- libgnome-2.10.0/schemas/desktop_gnome_lockdown.schemas.in	2005-07-18 15:54:51.808302000 +0600
++++ libgnome-2.10.0-new/schemas/desktop_gnome_lockdown.schemas.in	2005-07-18 16:24:23.882620000 +0600
+@@ -65,5 +65,37 @@
+       </locale>
+     </schema>
+ 
++    <schema>
++      <key>/schemas/desktop/gnome/lockdown/restrict_application_launching</key>
++      <applyto>/desktop/gnome/lockdown/restrict_application_launching</applyto>
++      <owner>gnome</owner>
++      <type>bool</type>
++      <default>false</default>
++      <locale name="C">
++        <short>Restrict Application Launching</short>
++        <long>
++         Turns on/off the restricted application feature. If used then
++         only those applications listed in the key allowed_applications will
++         appear in the menus, or will be allowed to be launched from the panel.
++        </long>
++      </locale>
++    </schema>
++
++    <schema>
++      <key>/schemas/desktop/gnome/lockdown/allowed_applications</key>
++      <applyto>/desktop/gnome/lockdown/allowed_applications</applyto>
++      <owner>gnome</owner>
++      <type>list</type>
++      <list_type>string</list_type>
++      <default>[/usr/bin/gnome-terminal,/usr/bin/mozilla,/usr/bin/staroffice,/usr/bin/starsuite,/usr/bin/evolution-1.4,/usr/bin/file-roller,/usr/bin/gcalctool,/usr/bin/gucharmap,/usr/bin/gedit,/usr/bin/gtali,/usr/bin/gataxx,/usr/bin/glines,/usr/bin/gnect,/usr/bin/gnibbles,/usr/bin/gnotski,/usr/bin/iagno,/usr/bin/mahjongg,/usr/bin/gnomine,/usr/bin/gnobots2,/usr/bin/same-gnome,/usr/bin/gnome-stones,/usr/bin/gnotravex,/usr/bin/eog,/usr/bin/ggv,/usr/bin/gaim,/usr/bin/gnome-cd,/usr/bin/gnome-sound-recorder,/usr/bin/gnome-volume-control,/usr/bin/bug-buddy,/usr/bin/glade-2,/usr/bin/YaST2,/usr/bin/gconf-editor,/usr/bin/gfloppy,/usr/bin/gdmsetup,/usr/bin/gdmflexiserver,/usr/bin/gnome-system-monitor,/usr/bin/gnome-search-tool,/usr/bin/gtkam,/usr/bin/gimp-remote-2.0,/usr/bin/gthumb,/usr/java/jdk1.5.0_01/jre/bin/ControlPanel,/usr/bin/jmplay,/usr/bin/totem,/usr/bin/planner,/usr/bin/gnomemeeting,/usr/bin/jdictionary,/usr/bin/jdiskreport,/usr/bin/jedit,/usr/bin/jgraphpad,/usr/bin/cddb-slave2-properties,/usr/bin/gnome-cd-properties,/usr/bin/gnome-file-types-properties,/usr/bin/gnome-panel-preferences,/usr/bin/gnome-default-applications-properties,/usr/bin/gnome-session-properties,/usr/bin/gnome-background-properties,/usr/bin/gnome-font-properties,/usr/bin/gnome-ui-properties,/usr/bin/gnome-display-properties,/usr/bin/xscreensaver-demo,/usr/bin/nautilus,/usr/bin/gnome-sound-properties,/usr/bin/userpasswd,/usr/bin/gpilotd-control-applet,/usr/bin/gnome-mouse-properties,/usr/bin/gnome-network-preferences,/usr/bin/nautilus-file-management-properties,/usr/bin/gnome-keybinding-properties,/usr/bin/gnome-keyboard-layout,/usr/bin/gnome-keyboard-properties,/usr/bin/gnome-theme-manager,/usr/bin/gnome-window-properties,/usr/bin/gnome-accessibility-keyboard-properties,/usr/bin/gok,/usr/bin/gnopernicus,/usr/bin/pdflaunch,/usr/bin/realplay,/usr/bin/staroffice-printeradmin,/usr/bin/starsuite-printeradmin,/usr/bin/gnome-at-properties,/usr/bin/blackjack,/usr/bin/jspider,/usr/java/j2redefault/javaws/javaws,/usr/bin/jsupdate,/usr/bin/fsexam,/usr/bin/gnome-im-properties,/usr/bin/vino-preferences,/usr/bin/apoc-config,/usr/bin/netbeans,/usr/bin/jds-help]</default>
++      <locale name="C">
++        <short>Allowed Applications List</short>
++        <long>
++        This is a list of allowed applications that can be run. It is only
++        checked if the restrict_application_launching feature is turned on.
++        </long>
++      </locale>
++    </schema>
++
+   </schemalist>
+ </gconfschemafile>

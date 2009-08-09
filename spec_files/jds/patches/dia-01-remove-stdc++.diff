@@ -1,0 +1,11 @@
+/jds/bin/diff -uprN dia-0.96.1.old/plug-ins/wmf/Makefile.am dia-0.96.1/plug-ins/wmf/Makefile.am
+--- dia-0.96.1.old/plug-ins/wmf/Makefile.am	2008-10-23 14:36:12.338908000 +0100
++++ dia-0.96.1/plug-ins/wmf/Makefile.am	2008-10-23 14:36:52.711625000 +0100
+@@ -3,7 +3,6 @@ pkglib_LTLIBRARIES = libwmf_filter.la
+ 
+ libwmf_filter_la_SOURCES = $(plugin_sources)
+ libwmf_filter_la_LDFLAGS = -export-dynamic -module -avoid-version 
+-libwmf_filter_la_LIBADD = -lstdc++
+ 
+ INCLUDES = -I$(top_srcdir)/intl -I$(top_srcdir)/lib \
+   $(GTK_CFLAGS) $(GNOME_CFLAGS) $(PANGOFT2_CFLAGS) $(UNICODE_CFLAGS) \

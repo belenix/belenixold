@@ -1,0 +1,13 @@
+--- gdm-2.20.8/configure.ac.orig	Thu Dec  4 13:40:57 2008
++++ gdm-2.20.8/configure.ac	Thu Dec  4 13:45:33 2008
+@@ -390,10 +390,6 @@
+ dnl ## gdmopen building
+ dnl There are perhaps others where this works
+ GDMOPEN=
+-AC_CHECK_HEADERS(sys/vt.h, [
+-		 AC_DEFINE(HAVE_SYS_VT_H)])
+-AC_CHECK_HEADERS(sys/vt.h, [
+-		 GDMOPEN=gdmopen])
+ AC_SUBST(GDMOPEN)
+ 
+ dnl ## Authentication scheme
