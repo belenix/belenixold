@@ -1,0 +1,21 @@
+--- pidginotr/gtk-ui.c    2007-03-06 11:52:06.032022000 +0800
++++ pidginotr/gtk-ui.c	2007-03-06 11:53:51.632355000 +0800
+@@ -143,10 +143,14 @@
+ 
+ static void clist_all_unselected(void)
+ {
+-    gtk_widget_set_sensitive(ui_layout.connect_button, 0);
+-    gtk_widget_set_sensitive(ui_layout.disconnect_button, 0);
+-    gtk_widget_set_sensitive(ui_layout.forget_button, 0);
+-    gtk_widget_set_sensitive(ui_layout.verify_button, 0);
++    if (ui_layout.connect_button)
++      gtk_widget_set_sensitive(ui_layout.connect_button, 0);
++    if (ui_layout.disconnect_button)
++      gtk_widget_set_sensitive(ui_layout.disconnect_button, 0);
++    if (ui_layout.forget_button)
++      gtk_widget_set_sensitive(ui_layout.forget_button, 0);
++    if (ui_layout.verify_button)
++      gtk_widget_set_sensitive(ui_layout.verify_button, 0);
+     ui_layout.selected_fprint = NULL;
+ }
+ 

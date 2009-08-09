@@ -1,0 +1,23 @@
+--- babl-0.0.22/docs/Makefile.am.old	2008-12-02 17:27:54.702283000 +0800
++++ babl-0.0.22/docs/Makefile.am	2008-12-02 17:28:08.917585000 +0800
+@@ -13,7 +13,6 @@
+ #
+ #
+ HTML_FILES = index-static.html 	\
+-	     index.html		\
+ 	     BablFishPath.html
+ 
+ EXTRA_DIST= 			\
+--- babl-0.0.22/configure.ac.old	2008-12-02 17:29:45.080703000 +0800
++++ babl-0.0.22/configure.ac	2008-12-02 17:29:35.014439000 +0800
+@@ -189,6 +189,10 @@
+     shrext=.dll
+     dynamiclib=-shared
+     ;;
++  *solaris*)                   #solaris
++    dynamiclib=-G
++    shrext=.so               
++    ;;
+   *)                           # linux (and BSD?)
+     dynamiclib=-shared
+     shrext=.so

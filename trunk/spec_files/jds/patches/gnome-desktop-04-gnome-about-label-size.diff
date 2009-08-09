@@ -1,0 +1,96 @@
+--- gnome-desktop-2.23.2.old/gnome-about/gnome-about.in	2008-05-29 13:05:06.482750000 +0100
++++ gnome-desktop-2.23.2/gnome-about/gnome-about.in	2008-05-29 13:04:34.907819000 +0100
+@@ -339,6 +339,7 @@
+ 
+     rewind_text       = ""
+     last_label_height = 0
++    label_height = 0
+ 
+     def rewind_animate (self):
+         '''Animation function for the rewind step'''
+@@ -346,8 +347,8 @@
+         if self.state == -2:
+             self.item = self.rewind_text
+             self.make_label ()
+-            label_height = self.label.size_request ()[1]
+-            total_height = self.height + label_height
++            self.label_height = self.label.size_request ()[1]
++            total_height = self.height + self.label_height
+             self.pos = float (self.last_label_height) / total_height
+             self.current.set (0.5, self.pos, 0, 0)
+             self.state = 0
+@@ -367,6 +368,9 @@
+     def animate (self):
+         '''The actual animation function'''
+         self.source = None
++        self.height = self.size_request ()[1]
++        if self.label:
++            self.label_height = self.label.size_request ()[1]
+         if self.state == -2:
+             self.rewind_animate ()
+         elif self.state == -1:
+@@ -377,9 +381,8 @@
+             if self.pos:
+                 '''Move towards the top position'''
+                 self.pos = max (0, self.pos - 0.02)
+-                label_height = self.label.size_request ()[1]
+-                total_height = self.height + label_height
+-                real_pos = float (self.pos * self.height + label_height) \
++                total_height = self.height + self.label_height
++                real_pos = float (self.pos * self.height + self.label_height) \
+                             / total_height
+                 self.current.set (0.5, real_pos, 0, 0)
+                 self.source = gobject.timeout_add (5, self.animate)
+@@ -394,20 +397,25 @@
+                 self.state = 2
+             self.source = gobject.timeout_add (5, self.animate)
+         elif self.state == 2:
+-            if not self.next:
+-                self.state = -2
+-                self.last_label_height = self.label.size_request ()[1]
+-                self.reset_animation ()
+-                self.source = gobject.timeout_add (1, self.animate)
+-            elif self.pos:
++            if self.pos:
+                 '''Move out of the visible region of the Layout'''
+-                self.pos = max (0, self.pos - 0.02)
+-                label_height = self.label.size_request ()[1]
+-                total_height = self.height + label_height
+-                real_pos = float (self.pos * label_height) \
++                if self.height < self.label_height:
++                    self.pos = max (0, self.pos - 0.002)
++                else:
++                    self.pos = max (0, self.pos - 0.02)
++                total_height = self.height + self.label_height
++                real_pos = float (self.pos * self.label_height) \
+                             / total_height
+                 self.current.set (0.5, real_pos, 0, 0)
+-                self.source = gobject.timeout_add (5, self.animate)
++                if self.height < self.label_height:
++                    self.source = gobject.timeout_add (15, self.animate)
++                else:
++                    self.source = gobject.timeout_add (5, self.animate)
++            elif not self.next:
++                self.state = -2
++                self.last_label_height = self.label_height
++                self.reset_animation ()
++                self.source = gobject.timeout_add (1, self.animate)
+             else:
+                 '''Label has disappeared, bye bye'''
+                 self.reset_animation ()
+@@ -420,11 +428,11 @@
+             return
+         self.label.set_size_request (self.width, -1)
+         self.current = gtk.Alignment (0.0, 1.0)
+-        label_height = self.label.size_request ()[1]
+-        height = self.size_request ()[1]
+-        self.current.set_size_request (-1, 2 * label_height + height)
++        self.label_height = self.label.size_request ()[1]
++        self.height = self.size_request ()[1]
++        self.current.set_size_request (-1, 2 * self.label_height + self.height)
+         self.current.add (self.label)
+-        self.put (self.current, 0, - label_height)
++        self.put (self.current, 0, - self.label_height)
+         self.pos = 1.0
+         self.show_all ()
+ 

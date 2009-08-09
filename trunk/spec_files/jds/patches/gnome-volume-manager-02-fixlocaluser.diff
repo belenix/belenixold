@@ -1,0 +1,15 @@
+--- /usr/tmp/clean/gnome-volume-manager-2.22.5/src/manager.c	2008-04-26 16:40:34.000000000 +0100
++++ gnome-volume-manager-2.22.5/src/manager.c	2008-08-11 08:08:07.920620000 +0100
+@@ -4052,8 +4066,12 @@
+ #ifdef __linux__
+ 	return gvm_user_is_local_fallback ();
+ #else
++#ifdef __sun
++	return TRUE;
++#else
+ 	return FALSE;
+ #endif
++#endif
+ }
+ 
+ /* checks that the user is at the local active X session */

@@ -1,0 +1,23 @@
+--- gaim-2.0.0beta6/pidgin/gtkaccount.c-ori	2007-04-03 15:27:40.388947000 +0800
++++ gaim-2.0.0beta6/pidgin/gtkaccount.c	2007-04-03 15:29:02.395556000 +0800
+@@ -425,6 +425,7 @@
+ 		dialog->protocol_menu = pidgin_protocol_option_menu_new(
+ 				dialog->protocol_id, G_CALLBACK(set_account_protocol_cb), dialog);
+ 		gtk_widget_ref(dialog->protocol_menu);
++  		gtk_widget_show(dialog->protocol_menu);
+ 	}
+ 
+ 	hbox = add_pref_box(dialog, vbox, _("Pro_tocol:"), dialog->protocol_menu);
+--- gaim-2.0.0beta6/libpurple/signals.c-ori	2007-04-03 15:28:03.320887000 +0800
++++ gaim-2.0.0beta6/libpurple/signals.c	2007-04-03 15:29:30.222262000 +0800
+@@ -339,8 +339,8 @@
+ 	/* Get the instance data */
+ 	instance_data =
+ 		(PurpleInstanceData *)g_hash_table_lookup(instance_table, instance);
+-
+-	g_return_if_fail(instance_data != NULL);
++	if (instance_data == NULL)
++		return;
+ 
+ 	/* Get the signal data */
+ 	signal_data =

@@ -1,0 +1,15 @@
+--- SDL-1.2.13/sdl.m4.orig	2008-01-17 20:50:30.689228733 +0100
++++ SDL-1.2.13/sdl.m4	2008-01-17 20:51:41.567595493 +0100
+@@ -32,10 +32,12 @@
+     fi
+   fi
+ 
++  as_save_PATH="$PATH"
+   if test "x$prefix" != xNONE; then
+     PATH="$prefix/bin:$prefix/usr/bin:$PATH"
+   fi
+   AC_PATH_PROG(SDL_CONFIG, sdl-config, no, [$PATH])
++  PATH="$as_save_PATH"
+   min_sdl_version=ifelse([$1], ,0.11.0,$1)
+   AC_MSG_CHECKING(for SDL - version >= $min_sdl_version)
+   no_sdl=""

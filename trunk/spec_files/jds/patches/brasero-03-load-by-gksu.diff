@@ -1,0 +1,85 @@
+diff --git a/data/brasero-copy-medium.desktop.in.in b/data/brasero-copy-medium.desktop.in.in
+index 458d7d2..6757b4f 100644
+--- a/data/brasero-copy-medium.desktop.in.in
++++ b/data/brasero-copy-medium.desktop.in.in
+@@ -3,7 +3,7 @@ _Name=Disc Copier
+ _GenericName=Disc Copier
+ _Comment=Copy CDs and DVDs
+ Categories=GNOME;GTK;System;
+-Exec=brasero -c %u
++Exec=gksu "brasero -c %u"
+ Icon=brasero
+ MimeType=x-content/audio-cdda;x-content/video-dvd;x-content/video-vcd;x-content/video-svcd;x-content/image-picturecd;
+ StartupNotify=true
+diff --git a/data/brasero-open-image.desktop.in.in b/data/brasero-open-image.desktop.in.in
+index 22f202d..18cf937 100644
+--- a/data/brasero-open-image.desktop.in.in
++++ b/data/brasero-open-image.desktop.in.in
+@@ -3,7 +3,7 @@ _Name=Disc Burner
+ _GenericName=Disc Burner
+ _Comment=Create CDs and DVDs
+ Categories=GNOME;AudioVideo;DiscBurning;
+-Exec=brasero -i %u
++Exec=gksu "brasero -i %u"
+ Icon=brasero
+ MimeType=application/x-cd-image;application/x-cdrdao-toc;application/x-cue;application/x-toc;
+ StartupNotify=true
+diff --git a/data/brasero-open-playlist.desktop.in.in b/data/brasero-open-playlist.desktop.in.in
+index 87d5960..579ed8f 100644
+--- a/data/brasero-open-playlist.desktop.in.in
++++ b/data/brasero-open-playlist.desktop.in.in
+@@ -3,7 +3,7 @@ _Name=Disc Burner
+ _GenericName=Disc Burner
+ _Comment=Create CDs and DVDs
+ Categories=GNOME;GTK;System;
+-Exec=brasero -l %u
++Exec=gksu "brasero -l %u"
+ Icon=brasero
+ MimeType=audio/x-scpls;audio/x-ms-asx;audio/x-mp3-playlist;audio/x-mpegurl;
+ StartupNotify=true
+diff --git a/data/brasero-open-project.desktop.in.in b/data/brasero-open-project.desktop.in.in
+index 8133787..bcfe9fa 100644
+--- a/data/brasero-open-project.desktop.in.in
++++ b/data/brasero-open-project.desktop.in.in
+@@ -3,7 +3,7 @@ _Name=Disc Burner
+ _GenericName=Disc Burner
+ _Comment=Create CDs and DVDs
+ Categories=GNOME;GTK;System;
+-Exec=brasero -p %u
++Exec=gksu "brasero -p %u"
+ Icon=brasero
+ MimeType=application/x-brasero;
+ StartupNotify=true
+diff --git a/data/brasero.desktop.in.in b/data/brasero.desktop.in.in
+index 9e5d1df..7076490 100644
+--- a/data/brasero.desktop.in.in
++++ b/data/brasero.desktop.in.in
+@@ -3,7 +3,7 @@ _Name=Brasero Disc Burner
+ _GenericName=Disc Burner
+ _Comment=Create and copy CDs and DVDs
+ Categories=GNOME;AudioVideo;DiscBurning;
+-Exec=brasero %U
++Exec=gksu "brasero %U"
+ Icon=brasero
+ StartupNotify=true
+ Terminal=false
+diff --git a/nautilus/nautilus-burn-extension.c b/nautilus/nautilus-burn-extension.c
+index 9031d84..22a1224 100644
+--- a/nautilus/nautilus-burn-extension.c
++++ b/nautilus/nautilus-burn-extension.c
+@@ -98,6 +98,15 @@ launch_process (GPtrArray *argv, GtkWindow *parent)
+         error = NULL;
+         g_ptr_array_add (argv, NULL);
+         args = (gchar **) g_ptr_array_free (argv, FALSE);
++        {
++                gchar **args_gksu = g_malloc(3*sizeof(gchar *));
++
++                *(args_gksu + 0) = g_build_filename (BINDIR, "gksu", NULL);
++                *(args_gksu + 1) = g_strdup_printf("%s", g_strjoinv(" ", args));
++                *(args_gksu + 2) = NULL;
++                g_strfreev (args);
++                args = args_gksu;
++        }
+         if (!g_spawn_async (NULL,
+                             args, NULL,
+                             0,

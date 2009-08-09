@@ -1,0 +1,43 @@
+/jds/bin/diff -uprN gnome-utils-2.25.90.old/configure.ac gnome-utils-2.25.90/configure.ac
+--- gnome-utils-2.25.90.old/configure.ac	2009-02-10 16:28:44.761465000 +0000
++++ gnome-utils-2.25.90/configure.ac	2009-02-10 16:29:22.619412000 +0000
+@@ -146,7 +146,7 @@ dnl ************************************
+ dnl screenshot modules
+ dnl *****************************************
+ 
+-AC_CHECK_HEADERS(X11/extensions/shape.h, XSHAPE_LIBS="-lXext")
++AC_CHECK_HEADERS(X11/extensions/shape.h, XSHAPE_LIBS="-lXext -lX11")
+ AC_SUBST(XSHAPE_LIBS)
+ 
+ dnl ****************************************
+/jds/bin/diff -uprN gnome-utils-2.25.90.old/gnome-screenshot/Makefile.am gnome-utils-2.25.90/gnome-screenshot/Makefile.am
+--- gnome-utils-2.25.90.old/gnome-screenshot/Makefile.am	2009-02-10 16:28:43.505401000 +0000
++++ gnome-utils-2.25.90/gnome-screenshot/Makefile.am	2009-02-10 16:29:45.769186000 +0000
+@@ -26,7 +26,7 @@ gnome_screenshot_SOURCES = \
+ 	screenshot-xfer.h		\
+ 	$(NULL)
+ 
+-gnome_screenshot_LDFLAGS = -export-dynamic
++#gnome_screenshot_LDFLAGS = -export-dynamic
+ 
+ gnome_screenshot_LDADD =		\
+ 	$(XSHAPE_LIBS)			\
+/jds/bin/diff -uprN gnome-utils-2.25.90.old/gnome-screenshot/gnome-screenshot.desktop.in gnome-utils-2.25.90/gnome-screenshot/gnome-screenshot.desktop.in
+--- gnome-utils-2.25.90.old/gnome-screenshot/gnome-screenshot.desktop.in	2009-02-10 16:28:43.505744000 +0000
++++ gnome-utils-2.25.90/gnome-screenshot/gnome-screenshot.desktop.in	2009-02-10 16:30:40.519371000 +0000
+@@ -1,12 +1,13 @@
+ [Desktop Entry]
+-_Name=Take Screenshot
++# SUN_BRANDING
++_Name=Save Screenshot
+ _Comment=Save images of your desktop or individual windows
+ Exec=gnome-screenshot --interactive
+ Terminal=false
+ Type=Application
+ Icon=applets-screenshooter
+ StartupNotify=true
+-Categories=GTK;GNOME;Utility;
++Categories=GTK;GNOME;Graphics;
+ NotShowIn=KDE;
+ X-GNOME-Bugzilla-Bugzilla=GNOME
+ X-GNOME-Bugzilla-Product=gnome-utils

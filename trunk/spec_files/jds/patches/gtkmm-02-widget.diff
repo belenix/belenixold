@@ -1,0 +1,13 @@
+--- gtkmm-2.13.7/gtk/gtkmm/widget.cc.orig	2008-08-22 14:28:50.584704000 +0800
++++ gtkmm-2.13.7/gtk/gtkmm/widget.cc	2008-08-22 14:30:02.047824000 +0800
+@@ -6298,7 +6298,9 @@
+ 
+ Allocation Widget::get_allocation() const
+ {
+-  return (Allocation)(Glib::wrap(&(gtk_widget_get_allocation(const_cast<GtkWidget*>(gobj())))));
++  GtkAllocation ga =gtk_widget_get_allocation(const_cast<GtkWidget*>(gobj()));
++  return (Allocation)(Glib::wrap(&ga));
++
+ }
+ 
+ Glib::RefPtr<Gdk::Window> Widget::get_window()

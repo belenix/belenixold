@@ -1,0 +1,13 @@
+diff --git a/src/plugins/cdrtools/burn-cdrecord.c b/src/plugins/cdrtools/burn-cdrecord.c
+index 32b2448..a259127 100644
+--- a/src/plugins/cdrtools/burn-cdrecord.c
++++ b/src/plugins/cdrtools/burn-cdrecord.c
+@@ -1169,7 +1169,7 @@ brasero_cdrecord_export_caps (BraseroPlugin *plugin, gchar **error)
+ 				  BRASERO_MEDIUM_WRITABLE|
+ 				  BRASERO_MEDIUM_REWRITABLE|
+ 				  BRASERO_MEDIUM_BLANK,
+-				  BRASERO_BURN_FLAG_RAW|
++/* 				  BRASERO_BURN_FLAG_RAW| */
+ 				  BRASERO_BURN_FLAG_BURNPROOF|
+ 				  BRASERO_BURN_FLAG_OVERBURN|
+ 				  BRASERO_BURN_FLAG_NOGRACE,

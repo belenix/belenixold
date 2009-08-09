@@ -1,0 +1,11 @@
+diff -ur gnome-volume-manager-2.22.5-orig//gnome-volume-manager.schemas.in gnome-volume-manager-2.22.5//gnome-volume-manager.schemas.in
+--- gnome-volume-manager-2.22.5-orig//gnome-volume-manager.schemas.in	Mon Sep  1 11:00:33 2008
++++ gnome-volume-manager-2.22.5//gnome-volume-manager.schemas.in	Mon Sep  1 11:00:45 2008
+@@ -166,7 +166,6 @@
+         <key>/schemas/desktop/gnome/volume_manager/autoplay_dvd_command</key>
+ 	<applyto>/desktop/gnome/volume_manager/autoplay_dvd_command</applyto>
+ 	<type>string</type>
+-	<default>totem %d</default>
+ 	<locale name="C">
+ 	  <short>DVD play command</short>
+ 	  <long>Command to run when a video DVD is inserted.</long>

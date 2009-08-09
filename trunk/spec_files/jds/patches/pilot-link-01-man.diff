@@ -1,0 +1,11 @@
+--- doc/Makefile.am.orig	2007-11-21 14:58:52.570859000 +0800
++++ doc/Makefile.am	2007-11-21 14:59:36.803248000 +0800
+@@ -1,6 +1,8 @@
+ if BUILD_XML
+ if ENABLE_XSLTPROC
+ SUBDIRS = xml man
++else
++SUBDIRS = man
+ endif
+ else
+ SUBDIRS = man

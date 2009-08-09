@@ -1,0 +1,17 @@
+--- brltty-3.9/Programs/sys_shlib_dlfcn.h.orig	2008-08-29 12:14:44.073958167 +1200
++++ brltty-3.9/Programs/sys_shlib_dlfcn.h	2008-08-29 12:15:43.732981835 +1200
+@@ -44,11 +44,9 @@
+   void **address = pointerAddress;
+   *address = dlsym(object, symbol);
+ 
+-  {
+-    const char *error = dlerror();
+-    if (!error) return 1;
+-    LogPrint(LOG_ERR, "%s", error);
+-  }
++  if (*address) return 1;
++  const char *error = dlerror();
++  LogPrint(LOG_ERR, "%s", error);
+ #endif /* HAVE_DLOPEN */
+   return 0;
+ }

@@ -1,0 +1,54 @@
+--- gnome-netstatus-2.26.0/src/netstatus-applet.c.orig	2009-03-08 05:25:52.000000000 +0000
++++ gnome-netstatus-2.26.0/src/netstatus-applet.c	2009-03-18 10:17:17.173596247 +0000
+@@ -32,6 +32,7 @@
+ 
+ #include "netstatus-icon.h"
+ #include "netstatus-iface.h"
++#include "netstatus-sysdeps.h"
+ #include "netstatus-dialog.h"
+ 
+ struct _NetstatusAppletPrivate
+@@ -440,15 +441,37 @@ netstatus_applet_create (NetstatusApplet
+       if (iface_names)
+ 	{
+ 	  GList *l;
++	  gulong in_packets, out_packets;
++	  gulong in_bytes, out_bytes;
++	  char *error_message;
+ 
+ 	  /* FIXME: instead of picking the first one we should
+ 	   *        figure out what interfaces aren't currently
+ 	   *        displayed in an applet.
+ 	   */
+-	  iface_name = iface_names->data;
+-
+-	  for (l = iface_names->next; l; l = l->next)
+-	    g_free (l->data);
++	  /* Process list of interfaces, and instead of showing first one,
++	   * Show first non error interface.
++	   */
++	  for (l = iface_names; l; l = l->next) {
++	    if ((error_message = netstatus_sysdeps_read_iface_statistics (l->data,
++	         &in_packets, &out_packets, &in_bytes, &out_bytes)) == NULL) {
++	        /* Success !! make this the iface_name */
++	        iface_name = l->data;
++	        break;
++	    } else {
++			g_free (error_message);
++		}
++	  }
++
++  	  if (!iface_name || !iface_name [0])
++	    iface_name = iface_names->data;
++
++	  for (l = iface_names; l; l = l->next) {
++	    /* Only free non used names */
++	    if (strcmp(l->data, iface_name)) {
++    	      g_free (l->data);
++		}
++	  }
+ 	  g_list_free (iface_names);
+ 	}
+       else
+
+

@@ -1,0 +1,125 @@
+--- babl-0.0.22/babl/babl-list.c.orig	2008-12-02 17:15:54.263327000 +0800
++++ babl-0.0.22/babl/babl-list.c	2008-12-02 17:18:13.992208000 +0800
+@@ -67,7 +67,7 @@
+     return list->count;
+ }
+ 
+-inline void
++void
+ babl_list_insert_last (BablList *list,
+                        Babl     *item)
+ {
+@@ -87,7 +87,7 @@
+     list->items[list->count++] = item;
+ }
+ 
+-inline void
++void
+ babl_list_remove_last (BablList *list)
+ {
+   babl_assert (list);
+@@ -96,7 +96,7 @@
+   list->count--;
+ }
+ 
+-inline Babl *
++Babl *
+ babl_list_get_first (BablList *list)
+ {
+   babl_assert (list);
+@@ -105,7 +105,7 @@
+   return (list->items[0]);
+ }
+ 
+-inline Babl *
++Babl *
+ babl_list_get_last (BablList *list)
+ {
+   babl_assert (list);
+@@ -114,7 +114,7 @@
+   return (list->items[list->count - 1]);
+ }
+ 
+-inline void
++void
+ babl_list_copy (BablList *from,
+                 BablList *to)
+ {
+--- babl-0.0.22/babl/babl-hash-table.c.orig	2008-12-02 17:15:31.767039000 +0800
++++ babl-0.0.22/babl/babl-hash-table.c	2008-12-02 17:16:51.983739000 +0800
+@@ -33,7 +33,7 @@
+ hash_rehash (BablHashTable *htab);
+ 
+ 
+-inline int
++int
+ babl_hash_by_str (BablHashTable *htab,
+                   const char    *str)
+ {
+@@ -52,7 +52,7 @@
+   return (hash & htab->mask);
+ }
+ 
+-inline int
++int
+ babl_hash_by_int (BablHashTable *htab,
+                   int           id)
+ {
+@@ -136,7 +136,7 @@
+   babl_free (nhtab);
+ }
+ 
+-inline int
++int
+ babl_hash_table_size (BablHashTable *htab)
+ {
+     return htab->mask + 1;
+--- babl-0.0.22/babl/babl-hash-table.h.orig	2008-12-02 17:15:45.983409000 +0800
++++ babl-0.0.22/babl/babl-hash-table.h	2008-12-02 17:17:11.447094000 +0800
+@@ -44,15 +44,15 @@
+ babl_hash_table_init (BablHashValFunction  hfunc,
+                       BablHashFindFunction ffunc);
+ 
+-inline int
++int
+ babl_hash_by_str (BablHashTable *htab,
+                   const char    *str);
+ 
+-inline int
++int
+ babl_hash_by_int (BablHashTable *htab,
+                   int           id);
+ 
+-inline int
++int
+ babl_hash_table_size (BablHashTable *htab);
+ 
+ int
+--- babl-0.0.22/babl/babl-list.h.orig	2008-12-02 17:16:01.943530000 +0800
++++ babl-0.0.22/babl/babl-list.h	2008-12-02 17:18:12.728107000 +0800
+@@ -47,20 +47,20 @@
+ int
+ babl_list_size (BablList *list);
+ 
+-inline void
++void
+ babl_list_insert_last (BablList *list,
+                        Babl     *item);
+ 
+-inline void
++void
+ babl_list_remove_last (BablList *list);
+ 
+-inline Babl *
++Babl *
+ babl_list_get_first (BablList *list);
+ 
+-inline Babl *
++Babl *
+ babl_list_get_last (BablList *list);
+ 
+-inline void
++void
+ babl_list_copy (BablList *from,
+                 BablList *to);
+ 

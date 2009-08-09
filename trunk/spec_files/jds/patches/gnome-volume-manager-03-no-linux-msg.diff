@@ -1,0 +1,11 @@
+--- gnome-volume-manager-2.22.5/src/properties.c.orig	2008-04-28 16:49:11.067950069 +0100
++++ gnome-volume-manager-2.22.5/src/properties.c	2008-04-28 16:55:44.587519331 +0100
+@@ -563,7 +563,7 @@
+ 						 GTK_BUTTONS_OK,
+ 						 _("Volume management not supported"));
+ 		gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+-							  _("The \"hald\" service is required but not currently "
++							  _("The \"svc:/system/hal\" service is required but not currently "
+ 							    "running. Enable the service and rerun this application, "
+ 							    "or contact your system administrator."));
+ 		

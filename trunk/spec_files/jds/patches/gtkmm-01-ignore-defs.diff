@@ -1,0 +1,22 @@
+--- gtkmm-2.13.5/tools/Makefile.am.orig	2008-07-24 14:43:17.520563774 +0800
++++ gtkmm-2.13.5/tools/Makefile.am	2008-07-24 14:43:29.357810589 +0800
+@@ -1,7 +1,7 @@
+ 
+ include $(top_srcdir)/tools/Makefile_list_of_sources.am_fragment
+ 
+-SUBDIRS = m4 extra_defs_gen
++SUBDIRS = m4 
+ 
+ EXTRA_DIST = Makefile_list_of_sources.am_fragment README TODO
+ 
+--- gtkmm-2.13.5/configure.in.orig	2008-07-24 14:42:40.445147114 +0800
++++ gtkmm-2.13.5/configure.in	2008-07-24 14:43:05.229427443 +0800
+@@ -409,7 +409,7 @@
+ 
+   tools/Makefile
+     tools/m4/Makefile
+-    tools/extra_defs_gen/Makefile
++    
+ ])
+ 
+ AC_CONFIG_FILES([
