@@ -1,0 +1,39 @@
+--- gthumb-2.10.8/data/gthumb.1.old	2008年  7月 31日 四 13:57:25
++++ gthumb-2.10.8/data/gthumb.1	2008年  7月 31日 四 13:59:53
+@@ -1,3 +1,4 @@
++'\" te
+ .TH "gthumb" "1" "May 2002" "GNOME Applications" ""
+ .SH "NAME"
+ .LP 
+@@ -14,6 +15,7 @@
+ files.  It also lets you view single files (including GIF animations), add
+ comments to images, organize images in catalogs, print images, view
+ slideshows, set your desktop background, and more.
++...\" LSARC 2008/207 GNOME 2.22
+ 
+ .SH "OPTIONS"
+ .LP 
+@@ -55,4 +57,23 @@
+ Written by Paolo Bacchilega <paolo.bacch@tin.it>.
+ .LP 
+ This manual page was originally written by Remco van de Meent <remco@debian.org>, for the Debian GNU/Linux system, now is maintained by Paolo Bacchilega.
++
++.SH "ATTRIBUTES"
++.PP
++See \fBattributes\fR(5)
++for descriptions of the following attributes:
++.sp
++.TS
++tab(^G) box;
++cw(2.75i) |cw(2.75i)
++lw(2.75i) |lw(2.75i)
++.
++ATTRIBUTE TYPE^ATTRIBUTE VALUE
++_
++Availability^SUNWgnome-img-organzier
++_
++Interface stability^Volatile
++
++.TE
++.sp
+ 

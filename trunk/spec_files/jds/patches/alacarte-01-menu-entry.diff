@@ -1,0 +1,13 @@
+diff -ruN alacarte-0.11.6.orig/data/alacarte.desktop.in.in alacarte-0.11.6/data/alacarte.desktop.in.in
+--- alacarte-0.11.6.orig/data/alacarte.desktop.in.in	2008-09-23 16:17:24.282101004 +0100
++++ alacarte-0.11.6/data/alacarte.desktop.in.in	2008-09-23 16:17:53.822944527 +0100
+@@ -1,7 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ _Name=Main Menu
+-_Comment=Change which applications are shown on the main menu
++# SUN_BRANDING
++_Comment=Add or remove entries from the Applications menu
+ Exec=alacarte
+ Terminal=false
+ Type=Application

@@ -1,0 +1,16 @@
+--- gthumb-2.10.10/data/gthumb.desktop.in.orig	Wed Dec  3 16:18:11 2008
++++ gthumb-2.10.10/data/gthumb.desktop.in	Wed Dec  3 16:18:53 2008
+@@ -1,7 +1,10 @@
+ [Desktop Entry]
+-_Name=gThumb Image Viewer
+-_GenericName=Image Viewer
+-_Comment=View and organize your images
++# SUN_BRANDING
++_Name=Image Organizer
++# SUN_BRANDING
++_GenericName=gThumb Image Organizer
++# SUN_BRANDING
++_Comment=Arrange, tag and search your image library
+ Categories=GNOME;GTK;Graphics;Viewer;RasterGraphics;2DGraphics;Photography;
+ Exec=gthumb %U
+ Icon=gthumb

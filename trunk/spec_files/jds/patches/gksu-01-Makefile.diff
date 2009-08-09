@@ -1,0 +1,16 @@
+--- gksu-1.3.0/gksu/Makefile.in.orig	2006-08-01 15:19:47.539962000 +0800
++++ gksu-1.3.0/gksu/Makefile.in	2006-08-01 15:20:13.707997000 +0800
+@@ -237,11 +237,11 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-AM_CFLAGS = -g -O2 -Wall
++AM_CFLAGS = -g
+ INCLUDES = @GKSU_CFLAGS@
+ AM_CPPFLAGS = -DLOCALEDIR=\"$(datadir)/locale\" -DDATA_DIR=\"$(datadir)\" -DPREFIX=\"$(prefix)\"
+ noinst_HEADERS = defines.h util.h
+-gksu_LDFLAGS = @GKSU_LIBS@ -lutil 
++gksu_LDFLAGS = @GKSU_LIBS@ 
+ gksu_SOURCES = gksu.c util.c
+ gksuexec_LDFLAGS = @GKSU_LIBS@
+ gksuexec_SOURCES = gksuexec.c util.c

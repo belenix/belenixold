@@ -1,0 +1,42 @@
+diff -uNr libproxy-0.2.3-orig/src/lib/Makefile.am libproxy-0.2.3/src/lib/Makefile.am
+--- libproxy-0.2.3-orig/src/lib/Makefile.am	2008-06-06 04:56:15.000000000 +0800
++++ libproxy-0.2.3/src/lib/Makefile.am	2009-02-02 15:29:59.234785000 +0800
+@@ -1,8 +1,8 @@
+ lib_LTLIBRARIES     = libproxy.la
+ libproxy_la_SOURCES = misc.c url.c pac.c dhcp.c dns.c slp.c wpad.c proxy_factory.c config_file.c \
+ 						misc.h url.h pac.h dhcp.h dns.h slp.h wpad.h proxy_factory.h proxy.h config_file.h
+-libproxy_la_CFLAGS  = -Wall
+-libproxy_la_LDFLAGS = -lm
++#libproxy_la_CFLAGS  = -Wall
++libproxy_la_LDFLAGS = -lm -lsocket
+ 
+ include_HEADERS     = proxy.h
+ 
+diff -uNr libproxy-0.2.3-orig/src/lib/dhcp.c libproxy-0.2.3/src/lib/dhcp.c
+--- libproxy-0.2.3-orig/src/lib/dhcp.c	2008-06-06 04:56:15.000000000 +0800
++++ libproxy-0.2.3/src/lib/dhcp.c	2009-02-02 15:32:32.894055000 +0800
+@@ -22,7 +22,9 @@
+ #include "pac.h"
+ #include "dhcp.h"
+ 
+-struct _pxDHCP { };
++struct _pxDHCP {
++	char dummy;	//For compatibility with Sun CC
++};
+ 
+ /**
+  * Creates a new pxDHCP PAC detector.
+diff -uNr libproxy-0.2.3-orig/src/lib/slp.c libproxy-0.2.3/src/lib/slp.c
+--- libproxy-0.2.3-orig/src/lib/slp.c	2008-06-06 04:56:15.000000000 +0800
++++ libproxy-0.2.3/src/lib/slp.c	2009-02-02 15:33:02.894429000 +0800
+@@ -22,7 +22,9 @@
+ #include "pac.h"
+ #include "slp.h"
+ 
+-struct _pxSLP { };
++struct _pxSLP {
++	char dummy;	//For compatibility with Sun CC
++};
+ 
+ /**
+  * Creates a new SLP PAC detector.

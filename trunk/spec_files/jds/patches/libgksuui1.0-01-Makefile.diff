@@ -1,0 +1,34 @@
+diff -u -r libgksuui1.0-1.0.5.orig/Makefile.in libgksuui1.0-1.0.5/Makefile.in
+--- libgksuui1.0-1.0.5.orig/Makefile.in	2005-06-13 22:52:09.000000000 +0800
++++ libgksuui1.0-1.0.5/Makefile.in	2006-08-01 15:08:24.132126000 +0800
+@@ -171,7 +171,7 @@
+ 
+ DISTCLEANFILES = *~
+ 
+-SUBDIRS = intl m4 po libgksuui graphics docs
++SUBDIRS = intl m4 po libgksuui graphics
+ DIST_SUBDIRS = $(SUBDIRS)
+ 
+ ACLOCAL_AMFLAGS = -I m4
+Only in libgksuui1.0-1.0.5: build
+diff -u -r libgksuui1.0-1.0.5.orig/libgksuui/Makefile.in libgksuui1.0-1.0.5/libgksuui/Makefile.in
+--- libgksuui1.0-1.0.5.orig/libgksuui/Makefile.in	2005-06-13 22:52:10.000000000 +0800
++++ libgksuui1.0-1.0.5/libgksuui/Makefile.in	2006-08-01 14:59:25.411786000 +0800
+@@ -167,7 +167,7 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-AM_CFLAGS = -g -O2 -Wall
++AM_CFLAGS = 
+ INCLUDES = `pkg-config --cflags gtk+-2.0`
+ AM_CPPFLAGS = -DLOCALEDIR=\"$(datadir)/locale\" -DDATA_DIR=\"$(datadir)\" -DPREFIX=\"$(prefix)\"
+ 
+@@ -177,7 +177,7 @@
+ # major -> breaks backward compatibility (changes to existing ABI)
+ # minor -> keeps compatibility (additions to the API)
+ # micro -> no change to the API/ABI
+-libgksuui1_0_la_LDFLAGS = -version-info 0:0:0 -Wl,-O1 -Wl,--version-script=libgksuui.ver `pkg-config --libs gtk+-2.0`
++libgksuui1_0_la_LDFLAGS = -version-info 0:0:0 -Wl, `pkg-config --libs gtk+-2.0`
+ 
+ noinst_HEADERS = defines.h
+ 

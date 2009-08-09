@@ -1,0 +1,15 @@
+--- pwlib/Makefile.in.ori	2006-03-21 14:04:10.817511000 +0800
++++ pwlib/Makefile.in	2006-03-21 14:05:29.269154000 +0800
+@@ -267,10 +267,12 @@
+ 		rm -f  $(PTLIB_FILE) ; \
+ 		ln -sf $(PTLIB_FILE).@MAJOR_VERSION@.@MINOR_VERSION@.@BUILD_NUMBER@ $(PTLIB_FILE) \
+ 	)
++ifneq ($(PTLIB_FILE),libpt.@SHAREDLIBEXT@)
+ 	(cd $(DESTDIR)$(LIBDIR); \
+ 		rm -f  libpt.@SHAREDLIBEXT@ ; \
+ 		ln -sf $(PTLIB_FILE) libpt.@SHAREDLIBEXT@ \
+ 	)
++endif
+ ifeq (1, $(HAS_PLUGINS))
+ 	cd plugins/pwlib/device/ ; \
+ 	( for dir in ./* ;\

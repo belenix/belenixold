@@ -1,0 +1,20 @@
+--- libproxy-0.2.3/src/bin/proxy.c.orig	2009-02-13 14:27:33.843552000 +0900
++++ libproxy-0.2.3/src/bin/proxy.c	2009-02-13 18:36:43.936237000 +0900
+@@ -47,7 +47,16 @@ readline(int fd)
+ 		
+ 		// Receive a single character, check for newline or EOF
+ 		if (read(fd, &c, 1) != 1) return buffer;
+-		if (c == '\n')            return buffer ? buffer : strdup("");
++		if (c == '\n')
++		{
++			if (buffer)
++			{
++				buffer[i-1] = '\0';
++				return buffer;
++			}
++			else
++				return strdup("");
++		}
+ 
+ 		// Allocate new buffer if we need
+ 		if (i % 1024 == 1)

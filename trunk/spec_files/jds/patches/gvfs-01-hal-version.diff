@@ -1,0 +1,11 @@
+--- gvfs-0.1.8/configure.ac.orig	2008-03-03 10:54:07.020246000 +0100
++++ gvfs-0.1.8/configure.ac	2008-03-03 10:54:40.203084000 +0100
+@@ -220,7 +220,7 @@
+ have_hal_fast_init=no
+ HAL_LIBS=
+ HAL_CFLAGS=
+-HAL_REQUIRED=0.5.10
++HAL_REQUIRED=0.5.8
+ 
+ if test "x$enable_hal" != "xno"; then
+   PKG_CHECK_EXISTS([hal >= $HAL_REQUIRED], msg_hal=yes)

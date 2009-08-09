@@ -1,0 +1,20 @@
+--- ../printman-0.0.2.old/configure.in	2005-06-30 19:44:02.138708000 +0100
++++ ./configure.in	2005-06-30 19:44:43.437583000 +0100
+@@ -20,7 +20,16 @@
+ LIBGNOMEUI_REQUIRED=1.107.0
+ GLIB_REQUIRED=1.3.15
+ 
+-PKG_CHECK_MODULES(GNOME_PRINT_MANAGER, 
++GNOME_PRINT_MANAGER_MODULES="glib-2.0 >= 2.0.1		\
++			     gdk-pixbuf-2.0 >= 2.0.0	\
++			     gtk+-2.0 >= 2.0.0		\
++			     libxml-2.0 >= 2.4.16	\
++			     atk >= 1.0.0		\
++			     gconf-2.0 >= 1.1.11	\
++			     gnome-vfs-2.0 >= 2.7.3	\
++			     gobject-2.0 >= 2.0.0	\
++			     gdk-x11-2.0 >= 2.0.0"
++PKG_CHECK_MODULES(GNOME_PRINT_MANAGER, $GNOME_PRINT_MANAGER_MODULES \
+ 		  libgnome-2.0 >= $LIBGNOME_REQUIRED \
+ 		  libgnomeui-2.0 >= $LIBGNOMEUI_REQUIRED)
+ AC_SUBST(GNOME_PRINT_MANAGER_CFLAGS)

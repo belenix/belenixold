@@ -1,0 +1,24 @@
+--- ../libexif-gtk-0.3.5.old/configure.in	2005-06-15 11:39:43.774109704 +0100
++++ ./configure.in	2005-06-15 11:40:46.830523672 +0100
+@@ -78,6 +78,7 @@
+ AC_OUTPUT([ po/Makefile.in m4/Makefile 
+   Makefile
+   libexif-gtk/Makefile
++  libexif-gtk/libexif-gtk-uninstalled.pc
+   libexif-gtk/libexif-gtk.pc
+   gtk-extensions/Makefile
+   tests/Makefile
+--- ../libexif-gtk-0.3.5.old/libexif-gtk/libexif-gtk-uninstalled.pc.in	1970-01-01 01:00:00.000000000 +0100
++++ ./libexif-gtk/libexif-gtk-uninstalled.pc.in	2005-06-15 11:40:55.840154000 +0100
+@@ -0,0 +1,11 @@
++prefix=
++exec_prefix=
++libdir=${pcfiledir}
++includedir=${pc_top_builddir}/${pcfiledir}
++
++Name: libexif-gtk
++Description: GTK-widgets for libexif
++Requires: libexif
++Version: @VERSION@
++Libs: ${pc_top_builddir}/${pcfiledir}/libexif-gtk.la
++Cflags: -I${pc_top_builddir}/${pcfiledir}/..

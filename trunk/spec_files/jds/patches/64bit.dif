@@ -1,0 +1,22 @@
+--- configure.in	2002/07/19 15:01:25	1.1
++++ configure.in	2002/07/19 15:01:54
+@@ -2330,7 +2330,7 @@
+ 
+ AC_DEFINE(LBER_LEN_T,long)
+ AC_DEFINE(LBER_SOCKET_T,int)
+-AC_DEFINE(LBER_TAG_T,long)
++AC_DEFINE(LBER_TAG_T,int)
+ 
+ dnl ----------------------------------------------------------------
+ dnl Checks for library functions.
+--- libraries/liblunicode/ucdata/ucgendat.c	2002/07/19 15:06:58	1.1
++++ libraries/liblunicode/ucdata/ucgendat.c	2002/07/19 15:07:43
+@@ -1273,7 +1274,7 @@
+     /*
+      * Write the byte count.
+      */
+-    fwrite((char *) &bytes, sizeof(unsigned long), 1, out);
++    fwrite((char *) &bytes, sizeof(unsigned int), 1, out);
+ 
+     /*
+      * Write the property list counts.

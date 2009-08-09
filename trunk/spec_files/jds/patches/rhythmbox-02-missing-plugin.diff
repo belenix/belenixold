@@ -1,0 +1,13 @@
+--- rhythmbox-0.11.6/backends/gstreamer/rb-player-gst.c.bak	2008-08-04 16:07:49.405502000 +0800
++++ rhythmbox-0.11.6/backends/gstreamer/rb-player-gst.c	2008-08-04 16:08:42.636195000 +0800
+@@ -457,7 +457,6 @@
+ 	g_strfreev (details);
+ 	g_strfreev (descriptions);
+
+-	gst_message_unref (message);
+ }
+ #endif
+
+ 
+
+

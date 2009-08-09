@@ -1,0 +1,29 @@
+diff -urN --ignore-space-change -Xdiff-excludes.txt /export/home/jdsbuild/packages/BUILD/SUNWgksu-1.3.0/gksu-1.3.0/gksu.desktop gksu-1.3.0/gksu.desktop
+--- /export/home/jdsbuild/packages/BUILD/SUNWgksu-1.3.0/gksu-1.3.0/gksu.desktop	2005-05-12 18:28:20.000000000 +0100
++++ gksu-1.3.0/gksu.desktop	2006-11-15 18:10:18.555680000 +0000
+@@ -1,10 +1,8 @@
+ [Desktop Entry]
+ Name=Root Terminal
+ Name[pt_BR]=Terminal como Root
+-Comment=Opens a terminal as the root user, using gksu to ask for the password
+-Comment[pt_BR]=Abre um terminal como usuário root, usando o gksu para pedir a senha
+ Name[de]=Root-Terminal
+-Comment[de]=Befehlszeile mit Administrationsrechten
++Comment=Run a command line shell as the root user
+ Exec=gksu /usr/bin/x-terminal-emulator
+ Icon=/usr/share/pixmaps/gksu-root-terminal.png
+ StartupNotify=true
+@@ -12,3 +10,4 @@
+ MultipleArgs=false
+ Type=Application
+ Categories=Application;System
++NoDisplay=true
+diff -urN --ignore-space-change -Xdiff-excludes.txt /export/home/jdsbuild/packages/BUILD/SUNWgksu-1.3.0/gksu-1.3.0/gksuexec.desktop gksu-1.3.0/gksuexec.desktop
+--- /export/home/jdsbuild/packages/BUILD/SUNWgksu-1.3.0/gksu-1.3.0/gksuexec.desktop	2005-05-12 18:28:20.000000000 +0100
++++ gksu-1.3.0/gksuexec.desktop	2006-11-15 18:10:59.832090000 +0000
+@@ -12,4 +12,4 @@
+ MultipleArgs=false
+ Type=Application
+ Categories=Application;System
+-
++NoDisplay=true

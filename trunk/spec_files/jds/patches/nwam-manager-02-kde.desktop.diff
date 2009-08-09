@@ -1,0 +1,9 @@
+--- nwam-manager-0.5.13/daemon/nwam-manager.desktop.in.orig	2009-07-28 22:11:21.411096517 +0530
++++ nwam-manager-0.5.13/daemon/nwam-manager.desktop.in	2009-07-28 22:11:55.960756685 +0530
+@@ -8,3 +8,6 @@
+ Type=Application
+ Categories=
+ X-GNOME-Autostart-enabled=true
++X-KDE-autostart-after=panel
++X-KDE-StartupNotify=false
++X-KDE-UniqueApplet=true

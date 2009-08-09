@@ -1,0 +1,87 @@
+--- gthumb-2.10.9/libgthumb/file-utils.c.orig	2008-08-26 21:24:24.534509000 +0900
++++ gthumb-2.10.9/libgthumb/file-utils.c	2008-08-26 21:29:49.873092000 +0900
+@@ -1239,6 +1239,31 @@ checksum_simple (const char *path)
+ /* URI/Path utils */
+ 
+ 
++char *
++get_utf8_display_name_from_uri (const char *escaped_uri)
++{
++	char      *unescaped_name = NULL;
++	char      *utf8_name = NULL;
++	GError    *err = NULL;
++
++	unescaped_name = gnome_vfs_unescape_string_for_display (escaped_uri);
++	utf8_name = g_filename_to_utf8 (unescaped_name, -1, NULL, NULL, &err);
++
++	if (err != NULL) {
++		g_warning ("%s:%u:%s(): %s\n", __FILE__, __LINE__, __FUNCTION__, err->message);
++		g_warning ("Hint: try to set G_FILENAME_ENCODING environment variable to the correct filename encoding or G_BROKEN_FILENAMES to 1\n");
++		utf8_name = unescaped_name;
++	} else {
++		g_free (unescaped_name);
++	}
++
++	if (g_utf8_validate (utf8_name, -1, NULL) == FALSE)
++		g_warning ("File display name is not valid UTF8. Please file a bug report.\n");
++
++	return utf8_name;
++}
++
++
+ const char *
+ get_home_uri (void)
+ {
+--- gthumb-2.10.9/libgthumb/file-utils.h.orig	2008-08-26 21:30:02.414382000 +0900
++++ gthumb-2.10.9/libgthumb/file-utils.h	2008-08-26 21:30:42.898266000 +0900
+@@ -158,6 +158,7 @@ long                checksum_simple     
+ 
+ /* URI/Path utils */
+ 
++char *get_utf8_display_name_from_uri (const char *uri);
+ const char *        get_home_uri                  (void);
+ const char *        get_file_path_from_uri        (const char       *uri);
+ const char *        get_catalog_path_from_uri     (const char       *uri);
+--- gthumb-2.10.9/src/gth-browser.c.orig	2008-08-26 22:02:33.550173000 +0900
++++ gthumb-2.10.9/src/gth-browser.c	2008-08-26 22:03:32.689598000 +0900
+@@ -455,6 +455,7 @@ window_update_statusbar_image_info (GthB
+ 	GthBrowserPrivateData *priv = browser->priv;
+ 	char                  *text;
+ 	char                   time_txt[50], *utf8_time_txt;
++	char                  *format_locale;
+ 	char                  *size_txt;
+ 	char                  *file_size_txt;
+ 	int                    width, height;
+@@ -479,7 +480,9 @@ window_update_statusbar_image_info (GthB
+ 	if (timer == 0)
+ 		timer = priv->image->mtime;
+ 	tm = localtime (&timer);
+-	strftime (time_txt, 50, _("%d %B %Y, %H:%M"), tm);
++	format_locale = g_locale_from_utf8 (_("%d %B %Y, %H:%M"), -1, 0, 0, 0);
++	strftime (time_txt, 50, format_locale, tm);
++	g_free (format_locale);
+ 	utf8_time_txt = g_locale_to_utf8 (time_txt, -1, 0, 0, 0);
+ 
+ 	size_txt = g_strdup_printf (_("%d x %d pixels"), width, height);
+--- gthumb-2.10.9/src/gth-dir-list.c.orig	2008-08-26 21:32:38.545404000 +0900
++++ gthumb-2.10.9/src/gth-dir-list.c	2008-08-26 21:33:25.860253000 +0900
+@@ -434,7 +434,7 @@ gth_dir_list_update_view (GthDirList *di
+ 		else
+ 			pixbuf = dir_pixbuf;
+ 
+-		utf8_name = gnome_vfs_unescape_string_for_display (name);
++		utf8_name = get_utf8_display_name_from_uri (name);
+ 		gtk_list_store_append (dir_list->list_store, &iter);
+ 		gtk_list_store_set (dir_list->list_store, &iter,
+ 				    DIR_LIST_COLUMN_ICON, pixbuf,
+--- gthumb-2.10.9/src/gth-location.c.orig	2008-08-26 21:36:34.389873000 +0900
++++ gthumb-2.10.9/src/gth-location.c	2008-08-26 21:37:48.387635000 +0900
+@@ -837,7 +837,7 @@ update_uri (GthLocation *loc,
+ 			if (same_uri (uri, home_uri))
+ 				uri_name = g_strdup (_("Home"));
+ 			else
+-				uri_name = gnome_vfs_unescape_string_for_display (file_name_from_path (uri));
++				uri_name = get_utf8_display_name_from_uri (file_name_from_path (uri));
+ 		}
+ 
+ 		gtk_list_store_insert (loc->priv->model, &iter, pos++);

@@ -1,0 +1,857 @@
+diff --git a/Makefile.am b/Makefile.am
+index bc21afc..907d603 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -18,7 +18,7 @@
+ # CDDL HEADER END
+ #
+ 
+-SUBDIRS = libnwam common tests capplet daemon po pixmaps
++SUBDIRS = common tests capplet daemon po pixmaps
+ 
+ EXTRA_DIST =			\
+ 	SUNWnwam-manager.spec	\
+diff --git a/common/nwamui_daemon.c b/common/nwamui_daemon.c
+index 4fe78c4..54bcfef 100644
+--- a/common/nwamui_daemon.c
++++ b/common/nwamui_daemon.c
+@@ -89,18 +89,21 @@ struct _NwamuiDaemonPrivate {
+     guint                        old_rx_packets;
+ 
+     gboolean                     emit_wlan_changed_signals;
+-    GList                       *wifi_list;
++
++    GHashTable                  *wlan_cache_hash;
+ };
+ 
+ typedef struct _NwamuiEvent {
+     int e;	/* ui daemon event type */
+-    libnwam_event_data_t *led;	/* daemon data */
++    gpointer user_data;
++    GDestroyNotify destroy;
++    GObject *object;
+     NwamuiDaemon* daemon;
+ } NwamuiEvent;
+ 
+ static gboolean nwamd_event_handler(gpointer data);
+ 
+-static NwamuiEvent* nwamui_event_new(NwamuiDaemon* daemon, int e, libnwam_event_data_t *led);
++static NwamuiEvent* nwamui_event_new(NwamuiDaemon* daemon, int e, GObject *object, gpointer user_data, GDestroyNotify destroy);
+ 
+ static void nwamui_event_free(NwamuiEvent *e);
+ 
+@@ -328,6 +331,12 @@ nwamui_daemon_init (NwamuiDaemon *self)
+     self->prv->wep_timeout_id = 0;
+     self->prv->communicate_change_to_daemon = TRUE;
+     self->prv->is_connected = FALSE;
++    /* < nwamui_wifi_net_get_unique_name(), g_object_ref(NwamuiWifiNet*) > */
++    self->prv->wlan_cache_hash = g_hash_table_new_full(g_str_hash,
++      g_str_equal,
++      (GDestroyNotify)g_free,
++      (GDestroyNotify)g_object_unref);
++
+ 
+     if (( self->prv->kstat_ctl = kstat_open ()) == NULL) {
+        g_debug ("Cannot open /dev/kstat: %s", strerror (errno));
+@@ -343,7 +352,7 @@ nwamui_daemon_init (NwamuiDaemon *self)
+ 		 */
+ 		g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,
+ 		  nwamd_event_handler,
+-		  (gpointer) nwamui_event_new(self, NWAMUI_DAEMON_INFO_ACTIVE, NULL),
++		  (gpointer) nwamui_event_new(self, NWAMUI_DAEMON_INFO_ACTIVE, NULL, NULL, NULL),
+ 		  (GDestroyNotify) nwamui_event_free);
+ 
+         nwamui_daemon_populate_wifi_fav_list( self );
+@@ -457,7 +466,9 @@ nwamui_daemon_finalize (NwamuiDaemon *self)
+     if (self->prv->kstat_ctl != NULL ) {
+         kstat_close (self->prv->kstat_ctl);
+     }
+-    
++
++    g_hash_table_destroy(self->prv->wlan_cache_hash);
++
+     g_free (self->prv); 
+     self->prv = NULL;
+ 
+@@ -921,9 +932,14 @@ dispatch_wifi_scan_events_from_cache(NwamuiDaemon* daemon )
+     libnwam_wlan_t         *wlan, *origwlan;
+     uint_t                  nwlan;
+     const char*             prev_iface_name = NULL;
++    gchar                  *unique_name;
+ 
+     origwlan = wlan = libnwam_get_wlan_list(&nwlan);
+     g_debug("%d WLANs detected.\n", nwlan);
++
++    /* Clean cache */
++    g_hash_table_remove_all(daemon->prv->wlan_cache_hash);
++
+     while (nwlan-- > 0) {
+         /* Try avoid potentially costly look up ncu object every time */
+         if ( prev_iface_name == NULL || strcmp(prev_iface_name, wlan->wlan_interface) != 0 ) {
+@@ -933,34 +949,53 @@ dispatch_wifi_scan_events_from_cache(NwamuiDaemon* daemon )
+             ncu = get_ncu_by_device_name( daemon, wlan->wlan_interface );
+         }
+ 
+-        g_debug("Interface: %-10s\n\t%-3s  "
++        g_debug("\n\tScan Wlan Interface: %-10s\n\t%s\n\t%-3s  "
+             "Key: %s  %s\n",
+-            wlan->wlan_interface,
+-            wlan->wlan_known ? "Old" : "New",
+-            wlan->wlan_haskey ? "Set" : "Unset",
+-            wlan->wlan_connected ? "Connected" :
+-            "Unconnected");
++          wlan->wlan_interface,
++          wlan->wlan_attrs.wla_essid ? wlan->wlan_attrs.wla_essid : "Hiden-essid",
++          wlan->wlan_known ? "Old" : "New",
++          wlan->wlan_haskey ? "Set" : "Unset",
++          wlan->wlan_connected ? "Connected" : "Unconnected");
++
+         /* FIXME - Skipping empty ESSID seems wrong here, what if we
+          * actually connect to this... Will it still appear in menu??
+          */
+         if ( strlen(wlan->wlan_attrs.wla_essid) > 0  && ncu != NULL ) {
+ 
+-            wifi_net = nwamui_wifi_net_new_from_wlan_attrs( ncu, &(wlan->wlan_attrs));
++            unique_name = wlan_compose_unique_name(wlan->wlan_interface,
++              wlan->wlan_attrs.wla_essid,
++              wlan->wlan_attrs.wla_bssid);
+ 
+-            if ( wlan->wlan_connected ) { /* connect WLAN, set in NCU... */
+-                nwamui_ncu_set_wifi_info (ncu, wifi_net);
+-                nwamui_wifi_net_set_status( wifi_net, NWAMUI_WIFI_STATUS_CONNECTED );
++            wifi_net = g_hash_table_lookup(daemon->prv->wlan_cache_hash,
++              unique_name);
++
++            /* Avoid add dup wifi_net to menu, which will cause critical
++             * error. Ignore the dup wifi_net shouldn't cause any issues.
++             */
++            if (!wifi_net) {
++
++                wifi_net = nwamui_wifi_net_new_from_wlan_attrs( ncu, &(wlan->wlan_attrs));
++                if (daemon->prv->emit_wlan_changed_signals) {
++                    /* trigger event */
++                    g_signal_emit (daemon,
++                      nwamui_daemon_signals[WIFI_SCAN_RESULT],
++                      0, /* details */
++                      wifi_net);
++                }
++
++                g_hash_table_insert(daemon->prv->wlan_cache_hash,
++                  g_strdup(unique_name), wifi_net);
++
++            } else {
++                nwamui_wifi_net_set_from_wlan_attrs( wifi_net, &(wlan->wlan_attrs));
+             }
+ 
+-            if (daemon->prv->emit_wlan_changed_signals) {
+-                /* trigger event */
+-                g_signal_emit (daemon,
+-                  nwamui_daemon_signals[WIFI_SCAN_RESULT],
+-                  0, /* details */
+-                  wifi_net);
++            if ( wlan->wlan_connected ) { /* connect WLAN, set in NCU... */
++                nwamui_ncu_set_wifi_info (ncu, wifi_net);
++				nwamui_wifi_net_set_status( wifi_net, NWAMUI_WIFI_STATUS_CONNECTED );
+             }
+ 
+-            g_object_unref(wifi_net);
++            g_free(unique_name);
+         }
+         wlan++;
+     }
+@@ -982,11 +1017,15 @@ dispatch_wifi_scan_events_from_cache(NwamuiDaemon* daemon )
+ }
+ 
+ static NwamuiEvent*
+-nwamui_event_new(NwamuiDaemon* daemon, int e, libnwam_event_data_t *led)
++nwamui_event_new(NwamuiDaemon* daemon, int e, GObject *object, gpointer user_data, GDestroyNotify destroy)
+ {
+     NwamuiEvent *event = g_new(NwamuiEvent, 1);
+     event->e = e;
+-    event->led = led;
++    event->object = object;
++    if (event->object)
++        g_object_ref(event->object);
++    event->user_data = user_data;
++    event->destroy = destroy;
+     event->daemon = g_object_ref(daemon);
+     return event;
+ }
+@@ -995,8 +1034,10 @@ static void
+ nwamui_event_free(NwamuiEvent *event)
+ {
+     g_object_unref(event->daemon);
+-    if (event->led) {
+-        libnwam_free_event(event->led);
++    if (event->object)
++        g_object_unref(event->object);
++    if (event->destroy) {
++        event->destroy(event->user_data);
+     }
+     g_free(event);
+ }
+@@ -1299,7 +1340,6 @@ nwamd_event_handler(gpointer data)
+ {
+     NwamuiEvent             *event = (NwamuiEvent *)data;
+     NwamuiDaemon            *daemon = event->daemon;
+-	libnwam_event_data_t    *led = event->led;
+     int                     err;
+ 
+     daemon->prv->event_cause = NWAMUI_DAEMON_EVENT_CAUSE_NONE;
+@@ -1307,7 +1347,6 @@ nwamd_event_handler(gpointer data)
+     g_debug("nwamd_event_handler : %d", event->e );
+ 
+     switch (event->e) {
+-    case NWAMUI_DAEMON_INFO_UNKNOWN:
+     case NWAMUI_DAEMON_INFO_ERROR:
+     case NWAMUI_DAEMON_INFO_INACTIVE:
+         nwamui_ncp_set_active_ncu( daemon->prv->active_ncp, NULL );
+@@ -1330,6 +1369,7 @@ nwamd_event_handler(gpointer data)
+         break;
+     case NWAMUI_DAEMON_INFO_RAW:
+     {
++        libnwam_event_data_t    *led = (libnwam_event_data_t *)event->user_data;
+         g_debug("NWAMUI_DAEMON_INFO_RAW led_type %d", led->led_type);
+         switch (led->led_type) {
+         case deInitial: {
+@@ -1339,7 +1379,7 @@ nwamd_event_handler(gpointer data)
+             /* Redispatch as INFO_ACTIVE */
+             g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,
+               nwamd_event_handler,
+-              (gpointer) nwamui_event_new(daemon, NWAMUI_DAEMON_INFO_ACTIVE, NULL),
++              (gpointer) nwamui_event_new(daemon, NWAMUI_DAEMON_INFO_ACTIVE, NULL, NULL, NULL),
+               (GDestroyNotify) nwamui_event_free);
+         }
+             break;
+@@ -1502,6 +1542,7 @@ nwamd_event_handler(gpointer data)
+             }
+             else {
+                 wifi = nwamui_wifi_net_new_from_wlan_attrs( ncu, &led->led_wlan  );
++                g_warning("Out of sync: ncu and wifi");
+             }
+ 
+             g_signal_emit (daemon,
+@@ -1523,12 +1564,13 @@ nwamd_event_handler(gpointer data)
+             g_assert(ncu);
+ 
+             if ( wifi ) {
+-                nwamui_wifi_net_set_status(wifi, NWAMUI_WIFI_STATUS_CONNECTED);
+-                nwamui_wifi_net_set_from_wlan_attrs( wifi, &led->led_wlan  );
++                nwamui_wifi_net_set_from_wlan_attrs(wifi, &led->led_wlan);
++				nwamui_wifi_net_set_status(wifi, NWAMUI_WIFI_STATUS_CONNECTED);
+             }
+             else {
+                 wifi = nwamui_wifi_net_new_from_wlan_attrs( ncu, &led->led_wlan  );
+                 nwamui_ncu_set_wifi_info(ncu, wifi);
++                g_warning("Out of sync: ncu and wifi");
+             }
+ 
+             nwamui_daemon_setup_dhcp_or_wep_key_timeout( daemon, ncu );
+@@ -1719,26 +1761,32 @@ nwamd_event_handler(gpointer data)
+         }
+     }
+     break;
+-    case NWAMUI_DAEMON_INFO_WLAN_CHANGED:
+-        /* fall through */
+     default:
+-        g_assert_not_reached();
++        g_signal_emit (daemon,
++          nwamui_daemon_signals[DAEMON_INFO],
++          0, /* details */
++          event->e,
++          event->object,
++          g_strdup(event->user_data));
++        break;
+     }
+     
+     return FALSE;
+ }
+ 
+ extern void
+-nwamui_daemon_emit_info_message( NwamuiDaemon* self, const gchar* message )
++nwamui_daemon_emit_info_message( NwamuiDaemon* self, nwamui_daemon_info_t info, GObject *object, const gchar* message )
+ {
++    NwamuiEvent *event;
++
+     g_return_if_fail( (NWAMUI_IS_DAEMON(self) && message != NULL ) );
+ 
+-    g_signal_emit (self,
+-      nwamui_daemon_signals[DAEMON_INFO],
+-      0, /* details */
+-      NWAMUI_DAEMON_INFO_UNKNOWN,
+-      NULL,
+-      g_strdup(message?message:""));
++    event =  nwamui_event_new(self, info, object, (gpointer)g_strdup(message?message:""), (GDestroyNotify)g_free);
++
++    g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,
++      nwamd_event_handler,
++      (gpointer)event,
++      (GDestroyNotify) nwamui_event_free);
+ }
+ 
+ extern void
+@@ -1840,7 +1888,7 @@ nwam_events_thread ( gpointer data )
+ 
+             g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,
+               nwamd_event_handler,
+-              (gpointer) nwamui_event_new(daemon, NWAMUI_DAEMON_INFO_ERROR, NULL),
++              (gpointer) nwamui_event_new(daemon, NWAMUI_DAEMON_INFO_ERROR, NULL, NULL, NULL),
+               (GDestroyNotify) nwamui_event_free);
+               
+             if ( ! event_thread_running() ) {
+@@ -1855,7 +1903,7 @@ nwam_events_thread ( gpointer data )
+ 				if (libnwam_init(-1) == 0) {
+                     g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,
+                       nwamd_event_handler,
+-                      (gpointer) nwamui_event_new(daemon, NWAMUI_DAEMON_INFO_ACTIVE, NULL),
++                      (gpointer) nwamui_event_new(daemon, NWAMUI_DAEMON_INFO_ACTIVE, NULL, NULL, NULL),
+                       (GDestroyNotify) nwamui_event_free);
+ 
+ 					continue;
+@@ -1874,7 +1922,7 @@ nwam_events_thread ( gpointer data )
+         
+         g_idle_add_full(G_PRIORITY_DEFAULT_IDLE,
+           nwamd_event_handler,
+-          (gpointer) nwamui_event_new(daemon, NWAMUI_DAEMON_INFO_RAW, led),
++          (gpointer) nwamui_event_new(daemon, NWAMUI_DAEMON_INFO_RAW, NULL, (gpointer)led, (GDestroyNotify)libnwam_free_event),
+           (GDestroyNotify) nwamui_event_free);
+     }
+     
+@@ -1964,16 +2012,23 @@ default_ncu_destroy_signal_handler (NwamuiDaemon *self, NwamuiNcu* ncu, gpointer
+ static void 
+ default_ncu_up_signal_handler (NwamuiDaemon *self, NwamuiNcu* ncu, gpointer user_data)
+ {
+-	g_debug("NCU %s up", nwamui_ncu_get_display_name(ncu));
++	gchar*      name = nwamui_ncu_get_display_name(ncu);
++
++	g_debug("NCU %s up", name);
+ 	
+     /* TODO - Send this message to UI, and also NCU  */
++    g_free(name);
+ }
+ 
+ static void 
+ default_ncu_down_signal_handler (NwamuiDaemon *self, NwamuiNcu* ncu, gpointer user_data)
+ {
+-	g_debug("NCU %s down", nwamui_ncu_get_display_name(ncu));
++	gchar*      name = nwamui_ncu_get_display_name(ncu);
++
++	g_debug("NCU %s down", name);
++
+     /* TODO - Send this message to UI, and also NCU  */
++    g_free(name);
+ }
+ 
+ static void
+diff --git a/common/nwamui_daemon.h b/common/nwamui_daemon.h
+index da0ae41..9319fe4 100644
+--- a/common/nwamui_daemon.h
++++ b/common/nwamui_daemon.h
+@@ -141,7 +141,7 @@ nwamui_daemon_event_cause_t         nwamui_daemon_get_event_cause(NwamuiDaemon*
+ 
+ const char *                        nwamui_daemon_get_event_cause_string(NwamuiDaemon* self );
+ 
+-extern void                         nwamui_daemon_emit_info_message( NwamuiDaemon* self, const gchar* message );
++extern void                         nwamui_daemon_emit_info_message( NwamuiDaemon* self, nwamui_daemon_info_t info, GObject *object, const gchar* message );
+ 
+ extern void                         nwamui_daemon_emit_signals_from_llp_info( NwamuiDaemon* self, NwamuiNcu* ncu, libnwam_llp_t* llp );
+ 
+diff --git a/common/nwamui_wifi_net.c b/common/nwamui_wifi_net.c
+index e60a676..a29bafe 100644
+--- a/common/nwamui_wifi_net.c
++++ b/common/nwamui_wifi_net.c
+@@ -683,7 +683,7 @@ wifi_net_connect_thread ( gpointer data )
+         NwamuiDaemon*   daemon = nwamui_daemon_get_instance();
+ 
+         g_warning("Error selecting network with NWAM : %s", strerror(errno));
+-        nwamui_daemon_emit_info_message(daemon, _("Failed to initiate connection to wireless network."));
++        nwamui_daemon_emit_info_message(daemon, NWAMUI_DAEMON_INFO_WLAN_CONNECT_FAILED, G_OBJECT(self), _("Failed to initiate connection to wireless network."));
+ 
+         g_object_unref(daemon);
+     }
+@@ -843,8 +843,7 @@ nwamui_wifi_net_get_unique_name ( NwamuiWifiNet *self )
+                   "bssid", &bssid,
+                   NULL);
+ 
+-    /* "%s - %s", so it's different to FALSEWLAN */
+-    ret_str = g_strconcat(device_name?device_name:"", " - ", essid ? essid : "", " - ", bssid ? bssid : "", NULL);
++    ret_str = wlan_compose_unique_name(device_name, essid, bssid);
+ 
+     g_free(device_name);
+     g_free(essid);
+@@ -853,6 +852,14 @@ nwamui_wifi_net_get_unique_name ( NwamuiWifiNet *self )
+     return( ret_str );
+ }
+ 
++extern gchar*
++wlan_compose_unique_name ( const gchar *device_name,
++  const gchar *essid,
++  const gchar *bssid)
++{
++    return g_strconcat(device_name ? device_name : "", " ", essid ? essid : "", " ", bssid ? bssid : "", NULL);
++}
++
+ extern void
+ nwamui_wifi_net_set_status ( NwamuiWifiNet *self, nwamui_wifi_status_t status )
+ {
+@@ -1241,6 +1248,6 @@ object_notify_cb( GObject *gobject, GParamSpec *arg1, gpointer data)
+ {
+     NwamuiWifiNet* self = NWAMUI_WIFI_NET(data);
+ 
+-/*     g_debug("NwamuiWifiNet: notify %s changed\n", arg1->name); */
++    g_debug("NwamuiWifiNet 0x%p essid %s notify '%s' changed", self, self->prv->essid, arg1->name);
+ }
+ 
+diff --git a/common/nwamui_wifi_net.h b/common/nwamui_wifi_net.h
+index 8331489..ad1ce6b 100644
+--- a/common/nwamui_wifi_net.h
++++ b/common/nwamui_wifi_net.h
+@@ -146,6 +146,10 @@ extern gchar*                       nwamui_wifi_net_get_bssid ( NwamuiWifiNet *s
+ 
+ extern gchar*                       nwamui_wifi_net_get_unique_name ( NwamuiWifiNet *self );
+ 
++extern gchar*                       wlan_compose_unique_name ( const gchar *device_name,
++  const gchar *essid,
++  const gchar *bssid);
++
+ extern gchar*                       nwamui_wifi_net_get_display_string (NwamuiWifiNet *self, gboolean has_many_wireless );
+ 
+ extern void                         nwamui_wifi_net_set_status ( NwamuiWifiNet *self, nwamui_wifi_status_t status );
+diff --git a/configure.in b/configure.in
+index d06afca..a5dff73 100644
+--- a/configure.in
++++ b/configure.in
+@@ -146,7 +146,6 @@ AC_SUBST(KSTAT_LIBS)
+ 
+ AC_CONFIG_FILES([
+ Makefile
+-libnwam/Makefile
+ common/Makefile
+ tests/Makefile
+ daemon/Makefile
+diff --git a/daemon/nwam-action.c b/daemon/nwam-action.c
+index 893dc56..15f2ec5 100644
+--- a/daemon/nwam-action.c
++++ b/daemon/nwam-action.c
+@@ -42,6 +42,7 @@
+ struct _NwamActionPrivate {
+ 	GtkWidget *w[MAX_WIDGET_NUM];
+     NwamuiWifiNet *wifi;
++    gulong toggled_handler_id;
+ };
+ 
+ enum {
+@@ -76,7 +77,10 @@ static void connect_wifi_net_signals(NwamAction *self, NwamuiWifiNet *wifi);
+ static void disconnect_wifi_net_signals(NwamAction *self, NwamuiWifiNet *wifi);
+ static void wifi_net_notify( GObject *gobject, GParamSpec *arg1, gpointer user_data);
+ 
+-G_DEFINE_TYPE (NwamAction, nwam_action, GTK_TYPE_RADIO_ACTION)
++/* action cb */
++static void on_nwam_wifi_toggled (GtkAction *action, gpointer data);
++
++G_DEFINE_TYPE (NwamAction, nwam_action, GTK_TYPE_TOGGLE_ACTION)
+ 
+ static void
+ nwam_action_class_init (NwamActionClass *klass)
+@@ -145,6 +149,11 @@ nwam_action_init (NwamAction *self)
+         g_object_unref(ncp);
+         g_object_unref(daemon);
+     }
++
++    g_object_set(self, "draw-as-radio", TRUE, NULL);
++
++    prv->toggled_handler_id = g_signal_connect (G_OBJECT(self), "toggled",
++      G_CALLBACK(on_nwam_wifi_toggled), (gpointer)self);
+ }
+ 
+ NwamAction *
+@@ -154,17 +163,17 @@ nwam_action_new (const gchar *name,
+   const gchar *stock_id,
+   NwamuiWifiNet *wifi)
+ {
+-  NwamAction *action;
++    NwamAction *action;
+ 
+-  action = g_object_new (NWAM_TYPE_ACTION,
+-    "name", name,
+-    "label", label,
+-    "tooltip", tooltip,
+-    "stock-id", stock_id,
+-    "wifi", wifi,
+-    NULL);
++    action = g_object_new (NWAM_TYPE_ACTION,
++      "name", name,
++      "label", label,
++      "tooltip", tooltip,
++      "stock-id", stock_id,
++      "wifi", wifi,
++      NULL);
+ 
+-  return action;
++    return action;
+ }
+ 
+ static GtkWidget *
+@@ -232,11 +241,9 @@ nwam_action_set_property (GObject         *object,
+             /* connect signal callback */
+             connect_wifi_net_signals(self, prv->wifi);
+ 
+-            /* initializing */
+-            wifi_net_notify(G_OBJECT(prv->wifi), NULL, (gpointer)self);
+-
+-            g_object_set (object, "value", (gint)prv->wifi, NULL);
+         }
++        /* initializing */
++        wifi_net_notify(G_OBJECT(prv->wifi), NULL, (gpointer)self);
+         break;
+ 	case PROP_LWIDGET:
+         g_return_if_fail(obj && G_IS_OBJECT (obj));
+@@ -379,28 +386,33 @@ static void
+ disconnect_wifi_net_signals(NwamAction *self, NwamuiWifiNet *wifi)
+ {
+     g_signal_handlers_disconnect_matched(wifi,
+-      G_SIGNAL_MATCH_DATA,
++      G_SIGNAL_MATCH_FUNC,
+       0,
+       NULL,
+       NULL,
+-      NULL,
+-      (gpointer)self);
++      (gpointer)wifi_net_notify,
++      NULL);
+ }
+ 
+ static void
+ wifi_net_notify( GObject *gobject, GParamSpec *arg1, gpointer user_data)
+ {
+ 	NwamAction *self = NWAM_ACTION(user_data);
++    NwamActionPrivate *prv = GET_PRIVATE(self);
+     NwamuiWifiNet *wifi = NWAMUI_WIFI_NET(gobject);
+     GtkWidget *img = NULL;
+ 
+     g_assert(self);
+ 
+-    img = gtk_image_new_from_pixbuf (nwamui_util_get_wireless_strength_icon(nwamui_wifi_net_get_signal_strength(wifi), TRUE ));
+-    nwam_action_set_widget (NWAM_ACTION(self), img, 0);
+-    
+-    img = gtk_image_new_from_pixbuf (nwamui_util_get_network_security_icon(nwamui_wifi_net_get_security (wifi), TRUE )); 
+-    nwam_action_set_widget (NWAM_ACTION(self), img, 1);
++    if (!arg1 || g_ascii_strcasecmp(arg1->name, "signal-strength") == 0) {
++          img = gtk_image_new_from_pixbuf (nwamui_util_get_wireless_strength_icon(nwamui_wifi_net_get_signal_strength(wifi), TRUE ));
++          nwam_action_set_widget (NWAM_ACTION(self), img, 0);
++    }
++
++    if (!arg1 || g_ascii_strcasecmp(arg1->name, "security") == 0) {
++          img = gtk_image_new_from_pixbuf (nwamui_util_get_network_security_icon(nwamui_wifi_net_get_security (wifi), TRUE )); 
++          nwam_action_set_widget (NWAM_ACTION(self), img, 1);
++    }
+ 
+     {
+         NwamuiDaemon* daemon = nwamui_daemon_get_instance();
+@@ -418,6 +430,29 @@ wifi_net_notify( GObject *gobject, GParamSpec *arg1, gpointer user_data)
+         g_object_unref(ncp);
+         g_object_unref(daemon);
+     }
++
++    if (!arg1 || g_ascii_strcasecmp(arg1->name, "status") == 0) {
++        g_signal_handler_block(self, prv->toggled_handler_id);
++        switch (nwamui_wifi_net_get_status(wifi)) {
++        case NWAMUI_WIFI_STATUS_CONNECTED:
++            gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(self), TRUE);
++            break;
++        case NWAMUI_WIFI_STATUS_DISCONNECTED:
++        case NWAMUI_WIFI_STATUS_FAILED:
++        default:
++            gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(self), FALSE);
++            break;
++        }
++        g_signal_handler_unblock(self, prv->toggled_handler_id);
++    }
++
++#if 0
++    {
++        gchar *name = nwamui_wifi_net_get_essid(wifi);
++        g_debug("%s\n\tAction 0x%p update wifi 0x%p %s\n\t%s", __func__, self, wifi, gtk_action_get_name(GTK_ACTION(self)), nwamui_wifi_net_get_status(wifi) == NWAMUI_WIFI_STATUS_CONNECTED ? "Active" : "Deactive");
++        g_free(name);
++    }
++#endif
+ }
+ 
+ /** 
+@@ -486,3 +521,53 @@ nwam_action_set_wifi (NwamAction *self, NwamuiWifiNet *wifi)
+     g_object_set(self, "wifi", wifi, NULL);
+ }
+ 
++static void
++on_nwam_wifi_toggled (GtkAction *action, gpointer data)
++{
++	NwamAction *self = NWAM_ACTION (action);
++    NwamActionPrivate *prv = GET_PRIVATE(self);
++    NwamuiDaemon *daemon = nwamui_daemon_get_instance();
++    NwamuiNcp* ncp = nwamui_daemon_get_active_ncp (daemon);
++    NwamuiNcu *ncu = NULL;
++    NwamuiWifiNet *wifi = prv->wifi;
++    gchar *name;
++
++    /* Should we temporary set active to false for self, and wait for
++     * wifi_net_notify to update self? */
++    g_signal_handler_block(self, prv->toggled_handler_id);
++    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(self), FALSE);
++    g_signal_handler_block(self, prv->toggled_handler_id);
++
++    g_debug("******** toggled %s ***** status %s ***** wifi 0x%p ****",
++      gtk_action_get_name(action),
++      gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action))?"on":"off",
++      wifi);
++
++    /* Always connect the wifi no matter if the action is active. */
++
++    /* If the active ncu is NULL, it means that the daemon hasn't yet
++     * selected anything, but that doesn't mean that it's not correct
++     * to allow the user to select the wifi net, this would result in
++     * the NCU selection by the daemon, but the wifi_net structure will
++     * contain a pointer to it's originating NCU, so use that.
++     *
++     * If it is non-NULL, then make sure the NCU is up to date w.r.t. the
++     * wifi_net.
++     */
++    ncu = nwamui_wifi_net_get_ncu ( wifi );
++        
++    name = nwamui_wifi_net_get_unique_name(wifi);
++
++    if (ncu != NULL) {
++        g_assert(nwamui_ncu_get_ncu_type(ncu) == NWAMUI_NCU_TYPE_WIRELESS);
++        g_debug("Using wifi_net's own NCU 0x%X\n\tENABLE\tWlan 0x%p - %s\n", ncu, wifi, name);
++        nwamui_wifi_net_connect(wifi);
++        g_object_unref(ncu);
++    } else {
++        g_warning("Orphan Wlan 0x%p - %s\n", wifi, name);
++    }
++
++    g_free(name);
++    g_object_unref(ncp);
++}
++
+diff --git a/daemon/nwam-action.h b/daemon/nwam-action.h
+index 85ad3f9..beb7674 100644
+--- a/daemon/nwam-action.h
++++ b/daemon/nwam-action.h
+@@ -45,7 +45,7 @@ typedef struct _NwamActionClass   NwamActionClass;
+ 
+ struct _NwamAction
+ {
+-  GtkRadioAction parent;
++  GtkToggleAction parent;
+ 
+ 	/*< private >*/
+ 
+@@ -54,7 +54,7 @@ struct _NwamAction
+ 
+ struct _NwamActionClass
+ {
+-  GtkRadioActionClass parent_class;
++  GtkToggleActionClass parent_class;
+ };
+ 
+ GType            nwam_action_get_type          (void) G_GNUC_CONST;
+diff --git a/daemon/nwam-menu.c b/daemon/nwam-menu.c
+index 7c171d8..26eaba3 100644
+--- a/daemon/nwam-menu.c
++++ b/daemon/nwam-menu.c
+@@ -46,7 +46,6 @@
+ #define NWAMUI_OBJECT_DATA	"nwam_object_data"
+ #define	NOWIFI	"No wireless networks detected"
+ #define	NONCU	"No network interfaces detected"
+-#define FALSEWLAN	"false_wlan"
+ #define FALSENCU	"automatic"
+ 
+ static NwamMenu *instance = NULL;
+@@ -159,7 +158,6 @@ static void on_activate_static_menuitems (GtkAction *action, gpointer udata);
+ /* NWAMUI object events */
+ static void on_nwam_ncu_toggled (GtkAction *action, gpointer data);
+ static void on_nwam_ncu_notify_cb( GObject *gobject, GParamSpec *arg1, gpointer data);
+-static void on_nwam_wifi_toggled (GtkAction *action, gpointer data);
+ 
+ static void on_ncp_notify_cb( GObject *gobject, GParamSpec *arg1, gpointer data);
+ 
+@@ -422,33 +420,6 @@ nwam_menu_recreate_wifi_menuitems (NwamMenu *self)
+ 
+     DEBUG();	
+ 
+-    {
+-        /* default "false" wlan which is invisible */
+-        const gchar *name = FALSEWLAN;
+-        action = GTK_ACTION(gtk_radio_action_new (name,
+-            name,
+-            NULL,
+-            NULL,
+-            (gint)NULL));
+-        gtk_action_set_visible(GTK_ACTION(action), FALSE);
+-/* 		g_object_set_data(G_OBJECT(action), NWAMUI_OBJECT_DATA, NULL); */
+-        nwam_menu_group_add_radio_action(self, ID_WIFI, GTK_RADIO_ACTION(action));
+-
+-        self->prv->change_from_daemon = TRUE;
+-        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(action), TRUE);
+-        self->prv->change_from_daemon = FALSE;
+-
+-        g_object_unref (action);
+-
+-		gtk_ui_manager_add_ui (self->prv->ui_manager,
+-          self->prv->uid[ID_WIFI],
+-          dynamic_menuitem_inserting_path[ID_WIFI],
+-          name, /* name */
+-          name, /* action */
+-          GTK_UI_MANAGER_MENUITEM,
+-          TRUE);
+-    }
+-
+     /* set force rescan flag so that we can identify daemon scan wifi event */
+     self->prv->force_wifi_rescan = TRUE;
+ }
+@@ -688,61 +659,6 @@ on_activate_static_menuitems (GtkAction *action, gpointer data)
+ }
+ 
+ static void
+-on_nwam_wifi_toggled (GtkAction *action, gpointer data)
+-{
+-    NwamMenu *self = NWAM_MENU (data);
+-    NwamuiNcp* ncp = nwamui_daemon_get_active_ncp (self->prv->daemon);
+-    NwamuiNcu *ncu = NULL;
+-    gpointer a_wifi = (gpointer)gtk_radio_action_get_current_value(GTK_RADIO_ACTION(action));
+-    NwamuiWifiNet *wifi;
+-/* 	NwamuiWifiNet *wifi = NWAMUI_WIFI_NET (g_object_get_data(G_OBJECT(action), NWAMUI_OBJECT_DATA)); */
+-
+-    g_object_get(action, "value", &wifi, NULL);
+-
+-    g_debug("******** toggled %s ***** status %s ***** wifi 0x%p ****",
+-      gtk_action_get_name(action),
+-      gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action))?"on":"off",
+-      wifi);
+-
+-    g_debug("active wifi 0x%p toggled wifi 0x%p", a_wifi, wifi);
+-
+-    /* If the toggle is generated by the daemon we don't want to proceed any
+-     * more since it will tell the daemon to reconnected unnecessarily
+-     */
+-    if (!self->prv->change_from_daemon
+-        && gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action))) {
+-
+-        /* If the active ncu is NULL, it means that the daemon hasn't yet
+-         * selected anything, but that doesn't mean that it's not correct
+-         * to allow the user to select the wifi net, this would result in
+-         * the NCU selection by the daemon, but the wifi_net structure will
+-         * contain a pointer to it's originating NCU, so use that.
+-         *
+-         * If it is non-NULL, then make sure the NCU is up to date w.r.t. the
+-         * wifi_net.
+-         */
+-        ncu = nwamui_wifi_net_get_ncu ( wifi );
+-        g_debug("Using wifi_net's own NCU 0x%X", ncu );
+-        
+-        if (ncu != NULL) {
+-            if (nwamui_ncu_get_ncu_type(ncu) == NWAMUI_NCU_TYPE_WIRELESS) {
+-                gchar *name = nwamui_wifi_net_get_unique_name(wifi);
+-                g_debug("\n\tENABLE\tWlan 0x%p - %s\n", wifi, name);
+-                g_free(name);
+-                nwamui_ncu_set_wifi_info(ncu, wifi);
+-                nwamui_wifi_net_connect(wifi);
+-            }
+-            g_object_unref(ncu);
+-        } else {
+-            /* change back to the default one, notify will set self finally */
+-            /* ncu is NULL, bug? */
+-            menus_set_toggle_action_active(self, ID_WIFI, FALSEWLAN, TRUE);
+-        }
+-    }
+-    g_object_unref(ncp);
+-}
+-
+-static void
+ on_nwam_ncu_toggled (GtkAction *action, gpointer data)
+ {
+     NwamMenu *self = NWAM_MENU (data);
+@@ -836,15 +752,10 @@ event_ncu_up (NwamuiDaemon* daemon, NwamuiNcu* ncu, gpointer data)
+                 name = nwamui_wifi_net_get_unique_name(wifi);
+ 
+                 g_object_unref(wifi);
+-
+-            } else {
+-                name = g_strdup(FALSEWLAN);
++                /* set active wlan menu item */
++                g_debug("******** set active on %s *********", name);
++                g_free(name);
+             }
+-        
+-            /* set active wlan menu item */
+-            g_debug("******** set active on %s *********", name);
+-            menus_set_toggle_action_active(self, ID_WIFI, name, TRUE);
+-            g_free(name);
+         }
+             break;
+         default:
+@@ -976,33 +887,12 @@ event_daemon_info (NwamuiDaemon* daemon,
+         nwam_menu_recreate_wifi_menuitems(self);
+         break;
+     case NWAMUI_DAEMON_INFO_WLAN_CONNECTED: {
+-        gchar *name = nwamui_wifi_net_get_unique_name(NWAMUI_WIFI_NET(obj));
+-
+-        /* Since nwamui daemon may create another wifi net instance for a same
+-         * wlan and set to a ncu, so we should try to find the menu item which
+-         * has the same essid so that we can update its wifi data. */
+-        GtkAction* action = menus_get_action(self, ID_WIFI, name);
+-
+-        g_free(name);
+-
+-        if (action) {
+-            nwam_action_set_wifi(NWAM_ACTION(action), NWAMUI_WIFI_NET(obj));
+-
+-            self->prv->change_from_daemon = TRUE;
+-            gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(action), TRUE);
+-            self->prv->change_from_daemon = FALSE;
+-        }
+     }
+         break;
+     case NWAMUI_DAEMON_INFO_WLAN_DISCONNECTED: {
+-        gchar *name = nwamui_wifi_net_get_unique_name(NWAMUI_WIFI_NET(obj));
+-        menus_set_toggle_action_active(self, ID_WIFI, name, FALSE);
+-        g_free(name);
+     }
+         /* Fall through */
+     case NWAMUI_DAEMON_INFO_WLAN_CONNECT_FAILED:
+-        /* enable default "false" wlan */
+-        menus_set_toggle_action_active(self, ID_WIFI, FALSEWLAN, TRUE);
+         break;
+     default:
+         /* ignore others */
+@@ -1118,20 +1008,7 @@ nwam_menu_create_wifi_menuitems (GObject *daemon, GObject *wifi, gpointer data)
+         /* action need be unique */
+         path = nwamui_wifi_net_get_unique_name(NWAMUI_WIFI_NET(wifi));
+ 		action = GTK_ACTION(nwam_action_new(path, menu_text, NULL, NULL, NWAMUI_WIFI_NET(wifi)));
+-/* 		g_object_set_data(G_OBJECT(action), NWAMUI_OBJECT_DATA, wifi); */
+-
+-        g_signal_connect (G_OBJECT (action), "toggled",
+-          G_CALLBACK(on_nwam_wifi_toggled), (gpointer)self);
+-        nwam_menu_group_add_radio_action(self, ID_WIFI, GTK_RADIO_ACTION(action));
+-
+-        /* If the wifi net is connected, then it should be selected in the
+-         * menus. Do this here since the active ncu could be NULL, yet still
+-         * be connected, this will catch that case.
+-         */
+-        if (nwamui_wifi_net_get_status(NWAMUI_WIFI_NET(wifi)) == NWAMUI_WIFI_STATUS_CONNECTED) {
+-            g_debug("======== enable wifi %s ===========", path);
+-            menus_set_toggle_action_active(self, ID_WIFI, path, TRUE);
+-        }
++        nwam_menu_group_add_action(self, ID_WIFI, GTK_ACTION(action));
+ 
+ 		/* menu */
+ 		gtk_ui_manager_add_ui (self->prv->ui_manager,
+@@ -1166,8 +1043,7 @@ nwam_menu_create_wifi_menuitems (GObject *daemon, GObject *wifi, gpointer data)
+                     if (wifi) {
+                         if (nwamui_wifi_net_get_status(wifi) == NWAMUI_WIFI_STATUS_CONNECTED) {
+                             gchar *name = nwamui_wifi_net_get_unique_name(wifi);
+-                            g_debug("======== enable wifi %s ===========", name);
+-                            menus_set_toggle_action_active(self, ID_WIFI, name, TRUE);
++                            g_debug("======== enabled wifi %s ===========", name);
+                             g_free(name);
+                         }
+                         g_object_unref(wifi);

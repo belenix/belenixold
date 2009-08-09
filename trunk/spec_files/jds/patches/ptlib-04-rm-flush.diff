@@ -1,0 +1,26 @@
+Index: ptlib/src/ptlib/common/pchannel.cxx
+===================================================================
+--- ptlib/src/ptlib/common/pchannel.cxx	(revision 21139)
++++ ptlib/src/ptlib/common/pchannel.cxx	(working copy)
+@@ -710,7 +710,7 @@
+ 
+ PBoolean PIndirectChannel::Write(const void * buf, PINDEX len)
+ {
+-  flush();
++  //flush();
+ 
+   PReadWaitAndSignal mutex(channelPointerMutex);
+ 
+Index: ptlib/src/ptlib/common/vconvert.cxx
+===================================================================
+--- ptlib/src/ptlib/common/vconvert.cxx	(revision 21139)
++++ ptlib/src/ptlib/common/vconvert.cxx	(working copy)
+@@ -1571,7 +1571,7 @@
+ 
+   BYTE * dstScanLine   = dstFrameBuffer;
+ 
+-#ifdef P_MEDIALIB
++#if 0
+   const BYTE *y0;
+   const BYTE *y1;
+   const BYTE *cb;

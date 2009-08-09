@@ -1,0 +1,12 @@
+diff -urN gvfs-1.2.0/daemon/gvfsbackendsmbbrowse.c ../SUNWgnome-gvfs-2.26.0.hacked/gvfs-1.2.0/daemon/gvfsbackendsmbbrowse.c
+--- gvfs-1.2.0/daemon/gvfsbackendsmbbrowse.c	2009-02-26 09:12:24.000000000 +0000
++++ ../SUNWgnome-gvfs-2.26.0.hacked/gvfs-1.2.0/daemon/gvfsbackendsmbbrowse.c	2009-03-23 13:50:16.625389000 +0000
+@@ -1492,7 +1492,7 @@
+     }
+ #endif
+ 
+-  DEBUG ("g_vfs_backend_smb_browse_class_init - default workgroup = '%s'\n", default_workgroup);
++    DEBUG ("g_vfs_backend_smb_browse_class_init - default workgroup = '%s'\n", default_workgroup ? default_workgroup : "NULL");
+ }
+ 
+ void
