@@ -1,0 +1,372 @@
+--- libgksuui1.0-1.0.5.orig/libgksuui/gksuui-convenience.c	Sat May 28 03:25:35 2005
++++ libgksuui1.0-1.0.5/libgksuui/gksuui-convenience.c	Mon Aug 21 15:02:51 2006
+@@ -195,7 +195,7 @@
+      gksuui_dialog_set_message(GKSUUI_DIALOG(dialog), message);
+ 
+   gtk_window_set_keep_above(dialog, TRUE);
+-  gtk_widget_show_all (dialog);
++  gtk_widget_show (dialog);
+ 
+   while (gtk_events_pending())
+     gtk_main_iteration ();
+@@ -260,7 +260,7 @@
+     case GTK_RESPONSE_NONE:
+       gtk_widget_destroy (dialog);
+       gksu_secure_free (pass);
+-      return 0;
++      return NULL;
+     }
+ 
+   gtk_widget_destroy (dialog);
+--- libgksuui1.0-1.0.5.orig/libgksuui/gksuui-dialog.c	Mon Jun 13 20:04:48 2005
++++ libgksuui1.0-1.0.5/libgksuui/gksuui-dialog.c	Mon Aug 21 14:46:46 2006
+@@ -19,6 +19,10 @@
+  */
+ 
+ #include <gtk/gtk.h>
++#include <X11/Xlib.h>
++#include <X11/XKBlib.h>
++#include <gdk/gdkkeysyms.h>
++#include <gdk/gdkx.h>
+ 
+ #include "defines.h"
+ #include "../config.h"
+@@ -25,6 +29,23 @@
+ 
+ #include "gksuui-dialog.h"
+ 
++static gboolean caps_lock_state = FALSE;
++
++gboolean
++gksuui_is_capslock_on (void);
++
++void
++capslock_update (GksuuiDialog *gksuui_dialog, gboolean new_state);
++
++void
++ok_button_update ( GksuuiDialog *dialog );
++
++void
++entry_key_release_event ( GtkWidget *widget, GdkEventKey *key, gpointer data);
++
++gboolean
++cl_key_press_event (GtkWidget *widget, GdkEventKey *key, gpointer data);
++
+ static void
+ gksuui_dialog_class_init (GksuuiDialogClass *klass);
+ 
+@@ -69,7 +90,14 @@
+   GtkDialog *dialog;
+   GtkWidget *hbox; /* aditional hbox for 'password: entry' label */
+   GtkWidget *label; /* the label itself */
+-
++  AtkObject *atk_entry, *atk_label;
++  AtkObject *rel_obj[1];
++  AtkRelation *relation;
++  AtkRelationSet *set;
++  GtkWidget *table;
++  GtkWidget *warning_image;
++  GtkWidget *warning_info;
++  
+   /* 
+      make sure we're using UTF-8 and getting our locale files
+      from the right place
+@@ -85,7 +113,7 @@
+   gksuui_dialog->main_vbox = dialog->vbox;
+ 
+   gtk_window_set_title (GTK_WINDOW(gksuui_dialog), "");
+-  gtk_dialog_set_has_separator (GTK_DIALOG(gksuui_dialog), FALSE);
++  gtk_dialog_set_has_separator (GTK_DIALOG(gksuui_dialog), TRUE);
+   gtk_container_set_border_width (GTK_CONTAINER(gksuui_dialog), 6);
+   gtk_box_set_spacing (GTK_BOX(gksuui_dialog->main_vbox), 12);
+ 
+@@ -100,16 +128,18 @@
+ 						      GTK_RESPONSE_CANCEL);
+   /*  the ok button  */
+   gksuui_dialog->ok_button = gtk_dialog_add_button (dialog,
+-						  _("Continue"),
++						  GTK_STOCK_OK,
+ 						  GTK_RESPONSE_OK);
+-  gtk_widget_grab_default (gksuui_dialog->ok_button);
++  gtk_widget_set_sensitive ( gksuui_dialog->ok_button, FALSE);
+ 
++  g_signal_connect (G_OBJECT (gksuui_dialog), "key_press_event",
++		    G_CALLBACK (cl_key_press_event), NULL);
+ 
+   /* hbox */
+   gksuui_dialog->hbox = gtk_hbox_new (FALSE, 12);
+   gtk_container_set_border_width (GTK_CONTAINER(gksuui_dialog->hbox), 6);
+   gtk_box_pack_start (GTK_BOX(gksuui_dialog->main_vbox),
+-		      gksuui_dialog->hbox, TRUE, TRUE, 0);
++		      gksuui_dialog->hbox, FALSE, FALSE, 0);
+   gtk_widget_show (gksuui_dialog->hbox);
+ 
+   /* image */
+@@ -122,16 +152,28 @@
+   gtk_widget_show (gksuui_dialog->image);
+ 
+   /* vbox for label and entry */
+-  gksuui_dialog->entry_vbox = gtk_vbox_new (FALSE, 12);
++  gksuui_dialog->entry_vbox = gtk_vbox_new (FALSE, 6);
+   gtk_box_pack_start (GTK_BOX(gksuui_dialog->hbox), gksuui_dialog->entry_vbox, 
+ 		      TRUE, TRUE, 0);
+   gtk_widget_show (gksuui_dialog->entry_vbox);
+ 
+-  /* label */
+-  gksuui_dialog->label = gtk_label_new (_("<span weight=\"bold\" size=\"larger\">"
++  /* SUN_BRANDING required_label */
++  gksuui_dialog->required_label = gtk_label_new (_("<span weight=\"bold\" size=\"larger\">"
++					  "Password Required</span>"));
++  gtk_label_set_justify (GTK_LABEL(gksuui_dialog->required_label), 
++			 GTK_JUSTIFY_CENTER);
++  gtk_label_set_use_markup (GTK_LABEL(gksuui_dialog->required_label), TRUE);
++  gtk_label_set_line_wrap (GTK_LABEL(gksuui_dialog->required_label), TRUE);
++  gtk_misc_set_alignment (GTK_MISC(gksuui_dialog->required_label), 0.0, 0);
++  gtk_box_pack_start (GTK_BOX(gksuui_dialog->entry_vbox), 
++		      gksuui_dialog->required_label, TRUE, TRUE, 0);
++  gtk_widget_show (gksuui_dialog->required_label);
++
++  /* SUN_BRANDING label */
++  gksuui_dialog->label = gtk_label_new (_("<span weight=\"normal\" size=\"medium\">"
+ 					  "Type the root password.</span>\n"));
+   gtk_label_set_justify (GTK_LABEL(gksuui_dialog->label), 
+-			 GTK_JUSTIFY_CENTER);
++			 GTK_JUSTIFY_LEFT);
+   gtk_label_set_use_markup (GTK_LABEL(gksuui_dialog->label), TRUE);
+   gtk_label_set_line_wrap (GTK_LABEL(gksuui_dialog->label), TRUE);
+   gtk_misc_set_alignment (GTK_MISC(gksuui_dialog->label), 0.0, 0);
+@@ -139,28 +181,75 @@
+ 		      gksuui_dialog->label, TRUE, TRUE, 0);
+   gtk_widget_show (gksuui_dialog->label);
+ 
+-  /* hbox for entry and label */
+-  hbox = gtk_hbox_new (FALSE, 6);
+-  gtk_box_pack_start (GTK_BOX (gksuui_dialog->entry_vbox), hbox, 
+-		      TRUE, TRUE, 0);
+-  gtk_widget_show (hbox);
+ 
++  /* table for entry and password label, warning image and warning info */
++  table = gtk_table_new ( 3, 2, FALSE);
++  gtk_container_add (GTK_CONTAINER(gksuui_dialog->entry_vbox), table);
++  gtk_widget_show (table);
++
+-  /* entry label */
+-  label = gtk_label_new (_("Password:"));
+-  gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
++  label = gtk_label_new (NULL);
++  /* SUN_BRANDING entry label */
++  gtk_label_set_text_with_mnemonic(GTK_LABEL(label), _("_Password:"));
++  gtk_table_attach ( GTK_TABLE (table), label, 0, 1, 0, 1, GTK_SHRINK, GTK_SHRINK, 0, 0);
+   gtk_widget_show (label);
+   
+   /* entry */
+   gksuui_dialog->entry = gtk_entry_new();
++
++
+   g_signal_connect_swapped (G_OBJECT(gksuui_dialog->entry), "activate",
+ 			    G_CALLBACK(gtk_button_clicked), 
+ 			    gksuui_dialog->ok_button);
++
++  g_signal_connect (G_OBJECT (gksuui_dialog->entry), "key_release_event",
++		    G_CALLBACK (entry_key_release_event), gksuui_dialog);
++
++  gtk_label_set_mnemonic_widget (GTK_LABEL(label), gksuui_dialog->entry);
++
++  atk_entry = gtk_widget_get_accessible( gksuui_dialog->entry );
++  atk_label = gtk_widget_get_accessible( label );
++
++  /* Create the labelled-by relation */
++  set = atk_object_ref_relation_set (atk_entry);
++  rel_obj[0] = atk_label;
++  relation = atk_relation_new (rel_obj, 1, ATK_RELATION_LABEL_FOR);
++  atk_relation_set_add (set, relation);
++  g_object_unref ( relation );
++
++  /* Create the label-for relation */
++  set = atk_object_ref_relation_set (atk_label);
++  rel_obj[0] = atk_entry;
++  relation = atk_relation_new (rel_obj, 1, ATK_RELATION_LABELLED_BY);
++  atk_relation_set_add (set, relation);
++  g_object_unref ( relation );
++
++
+   gtk_entry_set_visibility(GTK_ENTRY(gksuui_dialog->entry), FALSE);
+-  gtk_box_pack_start (GTK_BOX (hbox), gksuui_dialog->entry, 
+-		      TRUE, TRUE, 0);
++  gtk_table_attach_defaults ( GTK_TABLE (table), gksuui_dialog->entry, 1, 3, 0, 1);
+   gtk_widget_show (gksuui_dialog->entry);
+   gtk_widget_grab_focus(gksuui_dialog->entry);
+ 
++  /* add warning image */
++  gksuui_dialog->info_image = 
++  gtk_image_new_from_stock (GTK_STOCK_DIALOG_WARNING,
++			      GTK_ICON_SIZE_SMALL_TOOLBAR);
++  gtk_table_attach ( GTK_TABLE (table), gksuui_dialog->info_image, 1, 2, 1, 2, GTK_SHRINK, GTK_SHRINK, 0, 0);
++  gtk_misc_set_alignment (GTK_MISC(gksuui_dialog->info_image), 0.5, 0);
++  gtk_widget_show (gksuui_dialog->info_image);
++
++  /* add warning info */
++  gksuui_dialog->info_label = gtk_label_new( NULL );
++
++  gtk_label_set_justify (GTK_LABEL(gksuui_dialog->info_label), 
++			 GTK_JUSTIFY_LEFT );
++  gtk_label_set_use_markup (GTK_LABEL(gksuui_dialog->info_label), TRUE);
++  gtk_label_set_line_wrap (GTK_LABEL(gksuui_dialog->info_label), TRUE);
++  gtk_misc_set_alignment (GTK_MISC(gksuui_dialog->info_label), 0.0, 0);
++  gtk_table_attach ( GTK_TABLE (table), gksuui_dialog->info_label, 2,3,1,2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 10);
++  gtk_widget_show (gksuui_dialog->info_label);
++  caps_lock_state = gksuui_is_capslock_on();
++  capslock_update ( GKSUUI_DIALOG (dialog), caps_lock_state );
++
+   gtk_widget_pop_composite_child ();
+ }
+ 
+@@ -263,4 +352,109 @@
+   GtkEditable *entry = GTK_EDITABLE(dialog->entry);
+ 
+   return gtk_editable_get_chars (entry, 0, -1);
++}
++
++Display*
++get_parent_display (void)
++{
++  gboolean tested = FALSE;
++  Display *dsp = NULL;
++
++  if (tested)
++    return dsp;
++
++  tested = TRUE;
++
++  if (g_getenv ("GDM_PARENT_DISPLAY") != NULL)
++    {
++      char *old_xauth = g_strdup (g_getenv ("XAUTHORITY"));
++      if (g_getenv ("GDM_PARENT_XAUTHORITY") != NULL)
++        {
++	  g_setenv ("XAUTHORITY",
++		    g_getenv ("GDM_PARENT_XAUTHORITY"), TRUE);
++	}
++      dsp = XOpenDisplay (g_getenv ("GDM_PARENT_DISPLAY"));
++      if (old_xauth != NULL)
++        g_setenv ("XAUTHORITY", old_xauth, TRUE);
++      else
++        g_unsetenv ("XAUTHORITY");
++      g_free (old_xauth);
++    }
++
++  return dsp;
++}
++
++gboolean
++gksuui_is_capslock_on (void)
++{
++  XkbStateRec states;
++  Display *dsp;
++
++  /* HACK! incredible hack, if this is set we get
++   * indicator state from the parent display, since we must be inside an
++   * Xnest */
++  dsp = get_parent_display ();
++  if (dsp == NULL)
++    dsp = GDK_DISPLAY ();
++
++  if (XkbGetState (dsp, XkbUseCoreKbd, &states) != Success)
++      return FALSE;
++
++  return (states.locked_mods & LockMask) != 0;
++}
++
++gboolean
++cl_key_press_event (GtkWidget *widget, GdkEventKey *key, gpointer data)
++{
++  gboolean new_state;
++
++  new_state = gksuui_is_capslock_on ();
++  if (new_state != caps_lock_state) {
++	caps_lock_state = new_state;
++        capslock_update (GKSUUI_DIALOG(widget), new_state);
++  }
++  return FALSE;
++}
++
++
++void
++entry_key_release_event ( GtkWidget *widget, GdkEventKey *key, gpointer data)
++{
++
++  ok_button_update ( GKSUUI_DIALOG(data) );
++}
++void
++capslock_update (GksuuiDialog *gksuui_dialog, gboolean new_state)
++{
++  GtkDialog *dialog;
++
++  dialog = GTK_DIALOG(gksuui_dialog);
++  if ( new_state ) {
++	/* SUN_BRANDING */
++	gtk_label_set_markup (GTK_LABEL(gksuui_dialog->info_label), _("<span weight=\"normal\" size=\"medium\">"
++					  "Caps Locks is turned on</span>"));
++	gtk_image_set_from_stock (gksuui_dialog->info_image, GTK_STOCK_DIALOG_WARNING,
++			      GTK_ICON_SIZE_SMALL_TOOLBAR);
++  } else {
++	gtk_label_set_markup (GTK_LABEL(gksuui_dialog->info_label), _("<span weight=\"normal\" size=\"medium\">"
++					  " </span>"));
++	gtk_image_set_from_pixbuf (gksuui_dialog->info_image, NULL);  }
++}
++
++void
++ok_button_update ( GksuuiDialog *dialog )
++{
++	if ( strlen (gtk_entry_get_text ( dialog->entry)) == 0 ) {
++		g_signal_handlers_disconnect_by_func ( G_OBJECT(dialog->entry),
++			    G_CALLBACK(gtk_button_clicked), 
++			    dialog->ok_button);
++		gtk_widget_grab_default ( dialog->cancel_button );
++		gtk_widget_set_sensitive ( dialog->ok_button, FALSE);
++	} else {
++		g_signal_connect_swapped (G_OBJECT(dialog->entry), "activate",
++			    G_CALLBACK(gtk_button_clicked), 
++			    dialog->ok_button);
++		gtk_widget_grab_default (dialog->ok_button);
++		gtk_widget_set_sensitive ( dialog->ok_button, TRUE);
++	}
+ }
+--- libgksuui1.0-1.0.5.orig/libgksuui/gksuui-dialog.h	Tue May 10 06:45:36 2005
++++ libgksuui1.0-1.0.5/libgksuui/gksuui-dialog.h	Fri Jul  7 17:12:25 2006
+@@ -67,6 +67,9 @@
+   GtkWidget *entry;
+   GtkWidget *ok_button;
+   GtkWidget *cancel_button;
++  GtkWidget *required_label;
++  GtkWidget *info_image;
++  GtkWidget *info_label;
+ };
+ 
+ GType
+--- libgksuui1.0-1.0.5.orig/libgksuui/test-gksuui.c	Tue May 10 06:45:36 2005
++++ libgksuui1.0-1.0.5/libgksuui/test-gksuui.c	Mon Aug 21 15:06:25 2006
+@@ -43,13 +43,13 @@
+ 				     NULL);
+   gksuui_dialog_set_icon (GKSUUI_DIALOG(gksuui_dialog), pixbuf);
+ 
+-  gtk_widget_show_all (gksuui_dialog);
++  gtk_widget_show (gksuui_dialog);
+ 
+   response = gtk_dialog_run (GTK_DIALOG(gksuui_dialog));
+   fprintf (stderr, "response ID: %d\n", response);
+ 
+   password = gksuui_dialog_get_password (GKSUUI_DIALOG(gksuui_dialog));
+-  fprintf (stderr, "password: %s\n", password);
++  if ( password != NULL) fprintf (stderr, "password: %s\n", password);
+ 
+   gtk_widget_hide (gksuui_dialog);
+   while (gtk_events_pending ())
+@@ -56,7 +56,7 @@
+     gtk_main_iteration_do (FALSE);
+ 
+   password = gksu_ask_password (NULL, NULL, TRUE);
+-  fprintf (stderr, "password: %s\n", password);
++  if ( password != NULL) fprintf (stderr, "password: %s\n", password);
+ 
+   return 0;
+ }

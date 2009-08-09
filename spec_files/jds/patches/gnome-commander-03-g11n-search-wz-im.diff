@@ -1,0 +1,28 @@
+--- gnome-commander-1.2.7/src/gnome-cmd-quicksearch-popup.cc.orig	2008-08-22 16:21:16.646599000 +0900
++++ gnome-commander-1.2.7/src/gnome-cmd-quicksearch-popup.cc	2008-08-22 16:24:16.428563000 +0900
+@@ -126,6 +126,11 @@ static void on_text_changed (GtkEntry *e
+ 
+ static gboolean on_key_pressed (GtkWidget *entry, GdkEventKey *event, GnomeCmdQuicksearchPopup *popup)
+ {
++    if (GTK_ENTRY (entry)->editable && event->type == GDK_KEY_PRESS) {
++        if (gtk_im_context_filter_keypress (GTK_ENTRY(entry)->im_context, event))
++            return TRUE;
++    }
++
+     // While in quicksearch, treat "ALT/CTRL + key" as a simple "key"
+     event->state &= ~(GDK_CONTROL_MASK | GDK_MOD1_MASK);
+ 
+--- gnome-commander-1.2.7/src/gnome-cmd-rename-dialog.cc.orig	2008-08-22 16:21:20.633592000 +0900
++++ gnome-commander-1.2.7/src/gnome-cmd-rename-dialog.cc	2008-08-22 16:36:39.763217000 +0900
+@@ -43,6 +43,11 @@ static gboolean on_dialog_keypressed (Gt
+ {
+     GnomeCmdRenameDialog *dialog = GNOME_CMD_RENAME_DIALOG(widget);
+ 
++    if (dialog->priv->textbox->editable && event->type == GDK_KEY_PRESS) {
++        if (gtk_im_context_filter_keypress (dialog->priv->textbox->im_context, event))
++          return TRUE;
++    }
++
+     switch (event->keyval)
+     {
+         case GDK_Escape:

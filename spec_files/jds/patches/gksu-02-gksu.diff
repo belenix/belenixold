@@ -1,0 +1,184 @@
+--- gksu-1.3.0.orig/gksu/gksu.c	Tue Oct  7 05:49:18 2008
++++ gksu-1.3.0/gksu/gksu.c	Thu Oct  9 15:09:55 2008
+@@ -30,6 +30,8 @@
+ gboolean message_changed = FALSE;
+ gboolean prompt = FALSE;
+ gboolean always_ask_pass = FALSE;
++gboolean elevated_privelege = TRUE;
++gboolean elevated_role = TRUE;
+ 
+ struct option long_opts[] = {
+     /*
+@@ -37,10 +39,14 @@
+      */
+     {"help", no_argument, NULL, 'h'},
+     {"login", no_argument, NULL, 'l'},
++#ifndef __sun
+     {"preserv-env", no_argument, NULL, 'k'},
+     {"preserve-env", no_argument, NULL, 'k'},
++#endif
+     {"user", required_argument, NULL, 'u'},
++#ifndef __sun
+     {"print-pass", no_argument, NULL, 'p'},
++#endif
+     {"message", required_argument, NULL, 'm'},
+     {"title", required_argument, NULL, 't'},
+     {"icon", required_argument, NULL, 'i'},
+@@ -50,6 +56,8 @@
+     {"sudo-mode", optional_argument, NULL, 'S'},
+     {"prompt", optional_argument, NULL, 'P'},
+     {"always-ask-password", optional_argument, NULL, 'a'},
++    {"elevated-privelge", no_argument, NULL, 'p'},
++    {"elevated-role", no_argument, NULL, 'r'},
+     {0, 0, 0, 0}
+ };
+ 
+@@ -347,17 +355,21 @@
+ "  --message <message>, -m <message>\n"
+ "    Replace the standard message shown to ask for\n"
+ "    password for the argument passed to the option.\n"
++#ifndef __sun
+ "  --print-pass, -p\n"
+ "    Ask gksu to print the password to stdout, just\n"
+ "    like ssh-askpass. Useful to use in scripts with\n"
+ "    programs that accept receiving the password on\n"
+ "    stdin.\n"
++#endif
+ "  --prompt, -P\n"
+ "    Ask the user if they want to have their keyboard\n"
+ "    and mouse grabbed before doing so.\n"
++#ifndef __sun
+ "  --ssh-fwd, -s\n"
+ "    Strip the host part of the $DISPLAY variable, so that\n"
+ "    GKSu will work on SSH X11 Forwarding.\n"
++#endif
+ "  --sudo-mode, -S\n"
+ "    Make GKSu use sudo instead of su, as if it had been\n"
+ "    run as \"gksudo\".\n"
+@@ -366,14 +378,22 @@
+ "  --user <user>, -u <user>\n"
+ "    Call <command> as the specified user.\n"
+ "\n" 
++#ifndef __sun
+ "  --preserve-env, -k\n"
+ "    Preserve the current environments, does not set $HOME\n"
+ "    nor $PATH, for example.\n"
++#endif
+ "  --login, -l\n"
+ "    Make this a login shell. Beware this may cause\n"
+ "    problems with the Xauthority magic. Run xhost\n"
+ "    to allow the target user to open windows on your\n"
+ "    display!\n"
++#ifdef __sun
++"  --elevated-privilege, -p\n"
++"    attempt to elevate user's priveleg\n"
++"  --elevated-role, -r\n"
++"    attempt to elevate user's role\n"
++#endif
+ "\n"
+ "\n"), PACKAGE_VERSION, cmdname);
+ }
+@@ -506,6 +526,13 @@
+ 
+   gtk_widget_show_all (dialog);
+ 
++  // we "raise" the window because there is a race here for 
++  // focus-follow-mouse and auto-raise WMs that may put the window 
++  // in the background and confuse users
++  gtk_window_set_keep_above(dialog, TRUE);
++  // reset cursor 
++  gdk_window_set_cursor(dialog->window, gdk_cursor_new(GDK_LEFT_PTR));
++
+   for(;;) 
+     {
+       status = gdk_pointer_grab ((GTK_WIDGET(dialog))->window, TRUE, 0, NULL,
+@@ -679,7 +706,7 @@
+   int retvalue = 0;
+   int c = 0;
+ 
+-  setlocale (LC_ALL, "");
++  setlocale (6, "");
+   bindtextdomain(PACKAGE_NAME, LOCALEDIR);  
+   bind_textdomain_codeset (PACKAGE_NAME, "UTF-8");
+   textdomain(PACKAGE_NAME);
+@@ -724,7 +751,7 @@
+ 
+   context = gksu_context_new ();
+   read_config_file_options (context);
+-  while ((c = getopt_long(newargc, newargv, "?hu:lpm:kt:i:gdsS::P::a", long_opts, NULL))
++  while ((c = getopt_long(newargc, newargv, "?hu:lpm:kt:i:gdsS::P::ar", long_opts, NULL))
+ 	 != EOF)
+     {
+       switch (c)
+@@ -747,7 +774,11 @@
+ 	  gksu_context_set_login_shell (context, TRUE);
+ 	  break;
+ 	case 'p':
++#ifndef __sun
+ 	  print_pass = TRUE;
++#else
++	  gksu_context_set_elevated_privilege (context, FALSE);
++#endif
+ 	  break;
+ 	case 't':
+ 	  title = g_strdup (optarg);
+@@ -759,9 +790,11 @@
+ 	case 'i':
+ 	  icon = gdk_pixbuf_new_from_file (optarg, NULL);
+ 	  break;
++#ifndef __sun
+ 	case 'k':
+ 	  gksu_context_set_keep_env (context, TRUE);
+ 	  break;
++#endif
+ 	case 'g':
+ 	  grab = FALSE;
+ 
+@@ -821,6 +854,9 @@
+ 	  break;
+ 	case 'a':
+ 	  always_ask_pass = TRUE;
++	  break;
++	case 'r':
++	  gksu_context_set_elevated_role (context, FALSE);
+ 	}
+     }
+ 
+@@ -942,10 +978,12 @@ main (int argc, char **argv)
+ 	  if (!message_changed)
+ 	    {
+ 	      gchar *msg = 
+-		g_strdup_printf (_("<b>Please enter your password\n"
+-				   "to run %s as user %s</b>"),
+-				 gksu_context_get_command (context),
+-				 gksu_context_get_user (context));
++		/* SUN_BRANDING
++		   The string is back port from libgksu 2.0.9.
++		   su_ask_password() in libgksu/libgksu/libgksu.c */
++		g_strdup_printf (_("<b>Enter the password to run "
++		                   "the application '%s'</b>"),
++				 gksu_context_get_command (context));
+ 	      
+ 	      gksuui_dialog_set_message (GKSUUI_DIALOG(dialog), msg);
+ 	      g_free (msg);
+@@ -1031,13 +1069,18 @@ main (int argc, char **argv)
+ 	  gksu_context_set_password (context, password);
+ 	}
+ 
++      if ( gksu_context_get_pfexec_mode ( context ) )
++        {
++          gksu_context_set_need_pipe (context, FALSE);
++        }
++
+       gksu_context_run (context, &error);
+ 
+       if (error) {
+ 	gk_dialog (GTK_MESSAGE_ERROR, 
+-		   _("Failed to run %s as user %s:\n %s"),
++		   /* SUN_BRANDING */
++		   _("Failed to run %s:\n %s"),
+ 		   gksu_context_get_command (context),
+-		   gksu_context_get_user (context),
+ 		   error->message);
+ 	return 3;
+       }

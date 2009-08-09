@@ -1,0 +1,13 @@
+--- servers/slapd/back-ldbm/passwd.c	2003/03/24 12:30:38	1.1
++++ servers/slapd/back-ldbm/passwd.c	2003/03/24 12:31:43
+@@ -38,8 +38,8 @@
+ 	struct berval id = { 0, NULL };
+ 	struct berval new = { 0, NULL };
+ 
+-	struct berval dn;
+-	struct berval ndn;
++	struct berval dn = { 0, NULL };
++	struct berval ndn = { 0, NULL };
+ 
+ 	assert( reqoid != NULL );
+ 	assert( strcmp( LDAP_EXOP_MODIFY_PASSWD, reqoid ) == 0 );

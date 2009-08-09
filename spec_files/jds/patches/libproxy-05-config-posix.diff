@@ -1,0 +1,12 @@
+diff -uNr libproxy-0.2.3.orig/configure.ac libproxy-0.2.3/configure.ac
+--- libproxy-0.2.3.orig/configure.ac	2008-06-06 04:56:16.000000000 +0800
++++ libproxy-0.2.3/configure.ac	2009-03-11 15:37:03.402828000 +0800
+@@ -176,7 +176,7 @@
+ AC_TYPE_SIZE_T
+ PLUGINDIR=$libdir/$PACKAGE_NAME/$PACKAGE_VERSION/plugins
+ AC_SUBST(PLUGINDIR)
+-CFLAGS="-g -std=c99 $CFLAGS -DPLUGINDIR=\\\"$PLUGINDIR\\\" -DSYSCONFDIR=\\\"$sysconfdir\\\" -D_POSIX_C_SOURCE=1"
++CFLAGS="-g -std=c99 $CFLAGS -DPLUGINDIR=\\\"$PLUGINDIR\\\" -DSYSCONFDIR=\\\"$sysconfdir\\\""
+ 
+ ### Checks for library functions.
+ AC_FUNC_MALLOC

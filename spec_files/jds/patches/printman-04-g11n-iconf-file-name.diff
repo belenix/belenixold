@@ -1,0 +1,53 @@
+--- printman-0.0.2/src/print-manager-main-window.c.orig	2007-09-25 14:13:49.063224000 +0900
++++ printman-0.0.2/src/print-manager-main-window.c	2007-09-25 14:22:38.418399000 +0900
+@@ -372,6 +372,7 @@ load_pixbuf (const char *filename,
+ 	GdkPixbuf *pixbuf; 
+ 	GdkPixbuf *pixbuf_rendered;
+ 	gint i;
++	gchar *locale_filename = NULL;
+ 
+ 	pixbuf = NULL;
+ 	pixbuf_rendered = NULL;
+@@ -385,7 +386,11 @@ load_pixbuf (const char *filename,
+ 	}
+ 
+ 	if (!pixbuf_rendered) {
++		locale_filename = g_filename_from_utf8 (filename, -1, NULL, NULL, NULL);
++		if (g_file_test (locale_filename, G_FILE_TEST_EXISTS))
++			filename = locale_filename;
+ 		pixbuf_rendered = gdk_pixbuf_new_from_file (filename, NULL);
++		g_free (locale_filename);
+ 	}
+ 
+ 	pixbuf = gdk_pixbuf_copy (pixbuf_rendered);
+--- printman-0.0.2/src/print-manager-printer-properties.c.orig	2007-09-25 13:55:36.315715000 +0900
++++ printman-0.0.2/src/print-manager-printer-properties.c	2007-09-25 14:25:58.983841000 +0900
+@@ -52,6 +52,7 @@ printer_properties_response_cb (GtkWidge
+ 	GtkTextBuffer *buffer;
+ 	GtkTextIter start, end;
+ 	char *text;
++	char *locale_text;
+ 	const char *tmp;
+ 	const char *temp_icon_path;
+ 
+@@ -63,7 +64,11 @@ printer_properties_response_cb (GtkWidge
+ 			text = gtk_editable_get_chars (GTK_EDITABLE (
+ 							properties->icon_path),
+ 							0, -1);
+-			if (gdk_pixbuf_new_from_file (text, NULL)) {
++			locale_text = g_filename_from_utf8 (text, -1,
++			                                    NULL, NULL, NULL);
++			if ((g_file_test (locale_text, G_FILE_TEST_EXISTS) &&
++			     gdk_pixbuf_new_from_file (locale_text, NULL)) ||
++			    gdk_pixbuf_new_from_file (text, NULL)) {
+ 				print_manager_device_set_icon_path (
+ 							properties->device,
+ 							(const char *)text);
+@@ -95,6 +100,7 @@ printer_properties_response_cb (GtkWidge
+ 
+ 			}
+ 				
++		g_free (locale_text);
+ 		buffer = 
+ 			gtk_text_view_get_buffer (
+ 				GTK_TEXT_VIEW (properties->desc));

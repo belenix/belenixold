@@ -1,0 +1,22 @@
+--- ../libexif-gtk-0.3.3.old/gtk-extensions/Makefile.am	2004-01-16 16:49:13.000000000 -0800
++++ ./gtk-extensions/Makefile.am	2004-01-16 16:51:02.000000000 -0800
+@@ -1,7 +1,6 @@
+ INCLUDES =				\
+ 	-I$(top_srcdir)			\
+ 	-I$(top_srcdir)/intl		\
+-	-DGTK_DISABLE_DEPRECATED	\
+ 	$(GTK_CFLAGS)
+ 
+ noinst_LTLIBRARIES = libgtk-extensions.la
+--- ../libexif-gtk-0.3.3.old/libexif-gtk/Makefile.am	2004-01-16 16:49:13.000000000 -0800
++++ ./libexif-gtk/Makefile.am	2004-01-16 16:58:34.000000000 -0800
+@@ -3,8 +3,7 @@
+ 	-I$(top_srcdir)/intl				\
+ 	-I$(top_srcdir)/gtk-extensions			\
+ 	$(LIBEXIF_GTK_CFLAGS)				\
+-	-DG_LOG_DOMAIN=\"libexif\"			\
+-	-DGTK_DISABLE_DEPRECATED
++	-DG_LOG_DOMAIN=\"libexif\"
+ 
+ lib_LTLIBRARIES = libexif-gtk.la
+ 

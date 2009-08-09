@@ -1,0 +1,11 @@
+--- libwnck-2.26.0/libwnck/window.h.orig	2009-04-23 22:11:11.705615714 +0530
++++ libwnck-2.26.0/libwnck/window.h	2009-04-23 22:11:22.126729191 +0530
+@@ -31,7 +31,7 @@
+ #include <glib-object.h>
+ #include <libwnck/screen.h>
+ #include <gdk-pixbuf/gdk-pixbuf.h>
+-#include <gdk/gdkcolor.h>
++#include <gdk/gdk.h>
+ 
+ G_BEGIN_DECLS
+ 

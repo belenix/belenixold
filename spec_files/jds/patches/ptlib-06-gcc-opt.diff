@@ -1,0 +1,11 @@
+--- ptlib-2.4.2/make/unix.mak.orig	2009-04-24 00:15:04.978258530 +0530
++++ ptlib-2.4.2/make/unix.mak	2009-04-24 00:15:20.655298470 +0530
+@@ -665,7 +665,7 @@
+ 
+ ifneq ($(OSTYPE),Darwin)
+   ifeq ($(OSTYPE),solaris)
+-    OPTCCFLAGS	+= -xO3 
++    OPTCCFLAGS	+= -O3 
+   else
+     OPTCCFLAGS	+= -Os 
+   endif

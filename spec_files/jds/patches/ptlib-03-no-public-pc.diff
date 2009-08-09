@@ -1,0 +1,21 @@
+Index: ptlib/ptlib.pc.in
+===================================================================
+--- ptlib/ptlib.pc.in	(revision 21139)
++++ ptlib/ptlib.pc.in	(working copy)
+@@ -7,12 +7,14 @@
+ machtype=@MACHTYPE@
+ ostype=@OSTYPE@
+ objdir=obj_@OSTYPE@_@MACHTYPE@${suffix}
++builddir=@PTLIBDIR@
++buildlibdir=${builddir}/lib_@OSTYPE@_@MACHTYPE@
+ 
+ Name: ptlib
+ Description: PT Library
+ Version: @PTLIB_VERSION@
+-Libs: -L${libdir} -lpt${suffix} @ENDLDLIBS@ 
+-Cflags: -I${includedir} @STDCCFLAGS@
++Libs: -L${buildlibdir} -lpt${suffix} @ENDLDLIBS@ 
++Cflags: -I${builddir}/include @STDCCFLAGS@
+ 
+ PTLIB_IPV6=@PTLIB_IPV6@
+ PTLIB_RESOLVER=@PTLIB_RESOLVER@

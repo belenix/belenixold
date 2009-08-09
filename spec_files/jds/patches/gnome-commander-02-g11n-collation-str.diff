@@ -1,0 +1,39 @@
+--- gnome-commander-1.2.7/src/gnome-cmd-file.cc.orig	2008-08-22 10:09:40.771052000 +0900
++++ gnome-commander-1.2.7/src/gnome-cmd-file.cc	2008-08-22 10:30:38.655814000 +0900
+@@ -183,11 +183,15 @@ void gnome_cmd_file_invalidate_metadata 
+ 
+ void gnome_cmd_file_setup (GnomeCmdFile *finfo, GnomeVFSFileInfo *info, GnomeCmdDir *dir)
+ {
++    gchar *utf8_name = NULL;
++
+     g_return_if_fail (finfo != NULL);
+ 
+     finfo->info = info;
+     GNOME_CMD_FILE_INFO (finfo)->info = info;
+-    finfo->collate_key = g_utf8_collate_key_for_filename (info->name, -1);
++    utf8_name = get_utf8 (info->name);
++    finfo->collate_key = g_utf8_collate_key_for_filename (utf8_name, -1);
++    g_free (utf8_name);
+ 
+     if (dir)
+     {
+@@ -793,6 +797,8 @@ void gnome_cmd_file_show_cap_paste (Gnom
+ 
+ void gnome_cmd_file_update_info (GnomeCmdFile *finfo, GnomeVFSFileInfo *info)
+ {
++    gchar *utf8_name = NULL;
++
+     g_return_if_fail (finfo != NULL);
+     g_return_if_fail (info != NULL);
+ 
+@@ -800,7 +806,9 @@ void gnome_cmd_file_update_info (GnomeCm
+     gnome_vfs_file_info_unref (finfo->info);
+     gnome_vfs_file_info_ref (info);
+     finfo->info = info;
+-    finfo->collate_key = g_utf8_collate_key_for_filename (info->name, -1);
++    utf8_name = get_utf8 (info->name);
++    finfo->collate_key = g_utf8_collate_key_for_filename (utf8_name, -1);
++    g_free (utf8_name);
+ }
+ 
+ 

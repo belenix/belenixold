@@ -1,0 +1,27 @@
+diff -urN -x'*.orig' printman-0.0.2/Makefile.am ../SUNWgnome-print-2.18.0.hacked/printman-0.0.2/Makefile.am
+--- printman-0.0.2/Makefile.am	2004-06-14 01:42:25.000000000 +0100
++++ ../SUNWgnome-print-2.18.0.hacked/printman-0.0.2/Makefile.am	2007-05-03 18:01:28.843989000 +0100
+@@ -20,7 +20,7 @@
+ 
+ SUBDIRS = src help art po
+ 
+-Desktopdir = $(datadir)/applications
++Desktopdir = $(datadir)/applications/
+ Desktop_in_files = gnome-print-manager.desktop.in
+ Desktop_DATA = $(Desktop_in_files:.desktop.in=.desktop)
+ 
+diff -urN -x'*.orig' printman-0.0.2/gnome-print-manager.desktop ../SUNWgnome-print-2.18.0.hacked/printman-0.0.2/gnome-print-manager.desktop
+--- printman-0.0.2-orig/gnome-print-manager.desktop.in	1970-01-01 09:00:00.000000000 +0900
++++ printman-0.0.2/gnome-print-manager.desktop.in	2007-05-16 18:31:48.353365000 +0900
+@@ -0,0 +1,11 @@
++[Desktop Entry]
++# SUN_BRANDING
++_Name=Printer Queue Monitor
++# SUN_BRANDING
++_Comment=View printers and queues
++Exec=gnome-printinfo
++Terminal=0
++Type=Application
++Icon=print-manager.png
++StartupNotify=true
++Categories=GNOME;Application;System;Settings

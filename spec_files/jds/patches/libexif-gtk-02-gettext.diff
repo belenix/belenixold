@@ -1,0 +1,36 @@
+--- ../libexif-gtk-0.3.5.old/configure.in	2005-06-15 11:34:17.710678880 +0100
++++ ./configure.in	2005-06-15 11:35:06.205306576 +0100
+@@ -33,8 +33,16 @@
+ dnl ---------------------------------------------------------------------------
+ dnl i18n support
+ dnl ---------------------------------------------------------------------------
+-ALL_LINGUAS="es fr ru"
+-AM_GNU_GETTEXT
++GETTEXT_PACKAGE=libexif-gtk
++AC_SUBST(GETTEXT_PACKAGE)
++AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
++ 
++ALL_LINGUAS="es fr ru"
++AM_GLIB_GNU_GETTEXT
++USE_INCLUDED_LIBINTL=no
++AC_SUBST(USE_INCLUDED_LIBINTL)
++BUILD_INCLUDED_LIBINTL=no
++AC_SUBST(BUILD_INCLUDED_LIBINTL)
+ 
+ dnl ---------------------------------------------------------------------------
+ dnl libraries needed
+@@ -58,7 +66,13 @@
+ 	exif_msg="< 0.6.12 (think about upgrading)"])
+ CPPFLAGS="$CPPFLAGS_save"
+ 
+-CFLAGS="$CFLAGS -Wall -Wchar-subscripts -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wpointer-arith"
++dnl Only use -Wall if we have gcc
++if test "x$GCC" = "xyes"; then
++  if test -z "`echo "$CFLAGS" | grep "\-Wall" 2> /dev/null`" ; then
++    CFLAGS="$CFLAGS -Wall -Wchar-subscripts -Wmissing-declarations -Wmissing-prototypes -Wnested-externs -Wpointer-arith"
++  fi
++fi
++
+ AC_SUBST(CFLAGS)
+ 
+ AC_OUTPUT([ po/Makefile.in m4/Makefile 

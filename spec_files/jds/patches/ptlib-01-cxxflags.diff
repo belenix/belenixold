@@ -1,0 +1,52 @@
+Index: ptlib/make/common.mak
+===================================================================
+--- ptlib/make/common.mak	(revision 21149)
++++ ptlib/make/common.mak	(working copy)
+@@ -84,11 +84,11 @@
+ #
+ $(OBJDIR)/%.o : %.cxx 
+ 	@if [ ! -d $(OBJDIR) ] ; then mkdir -p $(OBJDIR) ; fi
+-	$(CXX) $(STDCCFLAGS) $(OPTCCFLAGS) $(CFLAGS) $(STDCXXFLAGS) -c $< -o $@
++	$(CXX) $(STDCCFLAGS) $(OPTCCFLAGS) $(CXXFLAGS) $(STDCXXFLAGS) -c $< -o $@
+ 
+ $(OBJDIR)/%.o : %.cpp 
+ 	@if [ ! -d $(OBJDIR) ] ; then mkdir -p $(OBJDIR) ; fi
+-	$(CXX) $(STDCCFLAGS) $(OPTCCFLAGS) $(CFLAGS) $(STDCXXFLAGS) -c $< -o $@
++	$(CXX) $(STDCCFLAGS) $(OPTCCFLAGS) $(CXXFLAGS) $(STDCXXFLAGS) -c $< -o $@
+ 
+ $(OBJDIR)/%.o : %.c 
+ 	@if [ ! -d $(OBJDIR) ] ; then mkdir -p $(OBJDIR) ; fi
+@@ -202,7 +202,7 @@
+ USE_PCH:=no
+ $(PTLIBDIR)/include/ptlib.h.gch/$(PT_OBJBASE): $(PTLIBDIR)/include/ptlib.h
+ 	@if [ ! -d `dirname $@` ] ; then mkdir -p `dirname $@` ; fi
+-	$(CXX) $(STDCCFLAGS) $(OPTCCFLAGS) $(CFLAGS) $(STDCXXFLAGS) -x c++ -c $< -o $@
++	$(CXX) $(STDCCFLAGS) $(OPTCCFLAGS) $(CXXFLAGS) $(STDCXXFLAGS) -x c++ -c $< -o $@
+ 
+ ifeq ($(USE_PCH),yes)
+ PCH_FILES =	$(PTLIBDIR)/include/ptlib.h.gch/$(PT_OBJBASE)
+Index: ptlib/make/plugins.mak
+===================================================================
+--- ptlib/make/plugins.mak	(revision 21149)
++++ ptlib/make/plugins.mak	(working copy)
+@@ -58,7 +58,7 @@
+ 
+ $(OBJDIR)/$(PLUGIN_FILENAME): $(PLUGIN_SOURCES)
+ 	mkdir -p $(OBJDIR)
+-	$(CXX) $(CFLAGS) $(STDCCFLAGS) \
++	$(CXX) $(CXXFLAGS) $(STDCCFLAGS) $(STDCXXFLAGS)\
+ 	$(LDFLAGS) \
+ 	$(PLUGIN_LIBS) \
+ 	-I. $(LDSOPTS) $< -o $@
+Index: ptlib/plugins/vidinput_v4l2/Makefile.in
+===================================================================
+--- ptlib/plugins/vidinput_v4l2/Makefile.in	(revision 21139)
++++ ptlib/plugins/vidinput_v4l2/Makefile.in	(working copy)
+@@ -1,5 +1,5 @@
+ HAS_LIBV4L = @HAS_LIBV4L@
+-CFLAGS += @V4L2_CFLAGS@
++CXXFLAGS += @V4L2_CFLAGS@
+ 
+ PLUGIN_NAME	= v4l2
+ PLUGIN_FAMILY	= device/videoinput
+Index: ptlib/make/unix.mak
