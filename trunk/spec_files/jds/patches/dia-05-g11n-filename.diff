@@ -1,0 +1,78 @@
+--- dia-0.96.1/app/diagram.c.orig	2008-12-16 13:22:56.280030000 +0900
++++ dia-0.96.1/app/diagram.c	2008-12-16 13:25:01.214645000 +0900
+@@ -1363,7 +1363,7 @@ diagram_update_for_filename(Diagram *dia
+   GSList *l;
+   DDisplay *ddisp;
+   char *title;
+-  char *filename = dia->filename;
++  char *filename = g_filename_from_utf8 (dia->filename, -1, NULL, NULL, NULL);
+ 
+   title = diagram_get_name(dia);
+ 
+--- dia-0.96.1/app/filedlg.c.orig	2008-12-16 12:45:12.265157000 +0900
++++ dia-0.96.1/app/filedlg.c	2008-12-16 17:59:26.595524000 +0900
+@@ -424,7 +424,7 @@ file_save_as_callback(gpointer data, gui
+   if (filename != NULL) {
+     char* fnabs = dia_get_absolute_filename (filename);
+     if (fnabs) {
+-      gchar *base = g_path_get_basename(fnabs);
++      gchar *base = g_path_get_basename(dia->filename);
+       gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(savedlg), fnabs);
+       /* FileChooser api insist on exiting files for set_filename  */
+       gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(savedlg), base);
+@@ -495,9 +495,10 @@ export_adapt_extension (const gchar* nam
+   const gchar* ext = NULL;
+   DiaExportFilter *efilter = efilter_by_index (index, &ext);
+   gchar *basename = g_path_get_basename (name);
++  gchar *utf8_name = NULL;
+ 
+   if (!efilter || !ext)
+-    gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(exportdlg), basename);
++    utf8_name = g_filename_to_utf8 (basename, -1, NULL, NULL, NULL);
+   else {
+     const gchar *last_dot = strrchr(basename, '.');
+     GString *s = g_string_new(basename);
+@@ -505,9 +506,11 @@ export_adapt_extension (const gchar* nam
+       g_string_truncate(s, last_dot-basename);
+     g_string_append(s, ".");
+     g_string_append(s, ext);
+-    gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(exportdlg), s->str);
++    utf8_name = g_filename_to_utf8 (s->str, -1, NULL, NULL, NULL);
+     g_string_free (s, TRUE);
+   }
++  gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(exportdlg), utf8_name);
++  g_free (utf8_name);
+   g_free (basename);
+ }
+ static void
+--- dia-0.96.1/plug-ins/cairo/diacairo.c.orig	2008-12-16 17:51:58.011745000 +0900
++++ dia-0.96.1/plug-ins/cairo/diacairo.c	2008-12-16 17:55:24.862039000 +0900
+@@ -963,26 +963,19 @@ typedef enum OutputKind
+ 
+ /* dia export funtion */
+ static void
+-export_data(DiagramData *data, const gchar *filename_utf8, 
++export_data(DiagramData *data, const gchar *filename, 
+             const gchar *diafilename, void* user_data)
+ {
+   DiaCairoRenderer *renderer;
+   FILE *file;
+   real width, height;
+   OutputKind kind = (OutputKind)user_data;
+-  gchar* filename = g_locale_from_utf8 (filename_utf8, -1, NULL, NULL, NULL);
+ 
+-  if (!filename) {
+-    message_error(_("Can't convert output filename '%s' to locale encoding.\n"
+-                    "Please choose a different name to save with cairo.\n"), 
+-		  dia_message_filename(filename_utf8), strerror(errno));
+-    return;
+-  }
+   file = fopen(filename, "wb"); /* "wb" for binary! */
+ 
+   if (file == NULL) {
+     message_error(_("Can't open output file %s: %s\n"), 
+-		  dia_message_filename(filename_utf8), strerror(errno));
++		  dia_message_filename(filename), strerror(errno));
+     return;
+   }
+   fclose (file);

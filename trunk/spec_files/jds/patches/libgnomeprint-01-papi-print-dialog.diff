@@ -1,0 +1,112 @@
+diff -urN libgnomeprint-2.12.1/libgnomeprint/gnome-print-transport.c ../SUNWgnome-print-2.14.0.hacked/libgnomeprint-2.12.1/libgnomeprint/gnome-print-transport.c
+--- libgnomeprint-2.12.1/libgnomeprint/gnome-print-transport.c	2005-09-22 20:27:10.000000000 +0100
++++ ../SUNWgnome-print-2.14.0.hacked/libgnomeprint-2.12.1/libgnomeprint/gnome-print-transport.c	2006-04-25 18:21:16.465274000 +0100
+@@ -392,10 +392,12 @@
+ gnome_print_transport_exists_by_name (const char *name)
+ {
+ 	GnomePrintTransport *trans;
++	GnomePrintConfig *config;
+ 
+ 	g_return_val_if_fail (name != NULL, FALSE);
+ 
+-	trans = gnome_print_transport_new_from_module_name (name, NULL);
++	config = gnome_print_config_default ();
++	trans = gnome_print_transport_new(config);
+ 	if (trans != NULL) {
+ 		g_object_unref (trans);
+ 		return TRUE;
+diff -urN libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi-transport.c ../SUNWgnome-print-2.14.0.hacked/libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi-transport.c
+--- libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi-transport.c	2004-05-18 02:53:09.000000000 +0100
++++ ../SUNWgnome-print-2.14.0.hacked/libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi-transport.c	2006-04-25 18:19:35.557131000 +0100
+@@ -153,9 +153,11 @@
+ 	g_free (transport->printer);
+ 	transport->printer = NULL;
+ 
+-	papiAttributeListFree (transport->attributes);
+-	transport->attributes = NULL;
+-
++	/* We do not free attributes here anymore because it is being freed by 
++	   papiJobFree() in the gp_transport_papi_close(). This happens 
++	   because transport->attributes is being passed to the lpd backend
++	   as job in papiJobStreamOpen ().
++	*/
+ 	G_OBJECT_CLASS (parent_class)->finalize (object);
+ }
+ 
+@@ -181,6 +183,7 @@
+ 		return GNOME_PRINT_ERROR_UNKNOWN;
+ 	}
+ 
++g_print ("gp_transport_papi_construct: transport->printer is %s\n", value);
+ 	transport->printer = value;
+ 
+ 	status = papiServiceCreate (&service, transport->printer, NULL, NULL,
+@@ -191,18 +194,6 @@
+ 	}
+ 	transport->service = service;
+ 
+-	value = (char *)gnome_print_config_get (gp_transport->config,
+-		(unsigned char *)GNOME_PRINT_KEY_NUM_COPIES);
+-	errno = 0;
+-	valint = strtol ((char *)value, NULL, 10);
+-	if (errno == 0)
+-		papiAttributeListAddInteger (&attributes, PAPI_ATTR_EXCL,
+-			"copies", valint);
+-	else
+-		papiAttributeListAddInteger (&attributes, PAPI_ATTR_EXCL,
+-			"copies", 1);
+-	g_free (value);
+-
+ 	/*
+ 	 * We really ought to pull this value from somewhere.  It probably will
+ 	 * be "application/postscript" most of the time, but at least with
+@@ -339,11 +330,11 @@
+ 		(const papi_attribute_t **)transport->attributes, NULL,
+ 		(const char **)&filename, &job);
+ 
+-	papiJobFree(job);
+-
+ 	if (status != PAPI_OK)
+ 		return GNOME_PRINT_ERROR_UNKNOWN;
+ 
++	papiJobFree(job);
++
+ 	return GNOME_PRINT_OK;
+ }
+ 
+diff -urN libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi.c ../SUNWgnome-print-2.14.0.hacked/libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi.c
+--- libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi.c	2006-04-25 18:18:12.454945000 +0100
++++ ../SUNWgnome-print-2.14.0.hacked/libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi.c	2006-04-25 18:19:52.346914000 +0100
+@@ -45,7 +45,7 @@
+ #include <libgnomeprint/gpa/gpa-settings.h>
+ 
+ #define d(x)
+-#define	GENERIC_PPD_FILE "file://localhost/usr/lib/lp/model/ppd/Generic/Generic-PostScript_Printer-Postscript.ppd.gz"
++#define	GENERIC_PPD_FILE "file://localhost/usr/lib/lp/model/ppd/system/foomatic/Generic/Generic-PostScript_Printer-Postscript.ppd.gz"
+ 
+ /* Argument order: id, name */
+ 
+@@ -77,7 +77,11 @@
+ "      </Option>"
+ "      <Option Id=\"Job\">"
+ "        <Option Id=\"NumCopies\" Type=\"String\" Default=\"1\"/>"
++"        <Option Id=\"NonCollatedCopiesHW\" Type=\"String\" Default=\"true\"/>"
++"        <Option Id=\"CollatedCopiesHW\" Type=\"String\" Default=\"false\"/>"
+ "        <Option Id=\"Collate\" Type=\"String\" Default=\"false\"/>"
++"        <Option Id=\"Duplex\" Type=\"String\" Default=\"false\"/>"
++"        <Option Id=\"Tumble\" Type=\"String\" Default=\"false\"/>"
+ "        <Option Id=\"PrintToFile\" Type=\"String\" Default=\"false\" Locked=\"true\"/>"
+ "        <Option Id=\"FileName\" Type=\"String\" Default=\"\"/>"
+ "      </Option>"
+@@ -686,6 +690,11 @@
+ 			return;
+ 		}
+ 
++		if (!printers) {
++			papiServiceDestroy (service);
++			return;
++		}
++
+ 		for (i = 0; printers[i] != NULL; i++)
+ 			;
+ 

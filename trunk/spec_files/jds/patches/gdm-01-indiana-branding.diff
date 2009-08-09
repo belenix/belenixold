@@ -1,0 +1,203 @@
+--- gdm-2.20.7-orig/config/PreSession.in	2008-07-16 10:33:39.824399838 +0800
++++ gdm-2.20.7/config/PreSession.in	2008-07-28 11:10:30.452931423 +0800
+@@ -21,47 +21,4 @@
+   echo "$OUTPUT"
+ }
+ 
+-# Set background color
+-XSETROOT=`gdmwhich xsetroot`
+-if [ "x$XSETROOT" != "x" ] ; then
+-
+-	CHECKBACKCOLOR="OK"
+-	if [ "x$GDM_GREETER_TYPE" = "xTHEMED" ]; then
+-		BACKCOLOR=`gdmflexiserver --command="GET_CONFIG greeter/GraphicalThemedColor $DISPLAY"`
+-
+-		CHECKBACKCOLOR=`echo $BACKCOLOR | sed 's/^\([^ ]*\) .*$/\1/'`
+-		if [ "x$CHECKBACKCOLOR" = "xOK" ]; then
+-			BACKCOLOR=`echo $BACKCOLOR | sed 's/^.* \(.*\)$/\1/'`
+-		else
+-			BACKCOLOR=""
+-		fi
+-	fi
+-
+-	# If we tried to load the themed backgroundcolor, but failed, then try loading plain color
+-	if [ "x$CHECKBACKCOLOR" != "xOK" ] || [ "x$GDM_GREETER_TYPE" = "xPLAIN" ]; then
+-
+-		# Background type can be 0=None, 1=Image & Color, 2=Color, or 3=Image 
+-		BACKTYPE=`gdmflexiserver --command="GET_CONFIG greeter/BackgroundType $DISPLAY"`
+-
+-		# Skip if background type does not include a color
+-		if [ "x$BACKTYPE" = "xOK 1" ] || [ "x$BACKTYPE" = "xOK 2" ]; then
+-			BACKCOLOR=`gdmflexiserver --command="GET_CONFIG greeter/BackgroundColor $DISPLAY"`
+-
+-			CHECKBACKCOLOR=`echo $BACKCOLOR | sed 's/^\([^ ]*\) .*$/\1/'`
+-			if [ "x$CHECKBACKCOLOR" = "xOK" ]; then
+-				BACKCOLOR=`echo $BACKCOLOR | sed 's/^.* \(.*\)$/\1/'`
+-			else
+-				BACKCOLOR=""
+-			fi
+-		fi
+-	fi
+-
+-	# Default value
+- 	if [ "x$BACKCOLOR" = "x" ]; then
+- 		BACKCOLOR="#76848F"
+- 	fi
+-
+-	"$XSETROOT" -cursor_name left_ptr -solid "$BACKCOLOR"
+-fi
+-
+ exit 0
+--- gdm-2.20.7/config/gdm.conf.in-orig	2008-08-05 22:15:29.270750000 -0500
++++ gdm-2.20.7/config/gdm.conf.in	2008-08-05 22:22:23.909301000 -0500
+@@ -68,7 +68,7 @@ TimedLoginDelay=30
+ 
+ # The greeter for attached (non-xdmcp) logins.  Change gdmlogin to gdmgreeter
+ # to get the new graphical greeter.
+-#Greeter=@libexecdir@/gdmlogin
++Greeter=@libexecdir@/gdmgreeter
+ 
+ # The greeter for xdmcp logins, usually you want a less graphically intensive
+ # greeter here so it's better to leave this with gdmlogin
+@@ -179,7 +179,7 @@ UserAuthDir=
+ UserAuthFBDir=/tmp
+ UserAuthFile=.Xauthority
+ # The X server to use if we can't figure out what else to run.
+-StandardXServer=@X_SERVER@
++StandardXServer=@X_SERVER@ -br
+ # The maximum number of flexible X servers to run.
+ #FlexibleXServers=5
+ # And after how many minutes should we reap the flexible server if there is no
+@@ -203,13 +203,13 @@ XnestUnscaledFontPath=@X_XNEST_UNSCALED_
+ # X to use specific vts.  Turn VTAllocation to false if this is causing
+ # problems.
+ #FirstVT=7
+-#VTAllocation=true
++VTAllocation=false
+ # Should double login be treated with a warning (and possibility to change VT's
+ # on Linux and FreeBSD systems for console logins)
+ #DoubleLoginWarning=true
+ # Should a second login always resume the current session and switch VT's on
+ # Linux and FreeBSD systems for console logins
+-#AlwaysLoginCurrentSession=true
++AlwaysLoginCurrentSession=false
+ 
+ # If true then the last login information is printed to the user before being
+ # prompted for password.  While this gives away some info on what users are on
+@@ -257,7 +257,7 @@ RelaxPermissions=0
+ # example, home directories owned by some other user.
+ CheckDirOwner=true
+ # If your HOME is managed by automounter, set to true
+-SupportAutomount=false
++SupportAutomount=true
+ # Number of seconds to wait after a failed login
+ #RetryDelay=1
+ # Maximum size of a file we wish to read.  This makes it hard for a user to DoS
+@@ -271,7 +271,14 @@ SupportAutomount=false
+ # Note: Anytime we find a -query or -indirect on the command line we do not add
+ # a "-nolisten tcp", as then the query just wouldn't work, so this setting only
+ # affects truly attached sessions.
+-#DisallowTCP=true
++#
++# On Solaris, the "options/tcp_listen" property in the x11-server smf(5)
++# service controls whether "-nolisten tcp" is added to the X command line,
++# and is set by default to add this option.  Therefore the GDM configuration
++# is set to false, allowing the x11-server smf property to control this 
++# feature on Solaris.  Solaris users are not recommended to control this
++# feature via the GDM configuration.
++DisallowTCP=false
+ # By default never place cookies if we "detect" NFS.  We detect NFS by
+ # detecting "root-squashing".  It seems bad practice to place cookies on things
+ # that go over the network by default and thus we do not do it by default.
+@@ -352,7 +359,7 @@ Enable=false
+ #GtkRC=@datadir@/themes/Default/gtk-2.0/gtkrc
+ 
+ # The GTK+ theme to use for the GUI.
+-#GtkTheme=Default
++GtkTheme=Nimbus
+ # If to allow changing the GTK+ (widget) theme from the greeter.  Currently
+ # this only affects the standard greeter as the graphical greeter does not yet
+ # have this ability.
+@@ -434,7 +441,7 @@ Browser=false
+ # menu that contains reboot, shutdown, suspend, config and chooser.  None of
+ # these is available if this is off.  They can be turned off individually
+ # however.
+-#SystemMenu=true
++SystemMenu=false
+ # Configuration is available from the system menu of the greeter.
+ #ConfigAvailable=true
+ # Should the chooser button be shown.  If this is shown, GDM can drop into
+@@ -470,8 +477,8 @@ DefaultRemoteWelcome=true
+ # The Standard greeter (gdmlogin) uses BackgroundColor as the background
+ # color, while the themed greeter (gdmgreeter) uses GraphicalThemedColor
+ # as the background color.
+-BackgroundColor=#76848F
+-GraphicalThemedColor=#76848F
++BackgroundColor=#000000
++GraphicalThemedColor=#000000
+ # XDMCP session should only get a color, this is the sanest setting since you
+ # don't want to take up too much bandwidth
+ #BackgroundRemoteOnlyColor=true
+@@ -513,8 +520,8 @@ ShowLocaleInLangBox=true
+ # list then provide a list that is delimited by /: to the GraphicalThemes
+ # key and set GraphicalThemeRand to true.  Otherwise use GraphicalTheme
+ # and specify just one theme.
+-#GraphicalTheme=circles
+-#GraphicalThemes=circles/:happygnome
++GraphicalTheme=Indiana
++GraphicalThemes=Indiana/:circles/:happygnome
+ GraphicalThemeDir=@datadir@/gdm/themes/
+ GraphicalThemeRand=false
+ 
+@@ -630,7 +637,7 @@ Gestures=false
+ 
+ [server-Standard]
+ name=Standard server
+-command=@X_SERVER@ @X_CONFIG_OPTIONS@ @XEVIE_OPTION@
++command=@X_SERVER@ @X_CONFIG_OPTIONS@ @XEVIE_OPTION@ -br
+ flexible=true
+ # Indicates that the X server should be started at a different process
+ # priority.  Values can be any integer value accepted by the setpriority C
+--- gdm-2.19.0/config/Xsession.in-orig	2007-05-11 14:17:11.932010000 +0800
++++ gdm-2.19.0/config/Xsession.in	2007-05-11 14:17:19.367542000 +0800
+@@ -271,14 +271,6 @@ if [ "x$command" = "xdefault" ] ; then
+   fi
+ fi
+ 
+-# add ssh-agent if found
+-sshagent="`gdmwhich ssh-agent`"
+-if [ -n "$sshagent" ] && [ -x "$sshagent" ] && [ -z "$SSH_AUTH_SOCK" ]; then
+-    command="$sshagent -- $command"
+-elif [ -z "$sshagent" ] ; then
+-    echo "$0: ssh-agent not found!"
+-fi
+-
+ echo "$0: Setup done, will execute: $command"
+ 
+ eval exec $command
+diff -ur gdm-2.20.7-orig//gui/gdmflexiserver-xnest.desktop.in.in gdm-2.20.7//gui/gdmflexiserver-xnest.desktop.in.in
+--- gdm-2.20.7-orig//gui/gdmflexiserver-xnest.desktop.in.in	Thu Aug 21 15:45:46 2008
++++ gdm-2.20.7//gui/gdmflexiserver-xnest.desktop.in.in	Thu Aug 21 15:46:43 2008
+@@ -2,7 +2,8 @@
+ Encoding=UTF-8
+ _Name=New Login in a Window
+ _GenericName=New Login in a Window
+-_Comment=Login as another user in a window
++# SUN_BRANDING
++_Comment=Log in to another session in a desktop window without logging out
+ TryExec=@X_XNEST_CMD@
+ Exec=gdmflexiserver --xnest
+ Icon=gdm-xnest
+diff -ur gdm-2.20.7-orig//gui/gdmflexiserver.desktop.in gdm-2.20.7//gui/gdmflexiserver.desktop.in
+--- gdm-2.20.7-orig//gui/gdmflexiserver.desktop.in	Thu Aug 21 15:45:46 2008
++++ gdm-2.20.7//gui/gdmflexiserver.desktop.in	Thu Aug 21 15:46:16 2008
+@@ -2,7 +2,8 @@
+ Encoding=UTF-8
+ _Name=New Login
+ _GenericName=New Login
+-_Comment=Log in as another user without logging out
++# SUN_BRANDING
++_Comment=Log in to another session without logging out
+ Exec=gdmflexiserver
+ Icon=gdmflexiserver
+ Terminal=false

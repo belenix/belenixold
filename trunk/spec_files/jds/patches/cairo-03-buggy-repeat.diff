@@ -1,0 +1,29 @@
+--- cairo-1.8.4/src/cairo-xlib-display.c.orig	2008-11-13 23:56:33.000000000 +0800
++++ cairo-1.8.4/src/cairo-xlib-display.c	2008-11-25 14:39:56.342087676 +0800
+@@ -66,6 +66,8 @@
+ 
+ static cairo_xlib_display_t *_cairo_xlib_display_list;
+ 
++static int buggy_repeat_force = -1;
++
+ static void
+ _cairo_xlib_remove_close_display_hook_internal (cairo_xlib_display_t *display,
+ 						cairo_xlib_hook_t *hook);
+@@ -337,6 +339,17 @@
+ 	if (VendorRelease (dpy) <= 40500000)
+ 	    display->buggy_repeat = TRUE;
+     }
++/* workaround; see http://defect.opensolaris.org/bz/show_bug.cgi?id=4187 */
++    if (buggy_repeat_force == -1) {
++        if (getenv("CAIRO_NO_BUGGY_REPEAT"))
++            buggy_repeat_force = 0;
++        else
++            buggy_repeat_force = 1;
++    }
++
++    if (buggy_repeat_force)
++        display->buggy_repeat = TRUE;
++
+ 
+     display->next = _cairo_xlib_display_list;
+     _cairo_xlib_display_list = display;

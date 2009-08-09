@@ -1,0 +1,10 @@
+--- libcanberra-0.12/src/oss.c.old	2009-04-22 20:02:23.499900000 +0800
++++ libcanberra-0.12/src/oss.c	2009-04-22 20:07:27.916436000 +0800
+@@ -422,6 +422,7 @@
+     out->callback = cb;
+     out->userdata = userdata;
+     out->pipe_fd[0] = out->pipe_fd[1] = -1;
++    out->pcm = -1;
+ 
+     if (pipe(out->pipe_fd) < 0) {
+         ret = CA_ERROR_SYSTEM;

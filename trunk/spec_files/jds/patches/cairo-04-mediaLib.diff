@@ -1,0 +1,21 @@
+--- cairo-1.4.14/configure.in.orig	2008-01-22 17:36:50.603023255 +0000
++++ cairo-1.4.14/configure.in	2008-01-22 17:38:10.096273436 +0000
+@@ -768,6 +768,18 @@
+ AM_CONDITIONAL(USE_MMX, test $have_mmx_intrinsics = yes)
+ 
+ dnl ===========================================================================
++dnl Check for mediaLib
++
++AC_MSG_CHECKING(for mediaLib 2.3)
++# Check for a mediaLib 2.3 function since that is what the cairo mediaLib
++# patch requires.
++AC_CHECK_LIB(mlib, mlib_ImageSetStruct, use_mlib=yes, use_mlib=no)
++if test $use_mlib = yes; then
++    AC_DEFINE(USE_MEDIALIB, 1, [use mediaLib])
++fi
++AM_CONDITIONAL(USE_MEDIALIB, test $use_mlib = yes)
++
++dnl ===========================================================================
+ 
+ AC_ARG_ENABLE(gcov,
+   AS_HELP_STRING([--enable-gcov],

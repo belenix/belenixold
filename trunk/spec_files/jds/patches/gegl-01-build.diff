@@ -1,0 +1,23 @@
+--- gegl-0.0.20/gegl/gegl-utils.h.orig	2008-11-20 15:10:20.714079463 +0800
++++ gegl-0.0.20/gegl/gegl-utils.h	2008-11-20 15:11:43.568470950 +0800
+@@ -56,7 +56,7 @@
+ 
+ #define INT_MULT(a,b,t)  ((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
+ 
+-inline gint _gegl_float_epsilon_zero  (float     value);
++gint _gegl_float_epsilon_zero  (float     value);
+ gint        _gegl_float_epsilon_equal (float     v1,
+                                        float     v2);
+ 
+--- gegl-0.0.20/gegl/gegl-utils.c.orig	2008-11-20 15:10:27.897926408 +0800
++++ gegl-0.0.20/gegl/gegl-utils.c	2008-11-20 15:11:45.032516001 +0800
+@@ -26,7 +26,7 @@
+ #include "gegl-types.h"
+ 
+ 
+-inline gint
++gint
+ _gegl_float_epsilon_zero (float value)
+ {
+   return value > -GEGL_FLOAT_EPSILON && value < GEGL_FLOAT_EPSILON;
+

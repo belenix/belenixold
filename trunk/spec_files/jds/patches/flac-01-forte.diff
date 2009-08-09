@@ -1,0 +1,497 @@
+--- flac-1.2.1/configure.in-orig	2007-08-01 13:33:59.050837000 -0500
++++ flac-1.2.1/configure.in	2007-08-01 13:13:34.248470000 -0500
+@@ -48,6 +48,14 @@ AM_CONFIG_HEADER(config.h)
+ 
+ AC_C_BIGENDIAN
+ 
++AC_C_INLINE
++
++if test "$ac_cv_c_inline" != no ; then
++  AC_DEFINE_UNQUOTED(FLAC_INLINE,$ac_cv_c_inline)
++  AC_SUBST(FLAC_INLINE)
++  AH_TEMPLATE(FLAC_INLINE, [define inline to use])
++fi
++
+ AC_CHECK_TYPES(socklen_t, [], [])
+ 
+ dnl check for getopt in standard library
+@@ -308,7 +308,7 @@
+ else
+ 	CPPFLAGS="-DNDEBUG $CPPFLAGS"
+ 	if test "x$GCC" = xyes; then
+-		CPPFLAGS="-DFLaC__INLINE=__inline__ $CPPFLAGS"
++		CPPFLAGS="$CPPFLAGS"
+ 		CFLAGS="-O3 -funroll-loops -finline-functions -Wall -W -Winline $CFLAGS"
+ 	fi
+ fi
+--- flac-1.2.0/include/share/replaygain_analysis.h-orig	2007-08-01 13:37:48.953601000 -0500
++++ flac-1.2.0/include/share/replaygain_analysis.h	2007-08-01 13:13:34.288739000 -0500
+@@ -1,59 +1,59 @@
+-/*
+- *  ReplayGainAnalysis - analyzes input samples and give the recommended dB change
+- *  Copyright (C) 2001 David Robinson and Glen Sawyer
+- *
+- *  This library is free software; you can redistribute it and/or
+- *  modify it under the terms of the GNU Lesser General Public
+- *  License as published by the Free Software Foundation; either
+- *  version 2.1 of the License, or (at your option) any later version.
+- *
+- *  This library is distributed in the hope that it will be useful,
+- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- *  Lesser General Public License for more details.
+- *
+- *  You should have received a copy of the GNU Lesser General Public
+- *  License along with this library; if not, write to the Free Software
+- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+- *
+- *  concept and filter values by David Robinson (David@Robinson.org)
+- *    -- blame him if you think the idea is flawed
+- *  coding by Glen Sawyer (glensawyer@hotmail.com) 442 N 700 E, Provo, UT 84606 USA
+- *    -- blame him if you think this runs too slowly, or the coding is otherwise flawed
+- *  minor cosmetic tweaks to integrate with FLAC by Josh Coalson
+- *
+- *  For an explanation of the concepts and the basic algorithms involved, go to:
+- *    http://www.replaygain.org/
+- */
+-
+-#ifndef GAIN_ANALYSIS_H
+-#define GAIN_ANALYSIS_H
+-
+-#include <stddef.h>
+-
+-#define GAIN_NOT_ENOUGH_SAMPLES  -24601
+-#define GAIN_ANALYSIS_ERROR           0
+-#define GAIN_ANALYSIS_OK              1
+-
+-#define INIT_GAIN_ANALYSIS_ERROR      0
+-#define INIT_GAIN_ANALYSIS_OK         1
+-
+-#ifdef __cplusplus
+-extern "C" {
+-#endif
+-
+-typedef float   Float_t;         /* Type used for filtering */
+-
+-extern Float_t ReplayGainReferenceLoudness; /* in dB SPL, currently == 89.0 */
+-
+-int     InitGainAnalysis ( long samplefreq );
+-int     AnalyzeSamples   ( const Float_t* left_samples, const Float_t* right_samples, size_t num_samples, int num_channels );
+-int		ResetSampleFrequency ( long samplefreq );
+-Float_t GetTitleGain     ( void );
+-Float_t GetAlbumGain     ( void );
+-
+-#ifdef __cplusplus
+-}
+-#endif
+-
+-#endif /* GAIN_ANALYSIS_H */
++/*
++ *  ReplayGainAnalysis - analyzes input samples and give the recommended dB change
++ *  Copyright (C) 2001 David Robinson and Glen Sawyer
++ *
++ *  This library is free software; you can redistribute it and/or
++ *  modify it under the terms of the GNU Lesser General Public
++ *  License as published by the Free Software Foundation; either
++ *  version 2.1 of the License, or (at your option) any later version.
++ *
++ *  This library is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ *  Lesser General Public License for more details.
++ *
++ *  You should have received a copy of the GNU Lesser General Public
++ *  License along with this library; if not, write to the Free Software
++ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++ *
++ *  concept and filter values by David Robinson (David@Robinson.org)
++ *    -- blame him if you think the idea is flawed
++ *  coding by Glen Sawyer (glensawyer@hotmail.com) 442 N 700 E, Provo, UT 84606 USA
++ *    -- blame him if you think this runs too slowly, or the coding is otherwise flawed
++ *  minor cosmetic tweaks to integrate with FLAC by Josh Coalson
++ *
++ *  For an explanation of the concepts and the basic algorithms involved, go to:
++ *    http://www.replaygain.org/
++ */
++
++#ifndef GAIN_ANALYSIS_H
++#define GAIN_ANALYSIS_H
++
++#include <stddef.h>
++
++#define GAIN_NOT_ENOUGH_SAMPLES  -24601
++#define GAIN_ANALYSIS_ERROR           0
++#define GAIN_ANALYSIS_OK              1
++
++#define INIT_GAIN_ANALYSIS_ERROR      0
++#define INIT_GAIN_ANALYSIS_OK         1
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++typedef float   Float_t;         /* Type used for filtering */
++
++extern Float_t ReplayGainReferenceLoudness; /* in dB SPL, currently == 89.0 */
++
++int     InitGainAnalysis ( long samplefreq );
++int     AnalyzeSamples   ( const Float_t* left_samples, const Float_t* right_samples, size_t num_samples, int num_channels );
++int		ResetSampleFrequency ( long samplefreq );
++Float_t GetTitleGain     ( void );
++Float_t GetAlbumGain     ( void );
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* GAIN_ANALYSIS_H */
+--- flac-1.2.0/src/plugin_winamp2/infobox.c-orig	2007-08-01 13:34:46.716826000 -0500
++++ flac-1.2.0/src/plugin_winamp2/infobox.c	2007-08-01 13:13:34.257582000 -0500
+@@ -48,7 +48,7 @@ static const char infoTitle[] = "FLAC Fi
+ 
+ /* TODO: write genres in utf-8 ? */
+ 
+-static __inline int GetGenresFileName(char *buffer, int size)
++static FLAC_INLINE int GetGenresFileName(char *buffer, int size)
+ {
+ 	char *c;
+ 
+@@ -273,7 +273,7 @@ static BOOL InitInfoboxInfo(HWND hwnd, c
+ 	return TRUE;
+ }
+ 
+-static void __inline SetTag(HWND hwnd, const char *filename, FLAC__StreamMetadata *tags)
++static void FLAC_INLINE SetTag(HWND hwnd, const char *filename, FLAC__StreamMetadata *tags)
+ {
+ 	strcpy(buffer, infoTitle);
+ 
+@@ -399,7 +399,7 @@ ULONGLONG FileSize(const char *fileName)
+ 	return res.QuadPart;
+ }
+ 
+-static __inline char *GetFileName(const char *fullname)
++static FLAC_INLINE char *GetFileName(const char *fullname)
+ {
+ 	const char *c = fullname + strlen(fullname) - 1;
+ 
+--- flac-1.2.0/src/share/replaygain_analysis/replaygain_analysis.c-orig	2007-08-01 13:36:01.582583000 -0500
++++ flac-1.2.0/src/share/replaygain_analysis/replaygain_analysis.c	2007-08-01 13:22:19.440619000 -0500
+@@ -110,10 +110,10 @@ typedef signed int      Int32_t;
+ #define YULE_ORDER         10
+ #define BUTTER_ORDER        2
+ #define RMS_PERCENTILE      0.95        /* percentile which is louder than the proposed level */
+-#define MAX_SAMP_FREQ   48000.          /* maximum allowed sample frequency [Hz] */
+-#define RMS_WINDOW_TIME     0.050       /* Time slice size [s] */
+-#define STEPS_per_dB      100.          /* Table entries per dB */
+-#define MAX_dB            120.          /* Table entries for 0...MAX_dB (normal max. values are 70...80 dB) */
++#define MAX_SAMP_FREQ   48000           /* maximum allowed sample frequency [Hz] */
++#define RMS_WINDOW_TIME    50           /* Time slice size [ms] */
++#define STEPS_per_dB      100           /* Table entries per dB */
++#define MAX_dB            120           /* Table entries for 0...MAX_dB (normal max. values are 70...80 dB) */
+ 
+ #define MAX_ORDER               (BUTTER_ORDER > YULE_ORDER ? BUTTER_ORDER : YULE_ORDER)
+ /* [JEC] the following was originally #defined as:
+@@ -122,12 +122,7 @@ typedef signed int      Int32_t;
+  * sampleWindow calculation in ResetSampleFrequency(), and was causing
+  * buffer overflows for 48kHz analysis, hence the +1.
+  */
+-#ifndef __sun
+- #define MAX_SAMPLES_PER_WINDOW  (size_t) (MAX_SAMP_FREQ * RMS_WINDOW_TIME + 1.)   /* max. Samples per Time slice */
+-#else
+- /* [JEC] Solaris Forte compiler doesn't like float calc in array indices */
+- #define MAX_SAMPLES_PER_WINDOW  (size_t) (2401)
+-#endif
++#define MAX_SAMPLES_PER_WINDOW  (size_t) (MAX_SAMP_FREQ * RMS_WINDOW_TIME / 1000 + 1)   /* max. Samples per Time slice */
+ #define PINK_REF                64.82 /* 298640883795 */                          /* calibration value */
+ 
+ static Float_t          linprebuf [MAX_ORDER * 2];
+@@ -255,7 +250,7 @@ ResetSampleFrequency ( long samplefreq )
+         default:    return INIT_GAIN_ANALYSIS_ERROR;
+     }
+ 
+-    sampleWindow = (int) ceil (samplefreq * RMS_WINDOW_TIME);
++    sampleWindow = (int) ceil (samplefreq * RMS_WINDOW_TIME / 1000);
+ 
+     lsum         = 0.;
+     rsum         = 0.;
+--- flac-1.2.0/src/share/replaygain_synthesis/replaygain_synthesis.c-orig	2007-08-01 13:38:42.924311000 -0500
++++ flac-1.2.0/src/share/replaygain_synthesis/replaygain_synthesis.c	2007-08-01 13:24:07.805641000 -0500
+@@ -44,10 +44,6 @@
+ #include "replaygain_synthesis.h"
+ #include "FLAC/assert.h"
+ 
+-#ifndef FLaC__INLINE
+-#define FLaC__INLINE
+-#endif
+-
+ /* adjust for compilers that can't understand using LL suffix for int64_t literals */
+ #ifdef _MSC_VER
+ #define FLAC__I64L(x) x
+@@ -236,7 +232,7 @@ void FLAC__replaygain_synthesis__init_di
+  * the following is based on parts of wavegain.c
+  */
+ 
+-static FLaC__INLINE FLAC__int64 dither_output_(DitherContext *d, FLAC__bool do_dithering, int shapingtype, int i, double Sum, int k)
++static FLAC_INLINE FLAC__int64 dither_output_(DitherContext *d, FLAC__bool do_dithering, int shapingtype, int i, double Sum, int k)
+ {
+ 	union {
+ 		double d;
+--- flac-1.2.1/src/plugin_common/tags.c-orig	2007-08-01 13:39:21.131268000 -0500
++++ flac-1.2.1/src/plugin_common/tags.c	2007-08-01 13:25:03.310108000 -0500
+@@ -29,12 +29,7 @@
+ #include "FLAC/metadata.h"
+ #include "share/alloc.h"
+ 
+-#ifndef FLaC__INLINE
+-#define FLaC__INLINE
+-#endif
+-
+-
+-static FLaC__INLINE size_t local__wide_strlen(const FLAC__uint16 *s)
++static FLAC_INLINE size_t local__wide_strlen(const FLAC__uint16 *s)
+ {
+ 	size_t n = 0;
+ 	while(*s++)
+@@ -48,7 +43,7 @@
+  * and a more clear explanation at the end of this section:
+  *   http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
+  */
+-static FLaC__INLINE size_t local__utf8len(const FLAC__byte *utf8)
++static FLAC_INLINE size_t local__utf8len(const FLAC__byte *utf8)
+ {
+ 	FLAC__ASSERT(0 != utf8);
+ 	if ((utf8[0] & 0x80) == 0) {
+@@ -90,7 +85,7 @@
+ }
+ 
+ 
+-static FLaC__INLINE size_t local__utf8_to_ucs2(const FLAC__byte *utf8, FLAC__uint16 *ucs2)
++static FLAC_INLINE size_t local__utf8_to_ucs2(const FLAC__byte *utf8, FLAC__uint16 *ucs2)
+ {
+ 	const size_t len = local__utf8len(utf8);
+ 
+@@ -145,7 +140,7 @@
+ 	return out;
+ }
+ 
+-static FLaC__INLINE size_t local__ucs2len(FLAC__uint16 ucs2)
++static FLAC_INLINE size_t local__ucs2len(FLAC__uint16 ucs2)
+ {
+ 	if (ucs2 < 0x0080)
+ 		return 1;
+@@ -155,7 +150,7 @@
+ 		return 3;
+ }
+ 
+-static FLaC__INLINE size_t local__ucs2_to_utf8(FLAC__uint16 ucs2, FLAC__byte *utf8)
++static FLAC_INLINE size_t local__ucs2_to_utf8(FLAC__uint16 ucs2, FLAC__byte *utf8)
+ {
+ 	if (ucs2 < 0x080) {
+ 		utf8[0] = (FLAC__byte)ucs2;
+-static FLaC__INLINE unsigned local__utf8_to_ucs2(const FLAC__byte *utf8, FLAC__uint16 *ucs2)
++static FLAC_INLINE unsigned local__utf8_to_ucs2(const FLAC__byte *utf8, FLAC__uint16 *ucs2)
+ {
+ 	const unsigned len = local__utf8len(utf8);
+ 
+--- flac-1.2.0/src/plugin_common/dither.c-orig	2007-08-01 13:39:27.414786000 -0500
++++ flac-1.2.0/src/plugin_common/dither.c	2007-08-01 13:25:25.428824000 -0500
+@@ -32,17 +32,12 @@
+ #endif
+ #define max(a,b) ((a)>(b)?(a):(b))
+ 
+-#ifndef FLaC__INLINE
+-#define FLaC__INLINE
+-#endif
+-
+-
+ /* 32-bit pseudo-random number generator
+  *
+  * @@@ According to Miroslav, this one is poor quality, the one from the
+  * @@@ original replaygain code is much better
+  */
+-static FLaC__INLINE FLAC__uint32 prng(FLAC__uint32 state)
++static FLAC_INLINE FLAC__uint32 prng(FLAC__uint32 state)
+ {
+ 	return (state * 0x0019660dL + 0x3c6ef35fL) & 0xffffffffL;
+ }
+@@ -54,7 +49,7 @@ typedef struct {
+ 	FLAC__int32 random;
+ } dither_state;
+ 
+-static FLaC__INLINE FLAC__int32 linear_dither(unsigned source_bps, unsigned target_bps, FLAC__int32 sample, dither_state *dither, const FLAC__int32 MIN, const FLAC__int32 MAX)
++static FLAC_INLINE FLAC__int32 linear_dither(unsigned source_bps, unsigned target_bps, FLAC__int32 sample, dither_state *dither, const FLAC__int32 MIN, const FLAC__int32 MAX)
+ {
+ 	unsigned scalebits;
+ 	FLAC__int32 output, mask, random;
+--- flac-1.2.0/src/libFLAC/bitreader.c-orig	2007-08-01 13:39:43.956587000 -0500
++++ flac-1.2.0/src/libFLAC/bitreader.c	2007-08-01 13:26:46.977537000 -0500
+@@ -91,7 +91,8 @@ typedef FLAC__uint32 brword;
+  */
+ static const unsigned FLAC__BITREADER_DEFAULT_CAPACITY = 65536u / FLAC__BITS_PER_WORD; /* in words */
+ 
+-static const unsigned char byte_to_unary_table[] = {
++/* Must be extern since it is referenced in extern inline functions */
++extern const unsigned char byte_to_unary_table[] = {
+ 	8, 7, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4,
+ 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+ 	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+@@ -126,10 +127,6 @@ static const unsigned char byte_to_unary
+ #define FLAC__U64L(x) x##LLU
+ #endif
+ 
+-#ifndef FLaC__INLINE
+-#define FLaC__INLINE
+-#endif
+-
+ /* WATCHOUT: assembly routines rely on the order in which these fields are declared */
+ struct FLAC__BitReader {
+ 	/* any partially-consumed word at the head will stay right-justified as bits are consumed from the left */
+@@ -149,7 +146,7 @@ struct FLAC__BitReader {
+ 
+ #ifdef _MSC_VER
+ /* OPT: an MSVC built-in would be better */
+-static _inline FLAC__uint32 local_swap32_(FLAC__uint32 x)
++static FLAC_INLINE FLAC__uint32 local_swap32_(FLAC__uint32 x)
+ {
+ 	x = ((x<<8)&0xFF00FF00) | ((x>>8)&0x00FF00FF);
+ 	return (x>>16) | (x<<16);
+@@ -173,7 +170,7 @@ done1:
+ }
+ #endif
+ 
+-static FLaC__INLINE void crc16_update_word_(FLAC__BitReader *br, brword word)
++static FLAC_INLINE void crc16_update_word_(FLAC__BitReader *br, brword word)
+ {
+ 	register unsigned crc = br->read_crc16;
+ #if FLAC__BYTES_PER_WORD == 4
+@@ -415,22 +412,22 @@ FLAC__uint16 FLAC__bitreader_get_read_cr
+ 	return br->read_crc16;
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitreader_is_consumed_byte_aligned(const FLAC__BitReader *br)
++FLAC_INLINE FLAC__bool FLAC__bitreader_is_consumed_byte_aligned(const FLAC__BitReader *br)
+ {
+ 	return ((br->consumed_bits & 7) == 0);
+ }
+ 
+-FLaC__INLINE unsigned FLAC__bitreader_bits_left_for_byte_alignment(const FLAC__BitReader *br)
++FLAC_INLINE unsigned FLAC__bitreader_bits_left_for_byte_alignment(const FLAC__BitReader *br)
+ {
+ 	return 8 - (br->consumed_bits & 7);
+ }
+ 
+-FLaC__INLINE unsigned FLAC__bitreader_get_input_bits_unconsumed(const FLAC__BitReader *br)
++FLAC_INLINE unsigned FLAC__bitreader_get_input_bits_unconsumed(const FLAC__BitReader *br)
+ {
+ 	return (br->words-br->consumed_words)*FLAC__BITS_PER_WORD + br->bytes*8 - br->consumed_bits;
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitreader_read_raw_uint32(FLAC__BitReader *br, FLAC__uint32 *val, unsigned bits)
++FLAC_INLINE FLAC__bool FLAC__bitreader_read_raw_uint32(FLAC__BitReader *br, FLAC__uint32 *val, unsigned bits)
+ {
+ 	FLAC__ASSERT(0 != br);
+ 	FLAC__ASSERT(0 != br->buffer);
+@@ -541,7 +538,7 @@ FLAC__bool FLAC__bitreader_read_raw_uint
+ 	return true;
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitreader_read_uint32_little_endian(FLAC__BitReader *br, FLAC__uint32 *val)
++FLAC_INLINE FLAC__bool FLAC__bitreader_read_uint32_little_endian(FLAC__BitReader *br, FLAC__uint32 *val)
+ {
+ 	FLAC__uint32 x8, x32 = 0;
+ 
+@@ -692,7 +689,7 @@ FLAC__bool FLAC__bitreader_read_byte_blo
+ 	return true;
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitreader_read_unary_unsigned(FLAC__BitReader *br, unsigned *val)
++FLAC_INLINE FLAC__bool FLAC__bitreader_read_unary_unsigned(FLAC__BitReader *br, unsigned *val)
+ #if 0 /* slow but readable version */
+ {
+ 	unsigned bit;
+--- flac-1.2.0/src/libFLAC/bitwriter.c-orig	2007-08-01 13:40:11.564333000 -0500
++++ flac-1.2.0/src/libFLAC/bitwriter.c	2007-08-01 13:13:34.288020000 -0500
+@@ -92,10 +92,6 @@ static const unsigned FLAC__BITWRITER_DE
+ #define FLAC__U64L(x) x##LLU
+ #endif
+ 
+-#ifndef FLaC__INLINE
+-#define FLaC__INLINE
+-#endif
+-
+ struct FLAC__BitWriter {
+ 	bwword *buffer;
+ 	bwword accum; /* accumulator; bits are right-justified; when full, accum is appended to buffer */
+@@ -106,7 +102,7 @@ struct FLAC__BitWriter {
+ 
+ #ifdef _MSC_VER
+ /* OPT: an MSVC built-in would be better */
+-static _inline FLAC__uint32 local_swap32_(FLAC__uint32 x)
++static FLAC_INLINE FLAC__uint32 local_swap32_(FLAC__uint32 x)
+ {
+ 	x = ((x<<8)&0xFF00FF00) | ((x>>8)&0x00FF00FF);
+ 	return (x>>16) | (x<<16);
+@@ -114,7 +110,8 @@ static _inline FLAC__uint32 local_swap32
+ #endif
+ 
+ /* * WATCHOUT: The current implementation only grows the buffer. */
+-static FLAC__bool bitwriter_grow_(FLAC__BitWriter *bw, unsigned bits_to_add)
++/* Must be extern since referenced from extern inline functions */
++FLAC__bool bitwriter_grow_(FLAC__BitWriter *bw, unsigned bits_to_add)
+ {
+ 	unsigned new_capacity;
+ 	bwword *new_buffer;
+@@ -296,7 +293,7 @@ void FLAC__bitwriter_release_buffer(FLAC
+ 	(void)bw;
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_zeroes(FLAC__BitWriter *bw, unsigned bits)
++FLAC_INLINE FLAC__bool FLAC__bitwriter_write_zeroes(FLAC__BitWriter *bw, unsigned bits)
+ {
+ 	unsigned n;
+ 
+@@ -334,7 +331,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_
+ 	return true;
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_uint32(FLAC__BitWriter *bw, FLAC__uint32 val, unsigned bits)
++FLAC_INLINE FLAC__bool FLAC__bitwriter_write_raw_uint32(FLAC__BitWriter *bw, FLAC__uint32 val, unsigned bits)
+ {
+ 	register unsigned left;
+ 
+@@ -373,7 +370,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_
+ 	return true;
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_int32(FLAC__BitWriter *bw, FLAC__int32 val, unsigned bits)
++FLAC_INLINE FLAC__bool FLAC__bitwriter_write_raw_int32(FLAC__BitWriter *bw, FLAC__int32 val, unsigned bits)
+ {
+ 	/* zero-out unused bits */
+ 	if(bits < 32)
+@@ -382,7 +379,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_
+ 	return FLAC__bitwriter_write_raw_uint32(bw, (FLAC__uint32)val, bits);
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_uint64(FLAC__BitWriter *bw, FLAC__uint64 val, unsigned bits)
++FLAC_INLINE FLAC__bool FLAC__bitwriter_write_raw_uint64(FLAC__BitWriter *bw, FLAC__uint64 val, unsigned bits)
+ {
+ 	/* this could be a little faster but it's not used for much */
+ 	if(bits > 32) {
+@@ -394,7 +391,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_
+ 		return FLAC__bitwriter_write_raw_uint32(bw, (FLAC__uint32)val, bits);
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_raw_uint32_little_endian(FLAC__BitWriter *bw, FLAC__uint32 val)
++FLAC_INLINE FLAC__bool FLAC__bitwriter_write_raw_uint32_little_endian(FLAC__BitWriter *bw, FLAC__uint32 val)
+ {
+ 	/* this doesn't need to be that fast as currently it is only used for vorbis comments */
+ 
+@@ -410,7 +407,7 @@ FLaC__INLINE FLAC__bool FLAC__bitwriter_
+ 	return true;
+ }
+ 
+-FLaC__INLINE FLAC__bool FLAC__bitwriter_write_byte_block(FLAC__BitWriter *bw, const FLAC__byte vals[], unsigned nvals)
++FLAC_INLINE FLAC__bool FLAC__bitwriter_write_byte_block(FLAC__BitWriter *bw, const FLAC__byte vals[], unsigned nvals)
+ {
+ 	unsigned i;
+ 

@@ -1,0 +1,10 @@
+--- clutter-0.9.2/tests/conform/test-conform-common.h-orig	2009-04-03 11:39:29.232810000 -0500
++++ clutter-0.9.2/tests/conform/test-conform-common.h	2009-04-03 11:39:44.315481000 -0500
+@@ -15,6 +15,7 @@ typedef struct _TestConformSharedState
+  * the test is finished. */
+ typedef struct _TestConformSimpleFixture
+ {
++  gboolean dummy;
+   /**/
+ } TestConformSimpleFixture;
+ 

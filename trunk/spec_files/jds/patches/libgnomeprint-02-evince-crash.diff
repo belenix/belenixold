@@ -1,0 +1,18 @@
+diff -urN libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi-transport.c ../SUNWgnome-print-2.15.4.hacked/libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi-transport.c
+--- libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi-transport.c	2006-08-09 14:11:47.360257000 +0100
++++ ../SUNWgnome-print-2.15.4.hacked/libgnomeprint-2.12.1/libgnomeprint/modules/papi/gnome-print-papi-transport.c	2006-08-09 14:14:01.420682000 +0100
+@@ -323,12 +323,13 @@
+ 	GPTransportPAPI *transport;
+ 	papi_status_t status;
+ 	papi_job_t job = NULL;
++	const char *files [] = { filename, NULL };
+ 
+ 	transport = GP_TRANSPORT_PAPI (gp_transport);
+ 
+ 	status = papiJobSubmit (transport->service, transport->printer,
+ 		(const papi_attribute_t **)transport->attributes, NULL,
+-		(const char **)&filename, &job);
++		files, &job);
+ 
+ 	if (status != PAPI_OK)
+ 		return GNOME_PRINT_ERROR_UNKNOWN;

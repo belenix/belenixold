@@ -1,0 +1,303 @@
+/jds/bin/diff -uprN dia-0.96.1.old/app/dia-props.c dia-0.96.1/app/dia-props.c
+--- dia-0.96.1.old/app/dia-props.c	2008-12-02 17:23:16.391323000 +0000
++++ dia-0.96.1/app/dia-props.c	2008-12-03 10:15:22.515100000 +0000
+@@ -139,14 +139,14 @@ create_diagram_properties_dialog(Diagram
+ 		   GTK_FILL, GTK_FILL, 0, 0);
+   gtk_widget_show(label);
+ 
+-  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 10.0, 0.1, 10.0, 10.0));
++  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 10.0, 0.1, 10.0, 0));
+   width_x_entry = gtk_spin_button_new(adj, 1.0, 3);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(width_x_entry), TRUE);
+   gtk_table_attach(GTK_TABLE(table), width_x_entry, 1,2, 2,3,
+ 		   GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+   gtk_widget_show(width_x_entry);
+ 
+-  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 10.0, 0.1, 10.0, 10.0));
++  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 10.0, 0.1, 10.0, 0));
+   width_y_entry = gtk_spin_button_new(adj, 1.0, 3);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(width_y_entry), TRUE);
+   gtk_table_attach(GTK_TABLE(table), width_y_entry, 2,3, 2,3,
+@@ -159,14 +159,14 @@ create_diagram_properties_dialog(Diagram
+ 		   GTK_FILL, GTK_FILL, 0, 0);
+   gtk_widget_show(label);
+ 
+-  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 100.0, 1.0, 10.0, 10.0));
++  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 100.0, 1.0, 10.0, 0));
+   visible_x_entry = gtk_spin_button_new(adj, 1.0, 0);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(visible_x_entry), TRUE);
+   gtk_table_attach(GTK_TABLE(table), visible_x_entry, 1,2, 3,4,
+ 		   GTK_FILL|GTK_EXPAND, GTK_FILL, 0, 0);
+   gtk_widget_show(visible_x_entry);
+ 
+-  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 100.0, 1.0, 10.0, 10.0));
++  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 100.0, 1.0, 10.0, 0));
+   visible_y_entry = gtk_spin_button_new(adj, 1.0, 0);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(visible_y_entry), TRUE);
+   gtk_table_attach(GTK_TABLE(table), visible_y_entry, 2,3, 3,4,
+@@ -188,7 +188,7 @@ create_diagram_properties_dialog(Diagram
+ 		   GTK_FILL, GTK_FILL, 0, 0);
+   gtk_widget_show(label);
+ 
+-  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 100.0, 1.0, 10.0, 10.0));
++  adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.0, 100.0, 1.0, 10.0, 0));
+   hex_size_entry = gtk_spin_button_new(adj, 1.0, 0);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(hex_size_entry), TRUE);
+   gtk_table_attach(GTK_TABLE(table), hex_size_entry, 1,2, 5,6,
+/jds/bin/diff -uprN dia-0.96.1.old/app/dialogs.c dia-0.96.1/app/dialogs.c
+--- dia-0.96.1.old/app/dialogs.c	2008-12-02 17:23:16.393717000 +0000
++++ dia-0.96.1/app/dialogs.c	2008-12-03 10:41:28.733781000 +0000
+@@ -66,7 +66,7 @@ GtkSpinButton *
+ dialog_add_spinbutton(GtkWidget *dialog, char *title,
+ 		      real min, real max, real decimals) {
+   GtkAdjustment *limits =
+-    GTK_ADJUSTMENT(gtk_adjustment_new(10.0, min, max, 1.0, 10.0, 100.0));
++    GTK_ADJUSTMENT(gtk_adjustment_new(10.0, min, max, 1.0, 10.0, 0));
+   GtkWidget *box = gtk_hbox_new(FALSE, 10);
+   GtkWidget *label = gtk_label_new(title);
+   GtkWidget *entry = gtk_spin_button_new(limits, 10.0, decimals);
+/jds/bin/diff -uprN dia-0.96.1.old/app/diapagelayout.c dia-0.96.1/app/diapagelayout.c
+--- dia-0.96.1.old/app/diapagelayout.c	2008-12-02 17:23:16.390570000 +0000
++++ dia-0.96.1/app/diapagelayout.c	2008-12-03 10:36:27.634596000 +0000
+@@ -203,7 +203,7 @@ dia_page_layout_init(DiaPageLayout *self
+   gtk_widget_show(wid);
+ 
+   self->tmargin = dia_unit_spinner_new(
+-	GTK_ADJUSTMENT(gtk_adjustment_new(1, 0,100, 0.1,10,10)),
++	GTK_ADJUSTMENT(gtk_adjustment_new(1, 0,100, 0.1,10,0)),
+ 	2, DIA_UNIT_CENTIMETER);
+   gtk_table_attach(GTK_TABLE(table), self->tmargin, 1,2, 0,1,
+ 		   GTK_FILL|GTK_EXPAND, GTK_FILL|GTK_EXPAND, 0, 0);
+@@ -216,7 +216,7 @@ dia_page_layout_init(DiaPageLayout *self
+   gtk_widget_show(wid);
+ 
+   self->bmargin = dia_unit_spinner_new(
+-	GTK_ADJUSTMENT(gtk_adjustment_new(1, 0,100, 0.1,10,10)),
++	GTK_ADJUSTMENT(gtk_adjustment_new(1, 0,100, 0.1,10,0)),
+ 	2, DIA_UNIT_CENTIMETER);
+   gtk_table_attach(GTK_TABLE(table), self->bmargin, 1,2, 1,2,
+ 		   GTK_FILL|GTK_EXPAND, GTK_FILL|GTK_EXPAND, 0, 0);
+@@ -229,7 +229,7 @@ dia_page_layout_init(DiaPageLayout *self
+   gtk_widget_show(wid);
+ 
+   self->lmargin = dia_unit_spinner_new(
+-	GTK_ADJUSTMENT(gtk_adjustment_new(1, 0,100, 0.1,10,10)),
++	GTK_ADJUSTMENT(gtk_adjustment_new(1, 0,100, 0.1,10,0)),
+ 	2, DIA_UNIT_CENTIMETER);
+   gtk_table_attach(GTK_TABLE(table), self->lmargin, 1,2, 2,3,
+ 		   GTK_FILL|GTK_EXPAND, GTK_FILL|GTK_EXPAND, 0, 0);
+@@ -242,7 +242,7 @@ dia_page_layout_init(DiaPageLayout *self
+   gtk_widget_show(wid);
+ 
+   self->rmargin = dia_unit_spinner_new(
+-	GTK_ADJUSTMENT(gtk_adjustment_new(1, 0,100, 0.1,10,10)),
++	GTK_ADJUSTMENT(gtk_adjustment_new(1, 0,100, 0.1,10,0)),
+ 	2, DIA_UNIT_CENTIMETER);
+   gtk_table_attach(GTK_TABLE(table), self->rmargin, 1,2, 3,4,
+ 		   GTK_FILL|GTK_EXPAND, GTK_FILL|GTK_EXPAND, 0, 0);
+@@ -266,7 +266,7 @@ dia_page_layout_init(DiaPageLayout *self
+   gtk_widget_show(self->scale);
+ 
+   self->scaling = gtk_spin_button_new(
+-	GTK_ADJUSTMENT(gtk_adjustment_new(100,1,10000, 1,10,10)), 1, 1);
++	GTK_ADJUSTMENT(gtk_adjustment_new(100,1,10000, 1,10,10)), 1, 0);
+   gtk_table_attach(GTK_TABLE(table), self->scaling, 1,4, 0,1,
+ 		   GTK_FILL|GTK_EXPAND, GTK_FILL|GTK_EXPAND, 0, 0);
+   gtk_widget_show(self->scaling);
+/jds/bin/diff -uprN dia-0.96.1.old/app/preferences.c dia-0.96.1/app/preferences.c
+--- dia-0.96.1.old/app/preferences.c	2008-12-02 17:23:16.372512000 +0000
++++ dia-0.96.1/app/preferences.c	2008-12-03 10:36:44.441969000 +0000
+@@ -406,7 +406,7 @@ prefs_get_property_widget(DiaPrefData *d
+   case PREF_INT:
+     adj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0,
+ 					    G_MININT, G_MAXINT,
+-					    1.0, 10.0, 10.0 ));
++					    1.0, 10.0, 0 ));
+     widget = gtk_spin_button_new (adj, 1.0, 0);
+     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(widget), TRUE);
+     gtk_widget_set_usize(widget, 80, -1);
+@@ -414,7 +414,7 @@ prefs_get_property_widget(DiaPrefData *d
+   case PREF_UINT:
+     adj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0,
+ 					    0.0, G_MAXINT,
+-					    1.0, 10.0, 10.0 ));
++					    1.0, 10.0, 0 ));
+     widget = gtk_spin_button_new (adj, 1.0, 0);
+     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(widget), TRUE);
+     gtk_widget_set_usize(widget, 80, -1);
+@@ -422,7 +422,7 @@ prefs_get_property_widget(DiaPrefData *d
+   case PREF_REAL:
+     adj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0,
+ 					    G_MINFLOAT, G_MAXFLOAT,
+-					    1.0, 10.0, 10.0 ));
++					    1.0, 10.0, 0 ));
+     widget = gtk_spin_button_new (adj, 1.0, 3);
+     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(widget), TRUE);
+     gtk_widget_set_usize(widget, 80, -1);
+@@ -430,7 +430,7 @@ prefs_get_property_widget(DiaPrefData *d
+   case PREF_UREAL:
+     adj = GTK_ADJUSTMENT(gtk_adjustment_new(0.0,
+ 					    0.0, G_MAXFLOAT,
+-					    1.0, 10.0, 10.0 ));
++					    1.0, 10.0, 0 ));
+     widget = gtk_spin_button_new (adj, 1.0, 3);
+     gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(widget), TRUE);
+     gtk_widget_set_usize(widget, 80, -1);
+/jds/bin/diff -uprN dia-0.96.1.old/lib/prop_geomtypes.c dia-0.96.1/lib/prop_geomtypes.c
+--- dia-0.96.1.old/lib/prop_geomtypes.c	2008-12-02 17:23:12.143764000 +0000
++++ dia-0.96.1/lib/prop_geomtypes.c	2008-12-03 10:39:18.033980000 +0000
+@@ -69,7 +69,7 @@ realprop_get_widget(RealProperty *prop, 
+   GtkAdjustment *adj = GTK_ADJUSTMENT(gtk_adjustment_new(prop->real_data,
+                                                          G_MINFLOAT, 
+                                                          G_MAXFLOAT,
+-                                                         0.1, 1.0, 1.0));
++                                                         0.1, 1.0, 0));
+   GtkWidget *ret = gtk_spin_button_new(adj, 1.0, 2);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(ret),TRUE);
+   prophandler_connect(&prop->common,GTK_OBJECT(adj),"value_changed");
+@@ -87,11 +87,11 @@ realprop_reset_widget(RealProperty *prop
+                                             numdata->min, numdata->max,
+                                             numdata->step, 
+                                             10.0 * numdata->step,
+-                                            10.0 * numdata->step));
++                                            0));
+   } else {
+     adj = GTK_ADJUSTMENT(gtk_adjustment_new(prop->real_data,
+                                             G_MINFLOAT, G_MAXFLOAT,
+-                                            0.1, 1.0, 1.0));
++                                            0.1, 1.0, 0));
+   }
+   gtk_spin_button_set_adjustment(GTK_SPIN_BUTTON(widget), adj);
+ }
+@@ -180,7 +180,7 @@ lengthprop_get_widget(LengthProperty *pr
+   GtkAdjustment *adj = GTK_ADJUSTMENT(gtk_adjustment_new(prop->length_data,
+                                                          G_MINFLOAT, 
+                                                          G_MAXFLOAT,
+-                                                         0.1, 1.0, 1.0));
++                                                         0.1, 1.0, 0));
+   GtkWidget *ret = dia_unit_spinner_new(adj, 2, DIA_UNIT_CENTIMETER);
+   /*  gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(ret),TRUE);*/
+   prophandler_connect(&prop->common,GTK_OBJECT(adj),"value_changed");
+@@ -199,11 +199,11 @@ lengthprop_reset_widget(LengthProperty *
+                                             numdata->min, numdata->max,
+                                             numdata->step, 
+                                             10.0 * numdata->step,
+-                                            10.0 * numdata->step));
++                                            0));
+   } else {
+     adj = GTK_ADJUSTMENT(gtk_adjustment_new(prop->length_data,
+                                             G_MINFLOAT, G_MAXFLOAT,
+-                                            0.1, 1.0, 1.0));
++                                            0.1, 1.0, 0));
+   }
+   dia_unit_spinner_set_adjustment(GTK_SPIN_BUTTON(widget), adj);
+   */
+@@ -295,7 +295,7 @@ fontsizeprop_get_widget(FontsizeProperty
+   GtkAdjustment *adj = GTK_ADJUSTMENT(gtk_adjustment_new(prop->fontsize_data,
+                                                          G_MINFLOAT, 
+                                                          G_MAXFLOAT,
+-                                                         0.1, 1.0, 1.0));
++                                                         0.1, 1.0, 0));
+   GtkWidget *ret = dia_unit_spinner_new(adj, 2, DIA_UNIT_POINT);
+   /*  gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(ret),TRUE);*/
+   prophandler_connect(&prop->common,GTK_OBJECT(adj),"value_changed");
+@@ -314,11 +314,11 @@ fontsizeprop_reset_widget(FontsizeProper
+                                             numdata->min, numdata->max,
+                                             numdata->step, 
+                                             10.0 * numdata->step,
+-                                            10.0 * numdata->step));
++                                            0));
+   } else {
+     adj = GTK_ADJUSTMENT(gtk_adjustment_new(prop->fontsize_data,
+                                             G_MINFLOAT, G_MAXFLOAT,
+-                                            0.1, 1.0, 1.0));
++                                            0.1, 1.0, 0));
+   }
+   gtk_spin_button_set_adjustment(GTK_SPIN_BUTTON(widget), adj);
+   */
+/jds/bin/diff -uprN dia-0.96.1.old/lib/prop_inttypes.c dia-0.96.1/lib/prop_inttypes.c
+--- dia-0.96.1.old/lib/prop_inttypes.c	2008-12-02 17:23:12.143558000 +0000
++++ dia-0.96.1/lib/prop_inttypes.c	2008-12-03 10:17:24.393757000 +0000
+@@ -280,7 +280,7 @@ intprop_get_widget(IntProperty *prop, Pr
+ { 
+   GtkAdjustment *adj = GTK_ADJUSTMENT(gtk_adjustment_new(prop->int_data,
+                                                          G_MININT, G_MAXINT,
+-                                                         1.0, 10.0, 10.0));
++                                                         1.0, 10.0, 0));
+   GtkWidget *ret = gtk_spin_button_new(adj, 1.0, 0);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(ret),TRUE);
+   prophandler_connect(&prop->common,GTK_OBJECT(adj),"value_changed");
+@@ -297,11 +297,11 @@ intprop_reset_widget(IntProperty *prop, 
+     adj = GTK_ADJUSTMENT(gtk_adjustment_new(prop->int_data,
+                                             numdata->min, numdata->max,
+                                             numdata->step, 10.0 * numdata->step,
+-                                            10.0 * numdata->step));
++                                            0));
+   } else {
+     adj = GTK_ADJUSTMENT(gtk_adjustment_new(prop->int_data,
+                                             G_MININT, G_MAXINT,
+-                                            1.0, 10.0, 10.0));
++                                            1.0, 10.0, 0));
+   }
+   gtk_spin_button_set_adjustment(GTK_SPIN_BUTTON(widget), adj);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(widget), TRUE);
+/jds/bin/diff -uprN dia-0.96.1.old/lib/widgets.c dia-0.96.1/lib/widgets.c
+--- dia-0.96.1.old/lib/widgets.c	2008-12-02 17:23:12.141938000 +0000
++++ dia-0.96.1/lib/widgets.c	2008-12-03 10:17:07.405589000 +0000
+@@ -149,7 +149,7 @@ dia_size_selector_init (DiaSizeSelector 
+   ss->ratio = 0.0;
+   /* Here's where we set up the real thing */
+   adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.01, 10,
+-					  0.1, 1.0, 1.0));
++					  0.1, 1.0, 0));
+   ss->width = GTK_SPIN_BUTTON(gtk_spin_button_new(adj, 1.0, 2));
+   gtk_spin_button_set_wrap(GTK_SPIN_BUTTON(ss->width), TRUE);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(ss->width), TRUE);
+@@ -157,7 +157,7 @@ dia_size_selector_init (DiaSizeSelector 
+   gtk_widget_show(GTK_WIDGET(ss->width));
+ 
+   adj = GTK_ADJUSTMENT(gtk_adjustment_new(1.0, 0.01, 10,
+-					  0.1, 1.0, 1.0));
++					  0.1, 1.0, 0));
+   ss->height = GTK_SPIN_BUTTON(gtk_spin_button_new(adj, 1.0, 2));
+   gtk_spin_button_set_wrap(GTK_SPIN_BUTTON(ss->height), TRUE);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(ss->height), TRUE);
+@@ -831,7 +831,7 @@ dia_line_style_selector_init (DiaLineSty
+   gtk_box_pack_start_defaults(GTK_BOX(box), label);
+   gtk_widget_show(label);
+ 
+-  adj = (GtkAdjustment *)gtk_adjustment_new(0.1, 0.00, 10.0, 0.1, 1.0, 1.0);
++  adj = (GtkAdjustment *)gtk_adjustment_new(0.1, 0.00, 10.0, 0.1, 1.0, 0);
+   length = gtk_spin_button_new(adj, DEFAULT_LINESTYLE_DASHLEN, 2);
+   gtk_spin_button_set_wrap(GTK_SPIN_BUTTON(length), TRUE);
+   gtk_spin_button_set_numeric(GTK_SPIN_BUTTON(length), TRUE);
+/jds/bin/diff -uprN dia-0.96.1.old/objects/UML/class_dialog.c dia-0.96.1/objects/UML/class_dialog.c
+--- dia-0.96.1.old/objects/UML/class_dialog.c	2008-12-02 17:23:12.825073000 +0000
++++ dia-0.96.1/objects/UML/class_dialog.c	2008-12-03 10:19:58.397673000 +0000
+@@ -255,7 +255,7 @@ create_font_props_row (GtkTable   *table
+   dia_font_selector_set_font (DIAFONTSELECTOR (*fontsel), font);
+   gtk_table_attach_defaults (GTK_TABLE (table), GTK_WIDGET(*fontsel), 1, 2, row, row+1);
+ 
+-  adj = gtk_adjustment_new (height, 0.1, 10.0, 0.1, 1.0, 1.0);
++  adj = gtk_adjustment_new (height, 0.1, 10.0, 0.1, 1.0, 0);
+   *heightsel = GTK_SPIN_BUTTON (gtk_spin_button_new (GTK_ADJUSTMENT(adj), 1.0, 2));
+   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (*heightsel), TRUE);
+   gtk_table_attach_defaults (table, GTK_WIDGET (*heightsel), 2, 3, row, row+1);
+@@ -349,7 +349,7 @@ class_create_page(GtkNotebook *notebook,
+   checkbox = gtk_check_button_new_with_label(_("Wrap Operations"));
+   prop_dialog->op_wrap = GTK_TOGGLE_BUTTON( checkbox );
+   gtk_box_pack_start (GTK_BOX (hbox), checkbox, TRUE, TRUE, 0);
+-  adj = gtk_adjustment_new( umlclass->wrap_after_char, 0.0, 200.0, 1.0, 5.0, 1.0);
++  adj = gtk_adjustment_new( umlclass->wrap_after_char, 0.0, 200.0, 1.0, 5.0, 0);
+   prop_dialog->wrap_after_char = GTK_SPIN_BUTTON(gtk_spin_button_new( GTK_ADJUSTMENT( adj), 0.1, 0));
+   gtk_spin_button_set_numeric( GTK_SPIN_BUTTON( prop_dialog->wrap_after_char), TRUE);
+   gtk_spin_button_set_snap_to_ticks( GTK_SPIN_BUTTON( prop_dialog->wrap_after_char), TRUE);
+@@ -364,7 +364,7 @@ class_create_page(GtkNotebook *notebook,
+   checkbox = gtk_check_button_new_with_label(_("Comments visible"));
+   prop_dialog->comments_vis = GTK_TOGGLE_BUTTON( checkbox );
+   gtk_box_pack_start (GTK_BOX (hbox), checkbox, TRUE, TRUE, 0);
+-  adj = gtk_adjustment_new( umlclass->comment_line_length, 17.0, 200.0, 1.0, 5.0, 1.0);
++  adj = gtk_adjustment_new( umlclass->comment_line_length, 17.0, 200.0, 1.0, 5.0, 0);
+   prop_dialog->comment_line_length = GTK_SPIN_BUTTON(gtk_spin_button_new( GTK_ADJUSTMENT( adj), 0.1, 0));
+   gtk_spin_button_set_numeric( GTK_SPIN_BUTTON( prop_dialog->comment_line_length), TRUE);
+   gtk_spin_button_set_snap_to_ticks( GTK_SPIN_BUTTON( prop_dialog->comment_line_length), TRUE);

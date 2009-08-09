@@ -1,0 +1,15 @@
+--- gegl-0.0.20/bin/gegl-options.c.orig	2009-01-16 14:45:20.177924000 +0800
++++ gegl-0.0.20/bin/gegl-options.c	2009-01-16 14:47:27.297948000 +0800
+@@ -133,9 +133,9 @@
+ "\tdelay:  %f\n"
+ "\t\n",
+     o->mode,
+-    o->file,
+-    o->xml,
+-    o->output,
++    o->file==NULL?"(null)":o->file,
++    o->xml==NULL?"(null)":o->xml,
++    o->output==NULL?"(null)":o->output,
+     o->rest==NULL?"":"yes",
+     o->delay
+ );

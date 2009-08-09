@@ -1,0 +1,37 @@
+diff -rup libgnome-2.22.0/schemas/desktop_gnome_background.schemas.in.in libgnome-2.22.0-sun/schemas/desktop_gnome_background.schemas.in.in
+--- libgnome-2.22.0/schemas/desktop_gnome_background.schemas.in.in	2008-01-08 10:04:30.000000000 +0100
++++ libgnome-2.22.0-sun/schemas/desktop_gnome_background.schemas.in.in	2008-06-01 10:20:48.154130358 +0200
+@@ -29,7 +29,7 @@
+         <applyto>/desktop/gnome/background/picture_filename</applyto>
+         <owner>gnome</owner>
+         <type>string</type>
+-	<default>@datadir@/pixmaps/backgrounds/gnome/background-default.jpg</default>
++	<default>@datadir@/pixmaps/backgrounds/sun/di-scurve-blue.png</default>
+         <locale name="C">
+         <short>Picture Filename</short>
+         <long>File to use for the background image.</long>
+diff -ur libgnome-2.23.4-orig//schemas/desktop_gnome_interface.schemas.in.in libgnome-2.23.4//schemas/desktop_gnome_interface.schemas.in.in
+--- libgnome-2.23.4-orig//schemas/desktop_gnome_interface.schemas.in.in	Tue Aug 12 15:46:20 2008
++++ libgnome-2.23.4//schemas/desktop_gnome_interface.schemas.in.in	Tue Aug 12 15:49:53 2008
+@@ -165,8 +165,9 @@
+       <applyto>/desktop/gnome/interface/font_name</applyto>
+       <owner>gnome</owner>
+       <type>string</type>
+-      <default>Sans 10</default>
++      <default>Sans Condensed 10</default>
+       <locale name="C">
++	<default><!-- SUN_BRANDING -->Sans Condensed 10</default>
+ 	<short>Default font</short>
+ 	<long>Name of the default font used by gtk+.</long>
+       </locale>
+@@ -209,8 +210,9 @@
+       <key>/schemas/desktop/gnome/interface/document_font_name</key>
+       <owner>gnome</owner>
+       <type>string</type>
+-      <default>Sans 10</default>
++      <default>Sans Condensed 10</default>
+       <locale name="C">
++	<default><!-- SUN_BRANDING -->Sans Condensed 10</default>
+ 	<short>Document font</short>
+ 	<long>Name of the default font used for reading documents.</long>
+       </locale>
