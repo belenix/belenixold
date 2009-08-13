@@ -1,0 +1,45 @@
+[$Version]
+update_info=kded.upd:kde3.0
+
+[General]
+XftAntialias=true
+XftHintStyle=hintmedium
+XftSubPixel=rgb
+desktopFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
+fixed=Monospace,10,-1,5,50,0,0,0,0,0
+font=DejaVu Sans,10,-1,5,50,0,0,0,0,0
+menuFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
+smallestReadableFont=DejaVu Sans,8,-1,5,50,0,0,0,0,0
+taskbarFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
+toolBarFont=DejaVu Sans,8,-1,5,50,0,0,0,0,0
+widgetStyle=cleanlooks
+
+[KDE]
+ShowIconsOnPushButtons=true
+
+[KDE-Global GUI Settings]
+GraphicEffectsLevel=6
+
+[KFileDialog Settings]
+Automatically select filename extension=true
+Breadcrumb Navigation=true
+Decoration position=0
+LocationCombo Completionmode=5
+PathCombo Completionmode=5
+Previews=false
+Recent URLs[$e]=$HOME/.local/share/akonadi/db_data
+Show Bookmarks=false
+Show Full Path=false
+Show Preview=false
+Show Speedbar=true
+Show hidden files=false
+Sort by=Name
+Sort reversed=false
+Speedbar Width=96
+View Style=Simple
+
+[Toolbar style]
+ToolButtonStyle=TextUnderIcon
+
+[WM]
+activeFont=DejaVu Sans,9,-1,5,50,0,0,0,0,0

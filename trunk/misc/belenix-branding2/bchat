@@ -1,0 +1,18 @@
+#!/bin/sh
+
+name=`zenity --entry --text="Enter IRC nickname"`
+name=`echo $name | nawk '{ print $NF }'`
+if [ $? -eq 0 ]
+then
+	if [ ! -d ${HOME}/.xchat2 ]
+	then
+		mkdir ${HOME}/.xchat2
+		mkdir ${HOME}/.xchat2/downloads
+		mkdir ${HOME}/.xchat2/scrollback
+	fi
+	echo "irc_nick1 = ${name}" > ${HOME}/.xchat2/xchat.conf
+	echo "irc_nick2 = ${name}_" >>  ${HOME}/.xchat2/xchat.conf
+	echo "irc_nick3 = ${name}__" >>  ${HOME}/.xchat2/xchat.conf
+	echo "irc_user_name = ${name}" >>  ${HOME}/.xchat2/xchat.conf
+	xchat --url=irc://irc.freenode.net/belenix
+fi
