@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Exec=kde-window-decorator --replace & compiz --replace gconf
+GenericName[en_US]=
+StartupNotify=false
+Terminal=false
+TerminalOptions=
+Type=Application
+X-KDE-autostart-after=kdesktop
