@@ -1,0 +1,10 @@
+--- kipi-plugins-0.2.0-kde4.2.4/dngconverter/dngwriter/extra/dng_sdk/dng_pthread.cpp.orig	2009-08-14 22:09:46.164190207 +0530
++++ kipi-plugins-0.2.0-kde4.2.4/dngconverter/dngwriter/extra/dng_sdk/dng_pthread.cpp	2009-08-14 22:08:57.479551235 +0530
+@@ -44,6 +44,7 @@
+ #else
+ 
+ #include <sys/time.h>
++#include <errno.h>
+ 
+ #endif
+ 

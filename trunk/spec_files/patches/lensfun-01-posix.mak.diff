@@ -1,0 +1,9 @@
+--- lensfun-0.2.3-64/build/mak/host/posix.mak.orig	2009-08-11 19:48:31.332467085 +0530
++++ lensfun-0.2.3-64/build/mak/host/posix.mak	2009-08-11 19:48:48.521810306 +0530
+@@ -12,5 +12,5 @@
+ define SINGLE.INSTALLDIR
+ 	if [ ! -d $2 ]; then install -m 0755 -d $2; fi
+ 	cp -drP $1* $2
+-	find $2 -type f -print0 | xargs -0 chmod $3
++	find $2 -type f | xargs chmod $3
+ endef

@@ -1,0 +1,82 @@
+--- kdiff3-0.9.95-kde4.2.4/config-kdiff3.h.cmake.orig	2009-08-12 00:03:03.144140402 +0530
++++ kdiff3-0.9.95-kde4.2.4/config-kdiff3.h.cmake	2009-08-12 00:06:34.026587032 +0530
+@@ -16,19 +16,19 @@
+ #undef HAVE_DLFCN_H
+ 
+ /* Define to 1 if you have the <inttypes.h> header file. */
+-#undef HAVE_INTTYPES_H
++#define HAVE_INTTYPES_H 1
+ 
+ /* Define if you have libjpeg */
+-#undef HAVE_LIBJPEG
++#define HAVE_LIBJPEG 1
+ 
+ /* Define if you have libpng */
+-#undef HAVE_LIBPNG
++#define HAVE_LIBPNG 1
+ 
+ /* Define if you have a working libpthread (will enable threaded code) */
+ #undef HAVE_LIBPTHREAD
+ 
+ /* Define if you have libz */
+-#undef HAVE_LIBZ
++#define HAVE_LIBZ 1
+ 
+ /* Define to 1 if you have the <memory.h> header file. */
+ #undef HAVE_MEMORY_H
+@@ -46,43 +46,43 @@
+ #undef HAVE_SGI_STL
+ 
+ /* Define to 1 if you have the `snprintf' function. */
+-#undef HAVE_SNPRINTF
++#define HAVE_SNPRINTF 1
+ 
+ /* Define to 1 if you have the <stdint.h> header file. */
+-#undef HAVE_STDINT_H
++#define HAVE_STDINT_H 1
+ 
+ /* Define to 1 if you have the <stdlib.h> header file. */
+-#undef HAVE_STDLIB_H
++#define HAVE_STDLIB_H 1
+ 
+ /* Define to 1 if you have the <strings.h> header file. */
+-#undef HAVE_STRINGS_H
++#define HAVE_STRINGS_H 1
+ 
+ /* Define to 1 if you have the <string.h> header file. */
+-#undef HAVE_STRING_H
++#define HAVE_STRING_H 1
+ 
+ /* Define if you have strlcat */
+-#undef HAVE_STRLCAT
++#define HAVE_STRLCAT 1
+ 
+ /* Define if you have the strlcat prototype */
+-#undef HAVE_STRLCAT_PROTO
++#define HAVE_STRLCAT_PROTO 1
+ 
+ /* Define if you have strlcpy */
+-#undef HAVE_STRLCPY
++#define HAVE_STRLCPY 1
+ 
+ /* Define if you have the strlcpy prototype */
+-#undef HAVE_STRLCPY_PROTO
++#define HAVE_STRLCPY_PROTO 1
+ 
+ /* Define to 1 if you have the <sys/bitypes.h> header file. */
+ #undef HAVE_SYS_BITYPES_H
+ 
+ /* Define to 1 if you have the <sys/stat.h> header file. */
+-#undef HAVE_SYS_STAT_H
++#define HAVE_SYS_STAT_H 1
+ 
+ /* Define to 1 if you have the <sys/types.h> header file. */
+-#undef HAVE_SYS_TYPES_H
++#define HAVE_SYS_TYPES_H 1
+ 
+ /* Define to 1 if you have the <unistd.h> header file. */
+-#undef HAVE_UNISTD_H
++#define HAVE_UNISTD_H 1
+ 
+ /* Define to 1 if you have the `vsnprintf' function. */
+ #undef HAVE_VSNPRINTF

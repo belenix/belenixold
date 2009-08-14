@@ -1,0 +1,12 @@
+--- gtk-qt-engine/src/utilities.cpp.orig	2009-08-14 10:07:49.108503127 +0530
++++ gtk-qt-engine/src/utilities.cpp	2009-08-14 10:08:25.802351912 +0530
+@@ -32,6 +32,9 @@
+ 
+ #ifdef USE_SOLARIS
+ #include <procfs.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
+ #endif
+ 
+ #include <QFile>

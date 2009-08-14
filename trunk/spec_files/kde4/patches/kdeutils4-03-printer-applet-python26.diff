@@ -1,0 +1,8 @@
+--- kdeutils-4.2.4/printer-applet/printer-applet.py.orig	2009-07-28 21:18:13.305265122 +0530
++++ kdeutils-4.2.4/printer-applet/printer-applet.py	2009-07-28 21:18:25.886493204 +0530
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python2.6
+ 
+ #############################################################################
+ ##

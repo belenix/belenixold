@@ -1,0 +1,10 @@
+--- kdiff3-0.9.95-kde4.2.4/src/kdiff3part.desktop.orig	2009-05-30 10:22:30.000000000 +0530
++++ kdiff3-0.9.95-kde4.2.4/src/kdiff3part.desktop	2009-08-11 23:36:34.523862102 +0530
+@@ -6,7 +6,6 @@
+ Name[ml]=കെഡിഫ്3ഭാഗം
+ Name[sv]=Kdiff3-del
+ Name[x-test]=xxKDiff3Partxx
+-MimeType=text/x-diff;
+ ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart
+ X-KDE-Library=libkdiff3part
+ Type=Service

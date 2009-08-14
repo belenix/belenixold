@@ -1,0 +1,14 @@
+--- digikam-0.10.0-kde4.2.4/libs/database/libpgf/PGFplatform.h.orig	2009-08-11 21:31:31.452776173 +0530
++++ digikam-0.10.0-kde4.2.4/libs/database/libpgf/PGFplatform.h	2009-08-11 21:32:07.978571542 +0530
+@@ -284,9 +284,9 @@
+ 
+ 
+ //-------------------------------------------------------------------------------
+-// LINUX
++// LINUX, Solaris
+ //-------------------------------------------------------------------------------
+-#ifdef __linux__
++#if defined(__linux__) || defined(sun) || defined(__sun)
+ #define __POSIX__
+ #endif /* __linux__ */
+ 
