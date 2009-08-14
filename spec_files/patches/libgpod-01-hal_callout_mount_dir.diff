@@ -1,0 +1,26 @@
+From e8633211edb36d633864a6ee82ad4655984fa732 Mon Sep 17 00:00:00 2001
+From: Todd Zullinger <tmz@pobox.com>
+Date: Sun, 4 Jan 2009 21:32:14 -0500
+Subject: [PATCH] Use /var/run/hald as mount dir for hal callout
+
+This is preferred over /tmp by SELinux.
+---
+ tools/hal-callout.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/tools/hal-callout.c b/tools/hal-callout.c
+index e7313fe..4d6044b 100644
+--- a/tools/hal-callout.c
++++ b/tools/hal-callout.c
+@@ -52,7 +52,7 @@ static char *mount_ipod (const char *dev_path)
+         if (fstype == NULL) {
+                 return NULL;
+         }
+-        filename = g_build_filename (g_get_tmp_dir (), "ipodXXXXXX", NULL);
++        filename = g_build_filename ("/var/run/hald", "ipodXXXXXX", NULL);
+         if (filename == NULL) {
+                 return NULL;
+         }
+-- 
+1.6.1
+

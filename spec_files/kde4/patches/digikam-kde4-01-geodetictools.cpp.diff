@@ -1,0 +1,13 @@
+--- digikam-0.10.0-kde4.2.4/libs/dmetadata/geodetictools.cpp.orig	2009-08-11 21:16:22.213257450 +0530
++++ digikam-0.10.0-kde4.2.4/libs/dmetadata/geodetictools.cpp	2009-08-11 21:16:46.850698525 +0530
+@@ -409,8 +409,8 @@
+             const double C2 = S*S;
+             // Compute new AO
+             AO = T1 + T2*C2 + T4*C2*C2 + T6*C2*C2*C2;
+-            const double CS = CONS/AO;
+-            S = asin(CS);
++            const double _CS = CONS/AO;
++            S = asin(_CS);
+             AZ_TEMP = AZ;
+             AZ = S;
+         }
