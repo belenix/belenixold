@@ -9,3 +9,34 @@ Index: workspace/kcontrol/dateandtime/clock.desktop
  Icon=preferences-system-time
  Type=Service
  X-KDE-ServiceTypes=KCModule
+--- kcontrol/dateandtime/helper.cpp.orig	2009-07-27 22:01:50.005628935 +0530
++++ kcontrol/dateandtime/helper.cpp	2009-07-27 22:02:13.571129969 +0530
+@@ -103,7 +103,7 @@
+         tf.open();
+         QTextStream ts(&tf);
+ 
+-        QFile fTimezoneFile(INITFILE);
++        QFile fTimezoneFile("/etc/default/init");
+         bool updatedFile = false;
+ 
+         if (fTimezoneFile.open(QIODevice::ReadOnly))
+@@ -115,7 +115,7 @@
+             for (QString line = is.readLine(); !line.isNull();
+                  line = is.readLine())
+             {
+-                if (line.find("TZ=") == 0)
++                if (line.indexOf("TZ=") == 0)
+                 {
+                     ts << "TZ=" << selectedzone << endl;
+                     found = true;
+@@ -144,8 +144,8 @@
+             {
+                 QTextStream os(&fTimezoneFile);
+ 
+-                for (QString line = ts->readLine(); !line.isNull();
+-                     line = ts->readLine())
++                for (QString line = ts.readLine(); !line.isNull();
++                     line = ts.readLine())
+                 {
+                     os << line << endl;
+                 }

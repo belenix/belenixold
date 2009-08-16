@@ -1,80 +1,50 @@
 #
-# spec file for package SFEconsolekit
+# spec file for package SUNWconsolekit
 #
 # includes module(s): ConsoleKit
 #
-# bugdb: http://bugs.freedesktop.org/show_bug.cgi?id=
+# Copyright 2009 Sun Microsystems, Inc.
+# This file and all modifications and additions to the pristine
+# package are under the same license as the package itself.
+#
+# Owner: halton
 #
 %include Solaris.inc
-
-# build with dbus support unless --without-dbus is used
-%define with_dbus %{?_without_dbus:0}%{?!_without_dbus:1}
 
 # Option to decide whether or not build library pam_ck_connector,
 # which implements pam_sm_open_session(3PAM) and pam_sm_close_session(3PAM).
 # By default, we don't build it.
 #
 # Note: To enable this pam module, you have to manually add 
-# an entry to /etc/pam.conf after installing SFEconsolekit-pam,
+# an entry to /etc/pam.conf after installing SUNWconsolekit-pam,
 # like this.
 # "login   session required       pam_ck_connector.so debug"
 #
 %define build_pam_module 1
 
+%use ck = ConsoleKit.spec
+
 Name:                    SFEconsolekit
 Summary:                 Framework for tracking users, login sessions, and seats.
-Version:                 0.3.0
-URL:                     http://www.freedesktop.org/wiki/Software/ConsoleKit
-Source:                  http://people.freedesktop.org/~mccann/dist/ConsoleKit-%{version}.tar.bz2
-Source1:                 consolekit.xml
-# date:2008-01-31 owner:yippi type:bug bugid:18149
-Patch1:                  ConsoleKit-01-emptystruct.diff
-# date:2008-03-02 owner:halton type:bug bugid:18173
-Patch2:                  ConsoleKit-02-pam.diff
-# date:2008-03-04 owner:halton type:bug bugid:18261
-Patch3:                  ConsoleKit-03-ck-history.diff
-# date:2008-12-30 owner:halton type:bug bugid:19333
-Patch4:                  ConsoleKit-04-ck-dynamic.diff
-# date:2008-06-24 owner:halton type:bug bugid:15866
-# Disable getcurrentsession.diff for now, since halton think it is not
-# a bug actually
-#Patch5:                  ConsoleKit-05-getcurrentsession.diff
-Patch5:                  ConsoleKit-05-add-sunray-type.diff
-Patch6:                  ConsoleKit-06-dynamic-tty.diff
-Patch7:                  ConsoleKit-07-solaris-vtdaemon.diff
-SUNW_BaseDir:            /
-SUNW_Copyright:          %{name}.copyright
+Version:                 %{ck.version}
+SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
+Source1:                 consolekit.xml
 
 %include default-depend.inc
 
-BuildRequires: SUNWgnome-libs-devel
-BuildRequires: SUNWPython
+Requires: SUNWglib2
+Requires: SUNWdbus-libs
+Requires: SUNWdbus-glib
+Requires: %{name}-root
+BuildRequires: SUNWglib2-devel
 BuildRequires: SUNWdbus-devel
 BuildRequires: SUNWdbus-glib-devel
-Requires: SUNWgnome-libs
-Requires: SUNWdbus
-Requires: SUNWdbus-glib
 
-%if %option_with_gnu_iconv
-Requires: SUNWgnu-libiconv
-Requires: SUNWgnu-gettext
-%else
-Requires: SUNWuiu8
-%endif
-
-%if %option_with_fox
-Requires: FSWxorg-clientlibs
-Requires: FSWxwrtl
-BuildRequires: FSWxorg-headers
-%else
-Requires: SUNWxwrtl
-Requires: SUNWxwplt
-Requires: SUNWxorg-clientlibs
-%endif
-
-Requires: SUNWpostrun
-Requires: SUNWgnome-config
+%package root
+Summary:                 %{summary} - / filesystem
+SUNW_BaseDir:            /
+%include default-depend.inc
 
 %package devel
 Summary:                 %{summary} - development files
@@ -84,79 +54,27 @@ Requires: %name
 
 %if %build_pam_module
 %package pam
-Summary:		 %{summary} - PAM module to register simple text logins. 
+Summary:		 %{summary} - PAM module to register simple text logins.
 SUNW_BaseDir:		 %{_basedir}
 %include default-depend.inc
 Requires: %name
 %endif
 
 %prep
-%setup -q -n ConsoleKit-%version
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
+rm -rf %name-%version
+mkdir %name-%version
+%ck.prep -d %name-%version
 
 %build
-CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
-if test "x$CPUS" = "x" -o $CPUS = 0; then
-    CPUS=1
-fi
-export CFLAGS="%optflags -I/usr/sfw/include -DANSICPP"
-%if %option_with_gnu_iconv
-export CFLAGS="$CFLAGS -I/usr/gnu/include -L/usr/gnu/lib -R/usr/gnu/lib -lintl"
-%endif
-%if %option_with_fox
-# for <X11/Xlib.h>
-export CFLAGS="$CFLAGS -I/usr/X11/include"
-%endif
+export CFLAGS="%optflags"
 export RPM_OPT_FLAGS="$CFLAGS"
-export ACLOCAL_FLAGS="-I %{_datadir}/aclocal"
-export CPPFLAGS="-I/usr/sfw/include"
-export LDFLAGS="-L/usr/sfw/lib -R/usr/sfw/lib"
-export MSGFMT="/usr/bin/msgfmt"
+export LDFLAGS="%_ldflags"
 
-glib-gettextize -f
-libtoolize --copy --force
-aclocal $ACLOCAL_FLAGS
-autoheader
-automake -a -c -f 
-autoconf
-./configure --prefix=%{_prefix}                     \
-            --libdir=%{_libdir}                     \
-            --libexecdir=%{_libexecdir}             \
-            --localstatedir=%{_localstatedir}       \
-            --sysconfdir=%{_sysconfdir}             \
-	    --mandir=%{_mandir}			    \
-%if %build_pam_module
-	    --enable-pam-module			    \
-	    --with-pam-module-dir=%{_libdir}/security	\
-%endif
-            --enable-rbac-shutdown=solaris.system.shutdown
-
-make -j$CPUS 
+%ck.build -d %name-%version
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type f -name "*.a" -exec rm -f {} ';'
-%if %build_pam_module
-%else
-
-# delete useless directory /usr/man/man8 which stores pam_ck_connector.8 
-#
-rm -rf $RPM_BUILD_ROOT/%{_mandir}
-%endif
-
-# The /var/run directory should not be included with the packages.
-# ConsoleKit will create it at run-time.
-#
-rmdir $RPM_BUILD_ROOT/var/run/ConsoleKit
-rmdir $RPM_BUILD_ROOT/var/run
+%ck.install -d %name-%version
 
 # These programs are intended to be used if you want ConsoleKit to be
 # like utmp/wtmp and log system start/restart/stop events.  There are
@@ -167,16 +85,68 @@ rm $RPM_BUILD_ROOT/%{_sbindir}/ck-log-system-start
 rm $RPM_BUILD_ROOT/%{_sbindir}/ck-log-system-restart
 rm $RPM_BUILD_ROOT/%{_sbindir}/ck-log-system-stop
 
-
 install -d $RPM_BUILD_ROOT/var/svc/manifest/system
 install --mode=0444 %SOURCE1 $RPM_BUILD_ROOT/var/svc/manifest/system
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre root
+#!/bin/sh
+#
+# Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+# Presence of this temp file will tell postinstall script
+# that the consolekit service is already installed, in which case
+# the current service state will be preserved, be it enabled
+# or disabled.
+rm -f $PKG_INSTALL_ROOT/var/consolekit_installed.tmp > /dev/null 2>&1
+
+if [ -f $PKG_INSTALL_ROOT/var/svc/manifest/system/consolekit.xml ]; then
+        touch $PKG_INSTALL_ROOT/var/consolekit_installed.tmp
+fi
+
+exit 0
+
+%post root
+#!/bin/sh
+#
+# Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+# Preinstall script will create this file if consolekit service was 
+# already installed, in which case we preserve current service state,
+# be it enabled or disabled.
+if [ -f $PKG_INSTALL_ROOT/var/consolekit_installed.tmp ]; then
+        rm -f $PKG_INSTALL_ROOT/var/consolekit_installed.tmp
+else
+        # enable consolekit:
+        # - PKG_INSTALL_ROOT is / or empty when installing onto a live system
+        #   and we can invoke svcadm directly;
+        # - otherwise it's upgrade, so we append to the upgrade script
+        if [ "${PKG_INSTALL_ROOT:-/}" = "/" ]; then
+                if [ `/sbin/zonename` = global ]; then
+                        /usr/sbin/svcadm enable -r svc:/system/consolekit:default
+                fi
+        else
+                cat >> ${PKG_INSTALL_ROOT}/var/svc/profile/upgrade <<-EOF
+                if [ \`/sbin/zonename\` = global ]; then
+                        /usr/sbin/svcadm enable -r svc:/system/consolekit:default
+                fi
+EOF
+        fi
+fi
+
+exit 0
+
 %files
+%doc -d ConsoleKit-%{ck.version} README AUTHORS
+%doc(bzip2) -d ConsoleKit-%{ck.version} COPYING NEWS
+%dir %attr (0755, root, other) %{_datadir}/doc
 %defattr (-, root, bin)
-%dir %attr (0755, root, sys) %{_prefix}
 %{_bindir}/*
 %{_sbindir}/*
 %{_libdir}/lib*.so*
@@ -187,31 +157,19 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{_datadir}
 %{_datadir}/dbus-1
 
-%dir %attr (0755, root, sys) %{_sysconfdir}
-%dir %attr (0755, root, sys) %{_sysconfdir}/ConsoleKit
-%dir %attr (0755, root, sys) %{_sysconfdir}/ConsoleKit/displays.d
-%attr (0755, root, sys) %{_sysconfdir}/ConsoleKit/displays.d/Headless.disp
-%attr (0755, root, sys) %{_sysconfdir}/ConsoleKit/displays.d/Local.disp
-%attr (0755, root, sys) %{_sysconfdir}/ConsoleKit/displays.d/LocalVNC.disp
-%attr (0755, root, sys) %{_sysconfdir}/ConsoleKit/displays.d/RemoteMachine.disp
-%attr (0755, root, sys) %{_sysconfdir}/ConsoleKit/displays.d/Sunray.disp
-%dir %attr (0755, root, sys) %{_sysconfdir}/ConsoleKit/run-session.d
-%dir %attr (0755, root, sys) %{_sysconfdir}/ConsoleKit/seats.d
-%attr (0755, root, sys) %{_sysconfdir}/ConsoleKit/seats.d/00-primary.seat
-
+%files root
+%defattr (-, root, sys)
+%{_sysconfdir}/ConsoleKit
 %dir %attr (0755, root, bin) %{_sysconfdir}/dbus-1
 %dir %attr (0755, root, bin) %{_sysconfdir}/dbus-1/system.d
 %{_sysconfdir}/dbus-1/system.d/ConsoleKit.conf
-%dir %attr (0755, root, sys) %dir /var
-%dir %attr (0755, root, sys) %dir /var/svc
-%dir %attr (0755, root, sys) %dir /var/svc/manifest
-%dir %attr (0755, root, sys) %dir /var/svc/manifest/system
+%dir %attr (0755, root, sys) %dir %{_localstatedir}
 # don't use %_localstatedir here, because this is an absolute path
 # defined by another package, so it has to be /var/svc even if this
 # package's %_localstatedir is redefined
-/var/svc/manifest/system/*
-%dir %attr (0755, root, sys) /var/log
-%dir %attr (0755, root, root) /var/log/ConsoleKit
+/var/svc/*
+%dir %attr (0755, root, sys) %{_localstatedir}/log
+%dir %attr (0755, root, root) %{_localstatedir}/log/ConsoleKit
 
 %files devel
 %defattr (-, root, bin)
@@ -228,8 +186,19 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Mon Jun 15 2009 - moinakg@belenix(dot)org
-- Pull in from SFE repo.
+* Thu Jul 30 2009 - halton.huo@sun.com
+- Add %pre and %post for -root pkg.
+* Mon Jul 27 2009 - halton.huo@sun.com
+- Move from SFE and spilit base part to ConsoleKit.spec
+* Thu Jul 23 2009 - halton.huo@sun.com
+- Bump to 0.3.1
+- Remove upstreamed patch: emptystruct.diff, pam.diff, solaris-getpwnamr.diff
+  and reorder rest
+- Add patch dev-console.diff to change owner of /dev/console for console login
+* Tue Jun 23 2009 - halton.huo@sun.com
+- Add copyright
+* Wed Apr 08 2009 - halton.huo@sun.com
+- Add patch8: solaris-getpwnamr.diff to fix bug #22361
 * Wed Apr 08 2009 - halton.huo@sun.com
 - Add patch5: add-sunray-type.diff to add Sunray for display-typs.conf.in
 - Add patch6: dynamic-tty.diff to add --tty for ck-dynaminc

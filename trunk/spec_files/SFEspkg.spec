@@ -8,7 +8,7 @@
 
 Name:                SFEspkg
 Summary:             spkg - Package and repository management toolkit
-Version:             0.2
+Version:             0.2.1
 Source1:             spkg
 Source2:             spkg_mod.py
 Source3:             tsort.py
@@ -81,7 +81,7 @@ cp %{SOURCE5} ${RPM_BUILD_ROOT}%{_localstatedir}/spkg
 cp %{SOURCE10} ${RPM_BUILD_ROOT}%{_localstatedir}/spkg
 cp %{SOURCE11} ${RPM_BUILD_ROOT}%{_localstatedir}/spkg
 
-python -m compileall -l ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
+python -m compileall -l -d %{_libdir}/python2.4/site-packages ${RPM_BUILD_ROOT}%{_libdir}/python2.4/site-packages
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -105,6 +105,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.4/site-packages/*
 
 %changelog
+* Sun Aug 16 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix handling of repeated package names.
 * Thu May 14 2009 - moinakg@belenix.org
 - Fix DESTDIR install for distutils.
 * Mon Nov 03 2008 - moinakg@belenix.org

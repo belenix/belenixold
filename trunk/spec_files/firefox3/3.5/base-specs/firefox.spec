@@ -8,10 +8,13 @@
 ##   Package Information Section   ##
 #####################################
 
+%define option_with_apoc_adapter 0
+%define option_without_moz_nss_nspr 1
+
 Name:        firefox
 Summary:     Mozilla Firefox Web browser
-Version:     3.5.1
-%define tarball_version 3.5.1
+Version:     3.5.2
+%define tarball_version 3.5.2
 Release:     1
 Copyright:   MPL/LGPL
 Group:       Applications/Internet
@@ -25,6 +28,10 @@ Source4:     %{name}.cfg
 Source5:     %{name}-xpcom.pc.in
 Source6:     %{name}-plugin.pc.in
 Source7:     %{name}-js.pc.in
+%if %option_with_apoc_adapter
+%define apoc_version 3.5
+Source8:     firefox-%{apoc_version}-apoc-adapter.tar.bz2
+%endif
 
 %if %option_without_moz_nss_nspr
 Source9:     nspr-nss-config
@@ -73,9 +80,6 @@ Patch10: firefox3-10-fix-mimetype-for-helper-app.diff
 Patch11: firefox3-11-system-nss-nspr.diff
 %endif
 
-# owner:ginnchen date:2009-06-05 type:bug bugzilla:492720 status:upstream
-Patch12: firefox3-12-bug492720.diff
-
 # owner:hawklu date:2008-12-12 type:bug bugzilla:468041 status:upstream
 Patch13: firefox3-13-js-dtrace.diff
 
@@ -88,8 +92,13 @@ Patch19: firefox3-19-xpcom-glue-no-hidden.diff
 # owner:hawklu date:2008-04-20 type:branding bugster:664645
 Patch20: firefox3-20-gen-devel-files.diff
 
-# owner:leon.sha date:2009-07-16 type:bug bugzilla:504043 status:upsteam
-Patch26: firefox3-26-bug504043.diff
+%if %option_with_apoc_adapter
+# owner:brian.lu date:2009-02-04 type:branding bugster:6801006
+Patch23: firefox3-23-package-apoc-adapter.diff
+
+# owner:brian.lu date:2009-02-04 type:branding bugster:6478680
+Patch24: firefox3-24-enable-apoc-adapter.diff
+%endif
 
 # owner:ginnchen date:2009-03-30 type:branding
 # disable sessionstore for form by default
@@ -108,6 +117,9 @@ Patch32: firefox3-32-use-system-theora.diff
 
 # owner:chrisk date:2009-07-19 type:bug
 Patch34: firefox3-34-gtk-includes.diff
+
+# owner:ginnchen date:2009-07-29 type:bug bugzilla:505678 status:upstream
+Patch35: firefox3-35-downloadable-font.diff
 
 URL:         http://www.mozilla.com/firefox
 
@@ -155,7 +167,11 @@ compliance, performance and portability.
 #####################################
 
 %prep
+%if %option_with_apoc_adapter
+%setup -q -c -n %{name} -a8
+%else
 %setup -q -c -n %{name}
+%endif
 
 cd ..
 /bin/mv %{name} %{name}.tmp.$$
@@ -180,12 +196,10 @@ cd %{name}
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
-%patch12 -p1
 %patch13 -p1
 %patch14 -p1
 %patch19 -p1
 %patch20 -p1
-%patch26 -p1
 %patch28 -p1
 %patch31 -p1
 %patch32 -p1
@@ -194,7 +208,13 @@ cd %{name}
 %patch29 -p1
 %endif
 
+%if %option_with_apoc_adapter
+%patch23 -p1 
+%patch24 -p1 
+%endif
+
 %patch34 -p1
+%patch35 -p1
 
 %if %option_without_moz_nss_nspr
 %patch11 -p1
@@ -242,6 +262,10 @@ ac_add_options --with-system-nss
 %endif
 ac_add_options --enable-system-sqlite
 EOF
+
+%if %option_with_apoc_adapter
+echo "ac_add_options --enable-extensions=default,apoc" >> .mozconfig
+%endif
 
 BUILD_OFFICIAL=1 
 MOZILLA_OFFICIAL=1
@@ -372,8 +396,9 @@ $RPM_BUILD_ROOT%{_libdir}/pkgconfig/%{name}-plugin.pc
 install -c -m 644 $RPM_BUILD_ROOT/tmp/%{name}-js.pc \
 $RPM_BUILD_ROOT%{_libdir}/pkgconfig/%{name}-js.pc
 
+# get out of the tmp dir before remove it
 cd $RPM_BUILD_ROOT
-/usr/bin/rm -rf $RPM_BUILD_ROOT/tmp
+rm -rf $RPM_BUILD_ROOT/tmp
 
 # remove local dictionary and share the one that delivered 
 # by myspell-dictionary
@@ -411,6 +436,16 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/firefox/defaults/profile/bookmarks.html
 %{_datadir}/pixmaps/%{name}-icon.png
 
 %changelog
+* Tue Aug 04 2009 - brian.lu@sun.com
+- Use new apoc adapter source tarball
+  firefox-3.5-apoc-adapter.tar.bz2
+  which uses mozilla public string APIs
+- Remove patch firefox3-33-apoc-failed-to-shutdown.diff
+* Tue Aug 04 2009 - ginn.chen@sun.com
+- Bump to Firefox 3.5.2.
+- Remove patch firefox3-12-bug492720.diff firefox3-26-bug504043.diff
+* Wed Jul 29 2009 - ginn.chen@sun.com
+- Add patch firefox3-35-downloadable-font.diff
 * Sun Jul 19 2009 - christian.kelly@sun.com
 - Add patch to fix gtk includes.
 * Thu Jul 16 2009 - ginn.chen@sun.com

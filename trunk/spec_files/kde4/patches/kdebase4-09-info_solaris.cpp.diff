@@ -1,5 +1,5 @@
---- kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp.orig	2009-07-18 21:45:46.948013137 +0530
-+++ kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp	2009-07-18 21:46:20.481537202 +0530
+--- kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp.orig	Wed Jul 29 21:17:05 2009
++++ kdebase-4.2.4/apps/kinfocenter/base/info_solaris.cpp	Wed Jul 29 21:03:59 2009
 @@ -7,6 +7,9 @@
  #include "config-infocenter.h"
  
@@ -20,7 +20,7 @@
  bool GetInfo_CPU(QTreeWidget* tree) {
  
  	kstat_ctl_t *kctl;
-@@ -127,8 +133,64 @@
+@@ -127,8 +133,68 @@
  	return true;
  }
  
@@ -55,39 +55,43 @@
 +			int sz = fields.size();
 +
 +			QStringList lst;
-+			if (sz >= 10) {
++			if (sz >= 9) {
++				int num;
++
++				num = 10;
 +				if (fields.at(3) == "Lvl" || fields.at(3) == "Edg") {
 +					lst << fields.at(0) << fields.at(1) << fields.at(2) \
 +					    << "-" << fields.at(3) << fields.at(4) \
 +					    << fields.at(5) << fields.at(6) << fields.at(7);
++					num = 9;
 +				} else {
 +					lst << fields.at(0) << fields.at(1) << fields.at(2) \
 +					    << fields.at(3) << fields.at(4) << fields.at(5) \
 +					    << fields.at(6) << fields.at(7) << fields.at(8);
 +				}
-+				if (sz > 10) {
++				if (sz > num) {
 +					QByteArray ary;
-+					for (int i = 9; i < sz; i++) {
++					for (int i = num-1; i < sz; i++) {
 +						ary += fields.at(i).toAscii();
 +						ary += " ";
 +					}
 +					lst << QString(ary);
-+				} else {
-+					lst << fields.at(9);
++				} else if (sz > num-1) {
++					lst << fields.at(num-1);
 +				}
++				new QTreeWidgetItem(tree, lst);
 +			}
-+			new QTreeWidgetItem(tree, lst);
 +		}
 +	} else {
 +		qDebug() << "Failed to run " << INTR_PROG;
 +	}
 +
-+        tree->sortItems(0, Qt::AscendingOrder);
++        tree->sortItems(3, Qt::AscendingOrder);
 +	return true;
  }
  
  bool GetInfo_DMA(QTreeWidget*) {
-@@ -325,13 +387,12 @@
+@@ -325,13 +391,12 @@
  			result = *it;
  		}
  		if( result == NULL ) {
@@ -104,7 +108,7 @@
  		}
  		else {
  			/*
-@@ -458,10 +519,10 @@
+@@ -458,10 +523,10 @@
  	else
  	nodeResult = type;
  

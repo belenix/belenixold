@@ -168,8 +168,8 @@ OPATH=${PATH}
 mkdir -p kdebld
 cd kdebld
 
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -floop-interchange -floop-block -ftree-loop-distribution -fPIC -DPIC -I%{gnu_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -floop-interchange -floop-block -ftree-loop-distribution -fPIC -DPIC -I%{gnu_inc}"
+export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -floop-interchange -floop-block -ftree-loop-distribution -fPIC -DPIC -I%{gnu_inc} -DSOLARIS -DUSE_SOLARIS -D_OS_SOLARIS_"
+export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -floop-interchange -floop-block -ftree-loop-distribution -fPIC -DPIC -I%{gnu_inc} -DSOLARIS -DUSE_SOLARIS -D_OS_SOLARIS_"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path}"
 export PATH="%{qt4_bin_path}:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -274,6 +274,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Rebuild with Solaris build flags.
 * Sun Jul 26 2009 - moinakg<at>belenix(dot)org
 - Add graphite loop optimizations for performance.
 * Tue Jul 07 2009 - moinakg(at)belenix<dot>org

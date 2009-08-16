@@ -7,6 +7,8 @@
 #   #  /lib/svc/method/ogl-select start
 
 %include Solaris.inc
+%define  gnu_share /usr/gnu/share
+
 Name:           SFEcompiz
 Summary:        compiz
 Version:        0.8.0
@@ -119,7 +121,12 @@ cd compiz-%{version}
 
 intltoolize --copy --force --automake
 
+%if %cc_is_gcc
+aclocal -I%{gnu_share}/aclocal
+%else
 aclocal
+%endif
+
 autoheader
 automake -a -c -f
 autoconf
@@ -136,6 +143,7 @@ export LDFLAGS="-L$PROTO_LIB -L/usr/X11/lib -L/usr/openwin/lib -R/usr/X11/lib -R
 	    --enable-gnome 		\
 	    --without-xcb		\
             --disable-kde               \
+	    --disable-kde4              \
 	    --with-default-plugins=core,dbus,move,place,png,regex,resize,svg,switcher,imgjpeg,resizeinfo,session,text,workarounds,decoration,animation,wall,fade
 
 make -j$CPUS
@@ -228,6 +236,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix build with SFEgcc.
 * Sun May 03 2009 - moinakg@belenix.org
 - Copy over updated spec from JDS repo.
 - TODO: Enable Kde window decorator after building KDE4

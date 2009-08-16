@@ -175,7 +175,9 @@ rm -rf ${RPM_BUILD_ROOT}%{_mandir}/mann
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%{_bindir}/dot -c
+LD_LIBRARY_PATH=${PKG_INSTALL_ROOT}%{_libdir}:${PKG_INSTALL_ROOT}%{_prefix}/gnu/lib
+export LD_LIBRARY_PATH
+$PKG_INSTALL_ROOT%{_bindir}/dot -c
 
 %files
 %defattr (-, root, bin)
@@ -239,6 +241,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix postinstall script to find the correct libraries in an ALTROOT install environment.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Add 64Bit build.
 * Sat Jun 21 2008 - moinakg@gmail.com

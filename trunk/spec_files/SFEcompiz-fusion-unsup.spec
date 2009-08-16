@@ -7,6 +7,7 @@
 %include Solaris.inc
 
 %define src_name compiz-fusion-plugins-unsupported
+%define  gnu_share /usr/gnu/share
 
 Name:                    SFEcompiz-fusion-unsup
 Summary:                 unsupported effects plugins for compiz
@@ -50,7 +51,13 @@ fi
 
 intltoolize --copy --force --automake
 libtoolize --force
+
+%if %cc_is_gcc
+aclocal -I%{gnu_share}/aclocal
+%else
 aclocal
+%endif
+
 autoheader
 automake -a -c -f
 autoconf
@@ -87,10 +94,11 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/omf/*/*-[a-z]*.omf
 %endif
 
 %post root 
-GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` gconftool-2 --makefile-install-rule %{_sysconfdir}/gconf/schemas/compiz-fakeargb.schemas \
-											   %{_sysconfdir}/gconf/schemas/compiz-mswitch.schemas \
-											   %{_sysconfdir}/gconf/schemas/compiz-snow.schemas \
-											   %{_sysconfdir}/gconf/schemas/compiz-tile.schemas
+GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
+	gconftool-2 --makefile-install-rule $BASEDIR%{_sysconfdir}/gconf/schemas/compiz-fakeargb.schemas \
+					   $BASEDIR%{_sysconfdir}/gconf/schemas/compiz-mswitch.schemas \
+					   $BASEDIR%{_sysconfdir}/gconf/schemas/compiz-snow.schemas \
+					   $BASEDIR%{_sysconfdir}/gconf/schemas/compiz-tile.schemas
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -119,6 +127,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix build with SFEgcc.
+- Fix postinstall script.
 * Sun May 03 2009 - moinakg@belenix.org
 - Bump version to 0.7.8
 - Add copyright file.

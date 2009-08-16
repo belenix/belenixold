@@ -133,6 +133,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %files devel
+%defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_bindir}
 %{_bindir}/ksba-config
 
@@ -148,6 +149,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/*
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix permissions.
 * Fri May 29 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Added 64Bit build
 - Bump version to 1.0.5.

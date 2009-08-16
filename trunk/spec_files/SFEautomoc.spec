@@ -115,6 +115,7 @@ cd ..
 rm -rf $RPM_BUILD_ROOT
 
 %files
+%defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_libdir}
 %dir %attr (0755, root, bin) %{_libdir}/automoc4
 %{_libdir}/automoc4/Automoc4Version.cmake
@@ -130,5 +131,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix permissions.
 * Sun Apr 17 2009 - moinakg@belenix.org
 - Initial version.
