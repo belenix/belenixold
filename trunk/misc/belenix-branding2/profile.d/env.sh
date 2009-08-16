@@ -1,11 +1,5 @@
-SHELL=/usr/bin/bash
-export SHELL
-
-PATH=/sbin:/usr/sbin:/usr/bin:/usr/ccs/bin:/usr/X11/bin:/usr/openwin/bin:/opt/DTT/bin
+PATH=/usr/gnu/bin:/sbin:/usr/sbin:/usr/bin:/usr/ccs/bin:/usr/X11/bin:/usr/openwin/bin:/opt/DTT/bin
 export PATH
-
-#LD_LIBRARY_PATH=/lib:/usr/lib:/usr/sfw/lib:/usr/X11/lib:/usr/foss/lib:/usr/openwin/lib
-#export LD_LIBRARY_PATH
 
 MANPATH=/usr/man:/usr/share/man:/usr/gnu/share/man:/usr/X11/man:/opt/DTT/Man:/usr/sfw/share/man
 export MANPATH
@@ -21,9 +15,6 @@ export KDEVARTMP
 
 G_BROKEN_FILENAMES=yes
 export G_BROKEN_FILENAMES
-
-#LD_PRELOAD=/usr/foss/lib/preloadable_libiconv.so
-#export LD_PRELOAD
 
 QTDIR=/usr
 export QTDIR

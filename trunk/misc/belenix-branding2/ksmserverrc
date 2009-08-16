@@ -1,0 +1,11 @@
+[$Version]
+update_info=ksmserver.upd:kde3
+
+[General]
+confirmLogout=true
+excludeApps=nwam-manager
+loginMode=restorePreviousLogout
+offerShutdown=true
+screenCount=1
+shutdownType=0
+

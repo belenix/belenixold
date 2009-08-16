@@ -78,6 +78,7 @@ f none etc/profile.d/kde.minimal.pagein=profile.d/kde.minimal.pagein 0755 root o
 f none etc/profile.d/kde.pagein=profile.d/kde.pagein 0755 root other
 f none etc/profile.d/xfce.minimal.pagein=profile.d/xfce.minimal.pagein 0755 root other
 f none etc/profile.d/xfce.pagein=profile.d/xfce.pagein 0755 root other
+s none etc/default_env.sh=etc/profile.d/env.sh
 
 d none etc/xdg 0755 root sys
 d none etc/xdg/xfce4-session 0755 root sys
@@ -95,20 +96,24 @@ f none etc/skel/.kde/share/config/kdeglobals=kdeglobals 0644 root other
 f none etc/skel/.kde/share/config/startupconfig=startupconfig 0644 root other
 f none etc/skel/.kde/share/config/startupconfigkeys=startupconfigkeys 0644 root other
 f none etc/skel/.kde/share/config/khotkeysrc=khotkeysrc 0644 root other
+f none etc/skel/.kde/share/config/ksplashrc=ksplashrc 0644 root other
 f none etc/skel/.kde/share/config/kwinrc=kwinrc 0644 root other
 f none etc/skel/.kde/share/config/kwinrulesrc=kwinrulesrc 0644 root other
 f none etc/skel/.kde/share/config/kdedrc=kdedrc 0644 root other
-f none etc/skel/.kde/share/config/kdesktoprc=kdesktoprc 0644 root other
 f none etc/skel/.kde/share/config/ktiprc=ktiprc 0644 root other
-f none etc/skel/.kde/share/config/kcmartsrc=kcmartsrc 0644 root other
 f none etc/skel/.kde/share/config/kickoffrc=kickoffrc 0644 root other
+f none etc/skel/.kde/share/config/ksmserverrc=ksmserverrc 0644 root other
 f none etc/skel/.kde/share/config/plasmarc=plasmarc 0644 root other
+f none etc/skel/.kde/share/config/plasma-appletsrc=plasma-appletsrc 0644 root other
+f none etc/skel/.kde/share/config/kres-migratorrc=kres-migratorrc 0644 root other
+f none etc/skel/.kde/share/config/kcmfonts=kcmfonts 0644 root other
 f none etc/skel/.kde/share/config/gtkrc=gtkrc 0644 root other
 f none etc/skel/.kde/share/config/gtkrc-2.0=gtkrc-2.0 0644 root other
 
 f none etc/skel/.kderc=.kderc 0644 root other
 f none etc/skel/.vimrc=vimrc 0644 root other
 f none etc/skel/.gtkrc-2.0-kde=gtkrc-2.0-kde 0644 root other
+f none etc/skel/.gtkrc-2.0-kde4=gtkrc-2.0-kde4 0644 root other
 d none etc/skel/.kde/share/config/session 0755 root other
 d none etc/skel/.kde/env 0755 root other
 f none etc/skel/.kde/env/gtk-qt-engine.rc.sh=gtk-qt-engine.rc.sh 0644 root other
@@ -151,6 +156,8 @@ d none etc/skel/.config/xfce4-session 0755 root other
 f none etc/skel/.config/xfce4-session/xfce4-session.rc=xfce4-session/xfce4-session.rc 0644 root other
 d none etc/skel/.config/autostart 0755 root other
 f none etc/skel/.config/autostart/xfce4-tips-autostart.desktop=xfce4/autostart/xfce4-tips-autostart.desktop 0644 root other
+d none etc/skel/.config/kde.org 0755 root other
+f none etc/skel/.config/kde.org/systemsettings.conf=systemsettings.conf 0644 root other
 
 d none etc/skel/.local 0755 root other
 d none etc/skel/.local/share 0755 root other
@@ -159,6 +166,7 @@ d none etc/skel/.local/share/xfce4/helpers 0755 root other
 f none etc/skel/.local/share/xfce4/helpers/custom-TerminalEmulator.desktop=xfce4/helpers/custom-TerminalEmulator.desktop 0644 root other
 f none etc/skel/.bashrc=local.bashrc 0644 root other
 f none etc/skel/.bash_profile=local.bashrc 0644 root other
+f none etc/skel/.fonts.conf=fonts.conf 0644 root other
 
 #
 # Common Branding - common to the two desktops
