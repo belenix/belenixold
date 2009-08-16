@@ -77,6 +77,15 @@ MICROROOT=$DIST_PROTO/bootcd_microroot
 RAMDISK_SIZE=110000
 DIST_MICROROOT_LIST=$SRC/microroot_list
 
+#
+# Indicate our branding package if not already set
+#
+if [ "x$BRANDING_PKG" = "x" ]
+then
+	BRANDING_PKG=FSWbelenix-branding
+fi
+export BRANDING_PKG
+
 # Set up root of the proto area
 [ -d $DIST_PROTO ] || mkdir $DIST_PROTO
 

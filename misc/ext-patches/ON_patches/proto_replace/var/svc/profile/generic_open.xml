@@ -155,6 +155,10 @@
   <!--
       Enable KDM
   -->
+  <service name='system/consolekit' version='1' type='service'>
+    <instance name='default' enabled='true' />
+  </service>
+
   <service name='application/graphical-login/kdm' version='1'
     type='service'>
     <instance name='default' enabled='true' />

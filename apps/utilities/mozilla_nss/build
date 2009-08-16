@@ -5,6 +5,6 @@ sh ./download_tarballs
 PATH=/opt/SUNWspro/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
 export PATH
 
-#sh ./build_nspr
+sh ./build_nspr
 sh ./build_nss
 
