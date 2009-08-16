@@ -10,12 +10,17 @@
 
 %define src_dir          kdebase-workspace
 %define python_version   2.6
+%define _sessionsdir %{_datadir}/xsessions
+
 Name:                    SFEkdebase4-workspace
 Summary:                 Libraries for PIM data management in KDE4
 Version:                 4.2.4
 License:                 LGPLv2+
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdebase-workspace-%{version}.tar.bz2
+Source1:                 kde.desktop
+Source2:                 kdm.xml
+Source3:                 kdmrc
 Patch1:                  kdebase-workspace-01-kdm.diff
 Patch2:                  kdebase-workspace-02-kwin.diff
 Patch3:                  kdebase-workspace-03-startkde.diff
@@ -53,6 +58,7 @@ Requires:      SFElibxklavier
 Requires:      SUNWdbus
 Requires:      SUNWxorg-client-programs
 Requires:      SUNWlibusb
+Requires:      SFEconsolekit
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEqimageblitz-devel
 BuildRequires: SFEkdelibs4-devel
@@ -70,6 +76,7 @@ BuildRequires: SFEpython26-pykde4-devel
 BuildRequires: SFElibxklavier-devel
 BuildRequires: SUNWdbus-devel
 BuildRequires: SUNWsfwhea
+BuildRequires: SFEconsolekit-devel
 Conflicts:     SFEkdebase3
 BuildConflicts: SFEkdebase3-devel
 Conflicts:     SFEkdmtheme
@@ -149,8 +156,8 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -189,6 +196,16 @@ export PATH="%{qt4_bin_path}:${OPATH}"
 make install DESTDIR=$RPM_BUILD_ROOT
 mv ${RPM_BUILD_ROOT}%{_libdir}/python%{python_version}/site-packages \
    ${RPM_BUILD_ROOT}%{_libdir}/python%{python_version}/vendor-packages
+
+install -d $RPM_BUILD_ROOT%{_sessionsdir}
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sessionsdir}
+
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/graphical-login
+cp %{SOURCE2} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/graphical-login
+
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/kapplications-merged
+cp %{SOURCE3} ${RPM_BUILD_ROOT}%{_datadir}/config/kdm/
+
 export PATH="${OPATH}"
 cd ..
 
@@ -226,9 +243,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dbus-1/services/*
 %dir %attr (0755, root, bin) %{_datadir}/sounds
 %{_datadir}/sounds/*
+%dir %attr (0755, root, bin) %{_datadir}/xsessions
+%{_datadir}/xsessions/*
 
 %dir %attr (0755, root, sys) %{_sysconfdir}
-%{_sysconfdir}/*
+%{_sysconfdir}/*rc
+%dir %attr (0755, root, sys) %{_sysconfdir}/xdg
+%dir %attr (0755, root, sys) %{_sysconfdir}/xdg/menus
+%dir %attr (0755, root, sys) %{_sysconfdir}/xdg/menus/kapplications-merged
+
+%dir %attr (0755, root, sys) %{_localstatedir}
+%dir %attr (0755, root, sys) %{_localstatedir}/svc
+%dir %attr (0755, root, sys) %{_localstatedir}/svc/manifest
+%dir %attr (0755, root, sys) %{_localstatedir}/svc/manifest/application
+%dir %attr (0755, root, sys) %{_localstatedir}/svc/manifest/application/graphical-login
+%class(manifest) %{_localstatedir}/svc/manifest/application/graphical-login/kdm.xml
 
 %defattr (-, root, other)
 %dir %attr (0755, root, other) %{_datadir}/apps
@@ -251,9 +280,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{_prefix}
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
-#%dir %attr (0755, root, bin) %{_libdir}
-#%dir %attr (0755, root, bin) %{_libdir}/KdepimLibs-%{version}
-#%{_libdir}/KdepimLibs-%{version}/*
 
 %files doc
 %defattr (-, root, bin)
@@ -263,5 +289,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Rebuild with Solaris build flags.
+- Add KDM SMF Manifest.
+- Add dependency on ConsoleKit.
 * Wed Jun 17 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version.

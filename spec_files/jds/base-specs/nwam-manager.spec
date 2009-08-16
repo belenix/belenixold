@@ -16,6 +16,8 @@ Summary:      Network Auto-Magic User Interface
 #Source:       http://src.opensolaris.org/source/raw/jds/nwam-manager/branches/phase-0.5/tarballs/%{name}-%{version}.tar.gz
 Source:       http://www.opensolaris.org/os/project/nwam/picea/%{name}-%{version}.tar.gz
 Patch1:       %{name}-01-defect6044.diff
+Patch2:       %{name}-02-kde.desktop.diff
+
 %if %build_l10n
 Source1:      l10n-configure.sh
 %endif
@@ -50,6 +52,7 @@ Nwam-manager is a GUI of Nwam http://www.opensolaris.org/os/project/nwam
 %prep
 %setup -q
 %patch1 -p1
+%patch2 -p1
 
 %build
 %ifos linux
@@ -70,7 +73,7 @@ intltoolize --force --copy --automake
 sh %SOURCE1 --enable-copyright
 %endif
 
-aclocal $ACLOCAL_FLAGS
+aclocal -I%{_prefix}/gnu/share/aclocal $ACLOCAL_FLAGS
 autoheader
 automake -a -c -f
 autoconf

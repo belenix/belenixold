@@ -151,6 +151,7 @@ cd ..
 rm -rf $RPM_BUILD_ROOT
 
 %files
+%defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
 %dir %attr (0755, root, bin) %{_libdir}
@@ -170,5 +171,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>\
+- Fix permissions.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Initial version.

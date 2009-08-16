@@ -20,15 +20,14 @@
 
 Name:                    SFExulrunner
 Summary:                 XUL Runtime for Gecko Applications
-Version:                 1.9.1.1pre
-%define tarball_version  1.9.1
+Version:                 1.9.1.1release
+%define tarball_version  1.9.1.1
 URL:                     http://developer.mozilla.org/En/XULRunner
-#Source:                  http://releases.mozilla.org/pub/mozilla.org/xulrunner/releases/%{version}/source/xulrunner-%{version}-source.tar.bz2
-Source:                  http://www.belenix.org/binfiles/xulrunner-%{tarball_version}-source.tar.bz2
+Source:                  http://releases.mozilla.org/pub/mozilla.org/xulrunner/releases/%{tarball_version}/source/xulrunner-%{tarball_version}-source.tar.bz2
 Source1:                 xulrunner-mozconfig
 Source2:                 xulrunner-find
-%define tarball_dir mozilla
 %define version_internal  1.9.1
+%define tarball_dir mozilla-%{version_internal}
 %define mozappdir         %{_libdir}/%{name}-%{version_internal}
 
 Patch1:                  xulrunner-01-path.diff
@@ -39,6 +38,22 @@ Patch8:                  xulrunner-08-toolkit-Makefile.in.diff
 Patch9:                  xulrunner-09-configure.diff
 Patch10:                 xulrunner-10-nanojit_regnames.diff
 Patch11:                 xulrunner-11-bool_weirdo.diff
+
+Patch12:                 firefox3-01-locale.diff
+#Patch13:                 firefox3-02-preload.diff
+Patch14:                 firefox3-03-disable-online-update.diff
+Patch15:                 firefox3-04-oggplay.diff
+Patch16:                 firefox3-05-g11n-nav-lang.diff
+Patch17:                 firefox3-06-donot-delay-stopping-realplayer.diff
+Patch18:                 firefox3-07-spellchecker-default.diff
+Patch19:                 firefox3-08-ksh.diff
+Patch20:                 firefox3-09-jemalloc-shared-library.diff
+Patch21:                 firefox3-10-fix-mimetype-for-helper-app.diff
+Patch22:                 firefox3-12-bug492720.diff
+Patch25:                 firefox3-20-gen-devel-files.diff
+Patch26:                 firefox3-28-ss-privacy-level.diff
+Patch27:                 firefox3-29-getting-started.diff
+Patch29:                 firefox3-34-gtk-includes.diff
 
 License:                 MPLv1.1 or GPLv2+ or LGPLv2+
 SUNW_BaseDir:            /
@@ -107,6 +122,8 @@ mkdir 32
 mv %{tarball_dir} 32
 cd 32/%{tarball_dir}
 rm -f configure
+rm -f js/src/configure
+
 %patch1 -p1
 %patch3 -p1
 %patch4 -p1
@@ -115,6 +132,23 @@ rm -f configure
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
+
+%patch12 -p1
+#%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch25 -p1
+%patch26 -p1
+%patch27 -p1
+%patch29 -p1
+
 rm -f .mozconfig
 cp %{SOURCE1} .mozconfig
 cd ../..
@@ -133,10 +167,11 @@ fi
 INTERNAL_GECKO=%{version_internal}
 MOZ_APP_DIR=%{_libdir}/%{name}-${INTERNAL_GECKO}
 export PREFIX='%{_prefix}'
-MOZ_SMP_FLAGS=-j1
-[ "$CPUS" -gt 1 ] && MOZ_SMP_FLAGS=-j2
 export CC=/usr/gnu/bin/gcc
 export CXX=/usr/gnu/bin/g++
+
+PATH=/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/gnu/bin:/usr/sfw/bin
+export PATH
 
 #%ifarch amd64 sparcv9
 #cd 64/%{tarball_dir}
@@ -152,16 +187,13 @@ export CXX=/usr/gnu/bin/g++
 #%endif
 
 cd 32/%{tarball_dir}
-accel=x86
-#export CFLAGS="%optflags -I/usr/include/mps"
-#export CXXFLAGS="%cxx_optflags -I/usr/include/mps"
-#export LDFLAGS="%_ldflags -L/usr/lib -R/usr/lib -L/usr/lib/mps -R/usr/lib/mps %{gnu_lib_path} %{sfw_lib_path}"
-export CFLAGS="%optflags %{gnu_lib_path}"
-export CXXFLAGS="%cxx_optflags %{gnu_lib_path}"
-#export LDFLAGS="%_ldflags -L/usr/lib -R/usr/lib %{gnu_lib_path} %{sfw_lib_path}"
+export CFLAGS="-finline-small-functions -march=pentium4 -fno-omit-frame-pointer %{gnu_lib_path}"
+export CXXFLAGS="-finline-small-functions -march=pentium4 -fno-omit-frame-pointer %{gnu_lib_path}"
+export LDFLAGS="-B direct -z ignore -z muldefs -L/usr/lib -R/usr/lib %{gnu_lib_path}"
 export LIBDIR='%{_libdir}'
+export PYTHON=%{_bindir}/python2.6
 
-gmake -f client.mk build STRIP="/bin/true" MOZ_MAKE_FLAGS="$MOZ_SMP_FLAGS"
+gmake -f client.mk build STRIP="/bin/true"
 
 cd ../..
 
@@ -185,30 +217,51 @@ cd %{tarball_dir}
 make install DESTDIR=${RPM_BUILD_ROOT}
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 
-(cd ${RPM_BUILD_ROOT}%{_datadir}/idl; ln -s xulrunner-%{version} xulrunner)
-(cd ${RPM_BUILD_ROOT}%{_libdir}; ln -s xulrunner-%{version} xulrunner)
+(cd ${RPM_BUILD_ROOT}%{_datadir}/idl; ln -s xulrunner-%{tarball_version} xulrunner)
+(cd ${RPM_BUILD_ROOT}%{_libdir}; ln -s xulrunner-%{tarball_version} xulrunner)
 
-install -m 0555 dist/sdk/bin/regxpcom ${RPM_BUILD_ROOT}%{_libdir}/xulrunner-%{version}
-cp -rL dist/include/* $RPM_BUILD_ROOT%{_includedir}/xulrunner-%{version}
-cp -rL dist/include/string/* $RPM_BUILD_ROOT%{_includedir}/xulrunner-%{version}/stable
+install -m 0555 dist/sdk/bin/regxpcom ${RPM_BUILD_ROOT}%{_libdir}/xulrunner-%{tarball_version}
+cp -rL dist/include/* $RPM_BUILD_ROOT%{_includedir}/xulrunner-%{tarball_version}
+cp -rL dist/include/string/* $RPM_BUILD_ROOT%{_includedir}/xulrunner-%{tarball_version}/stable
 
 find $RPM_BUILD_ROOT%{_includedir} -type f -name "*.h" | xargs chmod 644
 find $RPM_BUILD_ROOT%{_datadir}/idl -type f -name "*.idl" | xargs chmod 644
 
+NSS_VERS=`cat ./dist/include/nss/nss.h | sed 's/"//g' | grep "^#define NSS_VERSION" | nawk '{ print $3 }'`
+export NSS_VERS
+
+(cd ${RPM_BUILD_ROOT}%{_includedir}/xulrunner-%{tarball_version}/stable
+ (cd ../; ls | egrep -v "stable|unstable|*\.h$") | while read d
+ do
+   ln -s ../${d}
+ done)
+
+(cd ${RPM_BUILD_ROOT}%{_includedir}/xulrunner-%{tarball_version}/unstable
+ (cd ../; ls | egrep -v "stable|unstable|*\.h$") | while read d
+ do
+   ln -s ../${d}
+ done)
+
 (cd ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig
  cat libxul-unstable.pc | \
-  sed 's#includetype=unstable#includetype=unstable\nlibdir=\${sdkdir}/lib#' > libxul-unstable.pc.new
+  sed '
+    s#includetype=unstable#includetype=unstable\nlibdir=%{_libdir}/xulrunner-%{tarball_version}#
+    s#-L#-R${libdir} -L#
+  ' > libxul-unstable.pc.new
  mv libxul-unstable.pc.new libxul-unstable.pc
  cat libxul.pc | \
-  sed 's#includetype=stable#includetype=stable\nlibdir=\${sdkdir}/lib#' > libxul.pc.new
+  sed '
+    s#includetype=stable#includetype=stable\nlibdir=%{_libdir}/xulrunner-%{tarball_version}#
+    s#-L#-R${libdir} -L#
+  ' > libxul.pc.new
  mv libxul.pc.new libxul.pc
 
  cat mozilla-gtkmozembed-embedding.pc | \
-  sed 's#prefix=%{_prefix}#prefix=%{_prefix}\nlibdir=\${sdkdir}/lib#' \
+  sed 's#prefix=%{_prefix}#prefix=%{_prefix}\nlibdir=%{_libdir}/xulrunner-%{tarball_version}#' \
   > mozilla-gtkmozembed-embedding.pc.new
  mv mozilla-gtkmozembed-embedding.pc.new mozilla-gtkmozembed-embedding.pc
  cat mozilla-gtkmozembed.pc | \
-  sed 's#prefix=%{_prefix}#prefix=%{_prefix}\nlibdir=\${sdkdir}/lib#' \
+  sed 's#prefix=%{_prefix}#prefix=%{_prefix}\nlibdir=%{_libdir}/xulrunner-%{tarball_version}#' \
   > mozilla-gtkmozembed.pc.new
  mv mozilla-gtkmozembed.pc.new mozilla-gtkmozembed.pc
 
@@ -219,6 +272,19 @@ find $RPM_BUILD_ROOT%{_datadir}/idl -type f -name "*.idl" | xargs chmod 644
   sed 's#-I\${includedir}/stable#-I\${includedir}/stable -I\${includedir}/java -I\${includedir}/plugin#' \
   > mozilla-plugin.pc.new
  mv mozilla-plugin.pc.new mozilla-plugin.pc
+
+ cat mozilla-nss.pc | sed "s#^Version:.*#Version: ${NSS_VERS}#" > mozilla-nss.pc.new
+ cat mozilla-nss.pc.new | \
+   sed '
+     s#prefix=%{_prefix}#prefix=%{_prefix}\nlibdir=%{_libdir}/xulrunner-%{tarball_version}#
+     s#-L\${sdkdir}/lib#-L\${sdkdir}/sdk/lib -R\${libdir} -L\${libdir}#
+   ' > mozilla-nss.pc
+ cat mozilla-nspr.pc | \
+   sed '
+     s#prefix=%{_prefix}#prefix=%{_prefix}\nlibdir=%{_libdir}/xulrunner-%{tarball_version}#
+     s#-L\${sdkdir}/lib#-R\${libdir} -L\${libdir}#
+   ' > mozilla-nspr.pc.new
+ mv mozilla-nspr.pc.new mozilla-nspr.pc
 )
 
 cd ../..
@@ -231,8 +297,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{_basedir}
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/xulrunner
-%dir %attr (0755, root, bin) %{_libdir}/xulrunner-%{version}
-%{_libdir}/xulrunner-%{version}/*
+%dir %attr (0755, root, bin) %{_libdir}/xulrunner-%{tarball_version}
+%{_libdir}/xulrunner-%{tarball_version}/*
 %dir %attr (0755, root, bin) %{_bindir}
 %{_bindir}/*
 
@@ -251,8 +317,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
 %dir %attr (0755, root, bin) %{_libdir}
-%dir %attr (0755, root, bin) %{_libdir}/xulrunner-devel-%{version}
-%{_libdir}/xulrunner-devel-%{version}/*
+%dir %attr (0755, root, bin) %{_libdir}/xulrunner-devel-%{tarball_version}
+%{_libdir}/xulrunner-devel-%{tarball_version}/*
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*
 %dir %attr (0755, root, sys) %{_datadir}
@@ -262,6 +328,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Many changes to build.
+- Add in patches from JDS Firefox3 build.
 * Sun Jul 26 2009 - moinakg<at>belenix(dot)org
 - Bump to recent SVN version to get TraceMonkey JIT engine.
 * Tue Jul 07 2009 - moinakg(at)belenix<dot>org

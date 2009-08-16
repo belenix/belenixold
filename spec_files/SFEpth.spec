@@ -139,6 +139,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %files devel
+%defattr (-, root, bin)
 %dir %attr (0755, root, bin) %{_bindir}
 %{_bindir}/pth-config
 %ifarch amd64 sparcv9
@@ -153,6 +154,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/*
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix permissions.
 * Fri May 29 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Added 64Bit build.
 * Sat Dec 29 2007 - jijun.yu@sun.com

@@ -18,6 +18,7 @@ URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdeutils-%{version}.tar.bz2
 Patch1:                  kdeutils4-01-ark_servicepack.diff
 Patch2:                  kdeutils4-02-kbytearrayedit.diff
+Patch3:                  kdeutils4-03-printer-applet-python26.diff
 
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
@@ -79,6 +80,7 @@ Conflicts:     SFEkdeutils3-doc
 cd %{src_dir}-%{version}
 %patch1 -p1
 %patch2 -p0
+%patch3 -p1
 cd ..
 
 %build
@@ -189,5 +191,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix building printer applet.
 * Sun Jul 05 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version.

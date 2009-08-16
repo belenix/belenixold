@@ -14,6 +14,7 @@ Version:             4.4.0
 %define full_ver     %{version}
 Source:              ftp://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.bz2
 #Source:              ftp://ftp.nluug.nl/mirror/languages/gcc/snapshots/%{full_ver}/gcc-%{full_ver}.tar.bz2
+Patch1:              gcc4-01-nameser_compat.diff
 
 SUNW_BaseDir:        %{_basedir}
 SUNW_Copyright:      SFEgccruntime.copyright
@@ -137,6 +138,9 @@ export LD_OPTIONS="%ld_options %gnu_lib_path"
 cd gcc
 make install DESTDIR=$RPM_BUILD_ROOT
 
+cd $RPM_BUILD_ROOT
+%patch1 -p0
+
 cd $RPM_BUILD_ROOT%{_prefix}
 ln -s share/man man
 
@@ -221,6 +225,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Patch a header bug.
 * Web May 06 2009 - moinakg@belenix.org
 - Enable building with ClooG and PPL libs to get the Graphite framework.
 * Thu Apr 30 2009 - moinakg@belenix.org

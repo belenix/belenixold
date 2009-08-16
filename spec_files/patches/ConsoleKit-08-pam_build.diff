@@ -1,0 +1,20 @@
+--- ConsoleKit-0.3.1/./pam-ck-connector/pam-ck-connector.c.orig	2009-08-16 18:50:55.527951758 +0530
++++ ConsoleKit-0.3.1/./pam-ck-connector/pam-ck-connector.c	2009-08-16 18:51:49.213975376 +0530
+@@ -197,10 +197,17 @@
+ 
+         bufsize = sysconf (_SC_GETPW_R_SIZE_MAX);
+         buf = calloc (sizeof (char), bufsize);
++#if defined(sun) || defined(__sun)
++	pwdp = getpwnam_r (username, &pwd, buf, bufsize);
++	if (pwdp == NULL) {
++		goto out;
++	}
++#else
+         rc = getpwnam_r (username, &pwd, buf, bufsize, &pwdp);
+         if (rc != 0 || pwdp == NULL) {
+                 goto out;
+         }
++#endif
+ 
+         res = pwdp->pw_uid;
+         if (default_gid != NULL) {

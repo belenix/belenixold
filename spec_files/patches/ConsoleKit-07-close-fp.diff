@@ -1,0 +1,11 @@
+diff -urN ConsoleKit-0.3.1/src/ck-sysdeps-solaris.c ../SUNWconsolekit-0.3.1.hacked/ConsoleKit-0.3.1/src/ck-sysdeps-solaris.c
+--- ConsoleKit-0.3.1/src/ck-sysdeps-solaris.c	2009-07-27 14:11:58.754111351 +0100
++++ ../SUNWconsolekit-0.3.1.hacked/ConsoleKit-0.3.1/src/ck-sysdeps-solaris.c	2009-07-27 14:17:05.457434846 +0100
+@@ -323,6 +323,7 @@
+         }
+ 
+  out:
++	pclose (fp);
+         return hash;
+ }
+ 

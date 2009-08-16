@@ -15,6 +15,7 @@
 %include Solaris.inc
 
 %define src_name libcompizconfig
+%define  gnu_share /usr/gnu/share
 
 Name:                    SFElibcompizconfig
 Summary:                 compizconfig libraries - is an alternative configuration system for compiz
@@ -61,7 +62,13 @@ fi
 
 rm -f ltmain.sh
 libtoolize --force
+
+%if %cc_is_gcc
+aclocal -I%{gnu_share}/aclocal
+%else
 aclocal
+%endif
+
 autoheader
 automake -a -c -f
 autoconf
@@ -120,6 +127,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix build with SFEgcc.
 * Sun May 03 2009 - moinakg@belenix.org
 - Copy over updated spec from JDS repo.
 * Sun Feb 22 2009 - dave.lin@sun.com

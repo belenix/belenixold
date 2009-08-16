@@ -1630,7 +1630,10 @@ def do_build_pkglist(img, pkgs, pdict, incompats, type, level):
 		#
 		for name in rmlist:
 			try:
-				pkgs.remove(name)
+				# Remove all matching entries from pkgs. Once all matches 
+				# have been removed an exception will be thrown and ignored.
+				while True:
+					pkgs.remove(name)
 			except:
 				# We can have multiple entries due to package name change
 				# temporary plug to ignore.

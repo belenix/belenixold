@@ -117,7 +117,15 @@ cd gettext-%{version}-64
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{_arch64}/*.a
 rm -f $RPM_BUILD_ROOT/%{_libdir}/%{_arch64}/*.la
-mkdir -p cd $RPM_BUILD_ROOT/usr/lib/%{_arch64}
+if [ -f ./gettext-runtime/intl/.libs/libgnuintl.so ]
+then
+	cp ./gettext-runtime/intl/.libs/libgnuintl.so $RPM_BUILD_ROOT/usr/gnu/lib/%{_arch64}/libintl.so.8.0.2
+        chmod a+rx $RPM_BUILD_ROOT/usr/gnu/lib/%{_arch64}/libintl.so.8.0.2
+        (cd $RPM_BUILD_ROOT/usr/gnu/lib/%{_arch64}
+          ln -s libintl.so.8.0.2 libintl.so.8
+          ln -s libintl.so.8.0.2 libintl.so)
+fi
+mkdir -p $RPM_BUILD_ROOT/usr/lib/%{_arch64}
 (cd $RPM_BUILD_ROOT/usr/lib/%{_arch64}
  ln -s ../../gnu/lib/%{_arch64}/libintl.so libgnuintl.so)
  
@@ -200,6 +208,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Add workaround to rename wrongly generated shared lib name.
 * Sun Jul 26 2009 - moinakg<at>belenix(dot)org
 - Avoid linking with libsec to avoid bringing in system NSS/NSPR.
 * Tue May 12 2009 - moinakg@belenix.org

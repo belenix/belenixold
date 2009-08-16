@@ -10,7 +10,7 @@
 
 Name:                %nm
 Summary:             This is an empty package to satisfy dependencies
-Version:             1.0
+Version:             v4.1-2055b
 
 SUNW_BaseDir:        /
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build

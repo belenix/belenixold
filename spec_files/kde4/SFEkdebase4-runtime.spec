@@ -59,19 +59,6 @@ BuildConflicts: SFEkdebase3-devel
 Core runtime for the K Desktop Environment 4.
 This package is incompatible with the corresponding KDE3 package.
 
-#%package devel
-#Summary:                 %{summary} - development files
-#SUNW_BaseDir:            /
-#%include default-depend.inc
-#Requires: %name
-#Requires: SFEqt4-devel
-#Requires: SFEqimageblitz-devel
-#Requires: SFEkdelibs4-devel
-#Requires: SFEkdepimlibs4-devel
-#Requires: SFEautomoc
-#Requires: SFEcmake
-#Conflicts: SFEkdebase3-devel
-
 %package doc
 Summary:                 %{summary} - documentation files
 SUNW_BaseDir:            /
@@ -105,8 +92,8 @@ OPATH=${PATH}
 mkdir kdebld
 cd kdebld
 
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc}"
+export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -DSOLARIS -DUSE_SOLARIS"
+export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -DSOLARIS -DUSE_SOLARIS"
 
 #
 # SFW path is included for samba
@@ -223,17 +210,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{_sysconfdir}/xdg/menus
 %{_sysconfdir}/xdg/menus/*
 
-#%files devel
-#%defattr (-, root, bin)
-#%dir %attr (0755, root, sys) %{_prefix}
-#%dir %attr (0755, root, bin) %{_includedir}
-#%{_includedir}/*
-#%dir %attr (0755, root, bin) %{_libdir}
-#%dir %attr (0755, root, bin) %{_libdir}/KdepimLibs-%{version}
-#%{_libdir}/KdepimLibs-%{version}/*
-#%dir %attr (0755, root, bin) %{_libdir}/gpgmepp
-#%{_libdir}/gpgmepp/*
-
 %files doc
 %defattr (-, root, bin)
 %dir %attr (0755, root, sys) %{_prefix}
@@ -242,6 +218,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Rebuild with Solaris build flags.
 * Thu Jul 09 2009 - moinakg<at>belenix(dot)org
 - Set some executables as setuid/gid.
 - Add SocketSecurity implementation for Solaris.

@@ -13,9 +13,9 @@
 # PACKAGE NOT INCLUDED IN GNOME UMBRELLA ARC
 #
 %include Solaris.inc
-
-%define option_without_moz_nss_nspr 1
 %use firefox = firefox.spec
+
+%define option_with_apoc_adapter 0
 
 #####################################
 ##   Package Information Section   ##
@@ -78,6 +78,14 @@ Summary:       %{summary} - development files
 SUNW_BaseDir:  %{_basedir}
 %include default-depend.inc
 Requires:      %{name}
+
+%if %option_with_apoc_adapter
+%package apoc-adapter
+Summary:       %{summary} - Apoc Adapter
+SUNW_BaseDir:  %{_basedir}
+%include default-depend.inc
+Requires:      %{name}
+%endif
 
 #####################################
 ##   Package Preparation Section   ##
@@ -153,6 +161,35 @@ if $PKGCOND is_path_writable $BASEDIR/lib/%{firefox.name} > /dev/null 2>&1 ; the
 fi
 exit 0
 
+%if %option_with_apoc_adapter
+%post apoc-adapter
+PKGCOND=/usr/bin/pkgcond
+test -x $PKGCOND || exit 0
+if $PKGCOND is_path_writable $BASEDIR/lib/%{firefox.name} > /dev/null 2>&1 ; then
+  touch $BASEDIR/lib/%{firefox.name}/.autoreg
+
+  for f in components/compreg.dat components/xpti.dat; do
+      test -f $BASEDIR/lib/%{firefox.name}/$f && \
+        rm -f $BASEDIR/lib/%{firefox.name}/$f
+  done
+fi
+exit 0
+
+%postun apoc-adapter
+PKGCOND=/usr/bin/pkgcond
+test -x $PKGCOND || exit 0
+if $PKGCOND is_path_writable $BASEDIR/lib/%{firefox.name} > /dev/null 2>&1 ; then
+  touch $BASEDIR/lib/%{firefox.name}/.autoreg
+
+  for f in components/compreg.dat components/xpti.dat; do
+      test -f $BASEDIR/lib/%{firefox.name}/$f && \
+        rm -f $BASEDIR/lib/%{firefox.name}/$f
+  done
+fi
+exit 0
+
+%endif
+
 %files -f SUNWfirefox.list
 
 %doc -d firefox README.txt LICENSE 
@@ -184,6 +221,13 @@ exit 0
 %{_libdir}/firefox/xpidl
 %{_libdir}/firefox/xpt_dump
 %{_libdir}/firefox/xpt_link
+
+%if %option_with_apoc_adapter
+%files apoc-adapter
+%defattr(-, root, bin)
+%dir %attr (0755, root, bin) %{_libdir}
+%{_libdir}/%{firefox.name}/components/libmozapoc.so
+%endif
 
 %changelog
 * Thu Jun 11 2009 - brian.lu@sun.com
