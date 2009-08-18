@@ -1,5 +1,5 @@
-P SUNWj5dev
-P SUNWj5dmo
+P SUNWj6dev
+P SUNWj6dmo
 P SUNWhea
 P SUNWgdb
 P SUNWgm4
@@ -22,6 +22,7 @@ P SUNWlxml-devel
 P SUNWjpg-devel
 P SUNWpng-devel
 P SFEqt3-devel
+P SFEqt4-devel
 P SUNWmercurial
 P SUNWmdbdm
 P SUNWtcpdS
@@ -51,10 +52,8 @@ P SUNWPython-devel
 P SFExerces-c-devel
 P SFEreadline-devel
 P SFEopenmotif-devel
-P SFEkdewebdev3
 P SUNWflac-devel
 P SUNWlibtheora-devel
-P SFEdbus-qt3-devel
 P SUNWxorg-devel-docs
 P FSWxorg-devel-docs
 P SUNWuiu8
@@ -71,3 +70,18 @@ P SUNWgnome-media-devel
 P SUNWgnome-print-devel
 P SUNWgnome-python-libs-devel
 P SUNWgnome-vfs-devel
+P SFEsdl-devel
+P SFEautomoc
+P BELpkgbuild
+P SFEgcc
+P SFEgccruntime
+P SUNWioth
+P SUNWastdev
+P SUNWiwh
+P SFEbinutils-devel
+P SUNWtpm
+P SUNWgssdh
+P SUNWpostgr-82-devel
+P SUNWpostgr-83-devel
+P SUNWcpp
+P autobuilder
