@@ -1,0 +1,35 @@
+--- esound-0.2.37/configure.ac.orig	2007-02-26 16:59:11.000000000 -0500
++++ esound-0.2.37/configure.ac	2007-04-05 00:30:53.388740000 -0400
+@@ -193,7 +193,9 @@
+    CPPFLAGS="$CPPFLAGS -I/usr/include/mme"
+    AC_CHECK_HEADERS(mme/mme_api.h)
+    CPPFLAGS="$xCPPFLAGS"
+-   AM_PATH_ARTS(, HAVE_ARTS=yes, HAVE_ARTS=no)
++   dnl Comment this out as the macro is not found and we don't enable sound.
++   dnl AM_PATH_ARTS(, HAVE_ARTS=yes, HAVE_ARTS=no)
++   HAVE_ARTS=no
+ 
+    dnl Define the driver needed based on the first header file found
+ 
+@@ -349,6 +351,10 @@
+ CFLAGS="$CFLAGS $AUDIOFILE_CFLAGS"
+ LIBS="$LIBS $AUDIOFILE_LIBS"
+ 
++PKG_CHECK_MODULES(REAL_AUDIOFILE, audiofile >= 0.1.5)
++AC_SUBST(REAL_AUDIOFILE_CFLAGS)
++AC_SUBST(REAL_AUDIOFILE_LIBS)
++
+ build_esdplay=true
+ 
+ AM_CONDITIONAL(BUILD_ESDPLAY, $build_esdplay)
+@@ -424,7 +424,9 @@
+    LIBS="$esound_save_LIBS"
+ fi
+ 
+-AS_COMPILER_FLAG(-Wall, CFLAGS="$CFLAGS -Wall")
++dnl This macro is not in gnome-compiler-flags.m4. This option is invalid on
++dnl Solaris anyway.
++dnl AS_COMPILER_FLAG(-Wall, CFLAGS="$CFLAGS -Wall")
+ 
+ # set | sort; # just for double checking the script...
+ 

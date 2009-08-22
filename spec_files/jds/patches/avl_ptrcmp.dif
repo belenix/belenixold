@@ -1,0 +1,52 @@
+--- servers/slapd/proto-slap.h	2003/07/22 08:24:49	1.1
++++ servers/slapd/proto-slap.h	2003/07/22 08:25:56
+@@ -999,6 +999,9 @@
+ 	BerVarray *vals,
+ 	BerVarray addvals ));
+ 
++/* assumes (x) > (y) returns 1 if true, 0 otherwise */
++#define SLAP_PTRCMP(x, y) ((x) < (y) ? -1 : (x) > (y))
++
+ /*
+  * Other...
+  */
+--- servers/slapd/back-ldbm/attr.c	2003/07/22 08:25:02	1.1
++++ servers/slapd/back-ldbm/attr.c	2003/07/22 08:28:21
+@@ -27,7 +27,7 @@
+     AttrInfo	*a
+ )
+ {
+-	return desc - a->ai_desc;
++	return SLAP_PTRCMP(desc, a->ai_desc);
+ }
+ 
+ static int
+@@ -36,7 +36,7 @@
+     AttrInfo	*b
+ )
+ {
+-	return a->ai_desc - b->ai_desc;
++	return SLAP_PTRCMP(a->ai_desc, b->ai_desc);
+ }
+ 
+ void
+--- servers/slapd/back-bdb/attr.c	2003/07/22 08:25:08	1.1
++++ servers/slapd/back-bdb/attr.c	2003/07/22 08:29:13
+@@ -27,7 +27,7 @@
+ 	AttrInfo	*a
+ )
+ {
+-	return desc - a->ai_desc;
++	return SLAP_PTRCMP(desc, a->ai_desc);
+ }
+ 
+ static int
+@@ -36,7 +36,7 @@
+ 	AttrInfo	*b
+ )
+ {
+-	return a->ai_desc - b->ai_desc;
++	return SLAP_PTRCMP(a->ai_desc, b->ai_desc);
+ }
+ 
+ void

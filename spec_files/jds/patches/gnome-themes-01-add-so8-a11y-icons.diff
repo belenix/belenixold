@@ -1,0 +1,259 @@
+diff -urN gnome-themes-2.25.90-orig/configure.in gnome-themes-2.25.90-patched/configure.in
+--- gnome-themes-2.25.90-orig/configure.in	2009-01-30 15:19:39.000000000 +0000
++++ gnome-themes-2.25.90-patched/configure.in	2009-02-16 16:09:25.959933368 +0000
+@@ -213,7 +213,19 @@
+ icon-themes/Crux/scalable/status/Makefile
+ icon-themes/Crux/scalable/places/Makefile
+ icon-themes/HighContrast/Makefile
++icon-themes/HighContrast/16x16/Makefile
++icon-themes/HighContrast/16x16/apps/Makefile
++icon-themes/HighContrast/16x16/mimetypes/Makefile
++icon-themes/HighContrast/32x32/Makefile
++icon-themes/HighContrast/32x32/apps/Makefile
++icon-themes/HighContrast/32x32/mimetypes/Makefile
+ icon-themes/HighContrastInverse/Makefile
++icon-themes/HighContrastInverse/16x16/Makefile
++icon-themes/HighContrastInverse/16x16/apps/Makefile
++icon-themes/HighContrastInverse/16x16/mimetypes/Makefile
++icon-themes/HighContrastInverse/32x32/Makefile
++icon-themes/HighContrastInverse/32x32/apps/Makefile
++icon-themes/HighContrastInverse/32x32/mimetypes/Makefile
+ icon-themes/HighContrastLargePrint/Makefile
+ icon-themes/HighContrastLargePrint/36x36/Makefile
+ icon-themes/HighContrastLargePrint/36x36/animations/Makefile
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrast/16x16/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrast/16x16/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrast/16x16/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrast/16x16/Makefile.am	2009-02-16 16:32:04.269840500 +0000
+@@ -0,0 +1 @@
++SUBDIRS=apps mimetypes
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrast/16x16/apps/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrast/16x16/apps/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrast/16x16/apps/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrast/16x16/apps/Makefile.am	2009-02-16 16:32:50.885463757 +0000
+@@ -0,0 +1,16 @@
++NULL=
++
++icondir=	$(datadir)/icons/HighContrast/16x16/apps/
++
++icon_DATA=	\
++		staroffice-base.png \
++		staroffice-calc.png \
++		staroffice-draw.png \
++		staroffice-impress.png \
++		staroffice-main.png \
++		staroffice-math.png \
++		staroffice-printeradmin.png \
++		staroffice-writer.png \
++		$(NULL)
++
++EXTRA_DIST=	$(icon_DATA)
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrast/16x16/mimetypes/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrast/16x16/mimetypes/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrast/16x16/mimetypes/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrast/16x16/mimetypes/Makefile.am	2009-02-16 16:24:19.126186335 +0000
+@@ -0,0 +1,10 @@
++NULL=
++
++icondir=	$(datadir)/icons/HighContrast/16x16/mimetypes/
++
++icon_DATA=	\
++		staroffice-oasis-text-template.png \
++		staroffice-oasis-text.png \
++		$(NULL)
++
++EXTRA_DIST=	$(icon_DATA)
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrast/32x32/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrast/32x32/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrast/32x32/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrast/32x32/Makefile.am	2009-02-16 16:33:34.384956356 +0000
+@@ -0,0 +1 @@
++SUBDIRS=apps mimetypes
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrast/32x32/apps/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrast/32x32/apps/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrast/32x32/apps/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrast/32x32/apps/Makefile.am	2009-02-16 16:25:14.696566864 +0000
+@@ -0,0 +1,14 @@
++NULL=
++
++icondir=	$(datadir)/icons/HighContrast/32x32/apps/
++
++icon_DATA=	\
++		staroffice-base.png \
++		staroffice-calc.png \
++		staroffice-draw.png \
++		staroffice-impress.png \
++		staroffice-main.png \
++		staroffice-math.png \
++		staroffice-printeradmin.png \
++		staroffice-writer.png \
++		$(NULL)
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrast/32x32/mimetypes/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrast/32x32/mimetypes/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrast/32x32/mimetypes/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrast/32x32/mimetypes/Makefile.am	2009-02-16 16:33:53.475065118 +0000
+@@ -0,0 +1,10 @@
++NULL=
++
++icondir=	$(datadir)/icons/HighContrast/32x32/mimetypes/
++
++icon_DATA=	\
++		staroffice-oasis-text-template.png \
++		staroffice-oasis-text.png \
++		$(NULL)
++
++EXTRA_DIST=	$(icon_DATA)
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrast/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrast/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrast/Makefile.am	2009-01-14 12:06:03.000000000 +0000
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrast/Makefile.am	2009-02-16 16:42:34.482786702 +0000
+@@ -3,3 +3,5 @@
+ indextheme_DATA = index.theme
+ 
+ EXTRA_DIST=	$(indextheme_DATA)
++
++SUBDIRS= 16x16 32x32
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/16x16/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/16x16/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/16x16/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/16x16/Makefile.am	2009-02-16 16:38:06.273566793 +0000
+@@ -0,0 +1 @@
++SUBDIRS=apps mimetypes
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/16x16/apps/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/16x16/apps/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/16x16/apps/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/16x16/apps/Makefile.am	2009-02-16 16:39:53.593931390 +0000
+@@ -0,0 +1,17 @@
++NULL=
++
++icondir=	$(datadir)/icons/HighContrastInverse/16x16/apps/
++
++icon_DATA=	\
++		staroffice-base.png \
++		staroffice-calc.png \
++		staroffice-draw.png \
++		staroffice-impress.png \
++		staroffice-main.png \
++		staroffice-math.png \
++		staroffice-printeradmin.png \
++		staroffice-writer.png \
++		$(NULL)
++
++EXTRA_DIST=	$(icon_DATA)
++
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/16x16/mimetypes/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/16x16/mimetypes/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/16x16/mimetypes/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/16x16/mimetypes/Makefile.am	2009-02-16 16:26:07.311703051 +0000
+@@ -0,0 +1,11 @@
++NULL=
++
++icondir=	$(datadir)/icons/HighContrastInverse/16x16/mimetypes/
++
++icon_DATA=	\
++		staroffice-oasis-text-template.png \
++		staroffice-oasis-text.png \
++		$(NULL)
++
++EXTRA_DIST=	$(icon_DATA)
++
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/32x32/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/32x32/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/32x32/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/32x32/Makefile.am	2009-02-16 16:38:22.420246028 +0000
+@@ -0,0 +1 @@
++SUBDIRS=apps mimetypes
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/32x32/apps/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/32x32/apps/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/32x32/apps/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/32x32/apps/Makefile.am	2009-02-16 16:26:44.786760972 +0000
+@@ -0,0 +1,17 @@
++NULL=
++
++icondir=	$(datadir)/icons/HighContrastInverse/32x32/apps/
++
++icon_DATA=	\
++		staroffice-base.png \
++		staroffice-calc.png \
++		staroffice-draw.png \
++		staroffice-impress.png \
++		staroffice-main.png \
++		staroffice-math.png \
++		staroffice-printeradmin.png \
++		staroffice-writer.png \
++		$(NULL)
++
++EXTRA_DIST=	$(icon_DATA)
++
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/32x32/mimetypes/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/32x32/mimetypes/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/32x32/mimetypes/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/32x32/mimetypes/Makefile.am	2009-02-16 16:41:05.109543265 +0000
+@@ -0,0 +1,11 @@
++NULL=
++
++icondir=	$(datadir)/icons/HighContrastInverse/32x32/mimetypes/
++
++icon_DATA=	\
++		staroffice-oasis-text-template.png \
++		staroffice-oasis-text.png \
++		$(NULL)
++
++EXTRA_DIST=	$(icon_DATA)
++
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastInverse/Makefile.am	2009-01-14 12:05:42.000000000 +0000
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastInverse/Makefile.am	2009-02-16 16:42:08.098365662 +0000
+@@ -3,3 +3,5 @@
+ indextheme_DATA = index.theme
+ 
+ EXTRA_DIST=	$(indextheme_DATA)
++
++SUBDIRS= 16x16 32x32
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastLargePrint/48x48/apps/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastLargePrint/48x48/apps/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastLargePrint/48x48/apps/Makefile.am	2009-01-14 12:05:38.000000000 +0000
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastLargePrint/48x48/apps/Makefile.am	2009-02-16 16:43:31.585998783 +0000
+@@ -70,6 +70,14 @@
+ 		smc.png \
+ 		sound-juicer.png \
+ 		star.png \
++		staroffice-base.png \
++		staroffice-calc.png \
++		staroffice-draw.png \
++		staroffice-impress.png \
++		staroffice-main.png \
++		staroffice-math.png \
++		staroffice-printeradmin.png \
++		staroffice-writer.png \
+ 		system-file-manager.png \
+ 		utilities-terminal.png \
+ 		window-capplet.png \
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastLargePrint/48x48/mimetypes/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastLargePrint/48x48/mimetypes/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastLargePrint/48x48/mimetypes/Makefile.am	2009-01-14 12:05:41.000000000 +0000
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastLargePrint/48x48/mimetypes/Makefile.am	2009-02-16 16:44:08.979826042 +0000
+@@ -13,6 +13,8 @@
+ 		gnome-mime-application-x-core-file.png \
+ 		image-x-generic.png \
+ 		package-x-generic.png \
++		staroffice-oasis-text-template.png \
++		staroffice-oasis-text.png \
+ 		text-x-generic.png \
+ 		text-x-preview.png \
+ 		video-x-generic.png \
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastLargePrintInverse/48x48/apps/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastLargePrintInverse/48x48/apps/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastLargePrintInverse/48x48/apps/Makefile.am	2009-01-14 12:05:32.000000000 +0000
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastLargePrintInverse/48x48/apps/Makefile.am	2009-02-16 16:44:45.016114963 +0000
+@@ -70,6 +70,14 @@
+ 		smc.png \
+ 		sound-juicer.png \
+ 		star.png \
++		staroffice-base.png \
++		staroffice-calc.png \
++		staroffice-draw.png \
++		staroffice-impress.png \
++		staroffice-main.png \
++		staroffice-math.png \
++		staroffice-printeradmin.png \
++		staroffice-writer.png \
+ 		system-file-manager.png \
+ 		utilities-terminal.png \
+ 		window-capplet.png \
+diff -urN gnome-themes-2.25.90-orig/icon-themes/HighContrastLargePrintInverse/48x48/mimetypes/Makefile.am gnome-themes-2.25.90-patched/icon-themes/HighContrastLargePrintInverse/48x48/mimetypes/Makefile.am
+--- gnome-themes-2.25.90-orig/icon-themes/HighContrastLargePrintInverse/48x48/mimetypes/Makefile.am	2009-01-30 18:27:19.000000000 +0000
++++ gnome-themes-2.25.90-patched/icon-themes/HighContrastLargePrintInverse/48x48/mimetypes/Makefile.am	2009-02-16 16:45:11.383643179 +0000
+@@ -13,6 +13,8 @@
+ 		gnome-mime-application-x-core-file.png \
+ 		image-x-generic.png \
+ 		package-x-generic.png \
++		staroffice-oasis-text-template.png \
++		staroffice-oasis-text.png \
+ 		text-x-generic.png \
+ 		text-x-generic-template.png \
+ 		text-x-preview.png \

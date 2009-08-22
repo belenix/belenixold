@@ -1,0 +1,24 @@
+--- libffi-3.0.5/src/x86/ffitarget.h.patch2	2008-02-15 14:24:06.000000000 +1300
++++ libffi-3.0.5/src/x86/ffitarget.h	2008-06-06 00:19:04.440276530 +1200
+@@ -31,7 +31,7 @@
+ 
+ /* ---- System specific configurations ----------------------------------- */
+ 
+-#if defined (X86_64) && defined (__i386__)
++#if defined (X86_64) && (defined (__i386__) || defined (__i386))
+ #undef X86_64
+ #define X86
+ #endif
+@@ -54,10 +54,10 @@
+ #endif
+ 
+   /* ---- Intel x86 and AMD x86-64 - */
+-#if !defined(X86_WIN32) && (defined(__i386__) || defined(__x86_64__))
++#if !defined(X86_WIN32) && (defined(__i386__) || defined(__x86_64__) || defined (__i386))
+   FFI_SYSV,
+   FFI_UNIX64,   /* Unix variants all use the same ABI for x86-64  */
+-#ifdef __i386__
++#if defined (__i386__) || defined (__i386)
+   FFI_DEFAULT_ABI = FFI_SYSV,
+ #else
+   FFI_DEFAULT_ABI = FFI_UNIX64,

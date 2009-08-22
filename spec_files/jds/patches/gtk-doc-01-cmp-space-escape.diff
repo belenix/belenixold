@@ -1,0 +1,11 @@
+--- gtk-doc-1.11/gtkdoc-common.pl.in.ori	2009-03-18 06:42:54.971456339 +0000
++++ gtk-doc-1.11/gtkdoc-common.pl.in	2009-03-18 06:43:13.183143913 +0000
+@@ -51,7 +51,7 @@
+     my $exit_code = 1;
+ 
+     if (-e $old_file) {
+-	`cmp -s $old_file $new_file`;
++	`cmp -s "$old_file" "$new_file"`;
+ 	$exit_code = $? >> 8;
+ #	print "   cmp exit code: $exit_code ($?)\n";
+     }

@@ -1,0 +1,33 @@
+diff -urN java-access-bridge/impl/org/GNOME/Accessibility/ApplicationAccessible.java java-access-bridge-hacked/impl/org/GNOME/Accessibility/ApplicationAccessible.java
+--- java-access-bridge/impl/org/GNOME/Accessibility/ApplicationAccessible.java	2003-10-30 06:05:45.000000000 +1300
++++ java-access-bridge-hacked/impl/org/GNOME/Accessibility/ApplicationAccessible.java	2005-08-15 12:47:47.858600472 +1200
+@@ -94,7 +94,8 @@
+ 		  }
+ 		  public void windowOpened(WindowEvent e) {
+ 			  // System.out.println ("Window opened.");
+-              java.awt.Window win = e.getWindow();
++		      java.awt.Window win = e.getWindow();
++		      JavaBridge.dispatchWindowEvent (e.getSource(), "window:create");
+ 			  if (isToplevel( win )) {
+ 				  // Avoid duplication.
+                   if ( !vtoplevels.contains( win ) ) {
+@@ -108,7 +109,6 @@
+ 			  else {
+ 			  	System.out.println("WARNING: Unhandled Window type : " + win.toString());
+ 			  }
+-			  JavaBridge.dispatchWindowEvent (e.getSource(), "window:create");
+ 			  javax.accessibility.Accessible a_parent;
+               if ( e.getSource() instanceof javax.accessibility.Accessible ) {
+                   JavaBridge.traverseMenus(
+@@ -118,6 +118,11 @@
+ 							"object:children-changed:add",
+ 							0,
+ 							0);
++                          // This is a nasty hack to workaround lack of windowActivated notifications 
++                          // when a window is initially posted.  We assume here that windows always
++                          // get focus on posting, which is not universally true.
++			  JavaBridge.dispatchWindowEvent (e.getSource(), "window:activate");
++ 		  
+ 		  }
+ 	  };
+ 	  AWTEventListener globalListener = new AWTEventListener () {

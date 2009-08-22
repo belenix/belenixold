@@ -1,0 +1,19 @@
+--- /dev/null	2007-02-28 22:23:33.000000000 -0500
++++ audiofile-0.2.6/audiofile-uninstalled.pc.in	2007-02-28 22:28:09.585724000 -0500
+@@ -0,0 +1,6 @@
++Name: audiofile
++Description: audiofile
++Requires:
++Version: @VERSION@
++Libs: ${pc_top_builddir}/${pcfiledir}/libaudiofile/libaudiofile.la -lm
++Cflags: -I${pc_top_builddir}/${pcfiledir}/libaudiofile
+--- audiofile-0.2.6/configure.in.orig	2007-02-28 22:28:55.782024000 -0500
++++ audiofile-0.2.6/configure.in	2007-02-28 22:29:14.326955000 -0500
+@@ -94,6 +94,7 @@
+ AC_OUTPUT([
+ 	audiofile.spec
+ 	audiofile.pc
++	audiofile-uninstalled.pc
+ 	sfcommands/Makefile 
+ 	test/Makefile 
+ 	examples/Makefile 
