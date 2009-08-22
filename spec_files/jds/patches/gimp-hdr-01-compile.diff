@@ -1,0 +1,162 @@
+--- gimp-hdrtools-0.1/hdrtools.c.orig	2008-07-18 13:21:24.412734000 +0800
++++ gimp-hdrtools-0.1/hdrtools.c	2008-07-18 13:33:25.517065000 +0800
+@@ -1228,19 +1228,19 @@
+    g_object_set_data(G_OBJECT(gamma_spin), "preview", preview);
+ 
+ 
+-   gtk_signal_connect(GTK_OBJECT(dlg), "response",
+-                      GTK_SIGNAL_FUNC(dialog_response), 0);
+-   gtk_signal_connect(GTK_OBJECT(dlg), "destroy",
+-                      GTK_SIGNAL_FUNC(gtk_main_quit), 0);
+-   gtk_signal_connect(GTK_OBJECT(preview), "invalidated",
+-                      GTK_SIGNAL_FUNC(tonemap_image),
+-                      drawable);
+-   gtk_signal_connect(GTK_OBJECT(exposure_spin), "value_changed",
+-                      GTK_SIGNAL_FUNC(on_spin_changed),
+-                      &g_tonemap_vals.exposure);
+-   gtk_signal_connect(GTK_OBJECT(gamma_spin), "value_changed",
+-                      GTK_SIGNAL_FUNC(on_spin_changed),
+-                      &g_tonemap_vals.gamma);
++   g_signal_connect(dlg, "response",
++                    G_CALLBACK(dialog_response), 0);
++   g_signal_connect(dlg, "destroy",
++                    G_CALLBACK(gtk_main_quit), 0);
++   g_signal_connect(preview, "invalidated",
++                    G_CALLBACK(tonemap_image),
++                    drawable);
++   g_signal_connect(exposure_spin, "value_changed",
++                    G_CALLBACK(on_spin_changed),
++                    &g_tonemap_vals.exposure);
++   g_signal_connect(gamma_spin, "value_changed",
++                    G_CALLBACK(on_spin_changed),
++                    &g_tonemap_vals.gamma);
+    
+    gtk_widget_show(dlg);
+    
+@@ -1291,14 +1291,14 @@
+                              slider, 1, 0);
+    g_object_set_data(G_OBJECT(slider), "preview", preview);
+ 
+-   gtk_signal_connect(GTK_OBJECT(dlg), "response",
+-                      GTK_SIGNAL_FUNC(dialog_response), 0);
+-   gtk_signal_connect(GTK_OBJECT(dlg), "destroy",
+-                      GTK_SIGNAL_FUNC(gtk_main_quit), 0);
+-   gtk_signal_connect(GTK_OBJECT(preview), "invalidated",
+-                      GTK_SIGNAL_FUNC(convert_rgbe_to_rgbdiv8), drawable);
+-   gtk_signal_connect(GTK_OBJECT(slider), "value_changed",
+-                      GTK_SIGNAL_FUNC(on_slider_changed),
++   g_signal_connect(dlg, "response",
++                    G_CALLBACK(dialog_response), 0);
++   g_signal_connect(dlg, "destroy",
++                    G_CALLBACK(gtk_main_quit), 0);
++   g_signal_connect(preview, "invalidated",
++                    G_CALLBACK(convert_rgbe_to_rgbdiv8), drawable);
++   g_signal_connect(slider, "value_changed",
++                    G_CALLBACK(on_slider_changed),
+                       &g_rgbd8_vals.range);
+    
+    gtk_widget_show(dlg);
+@@ -1389,22 +1389,22 @@
+    g_object_set_data(G_OBJECT(uflchk), "exposure_spin", exposure_spin);
+    g_object_set_data(G_OBJECT(uflchk), "gamma_spin", gamma_spin);
+ 
+-   gtk_signal_connect(GTK_OBJECT(dlg), "response",
+-                      GTK_SIGNAL_FUNC(dialog_response), 0);
+-   gtk_signal_connect(GTK_OBJECT(dlg), "destroy",
+-                      GTK_SIGNAL_FUNC(gtk_main_quit), 0);
+-   gtk_signal_connect(GTK_OBJECT(tmchk), "clicked",
+-                      GTK_SIGNAL_FUNC(on_checkbox_clicked),
+-                      &g_tonemap_vals.tonemap);
+-   gtk_signal_connect(GTK_OBJECT(uflchk), "clicked",
+-                      GTK_SIGNAL_FUNC(on_file_levels_checked),
+-                      &g_tonemap_vals.usefilelevels);
+-   gtk_signal_connect(GTK_OBJECT(exposure_spin), "value_changed",
+-                      GTK_SIGNAL_FUNC(on_spin_changed),
+-                      &g_tonemap_vals.exposure);
+-   gtk_signal_connect(GTK_OBJECT(gamma_spin), "value_changed",
+-                      GTK_SIGNAL_FUNC(on_spin_changed),
+-                      &g_tonemap_vals.gamma);
++   g_signal_connect(dlg, "response",
++                    G_CALLBACK(dialog_response), 0);
++   g_signal_connect(dlg, "destroy",
++                    G_CALLBACK(gtk_main_quit), 0);
++   g_signal_connect(tmchk, "clicked",
++                    G_CALLBACK(on_checkbox_clicked),
++                    &g_tonemap_vals.tonemap);
++   g_signal_connect(uflchk, "clicked",
++                    G_CALLBACK(on_file_levels_checked),
++                    &g_tonemap_vals.usefilelevels);
++   g_signal_connect(exposure_spin, "value_changed",
++                    G_CALLBACK(on_spin_changed),
++                    &g_tonemap_vals.exposure);
++   g_signal_connect(gamma_spin, "value_changed",
++                    G_CALLBACK(on_spin_changed),
++                    &g_tonemap_vals.gamma);
+    
+    gtk_widget_show(dlg);
+    
+@@ -1494,22 +1494,22 @@
+    g_object_set_data(G_OBJECT(wlchk), "exposure_spin", exposure_spin);
+    g_object_set_data(G_OBJECT(wlchk), "gamma_spin", gamma_spin);
+ 
+-   gtk_signal_connect(GTK_OBJECT(dlg), "response",
+-                      GTK_SIGNAL_FUNC(dialog_response), 0);
+-   gtk_signal_connect(GTK_OBJECT(dlg), "destroy",
+-                      GTK_SIGNAL_FUNC(gtk_main_quit), 0);
+-   gtk_signal_connect(GTK_OBJECT(rlechk), "clicked",
+-                      GTK_SIGNAL_FUNC(on_checkbox_clicked),
+-                      &g_write_vals.rle);
+-   gtk_signal_connect(GTK_OBJECT(wlchk), "clicked",
+-                      GTK_SIGNAL_FUNC(on_write_levels_checked),
+-                      &g_write_vals.writelevels);
+-   gtk_signal_connect(GTK_OBJECT(exposure_spin), "value_changed",
+-                      GTK_SIGNAL_FUNC(on_spin_changed),
+-                      &g_write_vals.exposure);
+-   gtk_signal_connect(GTK_OBJECT(gamma_spin), "value_changed",
+-                      GTK_SIGNAL_FUNC(on_spin_changed),
+-                      &g_write_vals.gamma);
++   g_signal_connect(dlg, "response",
++                    G_CALLBACK(dialog_response), 0);
++   g_signal_connect(dlg, "destroy",
++                    G_CALLBACK(gtk_main_quit), 0);
++   g_signal_connect(rlechk, "clicked",
++                    G_CALLBACK(on_checkbox_clicked),
++                    &g_write_vals.rle);
++   g_signal_connect(wlchk, "clicked",
++                    G_CALLBACK(on_write_levels_checked),
++                    &g_write_vals.writelevels);
++   g_signal_connect(exposure_spin, "value_changed",
++                    G_CALLBACK(on_spin_changed),
++                    &g_write_vals.exposure);
++   g_signal_connect(gamma_spin, "value_changed",
++                    G_CALLBACK(on_spin_changed),
++                    &g_write_vals.gamma);
+    
+    gtk_widget_show(dlg);
+    
+--- gimp-hdrtools-0.1/Makefile.orig	2008-07-18 13:21:34.184384000 +0800
++++ gimp-hdrtools-0.1/Makefile	2008-07-18 13:55:38.240222000 +0800
+@@ -1,10 +1,10 @@
+ 
+ GIMPTOOL=gimptool-2.0
+ 
+-CC=gcc
+-CFLAGS=-g -O2 -Wall `$(GIMPTOOL) --cflags` -DGETTEXT_PACKAGE
+-LD=gcc
++CFLAGS=-xO2 -w `$(GIMPTOOL) --cflags` -DGETTEXT_PACKAGE $(EXTRA_CFLAGS)
++LD=$(CC)
+-LDFLAGS=
++LDFLAGS=$(EXTRA_LDFLAGS) 
++PREFIX=$(DESTDIR)
+ 
+ TARGET=hdrtools
+ 
+@@ -24,7 +24,7 @@
+ 	rm -f $(OBJS) $(TARGET)
+ 	
+ install: all
+-	$(GIMPTOOL) --install-bin $(TARGET)
++	$(GIMPTOOL) --prefix=$(PREFIX) --install-admin-bin $(TARGET)
+ 		
+ .c.o:
+ 	$(CC) -c $(CFLAGS) $<

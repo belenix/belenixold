@@ -1,0 +1,162 @@
+diff -ru dasher.orig/Data/glade/dasher.compose.glade dasher.speed/Data/glade/dasher.compose.glade
+--- dasher.orig/Data/glade/dasher.compose.glade	2009-03-17 18:17:09.000000000 +0100
++++ dasher.speed/Data/glade/dasher.compose.glade	2009-03-29 23:58:30.000000000 +0200
+@@ -683,12 +683,12 @@
+ 		      <property name="can_focus">True</property>
+ 		      <property name="climb_rate">0.10000000149</property>
+ 		      <property name="digits">1</property>
+-		      <property name="numeric">False</property>
+-		      <property name="update_policy">GTK_UPDATE_ALWAYS</property>
++		      <property name="numeric">True</property>
++		      <property name="update_policy">GTK_UPDATE_IF_VALID</property>
+ 		      <property name="snap_to_ticks">False</property>
+ 		      <property name="wrap">False</property>
+-		      <property name="adjustment">1 0.10000000149 8 0.10000000149 10 10</property>
+-		      <signal name="value_changed" handler="speed_changed" last_modification_time="Thu, 25 May 2006 16:50:04 GMT"/>
++		      <property name="adjustment">1 0.1 8 0.1 1 0</property>
++		      <signal name="value-changed" handler="speed_changed" />
+ 		    </widget>
+ 		    <packing>
+ 		      <property name="padding">0</property>
+diff -ru dasher.orig/Data/glade/dasher.direct.glade dasher.speed/Data/glade/dasher.direct.glade
+--- dasher.orig/Data/glade/dasher.direct.glade	2009-03-17 18:17:09.000000000 +0100
++++ dasher.speed/Data/glade/dasher.direct.glade	2009-03-29 23:52:42.000000000 +0200
+@@ -128,12 +128,12 @@
+ 	      <property name="can_focus">True</property>
+ 	      <property name="climb_rate">0.10000000149</property>
+ 	      <property name="digits">1</property>
+-	      <property name="numeric">False</property>
+-	      <property name="update_policy">GTK_UPDATE_ALWAYS</property>
++	      <property name="numeric">True</property>
++	      <property name="update_policy">GTK_UPDATE_IF_VALID</property>
+ 	      <property name="snap_to_ticks">False</property>
+ 	      <property name="wrap">False</property>
+-	      <property name="adjustment">1 0.10000000149 8 0.10000000149 10 10</property>
+-	      <signal name="value_changed" handler="speed_changed" last_modification_time="Thu, 25 May 2006 16:50:04 GMT"/>
++	      <property name="adjustment">1 0.1 8 0.1 1 0</property>
++	      <signal name="value-changed" handler="speed_changed" />
+ 	    </widget>
+ 	    <packing>
+ 	      <property name="padding">0</property>
+diff -ru dasher.orig/Data/glade/dasher.gameWIP.glade dasher.speed/Data/glade/dasher.gameWIP.glade
+--- dasher.orig/Data/glade/dasher.gameWIP.glade	2009-03-17 18:17:09.000000000 +0100
++++ dasher.speed/Data/glade/dasher.gameWIP.glade	2009-03-29 23:56:20.000000000 +0200
+@@ -817,13 +817,13 @@
+ 	      <property name="can_focus">True</property>
+ 	      <property name="climb_rate">0.10000000149</property>
+ 	      <property name="digits">1</property>
+-	      <property name="numeric">False</property>
+-	      <property name="update_policy">GTK_UPDATE_ALWAYS</property>
++	      <property name="numeric">True</property>
++	      <property name="update_policy">GTK_UPDATE_IF_VALID</property>
+ 	      <property name="snap_to_ticks">False</property>
+ 	      <property name="wrap">False</property>
+-	      <property name="adjustment">1 0.10000000149 8 0.10000000149 10 10</property>
+-	      <signal name="value_changed" handler="speed_changed" last_modification_time="Thu, 25 May 2006 16:50:04 GMT"/>
+-	      <signal name="focus-in-event" handler="test_focus_handler" last_modification_time="Fri, 02 Feb 2007 14:30:40 GMT"/>
++	      <property name="adjustment">1 0.1 8 0.1 1 0</property>
++	      <signal name="value-changed" handler="speed_changed" />
++	      <signal name="focus-in-event" handler="test_focus_handler" />
+ 	    </widget>
+ 	    <packing>
+ 	      <property name="padding">0</property>
+diff -ru dasher.orig/Data/glade/dasher.preferences.glade dasher.speed/Data/glade/dasher.preferences.glade
+--- dasher.orig/Data/glade/dasher.preferences.glade	2009-03-17 18:17:09.000000000 +0100
++++ dasher.speed/Data/glade/dasher.preferences.glade	2009-03-29 23:58:01.000000000 +0200
+@@ -261,8 +261,8 @@
+                                         <property name="visible">True</property>
+                                         <property name="can_focus">True</property>
+                                         <property name="update_policy">GTK_UPDATE_DISCONTINUOUS</property>
+-                                        <property name="adjustment">5.0999999999999996 0 100 0.10000000149 0.10000000149 0</property>
+-                                        <signal name="value_changed" handler="uniform_changed"/>
++                                        <property name="adjustment">5 0 100 0.1 0.1 0</property>
++                                        <signal name="value-changed" handler="uniform_changed"/>
+                                       </widget>
+                                       <packing>
+                                         <property name="expand">False</property>
+@@ -632,8 +632,8 @@
+                                       <widget class="GtkHScale" id="hscale1">
+                                         <property name="visible">True</property>
+                                         <property name="can_focus">True</property>
+-                                        <property name="adjustment">1 0.10000000149 8 0.10000000149 1 0</property>
+-                                        <signal name="value_changed" handler="PrefsSpeedSliderChanged"/>
++                                        <property name="adjustment">1 0.1 8 0.1 1 0</property>
++                                        <signal name="value-changed" handler="PrefsSpeedSliderChanged"/>
+                                       </widget>
+                                     </child>
+                                     <child>
+diff -ru dasher.orig/Data/glade/dasher.traditional.glade dasher.speed/Data/glade/dasher.traditional.glade
+--- dasher.orig/Data/glade/dasher.traditional.glade	2009-03-17 18:17:09.000000000 +0100
++++ dasher.speed/Data/glade/dasher.traditional.glade	2009-03-29 23:36:31.000000000 +0200
+@@ -578,13 +578,13 @@
+ 	      <property name="can_focus">True</property>
+ 	      <property name="climb_rate">0.10000000149</property>
+ 	      <property name="digits">1</property>
+-	      <property name="numeric">False</property>
+-	      <property name="update_policy">GTK_UPDATE_ALWAYS</property>
++	      <property name="numeric">True</property>
++	      <property name="update_policy">GTK_UPDATE_IF_VALID</property>
+ 	      <property name="snap_to_ticks">False</property>
+ 	      <property name="wrap">False</property>
+-	      <property name="adjustment">1 0.10000000149 8 0.10000000149 10 10</property>
+-	      <signal name="value_changed" handler="speed_changed" last_modification_time="Thu, 25 May 2006 16:50:04 GMT"/>
+-	      <signal name="focus-in-event" handler="test_focus_handler" last_modification_time="Fri, 02 Feb 2007 14:30:40 GMT"/>
++	      <property name="adjustment">1 0.1 8 0.1 1 0</property>
++	      <signal name="value-changed" handler="speed_changed" />
++	      <signal name="focus-in-event" handler="test_focus_handler" />
+ 	    </widget>
+ 	    <packing>
+ 	      <property name="padding">0</property>
+diff -ru dasher.orig/Data/glade/dashermaemo.preferences.glade dasher.speed/Data/glade/dashermaemo.preferences.glade
+--- dasher.orig/Data/glade/dashermaemo.preferences.glade	2009-03-17 18:17:09.000000000 +0100
++++ dasher.speed/Data/glade/dashermaemo.preferences.glade	2009-03-29 23:58:00.000000000 +0200
+@@ -214,8 +214,8 @@
+                                   <widget class="GtkHScale" id="hscale1">
+                                     <property name="visible">True</property>
+                                     <property name="can_focus">True</property>
+-                                    <property name="adjustment">0.10000000149 0.10000000149 8 0.10000000149 1 0</property>
+-                                    <signal name="value_changed" handler="PrefsSpeedSliderChanged"/>
++                                    <property name="adjustment">1 0.1 8 0.1 1 0</property>
++                                    <signal name="value-changed" handler="PrefsSpeedSliderChanged"/>
+                                   </widget>
+                                   <packing>
+                                     <property name="expand">False</property>
+@@ -680,8 +680,8 @@
+                                     <property name="visible">True</property>
+                                     <property name="can_focus">True</property>
+                                     <property name="update_policy">GTK_UPDATE_DISCONTINUOUS</property>
+-                                    <property name="adjustment">5 0 100 0.10000000149 0.10000000149 0</property>
+-                                    <signal name="value_changed" handler="uniform_changed"/>
++                                    <property name="adjustment">5 0 100 0.1 0.1 0</property>
++                                    <signal name="value-changed" handler="uniform_changed"/>
+                                   </widget>
+                                   <packing>
+                                     <property name="expand">False</property>
+diff -ru dasher.orig/Src/Gtk2/dasher_main.cpp dasher.speed/Src/Gtk2/dasher_main.cpp
+--- dasher.orig/Src/Gtk2/dasher_main.cpp	2009-03-17 18:16:50.000000000 +0100
++++ dasher.speed/Src/Gtk2/dasher_main.cpp	2009-03-29 23:47:52.000000000 +0200
+@@ -182,7 +182,7 @@
+ 
+ /* ... Message handling from main window widgets */
+ extern "C" gboolean dasher_main_cb_menu_command(GtkWidget *pWidget, gpointer pUserData);
+-extern "C" gboolean speed_changed(GtkWidget *pWidget, gpointer user_data);
++extern "C" void speed_changed(GtkWidget *pWidget, gpointer user_data);
+ extern "C" void alphabet_combo_changed(GtkWidget *pWidget, gpointer pUserData);
+ extern "C" void dasher_main_cb_filename_changed(DasherEditor *pEditor, gpointer pUserData);
+ extern "C" void dasher_main_cb_buffer_changed(DasherEditor *pEditor, gpointer pUserData);
+@@ -1409,13 +1409,10 @@
+   return FALSE; // TODO: Scheck semantics of return value
+ }
+ 
+-extern "C" gboolean 
++extern "C" void 
+ speed_changed(GtkWidget *pWidget, gpointer user_data) {
+   if(g_pDasherMain)
+-    return dasher_main_speed_changed(g_pDasherMain);
+-
+-  // TODO: Check callback return functions
+-  return false;
++    dasher_main_speed_changed(g_pDasherMain);
+ }
+ 
+ extern "C" void 

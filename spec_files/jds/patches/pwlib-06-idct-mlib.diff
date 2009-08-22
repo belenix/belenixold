@@ -1,0 +1,122 @@
+--- ./src/ptlib/common/jidctflt.cxx.org	2007-11-19 11:39:14.333297000 +0800
++++ ./src/ptlib/common/jidctflt.cxx	2007-11-19 12:48:36.796794000 +0800
+@@ -73,6 +73,12 @@
+ 
+ #include <stdint.h>
+ #include "tinyjpeg-internal.h"
++#ifdef SOLARIS
++#include "ptbuildopts.h"
++#endif
++#ifdef P_MEDIALIB
++#include <mlib.h>
++#endif
+ 
+ #define FAST_FLOAT float
+ #define DCTSIZE	   8
+@@ -122,6 +128,7 @@
+ void
+ tinyjpeg_idct_float (struct component *compptr, uint8_t *output_buf, int stride)
+ {
++#ifndef P_MEDIALIB
+   FAST_FLOAT tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
+   FAST_FLOAT tmp10, tmp11, tmp12, tmp13;
+   FAST_FLOAT z5, z10, z11, z12, z13;
+@@ -282,5 +289,8 @@
+     wsptr += DCTSIZE;		/* advance pointer to next row */
+     outptr += stride;
+   }
++#else
++  mlib_VideoIDCT8x8_U8_S16_NA(output_buf, compptr->DCT, stride);
++#endif  
+ }
+ 
+--- ./src/ptlib/common/tinyjpeg.cxx.org	2007-11-19 11:39:14.335828000 +0800
++++ ./src/ptlib/common/tinyjpeg.cxx	2007-11-19 12:25:44.006754000 +0800
+@@ -403,7 +403,15 @@
+    }
+ 
+   for (j = 0; j < 64; j++)
++#ifndef P_MEDIALIB
+     c->DCT[j] = DCT[zigzag[j]];
++#else
++  {
++    c->DCT[j] = DCT[zigzag[j]] * c->Q_table[j];
++    if (j == 0)
++      c->DCT[j] += 1024;
++  }
++#endif    
+ }
+ 
+ /*
+@@ -1559,7 +1567,11 @@
+  *
+  ******************************************************************************/
+ 
++#ifndef P_MEDIALIB
+ static void build_quantization_table(float *qtable, const unsigned char *ref_table)
++#else
++static void build_quantization_table(uint16_t *qtable, const unsigned char *ref_table)
++#endif
+ {
+   /* Taken from libjpeg. Copyright Independent JPEG Group's LLM idct.
+    * For float AA&N IDCT method, divisors are equal to quantization
+@@ -1579,7 +1591,11 @@
+ 
+   for (i=0; i<8; i++) {
+      for (j=0; j<8; j++) {
++#ifndef P_MEDIALIB
+        *qtable++ = ref_table[*zz++] * aanscalefactor[i] * aanscalefactor[j];
++#else
++       *qtable++ = ref_table[*zz++];
++#endif       
+      }
+    }
+ 
+@@ -1588,7 +1604,11 @@
+ static int parse_DQT(struct jdec_private *priv, const unsigned char *stream)
+ {
+   int qi;
++#ifndef P_MEDIALIB
+   float *table;
++#else
++  uint16_t *table;
++#endif
+   const unsigned char *dqt_block_end;
+ 
+   trace("> DQT marker\n");
+--- ./src/ptlib/common/tinyjpeg-internal.h.org	2007-11-19 11:39:14.337567000 +0800
++++ ./src/ptlib/common/tinyjpeg-internal.h	2007-11-19 12:47:57.414364000 +0800
+@@ -36,6 +36,9 @@
+ #define __TINYJPEG_INTERNAL_H_
+ 
+ #include <setjmp.h>
++#ifdef SOLARIS
++#include <ptbuildopts.h>
++#endif
+ 
+ #define SANITY_CHECK 1
+ 
+@@ -67,7 +70,11 @@
+ {
+   unsigned int Hfactor;
+   unsigned int Vfactor;
++#ifndef P_MEDIALIB
+   float *Q_table;		/* Pointer to the quantisation table to use */
++#else
++  uint16_t *Q_table;   /* Pointer to the quantisation table to use */
++#endif
+   struct huffman_table *AC_table;
+   struct huffman_table *DC_table;
+   short int previous_DC;	/* Previous DC coefficient */
+@@ -96,7 +103,11 @@
+   unsigned int reservoir, nbits_in_reservoir;
+ 
+   struct component component_infos[COMPONENTS];
++#ifndef P_MEDIALIB
+   float Q_tables[COMPONENTS][64];		/* quantization tables */
++#else
++  uint16_t Q_tables[COMPONENTS][64];   /* quantization tables */
++#endif
+   struct huffman_table HTDC[HUFFMAN_TABLES];	/* DC huffman tables   */
+   struct huffman_table HTAC[HUFFMAN_TABLES];	/* AC huffman tables   */
+   int default_huffman_table_initialized;

@@ -1,0 +1,29 @@
+--- SUNWgnome-archive-mgr-2.26.1/file-roller-2.26.1/src/dlg-add-folder.c.orig	2009-04-23 03:00:46.000000000 +0800
++++ SUNWgnome-archive-mgr-2.26.1/file-roller-2.26.1/src/dlg-add-folder.c	2009-04-24 11:56:14.701720000 +0800
+@@ -98,6 +98,7 @@
+ 	const char     *exclude_files;
+ 	const char     *exclude_folders;
+ 	char           *dest_dir;
++	char           *local_filename;
+ 
+ 
+ 	dlg_add_folder_save_last_options (data);
+@@ -153,8 +154,9 @@
+ 	if (utf8_only_spaces (exclude_folders))
+ 		exclude_folders = NULL;
+ 
++	local_filename = g_filename_from_uri (selected_folder,NULL,NULL);
+ 	dest_dir = build_uri (fr_window_get_current_location (window),
+-			      file_name_from_path (selected_folder),
++			      file_name_from_path (local_filename),
+ 			      NULL);
+ 
+ 	fr_window_archive_add_with_wildcard (window,
+@@ -166,6 +168,7 @@
+ 					     update,
+ 					     follow_links);
+ 
++	g_free (local_filename);
+ 	g_free (dest_dir);
+ 	g_free (selected_folder);
+ 	

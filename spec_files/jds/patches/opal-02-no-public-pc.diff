@@ -1,0 +1,22 @@
+Index: opal/opal.pc.in
+===================================================================
+--- opal/opal.pc.in	(revision 21139)
++++ opal/opal.pc.in	(working copy)
+@@ -6,13 +6,15 @@
+ machtype=@MACHTYPE@
+ ostype=@OSTYPE@
+ objdir=obj_@OSTYPE@_@MACHTYPE@${suffix}
++builddir=@OPALDIR@
++buildlibdir=${builddir}/lib_@OSTYPE@_@MACHTYPE@
+ 
+ Name: opal
+ Description: Open Phone Application Library
+ Version: @OPAL_VERSION@
+ Requires:@PKG_REQUIRES@
+-Libs: -L${libdir} -lopal${suffix} @PKG_LIBS@ 
+-Cflags: -I${includedir} -I${includedir}/opal @PKG_CFLAGS@
++Libs: -L${buildlibdir} -lopal${suffix} @PKG_LIBS@ 
++Cflags: -I${builddir}/include @PKG_CFLAGS@
+ 
+ #Optional OPAL features
+ OPAL_H323=@OPAL_H323@

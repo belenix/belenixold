@@ -1,0 +1,13 @@
+diff -ur gdesklets-0.36-orig/data/gdesklets.desktop.in gdesklets-0.36/data/gdesklets.desktop.in
+--- gdesklets-0.36-orig/data/gdesklets.desktop.in	2008-08-13 17:09:22.049387037 +0800
++++ gdesklets-0.36/data/gdesklets.desktop.in	2008-08-13 17:20:15.912361799 +0800
+@@ -1,7 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+ Name=gDesklets
+-_Comment=A desktop applet system for GNOME
++# SUN_BRANDING
++_Comment=Run small utility applications on your desktop background
+ Exec=gdesklets shell
+ Icon=gdesklets.png
+ Terminal=false

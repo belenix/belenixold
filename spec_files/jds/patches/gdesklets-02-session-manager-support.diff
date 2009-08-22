@@ -1,0 +1,60 @@
+--- gDesklets-0.36beta/main/client.py.orig	2007-11-22 11:30:36.753844000 +0800
++++ gDesklets-0.36beta/main/client.py	2007-11-22 11:31:18.018363000 +0800
+@@ -264,7 +264,8 @@
+ 
+     else:
+         daemon_path = os.path.join(HOME, "gdesklets-daemon")
+-        args = " ".join([ a for a in sys.argv if a.startswith("--") ])
++        args = " ".join([ a for a in sys.argv if a.endswith("translucent") | a.
++endswith("no-tray-icon") | a.endswith("debug")])
+         os.system("%s %s &" % (daemon_path, args))
+ 
+         pos = 0
+--- gDesklets-0.36beta/gdesklets.orig	2007-11-22 11:31:29.794530000 +0800
++++ gDesklets-0.36beta/gdesklets	2007-11-22 11:33:41.090780000 +0800
+@@ -218,13 +218,19 @@
+ 
+             try:
+                 index = self.__args.index("--sm-config-prefix")
+-                del args[index:index+2]
++                del self.__args[index:index+2]
+             except Exception:
+                 pass
+ 
+             try:
+                 index = self.__args.index("--sm-client-id")
+-                del args[index:index+2]
++                del self.__args[index:index+2]
++            except Exception:
++                pass
++
++            try:
++                index = self.__args.index("--screen")
++                del self.__args[index:index+2]
+             except Exception:
+                 pass
+ 
+--- gDesklets-0.36beta/gdesklets-daemon.orig	2007-11-22 11:33:49.980607000 +0800
++++ gDesklets-0.36beta/gdesklets-daemon	2007-11-22 11:35:20.644388000 +0800
+@@ -16,10 +16,12 @@
+ import pygtk
+ import sys
+ import utils
++import gnome
++import gnome.ui
+ 
+ 
+ 
+-
++VERSION="0.36"
+ # setup GTK
+ try:
+     pygtk.require("2.0")
+@@ -105,6 +107,7 @@
+ 
+     # enter gtk's mainloop
+     gtk.gdk.threads_enter()
++    gnome.init('gdesklets',VERSION)
+     gtk.main()
+     gtk.gdk.threads_leave()
+ 

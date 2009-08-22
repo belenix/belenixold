@@ -1,0 +1,12 @@
+diff -ur orca-2.23.90-orig//orca.desktop.in orca-2.23.90//orca.desktop.in
+--- orca-2.23.90-orig//orca.desktop.in	Thu Aug 21 16:22:48 2008
++++ orca-2.23.90//orca.desktop.in	Thu Aug 21 16:23:35 2008
+@@ -1,6 +1,7 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+-_Name=Orca Screen Reader and Magnifier
++# SUN_BRANDING
++_Name=Screen Reader and Magnifier
+ _Comment=Present on-screen information as speech or braille, or magnify the screen
+ Exec=orca
+ Icon=orca

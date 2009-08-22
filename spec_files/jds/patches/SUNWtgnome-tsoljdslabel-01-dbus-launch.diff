@@ -1,0 +1,20 @@
+diff -ruN tsoljdslabel-0.6.3.orig/Xsession.tjds tsoljdslabel-0.6.3.hacked/Xsession.tjds
+--- tsoljdslabel-0.6.3.orig/Xsession.tjds	2008-08-22 00:13:28.000000000 +0100
++++ tsoljdslabel-0.6.3.hacked/Xsession.tjds	2008-09-19 21:32:10.153150000 +0100
+@@ -21,4 +21,16 @@
+ 
+ command=/usr/dt/bin/Xsession
+ 
++# Save a copy of the user's SHELL value and restore after dbus-launch command
++shell_saved=$SHELL
++
++# Tell dbus-launch we want the environment value in ksh compatible syntax
++export SHELL=/bin/ksh
++eval `dbus-launch --exit-with-session --sh-syntax`
++
++# unset SHELL and restore user's value
++unset SHELL
++export SHELL=$shell_saved
++
++
+ exec $command

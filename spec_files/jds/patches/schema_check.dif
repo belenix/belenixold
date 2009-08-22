@@ -1,0 +1,98 @@
+--- servers/slapd/schema_check.c	2003/06/26 13:12:39	1.1
++++ servers/slapd/schema_check.c	2003/06/26 14:56:05
+@@ -21,6 +21,11 @@
+ 	ObjectClass *oc,
+ 	struct berval *ocname );
+ 
++static int entry_naming_check(
++        Entry *e,
++        const char** text,
++        char *textbuf, size_t textlen );
++
+ /*
+  * entry_schema_check - check that entry e conforms to the schema required
+  * by its object class(es).
+@@ -198,6 +203,12 @@
+ 		return LDAP_NO_OBJECT_CLASS_MODS;
+ 	}
+ 
++        /* naming check */
++        rc = entry_naming_check( e, text, textbuf, textlen );
++        if( rc != LDAP_SUCCESS ) {
++                return rc;
++        }
++
+ 	/* check that the entry has required attrs for each oc */
+ 	for ( i = 0; aoc->a_vals[i].bv_val != NULL; i++ ) {
+ 		if ( (oc = oc_bvfind( &aoc->a_vals[i] )) == NULL ) {
+@@ -589,3 +600,70 @@
+ 	return structural_class( ocmod->sml_bvalues, sc, NULL,
+ 		text, textbuf, textlen );
+ }
++
++static int
++entry_naming_check(
++        Entry *e,
++        const char** text,
++        char *textbuf, size_t textlen )
++{
++        /* naming check */
++        LDAPRDN         *rdn = NULL;
++        const char      *p = NULL;
++        ber_len_t       cnt;
++        int             rc = LDAP_SUCCESS;
++
++        /*
++         * Get attribute type(s) and attribute value(s) of our RDN
++         */
++        if ( ldap_bv2rdn( &e->e_name, &rdn, (char **)&p,
++                LDAP_DN_FORMAT_LDAP ) )
++        {
++                *text = "unrecongized attribute type(s) in RDN";
++                return LDAP_INVALID_DN_SYNTAX;
++        }
++
++        /* Check that each AVA of the RDN is present in the entry */
++        /* FIXME: Should also check that each AVA lists a distinct type */
++        for ( cnt = 0; (*rdn)[cnt]; cnt++ ) {
++                LDAPAVA *ava = (*rdn)[cnt];
++                AttributeDescription *desc = NULL;
++                Attribute *attr;
++                const char *errtext;
++
++                rc = slap_bv2ad( &ava->la_attr, &desc, &errtext );
++                if ( rc != LDAP_SUCCESS ) {
++                        snprintf( textbuf, textlen, "%s (in RDN)", errtext );
++                        break;
++                }
++
++                /* find the naming attribute */
++                attr = attr_find( e->e_attrs, desc );
++                if ( attr == NULL ) {
++                        snprintf( textbuf, textlen,
++                                "naming attribute '%s' is not present in entry",
++                                ava->la_attr.bv_val );
++                        rc = LDAP_NAMING_VIOLATION;
++                        break;
++                }
++
++                if( ava->la_flags & LDAP_AVA_BINARY ) {
++                        snprintf( textbuf, textlen,
++                                "value of naming attribute '%s' in unsupported BER form",
++                                ava->la_attr.bv_val );
++                        rc = LDAP_NAMING_VIOLATION;
++                }
++
++                if ( value_find( desc, attr->a_vals, &ava->la_value ) != 0 ) {
++                        snprintf( textbuf, textlen,
++                                "value of naming attribute '%s' is not present in entry",
++                                ava->la_attr.bv_val );
++                        rc = LDAP_NAMING_VIOLATION;
++                        break;
++                }
++        }
++
++        ldap_rdnfree( rdn );
++        return rc;
++}
++

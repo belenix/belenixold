@@ -1,0 +1,11 @@
+--- gnome-icon-theme-2.23.2/configure.in.orig	2008-06-16 16:29:40.879226410 +0100
++++ gnome-icon-theme-2.23.2/configure.in	2008-06-16 16:32:13.510316488 +0100
+@@ -51,7 +51,7 @@
+                     have_utils=yes, have_utils=no)
+    if test "x$have_utils" = "xyes"; then
+       UTILS_PATH="`$PKG_CONFIG --variable=program_path icon-naming-utils`"
+-      ICONMAP="$UTILS_PATH/icon-name-mapping"
++      ICONMAP="icon-name-mapping"
+       AC_MSG_RESULT([yes])
+    else
+       AC_MSG_RESULT([no])

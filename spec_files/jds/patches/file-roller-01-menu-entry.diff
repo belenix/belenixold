@@ -1,0 +1,12 @@
+--- file-roller-2.23.5/data/file-roller.desktop.in.in.orig	2008-08-05 11:04:29.857248599 +0100
++++ file-roller-2.23.5/data/file-roller.desktop.in.in	2008-08-05 11:04:52.728734997 +0100
+@@ -1,7 +1,8 @@
+ [Desktop Entry]
+ _Name=Archive Manager
+ _GenericName=Archive Manager
+-_Comment=Create and modify an archive
++# SUN_BRANDING
++_Comment=View, create and edit gzip, tar and other types of archive files
+ TryExec=file-roller
+ Exec=file-roller %U
+ StartupNotify=true

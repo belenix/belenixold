@@ -1,0 +1,11 @@
+--- opal-3.4.2/opal.m4.orig	2009-04-24 08:36:45.011122193 +0530
++++ opal-3.4.2/opal.m4	2009-04-24 08:36:57.753111868 +0530
+@@ -107,7 +107,7 @@
+                         [DEBUG_BUILD=no])
+            case "$target_os" in
+                solaris*)
+-                 opal_release_flags="-xO3 -DSOLARIS"
++                 opal_release_flags="-O3 -DSOLARIS"
+                  opal_debug_flags="-g -D_DEBUG -DSOLARIS"
+                ;;
+                *)
