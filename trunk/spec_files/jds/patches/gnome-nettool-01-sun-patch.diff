@@ -1,0 +1,321 @@
+diff -urN gnome-nettool-2.26.0/configure.in ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/configure.in
+--- gnome-nettool-2.26.0/configure.in	2009-03-17 02:43:58.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/configure.in	2009-03-27 17:44:23.401338000 +0000
+@@ -12,11 +12,16 @@
+ 
+ IT_PROG_INTLTOOL([0.35.0])
+ 
++dnl *** checks for socket, nsl, and kstat libraries ***
++AC_CHECK_FUNC(socket,,[AC_CHECK_LIB(socket,socket)])
++AC_CHECK_FUNC(gethostbyname,,[AC_CHECK_LIB(nsl,gethostbyname)])
++AC_CHECK_FUNC(kstat_open,,[AC_CHECK_LIB(kstat,kstat_open)])
++
+ AC_ISC_POSIX
+ AC_PROG_CC
+ AC_HEADER_STDC([])
+ AC_CHECK_HEADERS(sys/sockio.h)
+-AC_CHECK_HEADERS(sys/socket.h ifaddrs.h,,AC_MSG_ERROR(Required header not found: $ac_header))
++AC_CHECK_HEADERS(sys/socket.h,,AC_MSG_ERROR(Required header not found: $ac_header))
+ dnl AC_ARG_PROGRAM
+ AM_PROG_LIBTOOL
+ 
+diff -urN gnome-nettool-2.26.0/src/Makefile.am ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/Makefile.am
+--- gnome-nettool-2.26.0/src/Makefile.am	2008-03-25 04:25:11.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/Makefile.am	2009-03-27 17:44:23.403061000 +0000
+@@ -8,7 +8,7 @@
+ 	@NETTOOL_CFLAGS@
+ 
+ LDADD =				\
+-	$(NETTOOL_LIBS)	
++	$(NETTOOL_LIBS)
+ 
+ bin_PROGRAMS = gnome-nettool
+ 
+@@ -29,7 +29,9 @@
+ 	util-mii-wireless.h \
+ 	main.c
+ 
+-gnome_nettool_LDADD = @NETTOOL_LIBS@
++gnome_nettool_LDADD = @NETTOOL_LIBS@	\
++			-lsocket	\
++			-lnsl
+ 
+ EXTRA_DIST  = \
+ 	gnome-nettool.desktop.in \
+diff -urN gnome-nettool-2.26.0/src/callbacks.c ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/callbacks.c
+--- gnome-nettool-2.26.0/src/callbacks.c	2008-12-12 03:03:54.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/callbacks.c	2009-03-27 17:44:23.403858000 +0000
+@@ -306,7 +306,7 @@
+ }
+ 
+ void
+-on_about_activate (gpointer window, GtkWidget *menu_item)
++on_about_activate (GtkWidget *menu_item, gpointer window)
+ {
+ 	const gchar *authors[] = { 
+ 		"Germán Poo Caamaño <gpoo@gnome.org>", 
+diff -urN gnome-nettool-2.26.0/src/callbacks.h ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/callbacks.h
+--- gnome-nettool-2.26.0/src/callbacks.h	2008-12-12 01:44:23.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/callbacks.h	2009-03-27 17:44:23.404065000 +0000
+@@ -36,6 +36,6 @@
+                      guint            page_num,
+                      gpointer         data);
+ 
+-void on_about_activate (gpointer window, GtkWidget *menu_item);
++void on_about_activate (GtkWidget *menu_item, gpointer window);
+ 
+ void on_help_activate (gpointer window, GtkWidget *menu_item);
+diff -urN gnome-nettool-2.26.0/src/main.c ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/main.c
+--- gnome-nettool-2.26.0/src/main.c	2009-03-17 02:15:43.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/main.c	2009-03-27 17:44:23.404612000 +0000
+@@ -54,7 +54,7 @@
+ main (int argc, char *argv[])
+ {
+ 	GtkWidget *window;
+-	GtkWidget *menu_beep;
++	GtkWidget *menu_beep, *menu_quit, *menu_about;
+ 	GladeXML *xml;
+ 	GtkWidget *notebook;
+ 	GtkWidget *statusbar;
+@@ -155,6 +155,7 @@
+ 		current_page = INFO;
+ 		info_set_nic (info, info_input);
+ 	}
++
+ 	if (ping_input) {
+ 		current_page = PING;
+ 		netinfo_set_host (pinger, ping_input);
+@@ -215,11 +216,24 @@
+ 	g_object_set_data (G_OBJECT (notebook), "finger", finger);
+ 	g_object_set_data (G_OBJECT (notebook), "whois", whois);
+ 	
++	menu_quit = glade_xml_get_widget (xml, "m_quit");
++
++	g_signal_connect (G_OBJECT (menu_quit), "activate",
++                          G_CALLBACK (gn_quit_app),
++                          NULL);
++
+ 	menu_beep = glade_xml_get_widget (xml, "m_beep");
+ 
+ 	g_signal_connect (G_OBJECT (menu_beep), "activate",
+ 			  G_CALLBACK (on_beep_activate),
+ 			  (gpointer) pinger); 
++
++	menu_about = glade_xml_get_widget (xml, "m_about");
++
++	g_signal_connect (G_OBJECT (menu_about), "activate",
++                          G_CALLBACK (on_about_activate),
++                          (gpointer) window);
++
+ 	
+ 	glade_xml_signal_autoconnect (xml);
+ 	g_object_unref (G_OBJECT (xml));
+@@ -441,6 +455,9 @@
+ 	netstat->button = glade_xml_get_widget (xml, "netstat_button");
+ 	netstat->routing = glade_xml_get_widget (xml, "netstat_routing");
+ 	netstat->protocol = glade_xml_get_widget (xml, "netstat_protocol");
++#if defined(sun)
++	gtk_widget_hide (netstat->protocol);
++#endif
+ 	netstat->multicast = glade_xml_get_widget (xml, "netstat_multicast");
+ 	netstat->sensitive = NULL;
+ 	netstat->label_run = _("Netstat");
+diff -urN gnome-nettool-2.26.0/src/netstat.c ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/netstat.c
+--- gnome-nettool-2.26.0/src/netstat.c	2009-03-17 02:15:43.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/netstat.c	2009-03-27 17:44:23.405184000 +0000
+@@ -110,13 +110,21 @@
+ 	g_return_val_if_fail (netinfo != NULL, NULL);
+ 	
+ 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (netinfo->routing))) {
+-		/* Works for Solaris and Linux */
++#if defined(sun)
++		/* Works for Solaris */
++		if (netinfo_is_ipv6_enable ()) {
++			option = g_strdup ("-rn -f inet -f inet6");
++		} else {
++			option = g_strdup ("-rn -f inet");
++		}
++#else
++		/* Works for Linux */
+ 		if (netinfo_is_ipv6_enable ()) {
+ 			option = g_strdup ("-rn -A inet -A inet6");
+ 		} else {
+ 			option = g_strdup ("-rn -A inet");
+ 		}
+-
++#endif
+ 		if (netinfo->stbar_text)
+ 			g_free (netinfo->stbar_text);
+ 		netinfo->stbar_text = g_strdup (_("Getting routing table"));
+@@ -485,7 +493,7 @@
+ 	g_return_if_fail (line != NULL);
+ 
+ 	count = strip_route_line (line, &data);
+-#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
++#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(sun)
+ 	if (count == 6) {
+ #else
+ 	if ((count == 8) || (count == 7)) {
+@@ -541,7 +549,11 @@
+ 		gtk_list_store_set (GTK_LIST_STORE (model), &iter,
+ 					0, data.destination,
+ 					1, data.gateway,
++#if defined(sun)
++					2, NULL,
++#else
+ 					2, data.netmask,
++#endif
+ 					3, data.iface, -1);
+ 
+ 		gtk_tree_view_set_model (widget, model);
+@@ -562,7 +574,7 @@
+ 	gchar **items;
+ #endif
+ 
+-#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__)
++#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(sun)
+ 	count = sscanf (line, NETSTAT_ROUTE_FORMAT,
+ 			data->destination,
+ 			data->gateway, flags,
+@@ -718,9 +730,15 @@
+ 	gint count = 0;
+ 	gint members;
+ 
++#if defined(sun)
++	count = sscanf (line, NETSTAT_MULTICAST_FORMAT,
++			data->iface,
++			data->group, &members);
++#else
+ 	count = sscanf (line, NETSTAT_MULTICAST_FORMAT,
+ 			data->iface,
+ 			&members, data->group);
++#endif
+ 
+ 	snprintf ((data)->members, 30, "%d", members);
+ 	
+diff -urN gnome-nettool-2.26.0/src/netstat.h ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/netstat.h
+--- gnome-nettool-2.26.0/src/netstat.h	2008-12-10 00:38:30.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/netstat.h	2009-03-27 17:44:23.406076000 +0000
+@@ -34,10 +34,19 @@
+ #   define NETSTAT_PROTOCOL_FORMAT "%s %d %d %d.%d.%d.%d.%s %s %s"
+ #   define ALT_NETSTAT_PROTOCOL_FORMAT "%s %d %d *.%s %s %s"
+ #   define NETSTAT_ROUTE_FORMAT "%s %s %s %d %d %s"
++#   define NETSTAT_ROUTE6_FORMAT "%s %s %s %d %d %d %s"
+ #   define NETSTAT_MULTICAST_FORMAT "%s %d %s"
+ 
++#elif defined(sun)
++
++#   define NETSTAT_PROTOCOL_FORMAT "%s %d %d %s %s %s"
++#   define NETSTAT_ROUTE_FORMAT "%s %s %s %d %d %s"
++#   define NETSTAT_ROUTE6_FORMAT "%s %s %s %d %d %d %s"
++#   define NETSTAT_MULTICAST_FORMAT "%s %s %d"
++
+ #endif
+ 
++
+ typedef enum {
+ 	NONE,
+ 	ROUTE,
+diff -urN gnome-nettool-2.26.0/src/ping.c ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/ping.c
+--- gnome-nettool-2.26.0/src/ping.c	2008-12-10 00:38:44.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/ping.c	2009-03-27 17:45:30.906813000 +0000
+@@ -93,8 +93,13 @@
+ 		while (nodeavailable) {
+ 			gtk_tree_model_get (results, &node, 
+ 					    ICMP_SEQ_COLUMN, &seqnumber, -1);
++#if defined(sun)
++			index = seqnumber - rangemin;
++			if (seqnumber >= rangemin) {
++#else
+ 			index = seqnumber - rangemin - 1;
+ 			if (seqnumber > rangemin) {
++#endif
+ 				gtk_tree_model_get (results, &node, 
+ 						    SRTT_COLUMN, &srtt_str, 
+ 						    -1);
+@@ -193,8 +198,13 @@
+ 		}
+ 		draw_centered_text (widget, x, line1h, tmpstr);
+ 		g_free (tmpstr);
++#if defined(sun)
++		if (index + rangemin <= rangemax) {
++			tmpstr = g_strdup_printf ("%d", index + rangemin);
++#else
+ 		if (index + rangemin + 1 <= rangemax) {
+ 			tmpstr = g_strdup_printf ("%d", index + rangemin + 1);
++#endif
+ 		} else {
+ 			tmpstr = g_strdup ("-");
+ 		}
+@@ -294,7 +304,11 @@
+ 		program = util_find_program_dialog ("ping", parent);
+ 		break;
+ 	case IPV6:
++#if defined(sun)
++		program = util_find_program_dialog ("ping", parent);
++#else
+ 		program = util_find_program_dialog ("ping6", parent);
++#endif
+ 		
+ 		break;
+ 	case -1:
+@@ -308,7 +322,7 @@
+ 		if (count == -1) {
+ 			count_string = g_strdup_printf(" ");
+ 		} else {
+-#if defined(__sun__) || defined(__hpux__)
++#if defined(sun) || defined(__hpux__)
+ 			count_string = g_strdup_printf("%d", count);
+ #else
+ 			count_string = g_strdup_printf(" -c %d ", count);
+@@ -317,7 +331,7 @@
+ 
+ 		if (ip_version == IPV4) {
+ 			command =
+-#if defined(__sun__) || defined(__hpux__)
++#if defined(__hpux__) || defined(sun)
+ 				g_strdup_printf (PING_PROGRAM_FORMAT, program, 
+ 						host, count_string);
+ #else
+@@ -326,7 +340,7 @@
+ #endif
+ 		} else {
+ 			command =
+-#if defined(__sun__) || defined(__hpux__)
++#if defined(sun) || defined(__hpux__)
+ 				g_strdup_printf (PING_PROGRAM_FORMAT_6, program, 
+ 						host, count_string);
+ #else
+diff -urN gnome-nettool-2.26.0/src/ping.h ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/ping.h
+--- gnome-nettool-2.26.0/src/ping.h	2008-12-10 00:38:44.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/ping.h	2009-03-27 17:44:23.407006000 +0000
+@@ -36,11 +36,11 @@
+ #   define PING_PROGRAM_FORMAT_6 "%s ping6%s-n %s"
+ #   define PING_FORMAT "%d bytes from %s icmp_seq=%d ttl=%d time=%s %s"
+ #   define PING_PARAMS_6
+-#elif defined(__sun__) 
++#elif defined(sun) 
+     /*  <path to program> ping -s -n <host> [<count>] */
+-#   define PING_PROGRAM_FORMAT "%s ping -s -n %s 56%s"
+-#   define PING_PROGRAM_FORMAT_6 "%s ping -s -A inet6 -a -n %s 56%s"
+-#   define PING_FORMAT "%d bytes from %s icmp_seq=%d. time=%f %s"
++#   define PING_PROGRAM_FORMAT "%s ping -s -n %s 56 %s"
++#   define PING_PROGRAM_FORMAT_6 "%s ping -s -A inet6 -a -n %s 56 %s"
++#   define PING_FORMAT "%d bytes from %s icmp_seq=%d. time=%s %s"
+ #   define PING_PARAMS_5
+ #elif defined(__hpux__)
+ #   define PING_PROGRAM_FORMAT "%s ping %s -n%s"
+diff -urN gnome-nettool-2.26.0/src/utils.h ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/utils.h
+--- gnome-nettool-2.26.0/src/utils.h	2008-12-08 15:35:27.000000000 +0000
++++ ../SUNWgnome-nettool-2.26.0.hacked/gnome-nettool-2.26.0/src/utils.h	2009-03-27 17:44:23.407754000 +0000
+@@ -29,6 +29,10 @@
+ #  include <config.h>
+ #endif
+ 
++#define gethostbyname2(name, domain) getipnodebyname((name), (domain), 0, &g_n_err_macro)
++int g_n_err_macro;
++
++
+ #if (GLIB_MINOR_VERSION < 2)
+ 
+ #  define _g_vsprintf  vsprintf

@@ -1,0 +1,13 @@
+--- gnome-mag-0.14.5/magnifier/x11/gmag-graphical-server.c.orig	2007-06-07 16:28:12.220827760 +0100
++++ gnome-mag-0.14.5/magnifier/x11/gmag-graphical-server.c	2007-06-07 16:35:33.729120677 +0100
+@@ -49,6 +49,10 @@
+ 
+ #include <gdk/gdkx.h>
+ #include <gtk/gtk.h>
++/* From /usr/include/gtk-2.0/gdk-pixbuf/gdk-pixbuf-io.h */
++extern gboolean gdk_pixbuf_set_option  (GdkPixbuf   *pixbuf,
++                                 const gchar *key,
++                                 const gchar *value);
+ 
+ enum {
+ 	STRUT_LEFT = 0,

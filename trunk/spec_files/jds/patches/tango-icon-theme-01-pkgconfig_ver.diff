@@ -1,0 +1,11 @@
+--- tango-icon-theme-0.6.3/configure.ac.orig	2006-01-05 17:52:53.158393000 +0000
++++ tango-icon-theme-0.6.3/configure.ac	2006-01-05 17:53:10.570392000 +0000
+@@ -33,7 +33,7 @@
+                  have_utils=yes, have_utils=no)
+ if test "x$have_utils" = "xyes"; then
+    UTILS_PATH="`$PKG_CONFIG --variable=program_path icon-naming-utils`"
+-   ICONMAP="$UTILS_PATH/icon-name-mapping"
++   ICONMAP="icon-name-mapping"
+    AC_SUBST(ICONMAP)
+    AC_MSG_RESULT([yes])
+ else

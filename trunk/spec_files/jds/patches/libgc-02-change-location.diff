@@ -1,0 +1,10 @@
+--- gc-7.1/bdw-gc.pc.in.old	Fri Feb 20 13:52:44 2009
++++ gc-7.1/bdw-gc.pc.in	Fri Feb 20 13:53:07 2009
+@@ -6,5 +6,5 @@
+ Name: Boehm-Demers-Weiser Conservative Garbage Collector
+ Description: A garbage collector for C and C++
+ Version: @PACKAGE_VERSION@
+-Libs: -L${libdir} -lgc
++Libs: -L${libdir} -R${libdir} -lgc
+-Cflags: -I${includedir}
++Cflags: -I${includedir} -L${libdir} -lgc

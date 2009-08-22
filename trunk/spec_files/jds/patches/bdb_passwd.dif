@@ -1,0 +1,24 @@
+--- servers/slapd/back-bdb/passwd.c	16 Mar 2003 05:03:23 -0000	1.44
++++ servers/slapd/back-bdb/passwd.c	22 Mar 2003 15:59:41 -0000	1.46
+@@ -39,8 +39,8 @@
+ 	struct berval id = { 0, NULL };
+ 	struct berval new = { 0, NULL };
+ 
+-	struct berval dn;
+-	struct berval ndn;
++	struct berval dn = { 0, NULL };
++	struct berval ndn = { 0, NULL };
+ 
+ 	u_int32_t	locker = 0;
+ 	DB_LOCK		lock;
+@@ -278,6 +278,10 @@
+ 		
+ 	if( hash.bv_val != NULL ) {
+ 		free( hash.bv_val );
++	}
++
++	if( ndn.bv_val != NULL ) {
++		free( ndn.bv_val );
+ 	}
+ 
+ 	if( ltid != NULL ) {

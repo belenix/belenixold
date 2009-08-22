@@ -1,0 +1,14 @@
+diff -ur ghex-2.22.0-orig/ghex.desktop.in ghex-2.22.0/ghex.desktop.in
+--- ghex-2.22.0-orig/ghex.desktop.in	2008-08-15 16:14:05.580429868 +0800
++++ ghex-2.22.0/ghex.desktop.in	2008-08-15 16:14:43.741561732 +0800
+@@ -1,6 +1,8 @@
+ [Desktop Entry]
+ Encoding=UTF-8
+-_Name=Hex Editor
+-_Comment=GNOME Hexadecimal Editor
++# SUN_BRANDING
++_Name=GHex Binary File Editor
++# SUN_BRANDING
++_Comment=Inspect and edit the contents of binary files
+ Exec=ghex2 %F
+ Terminal=false

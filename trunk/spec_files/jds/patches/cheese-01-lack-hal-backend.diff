@@ -1,0 +1,105 @@
+--- ./src/cheese-webcam.c.orig	2009-03-16 18:04:41.371752000 +0800
++++ ./src/cheese-webcam.c	2009-03-16 18:02:37.710406000 +0800
+@@ -34,6 +34,14 @@
+ #include <X11/Xlib.h>
+ #include <libhal.h>
+ 
++#ifdef SOLARIS
++/* for ioctl query */
++#include <fcntl.h>
++#include <unistd.h>
++#include <sys/ioctl.h>
++#include <sys/videodev2.h>
++#endif
++
+ #include "cheese-webcam.h"
+ #include "cheese-flash.h"
+ 
+@@ -241,6 +249,11 @@
+                      * refers to a fake device so that resolution changing still
+                      * works even if the computer doesn't have a webcam. */
+   char **udis;
++#ifdef SOLARIS
++  char *dev_name;
++  struct stat s;
++  int suc_id = 0;
++#endif  
+   DBusError error;
+   LibHalContext *hal_ctx;
+ 
+@@ -287,6 +300,32 @@
+   if (num_udis > 0)
+         priv->num_webcam_devices = num_devices = num_udis;
+   else
++#ifdef SOLARIS	
++    for (i = 0;;i++)
++    {
++      dev_name = g_strdup_printf("%s%d", "/dev/video", i);
++      if (lstat(dev_name, &s) != 0)
++        break;
++      else	
++      {
++        int fd = -1;
++        if ((fd = open (dev_name, O_RDONLY | O_NONBLOCK)) < 0)
++	{
++	  g_warning ("Failed to open %s: %s", dev_name, strerror (errno));
++	  continue;
++	}  
++	else  
++	{  
++          priv->num_webcam_devices = num_devices = num_udis = 1;
++	  suc_id = i;
++	  close(fd);
++	}  
++      }	
++    }  
++  if (num_udis >= 1 && i > 0)
++    dev_name = g_strdup_printf("%s%d", "/dev/video", suc_id);
++  else  
++#endif
+   {
+     num_devices = 1;
+     priv->num_webcam_devices = num_udis;  /* We don't have any real cameras-- 
+@@ -304,6 +343,7 @@
+ 
+   for (i = 0; i < priv->num_webcam_devices; i++) 
+   {
++#ifndef SOLARIS
+     char *device;
+     
+     device = libhal_device_get_property_string (hal_ctx, udis[i], "video4linux.device", &error);
+@@ -315,8 +355,14 @@
+     }
+     priv->webcam_devices[i].video_device = g_strdup (device);
+     libhal_free_string (device);
++#else
++    priv->webcam_devices[i].video_device = g_strdup (dev_name);
++#endif    
+   }
+   libhal_free_string_array (udis);
++#ifdef SOLARIS
++  libhal_free_string(dev_name);
++#endif  
+ }
+ 
+ static void
+--- ./configure.ac.orig	2009-03-16 18:04:34.515441000 +0800
++++ ./configure.ac	2009-03-16 17:53:11.406730000 +0800
+@@ -15,7 +15,7 @@
+ AC_HEADER_STDC
+ AM_PROG_LIBTOOL
+ 
+-CFLAGS="${CFLAGS} -Wall"
++CFLAGS="${CFLAGS} -DSOLARIS"
+ 
+ GNOME_MAINTAINER_MODE_DEFINES
+ GNOME_COMPILE_WARNINGS
+@@ -66,7 +66,7 @@
+ GNOME_VFS_REQUIRED=2.18.0
+ LIBEBOOK_REQUIRED=1.12.0
+ DBUS_REQUIRED=1.0
+-HAL_REQUIRED=0.5.9
++HAL_REQUIRED=0.5.8
+ DBUS_GLIB_REQUIRED=0.7
+ LIBRSVG_REQUIRED=2.18.0
+ PANGOCAIRO_REQUIRED=1.18.0

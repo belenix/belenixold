@@ -1,0 +1,1105 @@
+diff -urN -x /home/sbade/dontdirr openssl-engine-0.9.6e.base/crypto/engine/Makefile openssl-engine-0.9.6e.patch/crypto/engine/Makefile
+--- openssl-engine-0.9.6e.base/crypto/engine/Makefile	Thu Feb  7 23:04:30 2002
++++ openssl-engine-0.9.6e.patch/crypto/engine/Makefile	Fri Aug  2 14:37:08 2002
+@@ -24,10 +24,10 @@
+ LIB=$(TOP)/libcrypto.a
+ LIBSRC= engine_err.c engine_lib.c engine_list.c engine_openssl.c \
+ 	hw_atalla.c hw_cswift.c hw_ncipher.c hw_aep.c hw_sureware.c \
+-	hw_ubsec.c hw_keyclient.c
++	hw_ubsec.c hw_keyclient.c hw_ibmca.c
+ LIBOBJ= engine_err.o engine_lib.o engine_list.o engine_openssl.o \
+ 	hw_atalla.o hw_cswift.o hw_ncipher.o hw_aep.o hw_sureware.o \
+-	hw_ubsec.o hw_keyclient.o
++	hw_ubsec.o hw_keyclient.o hw_ibmca.o
+ 
+ SRC= $(LIBSRC)
+ 
+diff -urN -x /home/sbade/dontdirr openssl-engine-0.9.6e.base/crypto/engine/Makefile.ssl openssl-engine-0.9.6e.patch/crypto/engine/Makefile.ssl
+--- openssl-engine-0.9.6e.base/crypto/engine/Makefile.ssl	Thu Feb  7 23:04:30 2002
++++ openssl-engine-0.9.6e.patch/crypto/engine/Makefile.ssl	Fri Aug  2 14:37:08 2002
+@@ -24,10 +24,10 @@
+ LIB=$(TOP)/libcrypto.a
+ LIBSRC= engine_err.c engine_lib.c engine_list.c engine_openssl.c \
+ 	hw_atalla.c hw_cswift.c hw_ncipher.c hw_aep.c hw_sureware.c \
+-	hw_ubsec.c hw_keyclient.c
++	hw_ubsec.c hw_keyclient.c hw_ibmca.c
+ LIBOBJ= engine_err.o engine_lib.o engine_list.o engine_openssl.o \
+ 	hw_atalla.o hw_cswift.o hw_ncipher.o hw_aep.o hw_sureware.o \
+-	hw_ubsec.o hw_keyclient.o
++	hw_ubsec.o hw_keyclient.o hw_ibmca.o
+ 
+ SRC= $(LIBSRC)
+ 
+diff -urN -x /home/sbade/dontdirr openssl-engine-0.9.6e.base/crypto/engine/engine.h openssl-engine-0.9.6e.patch/crypto/engine/engine.h
+--- openssl-engine-0.9.6e.base/crypto/engine/engine.h	Thu Feb  7 23:04:29 2002
++++ openssl-engine-0.9.6e.patch/crypto/engine/engine.h	Fri Aug  2 14:37:08 2002
+@@ -406,6 +406,13 @@
+ #define ENGINE_F_UBSEC_RNG_BYTES			 172
+ #define ENGINE_F_UBSEC_RSA_MOD_EXP			 168
+ #define ENGINE_F_UBSEC_RSA_MOD_EXP_CRT			 169
++#define ENGINE_F_IBMCA_FINISH				 180
++#define ENGINE_F_IBMCA_INIT				 181
++#define ENGINE_F_IBMCA_MOD_EXP				 182
++#define ENGINE_F_IBMCA_MOD_EXP_CRT			 183
++#define ENGINE_F_IBMCA_RAND_BYTES			 184
++#define ENGINE_F_IBMCA_RSA_MOD_EXP			 185
++
+ 
+ /* Reason codes. */
+ #define ENGINE_R_AEP_INIT_FAILURE			 132
+diff -urN -x /home/sbade/dontdirr openssl-engine-0.9.6e.base/crypto/engine/engine_err.c openssl-engine-0.9.6e.patch/crypto/engine/engine_err.c
+--- openssl-engine-0.9.6e.base/crypto/engine/engine_err.c	Thu Feb  7 23:04:27 2002
++++ openssl-engine-0.9.6e.patch/crypto/engine/engine_err.c	Fri Aug  2 14:37:08 2002
+@@ -177,6 +177,12 @@
+ {ERR_PACK(0,ENGINE_F_UBSEC_RNG_BYTES,0),	"UBSEC_RNG_BYTES"},
+ {ERR_PACK(0,ENGINE_F_UBSEC_RSA_MOD_EXP,0),	"UBSEC_RSA_MOD_EXP"},
+ {ERR_PACK(0,ENGINE_F_UBSEC_RSA_MOD_EXP_CRT,0),	"UBSEC_RSA_MOD_EXP_CRT"},
++{ERR_PACK(0,ENGINE_F_IBMCA_FINISH,0), "IBMCA_FINISH"},
++{ERR_PACK(0,ENGINE_F_IBMCA_INIT,0),   "IBMCA_INIT"},
++{ERR_PACK(0,ENGINE_F_IBMCA_MOD_EXP,0),        "IBMCA_MOD_EXP"},
++{ERR_PACK(0,ENGINE_F_IBMCA_MOD_EXP_CRT,0),    "IBMCA_MOD_EXP_CRT"},
++{ERR_PACK(0,ENGINE_F_IBMCA_RAND_BYTES,0),     "IBMCA_RAND_BYTES"},
++{ERR_PACK(0,ENGINE_F_IBMCA_RSA_MOD_EXP,0),    "IBMCA_RSA_MOD_EXP"},
+ {0,NULL}
+ 	};
+ 
+diff -urN -x /home/sbade/dontdirr openssl-engine-0.9.6e.base/crypto/engine/engine_int.h openssl-engine-0.9.6e.patch/crypto/engine/engine_int.h
+--- openssl-engine-0.9.6e.base/crypto/engine/engine_int.h	Sat Nov 17 06:28:05 2001
++++ openssl-engine-0.9.6e.patch/crypto/engine/engine_int.h	Fri Aug  2 14:37:08 2002
+@@ -151,6 +151,11 @@
+ ENGINE *ENGINE_atalla();
+ #endif /* !NO_HW_ATALLA */
+ 
++#ifndef NO_HW_IBMCA
++/* Returns a structure of ibmca methods. */
++ENGINE *ENGINE_ibmca();
++#endif /* !NO_HW_IBMCA */
++
+ #ifndef NO_HW_AEP
+ /* Returns a structure of AEP methods. */
+ ENGINE *ENGINE_aep();
+diff -urN -x /home/sbade/dontdirr openssl-engine-0.9.6e.base/crypto/engine/engine_list.c openssl-engine-0.9.6e.patch/crypto/engine/engine_list.c
+--- openssl-engine-0.9.6e.base/crypto/engine/engine_list.c	Sat Nov 17 06:28:07 2001
++++ openssl-engine-0.9.6e.patch/crypto/engine/engine_list.c	Fri Aug  2 14:37:08 2002
+@@ -215,6 +215,10 @@
+ 		return 0;
+ #endif /* !NO_HW_KEYCLIENT */
+ #endif /* !NO_HW */
++#ifndef NO_HW_IBMCA
++	if(!engine_list_add(ENGINE_ibmca()))
++		return 0;
++#endif /* !NO_HW_IBMCA */
+ 	engine_list_flag = 1;
+ 	return 1;
+ 	}
+diff -urN -x /home/sbade/dontdirr openssl-engine-0.9.6e.base/crypto/engine/hw_ibmca.c openssl-engine-0.9.6e.patch/crypto/engine/hw_ibmca.c
+--- openssl-engine-0.9.6e.base/crypto/engine/hw_ibmca.c	Thu Jan  1 01:00:00 1970
++++ openssl-engine-0.9.6e.patch/crypto/engine/hw_ibmca.c	Fri Aug  2 14:38:02 2002
+@@ -0,0 +1,814 @@
++/* crypto/engine/hw_ibmca.c */
++/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL
++ * project 2000.
++ */
++/* ====================================================================
++ * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ *
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ *
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in
++ *    the documentation and/or other materials provided with the
++ *    distribution.
++ *
++ * 3. All advertising materials mentioning features or use of this
++ *    software must display the following acknowledgment:
++ *    "This product includes software developed by the OpenSSL Project
++ *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
++ *
++ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
++ *    endorse or promote products derived from this software without
++ *    prior written permission. For written permission, please contact
++ *    licensing@OpenSSL.org.
++ *
++ * 5. Products derived from this software may not be called "OpenSSL"
++ *    nor may "OpenSSL" appear in their names without prior written
++ *    permission of the OpenSSL Project.
++ *
++ * 6. Redistributions of any form whatsoever must retain the following
++ *    acknowledgment:
++ *    "This product includes software developed by the OpenSSL Project
++ *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
++ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
++ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
++ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
++ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
++ * OF THE POSSIBILITY OF SUCH DAMAGE.
++ * ====================================================================
++ *
++ * This product includes cryptographic software written by Eric Young
++ * (eay@cryptsoft.com).  This product includes software written by Tim
++ * Hudson (tjh@cryptsoft.com).
++ *
++ */
++
++/* (C) COPYRIGHT International Business Machines Corp. 2001 */
++
++#include <stdio.h>
++#include <openssl/crypto.h>
++#include "cryptlib.h"
++#include <openssl/dso.h>
++#include "engine_int.h"
++#include <openssl/engine.h>
++
++#ifndef NO_HW
++#ifndef NO_HW_IBMCA
++
++#ifdef FLAT_INC
++#include "ica_openssl_api.h"
++#else
++#include "vendor_defns/ica_openssl_api.h"
++#endif
++
++static const char *IBMCA_F1 = "icaOpenAdapter";
++static const char *IBMCA_F2 = "icaCloseAdapter";
++static const char *IBMCA_F3 = "icaRsaModExpo";
++static const char *IBMCA_F4 = "icaRandomNumberGenerate";
++static const char *IBMCA_F5 = "icaRsaCrt";
++
++ICA_ADAPTER_HANDLE handle=0;
++
++static int ibmca_init(void);
++static int ibmca_finish(void);
++
++/* BIGNUM stuff */
++static int ibmca_mod_exp(BIGNUM *r, BIGNUM *a, const BIGNUM *p,
++        const BIGNUM *m, BN_CTX *ctx);
++
++static int ibmca_mod_exp_crt(BIGNUM *r, BIGNUM *a, const BIGNUM *p,
++        const BIGNUM *q, const BIGNUM *dmp1, const BIGNUM *dmq1,
++        const BIGNUM *iqmp, BN_CTX *ctx);
++
++/* RSA stuff */
++static int ibmca_rsa_mod_exp(BIGNUM *r0, BIGNUM *I, RSA *rsa);
++/* This function is aliased to mod_exp (with the mont stuff dropped). */
++static int ibmca_mod_exp_mont(BIGNUM *r, BIGNUM *a, const BIGNUM *p,
++        const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *m_ctx);
++
++/* DSA stuff */
++static int ibmca_dsa_mod_exp(DSA *dsa, BIGNUM *rr, BIGNUM *a1,
++        BIGNUM *p1, BIGNUM *a2, BIGNUM *p2, BIGNUM *m,
++        BN_CTX *ctx, BN_MONT_CTX *in_mont);
++static int ibmca_mod_exp_dsa(DSA *dsa, BIGNUM *r, BIGNUM *a,
++        const BIGNUM *p, const BIGNUM *m, BN_CTX *ctx,
++        BN_MONT_CTX *m_ctx);
++
++/* DH stuff */
++/* This function is alised to mod_exp (with the DH and mont dropped). */
++static int ibmca_mod_exp_dh(DH *dh, BIGNUM *r, BIGNUM *a, const BIGNUM *p,
++        const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *m_ctx);
++
++/* RAND stuff */
++static int ibmca_rand_bytes(unsigned char *buf, int num);
++static int ibmca_rand_status(void);
++
++/* Our internal RSA_METHOD that we provide pointers to */
++static RSA_METHOD ibmca_rsa =
++        {
++        "Ibmca RSA method",
++        NULL,
++        NULL,
++        NULL,
++        NULL,
++        ibmca_rsa_mod_exp,
++        ibmca_mod_exp_mont,
++        NULL,
++        NULL,
++        0,
++        NULL,
++        NULL,
++        NULL
++        };
++
++/* Our internal DSA_METHOD that we provide pointers to */
++static DSA_METHOD ibmca_dsa =
++        {
++        "Ibmca DSA method",
++        NULL, /* dsa_do_sign */
++        NULL, /* dsa_sign_setup */
++        NULL, /* dsa_do_verify */
++        ibmca_dsa_mod_exp, /* dsa_mod_exp */
++        ibmca_mod_exp_dsa, /* bn_mod_exp */
++        NULL, /* init */
++        NULL, /* finish */
++        0, /* flags */
++        NULL /* app_data */
++        };
++
++/* Our internal DH_METHOD that we provide pointers to */
++static DH_METHOD ibmca_dh =
++        {
++        "Ibmca DH method",
++        NULL,
++        NULL,
++        ibmca_mod_exp_dh,
++        NULL,
++        NULL,
++        0,
++        NULL
++        };
++
++static RAND_METHOD ibmca_rand =
++        {
++        /* "IBMCA RAND method", */
++        NULL,
++        ibmca_rand_bytes,
++        NULL,
++        NULL,
++        ibmca_rand_bytes,
++        ibmca_rand_status,
++        };
++
++/* Our ENGINE structure. */
++static ENGINE engine_ibmca =
++        {
++        "ibmca",
++        "Ibmca hardware engine support",
++        &ibmca_rsa,
++        &ibmca_dsa,
++        &ibmca_dh,
++        &ibmca_rand,
++        ibmca_mod_exp,
++        NULL,
++        ibmca_init,
++        ibmca_finish,
++        NULL, /* no ctrl() */
++        NULL, /* no load_privkey() */
++        NULL, /* no load_pubkey() */
++        0, /* no flags */
++        0, 0, /* no references */
++        NULL, NULL /* unlinked */
++        };
++
++/* As this is only ever called once, there's no need for locking
++ * (indeed - the lock will already be held by our caller!!!) */
++ENGINE *ENGINE_ibmca()
++        {
++        RSA_METHOD *meth1;
++        DSA_METHOD *meth2;
++        DH_METHOD *meth3;
++
++        /* We know that the "PKCS1_SSLeay()" functions hook properly
++         * to the ibmca-specific mod_exp and mod_exp_crt so we use
++         * those functions. NB: We don't use ENGINE_openssl() or
++         * anything "more generic" because something like the RSAref
++         * code may not hook properly, and if you own one of these
++         * cards then you have the right to do RSA operations on it
++         * anyway! */
++        meth1 = RSA_PKCS1_SSLeay();
++        ibmca_rsa.rsa_pub_enc = meth1->rsa_pub_enc;
++        ibmca_rsa.rsa_pub_dec = meth1->rsa_pub_dec;
++        ibmca_rsa.rsa_priv_enc = meth1->rsa_priv_enc;
++        ibmca_rsa.rsa_priv_dec = meth1->rsa_priv_dec;
++
++        /* Use the DSA_OpenSSL() method and just hook the mod_exp-ish
++         * bits. */
++        meth2 = DSA_OpenSSL();
++        ibmca_dsa.dsa_do_sign = meth2->dsa_do_sign;
++        ibmca_dsa.dsa_sign_setup = meth2->dsa_sign_setup;
++        ibmca_dsa.dsa_do_verify = meth2->dsa_do_verify;
++
++        /* Much the same for Diffie-Hellman */
++        meth3 = DH_OpenSSL();
++        ibmca_dh.generate_key = meth3->generate_key;
++        ibmca_dh.compute_key = meth3->compute_key;
++        return &engine_ibmca;
++        }
++
++/* This is a process-global DSO handle used for loading and unloading
++ * the Ibmca library. NB: This is only set (or unset) during an
++ * init() or finish() call (reference counts permitting) and they're
++ * operating with global locks, so this should be thread-safe
++ * implicitly. */
++
++static DSO *ibmca_dso = NULL;
++
++/* These are the function pointers that are (un)set when the library has
++ * successfully (un)loaded. */
++
++static unsigned int    (ICA_CALL *p_icaOpenAdapter)();
++static unsigned int    (ICA_CALL *p_icaCloseAdapter)();
++static unsigned int    (ICA_CALL *p_icaRsaModExpo)();
++static unsigned int    (ICA_CALL *p_icaRandomNumberGenerate)();
++static unsigned int    (ICA_CALL *p_icaRsaCrt)();
++
++/* utility function to obtain a context */
++static int get_context(ICA_ADAPTER_HANDLE *p_handle)
++        {
++        unsigned int status=0;
++
++        status = p_icaOpenAdapter(0, p_handle);
++        if(status != 0)
++                return 0;
++        return 1;
++        }
++
++/* similarly to release one. */
++static void release_context(ICA_ADAPTER_HANDLE handle)
++        {
++        p_icaCloseAdapter(handle);
++        }
++
++/* (de)initialisation functions. */
++static int ibmca_init()
++        {
++
++        void          (*p1)();
++        void          (*p2)();
++        void          (*p3)();
++        void          (*p4)();
++        void          (*p5)();
++
++        if(ibmca_dso != NULL)
++                {
++                ENGINEerr(ENGINE_F_IBMCA_INIT,ENGINE_R_ALREADY_LOADED);
++                goto err;
++                }
++        /* Attempt to load libatasi.so/atasi.dll/whatever. Needs to be
++         * changed unfortunately because the Ibmca drivers don't have
++         * standard library names that can be platform-translated well. */
++        /* TODO: Work out how to actually map to the names the Ibmca
++         * drivers really use - for now a symbollic link needs to be
++         * created on the host system from libatasi.so to atasi.so on
++         * unix variants. */
++
++        ibmca_dso = DSO_load(NULL, IBMCA_LIBNAME, NULL,
++                DSO_FLAG_NAME_TRANSLATION);
++        if(ibmca_dso == NULL)
++                {
++                ENGINEerr(ENGINE_F_IBMCA_INIT,ENGINE_R_DSO_FAILURE);
++                goto err;
++                }
++
++        if(!(p1 = DSO_bind_func(
++                ibmca_dso, IBMCA_F1)) ||
++                !(p2 = DSO_bind_func(
++                        ibmca_dso, IBMCA_F2)) ||
++                !(p3 = DSO_bind_func(
++                        ibmca_dso, IBMCA_F3)) ||
++                !(p4 = DSO_bind_func(
++                        ibmca_dso, IBMCA_F4)) ||
++                !(p5 = DSO_bind_func(
++                        ibmca_dso, IBMCA_F5)))
++                {
++                ENGINEerr(ENGINE_F_IBMCA_INIT,ENGINE_R_DSO_FAILURE);
++                goto err;
++                }
++
++        /* Copy the pointers */
++
++	p_icaOpenAdapter =           (unsigned int (ICA_CALL *)())p1;
++	p_icaCloseAdapter =          (unsigned int (ICA_CALL *)())p2;
++	p_icaRsaModExpo =            (unsigned int (ICA_CALL *)())p3;
++	p_icaRandomNumberGenerate =  (unsigned int (ICA_CALL *)())p4;
++	p_icaRsaCrt =                (unsigned int (ICA_CALL *)())p5;
++
++        if(!get_context(&handle))
++                {
++                ENGINEerr(ENGINE_F_IBMCA_INIT,ENGINE_R_UNIT_FAILURE);
++                goto err;
++                }
++
++        return 1;
++ err:
++        if(ibmca_dso)
++                DSO_free(ibmca_dso);
++
++        p_icaOpenAdapter = NULL;
++        p_icaCloseAdapter = NULL;
++        p_icaRsaModExpo = NULL;
++        p_icaRandomNumberGenerate = NULL;
++
++        return 0;
++        }
++
++static int ibmca_finish()
++        {
++        if(ibmca_dso == NULL)
++                {
++                ENGINEerr(ENGINE_F_IBMCA_FINISH,ENGINE_R_NOT_LOADED);
++                return 0;
++                }
++        release_context(handle);
++        if(!DSO_free(ibmca_dso))
++                {
++                ENGINEerr(ENGINE_F_IBMCA_FINISH,ENGINE_R_DSO_FAILURE);
++                return 0;
++                }
++        ibmca_dso = NULL;
++
++        return 1;
++        }
++
++static int ibmca_mod_exp(BIGNUM *r, BIGNUM *a, const BIGNUM *p,
++        const BIGNUM *m, BN_CTX *ctx)
++        {
++        /* I need somewhere to store temporary serialised values for
++         * use with the Ibmca API calls. A neat cheat - I'll use
++         * BIGNUMs from the BN_CTX but access their arrays directly as
++         * byte arrays <grin>. This way I don't have to clean anything
++         * up. */
++
++        BIGNUM *argument=NULL;
++        BIGNUM *result=NULL;
++        BIGNUM *key=NULL;
++        int to_return;
++	int inLen, outLen, tmpLen;
++
++
++        ICA_KEY_RSA_MODEXPO *publKey=NULL;
++        unsigned int rc;
++
++        to_return = 0; /* expect failure */
++
++        if(!ibmca_dso)
++                {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP,ENGINE_R_NOT_LOADED);
++                goto err;
++                }
++        /* Prepare the params */
++        argument = BN_CTX_get(ctx);
++        result = BN_CTX_get(ctx);
++        key = BN_CTX_get(ctx);
++
++        if( !argument || !result || !key)
++                {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP,ENGINE_R_BN_CTX_FULL);
++                goto err;
++                }
++
++
++	if(!bn_wexpand(argument, m->top) || !bn_wexpand(result, m->top) ||
++                !bn_wexpand(key, sizeof(*publKey)/BN_BYTES))
++
++                {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP,ENGINE_R_BN_EXPAND_FAIL);
++                goto err;
++                }
++
++        publKey = (ICA_KEY_RSA_MODEXPO *)key->d;
++
++        if (publKey == NULL)
++                {
++                goto err;
++                }
++        memset(publKey, 0, sizeof(ICA_KEY_RSA_MODEXPO));
++
++        publKey->keyType   =  CORRECT_ENDIANNESS(ME_KEY_TYPE);
++        publKey->keyLength =  CORRECT_ENDIANNESS(sizeof(ICA_KEY_RSA_MODEXPO));
++        publKey->expOffset =  (char *) publKey->keyRecord - (char *) publKey;
++
++        /* A quirk of the card: the exponent length has to be the same
++     as the modulus (key) length */
++
++	outLen = BN_num_bytes(m);
++
++     /* Check for a modulus greater than 2048 bits (256 bytes) */
++     if ( outLen > 256 ) {
++           ENGINEerr(ENGINE_F_IBMCA_MOD_EXP,ENGINE_R_SIZE_TOO_LARGE_OR_TOO_SMALL);
++           goto err;
++     }
++     /* SAB End check for modulus length */
++
++
++	publKey->expLength = publKey->nLength = outLen;
++
++     /* SAB Check for underflow condition here */
++     /* if the size of the exponent length is less than the size of the parameter p,
++      * then we have a big problem and we will underlfow the keyRecord buffer
++      * who knows what will happen then  
++      * */
++     if ( outLen < BN_num_bytes(p) ) {
++           ENGINEerr(ENGINE_F_IBMCA_MOD_EXP,ENGINE_R_SIZE_TOO_LARGE_OR_TOO_SMALL);
++           goto err;
++     }
++     /* SAB End Check for underflow */
++
++
++        BN_bn2bin(p, &publKey->keyRecord[publKey->expLength -
++                BN_num_bytes(p)]);
++        BN_bn2bin(m, &publKey->keyRecord[publKey->expLength]);
++
++
++
++        publKey->modulusBitLength = CORRECT_ENDIANNESS(publKey->nLength * 8);
++        publKey->nOffset   = CORRECT_ENDIANNESS(publKey->expOffset + 
++						publKey->expLength);
++
++        publKey->expOffset = CORRECT_ENDIANNESS((char *) publKey->keyRecord - 
++						(char *) publKey);
++
++
++	tmpLen = outLen;
++
++
++         
++	publKey->expLength = publKey->nLength = CORRECT_ENDIANNESS(tmpLen);
++
++  /* Prepare the argument */
++
++	memset(argument->d, 0, outLen);
++	BN_bn2bin(a, (unsigned char *)argument->d + outLen -
++                 BN_num_bytes(a));
++
++	inLen = outLen;
++
++  /* Perform the operation */
++
++          if( (rc = p_icaRsaModExpo(handle, inLen,(unsigned char *)argument->d,
++                publKey, &outLen, (unsigned char *)result->d))
++                !=0 )
++
++                {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP,ENGINE_R_REQUEST_FAILED);
++                goto err;
++                }
++
++
++        /* Convert the response */
++        BN_bin2bn((unsigned char *)result->d, outLen, r);
++        to_return = 1;
++ err:
++        if(argument) ctx->tos--;
++        if(result) ctx->tos--;
++        if(key) ctx->tos--;
++
++        return to_return;
++        }
++
++static int ibmca_rsa_mod_exp(BIGNUM *r0, BIGNUM *I, RSA *rsa)
++        {
++        BN_CTX *ctx;
++        int to_return = 0;
++
++        if((ctx = BN_CTX_new()) == NULL)
++                goto err;
++        if(!rsa->p || !rsa->q || !rsa->dmp1 || !rsa->dmq1 || !rsa->iqmp)
++                {
++                if(!rsa->d || !rsa->n)
++                        {
++                        ENGINEerr(ENGINE_F_IBMCA_RSA_MOD_EXP,
++                                ENGINE_R_MISSING_KEY_COMPONENTS);
++                        goto err;
++                        }
++                to_return = ibmca_mod_exp(r0, I, rsa->d, rsa->n, ctx);
++                }
++        else
++                {
++                to_return = ibmca_mod_exp_crt(r0, I, rsa->p, rsa->q, rsa->dmp1,
++                        rsa->dmq1, rsa->iqmp, ctx);
++                }
++ err:
++        if(ctx)
++                BN_CTX_free(ctx);
++        return to_return;
++        }
++
++/* Ein kleines chinesisches "Restessen"  */
++static int ibmca_mod_exp_crt(BIGNUM *r, BIGNUM *a, const BIGNUM *p,
++        const BIGNUM *q, const BIGNUM *dmp1,
++        const BIGNUM *dmq1, const BIGNUM *iqmp, BN_CTX *ctx)
++        {
++
++        BIGNUM *argument = NULL;
++        BIGNUM *result = NULL;
++        BIGNUM *key = NULL;
++  
++	unsigned int keyRecordSize;
++
++        int to_return = 0; /* expect failure */
++
++        char                *pkey=NULL;
++        ICA_KEY_RSA_CRT     *privKey=NULL;
++        int inLen, outLen;
++
++        int rc;
++        unsigned int        offset, pSize, qSize;
++
++        /* Prepare the params */
++
++        argument = BN_CTX_get(ctx);
++        result = BN_CTX_get(ctx);
++        key = BN_CTX_get(ctx);
++
++        if(!argument || !result || !key)
++                {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_BN_CTX_FULL);
++                goto err;
++                }
++
++	if(!bn_wexpand(argument, p->top + q->top) ||
++                !bn_wexpand(result, p->top + q->top) ||
++                !bn_wexpand(key, sizeof(*privKey)/BN_BYTES ))
++                {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_BN_EXPAND_FAIL);
++                goto err;
++                }
++
++        privKey = (ICA_KEY_RSA_CRT *)key->d;
++        memset(privKey, 0, sizeof(ICA_KEY_RSA_CRT));
++
++     /* SAB Add, check that the total size in bytes of the parameters does not
++      * exceede the buffer space we have 
++      * do this first because if it exceeds the 
++      */
++      keyRecordSize = BN_num_bytes(p) + BN_num_bytes(q) + BN_num_bytes(dmp1) + 
++		BN_num_bytes(dmq1) +  + BN_num_bytes(iqmp);
++		// DELETE BN_num_bytes(dmq1) + BN_num_bytes(q) + BN_num_bytes(iqmp);
++
++      if (keyRecordSize > sizeof(privKey->keyRecord)) {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_SIZE_TOO_LARGE_OR_TOO_SMALL);
++                goto err;
++      }
++
++     /* SAB add, check that the size of the split of q  are not greater than 2048 (256 bytes) */
++     if ( (BN_num_bytes(q) + BN_num_bytes(dmq1)  ) > 256 ) {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_SIZE_TOO_LARGE_OR_TOO_SMALL);
++                goto err;
++     }
++
++     /* SAB add, check that the size of the parts of P are  not greater than 2048 (256 bytes) */
++     if ( (BN_num_bytes(p) + BN_num_bytes(dmp1)  ) > 256 ) {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_SIZE_TOO_LARGE_OR_TOO_SMALL);
++                goto err;
++     }
++
++
++        privKey->keyType =  CORRECT_ENDIANNESS(CRT_KEY_TYPE);
++        privKey->keyLength = CORRECT_ENDIANNESS(sizeof(ICA_KEY_RSA_CRT));
++        privKey->modulusBitLength = CORRECT_ENDIANNESS(BN_num_bytes(q) * 2 * 8);
++
++        /*
++         * p,dp & qInv are 1 QWORD Larger
++         */
++        privKey->pLength = CORRECT_ENDIANNESS(BN_num_bytes(p)+8);
++        privKey->qLength = CORRECT_ENDIANNESS(BN_num_bytes(q));
++        privKey->dpLength = CORRECT_ENDIANNESS(BN_num_bytes(dmp1)+8);
++        privKey->dqLength = CORRECT_ENDIANNESS(BN_num_bytes(dmq1));
++        privKey->qInvLength = CORRECT_ENDIANNESS(BN_num_bytes(iqmp)+8);
++
++        offset = (char *) privKey->keyRecord
++                  - (char *) privKey;
++
++        qSize = BN_num_bytes(q);
++        pSize = qSize + 8;   /*  1 QWORD larger */
++
++/* SAB  probably a little redundant, but we'll verify that each of the 
++   components which make up a keyrecord sent to the card does not 
++   exceed the space that is allocate for it.  This handles the
++   case where even if the total length does not exceed keyrecord size, if
++   the operands are funny sized causing potential side affects to either
++   the card or result */
++
++   if (  ((BN_num_bytes(p)) > pSize ) || 
++         ((BN_num_bytes(dmp1)) > pSize ) || 
++         ((BN_num_bytes(iqmp)) > pSize ) || 
++	 ((BN_num_bytes(q)) > qSize ) || 
++	 ((BN_num_bytes(dmq1)) > qSize )  ) {
++
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_SIZE_TOO_LARGE_OR_TOO_SMALL);
++                goto err;
++
++   }
++
++
++        
++
++        /* these offset values are ignored on all platforms except Intel
++         * in libica
++         * */
++        privKey->dpOffset = CORRECT_ENDIANNESS(offset);
++
++	offset += pSize;
++	privKey->dqOffset = CORRECT_ENDIANNESS(offset);
++
++	offset += qSize;
++	privKey->pOffset = CORRECT_ENDIANNESS(offset);
++
++	offset += pSize;
++	privKey->qOffset = CORRECT_ENDIANNESS(offset);
++
++	offset += qSize;
++	privKey->qInvOffset = CORRECT_ENDIANNESS(offset);
++
++        /* Start at the beginning of the buffer. */
++        pkey = (char *) privKey->keyRecord;
++
++        /* SAB First check that we won't underflow the buffer... */
++        /* p greater in size than pSize will cause us to underflow */
++        /* should really check the other data sizes as well before doing the copies */
++        /* no sense doing any copies if the sizes and offsets will create a bad buffer */
++        /* although the check for total lengths not exceeding total space should help */
++
++        if ( pSize < BN_num_bytes(p)){
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_SIZE_TOO_LARGE_OR_TOO_SMALL);
++                goto err;
++        }
++
++
++        /* pkey += pSize - BN_num_bytes(p); this line is wrong  SAB  this is so that the field is padded with leading zeros */
++        pkey += pSize - BN_num_bytes(dmp1);  /* SAB  this is so that the field is padded with leading zeros */
++
++        BN_bn2bin(dmp1, pkey);
++        pkey += BN_num_bytes(dmp1);   /* move the pointer */
++
++        BN_bn2bin(dmq1, pkey);    /* Copy dmq1 */
++        pkey += qSize ;          /* dmq1 is qSize but somewhere we should really check this */
++        pkey += pSize - BN_num_bytes(p); /* the next field is padded with leading zeros */
++
++        BN_bn2bin(p, pkey);
++
++        pkey += BN_num_bytes(p);  /* move the pointer however many bytes we moved it */
++
++        BN_bn2bin(q, pkey);
++
++        pkey += qSize ;    /* Move the pointer to the next offset in the buffer */
++        pkey += pSize - BN_num_bytes(iqmp);  /* Another zero padded field */
++        BN_bn2bin(iqmp, pkey);
++
++        /* Prepare the argument and response */
++
++	outLen = CORRECT_ENDIANNESS(privKey->qLength) * 2;  /* correct endianess is used here because the privKey structures
++                                                            fields were converted  for endianess above  This makes it into
++                                                            native */
++
++     if (outLen > 256 ) {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_SIZE_TOO_LARGE_OR_TOO_SMALL);
++                goto err;
++     }
++
++
++     /* SAB Need to check for underflow as well as the case where  outLen is < the argument which would clobber
++      * the prior buffers */
++     if ( outLen < BN_num_bytes(a)) {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_BN_EXPAND_FAIL);
++     }
++
++     /* This will pad with leading zeros if the argument is less than the key length   this shouldnot really
++      * happen, but since the callers really are responsible for the padding, we need to make sure we have it 
++      * proper */
++
++        BN_bn2bin(a, (unsigned char *)argument->d + outLen -
++                          BN_num_bytes(a));
++
++
++        inLen = outLen;
++
++        memset(result->d, 0, outLen);
++
++        /* Perform the operation */
++
++        if ( (rc = p_icaRsaCrt(handle, inLen, (unsigned char *)argument->d,
++                privKey, &outLen, (unsigned char *)result->d)) != 0)
++                {
++                ENGINEerr(ENGINE_F_IBMCA_MOD_EXP_CRT,ENGINE_R_REQUEST_FAILED);
++                goto err;
++                }
++
++        /* Convert the response */
++
++        BN_bin2bn((unsigned char *)result->d, outLen, r);
++        to_return = 1;
++
++ err:
++        if(argument) ctx->tos--;
++        if(result) ctx->tos--;
++        if(key) ctx->tos--;
++        return to_return;
++
++        }
++
++/* This code was liberated and adapted from the commented-out code in
++ * dsa_ossl.c. Because of the unoptimised form of the Ibmca acceleration
++ * (it doesn't have a CRT form for RSA), this function means that an
++ * Ibmca system running with a DSA server certificate can handshake
++ * around 5 or 6 times faster/more than an equivalent system running with
++ * RSA. Just check out the "signs" statistics from the RSA and DSA parts
++ * of "openssl speed -engine ibmca dsa1024 rsa1024". */
++static int ibmca_dsa_mod_exp(DSA *dsa, BIGNUM *rr, BIGNUM *a1,
++        BIGNUM *p1, BIGNUM *a2, BIGNUM *p2, BIGNUM *m,
++        BN_CTX *ctx, BN_MONT_CTX *in_mont)
++        {
++        BIGNUM t;
++        int to_return = 0;
++
++        BN_init(&t);
++        /* let rr = a1 ^ p1 mod m */
++        if (!ibmca_mod_exp(rr,a1,p1,m,ctx)) goto end;
++        /* let t = a2 ^ p2 mod m */
++        if (!ibmca_mod_exp(&t,a2,p2,m,ctx)) goto end;
++        /* let rr = rr * t mod m */
++        if (!BN_mod_mul(rr,rr,&t,m,ctx)) goto end;
++        to_return = 1;
++ end:
++        BN_free(&t);
++        return to_return;
++        }
++
++
++static int ibmca_mod_exp_dsa(DSA *dsa, BIGNUM *r, BIGNUM *a,
++        const BIGNUM *p, const BIGNUM *m, BN_CTX *ctx,
++        BN_MONT_CTX *m_ctx)
++        {
++        return ibmca_mod_exp(r, a, p, m, ctx);
++        }
++
++/* This function is aliased to mod_exp (with the mont stuff dropped). */
++static int ibmca_mod_exp_mont(BIGNUM *r, BIGNUM *a, const BIGNUM *p,
++        const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *m_ctx)
++        {
++        return ibmca_mod_exp(r, a, p, m, ctx);
++        }
++
++/* This function is aliased to mod_exp (with the dh and mont dropped). */
++static int ibmca_mod_exp_dh(DH *dh, BIGNUM *r, BIGNUM *a, const BIGNUM *p,
++        const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *m_ctx)
++        {
++        return ibmca_mod_exp(r, a, p, m, ctx);
++        }
++
++/* Random bytes are good */
++static int ibmca_rand_bytes(unsigned char *buf, int num)
++        {
++        int to_return = 0; /* assume failure */
++        unsigned int ret;
++
++
++        if(handle == 0)
++                {
++                ENGINEerr(ENGINE_F_IBMCA_RAND_BYTES,ENGINE_R_NOT_INITIALISED);
++                goto err;
++                }
++
++        ret = p_icaRandomNumberGenerate(handle, num, buf);
++        if (ret < 0)
++                {
++                ENGINEerr(ENGINE_F_IBMCA_RAND_BYTES,ENGINE_R_REQUEST_FAILED);
++                goto err;
++                }
++        to_return = 1;
++ err:
++        return to_return;
++        }
++
++static int ibmca_rand_status(void)
++        {
++        return 1;
++        }
++
++#endif /* !NO_HW_IBMCA */
++#endif /* !NO_HW */
+diff -urN -x /home/sbade/dontdirr openssl-engine-0.9.6e.base/crypto/engine/vendor_defns/ica_openssl_api.h openssl-engine-0.9.6e.patch/crypto/engine/vendor_defns/ica_openssl_api.h
+--- openssl-engine-0.9.6e.base/crypto/engine/vendor_defns/ica_openssl_api.h	Thu Jan  1 01:00:00 1970
++++ openssl-engine-0.9.6e.patch/crypto/engine/vendor_defns/ica_openssl_api.h	Fri Aug  2 14:37:08 2002
+@@ -0,0 +1,189 @@
++
++#ifndef __ICA_OPENSSL_API_H__
++#define __ICA_OPENSSL_API_H__
++
++/**
++ ** abstract data types for API
++ **/
++
++#define ICA_ADAPTER_HANDLE int
++
++#if defined(linux) || defined (_AIX) || defined(sun)
++#define ICA_CALL 
++#endif
++
++#if defined(WIN32) || defined(_WIN32)
++#define ICA_CALL  __stdcall
++#endif
++
++/*------------------------------------------------*
++ | RSA defines and typedefs                       |
++ *------------------------------------------------*/
++ /*
++ * All data elements of the RSA key are in big-endian format
++ * Modulus-Exponent form of key
++ *
++ */
++ #define MAX_EXP_SIZE 256
++ #define MAX_MODULUS_SIZE 256
++ #define MAX_MODEXP_SIZE  (MAX_EXP_SIZE + MAX_MODULUS_SIZE)
++
++ #define MAX_OPERAND_SIZE  MAX_EXP_SIZE
++
++ typedef unsigned char ICA_KEY_RSA_MODEXPO_REC[MAX_MODEXP_SIZE];
++ /*
++ * All data elements of the RSA key are in big-endian format
++ * Chinese Remainder Thereom(CRT) form of key
++ * Used only for Decrypt, the encrypt form is typically Modulus-Exponent
++ *
++ */
++ #define MAX_BP_SIZE 136
++ #define MAX_BQ_SIZE 128
++ #define MAX_NP_SIZE 136
++ #define MAX_NQ_SIZE 128
++ #define MAX_QINV_SIZE 136
++ #define MAX_RSACRT_SIZE (MAX_BP_SIZE+MAX_BQ_SIZE+MAX_NP_SIZE+MAX_NQ_SIZE+MAX_QINV_SIZE)
++
++#define RSA_GEN_OPERAND_MAX   256 /* bytes */
++
++typedef unsigned char ICA_KEY_RSA_CRT_REC[MAX_RSACRT_SIZE];
++/*------------------------------------------------*
++ | RSA key token types                            |
++ *------------------------------------------------*/
++
++#define  RSA_PUBLIC_MODULUS_EXPONENT        3
++#define  RSA_PKCS_PRIVATE_CHINESE_REMAINDER 6
++
++#define KEYTYPE_MODEXPO         1
++#define KEYTYPE_PKCSCRT         2
++
++
++/*------------------------------------------------*
++ | RSA Key Token format                           |
++ *------------------------------------------------*/
++
++/*
++ * NOTE:  All the fields in the ICA_KEY_RSA_MODEXPO structure
++ *        (lengths, offsets, exponents, modulus, etc.) are
++ *        stored in big-endian format
++ */
++
++typedef struct _ICA_KEY_RSA_MODEXPO
++{   unsigned int  keyType;             /* RSA key type.               */
++    unsigned int  keyLength;           /* Total length of the token.  */
++    unsigned int  modulusBitLength;    /* Modulus n bit length.       */
++                                       /* -- Start of the data length.*/
++    unsigned int  nLength;             /* Modulus n = p * q           */
++    unsigned int  expLength;           /* exponent (public or private)*/
++                                       /*   e = 1/d * mod(p-1)(q-1)   */
++                                       /* -- Start of the data offsets*/
++    unsigned int  nOffset;             /* Modulus n .                 */
++    unsigned int  expOffset;           /* exponent (public or private)*/
++    unsigned char reserved[112];       /* reserved area               */
++                                       /* -- Start of the variable -- */
++                                       /* -- length token data.    -- */
++    ICA_KEY_RSA_MODEXPO_REC keyRecord;
++} ICA_KEY_RSA_MODEXPO;
++#define SZ_HEADER_MODEXPO (sizeof(ICA_KEY_RSA_MODEXPO) - sizeof(ICA_KEY_RSA_MODEXPO_REC))
++
++/*
++ * NOTE:  All the fields in the ICA_KEY_RSA_CRT structure
++ *        (lengths, offsets, exponents, modulus, etc.) are
++ *        stored in big-endian format
++ */
++
++typedef struct _ICA_KEY_RSA_CRT
++{   unsigned int  keyType;             /* RSA key type.               */
++    unsigned int  keyLength;           /* Total length of the token.  */
++    unsigned int  modulusBitLength;    /* Modulus n bit length.       */
++                                       /* -- Start of the data length.*/
++#if _AIX
++    unsigned int  nLength;             /* Modulus n = p * q           */
++#endif
++    unsigned int  pLength;             /* Prime number p .            */
++    unsigned int  qLength;             /* Prime number q .            */
++    unsigned int  dpLength;            /* dp = d * mod(p-1) .         */
++    unsigned int  dqLength;            /* dq = d * mod(q-1) .         */
++    unsigned int  qInvLength;          /* PKCS: qInv = Ap/q           */
++                                       /* -- Start of the data offsets*/
++#if _AIX
++    unsigned int  nOffset;             /* Modulus n .                 */
++#endif
++    unsigned int  pOffset;             /* Prime number p .            */
++    unsigned int  qOffset;             /* Prime number q .            */
++    unsigned int  dpOffset;            /* dp .                        */
++    unsigned int  dqOffset;            /* dq .                        */
++    unsigned int  qInvOffset;          /* qInv for PKCS               */
++#if _AIX
++    unsigned char reserved[80];        /* reserved area               */
++#else
++    unsigned char reserved[88];        /* reserved area               */
++#endif
++                                       /* -- Start of the variable -- */
++                                       /* -- length token data.    -- */
++    ICA_KEY_RSA_CRT_REC keyRecord;
++} ICA_KEY_RSA_CRT;
++#define SZ_HEADER_CRT (sizeof(ICA_KEY_RSA_CRT) - sizeof(ICA_KEY_RSA_CRT_REC))
++
++unsigned int
++icaOpenAdapter( unsigned int        adapterId,
++	        ICA_ADAPTER_HANDLE *pAdapterHandle );
++
++unsigned int
++icaCloseAdapter( ICA_ADAPTER_HANDLE adapterHandle );
++
++unsigned int
++icaRsaModExpo( ICA_ADAPTER_HANDLE    hAdapterHandle,
++	       unsigned int          inputDataLength,
++	       unsigned char        *pInputData,
++	       ICA_KEY_RSA_MODEXPO  *pKeyModExpo,
++	       unsigned int         *pOutputDataLength,
++	       unsigned char        *pOutputData );
++
++unsigned int
++icaRsaCrt( ICA_ADAPTER_HANDLE     hAdapterHandle,
++	   unsigned int           inputDataLength,
++	   unsigned char         *pInputData,
++	   ICA_KEY_RSA_CRT       *pKeyCrt,
++	   unsigned int          *pOutputDataLength,
++	   unsigned char         *pOutputData );
++
++unsigned int
++icaRandomNumberGenerate( ICA_ADAPTER_HANDLE  hAdapterHandle,
++			 unsigned int        outputDataLength,
++			 unsigned char      *pOutputData );
++
++/* Specific macros and definitions to not have IFDEF;s all over the
++   main code */
++
++#if (_AIX)
++static const char *IBMCA_LIBNAME = "/lib/libica.a(shr.o)";
++#elif (WIN32)
++static const char *IBMCA_LIBNAME = "cryptica";
++#else
++static const char *IBMCA_LIBNAME = "ica";
++#endif
++
++#if (WIN32)
++/*
++ The ICA_KEY_RSA_MODEXPO & ICA_KEY_RSA_CRT lengths and
++ offsets must be in big-endian format.
++
++*/
++#define CORRECT_ENDIANNESS(b) (  \
++                             (((unsigned long) (b) & 0x000000ff) << 24) |  \
++                             (((unsigned long) (b) & 0x0000ff00) <<  8) |  \
++                             (((unsigned long) (b) & 0x00ff0000) >>  8) |  \
++                             (((unsigned long) (b) & 0xff000000) >> 24)    \
++                             )
++#define CRT_KEY_TYPE   RSA_PKCS_PRIVATE_CHINESE_REMAINDER
++#define ME_KEY_TYPE    RSA_PUBLIC_MODULUS_EXPONENT
++#else
++#define CORRECT_ENDIANNESS(b) (b)
++#define CRT_KEY_TYPE       KEYTYPE_PKCSCRT
++#define ME_KEY_TYPE        KEYTYPE_MODEXPO
++#endif
++
++
++
++#endif   /* __ICA_OPENSSL_API_H__ */
