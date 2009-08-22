@@ -1,0 +1,27 @@
+--- opal/Makefile.in.ori	2006-03-21 14:02:27.513318000 +0800
++++ opal/Makefile.in	2006-03-21 14:03:46.522787000 +0800
+@@ -875,8 +875,10 @@
+ 		$(DESTDIR)@LIBDIR@/$(OPAL_FILE).$(MAJOR_VERSION)
+ 	ln -snf $(LIBNAME_PAT) \
+ 		$(DESTDIR)@LIBDIR@/$(OPAL_FILE)
++ifneq ($(OPAL_FILE),libopal.so)
+ 	ln -snf $(LIBNAME_PAT) \
+ 		$(DESTDIR)@LIBDIR@/libopal.so
++endif
+ 	( for fn in include/asn/*.h ; do \
+ 		$(INSTALL) -m 644 $$fn $(DESTDIR)$(PREFIX)/include/opal/asn ; \
+ 	done)
+--- opal/opal_inc.mak.in.ori	2006-03-21 14:02:34.060151000 +0800
++++ opal/opal_inc.mak.in	2006-03-21 14:10:24.220488000 +0800
+@@ -100,7 +100,11 @@
+ endif
+ 
+ 
++ifeq ($(OSTYPE),solaris)
++OPAL_BASE  = opal
++else
+ OPAL_BASE  = opal_$(PLATFORM_TYPE)_$(OPAL_SUFFIX)
++endif
+ OPAL_FILE  = lib$(OPAL_BASE)$(LIB_TYPE).$(LIB_SUFFIX)
+ 
+ LDFLAGS	    += -L$(OPAL_LIBDIR)

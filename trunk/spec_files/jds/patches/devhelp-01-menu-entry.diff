@@ -1,0 +1,13 @@
+--- devhelp-0.23/data/devhelp.desktop.in.in.orig	2009-04-23 21:14:29.737469182 +0530
++++ devhelp-0.23/data/devhelp.desktop.in.in	2009-04-23 21:15:19.743434689 +0530
+@@ -1,6 +1,8 @@
+ [Desktop Entry]
+-Name=Devhelp
+-_Comment=Developer's Help program
++# SUN_BRANDING
++_Name=GNOME Developer Documentation
++# SUN_BRANDING
++_Comment=Browse and search gtk+ and GNOME API documentation
+ _GenericName=Documentation Browser
+ Exec=devhelp
+ Terminal=false

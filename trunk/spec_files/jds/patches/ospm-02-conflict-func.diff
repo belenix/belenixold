@@ -1,0 +1,62 @@
+Index: trunk/configure.in
+===================================================================
+--- trunk/configure.in	(revision 552)
++++ trunk/configure.in	(working copy)
+@@ -103,7 +103,7 @@
+ AC_SUBST(LIBGLADE_CFLAGS)
+ AC_SUBST(LIBGLADE_LIBS)
+ 
+-PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.6.0)
++PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.15.0)
+ AC_SUBST(GTK_CFLAGS)
+ AC_SUBST(GTK_LIBS)
+ 
+Index: trunk/pm/ospm-queue-manager.c
+===================================================================
+--- trunk/pm/ospm-queue-manager.c	(revision 552)
++++ trunk/pm/ospm-queue-manager.c	(working copy)
+@@ -151,8 +151,6 @@
+ static void     build_printer_popup_menu    (OspmQueueManager   *qm);
+ static void     update_printer_popup_menu   (OspmQueueManager   *qm);
+ static void     build_background_popup_menu (OspmQueueManager   *qm);
+-static const gchar *gtk_menu_item_get_label (GtkMenuItem      *menu_item);
+-
+ static void     pop_up_context_menu         (GtkMenu            *menu,
+                                              gint16             offset_x,
+                                              gint16             offset_y,
+@@ -793,23 +791,6 @@
+ 
+ }
+ 
+-static const gchar *
+-gtk_menu_item_get_label (GtkMenuItem *menu_item)
+-{
+-        GList *children, *l;
+-        GtkWidget *child;
+-
+-        children = gtk_container_get_children (GTK_CONTAINER (menu_item));
+-
+-        for (l = g_list_first (children); l != NULL; l = g_list_next (l)) {
+-                child = (GtkWidget *)l->data;
+-                if (GTK_IS_LABEL (child)) {
+-                        return gtk_label_get_label (GTK_LABEL (child));
+-                }
+-        }
+-
+-}
+-
+ void
+ ospm_check_group_list_popup_sensitivity (GtkMenuItem *menu_item,
+                                          const gchar *name)
+@@ -828,8 +809,10 @@
+         for (l = g_list_first (children); l != NULL; l = g_list_next (l)) {
+                 child = (GtkWidget *)l->data;
+                 gname = gtk_menu_item_get_label (GTK_MENU_ITEM (child));
+-                if (!gname)
++                /* Check validation and seperator */
++                if (!gname || g_str_equal (gname, "")) {
+                         continue;
++                }
+                 if (g_str_equal (gname, name)) {
+                         gtk_widget_set_sensitive (child, FALSE);
+                 } else {

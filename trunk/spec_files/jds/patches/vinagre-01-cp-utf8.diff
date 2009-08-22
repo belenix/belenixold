@@ -1,0 +1,38 @@
+--- vinagre-2.24.1/src/vinagre-tab.c.orig	2008-11-28 10:34:07.585076717 +0900
++++ vinagre-2.24.1/src/vinagre-tab.c	2008-11-28 13:06:05.810668050 +0900
+@@ -353,7 +353,6 @@ static void
+ vnc_server_cut_text_cb (VncDisplay *vnc, const gchar *text, VinagreTab *tab)
+ {
+   GtkClipboard *cb;
+-  gsize a, b;
+   GtkTargetEntry targets[] = {
+ 				{"UTF8_STRING", 0, 0},
+ 				{"COMPOUND_TEXT", 0, 0},
+@@ -365,7 +364,7 @@ vnc_server_cut_text_cb (VncDisplay *vnc,
+     return;
+ 
+   g_free (tab->priv->clipboard_str);
+-  tab->priv->clipboard_str = g_convert (text, -1, "utf-8", "iso8859-1", &a, &b, NULL);
++  tab->priv->clipboard_str = g_strdup (text);
+ 
+   if (tab->priv->clipboard_str)
+     {
+@@ -974,17 +973,9 @@ vinagre_tab_send_ctrlaltdel (VinagreTab 
+ void
+ vinagre_tab_paste_text (VinagreTab *tab, const gchar *text)
+ {
+-  gchar *out;
+-  size_t a, b;
+   g_return_if_fail (VINAGRE_IS_TAB (tab));
+ 
+-  out = g_convert (text, -1, "iso8859-1", "utf-8", &a, &b, NULL);
+-
+-  if (out)
+-    {
+-      vnc_display_client_cut_text (VNC_DISPLAY (tab->priv->vnc), out);
+-      g_free (out);
+-    }
++  vnc_display_client_cut_text (VNC_DISPLAY (tab->priv->vnc), text);
+ }
+ 
+ gboolean

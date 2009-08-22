@@ -1,0 +1,266 @@
+diff -Nrup gDesklets-0.36beta/configure.in gDesklets-0.36/configure.in
+--- gDesklets-0.36beta/configure.in	2007-10-04 19:22:08.000000000 +0800
++++ gDesklets-0.36/configure.in	2007-10-08 13:13:10.232393000 +0800
+@@ -125,6 +125,7 @@ libdesklets/system/Linux/Makefile
+ libdesklets/system/Makefile
+ libdesklets/system/NetBSD/Makefile
+ libdesklets/system/OpenBSD/Makefile
++libdesklets/system/Solaris/Makefile
+ main/Makefile
+ plugin/Makefile
+ po/Makefile.in
+diff -Nrup gDesklets-0.36beta/libdesklets/system/Makefile.am gDesklets-0.36/libdesklets/system/Makefile.am
+--- gDesklets-0.36beta/libdesklets/system/Makefile.am	2007-10-04 19:22:11.000000000 +0800
++++ gDesklets-0.36/libdesklets/system/Makefile.am	2007-10-08 13:12:22.576595000 +0800
+@@ -20,7 +20,8 @@ SUBDIRS = \
+ 	Linux \
+ 	FreeBSD \
+ 	NetBSD \
+-	OpenBSD
++	OpenBSD \
++	Solaris 
+ 
+ 
+ gtop_la_LDFLAGS = -module -avoid-version -as-needed
+diff -Nrup gDesklets-0.36beta/libdesklets/system/Solaris/Generic.py gDesklets-0.36/libdesklets/system/Solaris/Generic.py
+--- gDesklets-0.36beta/libdesklets/system/Solaris/Generic.py	1970-01-01 08:00:00.000000000 +0800
++++ gDesklets-0.36/libdesklets/system/Solaris/Generic.py	2007-10-08 13:14:07.732202000 +0800
+@@ -0,0 +1,54 @@
++from libdesklets.system.Arch import Arch
++
++import re
++import struct
++import os
++
++class Generic(Arch):
++
++    def __init__(self):
++
++        Arch.__init__(self)
++
++        self.__bogomips    = re.compile('^bogomips\s+:\s+(\d+\.\d+)$', re.M)
++        self.__net_devices = re.compile('^\s*(\w+):.*mtu', re.M).findall(os.popen('/usr/sbin/ifconfig -a').read())
++
++
++
++    def net_devices(self):
++        """
++        @return : all available network devices
++        @rtype  : list
++        """
++
++        return self.__net_devices
++
++
++
++    def cpu_bogomips(self):
++        """
++        @return : bogomips of installed processor
++        @rtype  : float
++        """
++
++        return float(5000)
++
++
++
++    def users(self):
++        """
++        @return : number of connected users
++        @rtype  : int
++        """
++
++        count = 0
++        data = open('/var/adm/utmpx', 'rb').read()
++
++        for i in range(0, len(data), 384):
++            ut_type = struct.unpack('h', data[i:i+2])[0]
++
++            if (ut_type == 7):
++                count += 1
++
++        return count
++
+diff -Nrup gDesklets-0.36beta/libdesklets/system/Solaris/Makefile.am gDesklets-0.36/libdesklets/system/Solaris/Makefile.am
+--- gDesklets-0.36beta/libdesklets/system/Solaris/Makefile.am	1970-01-01 08:00:00.000000000 +0800
++++ gDesklets-0.36/libdesklets/system/Solaris/Makefile.am	2007-10-08 13:14:07.732326000 +0800
+@@ -0,0 +1,11 @@
++installdir = ${coredir}/libdesklets/system/Solaris
++
++install_DATA = \
++	__init__.py	\
++	Generic.py \
++	Sparc.py \
++	X86.py
++
++EXTRA_DIST = $(install_DATA)
++install_PYTHON = $(install_DATA)
++CLEANFILES = *.pyc
+diff -Nrup gDesklets-0.36beta/libdesklets/system/Solaris/Sparc.py gDesklets-0.36/libdesklets/system/Solaris/Sparc.py
+--- gDesklets-0.36beta/libdesklets/system/Solaris/Sparc.py	1970-01-01 08:00:00.000000000 +0800
++++ gDesklets-0.36/libdesklets/system/Solaris/Sparc.py	2007-10-08 13:14:07.732468000 +0800
+@@ -0,0 +1,68 @@
++from Generic import Generic
++
++import os
++import re
++
++
++class Sparc(Generic):
++
++    def __init__(self):
++
++        Generic.__init__(self)
++
++        def _get_model():
++            r = re.compile('brand\s+(.+)$', re.M)
++            m = r.findall( self._read_cpuinfo() )
++            return m[0]
++
++        def _get_cache():
++            r = re.compile('^\s+ecache-size:+\s+(.+)$',re.M)
++            m = r.findall(os.popen('/usr/sbin/prtconf -vp').read())
++            m_int = int(m[0],16)
++            return int(round(m_int/1000))
++
++        def _read_cpu_speed():
++            r = re.compile('clock_MHz\s+(\d+)$', re.M)
++            m = r.findall(self._read_cpuinfo())
++            return float(int(m[0]))
++
++        # CPU model and cache size never changes
++        self.__model_name = _get_model()
++        self.__cache_size = _get_cache()
++
++        # the cpu speed might change (laptops have mobile CPUs)
++        self.__speed = _read_cpu_speed()
++
++
++    def _read_cpuinfo(self):
++            """
++            @return : content of cpu_info
++            @rtype  : str
++            """
++            return os.popen('/usr/bin/kstat cpu_info').read()
++
++    def cpu_speed(self):
++        """
++        @return : current clock of installed processor
++        @rtype  : float
++        """
++
++        return self.__speed
++
++
++    def cpu_cache(self):
++        """
++        @return : 2nd level cache of installed processor
++        @rtype  : int
++        """
++
++        return self.__cache_size
++
++
++    def cpu_model(self):
++        """
++        @return : model/type of installed processor
++        @rtype  : str
++        """
++
++        return self.__model_name
+diff -Nrup gDesklets-0.36beta/libdesklets/system/Solaris/X86.py gDesklets-0.36/libdesklets/system/Solaris/X86.py
+--- gDesklets-0.36beta/libdesklets/system/Solaris/X86.py	1970-01-01 08:00:00.000000000 +0800
++++ gDesklets-0.36/libdesklets/system/Solaris/X86.py	2007-10-08 13:14:07.732611000 +0800
+@@ -0,0 +1,86 @@
++from Generic import Generic
++
++import re
++import struct
++import os
++
++# Also works for x86_64
++# it seems that there's no difference
++
++class X86(Generic):
++
++    def __init__(self):
++
++        Generic.__init__(self)
++
++        def _get_model():
++            r = re.compile('^.*brand-string.*\n\s+value=(.+)$', re.M)
++            m = r.findall( self._read_cpuinfo() )
++            return m[0]
++
++        def _get_cache():
++            r = re.compile('^.*l2-cache-size.*\n\s+value=(.+)$', re.M)
++            m = r.findall( self._read_cpuinfo())
++            m_int = int(m[0],16)
++            return int(round(m_int/1000))
++
++        def _read_cpu_speed():
++            r = re.compile('^.*cpu-mhz.*\n\s+value=(.+)$', re.M)
++            m = r.findall(self._read_cpuinfo())
++            return float(int(m[0],16))
++
++        # CPU model and cache size never changes
++        self.__model_name = _get_model()
++        self.__cache_size = _get_cache()
++
++        # the cpu speed might change (laptops have mobile CPUs)
++        self.__speed = _read_cpu_speed()
++
++
++    def _read_cpuinfo(self):
++            """
++            @return : content of cpu_info
++            @rtype  : str
++            """
++            return os.popen('/usr/sbin/prtconf -v').read()
++
++
++    def cpu_cache(self):
++        """
++        @return : 2nd level cache of installed processor
++        @rtype  : int
++        """
++
++        return self.__cache_size
++
++
++    def cpu_model(self):
++        """
++        @return : model/type of installed processor
++        @rtype  : str
++        """
++
++        return self.__model_name
++
++
++    def cpu_speed(self):
++        """
++        @return : current clock of installed processor
++        @rtype  : float
++        """
++        return self.__speed
++
++
++    def users(self):
++
++        count = 0
++        data = open('/var/adm/utmpx', 'rb').read()
++
++        for i in range(0, len(data), 384):
++            ut_type = struct.unpack('h', data[i:i+2])[0]
++
++            if (ut_type == 7):
++                count += 1
++
++        return count
++
+diff -Nrup gDesklets-0.36beta/libdesklets/system/Solaris/__init__.py gDesklets-0.36/libdesklets/system/Solaris/__init__.py
+--- gDesklets-0.36beta/libdesklets/system/Solaris/__init__.py	1970-01-01 08:00:00.000000000 +0800
++++ gDesklets-0.36/libdesklets/system/Solaris/__init__.py	2007-10-08 13:14:07.732742000 +0800
+@@ -0,0 +1,3 @@
++from X86 import X86
++from Sparc import Sparc
++from Generic import Generic

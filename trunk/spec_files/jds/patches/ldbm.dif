@@ -1,0 +1,190 @@
+diff -u -r1.66.2.3 -r1.66.2.9
+--- servers/slapd/back-ldbm/idl.c	28 Jul 2002 19:16:17 -0000	1.66.2.3
++++ servers/slapd/back-ldbm/idl.c	13 Mar 2003 03:35:27 -0000	1.66.2.9
+@@ -48,17 +48,29 @@
+ #ifdef LDBM_DEBUG_IDL
+ static void idl_check(ID_BLOCK *idl)
+ {
+-	int i;
++	int i, max;
+ 	ID_BLOCK last;
+ 
+-	if( ID_BLOCK_INDIRECT(idl) || ID_BLOCK_ALLIDS(idl)
+-		|| ID_BLOCK_NIDS(idl) <= 1 )
++	if( ID_BLOCK_ALLIDS(idl) )
++	{
++		return;
++	}
++#ifndef USE_INDIRECT_NIDS
++	if( ID_BLOCK_INDIRECT(idl) )
++	{
++		for ( max = 0; !ID_BLOCK_NOID(idl, max); max++ ) ;
++	} else
++#endif
++	{
++		max = ID_BLOCK_NIDS(idl);
++	}
++	if ( max <= 1 )
+ 	{
+ 		return;
+ 	}
+ 
+ 	for( last = ID_BLOCK_ID(idl, 0), i = 1;
+-		i < ID_BLOCK_NIDS(idl);
++		i < max;
+ 		last = ID_BLOCK_ID(idl, i), i++ )
+ 	{
+ 		assert (last < ID_BLOCK_ID(idl, i) );
+@@ -170,8 +182,7 @@
+ 	Datum	data;
+ 	ID_BLOCK	*idl;
+ 	ID_BLOCK	**tmp;
+-	int	nids;
+-	unsigned i;
++	unsigned	i, nids, nblocks;
+ 
+ 	idl = idl_fetch_one( be, db, key );
+ 
+@@ -197,21 +208,17 @@
+ 
+ #ifndef USE_INDIRECT_NIDS
+ 	/* count the number of blocks & allocate space for pointers to them */
+-	for ( i = 0; !ID_BLOCK_NOID(idl, i); i++ )
++	for ( nblocks = 0; !ID_BLOCK_NOID(idl, nblocks); nblocks++ )
+ 		;	/* NULL */
+ #else
+-	i = ID_BLOCK_NIDS(idl);
++	nblocks = ID_BLOCK_NIDS(idl);
+ #endif
+-	tmp = (ID_BLOCK **) ch_malloc( (i + 1) * sizeof(ID_BLOCK *) );
++	tmp = (ID_BLOCK **) ch_malloc( nblocks * sizeof(ID_BLOCK *) );
+ 
+ 	/* read in all the blocks */
+ 	cont_alloc( &data, &key );
+ 	nids = 0;
+-#ifndef USE_INDIRECT_NIDS
+-	for ( i = 0; !ID_BLOCK_NOID(idl, i); i++ ) {
+-#else
+-	for ( i = 0; i < ID_BLOCK_NIDS(idl); i++ ) {
+-#endif
++	for ( i = 0; i < nblocks; i++ ) {
+ 		cont_id( &data, ID_BLOCK_ID(idl, i) );
+ 
+ 		if ( (tmp[i] = idl_fetch_one( be, db, data )) == NULL ) {
+@@ -228,7 +235,6 @@
+ 
+ 		nids += ID_BLOCK_NIDS(tmp[i]);
+ 	}
+-	tmp[i] = NULL;
+ 	cont_free( &data );
+ 	idl_free( idl );
+ 
+@@ -238,7 +244,7 @@
+ 	nids = 0;
+ 
+ 	/* copy in all the ids from the component blocks */
+-	for ( i = 0; tmp[i] != NULL; i++ ) {
++	for ( i = 0; i < nblocks; i++ ) {
+ 		if ( tmp[i] == NULL ) {
+ 			continue;
+ 		}
+@@ -253,6 +259,8 @@
+ 	}
+ 	free( (char *) tmp );
+ 
++	assert( ID_BLOCK_NIDS(idl) == nids );
++
+ #ifdef LDBM_DEBUG_IDL
+ 	idl_check(idl);
+ #endif
+@@ -296,11 +304,6 @@
+ 	flags = LDBM_REPLACE;
+ 	rc = ldbm_cache_store( db, key, data, flags );
+ 
+-#ifdef LDBM_DEBUG
+-	Statslog( LDAP_DEBUG_STATS, "<= idl_store(): rc=%d\n",
+-		rc, 0, 0, 0, 0 );
+-#endif
+-
+ 	/* Debug( LDAP_DEBUG_TRACE, "<= idl_store %d\n", rc, 0, 0 ); */
+ 	return( rc );
+ }
+@@ -550,14 +553,13 @@
+ 
+ #ifndef USE_INDIRECT_NIDS
+ 	/* select the block to try inserting into *//* XXX linear search XXX */
+-	for ( i = 0; !ID_BLOCK_NOID(idl, i) && id > ID_BLOCK_ID(idl, i); i++ )
++	for ( i = 0; !ID_BLOCK_NOID(idl, i) && id >= ID_BLOCK_ID(idl, i); i++ )
+ 		;	/* NULL */
+ #else
+ 	i = idl_find(idl, id);
+-	if (ID_BLOCK_ID(idl, i) < id)
++	if (ID_BLOCK_ID(idl, i) <= id)
+ 		i++;
+ #endif
+-
+ 	if ( i != 0 ) {
+ 		i--;
+ 		first = 0;
+@@ -565,6 +567,11 @@
+ 		first = 1;
+ 	}
+ 
++	/* At this point, the following condition must be true:
++	 * ID_BLOCK_ID(idl, i) <= id && id < ID_BLOCK_ID(idl, i+1)
++	 * except when i is the first or the last block.
++	 */
++
+ 	/* get the block */
+ 	cont_alloc( &k2, &key );
+ 	cont_id( &k2, ID_BLOCK_ID(idl, i) );
+@@ -626,10 +633,11 @@
+ #else
+ 		if ( !first && (unsigned long)(i + 1) < ID_BLOCK_NIDS(idl) ) {
+ #endif
++			Datum k3;
+ 			/* read it in */
+-			cont_alloc( &k2, &key );
+-			cont_id( &k2, ID_BLOCK_ID(idl, i) );
+-			if ( (tmp2 = idl_fetch_one( be, db, k2 )) == NULL ) {
++			cont_alloc( &k3, &key );
++			cont_id( &k3, ID_BLOCK_ID(idl, i + 1) );
++			if ( (tmp2 = idl_fetch_one( be, db, k3 )) == NULL ) {
+ #ifdef NEW_LOGGING
+ 				LDAP_LOG( INDEX, ERR,
+ 					   "idl_insert_key: idl_fetch_one returned NULL\n", 0, 0, 0);
+@@ -640,7 +648,7 @@
+ #endif
+ 
+ 				/* split the original block */
+-				cont_free( &k2 );
++				cont_free( &k3 );
+ 				goto split;
+ 			}
+ 
+@@ -680,7 +688,7 @@
+ 			    db->dbc_maxids )) ) {
+ 			case 1:		/* id inserted first in block */
+ 				rc = idl_change_first( be, db, key, idl,
+-				    i + 1, k2, tmp2 );
++				    i + 1, k3, tmp2 );
+ 				/* FALL */
+ 
+ 			case 2:		/* id already there - how? */
+@@ -704,6 +712,8 @@
+ 
+ 				idl_free( tmp );
+ 				idl_free( tmp2 );
++				cont_free( &k3 );
++				cont_free( &k2 );
+ 				idl_free( idl );
+ 				return( 0 );
+ 
+@@ -712,6 +722,7 @@
+ 			}
+ 
+ 			idl_free( tmp2 );
++			cont_free( &k3 );
+ 		}
+ 
+ split:

@@ -1,0 +1,223 @@
+diff -urN gconf-editor.orig/configure.in gconf-editor.new/configure.in
+--- gconf-editor.orig/configure.in	2009-03-25 11:03:11.781997619 +0000
++++ gconf-editor.new/configure.in	2009-03-25 13:02:11.467113180 +0000
+@@ -32,10 +32,11 @@
+ fi
+ changequote([,])dnl
+ 
++PKG_CHECK_MODULES(POLKIT, polkit-dbus, HAVE_POLKIT=yes, HAVE_POLKIT=no)
++
+ PKG_CHECK_MODULES(GCONF_EDITOR,
+ 		  gconf-2.0 >= 2.9.2
+ 		  gtk+-2.0 >= 2.12.0
+-		  polkit-dbus >= 0.7
+ 		  dbus-glib-1 >= 0.71)
+ 
+ if test "$enable_maintainer_mode" = "yes"; then
+diff -urN gconf-editor.orig/src/gconf-editor-window.c gconf-editor.new/src/gconf-editor-window.c
+--- gconf-editor.orig/src/gconf-editor-window.c	2009-03-25 11:03:11.759676200 +0000
++++ gconf-editor.new/src/gconf-editor-window.c	2009-03-25 13:46:24.842411967 +0000
+@@ -640,12 +640,14 @@
+   gdk_display_flush (gtk_widget_get_display (GTK_WIDGET (gconfwindow)));
+ }
+ 
++#ifdef HAVE_POLKIT
+ static void
+ gconf_editor_popup_policykit_callback (GtkWindow *window, GError *error)
+ {
+   if (error)
+     gconf_editor_window_popup_error_dialog (window, _("Could not set value. Error was:\n%s"), error);
+ }
++#endif
+ 
+ static void
+ gconf_editor_popup_window_set_as_default (GtkAction *action, GtkWidget *callback_data)
+@@ -656,9 +658,21 @@
+   GtkTreeIter iter;
+   GConfValue *value;
+   char *path = NULL;
++
++#ifdef HAVE_POLKIT
+   gboolean can_use_pk;
+   
+   can_use_pk = (gconfwindow->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL);
++#else
++  GConfClient *client;
++  GError *error = NULL;
++
++  client = gconf_editor_window_get_client (GCONF_EDITOR_WINDOW_TYPE_DEFAULTS);
++  if (client == NULL) {
++    g_print ("Could not create GConf client\n");
++    return;
++  }
++#endif
+   
+   gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (gconfwindow->list_view)),
+                                    NULL, &iter);
+@@ -666,7 +680,7 @@
+                       GCONF_LIST_MODEL_KEY_PATH_COLUMN, &path,
+                       GCONF_LIST_MODEL_VALUE_COLUMN, &value,
+                       -1);
+-
++#ifdef HAVE_POLKIT
+   if (gconf_util_can_edit_defaults ()) {
+     GConfClient *client;
+ 
+@@ -693,6 +707,15 @@
+                                 (GFunc) gconf_editor_popup_policykit_callback,
+                                 g_object_ref (window), g_object_unref);
+   }
++#else
++  gconf_client_set (client, path, value, NULL);
++
++  gconf_client_suggest_sync (client, &error);
++  if (error) {
++    gconf_editor_window_popup_error_dialog (window, _("Could not sync value. Error was:\n%s"), error);
++  }
++  g_object_unref (client);
++#endif
+ }
+ 
+ static void
+@@ -704,9 +727,21 @@
+   GtkTreeIter iter;
+   GConfValue *value;
+   char *path = NULL;
++#ifdef HAVE_POLKIT
+   gboolean can_use_pk;
+   
+   can_use_pk = (gconfwindow->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL);
++#else
++  GError *error = NULL;
++  GConfClient *client;
++
++  client = gconf_editor_window_get_client (GCONF_EDITOR_WINDOW_TYPE_MANDATORY);
++  
++  if (client == NULL) {
++    g_print ("Could not create GConf client\n");
++    return;
++  }
++#endif
+ 
+   gtk_tree_selection_get_selected (gtk_tree_view_get_selection (GTK_TREE_VIEW (gconfwindow->list_view)),
+                                    NULL, &iter);
+@@ -714,7 +749,7 @@
+                       GCONF_LIST_MODEL_KEY_PATH_COLUMN, &path,
+                       GCONF_LIST_MODEL_VALUE_COLUMN, &value,
+                       -1);
+-
++#ifdef HAVE_POLKIT
+   if (gconf_util_can_edit_mandatory ()) {
+     GConfClient *client;
+ 
+@@ -741,6 +776,15 @@
+                                   (GFunc) gconf_editor_popup_policykit_callback,
+                                   g_object_ref (window), g_object_unref);
+   }
++#else
++  gconf_client_set (client, path, value, NULL);
++
++  gconf_client_suggest_sync (client, &error);
++  if (error) {
++    gconf_editor_window_popup_error_dialog (window, _("Could not sync value. Error was:\n%s"), error);
++  }
++  g_object_unref (client);
++#endif
+ }
+ 
+ static GtkActionEntry entries[] = {
+@@ -933,11 +977,19 @@
+ 			gtk_widget_set_sensitive (gtk_ui_manager_get_widget (window->ui_manager, "/GConfKeyPopupMenu/UnsetKey"), 
+ 						  window->type != GCONF_EDITOR_WINDOW_TYPE_DEFAULTS);
+ 			gtk_widget_set_sensitive (gtk_ui_manager_get_widget (window->ui_manager, "/GConfKeyPopupMenu/DefaultKey"), 
+-						  (gconf_util_can_edit_defaults () && window->type != GCONF_EDITOR_WINDOW_TYPE_DEFAULTS) ||
+-						  (gconf_pk_can_set_default () && window->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL));
++						  (gconf_util_can_edit_defaults () && window->type != GCONF_EDITOR_WINDOW_TYPE_DEFAULTS)
++#ifdef HAVE_POLKIT
++  || (gconf_pk_can_set_default () && window->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL));
++#else
++  );
++#endif
+ 			gtk_widget_set_sensitive (gtk_ui_manager_get_widget (window->ui_manager, "/GConfKeyPopupMenu/MandatoryKey"), 
+-						  (gconf_util_can_edit_mandatory () && window->type != GCONF_EDITOR_WINDOW_TYPE_MANDATORY) ||
+-						  (gconf_pk_can_set_mandatory () && window->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL));
++						  (gconf_util_can_edit_mandatory () && window->type != GCONF_EDITOR_WINDOW_TYPE_MANDATORY) 
++#ifdef HAVE_POLKIT
++  || (gconf_pk_can_set_mandatory () && window->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL));
++#else
++  );
++#endif
+ 			
+ 			gtk_tree_path_free (path);
+ 		}
+@@ -1036,11 +1088,19 @@
+ 		gtk_widget_set_sensitive (gtk_ui_manager_get_widget (window->ui_manager, "/GConfKeyPopupMenu/UnsetKey"), 
+ 					  window->type != GCONF_EDITOR_WINDOW_TYPE_DEFAULTS);
+ 		gtk_widget_set_sensitive (gtk_ui_manager_get_widget (window->ui_manager, "/GConfKeyPopupMenu/DefaultKey"), 
+-					  (gconf_util_can_edit_defaults () && window->type != GCONF_EDITOR_WINDOW_TYPE_DEFAULTS) ||
+-					  (gconf_pk_can_set_default () && window->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL));
++					  (gconf_util_can_edit_defaults () && window->type != GCONF_EDITOR_WINDOW_TYPE_DEFAULTS) 
++#ifdef HAVE_POLKIT
++  || (gconf_pk_can_set_default () && window->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL));
++#else
++  );
++#endif
+ 		gtk_widget_set_sensitive (gtk_ui_manager_get_widget (window->ui_manager, "/GConfKeyPopupMenu/MandatoryKey"), 
+-					  (gconf_util_can_edit_mandatory () && window->type != GCONF_EDITOR_WINDOW_TYPE_MANDATORY) ||
+-					  (gconf_pk_can_set_mandatory () && window->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL));
++					  (gconf_util_can_edit_mandatory () && window->type != GCONF_EDITOR_WINDOW_TYPE_MANDATORY) 
++#ifdef HAVE_POLKIT
++  || (gconf_pk_can_set_mandatory () && window->type == GCONF_EDITOR_WINDOW_TYPE_NORMAL));
++#else
++  );
++#endif
+ 			
+ 	}
+ 	else {
+diff -urN gconf-editor.orig/src/gconf-policykit.c gconf-editor.new/src/gconf-policykit.c
+--- gconf-editor.orig/src/gconf-policykit.c	2009-03-25 11:03:11.761976237 +0000
++++ gconf-editor.new/src/gconf-policykit.c	2009-03-25 13:06:13.075813036 +0000
+@@ -36,8 +36,10 @@
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
++#ifdef HAVE_POLKIT
+ #include <polkit/polkit.h>
+ #include <polkit-dbus/polkit-dbus.h>
++#endif
+ 
+ #include "gconf-policykit.h"
+ 
+@@ -80,7 +82,7 @@
+ 
+         return bus;
+ }
+-
++#ifdef HAVE_POLKIT
+ static gboolean
+ pk_io_watch_have_data (GIOChannel *channel, GIOCondition condition, gpointer user_data)
+ {
+@@ -434,3 +436,4 @@
+         set_key_async (data);
+         _gconf_pk_data_unref (data);
+ }
++#endif
+diff -urN gconf-editor.orig/src/gconf-policykit.h gconf-editor.new/src/gconf-policykit.h
+--- gconf-editor.orig/src/gconf-policykit.h	2009-03-25 11:03:11.760283144 +0000
++++ gconf-editor.new/src/gconf-policykit.h	2009-03-25 13:06:37.860483652 +0000
+@@ -26,7 +26,7 @@
+ #define  __GCONF_POLICYKIT_H__
+ 
+ #include <glib.h>
+-
++#ifdef HAVE_POLKIT
+ gint     gconf_pk_can_set_default    (void);
+ 
+ gint     gconf_pk_can_set_mandatory  (void);
+@@ -42,5 +42,5 @@
+                                        GFunc           callback,
+                                        gpointer        data,
+                                        GDestroyNotify  notify);
+-
++#endif
+ #endif /* __GCONF_POLICYKIT_H__ */

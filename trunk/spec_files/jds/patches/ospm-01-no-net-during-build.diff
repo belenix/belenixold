@@ -1,0 +1,9 @@
+--- ospm-1.4.7/help/C/ospm-pm.xml.orig	2008-10-30 11:03:10.000000000 +0900
++++ ospm-1.4.7/help/C/ospm-pm.xml	2008-12-03 00:01:13.817055000 +0900
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.0/docbookx.dtd">
++<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+ <book id="osolprtmonhlp" label="fcs" lang="en"><title>Print Manager for OpenSolaris</title>
+ <bookinfo><authorgroup><author><firstname>Solaris</firstname>
+ <surname>Publications</surname>

@@ -1,0 +1,29 @@
+--- pwlib/make/unix.mak.ori	2006-03-21 14:06:23.916249000 +0800
++++ pwlib/make/unix.mak	2006-03-21 14:06:29.476334000 +0800
+@@ -939,7 +939,11 @@
+ PW_LIBDIR	= $(PWLIBDIR)/lib
+ 
+ # set name of the PT library
++ifeq ($(OSTYPE),solaris)
++PTLIB_BASE	= pt
++else
+ PTLIB_BASE	= pt_$(PLATFORM_TYPE)_$(OBJ_SUFFIX)
++endif
+ PTLIB_FILE	= lib$(PTLIB_BASE)$(LIB_TYPE).$(LIB_SUFFIX)
+ PT_OBJBASE	= obj_$(PLATFORM_TYPE)_$(OBJDIR_SUFFIX)
+ PT_OBJDIR	= $(PW_LIBDIR)/$(PT_OBJBASE)
+--- pwlib/Makefile.in.ori	2006-03-21 14:04:10.817511000 +0800
++++ pwlib/Makefile.in	2006-03-21 14:05:29.269154000 +0800
+@@ -267,10 +267,12 @@
+ 		rm -f  $(PTLIB_FILE) ; \
+ 		ln -sf $(PTLIB_FILE).@MAJOR_VERSION@.@MINOR_VERSION@.@BUILD_NUMBER@ $(PTLIB_FILE) \
+ 	)
++ifneq ($(PTLIB_FILE),libpt.@SHAREDLIBEXT@)
+ 	(cd $(DESTDIR)$(LIBDIR); \
+ 		rm -f  libpt.@SHAREDLIBEXT@ ; \
+ 		ln -sf $(PTLIB_FILE) libpt.@SHAREDLIBEXT@ \
+ 	)
++endif
+ ifeq (1, $(HAS_PLUGINS))
+ 	cd plugins/pwlib/device/ ; \
+ 	( for dir in ./* ;\

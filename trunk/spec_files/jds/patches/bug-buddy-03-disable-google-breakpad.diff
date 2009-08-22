@@ -1,0 +1,14 @@
+/jds/bin/diff -uprN bug-buddy-2.25.2.old/configure.in bug-buddy-2.25.2/configure.in
+--- bug-buddy-2.25.2.old/configure.in	2008-12-11 14:21:10.650872000 +0000
++++ bug-buddy-2.25.2/configure.in	2008-12-11 14:21:20.933601000 +0000
+@@ -95,8 +95,8 @@ if test "x$enable_google_breakpad" = "xy
+ 	GOOGLE_BREAKPAD_SUPPORTED_OS="no"
+ 	case $target_os in
+ 		solaris*)
+-			solaris=yes
+-			GOOGLE_BREAKPAD_SUPPORTED_OS="yes"
++			solaris=no
++			GOOGLE_BREAKPAD_SUPPORTED_OS="no"
+ 		;;
+ 		linux*)
+ 			linux=yes

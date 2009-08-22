@@ -1,0 +1,194 @@
+Index: src/gnome-mount.c
+===================================================================
+RCS file: /cvs/gnome/gnome-mount/src/gnome-mount.c,v
+retrieving revision 1.18
+diff -u -r1.18 gnome-mount.c
+--- gnome-mount-0.4/src/gnome-mount.c	1 Mar 2006 16:25:10 -0000	1.18
++++ gnome-mount-0.4/src/gnome-mount.c	11 Jun 2006 21:40:34 -0000
+@@ -42,7 +42,11 @@
+ #include <libhal.h>
+ #include <libhal-storage.h>
+ 
++#ifndef sun
+ #include <mntent.h>
++#else
++#include <sys/mnttab.h>
++#endif
+ 
+ static DBusConnection *dbus_connection;
+ static LibHalContext *hal_ctx;
+@@ -400,6 +404,51 @@
+ 		return NULL;
+ }
+ 
++static char *
++get_mntent_mount_point(const char *device_file)
++{
++	char *mount_point;
++	FILE *f;
++#ifndef sun
++	struct mntent mnt;
++	struct mntent *mnte;
++	char buf[512];
++#else
++	struct mnttab mnt;
++	struct mnttab mpref = { NULL, NULL, NULL, NULL, NULL };
++#endif
++
++	mount_point = NULL;
++
++#ifndef sun
++	if ((f = setmntent ("/proc/mounts", "r")) != NULL) {
++		
++		while ((mnte = getmntent_r (f, &mnt, buf, sizeof(buf))) != NULL) {
++			if (strcmp (mnt.mnt_fsname, device_file) == 0) {
++				if (mnt.mnt_dir != NULL) {
++					mount_point = g_strdup (mnt.mnt_dir);
++				}
++				break;
++			}
++		}
++		endmntent (f);
++	}
++
++#else /* sun */
++
++	if ((f = fopen(MNTTAB, "r")) != NULL) {
++		mpref.mnt_special = (char *)device_file;
++		if (getmntany(f, &mnt, &mpref) == 0) {
++			mount_point = g_strdup (mnt.mnt_mountp);
++		}
++		fclose(f);
++	}
++
++#endif /* sun */
++
++out:
++	return (mount_point);
++}
+ 
+ static gboolean
+ volume_mount_with_options (const char *udi, LibHalVolume *volume, LibHalDrive *drive,
+@@ -410,6 +459,8 @@
+ 	gboolean ret = FALSE;
+ 	DBusError error;
+ 	unsigned int i;
++	const char *device_file;
++	char *mounted_at;
+ 	
+ 	if (mount_point == NULL)
+ 		mount_point = "";
+@@ -475,35 +526,11 @@
+ 		goto out;
+ 	}
+ 
+-	{
+-		char *mount_point;
+-		const char *device_file;
+-
+-		mount_point = NULL;
+-		device_file = get_dev_file (volume, drive);
+-
+-		if (device_file != NULL) {
+-			FILE *f;
+-			struct mntent mnt;
+-			struct mntent *mnte;
+-			char buf[512];
+-
+-			if ((f = setmntent ("/proc/mounts", "r")) != NULL) {
+-				
+-				while ((mnte = getmntent_r (f, &mnt, buf, sizeof(buf))) != NULL) {
+-					if (strcmp (mnt.mnt_fsname, device_file) == 0) {
+-						if (mnt.mnt_dir != NULL) {
+-							mount_point = g_strdup (mnt.mnt_dir);
+-						}
+-						break;
+-					}
+-				}
+-				endmntent (f);
+-			}
++	if ((device_file = get_dev_file (volume, drive)) != NULL) {
++		if ((mounted_at = get_mntent_mount_point(device_file)) != NULL) {
++			g_print (_("Mounted %s at \"%s\"\n"), device_file, mounted_at);
++			g_free (mounted_at);
+ 		}
+-
+-		g_print (_("Mounted %s at \"%s\"\n"), device_file, mount_point);
+-		g_free (mount_point);
+ 	}
+ 
+ 	ret = TRUE;
+@@ -1484,6 +1511,7 @@
+ 		goto out;
+ 
+ 	if (opt_device_file != NULL) {
++#ifndef sun
+ 		resolved_device_file = resolve_symlink (opt_device_file);
+ 		if (resolved_device_file == NULL) {
+ 			goto out;
+@@ -1491,6 +1519,9 @@
+ 		if (strcmp (resolved_device_file, opt_device_file) != 0) {
+ 			g_print (_("Resolved device file %s -> %s\n"), opt_device_file, resolved_device_file);
+ 		}
++#else /* sun */
++		resolved_device_file = g_strdup (opt_device_file);
++#endif /* sun */
+ 	}
+ 		
+ 	if (opt_hal_udi != NULL) {
+--- gnome-mount-0.4/src/gnome-mount.c-orig	2009-01-21 15:25:53.922425000 -0600
++++ gnome-mount-0.4/src/gnome-mount.c	2009-01-21 15:35:31.680865000 -0600
+@@ -58,6 +58,8 @@ static gboolean opt_noui = FALSE;
+ static gboolean opt_block = FALSE;
+ static gboolean opt_nodisplay = FALSE;
+ 
++#define DBUS_TIMEOUT G_MAXINT
++
+ static void 
+ notify_parent (gboolean success)
+ {
+@@ -488,7 +490,7 @@ volume_mount_with_options (const char *u
+ 	}
+ 
+ 	dbus_error_init (&error);
+-	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, dmesg, -1, &error)) ||
++	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, dmesg, DBUS_TIMEOUT, &error)) ||
+ 	    dbus_error_is_set (&error)) {
+ 		g_warning ("Mount failed for %s\n%s : %s\n", udi, error.name, error.message);
+ 
+@@ -749,7 +751,7 @@ volume_unmount (const char *udi, LibHalV
+ 	}
+ 		
+ 	dbus_error_init (&error);
+-	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, msg, -1, &error)) ||
++	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, msg, DBUS_TIMEOUT, &error)) ||
+ 	    dbus_error_is_set (&error)) {
+ 		g_warning ("Unmount failed for %s: %s : %s\n", udi, error.name, error.message);
+ 		show_error_dialog_unmount (udi, volume, drive, error.name, error.message);
+@@ -798,7 +800,7 @@ volume_eject (const char *udi, LibHalVol
+ 	}
+ 	
+ 	dbus_error_init (&error);
+-	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, msg, -1, &error))) {
++	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, msg, DBUS_TIMEOUT, &error))) {
+ 		g_warning ("Eject failed for %s: %s : %s\n", udi, error.name, error.message);
+ 		dbus_error_free (&error);
+ 		goto out;
+@@ -1119,7 +1121,7 @@ setup_crypto (const char *udi, LibHalVol
+ 	}
+ 	
+ 	dbus_error_init (&error);
+-	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, msg, -1, &error)) || 
++	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, msg, DBUS_TIMEOUT, &error)) || 
+ 	    dbus_error_is_set (&error)) {
+ 		g_warning ("Setup failed for %s: %s : %s\n", udi, error.name, error.message);
+ 		if (strcmp (error.name, "org.freedesktop.Hal.Device.Volume.Crypto.SetupPasswordError") == 0) {
+@@ -1191,7 +1193,7 @@ teardown_crypto (const char *udi, LibHal
+ 	}
+ 	
+ 	dbus_error_init (&error);
+-	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, msg, -1, &error)) || 
++	if (!(reply = dbus_connection_send_with_reply_and_block (dbus_connection, msg, DBUS_TIMEOUT, &error)) || 
+ 	    dbus_error_is_set (&error)) {
+ 		g_warning ("Teardown failed for %s: %s : %s\n", udi, error.name, error.message);
+ 		dbus_error_free (&error);

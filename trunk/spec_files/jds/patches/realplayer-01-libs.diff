@@ -1,0 +1,11 @@
+--- realplay.old	2006-01-19 18:00:00.874039000 +0800
++++ realplay	2006-01-19 18:00:31.842100000 +0800
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ 
+ # If you don't have readlink, fill in the path to hxplay.bin here.
+-# HELIX_LIBS="/usr/local/HelixPlayer" ; export HELIX_LIBS
++HELIX_LIBS="/usr/lib/RealPlay" ; export HELIX_LIBS
+ 
+ # To install this script, create a symlink to it from somewhere in your
+ # path.  Do *not* move the script out of the HelixPlayer directory, since

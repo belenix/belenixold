@@ -1,0 +1,18 @@
+--- libraries/libldap/init.c	2002/10/15 10:46:31	1.1
++++ libraries/libldap/init.c	2002/10/30 09:18:02	1.2
+@@ -506,6 +506,7 @@
+ #endif
+ 
+ 	openldap_ldap_init_w_sysconf(LDAP_CONF_FILE);
++	if( getuid() == geteuid() ){
+ 	openldap_ldap_init_w_userconf(LDAP_USERRC_FILE);
+ 
+ 	{
+@@ -535,6 +536,7 @@
+ 	}
+ 
+ 	openldap_ldap_init_w_env(gopts, NULL);
++	}
+ 
+ 	ldap_int_sasl_init();
+ }

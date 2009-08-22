@@ -1,0 +1,11 @@
+--- pwlib/configure.ac.ori2	2006-03-31 00:07:14.157037000 +0800
++++ pwlib/configure.ac	2006-03-31 00:07:42.618794000 +0800
+@@ -855,7 +855,7 @@
+ if test "x$LIB64" != "x" ; then
+   AC_DEFINE_UNQUOTED([P_DEFAULT_PLUGIN_DIR], ["${INSTALLPREFIX}/lib64/pwlib"], [Default plugin directory])
+ else
+-  AC_DEFINE_UNQUOTED([P_DEFAULT_PLUGIN_DIR], ["${INSTALLPREFIX}/lib/pwlib"], [Default plugin directory])
++  AC_DEFINE_UNQUOTED([P_DEFAULT_PLUGIN_DIR], ["${LIBDIR}/pwlib"], [Default plugin directory])
+ fi
+ 
+ dnl ########################################################################

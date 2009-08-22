@@ -1,0 +1,84 @@
+/jds/bin/diff -uprN bug-buddy-2.25.2.old/gnome-breakpad/gnome-breakpad.cc bug-buddy-2.25.2/gnome-breakpad/gnome-breakpad.cc
+--- bug-buddy-2.25.2.old/gnome-breakpad/gnome-breakpad.cc	2008-12-11 12:57:57.762310000 +0000
++++ bug-buddy-2.25.2/gnome-breakpad/gnome-breakpad.cc	2008-12-11 13:11:10.651856000 +0000
+@@ -32,6 +32,7 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <signal.h>
++#include <dlfcn.h>
+ #include <sys/wait.h>
+ 
+ #include <glib.h>
+@@ -494,6 +495,7 @@ check_if_gdb ()
+ int
+ gtk_module_init (int *argc, char** argv[])
+ {
++    void *handle;
+ 	bugbuddy = g_find_program_in_path ("bug-buddy");
+ 	
+ 	if (bugbuddy && !g_getenv ("GNOME_DISABLE_CRASH_DIALOG")) {
+@@ -503,35 +505,40 @@ gtk_module_init (int *argc, char** argv[
+ 						NULL, NULL, false);
+ #endif
+ 
+-        	static struct sigaction *setptr;
+-        	static struct sigaction old_action;
+-        	struct sigaction sa;
++        static struct sigaction *setptr;
++       	static struct sigaction old_action;
++       	struct sigaction sa;
+                 memset(&sa, 0, sizeof(sa));
+                 setptr = &sa;
+ 
+-                sa.sa_handler = bugbuddy_segv_handle;
++        sa.sa_handler = bugbuddy_segv_handle;
+ 
+-                sigaction(SIGSEGV, NULL, &old_action);
+-		if (old_action.sa_handler == SIG_DFL)
+-                	sigaction(SIGSEGV, setptr, NULL);
+-
+-                sigaction(SIGABRT, NULL, &old_action);
+-		if (old_action.sa_handler == SIG_DFL)
+-                	sigaction(SIGABRT, setptr, NULL);
+-
+-                sigaction(SIGTRAP, NULL, &old_action);
+-		if (old_action.sa_handler == SIG_DFL)
+-                	sigaction(SIGTRAP, setptr, NULL);
+-
+-                sigaction(SIGFPE, NULL, &old_action);
+-		if (old_action.sa_handler == SIG_DFL)
+-                	sigaction(SIGFPE, setptr, NULL);
+-
+-                sigaction(SIGBUS, NULL, &old_action);
+-		if (old_action.sa_handler == SIG_DFL)
+-                	sigaction(SIGBUS, setptr, NULL);
++        if ((handle = dlopen ("libjsig.so", RTLD_LAZY)) == NULL) {
++            sigaction(SIGSEGV, NULL, &old_action);
++		    if (old_action.sa_handler == SIG_DFL)
++                sigaction(SIGSEGV, setptr, NULL);
++
++            sigaction(SIGABRT, NULL, &old_action);
++		    if (old_action.sa_handler == SIG_DFL)
++                sigaction(SIGABRT, setptr, NULL);
++
++            sigaction(SIGTRAP, NULL, &old_action);
++		    if (old_action.sa_handler == SIG_DFL)
++                sigaction(SIGTRAP, setptr, NULL);
++
++            sigaction(SIGFPE, NULL, &old_action);
++		    if (old_action.sa_handler == SIG_DFL)
++                sigaction(SIGFPE, setptr, NULL);
++
++            sigaction(SIGBUS, NULL, &old_action);
++		    if (old_action.sa_handler == SIG_DFL)
++                sigaction(SIGBUS, setptr, NULL);
++
++		    old_handler = g_log_set_default_handler (bug_buddy_log_handler, NULL);
++        } else {
++            dlclose (handle);
++        }
+ 
+-		old_handler = g_log_set_default_handler (bug_buddy_log_handler, NULL);
+ 	}
+ 	return 0;
+ }

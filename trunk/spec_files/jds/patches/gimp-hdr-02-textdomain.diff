@@ -1,0 +1,44 @@
+--- gimp-hdrtools-0.1/hdrtools.c.orig	2008-08-28 16:35:43.388983000 +0900
++++ gimp-hdrtools-0.1/hdrtools.c	2008-08-28 18:46:47.946566000 +0900
+@@ -26,10 +26,13 @@
+ #include <float.h>
+ 
+ #include <gtk/gtk.h>
++#include <glib/gi18n-lib.h>
+ 
+ #include <libgimp/gimp.h>
+ #include <libgimp/gimpui.h>
+ 
++#define GETTEXT_PACKAGE "gimp-hdrtools"
++
+ static inline float max(float a, float b)
+ {
+    return(a > b ? a : b);
+@@ -123,7 +126,18 @@ static struct
+    float range;
+ } g_rgbd8_vals = { 1, 1.0f };
+ 
++#ifdef G_OS_WIN32
+ MAIN()
++#else
++int
++main (int argc, char *argv[])
++{
++  bindtextdomain (GETTEXT_PACKAGE, gimp_locale_directory ());
++  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
++  return gimp_main (&PLUG_IN_INFO, argc, argv);
++}
++#endif
++
+ 	
+ static void query(void)
+ {
+@@ -320,7 +334,7 @@ static void run(const gchar *name, gint 
+ 			case GIMP_RUN_WITH_LAST_VALS:
+ 			   gimp_ui_init(PROG_NAME, 0);
+ 			   export = gimp_export_image(&imageID, &drawableID,
+-                                       "Radiance RGBE",
++                                       _("Radiance RGBE"),
+                                        (GIMP_EXPORT_CAN_HANDLE_RGB |
+                                         GIMP_EXPORT_CAN_HANDLE_ALPHA));
+ 			   if(export == GIMP_EXPORT_CANCEL)

@@ -1,0 +1,132 @@
+--- configure.in	2002/06/27 10:10:03	1.1
++++ configure.in	2002/06/28 15:05:51
+@@ -2255,7 +2255,7 @@
+ 			[have_setproctitle=yes
+ 			LUTIL_LIBS="$LUTIL_LIBS -lutil"],
+ 			[have_setproctitle=no
+-			LIBOBJS="$LIBOBJS setproctitle.o"
++			AC_LIBOBJ(setproctitle)
+ 			LIBSRCS="$LIBSRCS setproctitle.c"])])
+ 
+ 	if test $have_setproctitle = yes ; then
+--- ./build/openldap.m4	2002/06/27 10:06:50	1.1
++++ ./build/openldap.m4	2002/06/28 15:05:43
+@@ -63,7 +63,7 @@
+ dnl
+ dnl ====================================================================
+ dnl
+-AC_DEFUN(AC_COMPILE_CHECK_SIZEOF,
++AC_DEFUN([AC_COMPILE_CHECK_SIZEOF],
+ [changequote(<<, >>)dnl 
+ dnl The name to #define. 
+ define(<<AC_TYPE_NAME>>, translit(sizeof_$1, [a-z *], [A-Z_P]))dnl 
+@@ -170,7 +170,7 @@
+ dnl
+ dnl --------------------------------------------------------------------
+ dnl OpenLDAP version of STDC header check w/ EBCDIC support
+-AC_DEFUN(OL_HEADER_STDC,
++AC_DEFUN([OL_HEADER_STDC],
+ [AC_REQUIRE_CPP()dnl
+ AC_REQUIRE([OL_CPP_EBCDIC])dnl
+ AC_CACHE_CHECK([for ANSI C header files], ol_cv_header_stdc,
+@@ -942,7 +942,7 @@
+ dnl Early MIPS compilers (used in Ultrix 4.2) don't like
+ dnl "int x; int *volatile a = &x; *a = 0;"
+ dnl 	-- borrowed from PDKSH
+-AC_DEFUN(OL_C_VOLATILE,
++AC_DEFUN([OL_C_VOLATILE],
+  [AC_CACHE_CHECK(if compiler understands volatile, ol_cv_c_volatile,
+     [AC_TRY_COMPILE([int x, y, z;],
+       [volatile int a; int * volatile b = x ? &y : &z;
+@@ -978,7 +978,7 @@
+ dnl
+ dnl ====================================================================
+ dnl Define sig_atomic_t if not defined in signal.h
+-AC_DEFUN(OL_TYPE_SIG_ATOMIC_T,
++AC_DEFUN([OL_TYPE_SIG_ATOMIC_T],
+  [AC_CACHE_CHECK(for sig_atomic_t, ol_cv_type_sig_atomic_t,
+     [AC_TRY_COMPILE([#include <signal.h>], [sig_atomic_t atomic;],
+ 		ol_cv_type_sig_atomic_t=yes, ol_cv_type_sig_atomic_t=no)])
+@@ -990,7 +990,7 @@
+ dnl
+ dnl ====================================================================
+ dnl Define socklen_t if not defined in sys/types.h or sys/socket.h
+-AC_DEFUN(OL_TYPE_SOCKLEN_T,
++AC_DEFUN([OL_TYPE_SOCKLEN_T],
+  [AC_CACHE_CHECK(for socklen_t, ol_cv_type_socklen_t,
+     [AC_TRY_COMPILE([
+ #ifdef HAVE_SYS_TYPES_H
+@@ -1009,7 +1009,7 @@
+ dnl
+ dnl ====================================================================
+ dnl Define inet_aton is available
+-AC_DEFUN(OL_FUNC_INET_ATON,
++AC_DEFUN([OL_FUNC_INET_ATON],
+  [AC_CACHE_CHECK([for inet_aton()], ol_cv_func_inet_aton,
+     [AC_TRY_LINK([
+ #ifdef HAVE_SYS_TYPES_H
+@@ -1036,7 +1036,7 @@
+ dnl
+ dnl ====================================================================
+ dnl check no of arguments for ctime_r
+-AC_DEFUN(OL_FUNC_CTIME_R_NARGS,
++AC_DEFUN([OL_FUNC_CTIME_R_NARGS],
+  [AC_CACHE_CHECK(number of arguments of ctime_r, ol_cv_func_ctime_r_nargs,
+    [AC_TRY_COMPILE([#include <time.h>],
+ 		[time_t ti; char *buffer; ctime_r(&ti,buffer,32);],
+@@ -1071,7 +1071,7 @@
+ dnl
+ dnl --------------------------------------------------------------------
+ dnl check return type of ctime_r()
+-AC_DEFUN(OL_FUNC_CTIME_R_TYPE,
++AC_DEFUN([OL_FUNC_CTIME_R_TYPE],
+  [AC_CACHE_CHECK(return type of ctime_r, ol_cv_func_ctime_r_type,
+    [AC_TRY_COMPILE([#include <time.h>],
+ 		[extern int (ctime_r)();],
+@@ -1083,7 +1083,7 @@
+ ])dnl
+ dnl ====================================================================
+ dnl check no of arguments for gethostbyname_r
+-AC_DEFUN(OL_FUNC_GETHOSTBYNAME_R_NARGS,
++AC_DEFUN([OL_FUNC_GETHOSTBYNAME_R_NARGS],
+  [AC_CACHE_CHECK(number of arguments of gethostbyname_r,
+ 	ol_cv_func_gethostbyname_r_nargs,
+ 	[AC_TRY_COMPILE([#include <sys/types.h>
+@@ -1133,7 +1133,7 @@
+ ])dnl
+ dnl
+ dnl check no of arguments for gethostbyaddr_r
+-AC_DEFUN(OL_FUNC_GETHOSTBYADDR_R_NARGS,
++AC_DEFUN([OL_FUNC_GETHOSTBYADDR_R_NARGS],
+  [AC_CACHE_CHECK(number of arguments of gethostbyaddr_r,
+ 	[ol_cv_func_gethostbyaddr_r_nargs],
+ 	[AC_TRY_COMPILE([#include <sys/types.h>
+--- acinclude.m4	2002/06/27 10:09:15	1.1
++++ acinclude.m4	2002/06/28 15:05:51
+@@ -12,3 +12,16 @@
+ dnl
+ divert(-1)
+ builtin(include, build/openldap.m4)dnl
++
++# From Ulrich Drepper.
++
++# serial 1
++
++AC_DEFUN([AM_TYPE_PTRDIFF_T],
++  [AC_CACHE_CHECK([for ptrdiff_t], am_cv_type_ptrdiff_t,
++     [AC_TRY_COMPILE([#include <stddef.h>], [ptrdiff_t p],
++		     am_cv_type_ptrdiff_t=yes, am_cv_type_ptrdiff_t=no)])
++   if test $am_cv_type_ptrdiff_t = yes; then
++     AC_DEFINE(HAVE_PTRDIFF_T,1,[Define if system has ptrdiff_t type])
++   fi
++])
+--- ./servers/slapd/slapd.conf	2002/06/27 10:05:43	1.1
++++ ./servers/slapd/slapd.conf	2002/06/28 15:05:47
+@@ -52,6 +52,6 @@
+ rootpw		secret
+ # The database directory MUST exist prior to running slapd AND 
+ # should only be accessible by the slapd/tools. Mode 700 recommended.
+-directory	%LOCALSTATEDIR%/openldap-data
++directory	/var/lib/ldap
+ # Indices to maintain
+ index	objectClass	eq

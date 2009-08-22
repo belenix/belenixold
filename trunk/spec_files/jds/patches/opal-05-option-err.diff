@@ -1,0 +1,28 @@
+Index: opal/plugins/LID/VPB/Makefile.in
+===================================================================
+--- opal/plugins/LID/VPB/Makefile.in	(revision 21139)
++++ opal/plugins/LID/VPB/Makefile.in	(working copy)
+@@ -46,6 +46,7 @@
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
++target_os=@target_os@
+ 
+ CC=@CC@
+ CXX=@CXX@
+@@ -69,8 +70,15 @@
+ OBJECTS = $(addprefix $(OBJDIR)/,$(patsubst %.cpp,%.o,$(notdir $(SRCS))))
+ 
+ $(PLUGIN): $(OBJECTS)
++
++ifeq (solaris,$(findstring solaris,$(target_os)))
++
++	$(CC) $(LDSO) $@ -o $@ $^ $(EXTRALIBS)
++else	
+ 	$(CC) $(LDSO) -o $@ $^ $(EXTRALIBS)
+ 
++endif	
++
+ install:
+ 	mkdir -p $(DESTDIR)$(libdir)/$(LID_PLUGIN_DIR)
+ 	install $(PLUGIN) $(DESTDIR)$(libdir)/$(LID_PLUGIN_DIR)
