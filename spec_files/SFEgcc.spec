@@ -9,12 +9,12 @@
 
 Name:                SFEgccruntime
 Summary:             GNU gcc runtime libraries required by applications
-Version:             4.4.0
-#%define snap_ver     20090331
+Version:             4.4.1
 %define full_ver     %{version}
 Source:              ftp://ftp.gnu.org/pub/gnu/gcc/gcc-%{version}/gcc-%{version}.tar.bz2
 #Source:              ftp://ftp.nluug.nl/mirror/languages/gcc/snapshots/%{full_ver}/gcc-%{full_ver}.tar.bz2
 Patch1:              gcc4-01-nameser_compat.diff
+Patch2:              gcc4-02-handle_pragma_pack_push_pop.diff
 
 SUNW_BaseDir:        %{_basedir}
 SUNW_Copyright:      SFEgccruntime.copyright
@@ -61,6 +61,7 @@ Requires:                %{name}
 %setup -q -c -n %{name}-%version
 mkdir gcc
 cd gcc-%{full_ver}
+%patch2 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -225,6 +226,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Bump version to 4.4.1.
+- Add patch required for successful Wine build.
 * Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Patch a header bug.
 * Web May 06 2009 - moinakg@belenix.org

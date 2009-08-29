@@ -1,0 +1,274 @@
+'\" t
+.\"
+.\" CDDL HEADER START
+.\"
+.\" The contents of this file are subject to the terms of the
+.\" Common Development and Distribution License (the "License").
+.\" You may not use this file except in compliance with the License.
+.\"
+.\" You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+.\" or http://www.opensolaris.org/os/licensing.
+.\" See the License for the specific language governing permissions
+.\" and limitations under the License.
+.\"
+.\" When distributing Covered Code, include this CDDL HEADER in each
+.\" file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+.\" If applicable, add the following below this CDDL HEADER, with the
+.\" fields enclosed by brackets "[]" replaced with your own identifying
+.\" information: Portions Copyright [yyyy] [name of copyright owner]
+.\"
+.\" CDDL HEADER END
+.\"
+.\" Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+.\" Use is subject to license terms.
+.\"
+.\"ident	"@(#)mysql.1.sunman	1.5	08/09/23 SMI"
+.\"
+.TH "mysql_50" "1" "" "" "User Commands"
+.SH NAME
+MySQL 5.0 \- MySQL RDBMS version 5.0 for Solaris 
+.SH DESCRIPTION
+
+MySQL version 5.0 for Solaris is delivered as part of Entire Distribution
+Software Group (SUNWCall), in the following 3 packages:
+
+.TS
+box;
+cbp-1 | cbp-1
+| | | .
+Package	Contents
+=
+SUNWmysql5u	MySQL 5.0 Server package (Usr component)
+=
+SUNWmysql5r	MySQL 5.0 Server package (Root component)
+=
+SUNWmysql5test	MySQL 5.0 test package
+
+.TE
+.PP
+
+The MySQL 5.0 software for Solaris is installed into a number of
+sub-directories of /usr/mysql/5.0. Symbolic links are created from all directories under /usr/mysql/5.0 to /usr/mysql directories. This enables the latest version of MySQL to be accessed from /usr/mysql. 
+
+The SUNWmysql5u package installs the following directories:
+
+.TS
+box;
+cbp-1 | cbp-1
+| | | .
+Directory	Contents
+=
+/usr/mysql/5.0/bin	Binaries and Scripts
+=
+/usr/mysql/5.0/lib	Libraries for client API 
+=
+/usr/mysql/5.0/include	Development header files
+=
+/usr/mysql/5.0/lib	Shared libraries
+=
+/usr/mysql/5.0/man/man1	Manual pages for client programs
+=
+/usr/mysql/5.0/man/man8	Manual pages for server programs
+=
+/usr/mysql/5.0/share	Shared data:locale,timezone 	
+=
+/usr/mysql/5.0/docs	HTML documentation 
+
+.TE
+.PP
+
+The SUNWmysql5u package also installs the following 64-bit directories
+.TP
+.ie t \(bu
+.el o
+\fB/usr/mysql/5.0/bin/64\fR - 64-bit
+Binaries and scripts
+.TP
+.ie t \(bu
+.el o
+\fB/usr/mysql/5.0/lib/64\fR - 64-bit
+libraries for client API and shared libraries
+.RE
+.sp
+.LP
+
+
+
+The following directories are additionally created by SUNWmysql5r package
+
+.TS
+box;
+cbp-1 | cbp-1
+| | | .
+Directory	Contents
+=
+/var/mysql/5.0/data	Default database data directory
+=
+/etc/mysql/5.0	Configuration file location
+
+.TE
+.PP
+
+The SUNWmysql5r package also installs the following SMF files to facilitate automatic service management
+(refer to smf(5) and the SMF section below):
+.RS
+.PP
+.br
+/var/svc/manifest/application/database/mysql.xml
+./br
+/lib/svc/method/mysql
+.RE
+.PP
+
+The SUNWmysql5test package creates the following directories:
+.TS
+box;
+cbp-1 | cbp-1
+| | | .
+Directory	Contents
+=
+/usr/mysql/5.0/mysql-test	MySQL test programs
+=
+/usr/mysql/5.0/sql-bench	SQL Benchmark test
+
+.TE
+.PP
+.SH AUTOMATIC SERVICE MANAGEMENT (SMF)
+MySQL 5.0  for Solaris includes files necessary to register with the
+service management facility described in smf(5). 
+
+After installation of the SUNWmysql5r package, register the MySQL service as under:
+
+.br
+example%svccfg import
+        /var/svc/manifest/application/database/mysql.xml
+
+The mysql:version_50 service is disabled by default. You can check the status of the service by issuing the following command :
+
+.br
+example% svcs mysql
+.br
+STATE          STIME    FMRI
+.br
+disabled 14:27:09 svc:/application/database/mysql:version_50
+
+
+Enable the mysql:version_50 service by issuing the following command :
+
+.br
+example%svcadm  enable mysql:version_50
+
+The state of the service instance should change to "online", and the database server should be started :
+
+.br
+example% svcs mysql
+.br
+STATE          STIME    FMRI
+.br
+online 14:30:08 svc:/application/database/mysql:version_50
+
+.br
+
+The 32-bit MySQL daemon runs by default. To start the 64-bit
+server, execute the following commands:
+.sp
+.LP
+\fB%svccfg\fR
+.sp
+.LP
+\fBsvc>select mysql:version_50\fR
+.sp
+.LP
+\fBsvc:/application/database/mysql:version_50>listprop mysql/enable_64bit\fR
+.sp
+.LP
+\fBmysql/enable_64bit boolean false\fR
+.sp
+.LP
+\fBsvc:/application/database/mysql:version_50>setprop mysql/enable_64bit=true\fR
+.sp
+.LP
+\fBsvc:/application/database/mysql:version_50>listprop mysql/enable_64bit\fR
+.sp
+.LP
+\fBmysql/enable_64bit boolean true\fR
+.sp
+.LP
+\fBsvc:/application/database/mysql:version_50>quit\fR
+.sp
+.LP
+\fB%svcadm refresh mysql:version_50\fR
+.sp
+.LP
+\fB%svcadm enable mysql:version_50\fR
+.sp
+.LP
+The 64-bit server is initiated.
+.sp
+
+.sp
+.TS
+tab(^G);
+lw(.95i) lw(.79i) lw(3.76i)
+lw(.95i) lw(.79i) lw(3.76i)
+.
+STATE          STIME    FMRI
+.br
+online 15:00:08 svc:/application/database/mysql:version_50
+
+.br
+
+
+.TE
+
+.LP
+Note -
+.sp
+.RS 2
+By default, the \fBmysql/enable_64bit\fR property
+is set to \fBFalse\fR. Set it \fBTrue\fR to start
+the 64-bit server.
+.RE
+.sp
+.LP
+To shutdown the database instance and prevent automatic restart (for example
+during scheduled downtime for maintenance), disable the SMF service by running:
+
+example% svcadm disable mysql:version_50
+.br
+example% svcs mysql
+.br
+STATE          STIME    FMRI
+.br
+disabled 14:30:08 svc:/application/database/mysql:version_50
+
+.br
+
+.RE
+
+.SH "ATTRIBUTES"
+See attributes(5) for descriptions of the  following  attributes:
+
+.TS
+box;
+cbp-1 | cbp-1
+| | | .
+ATTRIBUTE TYPE	ATTRIBUTE VALUE
+=
+Availability	SUNWmysql5r, SUNWmysql5u, SUNWmysql5test
+=
+Interface Stability	Uncommitted.
+.TE
+.PP
+.SH SEE ALSO
+.PP
+smf(5), svcs(1), svcprop(1), svccfg(1),
+svcadm(1), mysql(1) 
+
+.SH "NOTES"
+.PP
+Source for MySQL 5.0 is available on http://opensolaris.org
+
+.SH REFERENCES
+.PP
+http://www.mysql.com

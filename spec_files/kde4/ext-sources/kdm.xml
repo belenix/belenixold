@@ -39,6 +39,29 @@
 	</dependency>
 
 	<dependency
+	    name='sysconfig'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/milestone/sysconfig'/>
+	</dependency>
+
+	<dependency
+	    name='hal'
+	    grouping='require_all'
+	    restart_on='none'
+	    type='service'>
+		<service_fmri value='svc:/system/hal' />
+	</dependency>
+
+	<dependency name='multi-user'
+	    grouping='require_all'
+	    restart_on='error'
+	    type='service'>
+		<service_fmri value='svc:/milestone/multi-user:default'/>
+	</dependency>
+
+	<dependency
 	    name='consolekit'
 	    grouping='require_all'
 	    restart_on='none'

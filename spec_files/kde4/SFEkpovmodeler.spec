@@ -1,43 +1,34 @@
 #
-# spec file for package SFEkphotoalbum
+# spec file for package SFEkpovmodeler
 #
-# includes module(s): kphotoalbum
+# includes module(s): kpovmodeler
 #
 # No 64Bit build yet since Phonon and dependency GStreamer are still 32Bit
 #
 %include Solaris.inc
 %include base.inc
 
-%define src_dir          kphotoalbum
+%define src_dir          kpovmodeler
 %define kde_version      4.2.4
-Name:                    SFEkphotoalbum
-Summary:                 A Photo Album application for KDE
-Version:                 4.0.1
+Name:                    SFEkpovmodeler
+Summary:                 A graphical editor for povray scenes (KDE 4)
+Version:                 1.1.3
 License:                 GPLv2+
 URL:                     http://extragear.kde.org/
-Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{kde_version}/src/extragear/kphotoalbum-%{version}-kde%{kde_version}.tar.bz2
+Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{kde_version}/src/extragear/kpovmodeler-%{version}-kde%{kde_version}.tar.bz2
 
 SUNW_BaseDir:            /
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 Requires:      SFEkdelibs4
-Requires:      SUNWgnome-desktop-prefs
-Requires:      SFEkdegraphics4
-Requires:      SFEkdeedu4
-Requires:      SFEsoprano
+Requires:      SUNWfreetype2
+Requires:      SUNWxorg-mesa
 BuildRequires: SFEkdelibs4-devel
-BuildRequires: SUNWgnome-desktop-prefs-devel
 BuildRequires: SFEautomoc
 BuildRequires: SFEcmake
-BuildRequires: SFEkdegraphics4-devel
-BuildRequires: SFEkdeedu4-devel
-BuildRequires: SFEsoprano-devel
 
 %description
-A photo album tool. Focuses on three key points:
-  * It must be easy to describe a number of images at a time. 
-  * It must be easy to search for images. 
-  * It must be easy to browse and View the images.
+A graphical editor for povray scenes (KDE 4).
 
 %package doc
 Summary:                 %{summary} - documentation files
@@ -79,9 +70,9 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
-export LDFLAGS="%_ldflags -lsocket -lnsl -lkio -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} -lX11 %{sfw_lib_path}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export LDFLAGS="%_ldflags -lsocket -lnsl -lkio -lQtGui -lkdeui -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} -lX11 %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
 export CMAKE_LIBRARY_PATH="%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
@@ -127,15 +118,21 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{_prefix}
 %dir %attr (0755, root, bin) %{_bindir}
 %{_bindir}/*
+%dir %attr (0755, root, bin) %{_libdir}
+%{_libdir}/*.so*
+%dir %attr (0755, root, bin) %{_libdir}/kde4
+%{_libdir}/kde4/*
+
 %dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, bin) %{_datadir}/kde4
+%{_datadir}/kde4/*
+%dir %attr (0755, root, bin) %{_datadir}/dbus-1
+%dir %attr (0755, root, bin) %{_datadir}/dbus-1/interfaces
+%{_datadir}/dbus-1/interfaces/*
 
 %defattr (-, root, other)
 %dir %attr (0755, root, other) %{_datadir}/apps
 %{_datadir}/apps/*
-%dir %attr (0755, root, other) %{_datadir}/config
-%{_datadir}/config/*
-%dir %attr (0755, root, other) %{_datadir}/config.kcfg
-%{_datadir}/config.kcfg/*
 %dir %attr (0755, root, other) %{_datadir}/applications
 %{_datadir}/applications/*
 %dir %attr (0755, root, other) %{_datadir}/icons
@@ -156,6 +153,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
-- Add missing dirs.
-* Fri Aug 14 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Initial version.
