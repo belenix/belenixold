@@ -1,0 +1,903 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+B. TERMS AND CONDITIONS FOR ACCESSING OR OTHERWISE USING PYTHON
+===============================================================
+
+PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2
+--------------------------------------------
+
+1. This LICENSE AGREEMENT is between the Python Software Foundation
+("PSF"), and the Individual or Organization ("Licensee") accessing and
+otherwise using this software ("Python") in source or binary form and
+its associated documentation.
+
+2. Subject to the terms and conditions of this License Agreement, PSF
+hereby grants Licensee a nonexclusive, royalty-free, world-wide
+license to reproduce, analyze, test, perform and/or display publicly,
+prepare derivative works, distribute, and otherwise use Python
+alone or in any derivative version, provided, however, that PSF's
+License Agreement and PSF's notice of copyright, i.e., "Copyright (c)
+2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation; All Rights
+Reserved" are retained in Python alone or in any derivative version
+prepared by Licensee.
+
+3. In the event Licensee prepares a derivative work that is based on
+or incorporates Python or any part thereof, and wants to make
+the derivative work available to others as provided herein, then
+Licensee hereby agrees to include in any such work a brief summary of
+the changes made to Python.
+
+4. PSF is making Python available to Licensee on an "AS IS"
+basis.  PSF MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, PSF MAKES NO AND
+DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
+FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF PYTHON WILL NOT
+INFRINGE ANY THIRD PARTY RIGHTS.
+
+5. PSF SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF PYTHON
+FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS
+A RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING PYTHON,
+OR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.
+
+6. This License Agreement will automatically terminate upon a material
+breach of its terms and conditions.
+
+7. Nothing in this License Agreement shall be deemed to create any
+relationship of agency, partnership, or joint venture between PSF and
+Licensee.  This License Agreement does not grant permission to use PSF
+trademarks or trade name in a trademark sense to endorse or promote
+products or services of Licensee, or any third party.
+
+8. By copying, installing or otherwise using Python, Licensee
+agrees to be bound by the terms and conditions of this License
+Agreement.
+
+--------------------------------------------------------------------
+
+ portions copyright 2001, Autonomous Zones Industries, Inc., all rights...
+ err...  reserved and offered to the public under the terms of the
+ Python 2.2 license.
+ Author: Zooko O'Whielacronx
+ http://zooko.com/
+ mailto:zooko@zooko.com
+
+ Copyright 2000, Mojam Media, Inc., all rights reserved.
+ Author: Skip Montanaro
+
+ Copyright 1999, Bioreason, Inc., all rights reserved.
+ Author: Andrew Dalke
+
+ Copyright 1995-1997, Automatrix, Inc., all rights reserved.
+ Author: Skip Montanaro
+
+ Copyright 1991-1995, Stichting Mathematisch Centrum, all rights reserved.
+
+ Permission to use, copy, modify, and distribute this Python software and
+ its associated documentation for any purpose without fee is hereby
+ granted, provided that the above copyright notice appears in all copies,
+ and that both that copyright notice and this permission notice appear in
+ supporting documentation, and that the name of neither Automatrix,
+ Bioreason or Mojam Media be used in advertising or publicity pertaining to
+ distribution of the software without specific, written prior permission.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Python/exceptions.c:
+
+ written by Fredrik Lundh
+ modifications, additions, cleanups, and proofreading by Barry Warsaw
+
+ Copyright (c) 1998-2000 by Secret Labs AB.  All rights reserved.
+ 
+--------------------------------------------------------------------
+
+utf8tab.h, latin1tab.h:
+
+ Copyright (c) 1998, 1999 Thai Open Source Software Center Ltd
+   See the file COPYING for copying permission.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/test/test_pep292.py, Python-2.4.4/Lib/email/FeedParser.py:
+
+ Author: barry@python.org (Barry Warsaw)
+ Copyright (C) 2004 Python Software Foundation
+ Copyright (C) 2004-2006 Python Software Foundation
+ License: http://www.opensource.org/licenses/PythonSoftFoundation.php
+ Authors: Baxter, Wouters and Warsaw
+ Contact: email-sig@python.org
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/bsddb/dbshelve.py:
+
+           Copyright (c) 1997-2001 by Total Control Software
+                         All Rights Reserved
+
+ Creation Date:    11/3/97 3:39:04PM
+
+ License:      This is free software.  You may use this software for any
+               purpose including modification/redistribution, so long as
+               this header remains intact and that you do not claim any
+               rights of ownership or authorship of this software.  This
+               software has been tested, but no warranty is expressed or
+               implied.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/ossaudiodev.c:
+
+ ossaudiodev -- Python interface to the OSS (Open Sound System) API.
+
+ Originally written by Peter Bosch, March 2000, as linuxaudiodev.
+
+ Renamed to ossaudiodev and rearranged/revised/hacked up
+ by Greg Ward <gward@python.net>, November 2002.
+ Mixer interface by Nicholas FitzRoy-Dale <wzdd@lardcave.net>, Dec 2002.
+
+ (c) 2000 Peter Bosch.  All Rights Reserved.
+ (c) 2002 Gregory P. Ward.  All Rights Reserved.
+ (c) 2002 Python Software Foundation.  All Rights Reserved.
+
+ XXX need a license statement
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Python/getopt.c:
+
+ Copyright 1992-1994, David Gottner
+
+                    All Rights Reserved
+
+ Permission to use, copy, modify, and distribute this software and its 
+ documentation for any purpose and without fee is hereby granted, 
+ provided that the above copyright notice, this permission notice and
+ the following disclaimer notice appear unmodified in all copies.
+
+ I DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL I
+ BE LIABLE FOR ANY SPECIAL, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
+ DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA, OR PROFITS, WHETHER
+ IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+ Nevertheless, I would like to know about bugs in this library or
+ suggestions for improvment.  Send bug reports and feedback to
+ davegottner@delphi.com.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Mac/Modules/ColorPickermodule.c:
+
+*****************************************************************
+Copyright 1998 by Just van Rossum, Den Haag, The Netherlands.
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name of Just van Rossum not be 
+used in advertising or publicity pertaining to distribution of the 
+software without specific, written prior permission.
+
+JUST VAN ROSSUM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO 
+EVENT SHALL JUST VAN ROSSUM BE LIABLE FOR ANY SPECIAL, INDIRECT OR 
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF 
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR 
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+*****************************************************************
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/parsermodule.c:
+
+  Copyright 1995-1996 by Fred L. Drake, Jr. and Virginia Polytechnic
+  Institute and State University, Blacksburg, Virginia, USA.
+  Portions copyright 1991-1995 by Stichting Mathematisch Centrum,
+  Amsterdam, The Netherlands.  Copying is permitted under the terms
+  associated with the main Python distribution, with the additional
+  restriction that this additional notice be included and maintained
+  on all distributed copies.
+
+  This module serves to replace the original parser module written
+  by Guido.  The functionality is not matched precisely, but the
+  original may be implemented on top of this.  This is desirable
+  since the source of the text to be parsed is now divorced from
+  this interface.
+
+  Unlike the prior interface, the ability to give a parse tree
+  produced by Python code as a tuple to the compiler is enabled by
+  this module.  See the documentation for more details.
+
+  I've added some annotations that help with the lint code-checking
+  program, but they're not complete by a long shot.  The real errors
+  that lint detects are gone, but there are still warnings with
+  Py_[X]DECREF() and Py_[X]INCREF() macros.  The lint annotations
+  look like "NOTE(...)".
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/expat/winconfig.h, Python-2.4.4/Modules/expat/macconfig.h:
+================================================================
+* Copyright 2000, Clark Cooper
+* All rights reserved.
+*
+* This is free software. You are permitted to copy, distribute, or modify
+* it under the terms of the MIT/X license (contained in the COPYING file
+* with this distribution.)
+*
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/getnameinfo.c, Python-2.4.4/Modules/timing.h,
+Python-2.4.4/Modules/getaddrinfo.c, Python-2.4.4/Modules/addrinfo.h:
+
+ All rights reserved.
+ Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
+ Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. Neither the name of the project nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE
+ 
+ Copyright (c) 1993 George V. Neville-Neil
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. All advertising materials mentioning features or use of this software
+    must display the following acknowledgement:
+	This product includes software developed by George V. Neville-Neil
+ 4. The name, George Neville-Neil may not be used to endorse or promote 
+    products derived from this software without specific prior 
+    written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR 
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+ 
+ GAI_ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE
+ FOR GAI_ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON GAI_ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN GAI_ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+ 
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/unicodedata.c, Python-2.4.4/Python/codecs.c:
+
+   Copyright (c) Corporation for National Research Initiatives.
+
+   unicodedata -- Provides access to the Unicode 3.2 data base.
+
+   Data was extracted from the Unicode 3.2 UnicodeData.txt file.
+
+   Written by Marc-Andre Lemburg (mal@lemburg.com).
+   Modified for Python 2.0 by Fredrik Lundh (fredrik@pythonware.com)
+   Modified by Martin v. Löwis (martin@v.loewis.de)
+
+   Python Codec Registry and support functions
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/linuxaudiodev.c:
+
+*****************************************************************************
+ linuxaudiodev.c -- Linux audio device for python.
+ 
+ Author          : Peter Bosch
+ Created On      : Thu Mar  2 21:10:33 2000
+ Status          : Unknown, Use with caution!
+ 
+ Unless other notices are present in any part of this file
+ explicitly claiming copyrights for other people and/or 
+ organizations, the contents of this file is fully copyright 
+ (C) 2000 Peter Bosch, all rights reserved.
+*****************************************************************************
+ 
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/_localemodule.c:
+
+**********************************************************
+Copyright (C) 1997, 2002, 2003 Martin von Loewis
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies.
+
+This software comes with no warranty. Use at your own risk.
+
+*****************************************************************
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/sre_parse.py, Python-2.4.4/Demo/scripts/script.py:
+
+ Author: Steen Lumholt.
+ Copyright (c) 1998-2001 by Secret Labs AB.  All rights reserved.
+ Secret Labs' Regular Expression Engine
+
+--------------------------------------------------------------------
+
+Python-2.4.4/PC/_subprocess.c:
+
+ support routines for subprocess module
+
+ Currently, this extension module is only required when using the
+ subprocess module on Windows, but in the future, stubs for other
+ platforms might be added here as well.
+
+ Copyright (c) 2004 by Fredrik Lundh <fredrik@pythonware.com>
+ Copyright (c) 2004 by Secret Labs AB, http://www.pythonware.com
+ Copyright (c) 2004 by Peter Astrand <astrand@lysator.liu.se>
+
+ By obtaining, using, and/or copying this software and/or its
+ associated documentation, you agree that you have read, understood,
+ and will comply with the following terms and conditions:
+
+ Permission to use, copy, modify, and distribute this software and
+ its associated documentation for any purpose and without fee is
+ hereby granted, provided that the above copyright notice appears in
+ all copies, and that both that copyright notice and this permission
+ notice appear in supporting documentation, and that the name of the
+ authors not be used in advertising or publicity pertaining to
+ distribution of the software without specific, written prior
+ permission.
+
+ THE AUTHORS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
+ IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+ WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/syslogmodule.c:
+
+**********************************************************
+Copyright 1994 by Lance Ellinghouse,
+Cathedral City, California Republic, United States of America.
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its 
+documentation for any purpose and without fee is hereby granted, 
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in 
+supporting documentation, and that the name of Lance Ellinghouse
+not be used in advertising or publicity pertaining to distribution 
+of the software without specific, written prior permission.
+
+LANCE ELLINGHOUSE DISCLAIMS ALL WARRANTIES WITH REGARD TO
+THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS, IN NO EVENT SHALL LANCE ELLINGHOUSE BE LIABLE FOR ANY SPECIAL, 
+INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING 
+FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, 
+NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION 
+WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+*****************************************************************
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/tarfile.py:
+
+ Copyright (C) 2002 Lars Gustäbel <lars@gustaebel.de>
+ All rights reserved.
+
+ Permission  is  hereby granted,  free  of charge,  to  any person
+ obtaining a  copy of  this software  and associated documentation
+ files  (the  "Software"),  to   deal  in  the  Software   without
+ restriction,  including  without limitation  the  rights to  use,
+ copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies  of  the  Software,  and to  permit  persons  to  whom the
+ Software  is  furnished  to  do  so,  subject  to  the  following
+ conditions:
+
+ The above copyright  notice and this  permission notice shall  be
+ included in all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS  IS", WITHOUT WARRANTY OF ANY  KIND,
+ EXPRESS OR IMPLIED, INCLUDING  BUT NOT LIMITED TO  THE WARRANTIES
+ OF  MERCHANTABILITY,  FITNESS   FOR  A  PARTICULAR   PURPOSE  AND
+ NONINFRINGEMENT.  IN  NO  EVENT SHALL  THE  AUTHORS  OR COPYRIGHT
+ HOLDERS  BE LIABLE  FOR ANY  CLAIM, DAMAGES  OR OTHER  LIABILITY,
+ WHETHER  IN AN  ACTION OF  CONTRACT, TORT  OR OTHERWISE,  ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/regexpr.c:
+
+ Author: Tatu Ylonen <ylo@ngs.fi>
+
+ Copyright (c) 1991 Tatu Ylonen, Espoo, Finland
+
+ Permission to use, copy, modify, distribute, and sell this software
+ and its documentation for any purpose is hereby granted without
+ fee, provided that the above copyright notice appear in all copies.
+ This software is provided "as is" without express or implied
+ warranty.
+
+ Created: Thu Sep 26 17:14:05 1991 ylo
+ Last modified: Mon Nov  4 17:06:48 1991 ylo
+ Ported to Think C: 19 Jan 1992 guido@cwi.nl
+
+ This code draws many ideas from the regular expression packages by
+ Henry Spencer of the University of Toronto and Richard Stallman of
+ the Free Software Foundation.
+
+ Emacs-specific code and syntax table code is almost directly borrowed
+ from GNU regexp.
+
+ Bugs fixed and lots of reorganization by Jeffrey C. Ollie, April
+ 1997 Thanks for bug reports and ideas from Andrew Kuchling, Tim
+ Peters, Guido van Rossum, Ka-Ping Yee, Sjoerd Mullender, and
+ probably one or two others that I'm forgetting.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/cgen.py:
+
+#######################################################################
+ Copyright (c) 2000, BeOpen.com.
+ Copyright (c) 1995-2000, Corporation for National Research Initiatives.
+ Copyright (c) 1990-1995, Stichting Mathematisch Centrum.
+ All rights reserved.
+
+ See the file "Misc/COPYRIGHT" for information on usage and
+ redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#######################################################################
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/uu.py:
+
+ Copyright 1994 by Lance Ellinghouse
+ Cathedral City, California Republic, United States of America.
+                        All Rights Reserved
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for any purpose and without fee is hereby granted,
+ provided that the above copyright notice appear in all copies and that
+ both that copyright notice and this permission notice appear in
+ supporting documentation, and that the name of Lance Ellinghouse
+ not be used in advertising or publicity pertaining to distribution
+ of the software without specific, written prior permission.
+ LANCE ELLINGHOUSE DISCLAIMS ALL WARRANTIES WITH REGARD TO
+ THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ FITNESS, IN NO EVENT SHALL LANCE ELLINGHOUSE CENTRUM BE LIABLE
+ FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/PC/winsound.c:
+
+ Author: Toby Dickenson <htrd90@zepler.org>
+
+ Copyright (c) 1999 Toby Dickenson
+
+ Permission to use this software in any way is granted without
+ fee, provided that the copyright notice above appears in all
+ copies. This software is provided "as is" without any warranty.
+ 
+
+ Modified by Guido van Rossum 
+ Beep added by Mark Hammond 
+ Win9X Beep and platform identification added by Uncle Timmy 
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/Cookie.py:
+
+###
+ Copyright 2000 by Timothy O'Malley <timo@alum.mit.edu>
+
+                All Rights Reserved
+
+ Permission to use, copy, modify, and distribute this software
+ and its documentation for any purpose and without fee is hereby
+ granted, provided that the above copyright notice appear in all
+ copies and that both that copyright notice and this permission
+ notice appear in supporting documentation, and that the name of
+ Timothy O'Malley  not be used in advertising or publicity
+ pertaining to distribution of the software without specific, written
+ prior permission.
+
+ Timothy O'Malley DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+ AND FITNESS, IN NO EVENT SHALL Timothy O'Malley BE LIABLE FOR
+ ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ PERFORMANCE OF THIS SOFTWARE.
+
+###
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/_codecsmodule.c:
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+Copyright (c) Corporation for National Research Initiatives.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/bsddb/dbobj.py:
+
+ (C) Copyright 2001  Autonomous Zone Industries
+
+ License:  This is free software.  You may use this software for any
+           purpose including modification/redistribution, so long as
+           this header remains intact and that you do not claim any
+           rights of ownership or authorship of this software.  This
+           software has been tested, but no warranty is expressed or
+           implied.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Objects/unicodeobject.c:
+
+Unicode implementation based on original code by Fredrik Lundh,
+modified by Marc-Andre Lemburg <mal@lemburg.com> according to the
+Unicode Integration Proposal (see file Misc/unicode.txt).
+
+Copyright (c) Corporation for National Research Initiatives.
+
+--------------------------------------------------------------------
+The original string type implementation is:
+
+    Copyright (c) 1999 by Secret Labs AB
+    Copyright (c) 1999 by Fredrik Lundh
+
+By obtaining, using, and/or copying this software and/or its
+associated documentation, you agree that you have read, understood,
+and will comply with the following terms and conditions:
+
+Permission to use, copy, modify, and distribute this software and its
+associated documentation for any purpose and without fee is hereby
+granted, provided that the above copyright notice appears in all
+copies, and that both that copyright notice and this permission notice
+appear in supporting documentation, and that the name of Secret Labs
+AB or the author not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior
+permission.
+
+SECRET LABS AB AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO
+THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS.  IN NO EVENT SHALL SECRET LABS AB OR THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/md5c.c, Python-2.4.4/Modules/md5.h:
+
+ Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All
+rights reserved.
+
+License to copy and use this software is granted provided that it
+is identified as the "RSA Data Security, Inc. MD5 Message-Digest
+Algorithm" in all material mentioning or referencing this software
+or this function.
+
+License is also granted to make and use derivative works provided
+that such works are identified as "derived from the RSA Data
+Security, Inc. MD5 Message-Digest Algorithm" in all material
+mentioning or referencing the derived work.
+
+RSA Data Security, Inc. makes no representations concerning either
+the merchantability of this software or the suitability of this
+software for any particular purpose. It is provided "as is"
+without express or implied warranty of any kind.
+
+These notices must be retained in any copies of any part of this
+documentation and/or software.
+ 
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/_tkinter.c:
+
+**********************************************************
+Copyright (C) 1994 Steen Lumholt.
+
+                        All Rights Reserved
+
+*****************************************************************
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/bsddb/dbutils.py:
+
+ Copyright (C) 2000 Autonomous Zone Industries
+
+ License:      This is free software.  You may use this software for any
+               purpose including modification/redistribution, so long as
+               this header remains intact and that you do not claim any
+               rights of ownership or authorship of this software.  This
+               software has been tested, but no warranty is expressed or
+               implied.
+
+ Author: Gregory P. Smith <greg@electricrain.com>
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/asynchat.py, Python-2.4.4/Lib/asyncore.py:
+
+       Copyright 1996 by Sam Rushing
+       All Rights Reserved
+       Author: Sam Rushing <rushing@nightmare.com>
+
+ ======================================================================
+ Permission to use, copy, modify, and distribute this software and
+ its documentation for any purpose and without fee is hereby
+ granted, provided that the above copyright notice appear in all
+ copies and that both that copyright notice and this permission
+ notice appear in supporting documentation, and that the name of Sam
+ Rushing not be used in advertising or publicity pertaining to
+ distribution of the software without specific, written prior
+ permission.
+
+ SAM RUSHING DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
+ NO EVENT SHALL SAM RUSHING BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ ======================================================================
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/_randommodule.c:
+
+ Random objects 
+ ------------------------------------------------------------------
+   The code in this module was based on a download from:
+	  http://www.math.keio.ac.jp/~matumoto/MT2002/emt19937ar.html
+
+   It was modified in 2002 by Raymond Hettinger as follows:
+
+	* the principal computational lines untouched except for tabbing.
+
+	* renamed genrand_res53() to random_random() and wrapped
+	  in python calling/return code.
+
+	* genrand_int32() and the helper functions, init_genrand()
+	  and init_by_array(), were declared static, wrapped in
+	  Python calling/return code.  also, their global data
+	  references were replaced with structure references.
+
+	* unused functions from the original were deleted.
+	  new, original C python code was added to implement the
+	  Random() interface.
+
+   The following are the verbatim comments from the original code:
+
+   A C-program for MT19937, with initialization improved 2002/1/26.
+   Coded by Takuji Nishimura and Makoto Matsumoto.
+
+   Before using, initialize the state by using init_genrand(seed)
+   or init_by_array(init_key, key_length).
+
+   Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
+   All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+     1. Redistributions of source code must retain the above copyright
+	notice, this list of conditions and the following disclaimer.
+
+     2. Redistributions in binary form must reproduce the above copyright
+	notice, this list of conditions and the following disclaimer in the
+	documentation and/or other materials provided with the distribution.
+
+     3. The names of its contributors may not be used to endorse or promote
+	products derived from this software without specific prior written
+	permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ ---------------------------------------------------------------
+
+Python-2.4.4/Modules/_cursesmodule.c:
+
+   This is a curses module for Python.
+
+   Based on prior work by Lance Ellinghaus and Oliver Andrich
+   Version 1.2 of this module: Copyright 1994 by Lance Ellinghouse,
+    Cathedral City, California Republic, United States of America.
+
+   Version 1.5b1, heavily extended for ncurses by Oliver Andrich:
+   Copyright 1996,1997 by Oliver Andrich, Koblenz, Germany.
+
+   Tidied for Python 1.6, and currently maintained by <amk@amk.ca>.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this source file to use, copy, modify, merge, or publish it
+   subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or in any new file that contains a substantial portion of
+   this file.
+
+   THE  AUTHOR  MAKES  NO  REPRESENTATIONS ABOUT  THE  SUITABILITY  OF
+   THE  SOFTWARE FOR  ANY  PURPOSE.  IT IS  PROVIDED  "AS IS"  WITHOUT
+   EXPRESS OR  IMPLIED WARRANTY.  THE AUTHOR DISCLAIMS  ALL WARRANTIES
+   WITH  REGARD TO  THIS  SOFTWARE, INCLUDING  ALL IMPLIED  WARRANTIES
+   OF   MERCHANTABILITY,  FITNESS   FOR  A   PARTICULAR  PURPOSE   AND
+   NON-INFRINGEMENT  OF THIRD  PARTY  RIGHTS. IN  NO  EVENT SHALL  THE
+   AUTHOR  BE LIABLE  TO  YOU  OR ANY  OTHER  PARTY  FOR ANY  SPECIAL,
+   INDIRECT,  OR  CONSEQUENTIAL  DAMAGES  OR  ANY  DAMAGES  WHATSOEVER
+   WHETHER IN AN  ACTION OF CONTRACT, NEGLIGENCE,  STRICT LIABILITY OR
+   ANY OTHER  ACTION ARISING OUT OF  OR IN CONNECTION WITH  THE USE OR
+   PERFORMANCE OF THIS SOFTWARE.
+ 
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/_sre.c, Python-2.4.4/Lib/sre.py:
+ Copyright (c) 1997-2001 by Secret Labs AB.  All rights reserved.
+ Secret Labs' Regular Expression Engine
+
+ This version of the SRE library can be redistributed under CNRI's
+ Python 1.6 license.  For any other use, please contact Secret Labs
+ AB (info@pythonware.com).
+
+ Portions of this engine have been developed in cooperation with
+ CNRI.  Hewlett-Packard provided funding for 1.6 integration and
+ other compatibility work.
+ 
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/logging/config.py, Python-2.4.4/Lib/logging/__init__.py,
+Python-2.4.4/Lib/logging/handlers.py, Python-2.4.4/Lib/test/test_logging.py:
+
+ Copyright 2001-2005 by Vinay Sajip. All Rights Reserved.
+
+ Permission to use, copy, modify, and distribute this software and its
+ documentation for any purpose and without fee is hereby granted,
+ provided that the above copyright notice appear in all copies and that
+ both that copyright notice and this permission notice appear in
+ supporting documentation, and that the name of Vinay Sajip
+ not be used in advertising or publicity pertaining to distribution
+ of the software without specific, written prior permission.
+ VINAY SAJIP DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL
+ VINAY SAJIP BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+ IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Lib/subprocess.py:
+
+ Copyright (c) 2003-2005 by Peter Astrand <astrand@lysator.liu.se>
+
+ Licensed to PSF under a Contributor Agreement.
+ See http://www.python.org/2.4/license for licensing details.
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Demo/xmlrpc/xmlrpcserver.py:
+
+ a simple XML-RPC server for Python
+
+ History:
+ 1999-02-01 fl  added to xmlrpclib distribution
+
+ written by Fredrik Lundh, January 1999.
+
+ Copyright (c) 1999 by Secret Labs AB.
+ Copyright (c) 1999 by Fredrik Lundh.
+
+ fredrik@pythonware.com
+ http://www.pythonware.com
+
+ --------------------------------------------------------------------
+ Permission to use, copy, modify, and distribute this software and
+ its associated documentation for any purpose and without fee is
+ hereby granted.  This software is provided as is.
+ --------------------------------------------------------------------
+
+--------------------------------------------------------------------
+
+Python-2.4.4/Modules/fpetestmodule.c, Python-2.4.4/Modules/fpectlmodule.c:
+
+     ---------------------------------------------------------------------  
+    /                       Copyright (c) 1996.                           \ 
+   |          The Regents of the University of California.                 |
+   |                        All rights reserved.                           |
+   |                                                                       |
+   |   Permission to use, copy, modify, and distribute this software for   |
+   |   any purpose without fee is hereby granted, provided that this en-   |
+   |   tire notice is included in all copies of any software which is or   |
+   |   includes  a  copy  or  modification  of  this software and in all   |
+   |   copies of the supporting documentation for such software.           |
+   |                                                                       |
+   |   This  work was produced at the University of California, Lawrence   |
+   |   Livermore National Laboratory under  contract  no.  W-7405-ENG-48   |
+   |   between  the  U.S.  Department  of  Energy and The Regents of the   |
+   |   University of California for the operation of UC LLNL.              |
+   |                                                                       |
+   |                              DISCLAIMER                               |
+   |                                                                       |
+   |   This  software was prepared as an account of work sponsored by an   |
+   |   agency of the United States Government. Neither the United States   |
+   |   Government  nor the University of California nor any of their em-   |
+   |   ployees, makes any warranty, express or implied, or  assumes  any   |
+   |   liability  or  responsibility  for the accuracy, completeness, or   |
+   |   usefulness of any information,  apparatus,  product,  or  process   |
+   |   disclosed,   or  represents  that  its  use  would  not  infringe   |
+   |   privately-owned rights. Reference herein to any specific  commer-   |
+   |   cial  products,  process,  or  service  by trade name, trademark,   |
+   |   manufacturer, or otherwise, does not  necessarily  constitute  or   |
+   |   imply  its endorsement, recommendation, or favoring by the United   |
+   |   States Government or the University of California. The views  and   |
+   |   opinions  of authors expressed herein do not necessarily state or   |
+   |   reflect those of the United States Government or  the  University   |
+   |   of  California,  and shall not be used for advertising or product   |
+    \  endorsement purposes.                                              / 
+     ---------------------------------------------------------------------  
+
+--------------------------------------------------------------------
+

@@ -1,0 +1,103 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+  For the avoidance of doubt, except that if any license choice other
+  than GPL or LGPL is available it will apply instead, Sun elects to
+  use only the General Public License version 2 (GPLv2) at this time
+  for any software where a choice of GPL license versions is made
+  available with the language indicating that GPLv2 or any later
+  version may be used, or where a choice of which version of the GPL
+  is applied is otherwise unspecified.
+
+  Afin d'Ã©carter le moindre doute, Ã  moins qu'un choix de licence autre que
+  la GPL ou LGPL ne soit proposÃ© et donc appliquÃ© Ã  sa place, Sun a dÃ©cidÃ©,
+  pour le moment, d'utiliser uniquement la General Public License version 2 (GPLv2)
+  pour tout logiciel oÃ¹ le choix de versions de licences GPL s'accompagne d'une mention
+  indiquant que la GPLv2 ou toute version ultÃ©rieure peut Ãªtre utilisÃ©e, ou pour tout
+  logiciel oÃ¹ le choix de version de la GPL Ã  appliquer n'est spÃ©cifiÃ© en aucune maniÃ¨re.
+
+hu_HU Copyright
+
+  Hungarian Hunspell dictionaries version 1.1.1
+  
+  Files
+  
+  hu_HU.aff, hu_HU.dic: ISO-8859-2 encoded dictionary
+  
+  hu_HU_u8.aff, hu_HU_u8.dic: UTF-8 encoded dictionary with
+  alias compression (default in Hungarian OpenOffice.org)
+  
+  License
+  
+  GPL 2.0/LGPL 2.1/MPL 1.1 tri-license
+  
+  The contents of this software may be used under the terms of
+  the GNU General Public License Version 2 or later (the "GPL"), or
+  the GNU Lesser General Public License Version 2.1 or later (the "LGPL",
+  see COPYING.LGPL) or (excepting the LGPLed GNU gettext library in the
+  intl/ directory) the Mozilla Public License Version 1.1 or later
+  (the "MPL", see COPYING.MPL).
+  
+  Software distributed under these licenses is distributed on an "AS IS" basis,
+  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the licences
+  for the specific language governing rights and limitations under the licenses.
+  
+  LÃ¡szlÃ³ NÃ©meth
+  
+  # This dictionary is based on the Hungarian wordlist and affixes created  
+  # by László Németh, July 2006 V1.1.1, and is covered by their original   
+  # Gnu GPL license as published by the FSF, published at   
+  # http://magyarispell.sourceforge.net. 
+  # All modification to the affix file and wordlist to make compatible  
+  # with MySpell are copyright 2002-2005 László Németh, nemethl@gyorsposta.hu and  
+  # covered by the same Gnu GPL license as the original work.  
+  #   
+  # Thanks to   
+  # Tamás Szántó <tszanto@mol.hu>,  
+  # Árpád Bíró <biro_arpad@yahoo.com>,  
+  # Marcel Hilzinger <hili@suselinux.hu>,  
+  # Egmont Koblinger <egmont@cs.bme.hu>,  
+  # Ferenc Godó <godo@trillian.hu>,  
+  # Viktor Trón <tron@coli.uni-sb.de>,  
+  # Fransoa Holop <fred@francis.artia.sk>,  
+  # Eleonóra Goldmann <eleonora46@gmx.net>,  
+  # András Rung <rung@itm.bme.hu>  
+  #  
+  # and others for their assistance in making Hungarian   
+  # wordlist and affix table.  
+  #   
+  # Mailing list: <magyarispell@yahoogroups.com>  
+  # Subscribe: <magyarispell-subscribe@yahoogroups.com>  
+  # ----------------  
+  #   
+  # Ez a szótár azon a szólistán és ragozási szabálygyûjteményen alapul,  
+  # amelyet Németh László készített, és 2006 júliusában
+  # Magyar Ispell 1.1.1 néven a Gnu GPL licenc mellett a 
+  # http://magyarispell.sourceforge.net oldalon közzétett.
+  # 
+  # Az eredeti szabálygyûjtmény és szólista minden változtatása, amit a
+  # MySpell-lel való kompatibilitás tett szükségessé, Németh László 
+  # <nemethl@gyorsposta.hu> jogtulajdona, és ugyanazon Gnu GPL licenc
+  # vonatkozik rá, mint az eredeti munkára.
+  # 
+  # Köszönet illeti a következõket:
+  # 
+  # Szántó Tamás <tszanto@mol.hu>,
+  # Bíró Árpád <biro_arpad@yahoo.com>,
+  # Hilzinger Marcel <hili@suselinux.hu>,
+  # Koblinger Egmont <egmont@cs.bme.hu>,
+  # Godó Ferenc <godo@trillian.hu>,
+  # Trón Viktor <tron@coli.uni-sb.de>
+  # Fransoa Holop <fred@francis.artia.sk>,
+  # Goldmann Eleonóra <eleonora46@gmx.net>
+  # Rung András <rung@itm.bme.hu>
+  # és még sokakat a magyar szólista bõvítéséért, javításáért, 
+  # és a ragozási szabálygyûjtemény hibáinak és
+  # hiányosságainak feltárásáért!
+  # 
+  # Levelezési lista: <magyarispell@yahoogroups.com>
+  # Feliratkozás: <magyarispell-subscribe@yahoogroups.com>
+  # ----------------
+
+--------------------------------------------------------------------
+
