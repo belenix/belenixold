@@ -11,7 +11,7 @@
 Name:         dbus
 License:      GPL v2, AFL v2.1
 Group:        System/Libraries
-Version:      1.2.12
+Version:      1.2.16
 Release:      1
 Distribution: Java Desktop System
 Vendor:       Sun Microsystems, Inc.
@@ -19,9 +19,11 @@ Summary:      Simple IPC library based on messages
 Source:       http://dbus.freedesktop.org/releases/dbus/%{name}-%{version}.tar.gz
 URL:          http://www.freedesktop.org/wiki/Software_2fdbus
 #owner:yippi date:2007-09-06 type:feature 
-# System services are disabled in default Solaris configuration since they are
-# not yet supported on Solaris.
+# System services are disabled by default in Solaris configuration since
+# they are not yet supported on Solaris.
 Patch1:       dbus-01-nosystemservice.diff
+#owner:yippi date:2009-07-15 type:bug bugzilla:22788
+Patch2:       dbus-02-getpwnam.diff
 BuildRoot:    %{_tmppath}/%{name}-%{version}-build
 Docdir:	      %{_defaultdocdir}/doc
 Autoreqprov:  on
@@ -64,6 +66,7 @@ daemon).
 %prep
 %setup -q
 %patch1 -p1
+%patch2 -p1
 
 %build
 %ifos linux
@@ -77,6 +80,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
   CPUS=1
 fi
 
+libtoolize -f
 aclocal $ACLOCAL_FLAGS
 autoheader
 automake -a -c -f
@@ -137,6 +141,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python?.?/vendor-packages/*
 
 %changelog
+* Wed Jul 15 2009 - brian.cameron@sun.com
+- Bump to 1.2.16.  Add patch dbus-02-getpwnam.diff to fix compile issue.
 * Thu Jan 08 2009 - brian.cameron@sun.com
 - Bump to 1.2.12.
 * Wed Dec 10 2008 - brian.cameron@sun.com
