@@ -7,7 +7,7 @@
 
 %include base.inc
 
-%define mysql_dir /usr/mysql/5.0
+%define mysql_dir /usr/mysql/5.1
 %define postgres_dir /usr/postgres/8.3
 
 Name:                   SFEqt4
@@ -60,7 +60,7 @@ BuildRequires:          SUNWhal
 BuildRequires:          SUNWdbus-devel
 BuildRequires:          SUNWxorg-headers
 BuildRequires:          SFEcups-devel
-BuildRequires:          SUNWmysql5u
+BuildRequires:          SUNWmysql51u
 BuildRequires:		SUNWgnome-media-devel
 BuildRequires:		SFEnas-devel
 BuildRequires:		SUNWTiff-devel
@@ -79,7 +79,7 @@ Requires:               SUNWdbus
 Requires:               SFEcups
 Requires:		SUNWgnome-media
 Requires:		SFEnas
-Requires:               SUNWmysql5u
+Requires:               SUNWmysql51u
 Requires:               SUNWTiff
 Requires:               SFEgccruntime
 Requires:               SUNWpng
@@ -101,7 +101,7 @@ Requires:               SUNWhal
 Requires:               SUNWdbus-devel
 Requires:               SUNWxorg-headers
 Requires:               SFEcups-devel
-Requires:               SUNWmysql5u
+Requires:               SUNWmysql51u
 Requires:               SUNWgnome-media-devel
 Requires:               SFEnas-devel
 Requires:               SUNWTiff-devel
@@ -214,7 +214,6 @@ echo yes | ./configure -prefix %{_prefix} \
            -accessibility \
            -stl \
            -plugin-sql-mysql \
-           -plugin-sql-mysql \
            -plugin-sql-odbc \
            -plugin-sql-sqlite \
            -plugin-sql-psql -system-sqlite -webkit \
@@ -291,7 +290,6 @@ echo yes | ./configure -prefix %{_prefix} \
            -exceptions \
            -accessibility \
            -stl \
-           -plugin-sql-mysql \
            -plugin-sql-mysql \
            -plugin-sql-odbc \
            -plugin-sql-sqlite \
@@ -1069,6 +1067,9 @@ cd ..
 %{_bindir}/*.debug
 
 %changelog
+* Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Update MySQL dependency to 5.1.x package.
+- Remove duplicate options.
 * Sun Jul 05 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Pull in additional patches and enable phonon build for 32Bit target.
 * Tue Jun 23 2009 - Moinak Ghosh <moinakg@belenix(dot)org>

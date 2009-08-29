@@ -124,6 +124,9 @@ then
         (cd $RPM_BUILD_ROOT/usr/gnu/lib/%{_arch64}
           ln -s libintl.so.8.0.2 libintl.so.8
           ln -s libintl.so.8.0.2 libintl.so)
+	(cd $RPM_BUILD_ROOT/usr/gnu/lib/%{_arch64}
+	  ln -s libintl.so.8 libgnuintl.so.8
+	  ln -s libintl.so.8.0.2 libgnuintl.so.8.0.2)
 fi
 mkdir -p $RPM_BUILD_ROOT/usr/lib/%{_arch64}
 (cd $RPM_BUILD_ROOT/usr/lib/%{_arch64}
@@ -208,6 +211,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- More workaround for libgnuintl.so libname weirdness.
 * Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Add workaround to rename wrongly generated shared lib name.
 * Sun Jul 26 2009 - moinakg<at>belenix(dot)org

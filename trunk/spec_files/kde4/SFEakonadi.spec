@@ -8,7 +8,7 @@
 %include base.inc
 
 %define src_dir          akonadi
-%define mysql_version    5.0
+%define mysql_version    5.1
 
 Name:                    SFEakonadi
 Summary:                 PIM data storage server
@@ -25,14 +25,14 @@ BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:      SFEqt4
 Requires:      SUNWgnome-vfs
 Requires:      SFEboost-gpp
-Requires:      SUNWmysql5r
-Requires:      SUNWmysql5u
+Requires:      SUNWmysql51r
+Requires:      SUNWmysql51u
 BuildRequires: SFEautomoc
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEcmake
 BuildRequires: SUNWgnome-vfs
 BuildRequires: SFEboost-gpp-devel
-BuildRequires: SUNWmysql5u
+BuildRequires: SUNWmysql51u
 
 
 %description
@@ -157,6 +157,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Update MySQL version dependency to 5.1.
 * Fri Jul 17 2009 - moinakg(at)belenix<dot>org
 - Comment out MySQL config patch for now, appears to cause problems.
 * Sat Jul 04 2009 - moinakg@belenix(dot)org

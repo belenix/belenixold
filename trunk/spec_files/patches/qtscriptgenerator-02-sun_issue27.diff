@@ -1,0 +1,22 @@
+--- qtscriptgenerator-src-0.1.0/generator/asttoxml.h.orig	Sun Dec 14 00:08:55 2008
++++ qtscriptgenerator-src-0.1.0/generator/asttoxml.h	Sun Dec 14 00:09:01 2008
+@@ -30,7 +30,7 @@
+ #include <QString>
+ #include <QXmlStreamWriter>
+ 
+-void astToXML(const QString name);
++void astToXML(const QString &name);
+ void writeOutNamespace(QXmlStreamWriter &s, NamespaceModelItem &item);
+ void writeOutEnum(QXmlStreamWriter &s, EnumModelItem &item);
+ void writeOutFunction(QXmlStreamWriter &s, FunctionModelItem &item);
+--- qtscriptgenerator-src-0.1.0/generator/asttoxml.cpp.orig	Sun Dec 14 00:08:55 2008
++++ qtscriptgenerator-src-0.1.0/generator/asttoxml.cpp	Sun Dec 14 00:09:01 2008
+@@ -32,7 +32,7 @@
+ #include <QTextCodec>
+ #include <QFile>
+ 
+-void astToXML(QString name) {
++void astToXML(const QString &name) {
+     QFile file(name);
+ 
+     if (!file.open(QFile::ReadOnly))

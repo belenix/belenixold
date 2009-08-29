@@ -1,5 +1,5 @@
---- usr/gnu/lib/gcc/i386-pc-solaris2.11/4.4.0/include-fixed/arpa/nameser_compat.h.orig	2009-05-19 21:45:18.170331634 +0530
-+++ usr/gnu/lib/gcc/i386-pc-solaris2.11/4.4.0/include-fixed/arpa/nameser_compat.h	2009-05-19 21:45:53.297976467 +0530
+--- usr/gnu/lib/gcc/i386-pc-solaris2.11/4.4.1/include-fixed/arpa/nameser_compat.h.orig	2009-05-19 21:45:18.170331634 +0530
++++ usr/gnu/lib/gcc/i386-pc-solaris2.11/4.4.1/include-fixed/arpa/nameser_compat.h	2009-05-19 21:45:53.297976467 +0530
 @@ -127,7 +127,7 @@
  	 * which will force your compiles to bomb until you fix
  	 * the above macros.

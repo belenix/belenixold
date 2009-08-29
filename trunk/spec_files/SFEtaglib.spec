@@ -8,9 +8,12 @@
 
 Name:                    SFEtaglib
 Summary:                 TagLib  - a library for reading and editing the meta-data of several popular audio formats
-Version:                 1.5b1
-Source:                  http://developer.kde.org/~wheeler/files/src/taglib-%{version}.tar.gz
+Version:                 1.5rel
+%define tarball_version  1.5
+Source:                  http://developer.kde.org/~wheeler/files/src/taglib-%{tarball_version}.tar.gz
 Patch1:                  taglib-01-map.diff
+Patch2:                  taglib-02-kde#161721.diff
+
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -28,8 +31,9 @@ SUNW_BaseDir:            %{_basedir}
 Requires: %name
 
 %prep
-%setup -q -n taglib-%version
+%setup -q -n taglib-%tarball_version
 %patch1 -p1
+%patch2 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -81,6 +85,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Bump version to 1.5 release.
 * Thu Jul 16 2009 - moinakg(at)belenix<dot>org
 - Bump version to 1.5b1.
 - Add dependency on SFEgccruntime for Gcc builds.

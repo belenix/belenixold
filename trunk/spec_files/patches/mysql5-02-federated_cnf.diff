@@ -1,0 +1,65 @@
+--- my-small.cnf.sh	2008-08-04 05:20:16.000000000 -0700
++++ my-small.cnf.new	2008-09-09 21:26:25.298298400 -0700
+@@ -48,8 +48,8 @@
+ # Uncomment the following if you want to log updates
+ #log-bin=mysql-bin
+ 
+-# Disable Federated by default
+-skip-federated
++# Enable Federated Engine to avoid incompatibilties for OpenSolaris only
++#skip-federated
+ 
+ # Uncomment the following if you are NOT using BDB tables
+ #skip-bdb
+--- my-large.cnf.sh	2008-08-04 05:20:16.000000000 -0700
++++ my-large.cnf.new	2008-09-09 21:26:59.924623000 -0700
+@@ -46,8 +46,8 @@
+ # 
+ #skip-networking
+ 
+-# Disable Federated by default
+-skip-federated
++# Enable Federated Engine to avoid incompatibilties for OpenSolaris only
++#skip-federated
+ 
+ # Replication Master Server (default)
+ # binary logging is required for replication
+--- my-medium.cnf.sh	2008-08-04 05:20:16.000000000 -0700
++++ my-medium.cnf.new	2008-09-09 21:27:23.549792200 -0700
+@@ -44,8 +44,8 @@
+ # 
+ #skip-networking
+ 
+-# Disable Federated by default
+-skip-federated
++# Enable Federated Engine to avoid incompatibilties for OpenSolaris only
++#skip-federated
+ 
+ # Replication Master Server (default)
+ # binary logging is required for replication
+--- my-huge.cnf.sh	2008-08-04 05:20:16.000000000 -0700
++++ my-huge.cnf.new	2008-09-09 21:28:02.505784600 -0700
+@@ -46,8 +46,8 @@
+ # 
+ #skip-networking
+ 
+-# Disable Federated by default
+-skip-federated
++# Enable Federated Engine to avoid incompatibilties for OpenSolaris only 
++#skip-federated
+ 
+ # Replication Master Server (default)
+ # binary logging is required for replication
+--- my-innodb-heavy-4G.cnf.sh	2008-08-04 05:20:16.000000000 -0700
++++ my-innodb-heavy-4G.cnf.new	2008-09-09 21:28:34.171792600 -0700
+@@ -357,8 +357,8 @@
+ myisam_recover
+ 
+ 
+-# Disable Federated by default
+-skip-federated
++# Enable Federated Engine to avoid incompatibilties for OpenSolaris only
++#skip-federated
+ 
+ # *** BDB Specific options ***
+ 

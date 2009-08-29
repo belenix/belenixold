@@ -1,0 +1,11 @@
+--- taglib-extras-0.1.6/taglib-extras/tfile_helper.cpp.orig	2009-08-23 00:29:50.314621408 +0530
++++ taglib-extras-0.1.6/taglib-extras/tfile_helper.cpp	2009-08-23 00:30:22.304092504 +0530
+@@ -31,7 +31,7 @@
+ #endif
+ #include <wchar.h>
+ 
+-#if defined(__APPLE__) || defined(__FreeBSD__) || defined(_WIN32) || defined(_WIN64)
++#if defined(__APPLE__) || defined(__FreeBSD__) || defined(_WIN32) || defined(_WIN64) || defined(sun) || defined(__sun)
+ int wcscasecmp(const wchar_t *s1, const wchar_t *s2)
+ {
+      int i;

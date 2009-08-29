@@ -29,12 +29,10 @@ BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 Requires:      SFEqt4
 Requires:      SFEqimageblitz
 Requires:      SFEkdelibs4
-Requires:      SFEkdepimlibs4
 Requires:      SUNWxwplt
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEqimageblitz-devel
 BuildRequires: SFEkdelibs4-devel
-BuildRequires: SFEkdepimlibs4-devel
 BuildRequires: SFEautomoc
 BuildRequires: SFEcmake
 Conflicts:     SFEkdebase3
@@ -185,5 +183,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Remove dependency on self.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Initial version.
