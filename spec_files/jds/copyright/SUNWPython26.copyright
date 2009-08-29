@@ -1,0 +1,17 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License: Python Software Foundation License Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  LICENSE: PSF version 2 and the history of Python licensing
+  README.bz2: more information about Python
+
+ The sources of Python-%{version} were downloaded
+ from %{SOURCE0.url}

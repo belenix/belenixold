@@ -1,0 +1,1156 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+B. TERMS AND CONDITIONS FOR ACCESSING OR OTHERWISE USING PYTHON
+===============================================================
+
+PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2
+--------------------------------------------
+
+1. This LICENSE AGREEMENT is between the Python Software Foundation
+("PSF"), and the Individual or Organization ("Licensee") accessing and
+otherwise using this software ("Python") in source or binary form and
+its associated documentation.
+
+2. Subject to the terms and conditions of this License Agreement, PSF
+hereby grants Licensee a nonexclusive, royalty-free, world-wide
+license to reproduce, analyze, test, perform and/or display publicly,
+prepare derivative works, distribute, and otherwise use Python
+alone or in any derivative version, provided, however, that PSF's
+License Agreement and PSF's notice of copyright, i.e., "Copyright (c)
+2001, 2002, 2003, 2004, 2005, 2006 Python Software Foundation; All Rights
+Reserved" are retained in Python alone or in any derivative version
+prepared by Licensee.
+
+3. In the event Licensee prepares a derivative work that is based on
+or incorporates Python or any part thereof, and wants to make
+the derivative work available to others as provided herein, then
+Licensee hereby agrees to include in any such work a brief summary of
+the changes made to Python.
+
+4. PSF is making Python available to Licensee on an "AS IS"
+basis.  PSF MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, PSF MAKES NO AND
+DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
+FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF PYTHON WILL NOT
+INFRINGE ANY THIRD PARTY RIGHTS.
+
+5. PSF SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF PYTHON
+FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS
+A RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING PYTHON,
+OR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.
+
+6. This License Agreement will automatically terminate upon a material
+breach of its terms and conditions.
+
+7. Nothing in this License Agreement shall be deemed to create any
+relationship of agency, partnership, or joint venture between PSF and
+Licensee.  This License Agreement does not grant permission to use PSF
+trademarks or trade name in a trademark sense to endorse or promote
+products or services of Licensee, or any third party.
+
+8. By copying, installing or otherwise using Python, Licensee
+agrees to be bound by the terms and conditions of this License
+Agreement.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/wsgiref/headers.py, Python-2.5.2/Lib/encodings/ascii.py, Python-2.5.2/Lib/encodings/utf_16.py:
+
+Much of this module is red-handedly pilfered from email.Message in the stdlib,
+so portions are Copyright (C) 2001,2002 Python Software Foundation, and were
+written by Barry Warsaw.
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+(c) Copyright CNRI, All Rights Reserved. NO WARRANTY.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_cursesmodule.c:
+
+   Based on prior work by Lance Ellinghaus and Oliver Andrich
+   Version 1.2 of this module: Copyright 1994 by Lance Ellinghouse,
+    Cathedral City, California Republic, United States of America.
+
+   Version 1.5b1, heavily extended for ncurses by Oliver Andrich:
+   Copyright 1996,1997 by Oliver Andrich, Koblenz, Germany.
+
+   Tidied for Python 1.6, and currently maintained by <amk@amk.ca>.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this source file to use, copy, modify, merge, or publish it
+   subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or in any new file that contains a substantial portion of
+   this file.
+
+   THE  AUTHOR  MAKES  NO  REPRESENTATIONS ABOUT  THE  SUITABILITY  OF
+   THE  SOFTWARE FOR  ANY  PURPOSE.  IT IS  PROVIDED  "AS IS"  WITHOUT
+   EXPRESS OR  IMPLIED WARRANTY.  THE AUTHOR DISCLAIMS  ALL WARRANTIES
+   WITH  REGARD TO  THIS  SOFTWARE, INCLUDING  ALL IMPLIED  WARRANTIES
+   OF   MERCHANTABILITY,  FITNESS   FOR  A   PARTICULAR  PURPOSE   AND
+   NON-INFRINGEMENT  OF THIRD  PARTY  RIGHTS. IN  NO  EVENT SHALL  THE
+   AUTHOR  BE LIABLE  TO  YOU  OR ANY  OTHER  PARTY  FOR ANY  SPECIAL,
+   INDIRECT,  OR  CONSEQUENTIAL  DAMAGES  OR  ANY  DAMAGES  WHATSOEVER
+   WHETHER IN AN  ACTION OF CONTRACT, NEGLIGENCE,  STRICT LIABILITY OR
+   ANY OTHER  ACTION ARISING OUT OF  OR IN CONNECTION WITH  THE USE OR
+   PERFORMANCE OF THIS SOFTWARE.
+ 
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/timing.h:
+
+ Copyright (c) 1993 George V. Neville-Neil
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. All advertising materials mentioning features or use of this software
+    must display the following acknowledgement:
+	This product includes software developed by George V. Neville-Neil
+ 4. The name, George Neville-Neil may not be used to endorse or promote 
+    products derived from this software without specific prior 
+    written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR 
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_hashopenssl.c:
+
+ Copyright (C) 2005   Gregory P. Smith (greg@electricrain.com)
+ Licensed to PSF under a Contributor Agreement.
+
+ Derived from a skeleton of shamodule.c containing work performed by:
+
+ Andrew Kuchling (amk@amk.ca)
+ Greg Stein (gstein@lyra.org)
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/plat-mac/lib-scriptpackages/Terminal/Terminal_Suite.py, Python-2.5.2/Tools/unicode/listcodecs.py:
+
+(c) Copyright 2005, Marc-Andre Lemburg (mal@lemburg.com).
+
+    Licensed to PSF under a Contributor Agreement.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/expat/utf8tab.h:
+ Copyright (c) 1998, 1999 Thai Open Source Software Center Ltd
+   See the file COPYING for copying permission.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/PC/os2emx/pythonpm.c:
+
+ Andrew MacIntyre <andymac@bullseye.apana.org.au>, August 2001.
+ Released under the terms of the Python 2.1.1 licence - see the LICENCE
+ file in the Python v2.1.1 (or later) source distribution.
+ Copyright assigned to the Python Software Foundation, 2001.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Objects/unicodeobject.c:
+
+Unicode implementation based on original code by Fredrik Lundh,
+modified by Marc-Andre Lemburg <mal@lemburg.com> according to the
+Unicode Integration Proposal (see file Misc/unicode.txt).
+
+Major speed upgrades to the method implementations at the Reykjavik
+NeedForSpeed sprint, by Fredrik Lundh and Andrew Dalke.
+
+Copyright (c) Corporation for National Research Initiatives.
+
+--------------------------------------------------------------------
+
+The original string type implementation is:
+
+    Copyright (c) 1999 by Secret Labs AB
+    Copyright (c) 1999 by Fredrik Lundh
+
+By obtaining, using, and/or copying this software and/or its
+associated documentation, you agree that you have read, understood,
+and will comply with the following terms and conditions:
+
+Permission to use, copy, modify, and distribute this software and its
+associated documentation for any purpose and without fee is hereby
+granted, provided that the above copyright notice appears in all
+copies, and that both that copyright notice and this permission notice
+appear in supporting documentation, and that the name of Secret Labs
+AB or the author not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior
+permission.
+
+SECRET LABS AB AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO
+THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS.  IN NO EVENT SHALL SECRET LABS AB OR THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Tools/scripts/texcheck.py:
+
+   Written by Raymond D. Hettinger <python at rcn.com>
+   Copyright (c) 2003 Python Software Foundation.  All rights reserved.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/expat/pyexpatns.h:
+
+ Copyright (c) 2005-2006 ActiveState Software Inc.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Tools/unicode/gencodec.py:
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+(c) Copyright CNRI, All Rights Reserved. NO WARRANTY.
+(c) Copyright Guido van Rossum, 2000.
+
+Table generation:
+(c) Copyright Marc-Andre Lemburg, 2005.
+    Licensed to PSF under a Contributor Agreement.
+
+--------------------------------------------------------------------
+Python-2.5.2/Modules/zlib/zlib.h:
+
+  Copyright (C) 1995-2005 Jean-loup Gailly and Mark Adler
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+
+  Jean-loup Gailly        Mark Adler
+  jloup@gzip.org          madler@alumni.caltech.edu
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/zlib/inftrees.h:
+Python-2.5.2/Modules/zlib/minigzip.c:
+Python-2.5.2/Modules/zlib/infback.c, Python-2.5.2/Modules/zlib/inftrees.c:
+Python-2.5.2/Modules/zlib/inflate.c:
+Python-2.5.2/Modules/zlib/crc32.c:
+Python-2.5.2/Modules/zlib/inffast.c:
+Python-2.5.2/Modules/zlib/adler32.c
+
+ Copyright (C) 1995-2005 Mark Adler
+ For conditions of distribution and use, see copyright notice in zlib.h
+ 
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/zlib/deflate.c:
+Python-2.5.2/Modules/zlib/trees.c:
+Python-2.5.2/Modules/zlib/gzio.c:
+Python-2.5.2/Modules/zlib/deflate.h, Python-2.5.2/Modules/zlib/zutil.h:
+, Python-2.5.2/Modules/zlib/compress.c, Python-2.5.2/Modules/zlib/zutil.c, Python-2.5.2/Modules/zlib/zconf.in.h, Python-2.5.2/Modules/zlib/zconf.h, Python-2.5.2/Modules/zlib/example.c, Python-2.5.2/Modules/zlib/uncompr.c:
+
+ Copyright (C) 1995-2005 Jean-loup Gailly.
+ For conditions of distribution and use, see copyright notice in zlib.h
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Mac/Tools/Doc/HelpIndexingTool/Required_Suite.py, Python-2.5.2/Lib/encodings/utf_16_be.py, Python-2.5.2/Lib/encodings/raw_unicode_escape.py:
+Python-2.5.2/Lib/encodings/__init__.py:
+Python-2.5.2/Lib/encodings/charmap.py, Python-2.5.2/Lib/encodings/unicode_internal.py:
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+(c) Copyright CNRI, All Rights Reserved. NO WARRANTY.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/shamodule.c:
+ SHA module 
+
+ This module provides an interface to NIST's Secure Hash Algorithm 
+
+ See below for information about the original code this module was
+   based upon. Additional work performed by:
+
+   Andrew Kuchling (amk@amk.ca)
+   Greg Stein (gstein@lyra.org)
+
+   Copyright (C) 2005   Gregory P. Smith (greg@electricrain.com)
+   Licensed to PSF under a Contributor Agreement.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/ossaudiodev.c:
+
+ Originally written by Peter Bosch, March 2000, as linuxaudiodev.
+
+ Renamed to ossaudiodev and rearranged/revised/hacked up
+ by Greg Ward <gward@python.net>, November 2002.
+ Mixer interface by Nicholas FitzRoy-Dale <wzdd@lardcave.net>, Dec 2002.
+
+ (c) 2000 Peter Bosch.  All Rights Reserved.
+ (c) 2002 Gregory P. Ward.  All Rights Reserved.
+ (c) 2002 Python Software Foundation.  All Rights Reserved.
+
+ XXX need a license statement
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_sqlite/module.c:
+
+     *
+     * Copyright (C) 2004-2006 Gerhard Häring <gh@ghaering.de>
+     *
+     * This file is part of pysqlite.
+     *
+     * This software is provided 'as-is', without any express or implied
+     * warranty.  In no event will the authors be held liable for any damages
+     * arising from the use of this software.
+     *
+     * Permission is granted to anyone to use this software for any purpose,
+     * including commercial applications, and to alter it and redistribute it
+     * freely, subject to the following restrictions:
+     *
+     * 1. The origin of this software must not be misrepresented; you must not
+     *    claim that you wrote the original software. If you use this software
+     *    in a product, an acknowledgment in the product documentation would be
+     *    appreciated but is not required.
+     * 2. Altered source versions must be plainly marked as such, and must not be
+     *    misrepresented as being the original software.
+     * 3. This notice may not be removed or altered from any source distribution.
+--------------------------------------------------------------------
+
+Python-2.5.2/Mac/Modules/ColorPickermodule.c:
+
+Copyright 1998 by Just van Rossum, Den Haag, The Netherlands.
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the name of Just van Rossum not be 
+used in advertising or publicity pertaining to distribution of the 
+software without specific, written prior permission.
+
+JUST VAN ROSSUM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, 
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO 
+EVENT SHALL JUST VAN ROSSUM BE LIABLE FOR ANY SPECIAL, INDIRECT OR 
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF 
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR 
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/parsermodule.c:
+
+  Copyright 1995-1996 by Fred L. Drake, Jr. and Virginia Polytechnic
+  Institute and State University, Blacksburg, Virginia, USA.
+  Portions copyright 1991-1995 by Stichting Mathematisch Centrum,
+  Amsterdam, The Netherlands.  Copying is permitted under the terms
+  associated with the main Python distribution, with the additional
+  restriction that this additional notice be included and maintained
+  on all distributed copies.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/PC/_subprocess.c:
+
+ Copyright (c) 2004 by Fredrik Lundh <fredrik@pythonware.com>
+ Copyright (c) 2004 by Secret Labs AB, http://www.pythonware.com
+ Copyright (c) 2004 by Peter Astrand <astrand@lysator.liu.se>
+
+ By obtaining, using, and/or copying this software and/or its
+ associated documentation, you agree that you have read, understood,
+ and will comply with the following terms and conditions:
+
+ Permission to use, copy, modify, and distribute this software and
+ its associated documentation for any purpose and without fee is
+ hereby granted, provided that the above copyright notice appears in
+ all copies, and that both that copyright notice and this permission
+ notice appear in supporting documentation, and that the name of the
+ authors not be used in advertising or publicity pertaining to
+ distribution of the software without specific, written prior
+ permission.
+
+ THE AUTHORS DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
+ IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+ WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+ Licensed to PSF under a Contributor Agreement. 
+ See http://www.python.org/2.4/license for licensing details. 
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/expat/winconfig.h, Python-2.5.2/Mac/PythonLauncher/MyDocument.h, Python-2.5.2/Modules/expat/macconfig.h:
+
+* Copyright 2000, Clark Cooper
+* All rights reserved.
+*
+* This is free software. You are permitted to copy, distribute, or modify
+* it under the terms of the MIT/X license (contained in the COPYING file
+* with this distribution.)
+  MyDocument.h
+  PythonLauncher
+
+  Created by Jack Jansen on Fri Jul 19 2002.
+  Copyright (c) 2002 __MyCompanyName__. All rights reserved.
+*
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/getnameinfo.c, Python-2.5.2/Modules/getaddrinfo.c, Python-2.5.2/Modules/addrinfo.h:
+ Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.
+ Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ 3. Neither the name of the project nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+ 
+ GAI_ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE
+ FOR GAI_ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON GAI_ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN GAI_ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/SocketServer.py:
+
+  Copyright (C) 2000  Luke Kenneth Casson Leighton <lkcl@samba.org>
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/puremodule.c:
+
+ This module exports the C API to such Pure Software Inc. (tm) (now
+ called Pure Atria Corporation) products as Purify (tm) and Quantify
+ (tm).  Other packages could be added, but I didn't have those products
+ and thus lack the API documentation.
+
+ The actual purify.h and quantify.h files which embody the APIs are
+ copyrighted by Pure Software, Inc. and are only attainable through them.
+ This module assumes you have legally installed licenses of their
+ software.  Contact them on the Web via <http://www.pureatria.com/>
+
+ Author: Barry Warsaw <bwarsaw@python.org>
+                      <bwarsaw@cnri.reston.va.us>
+ 
+
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/linuxaudiodev.c:
+ 
+ Author          : Peter Bosch
+ Created On      : Thu Mar  2 21:10:33 2000
+ 
+ Unless other notices are present in any part of this file
+ explicitly claiming copyrights for other people and/or 
+ organizations, the contents of this file is fully copyright 
+ (C) 2000 Peter Bosch, all rights reserved.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Doc/tools/html2texi.pl:
+
+ Michael Ernst <mernst@cs.washington.edu>
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_localemodule.c:
+
+Copyright (C) 1997, 2002, 2003 Martin von Loewis
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies.
+
+This software comes with no warranty. Use at your own risk.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Objects/setobject.c, Python-2.5.2/Lib/plat-mac/lib-scriptpackages/CodeWarrior/CodeWarrior_suite.py:
+ set object implementation 
+   Written and maintained by Raymond D. Hettinger <python@rcn.com>
+   Derived from Lib/sets.py and Objects/dictobject.c.
+
+   Copyright (c) 2003-6 Python Software Foundation.
+   All rights reserved.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_bsddb.c:
+
+  Copyright (c) 1999-2001, Digital Creations, Fredericksburg, VA, USA
+  and Andrew Kuchling. All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+
+    o Redistributions of source code must retain the above copyright
+      notice, this list of conditions, and the disclaimer that follows.
+
+    o Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions, and the following disclaimer in
+      the documentation and/or other materials provided with the
+      distribution.
+
+    o Neither the name of Digital Creations nor the names of its
+      contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY DIGITAL CREATIONS AND CONTRIBUTORS *AS
+  IS* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+  PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL DIGITAL
+  CREATIONS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+  OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+  DAMAGE.
+
+ Portions of this module, associated unit tests and build scripts are the
+ result of a contract with The Written Word (http://thewrittenword.com/)
+ Many thanks go out to them for causing me to raise the bar on quality and
+ functionality, resulting in a better bsddb3 package for all of us to use.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/robotparser.py:
+
+    Copyright (C) 2000  Bastian Kleineidam
+
+    You can choose between two licenses when using this package:
+    1) GNU GPLv2
+    2) PSF license for Python 2.2
+
+--------------------------------------------------------------------
+
+Python-2.5.2/PC/os2vacpp/config.c, Python-2.5.2/Modules/config.c:
+
+Copyright (c) 2000, BeOpen.com.
+Copyright (c) 1995-2000, Corporation for National Research Initiatives.
+Copyright (c) 1990-1995, Stichting Mathematisch Centrum.
+All rights reserved.
+
+See the file "Misc/COPYRIGHT" for information on usage and
+redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_codecsmodule.c:
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+Copyright (c) Corporation for National Research Initiatives.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_sre.c:
+
+ Copyright (c) 1997-2001 by Secret Labs AB.  All rights reserved.
+
+ This version of the SRE library can be redistributed under CNRI's
+ Python 1.6 license.  For any other use, please contact Secret Labs
+ AB (info@pythonware.com).
+
+ Portions of this engine have been developed in cooperation with
+ CNRI.  Hewlett-Packard provided funding for 1.6 integration and
+ other compatibility work.
+ 
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/sha512module.c, Python-2.5.2/Modules/sha256module.c:
+ SHA512 module 
+
+ See below for information about the original code this module was
+   based upon. Additional work performed by:
+
+   Andrew Kuchling (amk@amk.ca)
+   Greg Stein (gstein@lyra.org)
+   Trevor Perrin (trevp@trevp.net)
+
+   Copyright (C) 2005   Gregory P. Smith (greg@electricrain.com)
+   Licensed to PSF under a Contributor Agreement.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/syslogmodule.c:
+
+Copyright 1994 by Lance Ellinghouse,
+Cathedral City, California Republic, United States of America.
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its 
+documentation for any purpose and without fee is hereby granted, 
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in 
+supporting documentation, and that the name of Lance Ellinghouse
+not be used in advertising or publicity pertaining to distribution 
+of the software without specific, written prior permission.
+
+LANCE ELLINGHOUSE DISCLAIMS ALL WARRANTIES WITH REGARD TO
+THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS, IN NO EVENT SHALL LANCE ELLINGHOUSE BE LIABLE FOR ANY SPECIAL, 
+INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING 
+FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, 
+NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION 
+WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/cookielib.py:
+
+This module has (now fairly distant) origins in Gisle Aas' Perl module
+HTTP::Cookies, from the libwww-perl library.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Mac/Modules/cg/CFMLateImport.h, Python-2.5.2/Mac/Modules/cg/CFMLateImport.c:
+
+	Written by:	Quinn
+
+	Copyright:	Copyright © 1999 by Apple Computer, Inc., all rights reserved.
+	You may incorporate this Apple sample source code into your program(s) without
+	restriction. This Apple sample source code has been provided "AS IS" and the
+	responsibility for its operation is yours. You are not permitted to redistribute
+	this Apple sample source code as "Apple sample source code" after having made
+	changes. If you're going to re-distribute the source, we require that you make
+	it clear in the source that the code was descended from Apple sample source
+	code, but that you've made changes.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/encodings/mac_latin2.py, Python-2.5.2/Python/getcopyright.c, Python-2.5.2/Lib/encodings/latin_1.py, Python-2.5.2/Lib/encodings/utf_8.py, Python-2.5.2/Lib/encodings/ptcp154.py:
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+(c) Copyright CNRI, All Rights Reserved. NO WARRANTY.
+(c) Copyright 2000 Guido van Rossum.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Doc/tools/prechm.py:
+
+    by hernan.foffani@iname.com
+    no copyright and no responsabilities.
+
+    modified by Dale Nagata for Python 1.5.2
+
+    Renamed from make_chm.py to prechm.py, and checked into the Python
+    project, 19-Apr-2002 by Tim Peters.  Assorted modifications by Tim
+    and Fred Drake.  Obtained from Robin Dunn's .chm packaging of the
+    Python 2.2 docs, at <http://alldunn.com/python/>.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_ctypes/darwin/dlfcn_simple.c, Python-2.5.2/Modules/_ctypes/darwin/dlfcn.h:
+
+Copyright (c) 2002 Peter O'Gorman <ogorman@users.sourceforge.net>
+
+Copyright (c) 2002 Jorge Acereda  <jacereda@users.sourceforge.net> &
+                   Peter O'Gorman <ogorman@users.sourceforge.net>
+                   
+Portions may be copyright others, see the AUTHORS file included with this
+distribution.
+
+Maintained by Peter O'Gorman <ogorman@users.sourceforge.net>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/PC/winsound.c:
+
+ Author: Toby Dickenson <htrd90@zepler.org>
+
+ Copyright (c) 1999 Toby Dickenson
+
+ Permission to use this software in any way is granted without
+ fee, provided that the copyright notice above appears in all
+ copies. This software is provided "as is" without any warranty.
+ 
+
+ Modified by Guido van Rossum 
+ Beep added by Mark Hammond 
+ Win9X Beep and platform identification added by Uncle Timmy 
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Python/codecs.c, Python-2.5.2/Modules/unicodedata.c:
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+Modified for Python 2.0 by Fredrik Lundh (fredrik@pythonware.com)
+Modified by Martin v. Löwis (martin@v.loewis.de)
+
+Copyright (c) Corporation for National Research Initiatives.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/dummy_thread.py, Python-2.5.2/Modules/bz2module.c:
+
+Copyright (c) 2002  Gustavo Niemeyer <niemeyer@conectiva.com>
+Copyright (c) 2002  Python Software Foundation; All Rights Reserved
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_elementtree.c:
+
+ Copyright (c) 1999-2006 by Secret Labs AB.  All rights reserved.
+ Copyright (c) 1999-2006 by Fredrik Lundh.
+
+ info@pythonware.com
+ http://www.pythonware.com
+ 
+ Licensed to PSF under a Contributor Agreement. 
+ See http://www.python.org/2.4/license for licensing details. 
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/encodings/mbcs.py, Python-2.5.2/Lib/plat-mac/lib-scriptpackages/StdSuites/AppleScript_Suite.py:
+
+Cloned by Mark Hammond (mhammond@skippinet.com.au) from ascii.py,
+which was written by Marc-Andre Lemburg (mal@lemburg.com).
+
+(c) Copyright CNRI, All Rights Reserved. NO WARRANTY.
+Suite AppleScript Suite: Standard terms for AppleScript
+Level 1, version 1
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Python/getopt.c:
+
+ Copyright 1992-1994, David Gottner
+
+                    All Rights Reserved
+
+ Permission to use, copy, modify, and distribute this software and its 
+ documentation for any purpose and without fee is hereby granted, 
+ provided that the above copyright notice, this permission notice and
+ the following disclaimer notice appear unmodified in all copies.
+
+ I DISCLAIM ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL I
+ BE LIABLE FOR ANY SPECIAL, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
+ DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA, OR PROFITS, WHETHER
+ IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+ OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+ Nevertheless, I would like to know about bugs in this library or
+ suggestions for improvment.  Send bug reports and feedback to
+ davegottner@delphi.com.
+
+ Modified to support --help and --version, as well as /? on Windows
+ * by Georg Brandl. 
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Objects/sliceobject.c:
+
+Written by Jim Hugunin and Chris Chase.
+
+Guido, feel free to do whatever you want in the way of copyrights
+for this file.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/PC/bdist_wininst/install.c:
+
+ Written by Thomas Heller, May 2000
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_tkinter.c:
+
+Copyright (C) 1994 Steen Lumholt.
+
+                        All Rights Reserved
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/expat/latin1tab.h:
+Python-2.5.2/Modules/expat/asciitab.h, Python-2.5.2/Modules/expat/iasciitab.h:
+
+ Copyright (c) 1998, 1999 Thai Open Source Software Center Ltd
+   See the file COPYING for copying permission.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/optparse.py:
+
+By Greg Ward <gward@python.net>
+
+Originally distributed as Optik; see http://optik.sourceforge.net/ .
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/ucred.c:
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to
+ deal in the Software without restriction, including without limitation the
+ rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ sell copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ DEALINGS IN THE SOFTWARE.
+
+ Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+ Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/plat-mac/lib-scriptpackages/CodeWarrior/Required.py, Python-2.5.2/Mac/PythonLauncher/FileSettings.h, Python-2.5.2/Lib/plat-mac/lib-scriptpackages/CodeWarrior/Standard_Suite.py, Python-2.5.2/Lib/plat-mac/lib-scriptpackages/Explorer/Standard_Suite.py:
+
+  Created by Jack Jansen on Sun Jul 21 2002.
+  Copyright (c) 2002 __MyCompanyName__. All rights reserved.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/RISCOS/Python/dynload_riscos.c, Python-2.5.2/Mac/Modules/icgluemodule.c, Python-2.5.2/Mac/Modules/MacOS.c, Python-2.5.2/Mac/Modules/gestaltmodule.c, Python-2.5.2/PC/os2emx/config.c, Python-2.5.2/PC/os2emx/dlfcn.h, Python-2.5.2/PC/os2emx/dlfcn.c, Python-2.5.2/Mac/Modules/snd/_Sndihooks.c, Python-2.5.2/Mac/Modules/Nav.c, Python-2.5.2/RISCOS/Modules/config.c, Python-2.5.2/Python/mactoolboxglue.c:
+**********************************************************
+Copyright 1991-1997 by Stichting Mathematisch Centrum, Amsterdam,
+The Netherlands.
+
+                        All Rights Reserved
+
+Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies and that
+both that copyright notice and this permission notice appear in
+supporting documentation, and that the names of Stichting Mathematisch
+Centrum or CWI or Corporation for National Research Initiatives or
+CNRI not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior
+permission.
+
+While CWI is the initial source for this software, a modified version
+is made available by the Corporation for National Research Initiatives
+(CNRI) at the Internet address ftp://ftp.python.org.
+
+STICHTING MATHEMATISCH CENTRUM AND CNRI DISCLAIM ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL STICHTING MATHEMATISCH
+CENTRUM OR CNRI BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL
+DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+
+Centrum or CWI not be used in advertising or publicity pertaining to
+distribution of the software without specific, written prior permission.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/expat/expat_config.h, Python-2.5.2/Objects/unicodectype.c:
+ 
+   Written by Marc-Andre Lemburg (mal@lemburg.com).
+   Modified for Python 2.0 by Fredrik Lundh (fredrik@pythonware.com)
+
+   Copyright (c) Corporation for National Research Initiatives.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_randommodule.c:
+
+   The code in this module was based on a download from:
+	  http://www.math.keio.ac.jp/~matumoto/MT2002/emt19937ar.html
+
+   It was modified in 2002 by Raymond Hettinger as follows:
+
+	* the principal computational lines untouched except for tabbing.
+
+	* renamed genrand_res53() to random_random() and wrapped
+	  in python calling/return code.
+
+	* genrand_int32() and the helper functions, init_genrand()
+	  and init_by_array(), were declared static, wrapped in
+	  Python calling/return code.  also, their global data
+	  references were replaced with structure references.
+
+	* unused functions from the original were deleted.
+	  new, original C python code was added to implement the
+	  Random() interface.
+
+   The following are the verbatim comments from the original code:
+
+   A C-program for MT19937, with initialization improved 2002/1/26.
+   Coded by Takuji Nishimura and Makoto Matsumoto.
+
+   Before using, initialize the state by using init_genrand(seed)
+   or init_by_array(init_key, key_length).
+
+   Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
+   All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+     1. Redistributions of source code must retain the above copyright
+	notice, this list of conditions and the following disclaimer.
+
+     2. Redistributions in binary form must reproduce the above copyright
+	notice, this list of conditions and the following disclaimer in the
+	documentation and/or other materials provided with the distribution.
+
+     3. The names of its contributors may not be used to endorse or promote
+	products derived from this software without specific prior written
+	permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/sre.h, Python-2.5.2/Lib/shutil.py, Python-2.5.2/Modules/sre_constants.h:
+
+ Copyright (c) 1997-2001 by Secret Labs AB.  All rights reserved.
+
+ See the _sre.c file for information on usage and redistribution.
+ 
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/test/testcodec.py, Python-2.5.2/Lib/test/test_charmapcodec.py:
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+(c) Copyright 2000 Guido van Rossum.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/test/test_ucn.py, Python-2.5.2/Lib/codecs.py, Python-2.5.2/Lib/test/test_unicodedata.py:
+
+Written by Bill Tutt.
+Modified for Python 2.0 by Fredrik Lundh (fredrik@pythonware.com)
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+(c) Copyright CNRI, All Rights Reserved. NO WARRANTY.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_ctypes/libffi:
+
+libffi - Copyright (c) 1996-2003  Red Hat, Inc.
+ia64_flags.h - Copyright (c) 2000 Hewlett Packard Company
+ffi.c - Copyright (c) 1996, 1998, 1999, 2001, 2003, 2004 Red Hat, Inc.
+ffi.c - Copyright (c) 2000 Software AG
+ffi.c - Copyright (c) 2002  Bo Thorsen <bo@suse.de>
+ffi.c - Copyright (c) 1998 Geoffrey Keating
+ffi.c - Copyright (c) 2004  Renesas Technology
+ffi.c - Copyright (c) 1998 Cygnus Solutions
+        Copyright (c) 2004 Simon Posnjak
+	Copyright (c) 2005 Axis Communications AB
+        Copyright (c) 2002  Ranjit Mathew
+        Copyright (c) 2002  Roger Sayle
+ffi.c - Copyright (c) 2004  Anthony Green
+	Copyright (c) 2000 Hewlett Packard Company
+ffi.c - Copyright (c) 2002, 2003, 2004, 2005 Kaz Kojima
+asm.h - Copyright (c) 1998 Geoffrey Keating
+ffitarget.h - Copyright (c) 1996-2004  Red Hat, Inc.
+ffitarget.h - Copyright (c) 2004  Renesas Technology.
+ffitarget.h - Copyright (c) 1996-2003  Red Hat, Inc.
+ffi_common.h - Copyright (c) 1996  Red Hat, Inc.
+prep_cif.c - Copyright (c) 1996, 1998  Red Hat, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+``Software''), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL CYGNUS SOLUTIONS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Mac/PythonLauncher/doscript.h, Python-2.5.2/Tools/bgen/bgen/macsupport.py:
+
+  Created by Jack Jansen on Wed Jul 31 2002.
+  Copyright (c) 2002 __MyCompanyName__. All rights reserved.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Lib/encodings/undefined.py, Python-2.5.2/Lib/encodings/utf_16_le.py, Python-2.5.2/Lib/encodings/unicode_escape.py:
+
+Written by Marc-Andre Lemburg (mal@lemburg.com).
+
+(c) Copyright CNRI, All Rights Reserved. NO WARRANTY.
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/fpetestmodule.c, Python-2.5.2/Modules/fpectlmodule.c:
+
+     ---------------------------------------------------------------------  
+    /                       Copyright (c) 1996.                           \ 
+   |          The Regents of the University of California.                 |
+   |                        All rights reserved.                           |
+   |                                                                       |
+   |   Permission to use, copy, modify, and distribute this software for   |
+   |   any purpose without fee is hereby granted, provided that this en-   |
+   |   tire notice is included in all copies of any software which is or   |
+   |   includes  a  copy  or  modification  of  this software and in all   |
+   |   copies of the supporting documentation for such software.           |
+   |                                                                       |
+   |   This  work was produced at the University of California, Lawrence   |
+   |   Livermore National Laboratory under  contract  no.  W-7405-ENG-48   |
+   |   between  the  U.S.  Department  of  Energy and The Regents of the   |
+   |   University of California for the operation of UC LLNL.              |
+   |                                                                       |
+   |                              DISCLAIMER                               |
+   |                                                                       |
+   |   This  software was prepared as an account of work sponsored by an   |
+   |   agency of the United States Government. Neither the United States   |
+   |   Government  nor the University of California nor any of their em-   |
+   |   ployees, makes any warranty, express or implied, or  assumes  any   |
+   |   liability  or  responsibility  for the accuracy, completeness, or   |
+   |   usefulness of any information,  apparatus,  product,  or  process   |
+   |   disclosed,   or  represents  that  its  use  would  not  infringe   |
+   |   privately-owned rights. Reference herein to any specific  commer-   |
+   |   cial  products,  process,  or  service  by trade name, trademark,   |
+   |   manufacturer, or otherwise, does not  necessarily  constitute  or   |
+   |   imply  its endorsement, recommendation, or favoring by the United   |
+   |   States Government or the University of California. The views  and   |
+   |   opinions  of authors expressed herein do not necessarily state or   |
+   |   reflect those of the United States Government or  the  University   |
+   |   of  California,  and shall not be used for advertising or product   |
+    \  endorsement purposes.                                              / 
+     ---------------------------------------------------------------------  
+
+--------------------------------------------------------------------
+
+Python-2.5.2/Modules/_sqlite/prepare_protocol.h, Python-2.5.2/Modules/_sqlite/cursor.h, Python-2.5.2/Modules/_sqlite/microprotocols.c, Python-2.5.2/Modules/_sqlite/cache.h, Python-2.5.2/Modules/_sqlite/cursor.c, Python-2.5.2/Modules/_sqlite/statement.c, Python-2.5.2/Modules/_sqlite/module.h, Python-2.5.2/Modules/_sqlite/sqlitecompat.h, Python-2.5.2/Modules/md5.h, Python-2.5.2/Modules/_sqlite/connection.h, Python-2.5.2/Modules/_sqlite/microprotocols.h, Python-2.5.2/Modules/_sqlite/connection.c, Python-2.5.2/Modules/_sqlite/row.c, Python-2.5.2/Modules/_sqlite/row.h, Python-2.5.2/Modules/_sqlite/cache.c, Python-2.5.2/Modules/_sqlite/prepare_protocol.c, Python-2.5.2/Modules/md5.c, Python-2.5.2/Modules/_sqlite/util.c, Python-2.5.2/Modules/_sqlite/statement.h, Python-2.5.2/Modules/_sqlite/util.h:
+
+ Copyright (C) 2004-2006 Gerhard Häring <gh@ghaering.de>
+ Copyright (C) 1999, 2000, 2002 Aladdin Enterprises.  All rights reserved.
+ Copyright (C) 2003-2004 Federico Di Gregorio <fog@debian.org>
+
+ This software is provided 'as-is', without any express or implied
+ warranty.  In no event will the authors be held liable for any damages
+ arising from the use of this software.
+
+ Permission is granted to anyone to use this software for any purpose,
+ including commercial applications, and to alter it and redistribute it
+ freely, subject to the following restrictions:
+
+ 1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required.
+ 2. Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+ 3. This notice may not be removed or altered from any source distribution.
+ 
+--------------------------------------------------------------------

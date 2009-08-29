@@ -1,0 +1,34 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+  For the avoidance of doubt, except that if any license choice other
+  than GPL or LGPL is available it will apply instead, Sun elects to
+  use only the General Public License version 2 (GPLv2) at this time
+  for any software where a choice of GPL license versions is made
+  available with the language indicating that GPLv2 or any later
+  version may be used, or where a choice of which version of the GPL
+  is applied is otherwise unspecified.
+
+  Afin d'écarter le moindre doute, à moins qu'un choix de licence autre que
+  la GPL ou LGPL ne soit proposé et donc appliqué à sa place, Sun a décidé,
+  pour le moment, d'utiliser uniquement la General Public License version 2 (GPLv2)
+  pour tout logiciel où le choix de versions de licences GPL s'accompagne d'une mention
+  indiquant que la GPLv2 ou toute version ultérieure peut être utilisée, ou pour tout
+  logiciel où le choix de version de la GPL à appliquer n'est spécifié en aucune manière.
+
+en_US Copyright
+
+  20040623 release.
+  --
+  This dictionary is based on a subset of the original
+  English wordlist created by Kevin Atkinson for Pspell 
+  and  Aspell and thus is covered by his original 
+  LGPL license.  The affix file is a heavily modified
+  version of the original english.aff file which was
+  released as part of Geoff Kuenning's Ispell and as 
+  such is covered by his BSD license.
+  
+  Thanks to both authors for their wonderful work.
+
+--------------------------------------------------------------------
+
