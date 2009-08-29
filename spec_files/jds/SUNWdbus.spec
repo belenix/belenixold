@@ -32,13 +32,12 @@ Source1:        dbus.xml
 Source2:        svc-dbus
 Source3:        0070.dbus
 %include default-depend.inc
+Requires:	SUNWxwrtl
 Requires:	SUNWdbus-libs
 Requires:	SUNWdbus-root
-Requires:	SUNWgnome-base-libs
 Requires:	SUNWlxml
 Requires:	SUNWlexpt
 Requires:	SUNWPython-extra
-BuildRequires:	SUNWgnome-base-libs-devel
 BuildRequires:	SUNWlxml
 BuildRequires:	SUNWsfwhea
 BuildRequires:	SUNWPython-extra
@@ -47,13 +46,11 @@ BuildRequires:	SUNWPython-extra
 Summary:                 %{summary} - development files
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
-Requires:	SUNWgnome-base-libs
 
 %package libs
 Summary:                 %{summary} - client libraries
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
-Requires:	SUNWgnome-base-libs
 BuildRequires:	SUNWdbus-devel
 
 %package root
