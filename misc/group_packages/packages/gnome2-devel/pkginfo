@@ -31,9 +31,9 @@
 # package, such as package abbreviation, full package name, package version,
 # and package architecture.
 #
-PKG=devel
-NAME=devel
-VERSION=2.1
-CATEGORY=development
-DESC=Basic Development packages group
+PKG=gnome2-devel
+NAME=gnome2-devel
+VERSION=1.0
+CATEGORY=desktop
+DESC=Gnome2 development support jumbo group package
 VENDOR=BeleniX

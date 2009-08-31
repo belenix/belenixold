@@ -28,7 +28,7 @@ TZ=PST
 PATH=/sbin:/usr/sbin:/usr/bin:/usr/sadm/install/bin
 PKG=FSWbelenix-branding2
 NAME=BeleniX-Branding2
-VERSION=2.2,REV=2008.03.05
+VERSION=2.3,REV=2008.03.05
 CATEGORY=system
 DESC=Miscellaneous configs, branding and docs
 VENDOR="BeleniX"

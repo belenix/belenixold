@@ -78,7 +78,7 @@ f none etc/profile.d/kde.minimal.pagein=profile.d/kde.minimal.pagein 0755 root o
 f none etc/profile.d/kde.pagein=profile.d/kde.pagein 0755 root other
 f none etc/profile.d/xfce.minimal.pagein=profile.d/xfce.minimal.pagein 0755 root other
 f none etc/profile.d/xfce.pagein=profile.d/xfce.pagein 0755 root other
-s none etc/default_env.sh=etc/profile.d/env.sh
+s none etc/default_env.sh=profile.d/env.sh
 
 d none etc/xdg 0755 root sys
 d none etc/xdg/xfce4-session 0755 root sys
@@ -96,7 +96,6 @@ f none etc/skel/.kde/share/config/kdeglobals=kdeglobals 0644 root other
 f none etc/skel/.kde/share/config/startupconfig=startupconfig 0644 root other
 f none etc/skel/.kde/share/config/startupconfigkeys=startupconfigkeys 0644 root other
 f none etc/skel/.kde/share/config/khotkeysrc=khotkeysrc 0644 root other
-f none etc/skel/.kde/share/config/ksplashrc=ksplashrc 0644 root other
 f none etc/skel/.kde/share/config/kwinrc=kwinrc 0644 root other
 f none etc/skel/.kde/share/config/kwinrulesrc=kwinrulesrc 0644 root other
 f none etc/skel/.kde/share/config/kdedrc=kdedrc 0644 root other
