@@ -7,7 +7,6 @@ P SFEffmpeg-devel
 P SFEffmpeg
 P SFEgpac-devel
 P SFEgpac
-P SFEkdemultimedia3-encumbered
 P SFElame-devel
 P SFElame
 P SFEliba52-devel
@@ -68,4 +67,3 @@ P SFExmms1-encumbered
 P SFExvid-devel
 P SFExvid
 P SFEakode-encumbered
-P SFEamarok1-encumbered
