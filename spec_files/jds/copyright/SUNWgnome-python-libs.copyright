@@ -1,0 +1,191 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+gnome-python-2.22.0:
+ Copyright (C) 2000 James Henstridge.
+
+pygobject-2.14.1/ltihooks.py:
+ Copyright (C) 2000 James Henstridge.
+
+pygtk-2.12.1/ltihooks.py, pygtk-2.12.1/examples/ide/gtkcons.py:
+ Copyright (C) 1998, 2000 James Henstridge
+ Copyright (C) 2004 John Finlay
+
+pygtksourceview-2.2.0/test/test-widget.py:
+ Copyright (C) 2004 - Inigo Serna <inigoserna@telefonica.net>
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+--------------------------------------------------------------------
+
+gconf-python:
+
+ Copyright (C) 2001, 2002 Johan Dahlin <zilch.am@home.se>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public
+ License along with this library; if not, write to the
+ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ Boston, MA 02111-1307, USA.
+ 
+--------------------------------------------------------------------
+
+gconf-python:
+
+ Copyright (C) 2003 Johan Dahlin
+ Copyright (C) 2005 Red Hat, Inc.
+
+pygobject-2.14.1/gobject:
+
+ Copyright (C) 1998-2003  James Henstridge
+ Copyright (C) 2004, 2006, 2007  Johan Dahlin
+ Copyright (C) 2005       Oracle
+ Copyright (C) 2006  Johannes Hoelzl
+
+pygobject-2.14.1/pygtk.py:
+ Copyright (C) 1998-2002  James Henstridge
+
+pygtk-2.12.1:
+
+ Copyright (C) 1998-2006  James Henstridge
+ Copyright (C) 2004-2006  Johan Dahlin
+ Copyright (C) 2006  John Finlay
+
+pyorbit-2.14.3:
+
+ Copyright (C) 1998-2003  James Henstridge <james@daa.com.au>
+ Copyright (C) 2005  Gustavo Carneiro <gjc@inescporto.pt>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ USA
+
+--------------------------------------------------------------------
+
+pycairo-1.4.0/examples/gtk/hangman.py:
+
+ Copyright © 2004 Kevin Worth
+
+ Permission to use, copy, modify, distribute, and sell this software
+ and its documentation for any purpose is hereby granted without fee,
+ provided that the above copyright notice appear in all copies and
+ that both that copyright notice and this permission notice appear in
+ supporting documentation, and that the name of the Kevin Worth not
+ be used in advertising or publicity pertaining to distribution of
+ the software without specific, written prior permission. Kevin Worth
+ California makes no representations about the suitability of this
+ software for any purpose.  It is provided "as is" without express or
+ implied warranty.
+
+ KEVIN WORTH DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+ INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
+ NO EVENT SHALL KEVIN WORTH BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+ CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+ NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+ WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+ Author: Kevin Worth <kevin@theworths.org>
+
+--------------------------------------------------------------------
+
+pycairo-1.4.0/cairo:
+ Copyright © 2003-2006 James Henstridge
+ Copyright © 2004-2006 Steve Chaplin
+
+ This library is free software; you can redistribute it and/or
+ modify it either under the terms of the GNU Lesser General Public
+ License version 2.1 as published by the Free Software Foundation
+ (the "LGPL") or, at your option, under the terms of the Mozilla
+ Public License Version 1.1 (the "MPL"). If you do not alter this
+ notice, a recipient may use your version of this file under either
+ the MPL or the LGPL.
+
+ You should have received a copy of the LGPL along with this library
+ in the file COPYING-LGPL-2.1; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ You should have received a copy of the MPL along with this library
+ in the file COPYING-MPL-1.1
+
+ The contents of this file are subject to the Mozilla Public License
+ Version 1.1 (the "License"); you may not use this file except in
+ compliance with the License. You may obtain a copy of the License at
+ http://www.mozilla.org/MPL/
+
+ This software is distributed on an "AS IS" basis, WITHOUT WARRANTY
+ OF ANY KIND, either express or implied. See the LGPL or the MPL for
+ the specific language governing rights and limitations.
+ 
+--------------------------------------------------------------------
+
+pygtk-2.12.1/examples/pango/extentdemo.py:
+
+ I, Adam Olsen, am the original author of this work.  I hereby
+ donate it into the public domain, and relinquish any rights I
+ may have in it.
+
+ I, Behdad Esfahbod, hereby disclaim any rights for my contributions
+ to this code.
+
+--------------------------------------------------------------------
+
+pygtksourceview-2.2.0/gtksourceview2module.c:
+   Copyright (C) 2007 - Gian Mario Tagliaretti <gianmt@gnome.org>
+   
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License
+   as published by the Free Software Foundation;
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+
+--------------------------------------------------------------------

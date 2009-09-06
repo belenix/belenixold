@@ -1,0 +1,120 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for SUNWgnome-sound-recorder
+
+ License: GNU Library General Public License Version 2
+ License: GNU Free Documentation License Version 1.1
+
+ You can find more information in the following directory:
+ /usr/share/doc/SUNWgnome-sound-recorder
+
+  COPYING.bz2:                             GNU GPL for the cddb-slave2
+                                           library (not shipped with Solaris),
+                                           the gnome-cd application (not 
+                                           shipped with Solaris), and the
+                                           gstreamer-properties application.
+  COPYING-DOCS.bz2:                        GNU FDL
+  COPYING.grecord.bz2:                     GNU LGPL for grecord application
+  AUTHORS:                                 List of authors of %{gmedia.name}
+  grecord/AUTHORS:                         List of authors of grecord
+  grecord/icons/AUTHORS:                   List of authors of grecord
+  NEWS.bz2:                                List of the most important changes
+                                           in %{gmedia.name}
+  grecord/NEWS.bz2:                        List of the most important changes
+                                           in grecord
+  ChangeLog.bz2:                           List of all changes and authors of
+                                           %{gmedia.name}
+  po/ChangeLog.bz2:                        List of all changes and authors of
+                                           %{gmedia.name}
+  grecord/ChangeLog.bz2:                   List of all changes and authors of
+                                           grecord
+  grecord/doc/ChangeLog.bz2:               List of all changes and authors of
+                                           grecord
+  README:                                  More information about %{gmedia.name}
+  grecord/README:                          More information about grecord
+
+Licensing and copyright information for SUNWgnome-media-apps
+
+ License: GNU General Public License Version 2
+ License: GNU Library General Public License Version 2
+ License: GNU Free Documentation License Version 1.1
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2:                             GNU GPL for the cddb-slave2
+                                           library (not shipped with Solaris),
+                                           the gnome-cd application (not 
+                                           shipped with Solaris), and the
+                                           gstreamer-properties application.
+  COPYING-DOCS.bz2:                        GNU FDL
+  COPYING.gst-mixer.bz2:                   GNU LGPL for gst-mixer application
+  COPYING.profiles.bz2:                    GNU LGPL for profiles library
+  COPYING.vu-meter.bz2:                    GNU LGPL for vu-meter application
+                                           (not shipped with Solaris)
+  AUTHORS:                                 List of authors of %{gmedia.name}
+  vu-meter/AUTHORS:                        List of authors of vu-meter (not
+                                           shipped with Solaris).
+  NEWS.bz2:                                List of the most important changes
+                                           in %{gmedia.name}
+  ChangeLog.bz2:                           List of all changes and authors of
+                                           %{gmedia.name}
+  po/ChangeLog.bz2:                        List of all changes and authors of
+                                           %{gmedia.name}
+  cddb-slave2/ChangeLog.bz2:               List of all changes and authors of
+                                           cddb-slave2 (not shipped with
+                                           Solaris)
+  gst-mixer/doc/ChangeLog.bz2:             List of all changes and authors of
+                                           gst-mixer
+  gnome-cd/ChangeLog.bz2:                  List of all changes and authors of
+                                           gnome-cd (not shipped with Solaris)
+  gnome-cd/doc/ChangeLog.bz2:              List of all changes and authors of
+                                           gnome-cd (not shipped with Solaris)
+  gstreamer-properties/ChangeLog.bz2:      List of all changes and authors of
+                                           gstreamer-properites 
+  gstreamer-properties/help/ChangeLog.bz2: List of all changes and authors of
+                                           gstreamer-properties
+  vu-meter/ChangeLog.bz2:                  List of all changes and authors of
+                                           vu-meter (not shipped with Solaris)
+  README:                                  More information about %{gmedia.name}
+  profiles/README:                         More information about profiles
+  vu-meter/README:                         More information about vu-meter (not
+                                           shipped with Solaris)
+
+  The gnome-cd application (which is not shipped with Solaris) uses some files
+  which use the following MIT license:
+
+  ---
+
+  Permission to use, copy, modify, distribute, and sell this software and its
+  documentation for any purpose is hereby granted without fee, provided that
+  the above copyright notice appear in all copies and that both that
+  copyright notice and this permission notice appear in supporting
+  documentation, and that the name of Red Hat not be used in advertising or
+  publicity pertaining to distribution of the software without specific,
+  written prior permission.  Red Hat makes no representations about the
+  suitability of this software for any purpose.  It is provided "as is"
+  without express or implied warranty.
+ 
+  RED HAT DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL RED HAT
+  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+  OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+  CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+  ---
+
+ The sources of gnome-media-%{gmedia.version} were downloaded
+ from %{gmedia.SOURCE0.url}

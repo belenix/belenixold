@@ -1,0 +1,85 @@
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - eel-%{eel.version}
+  - gnome-mount-%{gmount.version}
+  - nautilus-%{nautilus.version}
+  - nautilus-open-terminal-%{open_terminal.version}
+
+Licensing and copyright information for eel-%{eel.version}:
+
+ License: GNU Lesser General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/eel-%{eel.version}
+
+ COPYING.bz2: GNU GPL
+ COPYING.LIB.bz2: GNU LGPL
+ NEWS.bz2: list of all important changes in eel
+ ChangeLog.bz2 list of all changes and authors of eel
+ AUTHORS: Authors of eel
+ MAINTAINERS: Maintainers of eel
+ README: more information about eel
+
+ The sources of eel-{%eel.version} were downloaded
+ from %{eel.SOURCE0.url}
+  
+Licensing and copyright information for gnome-mount-%{gmount.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-mount-%{gmount.version}
+
+ COPYING.bz2: GNU GPL
+ NEWS.bz2: list of all important changes in gnome-mount
+ ChangeLog.bz2 list of all changes and authors of gnome-mount
+ AUTHORS: Authors of gnome-mount
+ README: more information about gnome-mount
+
+ The sources of gnome-mount-%{gmount.version} were downloaded
+ from %{gmount.SOURCE0.url}
+  
+Licensing and copyright information for nautilus-%{nautilus.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/nautilus-%{nautilus.version}
+
+ COPYING.bz2: GNU GPL
+ NEWS.bz2: list of all important changes in nautilus
+ ChangeLog.bz2 list of all changes and authors of nautilus
+ AUTHORS: Authors of nautilus
+ MAINTAINERS: Maintainers of nautilus
+ README: more information about nautilus
+
+ The sources of nautilus-%{nautilus.version} were downloaded
+ from %{nautilus.SOURCE0.url}
+
+Licensing and copyright information for nautilus-open-terminal-%{open_terminal.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/nautilus-open-terminal-%{open_terminal.version}
+
+ COPYING.bz2: GNU GPL
+ NEWS.bz2: list of all important changes in nautilus-open-terminal
+ ChangeLog.bz2 list of all changes and authors of nautilus-open-terminal
+ AUTHORS: Authors of nautilus-open-terminal
+ README: more information about nautilus-open-terminal
+
+ The sources of nautilus-open-terminal-%{open_terminal.version} were downloaded
+ from %{open_terminal.SOURCE0.url}
+  
+

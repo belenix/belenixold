@@ -1,0 +1,135 @@
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - gnome-applets-%{gapplets.version}
+  - gnome-netstatus-%{gnetstatus.version}
+  - quick-lounge-applet-%{qlounge.version}
+  - deskbar-applet-%{deskbar_applet.version}
+
+Licensing and copyright information for gnome-applets-%{gapplets.version}:
+
+ License: GNU Library General Public License Version 2
+ License: GNU Free Documentation Licence Version 1.1
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-applets-%{gapplets.version}
+
+ COPYING: GNU LGPL
+ accessx-status/COPYING: GNU LGPL
+ COPYING-DOCS: GNU FGL
+ README: more information about gnome-applets
+ stickynotes/README: more information stickynotes 
+ cpufreq/README: more information cpufreq 
+ geyes/README: more information geyes 
+ mini-commander/README: more information mini-commander 
+ trashapplet/README: more information trashapplet 
+ gkb-new/README: more information gkb-new 
+ null_applet/README: more information null_applet 
+ AUTHORS: Authors of gnome-applets
+ gweather/AUTHORS: Authors of gweather
+ cpufreq/AUTHORS: Authors of cpufreq
+ geyes/AUTHORS: Authors of geyes
+ multiload/AUTHORS: Authors of multiload
+ mini-commander/AUTHORS: Authors of mini-commander
+ drivemount/AUTHORS: Authors of drivemount
+ gkb-new/AUTHORS: Authors of gkb-new
+ accessx-status/AUTHORS: Authors of accessx-status
+ mixer/AUTHORS: Authors of mixer
+ modemlights/AUTHORS: Authors of modemlights
+ MAINTAINERS: Maintainers of gnome-applets
+
+ ChangeLog.bz2: list of all changes and authors of gnome-applets
+ stickynotes/ChangeLog.bz2: list of all changes and authors of stickynotes
+ charpick/ChangeLog.bz2: list of all changes and authors of charpick
+ gswitchit/ChangeLog.bz2: list of all changes and authors of gswitchit
+ gweather/ChangeLog.bz2: list of all changes and authors of gweather
+ cpufreq/ChangeLog.bz2: list of all changes and authors of cpufreq
+ cpufreq/help/ChangeLog.bz2: list of all changes and authors in the help files for cpufreq
+ geyes/docs/ChangeLog.bz2: list of all changes and authors in the documentation for geyes
+ geyes/ChangeLog.bz2: list of all changes and authors of geyes
+ multiload/ChangeLog.bz2: list of all changes and authors of multiload
+ mini-commander/ChangeLog.bz2: list of all changes and authors of mini-commander
+ drivemount/ChangeLog.bz2: list of all changes and authors of drivemount
+ drivemount/help/ChangeLog.bz2: list of all changes and authors in the help files for drivemount
+ trashapplet/docs/ChangeLog.bz2: list of all changes and authors in the documentation for drivemount
+ trashapplet/ChangeLog.bz2: list of all changes and authors of trashapplet
+ gkb-new/ChangeLog.bz2: list of all changes and authors of gkb-new
+ accessx-status/docs/ChangeLog.bz2: list of all changes and authors in the documentation for accessx-status
+ accessx-status/ChangeLog.bz2: list of all changes and authors of accessx-status
+ battstat/ChangeLog.bz2: list of all changes and authors of battstat
+ null_applet/ChangeLog.bz2: list of all changes and authors of null_applet
+ mixer/ChangeLog.bz2: list of all changes and authors of mixer
+ modemlights/ChangeLog.bz2: list of all changes and authors of modemlights
+ invest-applet/ChangeLog.bz2: list of all changes and authors of invest-applet
+ po/ChangeLog.bz2: list of all changes and authors in the po files for gnome-applets
+ NEWS.bz2: list of all important changes in gnome-applets
+ geyes/NEWS.bz2: list of all important changes in geyes
+ mini-commander/NEWS.bz2: list of all important changes in mini-commander
+
+ The sources of gnome-applets-%{gapplets.version} were downloaded
+ from %{gapplets.SOURCE0.url}
+  
+Licensing and copyright information for gnome-netstatus-%{gnetstatus.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-netstatus-%{gnetstatus.version}
+
+ COPYING: GNU GPL
+ README: more information about gnome-netstatus
+ NEWS: list of all important changes in gnome-netstatus
+ AUTHORS: Authors of gnome-netstatus
+ MAINTAINERS: Maintainers of gnome-netstatus
+ ChangeLog.bz2: list of all changes and authors of gnome-netstatus
+ po/ChangeLog.bz2: list of all changes and authors in the po files for gnome-netstatus
+ help/ChangeLog.bz2: list of all changes and authors in the help files for gnome-netstatus
+
+ The sources of gnome-netstatus-%{gnetstatus.version} were downloaded
+ from %{gnetstatus.SOURCE0.url}
+
+Licensing and copyright information for quick-lounge-applet-%{qlounge.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/quick-lounge-applet-%{qlounge.version}
+
+ README: more information about quick-lounge-applet
+ AUTHORS: Authors of quick-lounge-applet
+ NEWS: list of all important changes in quick-lounge-applet
+ ChangeLog.bz2: list of all changes and authors of quick-lounge-applet
+ help/ChangeLog: list of all changes and authors in the help files for quick-lounge-applet
+ po/ChangeLog: list of all changes and authors in the po files for quick-lounge-applet
+
+ The sources of quick-lounge-applet-%{qlounge.version} were downloaded
+ from %{qlounge.SOURCE0.url}
+
+Licensing and copyright information for deskbar-applet-%{deskbar_applet.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/deskbar-applet-%{deskbar_applet.version}
+
+ COPYING: GNU GPL
+ README: more information about deskbar-applet
+ AUTHORS: Authors of deskbar-applet
+ MAINTAINERS: Maintainers of deskbar-applet
+ NEWS: list of all important changes in deskbar-applet
+ ChangeLog.bz2: list of all changes and authors of deskbar-applet
+ help/ChangeLog: list of all changes and authors in the help files for deskbar-applet
+ po/ChangeLog: list of all changes and authors in the po files for deskbar-applet
+
+ The sources of quick-lounge-applet-%{deskbar_applet.version} were downloaded
+ from %{deskbar_applet.SOURCE0.url}
+

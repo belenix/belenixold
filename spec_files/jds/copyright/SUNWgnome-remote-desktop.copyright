@@ -1,0 +1,46 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+Package %name consists of the following components:
+
+  - vino-%{vino.version}
+  - realvnc-java-client-%{rjc.version}
+
+Licensing and copyright information for vino-%{vino.version}:
+
+ License: GNU General Public License Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/vino-%{vino.version}
+
+  COPYING.bz2: GNU GPL
+  NEWS.bz2: list of the most important changes in vino
+  ChangeLog.bz2: list of all changes and authors of vino
+  po/ChangeLog.bz2: list of all l10n changes and authors of vino
+  README: more information about vino
+  AUTHORS: list of all authors of vino
+
+ The sources of vino-%{vino.version} were downloaded
+ from %{vino.SOURCE0.url}
+
+Licensing and copyright information for realvnc-java-client-%{rjc.version}:
+
+ License: GNU General Public License Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/vnc-%{rjc.tarball_version}-javasrc/java
+
+  LICENCE.TXT.bz2: GNU GPL
+  README.bz2: more information about realvnc-java-client
+
+ The sources of realvnc-java-client-%{rjc.version} were downloaded
+ from http://www.realvnc.com/cgi-bin/download.cgi

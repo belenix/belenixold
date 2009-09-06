@@ -1,0 +1,90 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+  Copyright (c) 1987-2007 Sun Microsystems, Inc. All Rights Reserved.
+  Copyright (C) 2004-2007 Sami Pietila
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+           
+  This program is distributed in the hope that it will be useful, but 
+  WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+  General Public License for more details.
+           
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+  02111-1307, USA.
+ 
+  This maths library is based on the MP multi-precision floating-point
+  arithmetic package originally written in FORTRAN by Richard Brent,
+  Computer Centre, Australian National University in the 1970's.
+
+  It has been converted from FORTRAN into C using the freely available
+  f2c translator, available via netlib on research.att.com.
+
+  The subsequently converted C code has then been tidied up, mainly to
+  remove any dependencies on the libI77 and libF77 support libraries.
+
+  FOR A GENERAL DESCRIPTION OF THE PHILOSOPHY AND DESIGN OF MP,
+  SEE - R. P. BRENT, A FORTRAN MULTIPLE-PRECISION ARITHMETIC
+  PACKAGE, ACM TRANS. MATH. SOFTWARE 4 (MARCH 1978), 57-70.
+  SOME ADDITIONAL DETAILS ARE GIVEN IN THE SAME ISSUE, 71-81.
+  FOR DETAILS OF THE IMPLEMENTATION, CALLING SEQUENCES ETC. SEE
+  THE MP USERS GUIDE.
+
+--------------------------------------------------------------------
+
+gcalctool-5.20.2/gcalctool/ce_parser.tab.h,
+gcalctool-5.20.2/gcalctool/lr_parser.tab.h:
+
+ A Bison parser, made by GNU Bison 2.3.  
+
+ Skeleton interface for Bison's Yacc-like parsers in C
+
+   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.  
+
+ As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
+
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  
+
+--------------------------------------------------------------------
+

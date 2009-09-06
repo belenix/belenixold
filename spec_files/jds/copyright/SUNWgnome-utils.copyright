@@ -1,0 +1,96 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}
+
+  License: GNU General Public License Version 2
+
+
+  You can find more information in the following directory:
+  %{_datadir}/doc
+
+
+    SUNWgnome-disk-analyzer/AUTHORS: List of authors of gnome-utils
+    SUNWgnome-disk-analyzer/COPYING.bz2: GNU GPL
+    SUNWgnome-disk-analyzer/ChangeLog.bz2: List of all changes and authors
+                        of gnome-utils
+    SUNWgnome-disk-analyzer/po/ChangeLog.bz2: List of all l10n changes and
+                        authors of gnome-utils
+    SUNWgnome-disk-analyzer/NEWS.bz2: List of the most important changes
+                        to gnome-utils
+    SUNWgnome-disk-analyzer/README: More information about gnome-utils
+    SUNWgnome-disk-analyzer/baobab/AUTHORS: List of authors of baobab
+    SUNWgnome-disk-analyzer/baobab/ChangeLog.bz2: List of all changes and
+                        authors of baobab
+    SUNWgnome-disk-analyzer/baobob/help/ChangeLog.bz2: List of all help
+                        changes and authors of baobab
+    SUNWgnome-disk-analyzer/baobab/README: More information about baobab
+    SUNWgnome-dictionary/AUTHORS: List of authors of gnome-utils
+    SUNWgnome-dictionary/COPYING.bz2: GNU GPL
+    SUNWgnome-dictionary/ChangeLog.bz2: List of all changes and authors
+                        of gnome-utils
+    SUNWgnome-dictionary/po/ChangeLog.bz2: List of all l10n changes and
+                        authors of gnome-utils
+    SUNWgnome-dictionary/NEWS.bz2: List of the most important changes
+                        to gnome-utils
+    SUNWgnome-dictionary/README: More information about gnome-utils
+    SUNWgnome-dictionary/gnome-dictionary/AUTHORS: List of authors of
+                        gnome-dictionary
+    SUNWgnome-dictionary/gnome-dictionary/ChangeLog.bz2: List of all
+                        changes and authors of gnome-dictionary
+    SUNWgnome-dictionary/gnome-dictionary/help/ChangeLog.bz2: List of all
+                        help changes and authors of gnome-dictionary
+    SUNWgnome-dictionary/gnome-dictionary/README: More information
+                        about gnome-dictionary
+    SUNWgnome-screenshot/AUTHORS: List of authors of gnome-utils
+    SUNWgnome-screenshot/COPYING.bz2: GNU GPL
+    SUNWgnome-screenshot/ChangeLog.bz2: List of all changes and authors
+                        of gnome-utils
+    SUNWgnome-screenshot/po/ChangeLog.bz2: List of all l10n changes and
+                        authors of gnome-utils
+    SUNWgnome-screenshot/NEWS.bz2: List of the most important changes
+                        to gnome-utils
+    SUNWgnome-screenshot/README: More information about gnome-utils
+    SUNWgnome-screenshot/gnome-screenshot/ChangeLog.bz2: List of all changes
+                        and authors of gnome-screenshot
+    SUNWgnome-search-tool/AUTHORS: List of authors of gnome-utils
+    SUNWgnome-search-tool/COPYING.bz2: GNU GPL
+    SUNWgnome-search-tool/ChangeLog.bz2: List of all changes and authors
+                        of gnome-utils
+    SUNWgnome-search-tool/po/ChangeLog.bz2: List of all l10n changes and
+                        authors of gnome-utils
+    SUNWgnome-search-tool/NEWS.bz2: List of the most important changes
+                        to gnome-utils
+    SUNWgnome-search-tool/README: More information about gnome-utils
+    SUNWgnome-search-tool/gsearchtool/AUTHORS: List of authors of gsearchtool
+    SUNWgnome-search-tool/gsearchtool/ChangeLog.bz2: List of all changes
+                        and authors of gsearchtool
+    SUNWgnome-search-tool/gsearchtool/help/ChangeLog.bz2: List of all
+                        help changes and authors of gsearchtool
+
+    SUNWgnome-log-viewer/AUTHORS: List of authors of gnome-utils
+    SUNWgnome-log-viewer/COPYING.bz2: GNU GPL
+    SUNWgnome-log-viewer/ChangeLog.bz2: List of all changes and authors
+                        of gnome-utils
+    SUNWgnome-log-viewer/po/ChangeLog.bz2: List of all l10n changes and
+                        authors of gnome-utils
+    SUNWgnome-log-viewer/NEWS.bz2: List of the most important changes
+                        to gnome-utils
+    SUNWgnome-log-viewer/README: More information about gnome-utils
+    SUNWgnome-log-viewer/logview/ChangeLog.bz2: List of all changes and
+                        authors of logview
+    SUNWgnome-log-viewer/logview/help/ChangeLog.bz2: List of all help
+                        changes and authors of logview
+
+  The sources of gnome-utils-%{gnome_utils.version} were downloaded
+  from %{gnome_utils.SOURCE0.url}

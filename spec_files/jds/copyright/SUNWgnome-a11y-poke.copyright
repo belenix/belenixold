@@ -1,0 +1,21 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License: BSD 
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: BSD
+  AUTHORS: list of authors of accerciser
+  NEWS.bz2: list of the most important changes in accerciser
+  ChangeLog.bz2: list of all changes and authors of accerciser 
+  README: more information about accerciser
+
+ The sources of accerciser-%{accerciser.version} were downloaded
+ from %{accerciser.SOURCE0.url}
+

@@ -1,0 +1,24 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License:
+   binaries: GNU General Public License Version 3
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.FDL.bz2: GNU FDL
+  COPYING.GPL.bz2: GNU GPLv3
+  AUTHORS: Gerd Kohlberger, Francesco Fumanti
+  NEWS.bz2: list of the most important changes in mousetweaks
+  ChangeLog.bz2: list of all changes and authors of mousetweaks
+  README: more information about mousetweaks
+  src/mt-pidfile.c.bz2: a file contains copyright from other people
+
+ The sources of mousetweaks-%{mousetweaks.version} were downloaded
+ from %{mousetweaks.SOURCE0.url}
+

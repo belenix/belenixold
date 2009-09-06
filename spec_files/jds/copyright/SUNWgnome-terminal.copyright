@@ -1,0 +1,76 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %{name} consists of the following components:
+
+  - gnome-terminal-%{gterminal.version}
+  - vte-%{vte.version}
+
+Licensing and copyright information for gnome-terminal-%{gterminal.version}:
+
+ License: GNU General Public License Version 2
+ License: Public domain license
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2:               GNU GPL
+  AUTHORS:                   List of authors of %{gterminal.name}
+  NEWS.bz2:                  List of the most important changes in %{gterminal.name}
+  ChangeLog.bz2:             List of all changes and authors of %{gterminal.name}
+  ChangeLog.README.bz2:      List of all changes and authors of %{gterminal.name}
+  ChangeLog.pre-2-23.bz2:    List of all changes and authors of %{gterminal.name}
+  po/ChangeLog.pre-2-23.bz2: List of all changes and authors of %{gterminal.name}
+  README: More information about %{gterminal.name}
+
+  The %{gterminal.name} MD5 implementation uses the following license:
+
+  ---
+
+  This code implements the MD5 message-digest algorithm.
+  The algorithm is due to Ron Rivest.  This code was
+  written by Colin Plumb in 1993, no copyright is claimed.
+  This code is in the public domain; do with it what you wish.
+ 
+  Equivalent code is available from RSA Data Security, Inc.
+  This code has been tested against that, and is equivalent,
+  except that you don't need to include two pages of legalese
+  with every copy.
+
+  ---
+
+ The sources of gnome-terminal-%{gterminal.version} were downloaded
+ from %{gterminal.SOURCE0.url}
+
+Licensing and copyright information for vte-%{vte.version}:
+
+ License: GNU Library General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.LIB.bz2:                GNU LGPL
+  AUTHORS:                        List of authors of %{vte.name}
+  NEWS.bz2:                       List of the most important changes in
+                                  %{vte.name}
+  gnome-pty-helper/NEWS.bz2:      List of the most important changes in
+                                  gnome-pty-helper
+  ChangeLog.bz2:                  List of all changes and authors of %{vte.name}
+  gnome-pty-helper/ChangeLog.bz2: List of all changes and authors of
+                                  gnome-pty-helper
+  po/ChangeLog.bz2:               List of all changes and authors of %{vte.name}
+  ChangeLog.bz2:                  List of all changes and authors of %{vte.name}
+  README:                         More information about %{vte.name}
+
+ The sources of vte-%{vte.version} were downloaded
+ from %{vte.SOURCE0.url}

@@ -1,0 +1,220 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %{name} consists of the following components:
+
+  - gstreamer-%{gst.version}
+  - gst-plugins-base-%{gst_plugins_base.version}
+  - gst-plugins-good-%{gst_plugins_good.version}
+
+Licensing and copyright information for gstreamer-%{gst.version}:
+
+ License: GNU Library General Public License Version 2
+ License: Public domain license
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: GNU LGPL
+  AUTHORS: List of authors of %{gst.name}
+  NEWS.bz2: List of the most important changes in %{gst.name}
+  ChangeLog.bz2: List of all changes and authors of %{gst.name}
+  common/ChangeLog.bz2: List of all changes and authors of %{gst.name}.
+  README: More information about %{gst.name}
+
+  Some %{gst.name} win32 source files use the following public domain
+  licensing.  These files are not included in the Solaris version of GStreamer.
+
+  ---
+
+  This source code is offered for use in the public domain. You may
+  use, modify or distribute it freely.
+
+  This code is distributed in the hope that is will be useful but
+  WITHOUT ANY WARRANTY. ALL WARRANTIES, EXPRESS OR IMPLIED ARE HEREBY
+  DISCLAIMED. This includeds but is not limited to warranties of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+  ---
+
+ The sources of gstreamer-%{gst.version} were downloaded
+ from %{gst.SOURCE0.url}
+
+Licensing and copyright information for gst-plugins-base-%{gst_plugins_base.version}:
+
+ License: GNU General Public License Version 2
+ License: GNU Library General Public License Version 2
+ License: BSD License
+ License: Public domain license
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: GNU GPL
+  COPYING.LIB.bz2: GNU LGPL
+  AUTHORS: List of authors of %{gst_plugins_base.name}
+  NEWS.bz2: List of the most important changes in %{gst_plugins_base.name}
+  ChangeLog.bz2: List of all changes and authors of %{gst_plugins_base.name}
+  common/ChangeLog.bz2: List of all changes and authors of %{gst_plugins_base.name}.
+  README: More information about %{gst_plugins_base.name}
+
+  The %{gst_plugins_base.name} rtsp plugin contains a MD5 implementation
+  which uses the following license:
+
+  ---
+
+  This code implements the MD5 message-digest algorithm.
+  The algorithm is due to Ron Rivest.  This code was
+  written by Colin Plumb in 1993, no copyright is claimed.
+  This code is in the public domain; do with it what you wish.
+ 
+  Equivalent code is available from RSA Data Security, Inc.
+  This code has been tested against that, and is equivalent,
+  except that you don't need to include two pages of legalese
+  with every copy.
+
+  ---
+
+  The %{gst_plugins_base.name} cdda plugin contains a public domain SHA-1
+  algorithm with the following license:
+
+  ---
+
+  Please see file COPYING or http://bitzi.com/publicdomain
+  for more info.
+ 
+  NIST Secure Hash Algorithm
+  heavily modified by Uwe Hollerbach <uh@alumni.caltech edu>
+  from Peter C. Gutmann's implementation as found in
+  Applied Cryptography by Bruce Schneier
+
+  ---
+
+  The %{gst_plugins_base.name} fft plugins contains code licensed with the
+  following BSD license:
+
+  ---
+
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+    * Neither the author nor the names of any contributors may be used to
+      endorse or promote products derived from this software without specific
+      prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE.
+
+  ---
+
+  The %{gst_plugins_base.name} videoscale plugin contains code licensed with
+  the following BSD license:
+
+  ---
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+  1. Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+ 
+  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+  INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+  IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE.
+
+  ---
+
+  The %{gst_plugins_base.name} rtsp and sdp plugins contains dual-license
+  code which is dual licensed under the GNU LGPL and MIT license.
+
+ The sources of gst-plugins-base-%{gst_plugins_base.version} were downloaded
+ from %{gst_plugins_base.SOURCE0.url}
+
+Licensing and copyright information for gst-plugins-good-%{gst_plugins_good.version}:
+
+ License: GNU Lesser General Public License Version 2
+ License: BSD License
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.LIB.bz2: GNU LGPL
+  AUTHORS: List of authors of %{gst_plugins_good.name}
+  NEWS.bz2: List of the most important changes in %{gst_plugins_good.name}
+  ChangeLog.bz2: List of all changes and authors of %{gst_plugins_good.name}
+  common/ChangeLog.bz2: List of all changes and authors of %{gst_plugins_good.name}.
+  docs/random/ChangeLog-0.8.bz2: List of all changes and authors of %{gst_plugins_good.name}.
+  README: More information about %{gst_plugins_good.name}
+
+  The %{gst_plugins_good.name} monoscope plugin contains code licensed with the
+  following BSD license.
+
+  ---
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+ 
+  1. Redistributions of source code must retain the above copyright notice,
+     this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+  3. The name of the author may not be used to endorse or promote products
+     derived from this software without specific prior written permission.
+ 
+  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  ---
+
+  The %{gst_plugins_good.name} rtsp and osxaudio plugin contains code which is
+  dual-licensed under the GNU LGPL and MIT license.  The osxaudio plugin is
+  not shipped with Solaris.
+
+ The sources of gst-plugins-good-%{gst_plugins_good.version} were downloaded
+ from %{gst_plugins_good.SOURCE0.url}

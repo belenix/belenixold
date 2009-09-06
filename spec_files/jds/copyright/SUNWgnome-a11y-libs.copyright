@@ -1,0 +1,102 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - at-spi-%{at_spi.version}
+  - freetts-%{freetts.version}
+  - gnome-mag-%{gnome_mag.version}
+  - java-access-bridge-%{java_access_bridge.version}
+  - libgail-gnome-%{libgail_gnome.version}
+
+Licensing and copyright information for at-spi-%{at_spi.version}:
+
+ License: GNU LIBRARY GENERAL PUBLIC LICENSE Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/at-spi-%{at_spi.version}
+
+  COPYING.bz2: GNU LGPL
+  AUTHORS: list of authors of at_spi 
+  NEWS.bz2: list of the most important changes in at-spi
+  ChangeLog.bz2: list of all changes and authors of at-spi
+  README: more information about at-spi
+
+ The sources of at-spi-%{at_spi.version} were downloaded
+ from %{at_spi.SOURCE0.url}
+
+Licensing and copyright information for freetts-%{freetts.version}:
+
+ License: MIT
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/freetts-%{freetts.version}
+
+  license.terms: MIT
+  acknowledgments.txt: More information about authors
+  ANNOUNCE.txt: list of the most important changes in freetts
+  RELEASE_NOTES: list of all changes and authors of freetts
+  README: more information about freetts
+
+ The sources of freetts-%{freetts.version} were downloaded
+ from %{freetts.SOURCE0.url}
+
+Licensing and copyright information for gnome-mag-%{gnome_mag.version}:
+
+ License: GNU LIBRARY GENERAL PUBLIC LICENSE Version 2, GNU General Public License
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-mag-%{gnome_mag.version}
+
+  COPYING.bz2: GNU LGPL
+  AUTHORS: list of authors of gnome-mag
+  NEWS.bz2: list of the most important changes in gnome-mag
+  ChangeLog.bz2: list of all changes and authors of gnome-mag
+  README: more information about gnome-mag
+  colorblind/colorblind-applet.py: A file under GPL.
+
+ The sources of gnome-mag-%{gnome_mag.version} were downloaded
+ from %{gnome_mag.SOURCE0.url}
+
+Licensing and copyright information for java-access-bridge-%{java_access_bridge.version}:
+
+ License: GNU LIBRARY GENERAL PUBLIC LICENSE Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/java-access-bridge-%{java_access_bridge.version}
+
+  COPYING.bz2: GNU LGPL
+  AUTHORS: list of authors of java-access-bridge
+  NEWS.bz2: list of the most important changes in java-access-bridge
+  ChangeLog.bz2: list of all changes and authors of java-access-bridge
+  README: more information about java-access-bridge
+
+ The sources of java-access-bridge-%{java_access_bridge.version} were downloaded
+ from %{java_access_bridge.SOURCE0.url}
+
+Licensing and copyright information for libgail-gnome-%{libgail_gnome.version}:
+
+ License: GNU LIBRARY GENERAL PUBLIC LICENSE Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libgail-gnome-%{libgail_gnome.version}
+
+  COPYING.bz2: GNU LGPL
+  AUTHORS: list of authors of libgail-gnome
+  NEWS.bz2: list of the most important changes in libgail-gnome
+  ChangeLog.bz2: list of all changes and authors of libgail-gnome
+  README: more information about libgail-gnome
+
+ The sources of libgail-gnome-%{libgail_gnome.version} were downloaded
+ from %{libgail_gnome.SOURCE0.url}
+

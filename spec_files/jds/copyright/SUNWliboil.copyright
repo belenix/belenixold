@@ -1,0 +1,42 @@
+Licensing and copyright information for %{name}:
+
+ License: BSD License
+ License: MIT License
+ License: Motorola License
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: BSD license and Motorola license
+  AUTHORS: List of authors of %{liboil.name}
+  NEWS.bz2: List of the most important changes in %{liboil.name}
+  README: More information about %{liboil.name}
+
+  The fbmmx source files in liboil-%{liboil.version} have an MIT license
+  as follows:
+
+  ---
+
+  Permission to use, copy, modify, distribute, and sell this software and its
+  documentation for any purpose is hereby granted without fee, provided that
+  the above copyright notice appear in all copies and that both that
+  copyright notice and this permission notice appear in supporting
+  documentation, and that the name of Red Hat not be used in advertising or
+  publicity pertaining to distribution of the software without specific,
+  written prior permission.  Red Hat makes no representations about the
+  suitability of this software for any purpose.  It is provided "as is"
+  without express or implied warranty.
+ 
+  THE COPYRIGHT HOLDERS DISCLAIM ALL WARRANTIES WITH REGARD TO THIS
+  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+  FITNESS, IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
+  AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
+  OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+  SOFTWARE.
+
+  ---
+ 
+ The sources of liboil-%{liboil.version} were downloaded
+ from %{liboil.SOURCE0.url}

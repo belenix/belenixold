@@ -1,0 +1,86 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %{name} consists of the following components:
+
+  - gnome-system-tools-%{gnomesystemtools.version}
+  - system-tools-backends-%{systemtoolsbackends.version}
+
+Licensing and copyright information for gnome-system-tools-%{gnomesystemtools.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gnome-system-tools-%{gnomesystemtools.version}
+
+    AUTHORS: List of authors of gnome-system-tools
+    COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of gnome-system-tools
+    doc/network/ChangeLog.bz2: List of all doc changes and authors of
+                    gnome-system-tools network admin
+    doc/services/ChangeLog.bz2: List of all doc changes and authors of
+                    gnome-system-tools services admin
+    doc/time/ChangeLog.bz2: List of all doc changes and authors of
+                    gnome-system-tools time admin
+    doc/users/ChangeLog.bz2: List of all doc changes and authors of
+                    gnome-system-tools users admin
+    interfaces/ChangeLog.bz2: List of all changes and authors of
+                    gnome-system-tools interfaces
+    pixmaps/ChangeLog.bz2: List of all changes and authors of
+                    gnome-system-tools pixmaps
+    po/ChangeLog.bz2: List of all l10n changes and authors of
+                    gnome-system-tools
+    src/common/ChangeLog.bz2: List of all changes and authors of
+                    gnome-system-tools common
+    src/network/ChangeLog.bz2: List of all changes and authors of
+                    gnome-system-tools network admin
+    src/services/ChangeLog.bz2: List of all changes and authors of
+                    gnome-system-tools services admin
+    src/shares/ChangeLog.bz2: List of all changes and authors of
+                    gnome-system-tools shares admin
+    src/time/ChangeLog.bz2: List of all changes and authors of
+                    gnome-system-tools time admin
+    src/time/e-map/ChangeLog.bz2: List of all changes and authors of
+                    gnome-system-tools time e-map admin
+    src/users/ChangeLog.bz2: List of all changes and authors of
+                    gnome-system-tools users admin
+    NEWS.bz2: List of the most important changes to gnome-system-tools
+    README: More information about gnome-system-tools
+
+  The sources of gnome-system-tools-%{gnomesystemtools.version} were downloaded
+  from %{gnomesystemtools.SOURCE0.url}
+
+Licensing and copyright information for system-tools-backends-%{systemtoolsbackends.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/system-tools-backends-%{systemtoolsbackends.version}
+
+    AUTHORS: List of authors of system-tools-backends
+    COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of system-tools-backends
+    po/ChangeLog.bz2: List of all l10n changes and authors of
+                      system-tools-backends
+    NEWS.bz2: List of the most important changes to system-tools-backends
+    README: More information about system-tools-backends
+
+  The sources of system-tools-backends-%{systemtoolsbackends.version} were downloaded
+  from %{systemtoolsbackends.SOURCE0.url}
+
+ ----------------------------------------------------------------------------
+ "THE BEER-WARE LICENSE" (Revision 42):
+ <phk@login.dknet.dk> wrote this file.  As long as you retain this notice you
+ can do whatever you want with this stuff. If we meet some day, and you think
+ this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp
+ ----------------------------------------------------------------------------
