@@ -1,0 +1,153 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %{name} consists of the following components:
+
+  - gnome-desktop-%{gdesktop.version}
+  - gnome-menus-%{gnome_menus.version}
+  - gnome-panel-%{gpanel.version}
+  - libgweather-%{libgweather.version}
+  - libnotify-%{libnotify.version}
+  - notification-daemon-%{notificationdaemon.version}
+
+Licensing and copyright information for gnome-desktop-%{gdesktop.version}
+
+  License: GNU General Public License Version 2
+  License: GNU Library General Public License Version 2
+  License: GNU Free Documentation Licence Version 1.1
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gnome-desktop-%{gdesktop.version}
+
+    AUTHORS: List of authors of gnome-desktop
+    COPYING.bz2: GNU GPL
+    COPYING.LIB.bz2: GNU LGPL
+    COPYING-DOCS.bz2: GNU FDL
+    ChangeLog.bz2: List of all changes and authors of gnome-desktop
+    libgnome-desktop/ChangeLog.bz2: List of all changes and authors
+                                    of libgnome-desktop
+    gnome-about/ChangeLog.bz2: List of all changes and authors of gnome-about
+    desktop-docsChangeLog.bz2: List of all changes and authors of desktop-docs
+    po/ChangeLog.bz2: List of all l10n changes and authors of gnome-desktop
+    NEWS.bz2: List of the most important changes to gnome-desktop
+    README: More information about gnome-desktop
+
+  The sources of gnome-desktop-%{gdesktop.version} were downloaded
+  from %{gdesktop.SOURCE0.url}
+
+Licensing and copyright information for gnome-menus-%{gnome_menus.version}
+
+  License: GNU General Public License Version 2
+  License: GNU Library General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gnome-menus-%{gnome_menus.version}
+
+    AUTHORS: List of authors of gnome-menus
+    COPYING.bz2: GNU GPL
+    COPYING.LIB.bz2: GNU LGPL
+    ChangeLog.bz2: List of all changes and authors of gnome-menus
+    po/ChangeLog.bz2: List of all l10n changes and authors of gnome-menus
+    NEWS.bz2: List of the most important changes to gnome-menus
+    README: More information about gnome-menus
+
+  The sources of gnome-menus-%{gnome_menus.version} were downloaded
+  from %{gnome_menus.SOURCE0.url}
+
+Licensing and copyright information for gnome-panel-%{gpanel.version}
+
+  License: GNU General Public License Version 2
+  License: GNU Library General Public License Version 2
+  License: GNU Free Documentation Licence Version 1.1
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gnome-panel-%{gpanel.version}
+
+    AUTHORS: List of authors of gnome-panel
+    COPYING.bz2: GNU GPL
+    COPYING.LIB.bz2: GNU LGPL
+    COPYING-DOCS.bz2: GNU FDL
+    ChangeLog.bz2: List of all changes and authors of gnome-panel
+    po/ChangeLog.bz2: List of all l10n changes and authors of gnome-panel
+    idl/ChangeLog.bz2:: List of all changes and authors of gnome-panel idl
+    applets/ChangeLog.bz2: List of all changes and authors
+                           of gnome-panel applets
+    applets/wncklet/ChangeLog.bz2: List of all changes and authors
+                                   of wncklet gnome-panel applets
+    applets/clock/ChangeLog.bz2: List of all changes and authors
+                                 of gnome-panel clock applet
+    applets/notification_area/ChangeLog.bz2: List of all changes and authors of
+                                             gnome-panel notificaiton area
+    gnome-panel/ChangeLog.bz2: List of all changes and authors of gnome-panel
+    libpanel-applet/ChangeLog.bz2: List of all changes and authors
+                                   of libpanel-applet
+    help/ChangeLog.bz2: List of all help changes and authors of gnome-panel
+    NEWS.bz2: List of the most important changes to gnome-panel
+    README: More information about gnome-panel
+
+  The sources of gnome-panel-%{gpanel.version} were downloaded
+  from %{gpanel.SOURCE0.url}
+
+Licensing and copyright information for libgweather-%{libgweather.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/libgweather-%{libgweather.version}
+
+    AUTHORS: List of authors of libgweather
+    libgweather/AUTHORS: List of authors of libgweather
+    COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of libgweather
+    po/ChangeLog.bz2: List of all l10n changes and authors of libgweather
+    po-locations/ChangeLog.bz2: List of all l10n location changes and
+                                authors of libgweather
+    libgweather/ChangeLog.bz2: List of all changes and authors of libgweather
+    NEWS.bz2: List of the most important changes to libgweather
+    README: More information about libgweather
+    data/README: More information about libgweather data
+    data/README.timezones: More information about libgweather timezone data
+    libgweather/README: More information about libgweather
+
+  The sources of libgweather-%{libgweather.version} were downloaded
+  from %{libgweather.SOURCE0.url}
+
+Licensing and copyright information for libnotify-%{libnotify.version}
+
+  License: GNU Lesser General Public License Version 2.1
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/libnotify-%{libnotify.version}
+
+    AUTHORS: List of authors of libnotify
+    COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of libnotify
+    NEWS: List of the most important changes to libnotify
+
+  The sources of libnotify-%{libnotify.version} were downloaded
+  from %{libnotify.SOURCE0.url}
+ 
+Licensing and copyright information for notification-daemon-%{notificationdaemon.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/notification-daemon-%{notificationdaemon.version}
+
+    AUTHORS: List of authors of notification-daemon
+    COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of notification-daemon
+    NEWS.bz2: List of the most important changes to notification-daemon
+
+  The sources of notification-daemon-%{notificationdaemon.version} were downloaded
+  from %{notificationdaemon.SOURCE0.url}

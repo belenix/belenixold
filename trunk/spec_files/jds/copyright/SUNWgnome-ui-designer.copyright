@@ -1,0 +1,65 @@
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANNAMED_ICON_CHOOSERILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ 
+--------------------------------------------------------------------
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public
+ License along with this library; if not, write to the 
+ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ Boston, MA  02111-1307, USA.
+ 
+
+--------------------------------------------------------------------
+
+ Copyright (C) 2001-2005 Ximian, Inc.
+ Copyright (C) 2002, 2003, 2004 Joaquin Cuenca Abela
+ Copyright (C) 2004 Imendio AB
+ Copyright (C) 2004 Owen Taylor
+ Copyright (C) 2006 , 2007 Juan Pablo Ugarte.
+ Copyright (C) 2006-2007 Vincent Geddes
+ Copyright (C) 2001, 2005, 2006 , 2007 The GNOME Foundation.
+ Copyright (C) 1998-2002  James Henstridge <james@daa.com.au>
+
+ Authors:
+   Chema Celorio <chema@celorio.com>
+   Juan Pablo Ugarte <juanpablougarte@gmail.com>
+   Naba Kumar <naba@gnome.org>
+   Shane Butler <shane_b@users.sourceforge.net>
+   Joaquin Cuenca Abela <e98cuenc@yahoo.com>
+   Paolo Borelli <pborelli@katamail.com>
+   Owen Taylor  <otaylor@redhat.com>
+   Vincent Geddes <vgeddes@metroweb.co.za>
+   Archit Baweja <bighead@users.sourceforge.net>
+
+--------------------------------------------------------------------

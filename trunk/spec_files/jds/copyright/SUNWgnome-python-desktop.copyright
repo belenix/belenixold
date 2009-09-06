@@ -1,0 +1,154 @@
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+gnome-python-desktop-2.22.0/totem/plparsermodule.c:
+ 
+   Copyright (C) 2004 Tiago Cogumbreiro <cogumbreiro@users.sf.net>
+
+gnome-python-desktop-2.22.0/examples/gnomeprint/example_03.py,
+gnome-python-desktop-2.22.0/examples/gnomeprint/example_08.py,
+gnome-python-desktop-2.22.0/examples/gnomeprint/example_06.py:
+   Authors:
+      Chema Celorio <chema@ximian.com>
+   Python conversion:
+      Gustavo J. A. M. Carneiro <gustavo@users.sf.net>
+
+   Copyright (C) 2002 Ximian Inc. and authors
+
+   This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the Gnome Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.
+
+--------------------------------------------------------------------
+
+gnome-python-desktop-2.22.0/evolution/__init__.py:
+
+ Copyright (C) 2007 John Stowers <john.stowers@gmail.com>
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ USA
+
+--------------------------------------------------------------------
+
+gnome-python-desktop-2.22.0/evolution/override_common.c,
+gnome-python-desktop-2.22.0/evolution/override_common.h:
+
+ Copyright (C) 2005 Adam Hooper <adamh@cvs.gnome.org>
+ Copyright (C) 2005 Christian Persch <chpe@cvs.gnome.org>
+ Copyright (C) 2005 Crispin Flowerday <gnome@flowerday.cx>
+
+gnome-python-desktop-2.22.0/gtksourceview/gtksourceviewmodule.c:
+
+ Copyright (C) 2004 - Stéphan Kochen <g-lite@kochen.nl>
+
+gnome-python-desktop-2.22.0/nautilusburn/nb_module.c,
+gnome-python-desktop-2.22.0/ltihooks.py,
+gnome-python-desktop-2.22.0/tests/ltihooks.py,
+gnome-python-desktop-2.22.0/examples/gtksourceview/test-widget.py,
+gnome-python-desktop-2.22.0/nautilusburn/nb_track.c:
+
+ Copyright (C) 2000 James Henstridge.
+ Copyright (C) 2004 - Iñigo Serna <inigoserna@telefonica.net>
+ Copyright (C) 2004 Tiago Cogumbreiro <cogumbreiro@users.sf.net>
+
+gnome-python-desktop-2.22.0/evolution:
+
+ Copyright (c) 2007 John Stowers <john.stowers@gmail.com>
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.
+
+--------------------------------------------------------------------
+
+ 
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+--------------------------------------------------------------------
+
+gnome-python-desktop-2.22.0/gtop/gtop.c:
+   Copyright (C) 2004 Benoît Dejean <TazForEver at dlfp dot org>
+
+   LibGTop is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License,
+   or (at your option) any later version.
+
+   LibGTop is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+   for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with LibGTop; see the file COPYING. If not, write to the
+   Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.
+
+--------------------------------------------------------------------
+
+gnome-python-desktop-2.22.0/examples:
+
+ *  Authors:
+ *    Chema Celorio <chema@ximian.com>
+ *    Chris Lahey <clahey@ximian.com>
+ *
+ *  Python conversion:
+ *    Gustavo J. A. M. Carneiro <gustavo@users.sf.net>
+ *
+ *  Copyright (C) 2002, 2003 Ximian Inc. and authors
+
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Library General Public License
+ *  as published by the Free Software Foundation; either version 2 of
+ *  the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public
+ *  License along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+--------------------------------------------------------------------

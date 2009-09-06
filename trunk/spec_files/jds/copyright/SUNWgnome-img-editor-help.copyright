@@ -1,0 +1,22 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}
+
+  License: GNU Free Documentation Licence Version 1.2
+
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}
+
+    AUTHORS: List of authors of gimp-help
+    COPYING.bz2: GNU FDL
+    ChangeLog.bz2: List of all changes and authors of gimp-help
+    NEWS.bz2: List of the most important changes to gimp-help
+    quickreference/README: More information about gimp-help's quickreference
+    README: More information about gimp-help
+
+  The sources of gimp-help-%{gimp_help.version} were downloaded
+  from %{gimp_help.SOURCE0.url}

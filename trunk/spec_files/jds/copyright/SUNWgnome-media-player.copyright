@@ -1,0 +1,137 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %{name} consists of the following components:
+
+  - rhythmbox-%{rhythmbox.version}
+  - totem-%{totem.version}
+
+Licensing and copyright information for rhythmbox-%{rhythmbox.version}:
+
+ License: GNU General Public License Version 2
+ License: MIT License
+ License: BSD License
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: GNU GPL
+  AUTHORS: List of authors of %{rhythmbox.name}
+  NEWS.bz2: List of the most important changes in %{rhythmbox.name}
+  ChangeLog.bz2: List of all changes and authors of %{rhythmbox.name}
+  help/ChangeLog.bz2: List of all changes and authors of %{rhythmbox.name} Help
+  po/ChangeLog.bz2: List of all changes and authors of %{rhythmbox.name}.
+  README: More information about %{rhythmbox.name}
+
+  The %{rhythmbox.name} source files contain the following GPL license
+  exception:
+
+  ---
+
+  The Rhythmbox authors hereby grants permission for non-GPL compatible
+  GStreamer plugins to be used and distributed together with GStreamer
+  and Rhythmbox. This permission is above and beyond the permissions granted
+  by the GPL license by which Rhythmbox is covered. If you modify this code
+  you may extend this exception to your version of the code, but you are not
+  obligated to do so. If you do not wish to do so, delete this exception
+  statement from your version.
+
+  ---
+
+  The %{rhythmbox.name} coherance plugin module is licensed under the MIT
+  license specified at this URL: http://opensource.org/licenses/mit-license.php
+
+  The %{rhythmbox.name} MD5 implementation uses the following BSD license:
+
+  ---
+
+  This software is provided 'as-is', without any express or implied
+  warranty.  In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+
+  ---
+
+ The sources of rhythmbox-%{rhythmbox.version} were downloaded
+ from %{rhythmbox.SOURCE0.url}
+
+Licensing and copyright information for totem-%{totem.version}:
+
+ License: GNU General Public License Version 2
+ License: GNU Library General Public License Version 2
+ License: BSD License
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: GNU GPL
+  COPYING.LIB.bz2: GNU LGPL
+  license_change.bz2: Information about the GPL exception to allow
+                      non-GPL compatible GStreamer plugins to be used
+                      and distributed together with GStreamer and Totem.
+  AUTHORS: List of authors of %{totem.name}
+  NEWS.bz2: List of the most important changes in %{totem.name}
+  ChangeLog.bz2: List of all changes and authors of %{totem.name}
+  help/ChangeLog.bz2: List of all changes and authors of %{totem.name} Help
+  po/ChangeLog.bz2: List of all changes and authors of %{totem.name}.
+  README: More information about %{totem.name}
+
+  The %{totem.name} browser-plugin uses the LGPL Version 2.  It also contains
+  source which is dual-licensed under the Mozilla Public License Version 1.1,
+  GPL 2.0, and LGPL 2.1.  It also contains some code which uses the following
+  BSD license:
+
+  ---
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+ 
+  1. Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or other materials provided with the distribution.
+  3. Neither the names of Apple Computer, Inc. ("Apple") or The Mozilla
+  Foundation ("Mozilla") nor the names of their contributors may be used
+  to endorse or promote products derived from this software without
+  specific prior written permission.
+ 
+  THIS SOFTWARE IS PROVIDED BY APPLE, MOZILLA AND THEIR CONTRIBUTORS "AS
+  IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL APPLE, MOZILLA OR
+  THEIR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  ---
+
+ The sources of totem-%{totem.version} were downloaded
+ from %{totem.SOURCE0.url}
+

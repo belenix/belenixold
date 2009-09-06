@@ -1,0 +1,154 @@
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - gnome-keyring-%{gnomekeyring.version}
+  - libbonoboui-%{libbonoboui.version}
+  - libexif-gtk-%{libexif_gtk.version}
+  - libgnome-%{libgnome.version}
+  - libgnomeui-%{libgnomeui.version}
+  - libgtkhtml-%{libgtkhtml.version}
+  - rarian-%{rarian.version}
+  - startup-notification-%{startupnotification.version}
+
+Licensing and copyright information for gnome-keyring-%{gnomekeyring.version}:
+
+ License: GNU Lesser General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-keyring-%{gnomekeyring.version}
+
+ COPYING.bz2: GNU GPL
+ COPYING.LIB.bz2: GNU LGPL
+ NEWS.bz2: list of all important changes in gnome-keyring
+ ChangeLog.bz2 list of all changes and authors of gnome-keyring
+ AUTHORS: Authors of gnome-keyring
+ README: more information about gnome-keyring
+
+ The sources of gnome-keyring-%{gnomekeyring.version} were downloaded
+ from %{gnomekeyring.SOURCE0.url}
+  
+Licensing and copyright information for libbonoboui-%{libbonoboui.version}:
+
+ License: GNU Lesser General Public License Version 2.1
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libbonoboui-%{libbonoboui.version}
+
+ COPYING.bz2: GNU GPL
+ COPYING.LIB.bz2: GNU LGPL
+ NEWS.bz2: list of all important changes in libbonoboui
+ ChangeLog.bz2 list of all changes and authors of libbonoboui
+ MAINTAINERS: Maintainers of libbonoboui
+ README: more information about libbonoboui
+
+ The sources of libbonoboui-%{libbonoboui.version} were downloaded
+ from %{libbonoboui.SOURCE0.url}
+  
+Licensing and copyright information for libexif-gtk-%{libexif_gtk.version}:
+
+ License: GNU General Public License Version 2.1
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libexif-gtk-%{libexif_gtk.version}
+
+ COPYING.bz2: GNU GPL
+ NEWS.bz2: list of all important changes in libexif-gtk
+ ChangeLog.bz2 list of all changes and authors of libexif-gtk
+ README: more information about libexif-gtk
+
+ The sources of libexif-gtk-%{libexif_gtk.version} were downloaded
+ from %{libexif_gtk.SOURCE0.url}
+  
+Licensing and copyright information for libgnome-%{libgnome.version}:
+
+ License: GNU Library General Public License Version 2.1
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libgnome-%{libgnome.version}
+
+ COPYING.LIB.bz2: GNU LGPL
+ NEWS.bz2: list of all important changes in libgnome
+ ChangeLog.bz2 list of all changes and authors of libgnome
+ AUTHORS: Authors of libgnome
+ MAINTAINERS: Maintainers of libgnome
+ README: more information about libgnome
+
+ The sources of libgnome-%{libgnome.version} were downloaded
+ from %{libgnome.SOURCE0.url}
+  
+Licensing and copyright information for libgnomeui-%{libgnomeui.version}:
+
+ License: GNU Library General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libgnomeui-%{libgnomeui.version}
+
+ COPYING.LIB.bz2: GNU LGPL
+ NEWS.bz2: list of all important changes in libgnomeui
+ ChangeLog.bz2 list of all changes and authors of libgnomeui
+ AUTHORS: Authors of libgnomeui
+ MAINTAINERS: Maintainers of libgnomeui
+ README: more information about libgnomeui
+
+ The sources of libgnomeui-%{libgnomeui.version} were downloaded
+ from %{libgnomeui.SOURCE0.url}
+  
+Licensing and copyright information for libgtkhtml-%{libgtkhtml.version}:
+
+ License: GNU Library General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libgtkhtml-%{libgtkhtml.version}
+
+ COPYING.LIB.bz2: GNU LGPL
+ NEWS.bz2: list of all important changes in libgtkhtml
+ ChangeLog.bz2 list of all changes and authors of libgtkhtml
+ AUTHORS: Authors of libgtkhtml
+ README: more information about libgtkhtml
+
+ The sources of libgtkhtml-%{libgtkhtml.version} were downloaded
+ from %{libgtkhtml.SOURCE0.url}
+  
+Licensing and copyright information for rarian-%{rarian.version}:
+
+ License: GNU Library General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/rarian-%{rarian.version}
+
+ COPYING.bz2: GNU GPL
+ COPYING.LIB.bz2: GNU LGPL
+ NEWS.bz2: list of all important changes in rarian
+ ChangeLog.bz2 list of all changes and authors of rarian
+ MAINTAINERS: Maintainers of rarian
+ README: more information about rarian
+
+ The sources of rarian-%{rarian.version} were downloaded
+ from %{rarian.SOURCE0.url}
+  
+Licensing and copyright information for startup-notification-%{startupnotification.version}:
+
+ License: GNU Library General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/startup-notification-%{startupnotification.version}
+
+ COPYING.bz2: GNU LGPL
+ NEWS.bz2: list of all important changes in startup-noticiation
+ ChangeLog.bz2 list of all changes and authors of startup-noticiation
+ AUTHORS: Authors of startup-notification
+ README: more information about startup-notification
+
+ The sources of startup-notification-%{startupnotification.version} were downloaded
+ from %{startupnotification.SOURCE0.url}
+  
+

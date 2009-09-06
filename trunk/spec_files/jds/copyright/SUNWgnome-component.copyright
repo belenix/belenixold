@@ -1,0 +1,72 @@
+  Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+  Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - libIDL-%{idl.version}
+  - ORBit2-%{orbit.version}
+  - libbonobo-%{bonobo.version}
+
+Licensing and copyright information for libIDL-%{idl.version}
+
+License: GNU Lesser General Public License Version 2
+
+You can find more information in the following directory:
+%{_pkg_docdir}/libIDL-%{idl.version}
+
+COPYING.bz2: GNU LGPL
+AUTHORS: list of authors of libIDL
+NEWS.bz2: list of most important changes in libIDL
+ChangeLog.bz2: list of changes and authors of libIDL
+README: more information about libIDL
+
+The sources of libIDL-%{idl.version} were downloaded
+from %{idl.SOURCE0.url}
+
+
+Licensing and copyright information for ORBit2-%{orbit.version}
+
+License: GNU Lesser General Public License Version 2
+	 GNU General Public License Version 2
+
+You can find more information in the following directory:
+%{_pkg_docdir}/ORBit2-%{orbit.version}
+
+COPYING.bz2: GNU GPL
+COPYING.LIB.bz2: GNU LGPL
+AUTHORS: list of authors of ORBit2
+NEWS.bz2: list of most important changes in ORBit2
+ChangeLog.bz2: list of changes and authors of ORBit2
+README: more information about ORBit2
+
+The sources of ORBit2-%{orbit.version} were downloaded
+from %{orbit.SOURCE0.url}
+
+Licensing and copyright information for libbonobo-%{bonobo.version}
+License: GNU Lesser General Public License Version 2.1
+	 GNU General Public License Version 2
+
+You can find more information in the following directory:
+%{_pkg_docdir}/libbonobo-%{bonobo.version}
+
+COPYING.bz2: GNU GPL
+COPYING.LIB.bz2: GNU LGPL
+AUTHORS: list of authors of libbonobo
+NEWS.bz2: list of most important changes in libbonobo
+ChangeLog.bz2: list of changes and authors of libbonobo
+README: more information about libbonobo
+
+The sources of libbonobo-%{bonobo.version} were downloaded
+from %{bonobo.SOURCE0.url}
+
+--------------------------------------------------------------------

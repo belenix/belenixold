@@ -1,0 +1,127 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %{name} consists of the following components:
+
+  - audiofile-%{audiofile.version}
+  - esound-%{esound.version}
+  - gnome-audio-%{gnome_audio.version}
+
+Licensing and copyright information for audiofile-%{audiofile.version}:
+
+ License: GNU Library General Public License Version 2
+ License: GNU General Public License Version 2
+ License: MIT License
+ License: Sun public domain license
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: GNU LGPL for libraries
+  COPYING.GPL.bz2: GNU GPL for programs
+  AUTHORS: List of authors of %{audiofile.name}
+  NEWS.bz2: List of the most important changes in %{audiofile.name}
+  ChangeLog.bz2: List of all changes and authors of %{audiofile.name}
+  README: More information about %{audiofile.name}
+
+  The %{audiofile.name} source files contain an osxplay binary which
+  uses the BSD license, but this is not used on Solaris.
+
+  The %{audiofile.name} source files contain u-law, A-law and linear PCM 
+  conversion code with the following license:
+
+  ---
+
+  This source code is a product of Sun Microsystems, Inc. and is provided
+  for unrestricted use.  Users may copy or modify this source code without
+  charge.
+ 
+  SUN SOURCE CODE IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING
+  THE WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.
+ 
+  Sun source code is provided with no support and without any obligation on
+  the part of Sun Microsystems, Inc. to assist in its use, correction,
+  modification or enhancement.
+ 
+  SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE
+  INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY THIS SOFTWARE
+  OR ANY PART THEREOF.
+ 
+  In no event will Sun Microsystems, Inc. be liable for any lost revenue
+  or profits or other special, indirect and consequential damages, even if
+  Sun has been advised of the possibility of such damages.
+
+  ---
+
+  Some %{audiofile.name} source files contain this MIT license:
+
+  ---
+
+  Copyright 1992 by Stichting Mathematisch Centrum, Amsterdam, The
+  Netherlands.
+
+                          All Rights Reserved
+
+  Permission to use, copy, modify, and distribute this software and its
+  documentation for any purpose and without fee is hereby granted,
+  provided that the above copyright notice appear in all copies and that
+  both that copyright notice and this permission notice appear in
+  supporting documentation, and that the names of Stichting Mathematisch
+  Centrum or CWI not be used in advertising or publicity pertaining to
+  distribution of the software without specific, written prior permission.
+
+  STICHTING MATHEMATISCH CENTRUM DISCLAIMS ALL WARRANTIES WITH REGARD TO
+  THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+  FITNESS, IN NO EVENT SHALL STICHTING MATHEMATISCH CENTRUM BE LIABLE
+  FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+  OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+  ---
+
+ The sources of audiofile-%{audiofile.version} were downloaded
+ from %{audiofile.SOURCE0.url}
+
+Licensing and copyright information for esound-%{esound.version}:
+
+ License: GNU Library General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.LIB.bz2: GNU LGPL
+  AUTHORS: List of authors of %{esound.name}
+  NEWS.bz2: List of the most important changes in %{esound.name}
+  ChangeLog.bz2: List of all changes and authors of %{esound.name}
+  README: More information about %{esound.name}
+
+ The sources of esound-%{esound.version} were downloaded
+ from %{esound.SOURCE0.url}
+
+Licensing and copyright information for gnome-audio-%{gnome_audio.version}:
+
+ License: http://creativecommons.org/licenses/by-sa/2.0/
+ License: http://creativecommons.org/licenses/by/3.0/deed
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2:   Reference to README
+  ChangeLog.bz2: List of all changes and authors of %{gnome_audio.name}
+  README:        More information about %{gnome_audio.name} including license
+                 information.
+
+ The sources of gnome-audio-%{gnome_audio.version} were downloaded
+ from %{gnome_audio.SOURCE0.url}

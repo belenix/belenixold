@@ -1,0 +1,105 @@
+  Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+  Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - shared-mime-info-%{smimeinfo.version}
+  - gnome-mime-data-%{gmdata.version}
+  - gnome-vfs-%{gvfs.version}
+
+Licensing and copyright information for shared-mime-info-%{smimeinfo.version}:
+
+ License: GNU General Public License Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/shared-mime-info-%{smimeinfo.version}
+
+  COPYING.bz2: GNU GPL
+  AUTHORS: list of authors of shared-mime-info
+  NEWS.bz2: list of the most important changes in shared-mime-info
+  ChangeLog.bz2: list of all changes and authors of shared-mime-info
+  README: more information about shared-mime-info
+
+ The sources of shared-mime-info-%{smimeinfo.version} were downloaded
+ from %{smimeinfo.SOURCE0.url}
+
+
+Licensing and copyright information for gnome-mime-data-%{gmdata.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-mime-data-%{gmdata.version}
+
+  COPYING.bz2: GNU GPL
+  AUTHORS: list of authors of gnome-mime-data
+  NEWS.bz2: list of the most important changes in gnome-mime-data
+  ChangeLog.bz2: list of all changes and authors of gnome-mime-data
+  README: more information about gnome-mime-data
+
+ The sources of gnome-mime-data-%{gmdata.version} were downloaded
+ from %{gmdata.SOURCE0.url}
+
+
+Licensing and copyright information for gnome-vfs-%{gvfs.version}:
+
+ License: Libraries: GNU Lesser General Public License Version 2
+	  Binaries: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-vfs-%{gvfs.version}
+
+  COPYING.bz2: GNU GPL
+  COPYING.LIB.bz2: GNU LGPL
+  AUTHORS: list of authors of gnome-vfs
+  NEWS.bz2: list of the most important changes in gnome-vfs
+  ChangeLog.bz2: list of all changes and authors of gnome-vfs
+  README: more information about gnome-vfs
+
+ The sources of gnome-gvfs-%{gvfs.version} were downloaded
+ from %{gvfs.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+   `_gnome_vfs_canonicalize_pathname()' derived from code by Brian Fox and Chet
+   Ramey in GNU Bash, the Bourne Again SHell.  Copyright (C) 1987, 1988, 1989,
+   1990, 1991, 1992 Free Software Foundation, Inc.  
+
+   Authors: 1995 Miguel de Icaza
+   	    1995 Jakub Jelinek
+            1998 Pavel Machek
+            1999 Cleanup by Ettore Perazzoli
+
+   finduid, findgid are from GNU tar.  
+   Authors: 
+	Ian McKellar <yakk@yakk.net>
+ 
+--------------------------------------------------------------------
+
+ Licensed under the Academic Free License version 2.0
+ Or under the following terms:
+ xdgmimeint.h: Internal defines and functions.
+ xdgmimemagic.: Private file.  Datastructure for storing magic files.
+ xdgmimeint.c: Internal defines and functions.
+ xdgmimeglob.h: Private file.  Datastructure for storing the globs.
+
+ More info can be found at http://www.freedesktop.org/standards/
+
+ xdgmimeparent.h: Private file.  Datastructure for storing the hierarchy.
+ xdgmimealias.h: Private file.  Datastructure for storing the aliases.
+ xdgmimealias.c: Private file.  Datastructure for storing the aliases.
+ xdgmime.h: XDG Mime Spec mime resolver.  Based on version 0.11 of the spec.
+ xdgmimecache.h: Private file.  Datastructure for mmapped caches.
+
+--------------------------------------------------------------------
+

@@ -1,0 +1,271 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - blueprint.name-%{blueprint.version}
+  - gnome-backgrounds-%{backgrounds.version}
+  - gnome-icon-theme-%{icontheme.version}
+  - gtk-engines-%{engines.version}
+  - hicolor-icon-theme-%{hicolor.version}
+  - icon-naming-utils-%{icon_naming.version}
+  - nimbus-%{nimbus.version}
+  - %{brandedbackgrounds.name}-%{brandedbackgrounds.version}
+  - %{gdmtheme.name}-%{gdmtheme.version}
+  - tango-icon-theme-%{tango.version}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for blueprint-%{blueprint.version}:
+
+ License: GNU Library General Public License Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/blueprint-%{blueprint.version}
+
+  COPYING.bz2: GNU LGPL
+  AUTHORS: list of authors of blueprint
+  NEWS.bz2: list of the most important changes in blueprint
+  ChangeLog.bz2: list of all changes and authors of blueprint
+  icons/ChangeLog.bz2: list of all changes and authors of blueprint icons
+  po/ChangeLog.bz2: list of all changes and authors of blueprint globalization
+  README: more information about blueprint
+
+ The sources of blueprint-%{blueprint.version} were downloaded
+ from %{blueprint.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for gnome-backgrounds-%{backgrounds.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-backgrounds-%{backgrounds.version}
+
+  COPYING.bz2: GNU GPL
+  AUTHORS: list of authors of gnome-backgrounds
+  NEWS.bz2: list of the most important changes in gnome-backgrounds
+  ChangeLog.bz2: list of all changes and authors of gnome-backgrounds
+  po/ChangeLog.bz2: list of all changes and authors of gnome-backgrounds globalization
+  README: more information about gnome-backgrounds
+
+ The sources of gnome-backgrounds-%{backgrounds.version} were downloaded
+ from %{backgrounds.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for gnome-icon-theme-%{icontheme.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-icon-theme-%{icontheme.version}
+
+  COPYING.bz2: GNU GPL
+  AUTHORS: list of authors of gnome-icon-theme
+  NEWS.bz2: list of the most important changes in gnome-icon-theme
+  ChangeLog.bz2: list of all changes and authors of gnome-icon-theme
+  po/ChangeLog.bz2: list of all changes and authors of gnome-icon-theme globalization
+  README: more information about gnome-icon-theme
+
+ The sources of gnome-icon-theme-%{icontheme.version} were downloaded
+ from %{icontheme.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for gnome-themes-%{gthemes.version}:
+
+ License: GNU Lesser General Public License Version 2.1
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-themes-%{gthemes.version}
+
+  COPYING.bz2: GNU LGPL
+  AUTHORS: list of authors of gnome-themes
+  NEWS.bz2: list of the most important changes in gnome-themes
+  ChangeLog.bz2: list of all changes and authors of gnome-themes
+  po/ChangeLog.bz2: list of all changes and authors of gnome-themes globalization
+  README: more information about gnome-themes
+
+ The sources of gnome-themes-%{gthemes.version} were downloaded
+ from %{gthemes.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for gtk-engines-%{engines.version}:
+
+ License: GNU Lesser General Public License Version 2.1
+          GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gtk-engines-%{engines.version}
+
+  COPYING.bz2: ngeneral license file
+  COPYING.GPL.bz2: GNU GPL
+  COPYING.LGPL.bz2: GNU LGPL
+  NEWS.bz2: list of the most important changes in gtk2-engines
+  ChangeLog.bz2: list of all changes and authors of gtk2-engines
+  po/ChangeLog.bz2: list of all changes and authors of gtk2-engines globalizatio
+n
+  README: more information about gtk2-engines
+  AUTHORS: list of authors of gtk2-engines
+  engines/clearlooks/AUTHORS: list of authors of clearlooks theme
+  engines/crux/AUTHORS: list of authors of crux theme
+  engines/glide/AUTHORS: list of authors of glide theme
+  engines/hc/AUTHORS: list of authors of hc theme
+  engines/industrial/AUTHORS: list of authors of industrial theme
+  engines/lua/AUTHORS: list of authors of lua theme
+  engines/mist/AUTHORS: list of authors of mist theme
+  engines/redmond/AUTHORS: list of authors of redmond theme
+  engines/thinice/AUTHORS: list of authors of thinice theme
+
+ The sources of gtk-engines-%{engines.version} were downloaded
+ from %{engines.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for hicolor-icon-theme-%{hicolor.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/hicolor-icon-theme-%{hicolor.version}
+
+  COPYING.bz2: GNU GPL
+  ChangeLog.bz2: list of all changes and authors of hicolor-icon-theme
+  README: more information about hicolor-icon-theme
+
+ The sources of hicolor-icon-theme-%{hicolor.version} were downloaded
+ from %{hicolor.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for icon-naming-utils-%{icon_naming.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/icon-naming-utils-%{icon_naming.version}
+
+  COPYING.bz2: GNU GPL
+  AUTHORS: list of authors of icon-naming-utils
+  NEWS.bz2: list of the most important changes in icon-naming-utils
+  ChangeLog.bz2: list of all changes and authors of icon-naming-utils
+  README: more information about icon-naming-utils
+
+ The sources of icon-naming-utils-%{icon_naming.version} were downloaded
+ from %{icon_naming.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for nimbus-%{nimbus.version}:
+
+ License: GNU Library General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/nimbus-%{nimbus.version}
+
+  COPYING.bz2: GNU LGPL
+  AUTHORS: list of authors of nimbus
+  NEWS.bz2: list of the most important changes in nimbus
+  ChangeLog.bz2: list of all changes and authors of nimbus
+  po/ChangeLog.bz2: list of all changes and authors of nimbus
+  README: more information about nimbus
+
+ The sources of nimbus-%{nimbus.version} were downloaded
+ from %{nimbus.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{brandedbackgrounds.name}-%{brandedbackgrounds.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/%{brandedbackgrounds.name}-%{brandedbackgrounds.version}
+
+  COPYING.bz2: GNU GPL
+  AUTHORS: list of authors of %{brandedbackgrounds.name}
+  NEWS.bz2: list of the most important changes in %{brandedbackgrounds.name}
+  ChangeLog.bz2: list of all changes and authors of %{brandedbackgrounds.name}
+  po/ChangeLog.bz2: list of all changes and authors of %{brandedbackgrounds.name}
+  README: more information about %{brandedbackgrounds.name}
+
+ The sources of %{brandedbackgrounds.name}-%{brandedbackgrounds.version} were downloaded
+ from %{brandedbackgrounds.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{gdmtheme.name}-%{gdmtheme.version}:
+
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/%{gdmtheme.name}-%{gdmtheme.version}
+
+  COPYING.bz2: GNU GPL
+  AUTHORS: list of authors of %{gdmtheme.name}
+  NEWS.bz2: list of the most important changes in %{gdmtheme.name}
+  ChangeLog.bz2: list of all changes and authors of %{gdmtheme.name}
+  po/ChangeLog.bz2: list of all changes and authors of %{gdmtheme.name}
+  README: more information about %{gdmtheme.name}
+
+ The sources of %{gdmtheme.name}-%{gdmtheme.version} were downloaded
+ from %{gdmtheme.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{tango.name}-%{tango.version}:
+
+ License: Creative Commons Attribution-ShareAlike 2.5
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/%{tango.name}-%{tango.version}
+
+  COPYING.bz2: Creative Commons Attribution-ShareAlike 2.5
+  AUTHORS: list of authors of tango-icon-theme
+  NEWS.bz2: list of the most important changes in tango-icon-theme
+  ChangeLog.bz2: list of all changes and authors of tango-icon-theme
+  po/ChangeLog.bz2: list of all changes and authors of tango-icon-theme
+  README: more information about tango-icon-theme
+
+ The sources of %{tango.name}-%{tango.version} were downloaded
+ from %{tango.SOURCE0.url}
+
+------------------------ DMZ curosrs ------------------------------------
+
+Copyright (c) 2006 Jakub Steiner <jimmac@novell.com>
+Copyright (c) 2006 Novell, Inc.
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+

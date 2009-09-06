@@ -1,0 +1,133 @@
+ --------------------------------------------------------------------
+
+ For the avoidance of doubt, except that if any license choice other
+ than GPL or LGPL is available it will apply instead, Sun elects to
+ use only the General Public License version 2 (GPLv2) at this time
+ for any software where a choice of GPL license versions is made
+ available with the language indicating that GPLv2 or any later
+ version may be used, or where a choice of which version of the GPL 
+ is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1985,1989-93,1995-98,2000,2001,2002
+                 Free Software Foundation, Inc.
+                 This file is part of the GNU C Library.
+   Copyright (C) 2000, 2001 Chema Celorio  
+   Copyright (C) 2003  Gustavo Giráldez
+   Copyright (C) 2004  Red Hat, Inc.
+   Copyright (C) 2001-2007  Paolo Maggi
+   Copyright (C) 2007-2008  Paolo Maggi, Paolo Borelli and Yevgen Muntyan
+   Copyright (C) 2007 - Gustavo Giráldez and Paolo Maggi
+   Copyright (C) 1999, 2000 Scott Wimer
+   Copyright (C) 2004, Matthias Clasen <mclasen@redhat.com>
+   Copyright (C) 2005 - 2007, Marco Barisione <marco@barisione.org>
+   Copyright (C) 1997 - 2000 Free Software Foundation
+                       All rights reserved.
+   Copyright (C) 1998, 1999 Alex Roberts, Evan Lawrence
+   Copyright (C) 2000, 2001 Chema Celorio, Paolo Maggi
+   Copyright (C) 2002 Gustavo Gir�ldez <gustavo.giraldez@gmx.net>
+
+   Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
+   Author: Tom Tromey <tromey@creche.cygnus.com>
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  
+
+--------------------------------------------------------------------
+
+  Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation
+                All rights reserved.
+  Copyright (C) 2000 - 2005 Paolo Maggi 
+  Copyright (C) 2002, 2003 - Jeroen Zwartepoorte
+  Copyright (C) 1999,2000,2001,2002 by:
+                      Mikael Hermansson <tyan@linux.se>
+                      Chris Phelps <chicane@reninet.com>
+                      Jeroen Zwartepoorte <jeroen@xs4all.nl>
+  Copyright (C) 2001 - Mikael Hermansson<tyan@linux.se>
+  Copyright (C) 2003 - Paolo Maggi <paolo.maggi@polito.it>
+                       Gustavo Giráldez <gustavo.giraldez@gmx.net>
+  Copyright (C) 1998, 1999 - Alex Roberts, Evan Lawrence
+  Copyright (C) 2000, 2001 - Chema Celorio, Paolo Maggi 
+  Copyright (C) 2004  Red Hat, Inc.
+  Copyright (C) 2002  Gustavo Gir�ldez <gustavo.giraldez@gmx.net>
+  Copyright (C) 2007 - Johannes Schmid <jhs@gnome.org>
+  Copyright (C) 2001 - Mikael Hermansson <tyan@linux.se> and
+                       Chris Phelps <chicane@reninet.com>
+  Copyright (C) 2003 - Gustavo Giráldez and Paolo Maggi 
+  Copyright (C) 2005, 2006 - Marco Barisione, Emanuele Aina
+  Copyright (C) 2003-2007 - Paolo Maggi <paolo@gnome.org>
+  Copyright (C) 2000 - 2005 Paolo Maggi 
+  Copyright (C) 2002, 2003 Jeroen Zwartepoorte
+  Copyright (C) 1999-2002 - Mikael Hermansson <tyan@linux.se>
+                            Chris Phelps <chicane@reninet.com>
+                            Jeroen Zwartepoorte <jeroen@xs4all.nl>
+
+ Derived from gedit-print.c
+ Author: Tom Tromey <tromey@creche.cygnus.com>
+ Parts of this file are copied from the gedit and glimmer project.
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public License
+ as published by the Free Software Foundation; either version 2 of
+ the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public
+ License along with the Gnome Library; see the file COPYING.LIB.  If not,
+ write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ Boston, MA 02111-1307, USA.  
+
+--------------------------------------------------------------------
+
+ Copyright (c) 1997-2006 University of Cambridge
+
+ Written by Philip Hazel
+
+-----------------------------------------------------------------------------
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+    * Neither the name of the University of Cambridge nor the names of its
+      contributors may be used to endorse or promote products derived from
+      this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+-----------------------------------------------------------------------------
+

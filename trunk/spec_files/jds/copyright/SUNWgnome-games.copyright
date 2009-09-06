@@ -1,0 +1,88 @@
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - gnome-games-%{gnome_games.version}
+  - libggz-%{libggz.version}
+  - ggz-client-libs-%{ggz_client_libs.version}
+
+Licensing and copyright information for gnome-games-%{gnome_games.version}:
+
+ License: GNU General Public License Version 2
+  License: GNU Free Documentation Licence Version 1.1
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/gnome-games-%{gnome_games.version}
+
+ COPYING: GNU GPL
+ COPYING-DOCS: GNU FDL
+ NEWS.bz2: list of all importang changes in gnome-games
+ AUTHORS: Authors of gnome-games
+ MAINTAINERS: list of all maintainers of gnome-games
+ README: more information about gnome-games
+ ChangeLog.bz2: list of all changes and authors of gnome-games
+ po/ChangeLog.bz2: List of all l10n changes and authors of gnome-games
+ gnome-sudoku/AUTHORS: Authors of gnome-sudoku
+ glines/AUTHORS: Authors of glines
+ gnotski/AUTHORS: Authors of gnotski
+ gnomine/AUTHORS: Authors of gnomine
+ gnect/AUTHORS: Authors of gnect
+ gtali/AUTHORS: Authors of gtali
+ gnobots2/AUTHORS: Authors of gnobots2
+ gnotravex/AUTHORS: Authors of gnotravex
+ gnibbles/AUTHORS: Authors of gnibbles
+ iagno/AUTHORS: Authors of iagno
+ gnome-sudoku/README: more information about gnome-sudoku
+ dependencies/gnuchess/README: more information about gnuchess
+ same-gnome/README: more information about same-gnome
+ gnotski/README: more information about gnotski
+ gnomine/README: more information about gnomine
+ gtali/README: more information about gtali
+ glchess/README: more information about 
+ gnotravex/README: more information about gnotravex
+ same-gnome/help/ChangeLog.bz2: List of all changes and authors of same-gnome
+
+ The sources of gnome-games-%{gnome_games.version} were downloaded
+ from %{gnome_games.SOURCE0.url}
+  
+Licensing and copyright information for libggz-%{libggz.version}:
+
+ License: GNU Lesser General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libggz-%{libggz.version}
+
+ COPYING: GNU LGPL
+ NEWS.bz2: list of all important changes in libggz
+ AUTHORS: Authors of libggz
+ README: more information about libggz
+ README.GGZ: general information about libggz
+ ChangeLog.bz2: list of all changes and authors of libggz
+
+ The sources of libggz-%{libggz.version} were downloaded
+ from %{libggz.SOURCE0.url}
+
+Licensing and copyright information for ggz-client-libs-%{ggz_client_libs.version}:
+
+ License: GNU Lesser General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/ggz-client-libs-%{ggz_client_libs.version}
+
+ COPYING: GNU LGPL
+ NEWS.bz2: list of all important changes in ggz-client-libs
+ AUTHORS: Authors of ggz-client-libs
+ README: more information about ggz-client-libs
+ README.GGZ: general information about ggz-client-libs
+ ChangeLog.bz2: list of all changes and authors of ggz-client-libs
+
+ The sources of ggz-client-libs-%{ggz_client_libs.version} were downloaded
+ from %{ggz_client_libs.SOURCE0.url}

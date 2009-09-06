@@ -1,0 +1,106 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %{name} consists of the following components:
+
+  - gimp-%{gimp.version}
+  - gimp-hdrtools-%{gimphdr.version}
+
+Licensing and copyright information for gimp-%{gimp.version}
+
+  License: GNU General Public License Version 2
+  License: GNU Lesser General Public License Version 2.1
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gimp-%{gimp.version}
+
+    AUTHORS.bz2: List of authors of gimp
+    COPYING.bz2: GNU GPL
+    libgimp/COPYING.bz2: GNU LGPL
+    plug-ins/script-fu/tinyscheme/COPYING: TinyScheme copyright
+    plug-ins/script-fu/re/COPYRIGHT: TinyScheme RE Copyright
+    plug-ins/pygimp/COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of gimp
+    ChangeLog.pre-1-0.bz2: List of all changes and authors of gimp before 1.0
+    ChangeLog.pre-1-2.bz2: List of all changes and authors of gimp before 1.2
+    ChangeLog.pre-2-0.bz2: List of all changes and authors of gimp before 2.0
+    ChangeLog.pre-2-2.bz2: List of all changes and authors of gimp before 2.2
+    ChangeLog.pre-2-4.bz2: List of all changes and authors of gimp before 2.4
+    devel-docs/ChangeLog.bz2: List of all devel-docs changes and authors of gimp
+    po/ChangeLog.bz2: List of all l10n changes and authors of gimp
+    po-libgimp/ChangeLog.bz2: List of all l10n changes and authors of libgimp
+    po-plug-ins/ChangeLog.bz2: List of all l10n changes and authors of
+                            gimp plug-ins
+    po-python/ChangeLog.bz2: List of all l10n changes and authors of gimp python
+    po-script-fu/ChangeLog.bz2: List of all l10n changes and authors
+                            of gimp script-fu
+    po-tips/ChangeLog.bz2: List of all l10n changes and authors of gimp tips
+    plug-ins/script-fu/tinyscheme/CHANGES.bz2: List of all changes and
+                            authors of TinyScheme
+    plug-ins/gimpressionist/ChangeLog.bz2: List of all changes and
+                            authors of GIMPressionist
+    plug-ins/pygimp/ChangeLog.bz2: List of all changes and authors of pygimp
+
+    LICENSE: License information about gimp
+    plug-ins/script-fu/ftx/LICENSE: License information about
+                            TinyScheme Extensions
+    NEWS.bz2: List of the most important changes to gimp
+    NEWS.pre-2-0.bz2: List of the most important changes to gimp before 2.0
+    NEWS.pre-2-2.bz2: List of the most important changes to gimp before 2.2
+    NEWS.pre-2-4.bz2: List of the most important changes to gimp before 2.4
+    README.bz2: More information about gimp
+    devel-docs/README: More information about gimp devel-docs
+    devel-docs/README.gtkdoc.bz2: More information about gimp devel-docs gtk-doc
+    devel-docs/tools/README.shooter: More information about gimp doc-shooter
+    docs/Wilber.xcf.gz.README: More information about gimp Mascot, Wilber
+    README.i18n.bz2: More information about gimp internationalisation
+    README.win32: More information about gimp on windows
+    tools/pdbgen/README.bz2: More information about PDGGEN
+    app/pdb/README: More information about PDB-Wrappers
+    plug-ins/script-fu/ftx/README: More information about TinyScheme Extensions
+    plug-ins/script-fu/re/README: More information about TinyScheme RE
+    plug-ins/script-fu/re/README.1st: More information about TinyScheme RE
+    plug-ins/script-fu/tinyscheme/README: More information about TinyScheme
+    plug-ins/flame/README: More information about flame plug-in
+    plug-ins/gfig/README.bz2: More information about gfig plug-in
+    plug-ins/gflare/README: More information about GFlare plug-in
+    plug-ins/gimpressionist/README.bz2: More information about
+                        GIMPressionist plug-in
+    plug-ins/ifscompose/README.ifscompose: More information about
+                        IfsCompose plug-in
+    plug-ins/Lighting/README: More information about Lighting Effects plug-in
+    plug-ins/MapObject/README: More information about MapObject plug-in
+    plug-ins/metadata/README: More information about gimp metadata plug-in
+    plug-ins/sel2path/README: More information about sel2path plug-in
+    plug-ins/sel2path/README.limn: More information about sel2path plug-in
+    plug-ins/twain/README: More information about TWAIN plug-in
+    plug-ins/xjt/README: More information about XJT plug-in
+    plug-ins/xjt/README_xjt_fileformat.txt.bz2: More information about
+                        XJT plug-in
+
+  The sources of gimp-%{gimp.version} were downloaded
+  from %{gimp.SOURCE0.url}
+
+Licensing and copyright information for gimp-hdrtools-%{gimphdr.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gimp-hdrtools-%{gimphdr.version}
+
+    COPYING.bz2: GNU GPL
+    LICENSE: License information about gimp-hdrtools
+    README: More information about gimp-hdrtools
+
+  The sources of gimp-hdrtools-%{gimphdr.version} were downloaded
+  from %{gimphdr.SOURCE0.url}

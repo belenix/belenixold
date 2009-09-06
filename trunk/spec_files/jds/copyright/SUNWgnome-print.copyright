@@ -1,0 +1,215 @@
+  Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+  Use is subject to license terms.
+
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - printman-%{printman.version}
+  - libgnomeprint-%{g20_version}
+  - libgnomeprintui-%{g20_version}
+  - libgnomeprint-%{gprint.version}
+  - libgnomeprintui-%{gprintui.version}
+
+Licensing and copyright information for printman-%{printman.version}:
+
+ License: GNU General Public License Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/printman-%{printman.version}
+
+  COPYING.bz2: GNU GPL
+  AUTHORS: list of authors of printman
+  NEWS.bz2: list of the most important changes in printman
+  ChangeLog.bz2: list of all changes and authors of printman
+  README: more information about printman 
+
+  The sources of printman-%{printman.version} were downloaded
+  from %{printman.SOURCE0.url}
+
+Licensing and copyright information for libgnomeprint-%{g20_version}:
+
+ License: GNU Lesser General Public License Version 2.1
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libgnomeprint-%{g20_version}
+
+  COPYING.LIB.bz2: GNU LGPL
+  AUTHORS: list of authors of libgnomeprint-%{g20_version}
+  NEWS.bz2: list of the most important changes in libgnomeprint-%{g20_version}
+  ChangeLog.bz2: list of all changes and authors of libgnomeprint-%{g20_version}
+  README: more information about libgnomeprint-%{g20_version} 
+
+  The sources of libbgnomeprint-%{g20_version} were downloaded
+  from %{SOURCE1.url}
+
+Licensing and copyright information for libgnomeprintui-%{g20_version}:
+
+ License: GNU Lesser General Public License Version 2.1
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libgnomeprintui-%{g20_version}
+
+  COPYING.LIB.bz2: GNU LGPL
+  AUTHORS: list of authors of libgnomeprintui-%{g20_version}
+  NEWS.bz2: list of the most important changes in libgnomeprintui-%{g20_version}
+  ChangeLog.bz2: list of all changes and authors of libgnomeprintui-%{g20_version}
+  README: more information about libgnomeprintui-%{g20_version}
+
+  The sources of libbgnomeprintui-%{g20_version} were downloaded
+  from %{SOURCE2.url}
+
+Licensing and copyright information for libgnomeprint-%{gprint.version}:
+
+ License: GNU Lesser General Public License Version 2.1
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libgnomeprint-%{gprint.version}
+
+  COPYING.LIB.bz2: GNU LGPL
+  AUTHORS: list of authors of libgnomeprint-%{gprint.version}
+  NEWS.bz2: list of the most important changes in libgnomeprint-%{gprint.version}
+  ChangeLog.bz2: list of all changes and authors of libgnomeprint-%{gprint.version}
+  README: more information about libgnomeprint-%{gprint.version}
+
+  The sources of libbgnomeprint-%{gprint.version} were downloaded
+  from %{gprint.SOURCE0.url}
+
+Licensing and copyright information for libgnomeprintui-%{gprintui.version}:
+
+ License: GNU Lesser General Public License Version 2.1
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}/libgnomeprintui-%{gprintui.version}
+
+  COPYING.LIB.bz2: GNU LGPL
+  AUTHORS: list of authors of libgnomeprintui-%{gprintui.version}
+  NEWS.bz2: list of the most important changes in libgnomeprintui-%{gprintui.version}
+  ChangeLog.bz2: list of all changes and authors of libgnomeprintui-%{gprintui.version}
+  README: more information about libgnomeprintui-%{gprintui.version}
+
+  The sources of libbgnomeprintui-%{gprintui.version} were downloaded
+  from %{gprintui.SOURCE0.url}
+
+--------------------------------------------------------------------
+
+ (C) 1988, 1989, 1990 by Adobe Systems Incorporated. All rights reserved.
+
+ This file may be freely copied and redistributed as long as:
+   1) This entire notice continues to be included in the file, 
+   2) If the file has been modified in any way, a notice of such
+      modification is conspicuously indicated.
+
+ PostScript, Display PostScript, and Adobe are registered trademarks of
+ Adobe Systems Incorporated.
+ 
+ ************************************************************************
+ THE INFORMATION BELOW IS FURNISHED AS IS, IS SUBJECT TO CHANGE WITHOUT
+ NOTICE, AND SHOULD NOT BE CONSTRUED AS A COMMITMENT BY ADOBE SYSTEMS
+ INCORPORATED. ADOBE SYSTEMS INCORPORATED ASSUMES NO RESPONSIBILITY OR 
+ LIABILITY FOR ANY ERRORS OR INACCURACIES, MAKES NO WARRANTY OF ANY 
+ KIND (EXPRESS, IMPLIED OR STATUTORY) WITH RESPECT TO THIS INFORMATION, 
+ AND EXPRESSLY DISCLAIMS ANY AND ALL WARRANTIES OF MERCHANTABILITY, 
+ FITNESS FOR PARTICULAR PURPOSES AND NONINFRINGEMENT OF THIRD PARTY RIGHTS.
+ ************************************************************************
+ 
+  Author: 
+	Raph Levien <raph@acm.org> 1998
+	Morten Welinder <terra@diku.dk> September 1999.
+
+--------------------------------------------------------------------
+
+  Copyright: 2000, 2003 by Sun Microsystems, Inc.
+  All rights reserved.
+
+  Author: Alexander Gelfenbain
+ 	  tajima
+
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+ 3. Neither the name of Sun Microsystems, Inc. nor the names of 
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+ This software is provided "AS IS," without a warranty of any kind.
+
+ ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES,
+ INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A
+ PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY EXCLUDED.
+ SUN AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES OR
+ LIABILITIES SUFFERED BY LICENSEE AS A RESULT OF OR RELATING TO USE,
+ MODIFICATION OR DISTRIBUTION OF THE SOFTWARE OR ITS DERIVATIVES.
+ IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST REVENUE,
+ PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
+ INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE
+ THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE
+ SOFTWARE, EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+ 
+  The Contents of this file are made available subject to the terms of
+  either of the following licenses
+
+         - GNU Lesser General Public License Version 2.1
+         - Sun Industry Standards Source License Version 1.1
+
+  Sun Microsystems Inc., October, 2000
+
+  GNU Lesser General Public License Version 2.1
+  =============================================
+  901 San Antonio Road, Palo Alto, CA 94303, USA
+
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License version 2.1, as published by the Free Software Foundation.
+
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+  MA  02111-1307  USA
+
+
+  Sun Industry Standards Source License Version 1.1
+  =================================================
+  The contents of this file are subject to the Sun Industry Standards
+  Source License Version 1.1 (the "License"); You may not use this file
+  except in compliance with the License. You may obtain a copy of the
+  License at http://www.openoffice.org/license.html.
+
+  Software provided under this License is provided on an "AS IS" basis,
+  WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING,
+  WITHOUT LIMITATION, WARRANTIES THAT THE SOFTWARE IS FREE OF DEFECTS,
+  MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE, OR NON-INFRINGING.
+  See the License for the specific provisions governing your rights and
+  obligations concerning the Software.
+
+  The Initial Developer of the Original Code is: Sun Microsystems, Inc.
+
+  Contributor(s): Alexander Gelfenbain
+
+ 
+--------------------------------------------------------------------
+

@@ -1,0 +1,100 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %{name} consists of the following components:
+
+  - libgphoto2-%{libgphoto2.version}
+  - libgphoto2_port-%{libgphoto2.version}
+  - gphoto2-%{gphoto2.version}
+  - gtkam-%{gtkam.version}
+  - gexif-%{gtkam.gexif_version}
+
+Licensing and copyright information for libgphoto2-%{libgphoto2.version}
+
+  License: GNU Lesser General Public License Version 2.1
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/libgphoto2-%{libgphoto2.version}
+
+    AUTHORS: List of authors of libgphoto2
+    COPYING.bz2: GNU LGPL
+    ChangeLog.bz2: List of all changes and authors of libgphoto2
+    NEWS.bz2: List of the most important changes to libgphoto2
+    README.in.bz2: More information about libgphoto2
+
+  The sources of libgphoto2-%{libgphoto2.version} were downloaded
+  from %{libgphoto2.SOURCE0.url}
+
+Licensing and copyright information for libgphoto2_port-%{libgphoto2.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/libgphoto2-%{libgphoto2.version}/libgphoto2_port
+
+    libgphoto2_port/AUTHORS: List of authors of libgphoto2_port
+    libgphoto2_port/COPYING.LIB.bz2: GNU GPL
+    libgphoto2_port/ChangeLog.bz2: List of all changes and authors
+                                   for libgphoto2_port
+    libgphoto2_port/NEWS: List of the most important changes to libgphoto2_port
+    libgphoto2_port/README: More information about libgphoto2_port
+
+  The sources of libgphoto2_port-%{libgphoto2.version} were downloaded
+  from %{libgphoto2.SOURCE0.url}
+ 
+Licensing and copyright information for gphoto2-%{gphoto2.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gphoto2-%{gphoto2.version}
+
+    COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of gphoto2
+    NEWS: List of the most important changes to gphoto2
+    README.bz2: More information about gphoto2
+
+  The sources of gphoto2-%{gphoto2.version} were downloaded
+  from %{gphoto2.SOURCE0.url}
+ 
+Licensing and copyright information for gtkam-%{gtkam.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gtkam-%{gtkam.version}
+
+    AUTHORS: List of authors of gtkam
+    COPYING.bz2: GNU GPL
+    CHANGES: List of the important changes to gtkam
+    ChangeLog.bz2: List of all changes and authors of gtkam
+    NEWS: List of the most important changes to gtkam
+    README: More information about gtkam
+
+  The sources of gtkam-%{gtkam.version} were downloaded
+  from %{gtkam.SOURCE0.url}
+ 
+Licensing and copyright information for gexif-%{gtkam.gexif_version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gtkam-%{gtkam.version}/gexif-%{gtkam.gexif_version}
+
+    gexif-%{gtkam.gexif_version}/AUTHORS: List of authors of gexif
+    gexif-%{gtkam.gexif_version}/COPYING.bz2: GNU GPL
+    gexif-%{gtkam.gexif_version}/ChangeLog: List of all changes and authors
+                                            of gexif
+
+  The sources of gexif-%{gtkam.gexif_version} were downloaded
+  from %{gtkam.SOURCE1.url}

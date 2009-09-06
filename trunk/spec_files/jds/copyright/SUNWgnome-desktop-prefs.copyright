@@ -1,0 +1,104 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %{name} consists of the following components:
+
+  - desktop-file-utils-%{dfu.version}
+  - gnome-control-center-%{cc.version}
+  - gnome-settings-daemon-%{gsd.version}
+
+Licensing and copyright information for desktop-file-utils-%{dfu.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/desktop-file-utils-%{dfu.version}
+
+    AUTHORS: List of authors of desktop-file-utils
+    COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of desktop-file-utils
+    NEWS.bz2: List of the most important changes to desktop-file-utils
+    README: More information about desktop-file-utils
+
+  The sources of desktop-file-utils-%{dfu.version} were downloaded
+  from %{dfu.SOURCE0.url}
+
+Licensing and copyright information for gnome-control-center-%{cc.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gnome-control-center-%{cc.version}
+
+    AUTHORS: List of authors of gnome-control-center
+    capplets/about-me/AUTHORS: List of authors of about-me capplet
+    COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of gnome-control-center
+    capplets/about-me/ChangeLog.bz2: List of all changes and authors of
+                            about-me capplet
+    capplets/accessibility/at-properties/ChangeLog.bz2: List of all changes
+                            and authors of accessibility capplet
+    capplets/appearance/ChangeLog.bz2: List of all changes and authors of
+                            appearence properties capplet
+    capplets/common/ChangeLog.bz2: List of all changes and authors of
+                            common capplet
+    capplets/default-applications/ChangeLog.bz2: List of all changes and
+                            authors of default-applications capplet
+    capplets/display/ChangeLog.bz2: List of all changes and authors of
+                            display capplet
+    capplets/keybindings/ChangeLog.bz2: List of all changes and authors of
+                            keybindings capplet
+    capplets/keyboard/ChangeLog.bz2: List of all changes and authors of
+                            keyboard capplet
+    capplets/mouse/ChangeLog.bz2: List of all changes and authors of
+                            mouse capplet
+    capplets/network/ChangeLog.bz2: List of all changes and authors of
+                            network capplet
+    capplets/windows/ChangeLog.bz2: List of all changes and authors of
+                            windows capplet
+    help/ChangeLog.bz2: List of all help changes and
+                        authors of gnome-control-center
+    libslab/ChangeLog.bz2: List of all changes and authors of libslab
+    libwindow-settings/ChangeLog.bz2: List of all changes and
+                                      authors of libwindow-settings
+    po/ChangeLog.bz2: List of all l10n changes and authors
+                      of gnome-control-center
+    shell/ChangeLog.bz2: List of all changes and authors of shell
+    typing-break/ChangeLog.bz2: List of all changes and authors of typing-break
+    NEWS.bz2: List of the most important changes to gnome-control-center
+    README: More information about gnome-control-center
+
+  The sources of gnome-control-center-%{cc.version} were downloaded
+  from %{cc.SOURCE0.url}
+
+Licensing and copyright information for gnome-settings-daemon-%{gsd.version}
+
+  License: GNU General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gnome-settings-daemon-%{gsd.version}
+
+    AUTHORS: List of authors of gnome-settings-daemon
+    COPYING.bz2: GNU GPL
+    ChangeLog.bz2: List of all changes and authors of gnome-settings-daemon
+    po/ChangeLog.bz2: List of all l10n changes and authors of
+                      gnome-settings-daemon
+    NEWS.bz2: List of the most important changes to gnome-settings-daemon
+    plugins/sound/libsounds/README: More information about 
+                    gnome-settings-daemon sound plugin
+    plugins/sound/libsounds/ChangeLog.bz2: Lisdt of all changes and authors
+                    of gnome-settings-daemon sound plugin
+                    gnome-settings-daemon sound plugin
+
+  The sources of gnome-settings-daemon-%{gsd.version} were downloaded
+  from %{gsd.SOURCE0.url}
