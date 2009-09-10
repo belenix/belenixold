@@ -1,0 +1,18 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}
+
+  License: PSF 
+  License: Zope Public License
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}
+
+    PKG-INFO: Package informaiton about Setuptools
+    README.txt.bz2: More informaiton about Setuptools
+
+  The sources of setuptools-%{pst.version} were downloaded
+  from %{pst.SOURCE0.url}

@@ -1,0 +1,179 @@
+    Copyright (c) 2001 Adam M. Costello and Cosmin Truta.  Everyone
+    is hereby granted permission to do whatever they like with this
+    file, provided that if they modify it they take reasonable steps to
+    avoid confusing or misleading people about the authors, version,
+    and terms of use of the derived file.  The copyright holders make
+    no guarantees regarding this file, and are not responsible for any
+    damage resulting from its use.
+
+--------------------------------------------------------------------
+
+ Authors and maintainers:
+  libpng versions 0.71, May 1995, through 0.88, January 1996: Guy Schalnat
+  libpng versions 0.89c, June 1996, through 0.96, May 1997: Andreas Dilger
+  libpng versions 0.97, January 1998, through 1.2.18 - May 15, 2007: Glenn
+ libpng version 1.0.26 - May 15, 2007
+
+ Copyright (c) 1998-2007 Glenn Randers-Pehrson
+ (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
+ (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
+ Copyright (c) 1998, Intel Corporation
+
+ For conditions of distribution and use, see copyright notice in png.h
+
+ Based on MSVC code contributed by Nirav Chhatrapati, Intel Corp., 1998.
+ Interface to libpng contributed by Gilles Vollant, 1999.
+ GNU C port by Greg Roelofs, 1999-2001.
+
+  libpng versions 0.97, January 1998, through 1.0.26 - May 15, 2007: Glenn
+  See also "Contributing Authors", below.
+
+ COPYRIGHT NOTICE, DISCLAIMER, and LICENSE:
+
+ If you modify libpng you may insert additional notices immediately following
+ this sentence.
+
+ libpng versions 1.2.6, August 15, 2004, through 1.2.18, May 15, 2007, are
+ libpng versions 1.2.6, August 15, 2004, through 1.0.26, May 15, 2007, are
+ Copyright (c) 2004, 2006-2007 Glenn Randers-Pehrson, and are
+ distributed according to the same disclaimer and license as libpng-1.2.5
+ with the following individual added to the list of Contributing Authors:
+
+    Cosmin Truta
+
+ libpng versions 1.0.7, July 1, 2000, through 1.2.5, October 3, 2002, are
+ Copyright (c) 2000-2002 Glenn Randers-Pehrson, and are
+ distributed according to the same disclaimer and license as libpng-1.0.6
+ with the following individuals added to the list of Contributing Authors:
+
+    Simon-Pierre Cadieux
+    Eric S. Raymond
+    Gilles Vollant
+
+ and with the following additions to the disclaimer:
+
+    There is no warranty against interference with your enjoyment of the
+    library or against infringement.  There is no warranty that our
+    efforts or the library will fulfill any of your particular purposes
+    or needs.  This library is provided with all faults, and the entire
+    risk of satisfactory quality, performance, accuracy, and effort is with
+    the user.
+
+ libpng versions 0.97, January 1998, through 1.0.6, March 20, 2000, are
+ Copyright (c) 1998, 1999, 2000 Glenn Randers-Pehrson, and are
+ distributed according to the same disclaimer and license as libpng-0.96,
+ with the following individuals added to the list of Contributing Authors:
+
+    Tom Lane
+    Glenn Randers-Pehrson
+    Willem van Schaik
+
+ libpng versions 0.89, June 1996, through 0.96, May 1997, are
+ Copyright (c) 1996, 1997 Andreas Dilger
+ Distributed according to the same disclaimer and license as libpng-0.88,
+ with the following individuals added to the list of Contributing Authors:
+
+    John Bowler
+    Kevin Bracey
+    Sam Bushell
+    Magnus Holmgren
+    Greg Roelofs
+    Tom Tanner
+
+ libpng versions 0.5, May 1995, through 0.88, January 1996, are
+ Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.
+
+ For the purposes of this copyright and license, "Contributing Authors"
+ is defined as the following set of individuals:
+
+    Andreas Dilger
+    Dave Martindale
+    Guy Eric Schalnat
+    Paul Schmidt
+    Tim Wegner
+
+ The PNG Reference Library is supplied "AS IS".  The Contributing Authors
+ and Group 42, Inc. disclaim all warranties, expressed or implied,
+ including, without limitation, the warranties of merchantability and of
+ fitness for any purpose.  The Contributing Authors and Group 42, Inc.
+ assume no liability for direct, indirect, incidental, special, exemplary,
+ or consequential damages, which may result from the use of the PNG
+ Reference Library, even if advised of the possibility of such damage.
+
+ Permission is hereby granted to use, copy, modify, and distribute this
+ source code, or portions hereof, for any purpose, without fee, subject
+ to the following restrictions:
+
+ 1. The origin of this source code must not be misrepresented.
+
+ 2. Altered versions must be plainly marked as such and
+ must not be misrepresented as being the original source.
+
+ 3. This Copyright notice may not be removed or altered from
+    any source or altered source distribution.
+
+ The Contributing Authors and Group 42, Inc. specifically permit, without
+ fee, and encourage the use of this source code as a component to
+ supporting the PNG file format in commercial products.  If you use this
+ source code in a product, acknowledgment is not required but would be
+ appreciated.
+ 
+ A "png_get_copyright" function is available, for convenient use in "about"
+ boxes and the like:
+
+ printf("%s",png_get_copyright(NULL));
+
+ Also, the PNG logo (in PNG format, of course) is supplied in the
+ files "pngbar.png" and "pngbar.jpg (88x31) and "pngnow.png" (98x31).
+ 
+ Libpng is OSI Certified Open Source Software.  OSI Certified is a
+ certification mark of the Open Source Initiative.
+ 
+ The contributing authors would like to thank all those who helped
+ with testing, bug fixes, and patience.  This wouldn't have been
+ possible without all of you.
+
+ Thanks to Frank J. T. Wojcik for helping with the documentation.
+
+--------------------------------------------------------------------
+
+  pnm2png.c --- conversion from PBM/PGM/PPM-file to PNG-file
+  png2pnm.c --- conversion from PNG-file to PGM/PPM-file
+  copyright (C) 1999 by Willem van Schaik <willem@schaik.com>
+
+  version 1.0 - 1999.10.15 - First version.
+
+  Permission to use, copy, modify, and distribute this software and
+  its documentation for any purpose and without fee is hereby granted,
+  provided that the above copyright notice appear in all copies and
+  that both that copyright notice and this permission notice appear in
+  supporting documentation. This software is provided "as is" without
+  express or implied warranty.
+ 
+
+--------------------------------------------------------------------
+
+      Copyright (c) 1998-2001 Greg Roelofs.  All rights reserved.
+
+      This software is provided "as is," without warranty of any kind,
+      express or implied.  In no event shall the author or contributors
+      be held liable for any damages arising in any way from the use of
+      this software.
+
+      Permission is granted to anyone to use this software for any purpose,
+      including commercial applications, and to alter it and redistribute
+      it freely, subject to the following restrictions:
+
+      1. Redistributions of source code must retain the above copyright
+         notice, disclaimer, and this list of conditions.
+      2. Redistributions in binary form must reproduce the above copyright
+         notice, disclaimer, and this list of conditions in the documenta-
+         tion and/or other materials provided with the distribution.
+      3. All advertising materials mentioning features or use of this
+         software must display the following acknowledgment:
+
+            This product includes software developed by Greg Roelofs
+            and contributors for the book, "PNG: The Definitive Guide,"
+            published by O'Reilly and Associates.
+
+--------------------------------------------------------------------

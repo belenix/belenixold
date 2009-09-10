@@ -1,0 +1,26 @@
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}
+
+ License: The Academic Free License Version 2.1
+ License: GNU General Public License Version 2
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: AFL and GNU GPL
+  AUTHORS: List of authors of %{dbus_glib.name}
+  NEWS.bz2: List of the most important changes in %{dbus_glib.name}
+  ChangeLog.bz2: List of all changes and authors of %{dbus_glib.name}
+  README: More information about %{dbus_glib.name}
+
+ The sources of dbus-glib-%{dbus_glib.version} were downloaded
+ from %{dbus_glib.SOURCE0.url}

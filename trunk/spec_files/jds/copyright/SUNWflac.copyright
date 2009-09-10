@@ -1,0 +1,36 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License: Xiph.org BSD-style License
+ License: GNU General Public License Version 2
+ License: GNU Lesser General Public License Version 2.1
+ License: GNU Free Documentation License Version 1.2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.Xiph.bz2: Xiph.org BSD-style license used for the %{flac.name} codec
+                    libraries
+  COPYING.GPL.bz2:  GNU GPL used for other %{flac.name} programs, libraries or
+                    plugins
+  COPYING.LGPL.bz2: GNU LGPL used for other %{flac.name} programs, libraries or
+                    plugins
+  COPYING.FDL.bz2:  GNU Free Documentation License used by %{flac.name}
+                    documentation
+  AUTHORS:          List of authors of %{flac.name}
+  README:           More information about %{flac.name}
+
+ The sources of flac-%{flac.version} were downloaded
+ from %{flac.SOURCE0.url}

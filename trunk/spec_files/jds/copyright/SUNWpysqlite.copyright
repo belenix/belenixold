@@ -1,0 +1,17 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}
+
+  License: zlib/libpng
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}
+
+    LICENSE: zlib/libpng license
+    PKG-INFO: Package information about pysqlite
+
+  The sources of pysqlite-%{pysqlite.version} were downloaded
+  from %{pysqlite.SOURCE0.url}

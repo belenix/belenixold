@@ -1,0 +1,21 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}
+
+  License: zlib/libpng
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}
+
+    ChangeLog.bz2: List of all changes and authors of xdg-utils
+    LICENSE: zlib/libpng license
+    README.bz2: More information about xdg-utils
+    scripts/README: More information about xdg-utils scripts
+    tests/debug/README: More information about xdg-utils debug tests
+    tests/README.bz2: More information about xdg-utils tests
+
+  The sources of xdg-utils-%{version} were downloaded
+  from %{SOURCE0.url}

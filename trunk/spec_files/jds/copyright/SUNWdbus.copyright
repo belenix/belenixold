@@ -1,0 +1,37 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License: The Academic Free License Version 2.1
+ License: GNU General Public License Version 2
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: AFL and GNU GPL
+  AUTHORS: List of authors of %{dbus.name}
+  NEWS.bz2: List of the most important changes in %{dbus.name}
+  NEWS.pre-1.0.bz2: List of the most important changes in %{dbus.name}
+  NEWS.pre-1.2.bz2: List of the most important changes in %{dbus.name}
+  ChangeLog.bz2: List of all changes and authors of %{dbus.name}
+  ChangeLog.pre-1.0.bz2: List of all changes and authors of %{dbus.name}
+  ChangeLog.pre-1.2.bz2: List of all changes and authors of %{dbus.name}
+  README: More information about %{dbus.name}
+
+  The %{dbus.name} module is dual-licensed under the AFL and the
+  GPL.  However, the dbus-cleanup-sockets program is licensed only under
+  the GNU General Public License Version 2 license.
+
+ The sources of dbus-%{dbus.version} were downloaded
+ from %{dbus.SOURCE0.url}

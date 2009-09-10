@@ -1,0 +1,19 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License: BSD. MIT
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  doc/COPYING: BSD license.
+  doc/ChangeLog: list of all changes and authors of IPython
+  IPython/DPyGetOpt.py: A file uses MIT license.
+
+ The sources of ipython-%{ipython.version} were downloaded
+ from %{ipython.SOURCE0.url}
+

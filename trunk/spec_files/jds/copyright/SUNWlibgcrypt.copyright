@@ -1,0 +1,22 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License: GNU General Public License Version 2
+ License: GNU Lesser General Public License Version 2.1
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: GNU GPL
+  COPYING.LIB.bz2: GNU LGPL
+  AUTHORS: List of authors of %{libgcrypt.name}
+  NEWS.bz2: List of the most important changes in %{libgcrypt.name}
+  ChangeLog.bz2: List of all changes and authors of %{libgcrypt.name}
+  README: More information about %{libgcrypt.name}
+
+ The sources of libgcrypt-%{libgcrypt.version} were downloaded
+ from %{libgcrypt.SOURCE0.url}
