@@ -1,0 +1,18 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License: Common Development and Distribution License (CDDL)
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: CDDL
+  ChangeLog.bz2: list of all changes and authors of devguide
+  REAMDE: more information about devguide
+
+ The sources of devguide-%{tarball_version} were downloaded
+ from %{SOURCE0.url}

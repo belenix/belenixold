@@ -1,0 +1,31 @@
+Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
+  Use is subject to license terms. 
+
+------------------------------------------------------------------
+
+  For the avoidance of doubt, except that if any license choice other
+  than GPL or LGPL is available it will apply instead, Sun elects to
+  use only the General Public License version 2 (GPLv2) at this time
+  for any software where a choice of GPL license versions is made
+  available with the language indicating that GPLv2 or any later
+  version may be used, or where a choice of which version of the GPL
+  is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for unique-%{unique.version}:
+
+ License: GNU Lesser General Public License
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  AUTHORS: List of authors of unique
+  COPYING.bz2: GNU LGPL v2.1
+  ChangeLog.bz2: List of the most important changes of unique
+  po/ChangeLog.bz2: o/ChangeLog.bz2: List of all changes and authors of unique
+  NEWS: List of the news in unique
+  README: More information about unique
+
+ The sources of unique-%{unique.version} were downloaded
+ from %{unique.SOURCE0.url}

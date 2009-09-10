@@ -1,0 +1,34 @@
+Package %{name} consists of the following components:
+
+  - libogg-%{libogg.version}
+  - libvorbis-%{libvorbis.version}
+
+Licensing and copyright information for libogg-%{libogg.version}:
+
+ License: Xiph.org BSD-style License
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: Xiph.org BSD-style license
+  AUTHORS: List of authors of %{libogg.name}
+  CHANGES.bz2: List of all changes and authors of %{libogg.name}
+  README: More information about %{libogg.name}
+
+ The sources of libogg-%{libogg.version} were downloaded
+ from %{libogg.SOURCE0.url}
+
+Licensing and copyright information for libvorbis-%{libvorbis.version}:
+
+ License: Xiph.org BSD-style License
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: Xiph.org BSD-style license
+  AUTHORS: List of authors of %{libvorbis.name}
+  CHANGES.bz2: List of all changes and authors of %{libvorbis.name}
+  README: More information about %{libvorbis.name}
+
+ The sources of libvorbis-%{libvorbis.version} were downloaded
+ from %{libvorbis.SOURCE0.url}

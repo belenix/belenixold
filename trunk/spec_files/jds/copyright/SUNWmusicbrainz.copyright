@@ -1,0 +1,69 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License: GNU Lesser General Public License Version 2.1
+ License: GNU General Public License Version 2
+ License: Public domain license
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2:         GNU LGPL
+  python/COPYING.bz2:  GNU GPL
+  AUTHORS:             List of authors of %{musicbrainz.name}
+  ChangeLog.bz2:       List of all changes and authors of %{musicbrainz.name}
+  README:              More information about %{musicbrainz.name}
+  perl/Bundle/README:  More information about %{musicbrainz.name} and specifies
+                       the license for the perl client shown below.
+  perl/Client/README:  More information about %{musicbrainz.name} and specifies
+                       the license for the perl client shown below.
+  perl/TRM/README:     More information about %{musicbrainz.name} and specifies
+                       the license for the perl client shown below.
+  perl/Queries/README: More information about %{musicbrainz.name} and specifies
+                       the license for the perl client shown below.
+  python/README:       More information about %{musicbrainz.name}
+
+  The %{musicbrainz.name} Perl code uses the following license:
+
+  ---
+
+  This code may be used and distributed under the same license as any
+  version of Perl.
+
+  ---
+
+  The %{musicbrainz.name} code contains a public domain SHA-1 algorithm with
+  the following license:
+
+  ---
+
+  Please see file COPYING or http://bitzi.com/publicdomain
+  for more info.
+ 
+  NIST Secure Hash Algorithm
+  heavily modified by Uwe Hollerbach <uh@alumni.caltech edu>
+  from Peter C. Gutmann's implementation as found in
+  Applied Cryptography by Bruce Schneier
+
+  ---
+
+  The %{musicbrainz.name} library contains a RDF parsing algorithm that is dual
+  licensed under the LGPL Version 2 and the Mozilla Public License Version 1.1.
+
+  The %{musicbrainz.name} library contains a base64 algorithm that is dual
+  licensed under the LGPL version 2.1 and the MIT license.
+
+ The sources of libmusicbrainz-%{musicbrainz.version} were downloaded
+ from %{musicbrainz.SOURCE0.url}

@@ -1,0 +1,47 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following component:
+
+  - glib-%{glib.version}
+  
+Licensing and copyright information for glib-%{glib.version}:
+
+License: GNU Lesser General Public License Version 2.1
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/glib-%{glib.version}
+
+  COPYING.bz2: GNU LGPL
+  AUTHORS: list of authors of glib
+  ChangeLog.bz2: list of all changes and authors of glib
+  ChangeLog.pre-1-2.bz2: list of all changes and authors of glib pre-1-2
+  ChangeLog.pre-2-0.bz2: list of all changes and authors of glib pre-2-0
+  ChangeLog.pre-2-2.bz2: list of all changes and authors of glib pre-2-2
+  ChangeLog.pre-2-4.bz2: list of all changes and authors of glib pre-2-4
+  ChangeLog.pre-2-6.bz2: list of all changes and authors of glib pre-2-6
+  ChangeLog.pre-2-8.bz2: list of all changes and authors of glib pre-2-8
+  ChangeLog.pre-2-10.bz2: list of all changes and authors of glib pre-2-10
+  ChangeLog.pre-2-12.bz2: list of all changes and authors of glib pre-2-12
+  ChangeLog.pre-2-14.bz2: list of all changes and authors of glib pre-2-14
+  gio/ChangeLog.bz2: list of all changes and authors of gio
+  gmodule/ChangeLog.bz2: list of all changes and authors of gmodule
+  gobject/ChangeLog.bz2: list of all changes and authors of gobject
+  gthread/ChangeLog.bz2: list of all changes and authors of gthread
+  po/ChangeLog.bz2: list of all changes and authors of po files for glib
+  NEWS.bz2: list of the most important changes in glib
+  README: more information about glib
+
+ The sources of glib-%{glib.version} were downloaded
+ from %{glib.SOURCE0.url}
+
