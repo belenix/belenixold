@@ -1,0 +1,19 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}
+
+  License: Common Development And Distribution Licence Version 1.0
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}
+
+    AUTHORS: List of authors of nwam-manager
+    COPYING.bz2: CDDL
+    ChangeLog.bz2: List of all changes and authors of nwam-manager
+    README: More information about nwam-manager
+
+  The sources of nwam-manager-%{nwam_manager.version} were downloaded
+  from %{nwam_manager.SOURCE0.url}

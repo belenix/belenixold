@@ -1,0 +1,68 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following components:
+
+  - gksu-%{gksu.version}
+  - libgksu1.2-%{libgksu.version}
+  - libgksuui1.0-%{libgksuui.version}
+
+Licensing and copyright information for gksu-%{gksu.version}:
+
+  License: GNU General Public License Version 2
+ 
+  You can find more information in the following directory:
+  %{_pkg_docdir}/gksu-%{gksu.version}
+
+    COPYING.bz2: GNU GPL
+    AUTHORS: list of authors of gksu
+    ChangeLog.bz2: list of all changes and authors of gksu
+    po/ChangeLog.bz2: List of all l10n changes and authors of
+                    gksu
+    README: more information about gksu
+
+  The sources of gksu-%{gksu.version} were downloaded
+  from %{gksu.SOURCE0.url}
+
+Licensing and copyright information for libgksu1.2-%{libgksu.version}:
+
+  License: GNU Library General Public License Version 2
+ 
+  You can find more information in the following directory:
+  %{_pkg_docdir}/libgksu1.2-%{libgksu.version}
+
+    COPYING.bz2: GNU LGPL
+    AUTHORS: list of authors of libgksu1.2
+    ChangeLog.bz2: list of all changes and authors of libgksu1.2
+    po/ChangeLog.bz2: List of all l10n changes and authors of
+                    libgksu1.2
+
+  The sources of libgksu1.2-%{libgksu.version} were downloaded
+  from %{libgksu.SOURCE0.url}
+
+Licensing and copyright information for libgksuui-%{libgksuui.version}:
+
+  License: GNU Library General Public License Version 2
+
+  You can find more information in the following directory:
+  %{_pkg_docdir}/libgksuui1.0-%{libgksuui.version}
+
+    COPYING.bz2: GNU LGPL
+    AUTHORS: list of authors of libgksuui1.0
+    ChangeLog.bz2: list of all changes and authors of libgksuui1.0
+    po/ChangeLog.bz2: List of all l10n changes and authors of
+                    libgksuui1.0
+
+  The sources of libgksuui1.0-%{libgksuui.version} were downloaded
+  from %{libgksuui.SOURCE0.url}
+

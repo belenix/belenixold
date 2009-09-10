@@ -1,0 +1,20 @@
+  Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+  Use is subject to license terms. 
+
+--------------------------------------------------------------------
+
+  Licensing and copyright information for %{name}:
+
+   License: GNU Lesser General Public License Version 2
+ 
+   You can find more information in the following directory:
+   %{_pkg_docdir}
+
+    AUTHORS: List of authors for sysm-config-printer
+    COPYING.bz2: GNU GPL V2
+    ChangeLog.bz2: list of all changes and authors of system-config-printer
+    README: more information about system-config-printer
+
+   The sources of system-config-printer-%{scp.version} were downloaded from
+   %{scp.SOURCE0.url}
+
