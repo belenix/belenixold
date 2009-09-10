@@ -1,0 +1,40 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+For the avoidance of doubt, except that if any license choice other
+than GPL or LGPL is available it will apply instead, Sun elects to
+use only the General Public License version 2 (GPLv2) at this time
+for any software where a choice of GPL license versions is made
+available with the language indicating that GPLv2 or any later
+version may be used, or where a choice of which version of the GPL
+is applied is otherwise unspecified.
+
+--------------------------------------------------------------------
+
+Package %name consists of the following component:
+
+  - cairo-%{cairo.version}
+  
+Licensing and copyright information for cairo-%{cairo.version}:
+
+License: GNU Lesser General Public License Version 2.1
+	 Mozilla Public Licence 1.1
+
+ You can find more information in the following directory:
+ %{_pkg_docdir}/cairo-%{cairo.version}
+
+  COPYING.bz2: General license file
+  COPYING-LGPL-2.1.bz2: GNU LGPL
+  COPYING-MPL-1.1.bz2: Mozilla Public icense
+  AUTHORS: list of authors of cairo
+  NEWS.bz2: list of the most important changes in cairo
+  ChangeLog.pre-1.0.bz2: list of all changes and authors of cairo pre-1.0
+  ChangeLog.pre-1.2.bz2: list of all changes and authors of cairo pre-1.2
+  ChangeLog.pre-1.4.bz2: list of all changes and authors of cairo pre-1.4
+  ChangeLog.pre-1.6.bz2: list of all changes and authors of cairo pre-1.6
+  ChangeLog.bz2: list of all changes and authors of cairo
+  README: more information about cairo
+
+ The sources of cairo-%{cairo.version} were downloaded
+ from %{cairo.SOURCE0.url}
+

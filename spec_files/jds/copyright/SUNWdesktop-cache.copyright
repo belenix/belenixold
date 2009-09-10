@@ -1,0 +1,21 @@
+Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
+Use is subject to license terms.
+
+--------------------------------------------------------------------
+
+Licensing and copyright information for %{name}:
+
+ License: CDDL
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: CDDL
+  AUTHORS: list of authors of desktop-cache-smf-services
+  NEWS.bz2: list of the most important changes in desktop-cache-smf-services
+  ChangeLog.bz2: list of all changes and authors of desktop-cache-smf-services
+  README: more information about desktop-cache-smf-services
+
+ The sources of desktop-cache-smf-services-%{version} were downloaded
+ from %{SOURCE0.url}
+

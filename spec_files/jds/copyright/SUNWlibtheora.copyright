@@ -1,0 +1,18 @@
+Licensing and copyright information for %{name}:
+
+ License: Xiph.org BSD-style License
+ 
+ You can find more information in the following directory:
+ %{_pkg_docdir}
+
+  COPYING.bz2: Xiph.org BSD-style license
+  AUTHORS: List of authors of %{theora.name}
+  CHANGES.bz2: List of all changes and authors of %{theora.name}
+  README: More information about %{theora.name}
+
+ The libtheora win32 transcoder code contains avilib, which is under the
+ GNU General Public License version 2.  However, this is not shipped
+ on Solaris.
+
+ The sources of libtheora-%{theora.version} were downloaded
+ from %{theora.SOURCE0.url}
