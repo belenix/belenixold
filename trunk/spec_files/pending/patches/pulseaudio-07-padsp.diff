@@ -1,0 +1,49 @@
+--- pulseaudio-0.9.17/src/utils/padsp.c.orig	2009-09-11 23:06:18.823796710 +0530
++++ pulseaudio-0.9.17/src/utils/padsp.c	2009-09-11 23:07:02.686135961 +0530
+@@ -32,12 +32,14 @@
+ #define _LARGEFILE64_SOURCE 1
+ #endif
+ 
++#define __lint
++#include <sys/stat.h>
++#undef __lint
+ #include <sys/soundcard.h>
+ #include <sys/ioctl.h>
+ #include <pthread.h>
+ #include <unistd.h>
+ #include <sys/socket.h>
+-#include <sys/stat.h>
+ #include <dlfcn.h>
+ #include <errno.h>
+ #include <fcntl.h>
+@@ -45,6 +47,13 @@
+ #include <stdarg.h>
+ #include <stdio.h>
+ #include <signal.h>
++#include <syslog.h>
++
++int allow_severity = LOG_INFO;
++int deny_severity = LOG_WARNING;
++
++#undef stat64
++#undef stat
+ 
+ #ifdef __linux__
+ #include <linux/sockios.h>
+@@ -55,6 +64,16 @@
+ #include <pulsecore/llist.h>
+ #include <pulsecore/core-util.h>
+ 
++#undef SOUND_PCM_READ_RATE
++#define SOUND_PCM_READ_RATE             _IOR('P', 2, int)
++#undef SOUND_PCM_READ_CHANNELS
++#define SOUND_PCM_READ_CHANNELS         _IOR('P', 6, int)
++#undef SOUND_PCM_READ_BITS
++#define SOUND_PCM_READ_BITS             _IOR('P', 5, int)
++#undef SOUND_PCM_READ_FILTER
++#define SOUND_PCM_READ_FILTER           _IOR('P', 7, int)
++
++
+ /* On some systems SIOCINQ isn't defined, but FIONREAD is just an alias */
+ #if !defined(SIOCINQ) && defined(FIONREAD)
+ # define SIOCINQ FIONREAD
