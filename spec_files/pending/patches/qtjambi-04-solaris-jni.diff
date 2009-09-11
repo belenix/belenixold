@@ -1,0 +1,30 @@
+--- qtjambi-src-gpl-4.4.3_01-64/qtjambi/qtjambi_base.pri.orig	2009-05-16 15:44:16.511852736 +0530
++++ qtjambi-src-gpl-4.4.3_01-64/qtjambi/qtjambi_base.pri	2009-05-16 15:44:39.989175071 +0530
+@@ -33,9 +33,9 @@
+     win32 {
+         INCLUDEPATH += $$JAVA/include/win32
+     } else {
+-    solaris-g++ | solaris-cc {
+-        INCLUDEPATH += $$JAVA/include/solaris
+-    } else {
++        solaris-g++* | solaris-cc* {
++            INCLUDEPATH += $$JAVA/include/solaris
++        } else {
+             INCLUDEPATH += $$JAVA/include/linux
+         }
+     }
+--- qtjambi-src-gpl-4.4.3_01-64/designer-integration/pri/jambi.pri.orig	2009-05-16 15:45:16.841527077 +0530
++++ qtjambi-src-gpl-4.4.3_01-64/designer-integration/pri/jambi.pri	2009-05-16 15:45:32.398461904 +0530
+@@ -15,7 +15,11 @@
+     win32 {
+         INCLUDEPATH += $$(JAVADIR)/include/win32
+     } else {
+-        INCLUDEPATH += $$(JAVADIR)/include/linux
++        solaris-g++* | solaris-cc* {
++            INCLUDEPATH += $$JAVA/include/solaris
++        } else {
++            INCLUDEPATH += $$JAVA/include/linux
++        }
+     }
+ }
+ 

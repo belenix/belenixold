@@ -1,0 +1,18 @@
+--- pulseaudio-0.9.5/src/daemon/default.pa.in.orig	Fri Aug 25 14:08:11 2006
++++ pulseaudio-0.9.5/src/daemon/default.pa.in	Thu Sep 13 16:15:09 2007
+@@ -49,8 +49,14 @@
+ ### here if you plan to use paprefs)
+ #load-module module-esound-protocol-tcp
+ #load-module module-native-protocol-tcp
+-#load-module module-zeroconf-publish
++load-module module-zeroconf-publish
+ 
++#examples: 
++#load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1
++#load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1
++#load-module module-esound-protocol-tcp auth-ip-acl=127.0.0.1;192.168.0.0/16
++#load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;192.168.0.0/16
++
+ ### Load the RTP reciever module (also configured via paprefs, see above)
+ #load-module module-rtp-recv
+ 

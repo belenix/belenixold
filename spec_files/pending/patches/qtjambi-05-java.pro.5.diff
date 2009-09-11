@@ -1,0 +1,16 @@
+--- qtjambi-4.4.0.orig/java.pro	2008-06-07 19:42:43.000000000 -0400
++++ qtjambi-4.4.0/java.pro	2008-09-01 18:25:35.000000000 -0400
+@@ -2,12 +2,10 @@
+ CONFIG += ordered
+ 
+ SUBDIRS = qtjambi juic qtjambi_core qtjambi_gui qtjambi_sql \
+-          qtjambi_svg qtjambi_network qtjambi_xml qtjambi_designer designer-integration
++          qtjambi_svg qtjambi_network qtjambi_xml qtjambi_designer designer-integration qtjambi_phonon qtjambi_opengl
+ 
+ contains(QT_CONFIG, webkit): SUBDIRS += qtjambi_webkit
+-contains(QT_CONFIG, phonon): SUBDIRS += qtjambi_phonon
+ contains(QT_CONFIG, xmlpatterns): SUBDIRS += qtjambi_xmlpatterns
+-contains(QT_CONFIG, opengl): SUBDIRS += qtjambi_opengl
+ 
+ contains(QT_CONFIG, release):contains(QT_CONFIG, debug) {
+     # Qt was configued with both debug and release libs
