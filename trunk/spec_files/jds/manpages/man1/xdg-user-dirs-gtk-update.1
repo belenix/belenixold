@@ -1,0 +1,132 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/116 XDG User Dirs-->
+<!ENTITY cmd "xdg-user-dirs-gtk-update">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="xdg-user-dirs-gtk-update-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>xdg-user-dirs-gtk-update</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">03 Apr 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>xdg-user-dirs-gtk-update</primary></indexterm><indexterm><primary>Graphical User Interface for xdg-user-dirs-update.</primary></indexterm>
+<refnamediv id="xdg-user-dirs-gtk-update-1-name"><refname>xdg-user-dirs-gtk-update</refname><refpurpose>Graphical User Interface for xdg-user-dirs-update.</refpurpose></refnamediv>
+
+<refsynopsisdiv id="xdg-user-dirs-gtk-update-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+</cmdsynopsis></refsynopsisdiv>
+
+<refsect1 id="xdg-user-dirs-gtk-update-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> is automatically run on login to the GNOME desktop environment to aid in the management of the locale specific XDG User Directories.
+</para>
+<para>
+Should the user be starting a session that is using a different locale to that
+which was used to create the original XDG User Directories, then the user will
+be prompted to make a decision on whether to update the XDG User Directories
+to the new locale or leave them unchanged.
+</para>
+<para>
+The original locale that was used to create the initial set of XDG User
+Directories on first login is stored in the file
+${XDG_CONFIG_HOME}/user-dirs.locale.
+</para>
+<para>
+Should the user decide to update to the current locale, then xdg-user-dirs-update will be used to perform the desired action.
+</para>
+</refsect1>
+
+<refsect1 id="xdg-user-dir-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables: 
+</para>
+<para>
+    HOME.
+</para>
+
+<para>
+Other environment variable that are used are:
+</para>
+<variablelist termlength="short">
+<varlistentry>
+<term>XDG_CONFIG_HOME</term>
+<listitem><para>Base directory for storge of XDG configuration files. Defaults to <filename>${HOME}/.config</filename></para></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id="xdg-user-dir-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="short">
+
+<varlistentry>
+<term><filename>/usr/bin/&cmd;</filename></term>
+<listitem><para>Application to manage updates to user's XDG User Directories</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><filename>${XDG_CONFIG_HOME}/user-dirs.locale</filename></term>
+<listitem><para>Locale used in the initial creation of the current XDG User Directories and what they map to.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><filename>${XDG_CONFIG_HOME}/user-dirs.dirs</filename></term>
+<listitem><para>Location of the user-specific configuration including the current list of directories and what they map to.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+
+<refsect1 id="xdg-user-dirs-gtk-update-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWxdg-user-dirs-gtk</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="xdg-user-dirs-gtk-update-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+More information can be found at:
+</para>
+<para>
+<literal>http://www.freedesktop.org/wiki/Software/xdg-user-dirs</literal>
+</para>
+<para>
+<citerefentry><refentrytitle>xdg-user-dirs-update</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>xdg-user-dir</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+
+<refsect1 id="xdg-user-dirs-gtk-update-1-note"><title>&note-tt;</title>
+<para>Written by Darren Kenny, Sun Microsystems Inc, 2008</para>
+</refsect1>
+</refentry>

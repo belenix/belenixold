@@ -1,0 +1,191 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY envr-tt "ENVIRONMENT VARIABLES">
+<!ENTITY cmd "csslint-0.6">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="csslint-06-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">13 Mar 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<refnamediv id="csslint-06-1-name">
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>
+command line CSS tool
+</primary></indexterm>
+<refname>&cmd;</refname>
+<refpurpose>
+command line CSS tool
+</refpurpose></refnamediv>
+<refsynopsisdiv id="csslint-06-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-version</option></arg>
+</cmdsynopsis>
+
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-dump-location</option></arg>
+<arg rep="repeat"><option role="nodash"><replaceable>file</replaceable></option></arg>
+</cmdsynopsis>
+
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-evaluate</option></arg>
+<arg choice="opt"><option>-author-sheet <replaceable>path</replaceable></option></arg>
+<arg choice="opt"><option>-ua-sheet <replaceable>path</replaceable></option></arg>
+<arg choice="opt"><option>-user-sheet <replaceable>path</replaceable></option></arg>
+<arg choice="opt"><option>-xml <replaceable>path</replaceable></option></arg>
+<arg choice="opt"><option>-xpath <replaceable>expression</replaceable></option></arg>
+<arg rep="repeat"><option role="nodash"><replaceable>file</replaceable></option></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+<refsect1 id="csslint-06-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd</command> parses one or more CSS (Cascading Style Sheet) files,
+specified on the command line.  It displays various types of output depending
+on the options specified.  It is useful for detecting errors in the CSS code
+and in the CSS parser itself.
+</para>
+<para>
+Except when the <option>-dump-location</option> option is used,
+<command>&cmd;</command> parses a CSS file and builds a CSS object model.
+</para>
+</refsect1>
+<refsect1 id="csslint-06-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry><term><option>-author-sheet <replaceable>path</replaceable></option></term>
+<listitem><para>
+Specify the <replaceable>path</replaceable> to an author sheet.  This option
+is only useful with the <option>-evaluate</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>-dump-location</option></term>
+<listitem><para>
+Dumps parsing location information for selectors and property declarations.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>e</option>, <option>-evaluate</option></term>
+<listitem><para>
+Display the CSS properties associated to the XML nodes referred to by an 
+xpath expression.  The xpath expression must be specified using the
+<option>-xpath</option> option and at least one type of stylesheet by using
+the <option>-author-sheet</option>, <option>-ua-sheet</option>, and
+<option>-user-sheet</option> options.  An XML file can be specified with the
+<option>-xml</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>-help</option></term>
+<listitem><para>
+Display usage information.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>-ua-sheet <replaceable>path</replaceable></option></term>
+<listitem><para>
+Specify the <replaceable>path</replaceable> to an ua sheet.  This option
+is only useful with the <option>-evaluate</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>-user-sheet <replaceable>path</replaceable></option></term>
+<listitem><para>
+Specify the <replaceable>path</replaceable> to an user sheet.  This option
+is only useful with the <option>-evaluate</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>v</option>, <option>-version</option></term>
+<listitem><para>
+Display version information.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>-xml <replaceable>path</replaceable></option></term>
+<listitem><para>
+Specify the <replaceable>path</replaceable> to an XML file.  This option
+is only useful with the <option>-evaluate</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>-xpath <replaceable>expression</replaceable></option></term>
+<listitem><para>
+Specify the xpath <replaceable>expression</replaceable> to a.  This option
+is only useful with the <option>-evaluate</option> option.
+</para>
+</listitem></varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1 id="csslint-06-1-oper"><title>OPERANDS</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>file</replaceable></option></term>
+<listitem><para>
+The name of one or more CSS files to be parsed.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="csslint-06-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename> </term><listitem>
+<para>
+Executable for CSS Lint.
+</para>
+</listitem></varlistentry>
+<refsect1 id="csslint-06-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN2" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWlibcroco</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="csslint-06-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>croco-0.6-config</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libcroco-0.6</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+</para>
+</refsect1>
+<refsect1 id="csslint-06-1-note"><title>&note-tt;</title>
+<para>
+Original manpage written by Gael CHAMOULAUD (strider)
+<strider@freespiders.org>.  Updated by Brian Cameron, Sun Microsystems, Inc.,
+2009.
+</para>
+</refsect1>
+</refentry>

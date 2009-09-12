@@ -1,0 +1,133 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/682 Drivel for OpenSolaris-->
+<!ENTITY cmd "drivel">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="drivel-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">12 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>GNOME client for editing blogs</primary></indexterm>
+
+<refnamediv id="drivel-1-name">
+<refname>&cmd;</refname>
+<refpurpose>GNOME client for editing blogs</refpurpose></refnamediv>
+
+<refsynopsisdiv id="drivel-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-verbose</option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1 id="drivel-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> is a GNOME client for editing blogs.
+</para>
+<para></para>
+<itemizedlist>
+<listitem>Support for LiveJournal, Blogger, MovableType, Advogato, and Atom
+journals
+</listitem>
+<listitem>The ability to post, edit, delete, and view recent entries
+</listitem>
+<listitem>Integrated spellchecking and HTML syntax highlighting
+</listitem>
+<listitem>Offline composition and editing
+</listitem>
+<listitem>Automatic recovery in the event of a crash
+</listitem>
+<listitem>Journal system extensions, including LiveJournal and MovableType
+</listitem>
+</itemizedlist>
+</refsect1>
+
+<refsect1 id="drivel-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry>
+<term><option>v</option>, <option>-verbose</option></term>
+<listitem><para>
+Enables debug output.
+</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications. See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry> for more information.</para></listitem>
+</varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="drivel-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Start &cmd; from the command line</title>
+<para><screen>example% <userinput>&cmd;</userinput></screen></para>
+</example>
+</refsect1>
+
+<refsect1 id="drivel-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>1</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="drivel-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename> </term><listitem>
+<para>Executable for Drivel application</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="drivel-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWdrivel</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="drivel-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+<para>For more information about drivel, please refer to
+<literal>http://dropline.net/past-projects/drivel-blog-editor</literal></para>
+</refsect1>
+
+<refsect1 id="drivel-1-note"><title>&note-tt;</title>
+<para>Drivel was written by Todd Kulesza <<literal>todd@dropline.net</literal>>. </para>
+<para>This manual page was written by David Zhang <<literal>david.zhang@sun.com</literal>>.</para>
+</refsect1>
+</refentry>

@@ -1,0 +1,111 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY exam-tt "EXAMPLES">
+<!ENTITY cmd "tiffinfo">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="tiffinfo-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>tiffinfo</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>tiffinfo</primary></indexterm><indexterm><primary>display
+information about TIFF files</primary></indexterm>
+<refnamediv id="tiffinfo-1-name"><refname>tiffinfo</refname><refpurpose>display
+information about TIFF files</refpurpose></refnamediv>
+<refsynopsisdiv id="tiffinfo-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash"><replaceable>
+options</replaceable></option></arg><arg choice="plain" rep="repeat"><option
+role="nodash"><replaceable>input.tif</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="tiffinfo-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> displays information about files created according
+to the Tag Image File Format, Revision 6.0. By default, the      contents
+of each TIFF directory in each file is displayed, with the value of each tag
+shown symbolically, where sensible.</para>
+</refsect1>
+<refsect1 id="tiffinfo-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>c</option></term><listitem><para>Display the colormap
+and color or gray response curves, if present.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>D</option></term><listitem><para>Display the directory
+tags, and read and decompress all of the data in each image, but do not display
+such data.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>d</option></term><listitem><para>Display the directory
+tags, and display each byte of decompressed data in hexadecimal format.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>j</option></term><listitem><para>Display any JPEG-related
+tags that are present.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>o</option></term><listitem><para>Set the initial
+TIFF directory according to the specified file offset. The file offset may
+be specified using the usual C-style syntax, that is, a leading &ldquo;0x&rdquo;
+for hexadecimal and a leading &ldquo;0&rdquo; for octal.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>s</option></term><listitem><para>Display the offsets
+and byte counts for each data strip in a directory.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>z</option></term><listitem><para>Enable strip
+chopping when reading image data.</para>
+</listitem></varlistentry>
+<varlistentry><term><option><replaceable>#</replaceable></option></term><listitem>
+<para>Set the initial TIFF directory to <replaceable>#</replaceable>.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="tiffinfo-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash"><replaceable>input.tif</replaceable></option></term>
+<listitem><para>The name of the TIFF file.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="tiffinfo-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="tiffinfo-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>pal2rgb</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffcp</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffcmp</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffmedian</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="tiffinfo-1-note"><title>&note-tt;</title>
+<para>Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>

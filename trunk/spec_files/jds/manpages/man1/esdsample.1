@@ -1,0 +1,146 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "esdsample">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="esdsample-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>esdsample</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">8 Jan 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>esdsample</primary></indexterm><indexterm><primary>play
+a sample</primary></indexterm><refnamediv id="esdsample-1-name"><refname>esdsample</refname>
+<refpurpose>play a sample</refpurpose></refnamediv>
+<refsynopsisdiv id="esdsample-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option>s <replaceable>
+hostname</replaceable>:<replaceable>port</replaceable></option></arg><arg
+choice="opt"><option>b</option></arg><arg choice="opt"><option>d</option></arg>
+<arg choice="opt"><option>e</option></arg><arg choice="opt"><option>h</option></arg>
+<arg choice="opt"><option>m</option></arg><arg choice="opt"><option>r <replaceable>
+freq</replaceable></option></arg><arg choice="plain"><option role="nodash"><replaceable>
+samplename</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="esdsample-1-desc"><title>&desc-tt;</title>
+<para>The <command>&cmd;</command> utility plays a sample using the Enlighted
+Sound Daemon (<filename>esd</filename>). </para>
+</refsect1>
+<refsect1 id="esdsample-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium"><varlistentry><term><option>s <replaceable>
+hostname</replaceable>:<replaceable>port</replaceable></option></term><listitem>
+<para>Contact the <filename>esd</filename> server on <replaceable>hostname
+</replaceable> at <replaceable>port</replaceable>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>b</option></term><listitem><para>Specify that
+the output should be in 8-bit format. By default, the output is in 16-bit
+format.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>d</option></term><listitem><para>Play the sample
+from file as raw data. The default behavior is to read the data from a sound
+file (<filename>.wav</filename>, <filename>.au</filename>, and so on). If
+this option is chosen, <filename><replaceable>samplename </replaceable></filename>is
+the name of a file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>e</option></term><listitem><para>Play the sample
+from the <filename>esd </filename>cache. If this option is chosen, <filename><replaceable>
+samplename </replaceable></filename> is the name of the sample in the cache.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>h</option></term><listitem><para>Display help
+text, and exit.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>m</option></term><listitem><para>Specify that
+the output should be in mono format. By default, the output is in stereo format.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>r <replaceable>freq</replaceable></option></term>
+<listitem><para>Specify that the output rate should be set to <replaceable>
+freq</replaceable>. By default, the output rate is set to 44.1 kHz.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="esdsample-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium"><varlistentry><term><option role="nodash"><replaceable>
+samplename</replaceable></option></term><listitem><para>The name of the sample
+to be played.  If the <option>e</option> option is used, <filename><replaceable>
+samplename </replaceable></filename>is the <filename>esd </filename> cache
+name. Otherwise, <filename><replaceable>samplename </replaceable></filename>
+is a filename.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="esdsample-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Playing a sample from a file </title>
+<para><screen>example% <userinput>&cmd; generic.wav</userinput></screen></para>
+</example>
+<example role="example"><title>Playing a sample from the esd cache</title>
+<para><screen>example% <userinput>&cmd; <option>e</option> esdctl:generic.wav
+</userinput></screen>(where <filename>esdctl:generic.wav</filename> is the
+cache name)</para>
+</example>
+</refsect1>
+<refsect1 id="esdsample-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="esdsample-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium"><varlistentry><term><filename>/usr/bin/&cmd;</filename> 
+</term><listitem><para>Executable for Enlightened Sound Daemon sound sampler.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="esdsample-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-audio
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="esdsample-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>esdcat</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esdmon</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esdplay</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esdrec</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esdctl</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esd-config</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libesd</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="esdsample-1-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2003, 2006.</para>
+</refsect1>
+</refentry>

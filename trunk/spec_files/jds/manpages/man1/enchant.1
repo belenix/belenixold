@@ -1,0 +1,163 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2006/202 GNOME 2.14-->
+<!--ARC : LSARC 2006/462 GNOME 2.16-->
+<!--ARC : LSARC 2007/146 GNOME 2.18-->
+<!--ARC : LSARC 2007/520 GNOME 2.20-->
+<!--ARC : LSARC 2008/207 GNOME 2.22-->
+<!ENTITY envr-tt "ENVIRONMENT VARIABLES">
+<!ENTITY cmd "enchant">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="enchant-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">30 Jul 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<refnamediv id="enchant-1-name">
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>
+a spell checker
+</primary></indexterm>
+<refname>&cmd;</refname>
+<refpurpose>
+a spell checker
+</refpurpose></refnamediv>
+<refsynopsisdiv id="enchant-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>a</option></arg>
+<arg choice="opt"><option>d <replaceable>dictionary</replaceable></option></arg>
+<arg choice="opt"><option>l</option></arg>
+<arg choice="opt"><option>L</option></arg>
+<arg choice="opt"><option>v</option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>file</replaceable></option></arg>
+
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="enchant-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> is an ispell-compatible spellchecker.
+</para>
+</refsect1>
+<refsect1 id="enchant-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option>a</option></term>
+<listitem><para>List alternatives.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>d </option><replaceable>dictionary</replaceable></term>
+<listitem><para>
+Uses the specified <replaceable>dictionary</replaceable>.
+</para></listitem></varlistentry>
+<varlistentry><term><option>l</option></term>
+<listitem><para>List only the misspellings.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>L</option></term><listitem><para>Include
+line numbers in the output.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>v</option></term>
+<listitem><para>Displays version information.</para>
+</listitem></varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id="enchant-1-oper"><title>OPERANDS</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>file</replaceable></option></term>
+<listitem><para>
+The text <replaceable>file</replaceable> to be checked. If this parameter is
+not specified, then standard input is used.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="enchant-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>enchant.ordering;</filename> </term><listitem>
+<para>Enchant has a global and  a  per-user  ordering  file  named
+<filename>enchant.ordering</filename>. It  lets the user specify which spelling
+backend to use for individual languages in the case when you
+care  which backend gets used. The global file is located in
+$(datadir)/enchant and  the  per-user  file  is  located  in
+~/.enchant.  The per-user file takes precedence, if found.</para>
+<para>The  ordering  file  takes  the  form   language_tag:<comma-
+separated  list  of spelling backends>. Currently it supports
+following backends: aspell, myspell, ispell,  uspell,
+hspell. The comma-separated list may not include spaces. '*'
+is used to mean "use this ordering for all languages, unless
+instructed otherwise." For example:
+
+*:aspell,myspell,ispell
+en:aspell,myspell,ispell
+en_UK:myspell,aspell,ispell
+fr:myspell,ispell:aspell
+</para>
+</listitem></varlistentry>
+<refsect1 id="enchant-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN2" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-spell</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="enchant-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>enchant-lsmod</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libenchant</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="enchant-1-note"><title>&note-tt;</title>
+<para>
+Unless configured otherwise, Enchant's Myspell, Ispell,  and
+Uspell  backends  will  look for dictionaries in directories
+specific to Enchant,  and  will  not  use  your  system-wide
+installed  dictionaries. This is for pragmatic reasons since
+many distributions install these dictionaries into different
+locations.
+
+Like the  enchant.ordering  file  described  above,  Enchant
+looks  in  the global directory for these dictionaries and a
+per-user directory.  The per-user directory takes precedence
+if  it  is found.  Enchant looks for Myspell dictionaries in
+$(datadir)/enchant/myspell and ~/.enchant/myspell.   Enchant
+looks  for  Ispell dictionaries in $(datadir)/enchant/ispell
+and  ~/.enchant/ispell. Enchant looks for Uspell dic-
+tionaries  in $(datadir)/enchant/uspell and ~/.enchant/uspell.
+
+Packagers and users may wish to make symbolic links  to  the
+system-wide  dictionary directories. Or, preferably, use the
+--with-myspell-dir, --with-ispell-dir, and --with-uspell-dir
+'configure' arguments.
+
+Written by Jeff Cai, Sun Microsystems Inc., 2009.
+</para>
+</refsect1>
+</refentry>

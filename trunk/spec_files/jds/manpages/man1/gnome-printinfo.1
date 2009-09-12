@@ -1,0 +1,181 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734 GNOME For Nevada-->
+<!--ARC : LSARC 2008/389 presto phase II-->
+<!ENTITY cmd "gnome-printinfo">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-printinfo-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-printinfo</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">2 Oct 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-printinfo</primary></indexterm><indexterm><primary>
+GNOME print manager</primary></indexterm><refnamediv id="gnome-printinfo-1-name">
+<refname>gnome-printinfo</refname><refpurpose>GNOME print manager</refpurpose></refnamediv>
+<refsynopsisdiv id="gnome-printinfo-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-default</option></arg>
+<arg choice="opt"><option>-edit</option></arg>
+<arg choice="opt"><option>-printer=<replaceable>printer</replaceable></option></arg>
+<arg choice="opt"><option>-open=<replaceable>printer</replaceable></option></arg>
+<arg choice="opt"><option>-edit-path=<replaceable>default-source-file</replaceable></option></arg>
+<arg><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnome-printinfo-1-desc"><title>&desc-tt;</title>
+<para>
+The GNOME Print Manager application enables you to control and manage printers
+and print jobs. You can use GNOME Print Manager to perform the following tasks:
+</para>
+<itemizedlist>
+<listitem>Detect existing printers</listitem>
+<listitem>Choose which printer to use for different documents
+</listitem>
+<listitem>View a list of the print jobs that are queued on each printer
+</listitem>
+<listitem>Cancel print jobs that are queued</listitem>
+</itemizedlist>
+</refsect1>
+<refsect1 id="gnome-printinfo-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wide"><varlistentry>
+<term><option>d</option>, <option>-default</option></term>
+<listitem><para>Shows the printer queue for the default printer only.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>e</option>, <option>-edit</option></term><listitem><para>Allows the
+superuser to edit the default label, icon and 	description of printers, for
+the current LANG setting.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-edit-path=<replaceable>default-source-file</replaceable></option></term>
+<listitem><para>Allows the superuser to edit the printer default settings
+for the GConf source specified.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>o</option>, <option>-open=<replaceable>printer</replaceable></option></term>
+<listitem><para>Opens the printer queue window for the specified <replaceable>
+printer</replaceable>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>p</option>, <option>-printer=<replaceable>printer</replaceable></option></term>
+<listitem><para>Shows the printer queue window for the specified <replaceable>
+printer</replaceable>only.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-printinfo-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Launching GNOME Print Manager to show the default
+printer only:</title>
+<para><screen>example% <userinput>&cmd; -d</userinput></screen></para>
+</example>
+<example role="example"><title>Launching GNOME Print Manager to show printer &ldquo;prn004001&rdquo;:
+</title>
+<para><screen>example% <userinput>&cmd; -p prn004001</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnome-printinfo-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables:</para>
+<variablelist><varlistentry><term>REQ_DIR</term><listitem><para>Used to store
+print requests. If not set, defaults to <filename>/var/spool/lp/requests/%s/
+</filename></para>
+</listitem></varlistentry>
+<varlistentry><term>TMP_DIR</term><listitem><para>Used to store local print
+jobs. If not set, defaults to <filename>/var/spool/lp/tmp</filename></para>
+</listitem></varlistentry>
+<varlistentry><term>LANG</term><listitem><para>Current language setting.</para>
+</listitem></varlistentry>
+<varlistentry><term>DEF_PRN</term><listitem><para>Current default printer.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>PRINTER</term><listitem><para>Current printer.</para>
+</listitem></varlistentry>
+<varlistentry><term>LPDEST</term><listitem><para>Destination printer for <command>
+lp</command>.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-printinfo-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-printinfo-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide"><varlistentry><term><filename>/usr/bin/&cmd;</filename> 
+</term><listitem><para>Executable for GNOME print manager</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-printinfo-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-print
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-printinfo-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citetitle>GNOME Print Manager Manual</citetitle></para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle> for your platform.</para>
+<para>
+<citerefentry><refentrytitle>lp</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lp</refentrytitle><manvolnum>7D</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>cancel</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>enable</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpq</refentrytitle><manvolnum>1B</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpr</refentrytitle><manvolnum>1B</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lprm</refentrytitle><manvolnum>1B</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpstat</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>postprint</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>pr</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>stty</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>accept</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpadmin</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpfilter</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpforms</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpmove</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpsched</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpshut</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpsystem</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>lpusers</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>printers</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>printers.conf</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gnome-printinfo-1-note"><title>&note-tt;</title>
+<para>Written by Matt Keenan, Sun Microsystems Inc., 2003, 2006.</para>
+</refsect1>
+</refentry>

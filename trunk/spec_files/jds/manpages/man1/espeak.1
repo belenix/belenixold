@@ -1,0 +1,249 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!-- ARC : LSARC 2008/536 espeak for OpenSolaris-->
+<!ENTITY cmd "espeak">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="espeak-1">
+<!-- %Z%%M% %I% %E% SMI; --> 
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">20 Aug 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>a compact open source software speech synthesizer</primary></indexterm>
+
+<refnamediv id="espeak-1-name"><refname>&cmd;</refname><refpurpose>a compact open source software speech synthesizer</refpurpose></refnamediv>
+
+<refsynopsisdiv id="espeak-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option role="nodash"><replaceable>option...</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>words</replaceable></option></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1 id="espeak-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> is a compact open source software speech synthesizer.
+It can run as a command line program to speak text from a file or from
+<literal>stdin</literal>.</para>
+<para>Main features of <command>&cmd;</command>:</para>
+<para>
+<screen>
+    * Includes different voices, whose characteristics
+      can be altered.
+    * Can produce speech output as a WAV file.
+    * Supports SSML (Speech Synthesis Markup Language
+      - not complete)
+    * Supports HTML.
+    * Is compact in size.
+    * Can translate text to phoneme codes, so it could
+      be adapted as a front end for another speech
+      synthesis engine.
+    * Is written in C++.
+</screen>
+</para>
+</refsect1>
+
+<refsect1 id="espeak-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>a <replaceable>integer</replaceable></option></term>
+<listitem><para>Amplitude as an <replaceable>integer</replaceable> in the
+range from 0 to 200, default is 100.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>b</option></term>
+<listitem><para>Input text is 8-bit encoded.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>f <replaceable>text_file</replaceable></option></term>
+<listitem><para>Speak text from <replaceable>text_file</replaceable>.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>g <replaceable>integer</replaceable></option></term>
+<listitem><para>Specify the word gap, or the pause between words, as an
+<replaceable>integer</replaceable>.   Units of 10mS at the default
+speed.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>k <replaceable>integer</replaceable></option></term>
+<listitem><para>Indicate how to speak capital letters as an
+<replaceable>integer</replaceable>.  The argument can have the following
+values: 1=sound, 2=the word "capitals", higher values=a pitch increase (try
+<option>k</option> 20).</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>l <replaceable>integer</replaceable></option></term>
+<listitem><para>Line length as an <replaceable>integer</replaceable>. If not
+zero (which is the default), consider lines less than this length as
+end-of-clause.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>m</option></term>
+<listitem><para>Interpret SSML markup, and ignore other &lt; &gt; tags.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>p <replaceable>integer</replaceable></option></term>
+<listitem><para>Pitch adjustment as an <replaceable>integer</replaceable> in
+the range from 0 to 99, default is 50.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>q</option></term>
+<listitem><para>Quiet, do not produce any speech (may be useful with
+<option>x</option>).</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>s <replaceable>integer</replaceable></option></term>
+<listitem><para>Speed as an <replaceable>integer</replaceable> meaning
+words per minute.  Values can be from 80 to 370, default is 170.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>v <replaceable>voice_file</replaceable></option></term>
+<listitem><para>Use specified <replaceable>voice_file</replaceable>.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>w <replaceable>filename</replaceable></option></term>
+<listitem><para>Write output to the specified
+<replaceable>filename</replaceable>, in WAV format,
+rather than speaking it directly.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>x</option></term>
+<listitem><para>Write phoneme mnemonics to <literal>stdout</literal>.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>X</option></term>
+<listitem><para>Write phonemes mnemonics and translation trace to
+<literal>stdout</literal>.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>z</option></term>
+<listitem><para>No final sentence pause at the end of the text.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-compile=<replaceable>voice_name</replaceable></option></term>
+<listitem><para>Compile the pronunciation rules and dictionary in the
+current directory. The <replaceable>voice_name</replaceable> value is optional
+and specifies which language to use.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-punct="<replaceable>characters</replaceable>"</option></term>
+<listitem><para>Speak the names of punctuation
+<replaceable>characters</replaceable> while speaking.  If the
+<replaceable>characters</replaceable> value is omitted, all punctuation is
+spoken.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-split=<replaceable>minutes</replaceable></option></term>
+<listitem><para>Starts a new WAV file every <replaceable>minutes<replaceable>.  Used with <option>w</option>.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-stdin</option></term>
+<listitem><para>Read text input from <literal>stdin</literal> instead of a
+file.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-stdout</option></term>
+<listitem><para>Write speech output to <literal>stdout</literal>.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-voices=<replaceable>language</replaceable></option></term>
+<listitem><para>List the available voices for the specified
+<replaceable>language</replaceable>.  If <replaceable>language</replaceable> is
+omitted, then list all voices.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+
+<refsect1 id="espeak-1-file"><title>&file-tt;</title>
+<para>The following files are used by &cmd;:</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><filename>/usr/lib/libespeak.so</filename></term>
+<listitem><para>
+Library for &cmd; speech synthesis
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><filename>/usr/share/espeak-data</filename></term>
+<listitem><para>
+Directory of voice language and data files
+</para>
+</listitem></varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id="espeak-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWespeak</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<refsect1 id="espeak-1-note"><title>&note-tt;</title>
+<para>
+&cmd; was written by Jonathan Duddington.
+</para>
+</refsect1>
+
+<refsect1 id="espeak-1-also"><title>&also-tt;</title>
+<para>
+<citerefentry><refentrytitle>orca</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libespeak</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomespeech</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>
+Additional information is available from the following site:
+</para>
+<para>
+http://espeak.sourceforge.net/
+</para>
+</refsect1>
+
+</refentry>

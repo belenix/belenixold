@@ -1,0 +1,110 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "gnomevfs-copy">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnomevfs-copy-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnomevfs-copy</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">14 May 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnomevfs-copy</primary></indexterm><indexterm><primary>
+copy a file from one VFS location to another</primary></indexterm>
+<refnamediv id="gnomevfs-copy-1-name"><refname>gnomevfs-copy</refname><refpurpose>
+copy a file from one VFS location to another</refpurpose></refnamediv>
+<refsynopsisdiv id="gnomevfs-copy-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option role="nodash"><replaceable>source-URI</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>destination-URI</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnomevfs-copy-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> is obsolete.  It has been superseded by gvfs-copy.  See
+<citerefentry><refentrytitle>gvfs-copy</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+</para>
+<para><command>&cmd;</command> copies a file from one URI location to another,
+using the virtual file system.</para>
+</refsect1>
+<refsect1 id="gnomevfs-copy-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>source-URI</replaceable></option></term>
+<listitem><para>Specifies the source file location in standard URI format.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>destination-URI</replaceable></option></term>
+<listitem><para>Specifies the destination file or directory location in standard
+URI format.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnomevfs-copy-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Copying a File From a Web Server to a Local File</title>
+<para><screen>example% <userinput>&cmd; <literal>http://www.sun.com file:///home/user/index.html</literal>
+</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnomevfs-copy-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables: NLSPATH.</para>
+</refsect1>
+<refsect1 id="gnomevfs-copy-1-exit"><title>&exit-tt;</title>
+<para>The exit value 0 is returned regardless of success or failure.</para>
+</refsect1>
+<refsect1 id="gnomevfs-copy-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable to copy a file from one VFS location to another</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnomevfs-copy-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-vfs
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Obsolete Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnomevfs-copy-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gnomevfs-cat</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-info</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-ls</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-mkdir</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-copy</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gnomevfs-copy-1-note"><title>&note-tt;</title>
+<para>Written by Stephen Browne, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>

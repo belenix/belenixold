@@ -1,0 +1,156 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2006/202  GNOME 2.14-Vermillion-->
+<!ENTITY cmd "freetts-synthesis-driver">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+
+<refentry id="freetts-synthesis-driver-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+
+<refmeta>
+<refentrytitle>&cmd;</refentrytitle>
+<manvolnum>1</manvolnum>
+<refmiscinfo class="date">22 Oct 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+
+<indexterm><primary>&cmd;</primary></indexterm>
+
+
+<refnamediv id="freettsk-synthesis-driver-1-name">
+<refname>&cmd;</refname>
+<refpurpose>build GNOME Speech driver for freetts synthesis engines</refpurpose>
+</refnamediv>
+
+<!--------------------------------------------------------------------------------------------------SH-->
+<refsect1 id="freettsk-synthesis-driver-1-desc">
+<title>DESCRIPTION</title>
+
+<para>
+The GNOME Speech contains a standard API for communicating with various text-to-speech engines.
+It hides the differences in the implementation, API, and markups used by the various engines 
+by defining an API that accommodates all the standard features of most speech engines, 
+and some of the more obscure features supported by some engines.
+</para>
+
+<para>
+And GNOME Speech driver(like freetts-synthesis-driver)implementations proxy the standard API, 
+which is defined in IDL, to the various commands and markup language of a particular engine(like freetts).
+</para>
+
+<para>
+This commond is building GNOME Speech driver for freetts engine.
+To build the FreeTTS GNOME Speech driver, the Java SDK version 1.4.1 and FreeTTS version 1.2 are required.
+If the javac binary can not be found or is not in your path, 
+you can specify the --with-java-home option when configuring GNOME Speech 
+to tell the build system where to find the Java sdk.
+In order to build the FreeTTS driver, you must tell the build system where to find FreeTTS.  
+Use the --with-freetts-dir configure option to do this.
+Note, you should specify the path to the directory under tthe FreeTTS root directory 
+which contains the FreeTTS jar files.
+</para>
+</refsect1>
+
+<!--------------------------------------------------------------------------------------------------SH-->
+<refsect1 id="freettsk-synthesis-driver-1-file">
+<title>FILES</title>
+
+<para>The following files are used by this library:
+</para>
+
+<variablelist termlength="wholepage">
+<varlistentry>
+<term><filename>/user/java/jdk</filename></term>
+<listitem><para>The Java SDK is required to build the FreeTTS GNOME Speech driver.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>/user/lib/freetts.jar</filename></term>
+<listitem><para>Freetts library is required to build the FreeTTS GNOME Speech driver.</para></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<!--------------------------------------------------------------------------------------------------SH-->
+<refsect1 id="freettsk-synthesis-driver-1-attr">
+<title>ATTRIBUTES</title>
+
+<para>See 
+<olink targetdocent="REFMAN5" localinfo="attributes-5">
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</olink>
+for descriptions of the following attributes:
+</para>
+
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1">
+<colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row>
+<entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+<entry align="center" valign="middle">ATTRIBUTE VALUE</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><para>Availability</para></entry>
+<entry><para>SUNWgnome-a11y-speech</para></entry>
+</row>
+<row>
+<entry colname="COLSPEC0"><para>Interface stability</para></entry>
+<entry colname="COLSPEC1"><para>Volatile</para></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<!--------------------------------------------------------------------------------------------------SH-->
+<refsect1 id="freettsk-synthesis-driver-1-also">
+<title>SEE ALSO</title>
+
+<!--Reference to another man page-->
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+
+<!--------------------------------------------------------------------------------------------------SH-->
+<refsect1 id="freettsk-synthesis-driver-1-hist">
+<title>HISTORY</title>
+
+<para>
+October 17 2008:
+Originally written by Yue Wang (Yue.Wang@Sun.COM).
+</para>
+</refsect1>
+
+<!--------------------------------------------------------------------------------------------------SH-->
+
+
+
+
+
+
+</refentry>
+
+
+
+
+
+
+
+
+

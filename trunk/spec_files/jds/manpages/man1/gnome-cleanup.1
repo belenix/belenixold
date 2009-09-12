@@ -1,0 +1,133 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/348 GNOME Panel-->
+<!ENTITY cmd "gnome-cleanup">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-cleanup-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-cleanup</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">27 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-cleanup</primary></indexterm><indexterm>
+<primary>
+cleans GNOME user preferences
+</primary></indexterm><refnamediv id="gnome-cleanup-1-name">
+<refname>gnome-cleanup</refname><refpurpose>
+cleans GNOME user preferences
+</refpurpose>
+</refnamediv>
+<refsynopsisdiv id="gnome-cleanup-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option role="nodash"><replaceable>user</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnome-cleanup-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> erases all GNOME user preferences, returning the user
+to the default look and feel.  This can be used to undo undesired preference
+settings, or to correct the desktop if the preferences become corrupt.  The
+GNOME preference files are automatically recreated the next time the user
+logs into a GNOME session.  By default this program erases the configuration
+files for the user running the command.  However, a different user can be
+specified on the command line.  Of course, configuration files are only 
+erased if the user running &cmd; has appropriate file permissions to erase
+the user's configuration files.
+</para>
+<para>
+<command>&cmd;</command> will display a listing of all preference files that it
+will erase before erasing any files, and prompts the user to confirm that they
+would like to erase these files.  Files are erase only after receiving a
+positive confirmation from the user.
+</para>
+<para>
+<command>&cmd;</command> cannot be run while logged into a GNOME session.
+Users should run this program when logged into another session, for example,
+the Failsafe session. If the user tries to run this program while already
+logged into GNOME, an error message is displayed.
+</para>
+</refsect1>
+<refsect1 id="gnome-cleanup-1-opts"><title>&opts-tt;</title>
+<para>None.</para>
+</refsect1>
+<refsect1 id="gnome-cleanup-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry>
+<term><option role="nodash"><replaceable>user</replaceable></option></term>
+<listitem><para>
+Specify the <replaceable>user</replaceable> whose configuration files will
+be erased.  The files will only be erased if the user running &cmd; has file
+permissions to erase the user's configuration files.  This is useful, for
+example, if you want to run the script as the root user to erase the
+configuration files for a specific user.  If <replaceable>user</replaceable>
+is not specified, the user is the same as the user who runs the &cmd; command.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-cleanup-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Erase GNOME user preferences</title>
+<para><screen>example% <userinput>&cmd;</userinput></screen></para>
+</example>
+<para>After displaying a list of preference files that will be erase, the
+following question is displayed:<screen><computeroutput>Do you wish to remove these files (Y/N)
+</computeroutput></screen></para>
+<para>The files are erase only if the user provides a positive response.
+</para>
+</refsect1>
+<refsect1 id="gnome-cleanup-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-cleanup-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium"><varlistentry><term><filename>/usr/bin/&cmd;</filename> 
+</term><listitem><para>Executable for GNOME cleanup.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-cleanup-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-panel
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-cleanup-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gnome-cleanup-1-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2003, 2007.</para>
+</refsect1>
+</refentry>

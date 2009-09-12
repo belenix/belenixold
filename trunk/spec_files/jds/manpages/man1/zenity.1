@@ -1,0 +1,794 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY envr-tt "ENVIRONMENT VARIABLES">
+<!ENTITY cmd "zenity">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+
+<refentry id="zenity-1">
+
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">15 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>gdialog</primary></indexterm>
+<indexterm><primary>display simple GNOME dialogs</primary></indexterm>
+
+<refnamediv id="zenity-1-name">
+<refname>&cmd;</refname><refname>gdialog</refname>
+<refpurpose>display simple GNOME dialogs</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="zenity-1-synp"><title>&synp-tt;</title>
+
+<!-- Calendar Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-calendar</option></arg>
+<!-- Standard options -->
+<arg><option>-title=<replaceable>title</replaceable></option></arg>
+<arg><option>-window-icon=<replaceable>path</replaceable></option></arg>
+<arg><option>-width=<replaceable>width</replaceable></option></arg>
+<arg><option>-height=<replaceable>height</replaceable></option></arg>
+<arg><option>-timeout=<replaceable>seconds</replaceable></option></arg>
+<!-- Specific options -->
+<arg><option>-text=<replaceable>text</replaceable></option></arg>
+<arg><option>-day=<replaceable>number</replaceable></option></arg>
+<arg><option>-month=<replaceable>number</replaceable></option></arg>
+<arg><option>-year=<replaceable>number</replaceable></option></arg>
+<arg><option>-date-format=<replaceable>format</replaceable></option></arg>
+</cmdsynopsis>
+
+<!-- Entry Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-entry</option></arg>
+<!-- Standard options -->
+<arg><option>-title=<replaceable>title</replaceable></option></arg>
+<arg><option>-window-icon=<replaceable>path</replaceable></option></arg>
+<arg><option>-width=<replaceable>width</replaceable></option></arg>
+<arg><option>-height=<replaceable>height</replaceable></option></arg>
+<arg><option>-timeout=<replaceable>seconds</replaceable></option></arg>
+<!-- Specific options -->
+<arg><option>-text=<replaceable>text</replaceable></option></arg>
+<arg><option>-entry-text=<replaceable>text</replaceable></option></arg>
+<arg><option>-hide-text</option></arg>
+</cmdsynopsis>
+
+<!-- Error/Info/Question/Warning Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-error</option> | <option>-info</option> | <option>-question</option> | <option>-warning</option></arg>
+<!-- Standard options -->
+<arg><option>-title=<replaceable>title</replaceable></option></arg>
+<arg><option>-window-icon=<replaceable>path</replaceable></option></arg>
+<arg><option>-width=<replaceable>width</replaceable></option></arg>
+<arg><option>-height=<replaceable>height</replaceable></option></arg>
+<arg><option>-timeout=<replaceable>seconds</replaceable></option></arg>
+<!-- Specific options -->
+<arg><option>-text=<replaceable>text</replaceable></option></arg>
+<arg><option>-nowrap</option></arg>
+</cmdsynopsis>
+
+<!-- File Selection Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-file-selection</option></arg>
+<!-- Standard options -->
+<arg><option>-title=<replaceable>title</replaceable></option></arg>
+<arg><option>-window-icon=<replaceable>path</replaceable></option></arg>
+<arg><option>-width=<replaceable>width</replaceable></option></arg>
+<arg><option>-height=<replaceable>height</replaceable></option></arg>
+<arg><option>-timeout=<replaceable>seconds</replaceable></option></arg>
+<!-- Specific options -->
+<arg><option>-filename=<replaceable>path</replaceable></option></arg>
+<arg><option>-multiple</option></arg>
+<arg><option>-directory</option></arg>
+<arg><option>-save</option></arg>
+<arg><option>-separator=<replaceable>character</replaceable></option></arg>
+<arg><option>-confirm-overwrite</option></arg>
+</cmdsynopsis>
+
+<!-- List Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-list</option></arg>
+<!-- Standard options -->
+<arg><option>-title=<replaceable>title</replaceable></option></arg>
+<arg><option>-window-icon=<replaceable>path</replaceable></option></arg>
+<arg><option>-width=<replaceable>width</replaceable></option></arg>
+<arg><option>-height=<replaceable>height</replaceable></option></arg>
+<arg><option>-timeout=<replaceable>seconds</replaceable></option></arg>
+<!-- Specific options -->
+<arg choice="plain"><option>-column=<replaceable>text</replaceable></option></arg>
+<arg><option>-checklist</option></arg>
+<arg><option>-radiolist</option></arg>
+<arg><option>-separator=<replaceable>character</replaceable></option></arg>
+<arg><option>-multiple</option></arg>
+<arg><option>-editable</option></arg>
+<arg><option>-print-column=<replaceable>number</replaceable></option></arg>
+<arg><option>-hide-column=<replaceable>number</replaceable></option></arg>
+</cmdsynopsis>
+
+<!-- Notification Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-notification</option></arg>
+<!-- Standard options -->
+<arg><option>-window-icon=<replaceable>path</replaceable></option></arg>
+<arg><option>-timeout=<replaceable>seconds</replaceable></option></arg>
+<!-- Specific options -->
+<arg><option>-text=<replaceable>text</replaceable></option></arg>
+<arg><option>-listen</option></arg>
+</cmdsynopsis>
+
+<!-- Progress Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-progress</option></arg>
+<!-- Standard options -->
+<arg><option>-title=<replaceable>title</replaceable></option></arg>
+<arg><option>-window-icon=<replaceable>path</replaceable></option></arg>
+<arg><option>-width=<replaceable>width</replaceable></option></arg>
+<arg><option>-height=<replaceable>height</replaceable></option></arg>
+<arg><option>-timeout=<replaceable>seconds</replaceable></option></arg>
+<!-- Specific options -->
+<arg><option>-text=<replaceable>text</replaceable></option></arg>
+<arg><option>-percentage=<replaceable>number</replaceable></option></arg>
+<arg><option>-pulsate</option></arg>
+<arg><option>-auto-close</option></arg>
+<arg><option>-auto-kill</option></arg>
+</cmdsynopsis>
+
+<!-- Scale Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-scale</option></arg>
+<!-- Standard options -->
+<arg><option>-title=<replaceable>title</replaceable></option></arg>
+<arg><option>-window-icon=<replaceable>path</replaceable></option></arg>
+<arg><option>-width=<replaceable>width</replaceable></option></arg>
+<arg><option>-height=<replaceable>height</replaceable></option></arg>
+<arg><option>-timeout=<replaceable>seconds</replaceable></option></arg>
+<!-- Specific options -->
+<arg><option>-text=<replaceable>text</replaceable></option></arg>
+<arg><option>-value=<replaceable>number</replaceable></option></arg>
+<arg><option>-min-value=<replaceable>number</replaceable></option></arg>
+<arg><option>-max-value=<replaceable>number</replaceable></option></arg>
+<arg><option>-step=<replaceable>number</replaceable></option></arg>
+<arg><option>-print-partial</option></arg>
+<arg><option>-hide-value</option></arg>
+</cmdsynopsis>
+
+<!-- Text Info Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-text-info</option></arg>
+<!-- Standard options -->
+<arg><option>-title=<replaceable>title</replaceable></option></arg>
+<arg><option>-window-icon=<replaceable>path</replaceable></option></arg>
+<arg><option>-width=<replaceable>width</replaceable></option></arg>
+<arg><option>-height=<replaceable>height</replaceable></option></arg>
+<arg><option>-timeout=<replaceable>seconds</replaceable></option></arg>
+<!-- Specific options -->
+<arg><option>-filename=<replaceable>path</replaceable></option></arg>
+<arg><option>-editable</option></arg>
+</cmdsynopsis>
+
+<!-- Misc Options -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-about</option> | <option> -help</option> | <option>-usage</option> | <option>-version</option> | <option><replaceable> GTK+_options</replaceable></option></arg>
+</cmdsynopsis>
+
+</refsynopsisdiv>
+
+
+<refsect1 id="zenity-1-desc"><title>&desc-tt;</title>
+<para>The &cmd; application displays simple GNOME dialogs. You can use Zenity
+to create scripts that interact graphically with the user. <citerefentry>
+<refentrytitle>gdialog</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+has been deprecated and is now a wrapper script around Zenity, and will preserve
+compatibility with older scripts.</para>
+<para></para>
+</refsect1>
+
+<refsect1 id="zenity-1-opts">
+<title>&opts-tt;</title>
+<para>Zenity supports several different types of options.</para>
+
+<!-- Miscellaneous options -->
+<refsect2 id="zenity-1-opts-zenity">
+<title>Zenity Miscellaneous Options</title>
+<para>The following miscellaneous options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-about</option></term>
+<listitem><para>Display the About Zenity dialog, which provides information about the Zenity application,
+including the version number and the author.</para></listitem>
+</varlistentry>
+
+<varlistentry><term><option>-version</option></term>
+<listitem><para>Display the version number of Zenity.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+
+<!-- Help options -->
+<refsect2 id="zenity-1-opts-help">
+<title>Help Options</title>
+<para>The following help options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>?</option>, <option>-help</option></term>
+<listitem><para>Display help text.</para></listitem>
+</varlistentry>
+
+<varlistentry><term><option>-help-*</option></term>
+<listitem><para>Display help text on specific dialogs.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+
+<!-- GTK+ options -->
+<refsect2 id="zenity-1-opts-gtk">
+<title>GTK+ Options</title>
+<para>Zenity supports the standard GTK+ options. For more information about
+the GTK+ options, execute the <command>&cmd; --help-gtk<option></command>
+command.</para>
+</refsect2>
+
+
+<!-- Dialog options -->
+<refsect2 id="zenity-1-opts-dialog">
+<title>Dialog Options</title>
+<para>The following dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-calendar</option></term>
+<listitem><para>Display a calendar dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-entry</option></term>
+<listitem><para>Display a text entry dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-error</option></term>
+<listitem><para>Display an error dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-file-selection</option></term>
+<listitem><para>Display a file-selection dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-info</option></term>
+<listitem><para>Display an informational dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-list</option></term>
+<listitem><para>Display a list dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-notification</option></term>
+<listitem><para>Display a notification icon.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-progress</option></term>
+<listitem><para>Display a progress indication dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-question</option></term>
+<listitem><para>Display a question dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-scale</option></term>
+<listitem><para>Display a scale dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-text-info</option></term>
+<listitem><para>Display a text information dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-warning</option></term>
+<listitem><para>Display a warning dialog.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+<!-- General options -->
+<refsect2 id="zenity-1-opts-dialog-general">
+<title>General Dialog Options</title>
+<para>The following general dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-title=<replaceable>title</replaceable></option></term>
+<listitem><para>Set the dialog title.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-window-icon=<replaceable>path</replaceable></option></term>
+<listitem><para>Set the dialog window icon with a full path to an image.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-width=<replaceable>width</replaceable></option></term>
+<listitem><para>Set the dialog width.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-height=<replaceable>height</replaceable></option></term>
+<listitem><para>Set the dialog height.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-timeout=<replaceable>seconds</replaceable></option></term>
+<listitem><para>Set the dialog timeout in seconds.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+<!-- Calendar options -->
+<refsect2 id="zenity-1-opts-dialog-calendar">
+<title>Calendar Dialog Options</title>
+<para>The following calendar dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-text=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the dialog text.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-day=<replaceable>number</replaceable></option></term>
+<listitem><para>Set the calendar day.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-month=<replaceable>number</replaceable></option></term>
+<listitem><para>Set the calendar month.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-year=<replaceable>number</replaceable></option></term>
+<listitem><para>Set the calendar year.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-date-format=<replaceable>format</replaceable></option></term>
+<listitem><para>Set the date format to return at the command line. The default
+format depends on your locale. The format must be of <command>strftime</command>
+style, for example <literal>%A %d/%m/%y</literal>.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+<!-- Text Entry options -->
+<refsect2 id="zenity-1-opts-dialog-textentry">
+<title>Text-Entry Dialog Options</title>
+<para>The following text-entry dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-text=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the dialog text.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-entry-text=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the dialog entry text.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-hide-text</option></term>
+<listitem><para>Use asterisks to hide the entry text.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+<!-- Error/Info/Question/Warning options -->
+<refsect2 id="zenity-1-opts-dialog-error-info-question-warning">
+<title>Error, Info, Question and Warning Dialog Options</title>
+<para>The following error, info, question and warning dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-text=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the dialog text.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-nowrap</option></term>
+<listitem><para>Do not enable text wrapping in the dialog.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+
+<!-- File Selection options -->
+<refsect2 id="zenity-1-opts-dialog-file">
+<title>File-Selection Dialog Options</title>
+<para>The following file-selection dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-filename=<replaceable>path</replaceable></option></term>
+<listitem><para>Set the file or directory to select by default.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-multiple</option></term>
+<listitem><para>Allow multiple selections.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-directory</option></term>
+<listitem><para>Activate directory-only selection.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-save</option></term>
+<listitem><para>Activate save mode file selection.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-separator=<replaceable>character</replaceable></option></term>
+<listitem><para>Set the separator character to return at the command line.
+This option is used only when the dialog allows multiple selections.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-confirm-overwrite</option></term>
+<listitem><para>Confirm overwrite of files.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+
+<!-- List options -->
+<refsect2 id="zenity-1-opts-dialog-list">
+<title>List Dialog Options</title>
+<para>The following list dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-text=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the dialog text.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-column=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the text of a column.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-checklist</option></term>
+<listitem><para>Specify that the first column contains check boxes.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-radiolist</option></term>
+<listitem><para>Specify that the first column contains radio buttons.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-separator=<replaceable>character</replaceable></option></term>
+<listitem><para>Set the separator character to return at the command line.
+This option is used only when the dialog allows multiple selections.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-editable</option></term>
+<listitem><para>Specify that the dialog contents are editable.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-print-column=<replaceable>number</replaceable></option></term>
+<listitem><para>Specify which column to print on return.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-hide-column=<replaceable>number</replaceable></option></term>
+<listitem><para>Specify which columns should be hidden from view.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+
+<!-- Notification options -->
+<refsect2 id="zenity-1-opts-dialog-notification">
+<title>Notification Options</title>
+<para>The following notification dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-text=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the dialog text.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-listen</option></term>
+<listitem><para>Listen for commands on standard input. Commands include
+'message', 'tooltip', 'icon', and 'visible' separated by a colon. For
+example, "message:Hello world", "icon:/path/to/icon", or 
+"visible:false".</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+
+<!-- Progress options -->
+<refsect2 id="zenity-1-opts-dialog-progress">
+<title>Progress-Indication Dialog Options</title>
+<para>The following progress-indication dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-text=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the dialog text.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-percentage=<replaceable>number</replaceable></option></term>
+<listitem><para>Set the initial percentage of the progress bar.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-pulsate</option></term>
+<listitem><para>Specify that the progress bar pulsates until an EOF character is read from the command
+line.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-auto-close</option></term>
+<listitem><para>Close the dialog automatically when 100% has been reached.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-auto-kill</option></term>
+<listitem><para>Kill the parent process if cancel button is pressed.</para></listitem>
+</varlistentry>
+
+</refsect2>
+</variablelist>
+
+
+<!-- Scale options -->
+<refsect2 id="zenity-1-opts-dialog-scale">
+<title>Scale Dialog Options</title>
+<para>The following scale dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-text=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the dialog text.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-value=<replaceable>number</replaceable></option></term>
+<listitem><para>Set the initial value.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-min-value=<replaceable>number</replaceable></option></term>
+<listitem><para>Set the minimum value of the scale.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-max-value=<replaceable>number</replaceable></option></term>
+<listitem><para>Set the maximum value of the scale.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-step=<replaceable>number</replaceable></option></term>
+<listitem><para>Set the step size of the scale.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-print-partial</option></term>
+<listitem><para>Set the values of the scale as they are selected.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-hide-value</option></term>
+<listitem><para>Set the value of the scale from view.</para></listitem>
+</varlistentry>
+
+</refsect2>
+</variablelist>
+
+
+<!-- Text Info options -->
+<refsect2 id="zenity-1-opts-dialog-textinfo">
+<title>Text-Informational Dialog Options</title>
+<para>The following text-informational dialog options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><option>-filename=<replaceable>path</replaceable></option></term>
+<listitem><para>Set the file to display in the dialog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-editable</option></term>
+<listitem><para>Specify that the dialog contents are editable.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect2>
+
+
+<!-- Examples -->
+<refsect1 id="zenity-1-exam">
+<title>&exam-tt;</title>
+
+<example role="example">
+<title>Launching Zenity Using the List Dialog</title>
+<para><screen>example% <userinput>&cmd; --list --title="Choose bugs you wish to view" \\
+  --text="Select items from the list below." \\
+  --column="Bug Number" --column="Severity" --column="Description" \\
+  992383 Normal "GtkTreeView crashes on multiple selections" \\
+  293823 High "GNOME Dictionary does not handle proxy" \\
+  393823 Critical "Menu editing does not work in GNOME 2.0"</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Launching Zenity Using the Progress Dialog</title>
+<para><screen>example% <userinput>find . -name '*.bk' | &cmd; --progress \\
+  --title="Finding backups" --pulsate </userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Launching Zenity Using the Text Informational Dialog</title>
+<para><screen>example% <userinput>&cmd; --text-info --title="OpenSolaris License" \\
+  --filename="/usr/src/OPENSOLARIS.LICENSE"</userinput></screen></para>
+</example>
+
+</refsect1>
+
+
+<!-- Environmental variables -->
+<refsect1 id="zenity-1-envr">
+<title>&envr-tt;</title>
+<para>The following environment variables affect the execution of <command>&cmd;</command>: </para>
+
+<variablelist termlength="wide">
+<varlistentry><term>ZENITY_OK, DIALOG_OK</term><listitem><para>Set the return
+value for OK.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>ZENITY_CANCEL, DIALOG_CANCEL</term>
+<listitem><para>Set the return value for Cancel.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>ZENITY_ERROR, DIALOG_ERROR</term>
+<listitem><para>Set the return value for Error.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>ZENITY_ESC, DIALOG_ESC</term><listitem><para>Set the return value for Escape.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+
+<!-- Exit values -->
+<refsect1 id="zenity-1-exit">
+<title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+
+<varlistentry>
+<term><returnvalue>&ndash;1</returnvalue></term>
+<listitem><para> Error</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><returnvalue>0</returnvalue></term>
+<listitem><para>OK</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><returnvalue>1</returnvalue></term>
+<listitem><para>Cancel, Escape</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+
+<!-- Files -->
+<refsect1 id="zenity-1-file">
+<title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><filename>/usr/bin/&cmd;</filename></term>
+<listitem> <para>Executable for Zenity.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><filename>/usr/bin/gdialog</filename></term>
+<listitem> <para>Symbolic link to run <command>&cmd;</command>.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+
+<!-- Attributes -->
+<refsect1 id="zenity-1-attr">
+<title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-dialog</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volitile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+
+</refsect1>
+
+
+<!-- See also -->
+<refsect1 id="zenity-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citetitle>Zenity Manual</citetitle></para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="zenity-1-note"><title>&note-tt;</title>
+<para>Written by Glynn Foster, Sun Microsystems Inc., 2003, 2004, 2006, 2007.</para>
+</refsect1>
+</refentry>

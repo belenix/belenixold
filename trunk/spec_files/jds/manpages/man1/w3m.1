@@ -1,0 +1,99 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/346  w3m Text Based Web Browser -->
+<!ENTITY cmd "w3m">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="w3m-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>w3m</refentrytitle><manvolnum>1</manvolnum>
+  <refmiscinfo class="date">22 Oct 2008</refmiscinfo>
+  <refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+  <refmiscinfo class="software">&release;</refmiscinfo>
+  <refmiscinfo class="arch">generic</refmiscinfo>
+  <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+  </refmeta>
+
+<indexterm><primary>
+  w3m</primary></indexterm>
+<indexterm><primary>
+    A text based Web browser and pager
+  </primary></indexterm>
+
+<refnamediv id="w3m-1-name">
+  <refname>w3m</refname>
+  <refpurpose>
+    a text based Web browser and pager
+    </refpurpose></refnamediv>
+
+<refsynopsisdiv id="w3m-1-synp">
+  <title>&synp-tt;</title>
+  <cmdsynopsis><command>&cmd;</command>
+    <arg choice="opt"><option>options</option></arg>
+    <arg choice="opt"><option>URL or filename</option></arg>
+    </cmdsynopsis></refsynopsisdiv>
+  <para>Use "w3m -h" to display a complete list of current options.
+    </para>
+
+<refsect1 id="w3m-1-desc"><title>&desc-tt;</title>
+  <para>w3m is a World Wide Web (WWW) text based client. It has English and Japanese help files and an option menu and can be configured to use either language. It will display hyper- text markup language (HTML) documents containing links to files residing on the local system, as well as files resid- ing on remote systems. It can display HTML tables and frames. In addition, it can be used as a "pager" in much the same manner as "more" or "less".
+  </para> </refsect1>
+
+<refsect1 id="w3m-1-opts"><title>&opts-tt;</title>
+<para>At start up, w3m will load any local file or remote URL specified at the command line. For help with runtime options, press "H" while running _w_3_m. Command line options are:
+
+   -t tab    Set tab width
+   -r        Ignore backspace effect
+   -l line   Number of preserved line (default 10000)
+   -B        Load bookmark
+   -bookmark file
+             Specify bookmark file
+   -T type   Specify content-type
+   -m        Internet message mode
+   -v        Visual startup mode
+   -M        Monochrome display
+   -F        Automatically render frame
+   -dump     Dump formatted page into stdout
+</para>
+</refsect1>
+
+<refsect1 id="w3m-1-attr"><title>&attr-tt;</title>
+  <para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+    <refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+    for descriptions of the following attributes:</para>
+
+  <informaltable frame="all">
+    <tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+    <colspec colname="COLSPEC1" colwidth="1*">
+    <thead>
+      <row>
+        <entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+        <entry align="center" valign="middle">ATTRIBUTE VALUE</entry></row> </thead>
+    <tbody>
+      <row>
+        <entry><para>Availability</para></entry><entry><para>SUNWw3m</para></entry></row>
+      <row>
+        <entry colname="COLSPEC0"><para>Interface stability</para></entry>
+        <entry colname="COLSPEC1"><para>Volatile</para></entry></row> </tbody> </tgroup> </informaltable> </refsect1>
+
+<refsect1 id="w3m-1-also"><title>&also-tt;</title>
+  <!--Reference to another man page-->
+  <!--Reference to a Help manual-->
+  <!--Reference to a book.-->
+  <para>
+    <citerefentry><refentrytitle>w3mman</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+    <citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry> </para>
+  <para>
+    <citetitle>&cmd; Website</citetitle>,
+    <literal>http://w3m.sourceforge.net/index.en.html</literal> </para> </refsect1>
+
+<refsect1 id="w3m-1-note"><title>&note-tt;</title>
+  <para>Authored by Akinori ITO <aito@fw.ipsj.or.jp>, Updated by Lei Ju, Sun Microsystems Inc., 2008.</para>
+  </refsect1>
+  </refentry>

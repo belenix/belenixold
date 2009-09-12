@@ -1,0 +1,195 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.x on Solaris-->
+<!ENTITY cmd "gnome-search-tool">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-search-tool-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-search-tool</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">2 Oct 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-search-tool</primary></indexterm><indexterm><primary>
+search for files</primary></indexterm><refnamediv id="gnome-search-tool-1-name">
+<refname>gnome-search-tool</refname><refpurpose>search for files</refpurpose></refnamediv>
+<refsynopsisdiv id="gnome-search-tool-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-named=<replaceable>text</replaceable></option></arg>
+<arg choice="opt"><option>-path=<replaceable>folder</replaceable></option></arg>
+<arg choice="opt"><option>-sortby=<replaceable>order</replaceable></option></arg>
+<arg choice="opt"><option>-descending</option></arg>
+<arg choice="opt"><option>-contains=<replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>-user=<replaceable>user</replaceable></option></arg>
+<arg choice="opt"><option>-nouser</option></arg>
+<arg choice="opt"><option>-allmounts</option></arg>
+<arg choice="opt"><option>-empty</option></arg>
+<arg choice="opt"><option>-follow</option></arg>
+<arg choice="opt"><option>-group=<replaceable>group</replaceable></option></arg>
+<arg choice="opt"><option>-hidden</option></arg>
+<arg choice="opt"><option>-mtimeless=<replaceable>date</replaceable></option></arg>
+<arg choice="opt"><option>-mtimemore=<replaceable>date</replaceable></option></arg>
+<arg choice="opt"><option>-notnamed=<replaceable>filename</replaceable></option></arg>
+<arg choice="opt"><option>-regex=<replaceable>pattern</replaceable></option></arg>
+<arg choice="opt"><option>-sizeless=<replaceable>size</replaceable></option></arg>
+<arg choice="opt"><option>-sizemore=<replaceable>size</replaceable></option></arg>
+<arg choice="opt"><option>-start</option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnome-search-tool-1-desc"><title>&desc-tt;</title>
+<para>The Search for Files application enables you to search for files on
+your system. Search for Files uses the <citerefentry><refentrytitle>find</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry> command.</para>
+<para></para>
+</refsect1>
+<refsect1 id="gnome-search-tool-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium"><varlistentry><term><option>-allmounts</option></term>
+<listitem><para>Select the 'Search other filesystems' search constraint.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-contains=<replaceable>string</replaceable></option></term>
+<listitem><para>Select the 'Contains the text' search constraint and set the
+text of that entry. Use a full filename or a partial filename with wildcards.
+See <citerefentry><refentrytitle>find</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry> for more details about using wildcards.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-descending</option></term><listitem><para>Set
+sort order to descending. The default sort order is ascending.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-empty</option></term><listitem><para>Select the
+'File is empty' search constraint.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-follow</option></term><listitem><para>Select
+the 'Follow symbolic links' search constraint.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-group=<replaceable>group</replaceable></option></term>
+<listitem><para>Select the 'Owned by group' search constraint and set the
+text of that entry.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-hidden</option></term><listitem><para>Select the
+'Show hidden and backup files' search option.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-mtimeless=<replaceable>date</replaceable></option></term>
+<listitem><para>Select the 'Date modified before (days)' search constraint
+and set the text of that entry.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-mtimemore=<replaceable>date</replaceable></option></term>
+<listitem><para>Select the 'Date modified after (days)' search constraint
+and set the text of that entry.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-named=<replaceable>text</replaceable></option></term>
+<listitem><para>Set the <replaceable>text</replaceable> of the 'Name contains' search option.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-notnamed=<replaceable>filename</replaceable></option></term>
+<listitem><para>Select the 'File is not named' search constraint and set the
+text of that entry. Use a full filename or a partial filename with wildcards.
+See <citerefentry><refentrytitle>find</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry> for more details about using wildcards.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-nouser</option></term><listitem><para>Select
+the 'Owner is unrecognized' search constraint.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-path=<replaceable>folder</replaceable></option></term>
+<listitem><para>Set the text of the 'Look in folder' entry. Defaults to the
+current working directory.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-start</option></term><listitem><para>Automatically
+start a search.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-regex=<replaceable>pattern</replaceable></option></term>
+<listitem><para>Select the 'File matches regular expression' search constraint
+and set the text of that entry. See <citerefentry><refentrytitle>find</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry> for more details about the regular
+expression patterns that can be used.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-sizeless=<replaceable>size</replaceable></option></term>
+<listitem><para>Select the 'Size is less than (kilobytes)' search constraint
+and set the text of that entry.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-sizemore=<replaceable>size</replaceable></option></term>
+<listitem><para>Select the 'Size is more than (kilobytes)' search constraint
+and set the text of that entry.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-sortby=<replaceable>order</replaceable></option></term>
+<listitem><para>Sort files by one of the following: name, folder, size, type,
+or date.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-user=<replaceable>user</replaceable></option></term>
+<listitem><para>Select the  'Owned by user' search constraint and set the
+text of that entry.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-search-tool-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Performing a basic search automatically</title>
+<para><screen>example% <userinput>&cmd; --name=a.out --path=$HOME --autostart
+</userinput></screen></para>
+</example>
+<example role="example"><title>Performing an advanced search automatically
+</title>
+<para><screen>example% <userinput>&cmd; --contains=unistd.h --mtimeless=3 --sortby=size 	--autostart
+</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnome-search-tool-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-search-tool-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide"><varlistentry><term><filename>/usr/bin/&cmd;</filename> 
+</term><listitem><para>Executable for Search for Files</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-search-tool-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-search-tool
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-search-tool-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citetitle>Search for Files Manual</citetitle></para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle> for your platform.</para>
+<para><citerefentry><refentrytitle>find</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>gnome-std-options</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="gnome-search-tool-1-note"><title>&note-tt;</title>
+<para>Written by Glynn Foster, Sun Microsystems Inc., 2003, 2006.</para>
+</refsect1>
+</refentry>

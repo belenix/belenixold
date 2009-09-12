@@ -1,0 +1,98 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY exam-tt "EXAMPLES">
+<!ENTITY cmd "tiffdump">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="tiffdump-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>tiffdump</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>tiffdump</primary></indexterm><indexterm><primary>display
+verbatim information about TIFF files</primary></indexterm>
+<refnamediv id="tiffdump-1-name"><refname>tiffdump</refname><refpurpose>display
+verbatim information about TIFF files</refpurpose></refnamediv>
+<refsynopsisdiv id="tiffdump-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash"><replaceable>
+options</replaceable></option></arg><arg choice="plain" rep="repeat"><option
+role="nodash"><replaceable>input.tif</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="tiffdump-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> displays directory information from files created
+according to the Tag Image File Format, Revision 6.0. The header of each TIFF
+file (magic number, version, and first directory offset) is displayed, followed
+by the tag contents of each directory in the file. For each tag, the name,
+datatype, count, and values are displayed. When the symbolic name for a tag
+or datatype is known, the symbolic name is displayed followed by the numeric
+decimal value. Tag values are displayed enclosed in &ldquo;&lt;>&rdquo; characters
+immediately preceded by the value of the count field. For example, an ImageWidth
+tag might be displayed as &ldquo;ImageWidth (256) SHORT (3) 1&lt;800>&rdquo;.
+</para>
+<para><command>&cmd;</command> is particularly useful for investigating the
+contents of TIFF files that <filename>libtiff</filename> does not understand.
+</para>
+</refsect1>
+<refsect1 id="tiffdump-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>h</option></term><listitem><para>Force numeric
+data to be displayed in hexadecimal rather than the default decimal
+format.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>o</option></term><listitem><para>Dump the contents
+of the IFD at a particular file offset. The file offset may be specified using
+the usual C-style syntax, that is, a leading &ldquo;0x&rdquo; for hexadecimal
+and a leading &ldquo;0&rdquo; for octal.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="tiffdump-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash"><replaceable>input.tif</replaceable></option></term>
+<listitem><para>The name of the TIFF file.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="tiffdump-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="tiffdump-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>tiffinfo</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>
+3</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="tiffdump-1-note"><title>&note-tt;</title>
+<para>Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>

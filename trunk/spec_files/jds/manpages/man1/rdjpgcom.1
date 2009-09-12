@@ -1,0 +1,101 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734 GNOME For Nevada-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY cmd "rdjpgcom">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="rdjpgcom-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>rdjpgcom</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>rdjpgcom</primary></indexterm><indexterm><primary>display
+text comments from a JPEG file</primary></indexterm>
+<refnamediv id="rdjpgcom-1-name"><refname>rdjpgcom</refname><refpurpose>display
+text comments from a JPEG file</refpurpose></refnamediv>
+<refsynopsisdiv id="rdjpgcom-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option>verbose</option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>filename</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="rdjpgcom-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> reads the named JPEG or JFIF file, or the standard
+input if no file is named, and displays any text comments found in the file
+on the standard output.</para>
+<para>The JPEG standard allows "comment" (COM) blocks to occur within a JPEG
+file. Although the standard does not actually define the intended function
+of COM blocks, they are widely used to hold user-supplied text strings. This
+enables you to add annotations, titles, index terms, and so on to your JPEG
+files, and later retrieve the COM blocks as text. COM blocks do not interfere
+with the image stored in the JPEG file. The maximum size of a COM block is
+64K, but you can have many COM blocks in one JPEG file.</para>
+</refsect1>
+<refsect1 id="rdjpgcom-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>verbose</option></term><listitem><para>Causes <command>&cmd;</command>
+to also display the JPEG image dimensions.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="rdjpgcom-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash"><replaceable>filename</replaceable></option></term>
+<listitem><para>The name of the JPEG file that contains text comments.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="rdjpgcom-1-exde"><title>&exde-tt;</title>
+<para><command>&cmd;</command> does not depend on the IJG JPEG library. The <command>&cmd;</command>
+source code is intended to illustrate the minimum amount of code required
+to parse a JPEG file header correctly. </para>
+<para>In <option>verbose</option> mode, <command>&cmd;</command> also attempts
+to display the contents of any "APP12" markers as text. Some digital cameras
+produce APP12 markers that contain useful textual information. You can also
+modify the source code to display other APP<replaceable>n</replaceable>
+marker types.</para>
+</refsect1>
+<refsect1 id="rdjpgcom-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWjpg</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="rdjpgcom-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>cjpeg</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>djpeg</refentrytitle><manvolnum>
+1</manvolnum></citerefentry>, <citerefentry><refentrytitle>jpegtran</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>wrjpgcom
+</refentrytitle><manvolnum>1</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="rdjpgcom-1-note"><title>&note-tt;</title>
+<para>This man page was originally written by the Independent JPEG Group.
+Updated by Breda McColgan, Sun Microsystems Inc., 2004. </para>
+</refsect1>
+</refentry>

@@ -1,0 +1,481 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2002/146 GNOME 2.0 Configuration - GConf-->
+<!ENTITY cmd "gconftool-2">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gconftool-2-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gconftool-2</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">09 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gconftool-2</primary></indexterm><indexterm><primary>
+GNOME configuration tool</primary></indexterm><refnamediv id="gconftool-2-1-name">
+<refname>gconftool-2</refname><refpurpose>GNOME configuration tool</refpurpose>
+</refnamediv>
+<refsynopsisdiv id="gconftool-2-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-all-dirs</option></arg>
+<arg choice="opt"><option>-all-entries</option></arg>
+<arg choice="opt"><option>-apply-schema</option></arg>
+<arg choice="opt"><option>-break-directory</option></arg>
+<arg choice="opt"><option>-break-key</option></arg>
+<arg choice="opt"><option>-car-type=</option><group choice="plain"><arg choice="plain"><option role="nodash">int</option></arg><arg choice="plain"><option role="nodash">bool</option></arg><arg choice="plain"><option role="nodash">float</option></arg><arg choice="plain"><option role="nodash">string</option></arg></group></arg>
+<arg choice="opt"><option>-cdr-type=</option><group choice="plain"><arg choice="plain"><option role="nodash">int</option></arg><arg choice="plain"><option role="nodash">bool</option></arg><arg choice="plain"><option role="nodash">float</option></arg><arg choice="plain"><option role="nodash">string</option></arg></group></arg>
+<arg choice="opt"><option>-config-source=<replaceable>source</replaceable></option></arg>
+<arg choice="opt"><option>-dir-exists=<replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>-direct</option></arg>
+<arg choice="opt"><option>-dump</option></arg>
+<arg choice="opt"><option>-get</option></arg>
+<arg choice="opt"><option>-get-default-source</option></arg>
+<arg choice="opt"><option>-get-list-size</option></arg>
+<arg choice="opt"><option>-get-list-element</option></arg>
+<arg choice="opt"><option>-get-schema-name</option></arg>
+<arg choice="opt"><option>-get-type</option></arg>
+<arg choice="opt"><option>-ignore-schema-defaults</option></arg>
+<arg choice="opt"><option>-install-schema-file=<replaceable>file</replaceable></option></arg>
+<arg choice="opt"><option>-list-type=</option><group choice="plain"><arg choice="plain"><option role="nodash">int</option></arg><arg choice="plain"><option role="nodash">bool</option></arg><arg choice="plain"><option role="nodash">float</option></arg><arg choice="plain"><option role="nodash">string</option></arg></group></arg>
+<arg choice="opt"><option>-load=<replaceable>file</replaceable></option></arg>
+<arg choice="opt"><option>-makefile-install-rule</option></arg>
+<arg choice="opt"><option>-makefile-uninstall-rule</option></arg>
+<arg choice="opt"><option>-owner=<replaceable>owner</replaceable></option></arg>
+<arg choice="opt"><option>-ping</option></arg>
+<arg choice="opt"><option>-recursive-unset</option></arg>
+<arg choice="opt"><option>-search-key</option></arg>
+<arg choice="opt"><option>-set</option></arg>
+<arg choice="opt"><option>-set-schema</option></arg>
+<arg choice="opt"><option>-short-desc=<replaceable>description</replaceable></option></arg>
+<arg choice="opt"><option>-long-desc=<replaceable>description</replaceable></option></arg>
+<arg choice="opt"><option>-short-docs</option></arg>
+<arg choice="opt"><option>-long-docs</option></arg>
+<arg choice="opt"><option>-shutdown</option></arg>
+<arg choice="opt"><option>-spawn</option></arg>
+<arg choice="opt"><option>-type=</option><group choice="plain"><arg choice="plain"><option role="nodash">int</option></arg><arg choice="plain"><option role="nodash">bool</option></arg><arg choice="plain"><option role="nodash">float</option></arg><arg choice="plain"><option role="nodash">string</option></arg><arg choice="plain"><option role="nodash">list</option></arg><arg choice="plain"><option role="nodash">pair</option></arg></group></arg>
+<arg choice="opt"><option>-unapply-schema</option></arg>
+<arg choice="opt"><option>-unload</option></arg>
+<arg choice="opt"><option>-unset</option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>key</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>value</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gconftool-2-1-desc"><title>&desc-tt;</title>
+<para>Each preference in the GConf repository is expressed as a key-value
+pair. A GConf preference key is an element in the GConf repository that corresponds
+to an application preference. Preference keys typically have simple values
+such as strings, integers, or lists of strings and integers. The default key-value
+pairs are installed on the system, and are known as schemas. <command>&cmd;</command>
+is the command-line interface tool that enables you to set the values of keys,
+display the values of keys, and install schemas from schema definition files
+when you install an application. The GConf preference keys are stored and
+managed by the GConf daemon (<filename>gconfd-2</filename>).   These keys
+are cached in memory, and saved to disk in XML format when appropriate.</para>
+</refsect1>
+<refsect1 id="gconftool-2-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><option>-all-dirs</option></term>
+<listitem><para>
+Lists all subdirectories in a directory that you specify.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>a</option>, <option>-all-entries</option></term>
+<listitem><para>
+Displays the value of all keys in a directory that you specify.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-apply-schema</option></term>
+<listitem><para>
+Apply the specified schema to the specified key.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-break-directory</option></term>
+<listitem><para>
+Stress-test an application by setting and unsetting several keys within the
+directories.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-break-key</option></term>
+<listitem><para>
+Stress-test an application by setting and unsetting several preference-key
+values of different types.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-car-type=<replaceable>int|bool|float|string</replaceable></option></term>
+<listitem><para>
+Specifies the type of the car pair value being set, or the type of the value
+described by a schema.  Unique abbreviations are allowed.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-cdr-type=<replaceable>int|bool|float|string</replaceable></option></term>
+<listitem><para>
+Specifies the type of the cdr pair value being set, or the type of the value
+described by a schema.  Unique abbreviations are allowed.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-config-source=<replaceable>source</replaceable></option></term>
+<listitem><para>
+Use this option with the <option>-direct</option> option to specify a
+configuration <replaceable>source</replaceable> to use. If you do not specify a
+configuration source with this option, the command runs on all configuration
+sources in the path file.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-dir-exists=<replaceable>string</replaceable></option></term>
+<listitem><para>
+Returns 0 if the directory exists, returns 2 if the directory does not
+exist.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-direct</option></term>
+<listitem><para>
+Use this option with the <option>-config-source</option> option to access a
+configuration source directly. When you use this option, GConf bypasses the
+server. Ensure that the GConf daemon, <filename>gconfd-2</filename>, is not
+running before you use this option.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-dump</option></term>
+<listitem><para>
+Dump to standard output an XML description of all entries under a 
+directory, recursively.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>g</option>, <option>-get</option></term>
+<listitem><para>
+Displays the value of a preference key that you specify. Also displays the
+values of the elements in the schema object for a schema key that you
+specify, unless you specify the <option>-ignore-schema-defaults</option>
+option.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<varlistentry>
+<term><option>-get-default-source</option></term>
+<listitem><para>
+Get the name of the default source.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-get-list-element</option></term>
+<listitem><para>
+Get a specific element from a list key, numerically indexed.
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-get-list-size</option></term>
+<listitem><para>
+Get the number of elements in a list key.
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-get-schema-name</option></term>
+<listitem><para>
+Get the name of the schema applied to this key.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>T</option>, <option>-get-type</option></term>
+<listitem><para>
+Print the data type of a key to standard output.
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-ignore-schema-defaults</option></term>
+<listitem><para>
+Ignore schema defaults when reading values.
+</listitem></varlistentry>
+<varlistentry>
+<term><option>?</option>, <option>-help</option></term>
+<listitem><para>
+Displays a help message about the <command>&cmd;</command> command, and the
+options that you can use with the <command>&cmd;</command> command.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-install-schema-file=<replaceable>file</replaceable></option></term>
+<listitem><para>
+Specifies a schema <replaceable>file</replaceable> to be installed.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-list-type=<replaceable>int|bool|float|string</replaceable></option></term>
+<listitem><para>
+Specifies the type of the list value being set, or the type of the value
+described by a schema.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-long-desc=<replaceable>description</replaceable></option></term>
+<listitem><para>
+Use this option with the <option>-set-schema</option> option to specify a long
+description for a schema key.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-long-docs</option></term>
+<listitem><para>
+Get the long doc string for a key</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-load=<replaceable>file</replaceable></option></term>
+<listitem><para>
+Load from the specified <replaceable>file</replaceable> an XML description of
+values and set them relative to a directory.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-makefile-install-rule</option></term>
+<listitem><para>
+Properly installs schema files on the command line into the database.
+GCONF_CONFIG_SORUCE environment variable should be set to a non-default
+config source or set to the empty string to use the default.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-makefile-uninstall-rule</option></term>
+<listitem><para>
+Properly uninstalls schema files on the command line from the database
+GCONF_CONFIG_SOURCE environment variable should be set to a non-default
+config source or set to the empty string to use the default.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-owner=<replaceable>owner</replaceable></option></term>
+<listitem><para>
+Use this option with the <option>-set-schema</option> option to specify an
+<replaceable>owner</replaceable> for a schema key.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>p</option>, <option>-ping</option></term>
+<listitem><para>
+Returns 0 if <filename>gconfd-2</filename> is running, returns 2 if
+<filename>gconfd-2</filename> is not running.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>R</option>, <option>-recursive-list</option></term>
+<listitem><para>
+Displays the value of all preference keys in all subdirectories in a directory
+that you specify.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-recursive-unset</option></term>
+<listitem><para>
+Recursively unset all keys at or below the key/directory names on the command
+line.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>S</option>, <option>-search-key</option></term>
+<listitem><para>
+Search for a key, recursively.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>s</option>, <option>-set</option></term>
+<listitem><para>Sets the value of a preference key, and writes the value to
+the user configuration source.  Use the <option>-type</option> option with the
+<option>-set</option> option to specify the data type of the value that you
+want to set.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-set-schema</option></term>
+<listitem><para>
+Sets the value of an attribute in a schema key, and writes the value to the
+default configuration source.  Use with <option>-short-desc</option>, 
+<option>-long-desc</option>, <option>-owner</option>, and
+<option>-type</option>.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-short-desc=<replaceable>description</replaceable></option></term>
+<listitem><para>
+Use this option with the <option>-set-schema</option> option to specify a short
+description for a schema key.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-short-docs</option></term>
+<listitem><para>
+Get the short doc string for a key.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-shutdown</option></term>
+<listitem><para>
+Terminates the GConf daemon. Do not use this option unless absolutely
+necessary.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-spawn</option></term>
+<listitem><para>
+Launch the config server (<filename>gconfd-2</filename>). This normally happens
+automatically when needed.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>t</option>, <option>-type=<replaceable>data_type</replaceable></option></term>
+<listitem><para>
+Use this option to specify the data type when you set a value of a preference
+key. You can also use this option when you set the value of an attribute in a
+schema key. Valid data types are <literal>bool</literal>,
+<literal>float</literal>, <literal>int</literal>, <literal>list</literal>,
+<literal>pair</literal>, and <literal>string</literal>.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-unapply-schema-name</option></term>
+<listitem><para>
+Remove any schemas that are currently applied to the specified key.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-unload</option></term>
+<listitem><para>
+Unoload a set of values described in an XML file.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>u</option>, <option>-unset</option></term>
+<listitem><para>
+Resets the value of a preference key from the user setting to the setting in
+the default configuration source.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-help</option></term>
+<listitem><para>
+Displays a brief help message about the <command>&cmd;</command> command, and
+the options that you can use with the <command>&cmd;</command> command.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>v</option>, <option>-version</option></term>
+<listitem><para>
+Display the version number of the <command>&cmd;</command> command.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gconftool-2-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry>
+<term><option role="nodash"><replaceable>key</replaceable></option></term>
+<listitem><para>
+Configuration key or directory. 
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option role="nodash"><replaceable>value</replaceable></option></term>
+<listitem><para>
+When setting configuration options, the value to set.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="gconftool-2-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of environment variables.</para>
+
+<variablelist termlength="medium">
+<varlistentry><term>
+<envar>GCONF_CONFIG_SOURCES</envar></term><listitem>
+<para>
+The directory of the GConf database.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="gconftool-2-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Turning off the tooltips for gnome-panel</title>
+<para><screen>example% <userinput>&cmd; -s /apps/panel/global/tooltips_enabled -t bool false
+</userinput></screen></para>
+</example>
+<example role="example"><title>Identifying the values of the http proxy host
+and port </title>
+<para><screen>example% <userinput>&cmd; --get /system/http_proxy/host /system/http_proxy/port
+</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gconftool-2-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gconftool-2-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide"><varlistentry><term><filename>&cmd;</filename> 
+</term><listitem><para>The command-line executable for the application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/schemas</filename> </term><listitem>
+<para>Directory containing the schema definition files.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/<replaceable>version</replaceable>/path
+</filename> </term><listitem><para>The location of the GConf path file.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gconftool-2-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-config
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gconftool-2-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the <citetitle>GNOME Desktop System Administration Guide</citetitle> for your platform.</para>
+<para>
+<citerefentry><refentrytitle>gconf-editor</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgconf-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gconftool-2-1-note"><title>&note-tt;</title>
+<para>Some distributions of GNOME also provide a graphical <filename>gconf
+</filename> tool called <command>gconf-editor</command>. However, <command>&cmd;</command>
+provides more functionality than <command>gconf-editor</command>.
+</para>
+<para>Written by Ghee Teo, updated by Brian Cameron Sun Microsystems Inc.,
+2003, 2006, 2007.</para>
+</refsect1>
+</refentry>

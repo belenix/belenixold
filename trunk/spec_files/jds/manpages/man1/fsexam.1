@@ -1,0 +1,829 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "fsexam">
+<!ENTITY clicmd "fsexamc">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+
+<refentry id="fsexam-1">
+
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta>
+<refentrytitle>fsexam</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">16 Apr 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm>
+<primary>fsexam</primary>
+</indexterm>
+<indexterm>
+<primary>examine encoding of file name or content and convert to UTF-8</primary>
+</indexterm>
+
+<!-- Name -->
+<refnamediv id="fsexam-1-name">
+<refname>fsexam</refname>
+<refpurpose>examine encoding of file name or content and convert to UTF-8</refpurpose>
+</refnamediv>
+
+<!-- Synopsis -->
+<refsynopsisdiv id="fsexam-1-synp"><title>&synp-tt;</title>
+<!-- fsexamc option -->
+<cmdsynopsis><command>&clicmd;</command>
+<arg choice="opt"><option role="nodash">-a</option></arg>
+<arg choice="opt"><option role="nodash">-b</option></arg>
+<arg choice="opt"><option role="nodash">-d <replaceable>dry-run-result-file</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-E <replaceable>module-name</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-e <replaceable>encoding-list</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-F</option></arg>
+<arg choice="opt"><option role="nodash">-f <replaceable>'expression'</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-g <replaceable>history-length</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-H</option></arg>
+<arg choice="opt"><option role="nodash">-k</option></arg>
+<arg choice="opt"><option role="nodash">-L <replaceable>log-file</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-l</option></arg>
+<arg choice="opt"><option role="nodash">-n</option></arg>
+<arg choice="opt"><option role="nodash">-P</option></arg>
+<arg choice="opt"><option role="nodash">-p</option></arg>
+<arg choice="opt"><option role="nodash">-R</option></arg>
+<arg choice="opt"><option role="nodash">-r</option></arg>
+<arg choice="opt"><option role="nodash">-S</option></arg>
+<arg choice="opt"><option role="nodash">-s</option></arg>
+<arg choice="opt"><option role="nodash">-t</option></arg>
+<arg choice="opt"><option role="nodash">-w</option></arg>
+</cmdsynopsis>
+
+<cmdsynopsis><command>&clicmd;</command>
+<arg choice="opt"><option role="nodash">-V</option></arg>
+</cmdsynopsis>
+
+<cmdsynopsis><command>&clicmd;</command>
+<arg choice="opt"><option role="nodash">-?</option></arg>
+</cmdsynopsis>
+
+<!-- fsexam option -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option role="nodash">-a</option></arg>
+<arg choice="opt"><option role="nodash">-b</option></arg>
+<arg choice="opt"><option role="nodash">-E <replaceable>module-name</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-e <replaceable>encoding-list</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-F</option></arg>
+<arg choice="opt"><option role="nodash">-f <replaceable>'expression'</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-g <replaceable>history-length</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-H</option></arg>
+<arg choice="opt"><option role="nodash">-k</option></arg>
+<arg choice="opt"><option role="nodash">-L <replaceable>log-file</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-l</option></arg>
+<arg choice="opt"><option role="nodash">-n</option></arg>
+<arg choice="opt"><option role="nodash">-P</option></arg>
+<arg choice="opt"><option role="nodash">-p</option></arg>
+<arg choice="opt"><option role="nodash">-R</option></arg>
+<arg choice="opt"><option role="nodash">-r</option></arg>
+<arg choice="opt"><option role="nodash">-S</option></arg>
+<arg choice="opt"><option role="nodash">-s</option></arg>
+<arg choice="opt"><option role="nodash">-t</option></arg>
+<arg choice="opt"><option role="nodash">-w</option></arg>
+</cmdsynopsis>
+
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option role="nodash">-V</option></arg>
+</cmdsynopsis>
+
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option role="nodash">-?</option></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1 id="fsexam-1-desc"><title>&desc-tt;</title>
+<para>The <application>fsexam</application> graphical user interface utility examines file names or file contents and try to convert them from legacy encodings to UTF-8 using given encoding list, system default encoding list, or both.
+</para>
+<para>
+The <application>fsexamc<application> invocation is the same as fsexam except that the utility is now a command line interface utility.  
+</para> 
+<para>
+When converting file names, fsexam will process regular file names, directory file names, and symbolic links by default. When converting file content, it will handle regular plain text files only by default. Use "-E module-name" to enable special file handling.
+</para>
+<para>
+fsexam will ignore most of non-plain text files such as binary files, office document files, image files, and so on. It might produce unexpected result if conversion of such files are forced with -F option. Internally, fsexam uses file(1) utility to determine whether files are plain text files or not.
+</para>
+<para>
+By default, fsexam will convert file names. To convert file contents instead, specify -t option.
+</para>
+<para>
+To help find the best encoding, fsexam has encoding lists for supported languages. They include the most popular codesets or encodings of corresponding languages. For example, fsexam specifies GB18030, BIG5, EUC-TW, and so on for Simplified Chinese. The list is used to generate conversion candidates. You can use "-e encoding-list" option to add more encodings other than those system pre-defined encodings.  If -a option is specified, additional encodings that are suggested by the encoding auto-detection library will be added to the encoding list for possible use. The encoding specified by the -e option has higher priority than the automatically detected encodings.
+</para>
+</refsect1>
+
+<!-- options -->
+<refsect1 id="fsexam-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+
+<varlistentry>
+<term><option role="nodash">-a </option></term>
+<term><option>-auto-detect</option></term>
+<listitem>
+<para>  
+</para>
+<para>
+Enable encoding auto-detection. fsexam can guess the encodings of
+file names or file contents with the help of encoding
+auto-detection library interfaces. Use this option when you do not
+know the encodings of files. Note that, in file name conversions,
+the auto-detection based on the statistics may not be reliable
+due to small number of characters in the file names.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-b</option></term>
+<term><option>-batch</option></term>
+<listitem>
+<para>  
+</para>
+<para>Batch mode which is also known as non-interactive mode. With this
+mode, fsexam will not display candidates or wait for user's
+selection or confirmation. 
+</para>
+<para>
+Please make sure your terminal can display UTF-8 
+characters well when using this option. Otherwise, illegible 
+or gibberish characters may be presented to you. 
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-d <replaceable>dry-run-result-file</replaceable></option></term>
+<listitem>
+<para>  
+</para>
+<para>Specifies the dry run result file. Used with -n option, dry run
+result will be stored into the file. Used without -n option,
+fsexam will convert based on the scenario in the dry run result
+file supplied. 
+</para>
+<para>
+The dry run result file will be created if it does not exist. If
+it exists as a regular file, the file will be truncated to zero
+length and overwritten.
+</para>
+<para>
+When fsexam creates a dry run result file, you can edit and then
+subsequently feed it to fsexam to perform conversions based on
+the content of the edited dry run result file. Note that
+the editing should be done carefully in the format preserving
+manner. Recommended edit operation is to delete any wrong or
+inappropriate candidates and make the right one as the first
+candidate. For more information, refer to fsexam(4).
+</para>
+<para>
+If the edited file does not conform to the file format described in
+the fsexam(4), fsexam will print out a warning message and quit
+without doing anything.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-E <replaceable>moduel-name</replaceable></option></term>
+<term><option>-enable-module <replaceable>moduel-name</replaceable></option></term>
+<listitem>
+<para>  
+</para>
+<para>Enable special file handling. Currently the only valid option
+argument is "COMPRESS". "ALL" can be used to enable all modules
+available.
+</para>
+<para>
+The COMPRESS module supports several popular compress and
+archive format files. Currently, the module supports .tar,
+.tar.gz, .tar.bz2, .zip, and .tar.Z file formats. Used with
+-t option, fsexam converts contents of files in archived,
+compressed, or files of both. Without -t, fsexam converts
+file names.
+</para>
+<para>
+Note that the COMPRESS module ignores symbolic links in
+the files archived, compressed, or both. It also ignores -n option.
+The COMPRESS module handles files compressed, archived, or both
+only if -R option is specified. If there is no suitable ISO8859-1
+codeset locales in the system, this option is not supported as
+described in the NOTES section.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-e <replaceable>encoding-list</replaceable></option></term>
+<term><option>-encoding-list <replaceable>encoding-list</replaceable></option></term>
+<listitem>
+<para>  
+</para>
+<para>Specifies one or more colon or comma separated encodings to be
+used during conversion.
+</para>
+<para>
+If this or -a options are not specified, fsexam uses system
+pre-defined encoding list for the current locale.
+</para>
+<para>
+If specified without -a, -p, or -P options, by default, the list of
+encodings supplied with -e option replaces the system pre-defined
+encoding list for this session.
+</para>
+<para>
+Use -p to prepend it after the system pre-defined encoding list.
+Use -P to append it before the pre-defined encoding list. If you
+want to make the encoding-list permanent, instead of only for
+the current session, use -S option.
+</para>
+<para>
+When used with -a option, fsexam will merge the supplied encoding
+list and auto-detected encoding list. Note that the supplied
+encoding-list here has higher priority than the auto-detected
+encodings.
+</para>
+<para>
+In non-interactive mode, the first encoding which can be used
+to convert file name or file content to UTF-8 successfully is
+used. In interactive mode, fsexam will display all candidates
+that are successfully converted from the encodings in the list of
+encodings to UTF-8. Note that if fsexam cannot convert successfully,
+such encodings will not be displayed in the list of candidates.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-F</option></term>
+<term><option>-force-convert</option></term>
+<listitem>
+<para> 
+</para>
+<para>Forcible conversion mode. fsexam will determine whether
+file name or file content is in UTF-8 or not, and if it is in
+UTF-8 already, then, fsexam will not convert by default.
+However, since fsexam has no completely accurate way to determine
+whether a string is in UTF-8 or not, sometimes, a byte sequence in
+legacy encoding could be treated as a valid UTF-8 string. As an
+example, three Simplified Chinese characters in GB2312 (two bytes
+per character) could be treated as two valid UTF-8 characters
+(three bytes per character). Use this option to bypass
+the verification step and perform conversions forcibly.
+</para>
+<para>
+This option has to be used with caution and should be also
+avoided to use with -R whenever possible. It may convert real
+UTF-8 encoded file names or file contents to unintended
+characters.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-f <replaceable>'expression'</replaceable></option></term>
+<term><option>-find-expression <replaceable>'expression'</replaceable></option></term>
+<listitem>
+<para>  
+</para>
+<para>Search files according to 'expression.' The 'expression' here
+is a subset of the 'expression' used in find(1). But unlike
+find(1), the 'expression' here must include a path name of
+a starting point in the directory hierarchy in which you 
+want to search files from as the first item. Following the path
+name, other items valid for the expression are following options
+and their combinations: -name, -amin, -atime, -cmin, -ctime,
+-group, -mmin, -mtime, -user. Refer to find(1) for more
+information. Internally, fsexam uses find(1) to perform searching.
+</para>
+<para>
+You may want to use single quote to quote the whole expression
+because shell may expand special characters in it if you use
+double quotes.
+</para>
+<para>
+When this option is used, any other operands are ignored.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-g <replaceable>history-length</replaceable></option></term>
+<listitem>
+<para>  
+</para>
+<para>Set the history length. fsexam saves the information about on what
+it has done and use the information to handle restore operations. 
+</para>
+<para>
+By default, fsexam will save history information for 100 fsexam
+executions as long as disk space permits. A single batch conversion
+counts as one. Use this option to change the default value.
+</para>
+<para>
+If you change the length from a higher value to a lower value,
+the older history information will be purged.
+</para>
+<para>
+When the number of history reach to the top limit, fsexam will 
+discard the oldest history information in order to accept and 
+record new history information.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-H</option></term>
+<term><option>-hidden</option></term>
+<listitem>
+<para>  
+</para>
+<para>Handles hidden files. Unless the option is specified, hidden files
+with names starting with a dot (.) will be ignored by default.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-k</option></term>
+<term><option>-no-check-symlink-content</option></term>
+<listitem>
+<para>  
+</para>
+<para>By default, during file name conversions, if both symbolic link
+and its source belong to the user supplied list of files or
+a starting point of a directory hierarchy at operands, fsexam tries
+to keep them consistent. In other words, if a source name is
+converted, then, not only symbolic link itself when applicable
+but also the content of the symbolic link is converted. If given
+source names are not converted for some reason, the corresponding
+symbolic link contents are also not converted and warning messages
+are issued. If either is not in the operand specified list,
+fsexam may break the symbolic links.
+</para>
+<para>
+This default behavior of symbolic link processings need more
+resource and computation time and thus use of -k option is
+recommended to bypass the default behavior of symbolic link
+processing if you have no symbolic links.
+</para>
+<para>
+During content conversions and dry run conversions, fsexam does
+not care about the symbolic link contents.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-l</option></term>
+<term><option role="nodash">-list-encoding</option></term>
+<listitem>
+<para>  
+</para>
+<para>List all available encodings supported by fsexam.    
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-L <replaceable>log-file</replaceable></option></term>
+<term><option>-log-file <replaceable>log-file</replaceable></option></term>
+<listitem>
+<para>  
+</para>
+<para>If specified, fsexam writes log into the log-file. Default is no log file writing.
+</para>
+<para>
+The basic log file format is:
+</para>
+<para>
+        (category) fullpath: message
+</para>
+<para>
+The "category" values possible are "ERROR", "WARNING", and "INFO".
+The "fullpath" is the full path of file that is handled. The
+"message" briefly describes the operation result. 
+</para>
+<para>
+If the "fullpath" or the "message" contain non-UTF-8 characters,
+fsexam writes their hexadecimal byte values prefixed with "\\x"
+such as "\\xAE\\x89" into the file.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-n</option></term>
+<term><option>-dry-run</option></term>
+<listitem>
+<para>  
+</para>
+<para>Dry run mode. With this mode, fsexam writes conversion information
+into the dry-run-result-file specified with -d option instead of
+actually performing the conversion on the file names or contents. 
+</para>
+<para>
+If used with -a option, the dry-run-result-file may get more
+candidates. 
+</para>
+<para>
+Note that compressed or archived files are not supported with
+this mode and symbolic links and their source consistencies are
+also not kept.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-P</option></term>
+<term><option>-append-encoding-list</option></term>
+<listitem>
+<para>  
+</para>
+<para>When used with -e option, fsexam appends the encoding-list to
+the system pre-defined encoding list. Otherwise, it has no effect.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-p</option></term>
+<term><option>-prepend-encoding-list</option></term>
+<listitem>
+<para>  
+</para>
+<para>When used with -e option, fsexam prepends the encoding-list to
+the system pre-defined encoding list. Otherwise, it has no effect.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-R</option></term>
+<term><option>-recursive</option></term>
+<listitem>
+<para>  
+</para>
+<para>Recursive mode. In this mode, fsexam recursively converts all
+applicable files and subdirectories specified at the operands
+as directories.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-r</option></term>
+<term><option>-remote</option></term>
+<listitem>
+<para>  
+</para>
+<para>With this option, fsexam handles files mounted as NFS and such
+remote file systems. Without the option, fsexam handles files in
+local disks only.
+</para>
+<para>Obviously, while fsexam is running, file system mounting or
+unmounting at a directory hierarchy that is being examined
+are not recommended.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-S</option></term>
+<term><option>-save-encoding-list</option></term>
+<listitem>
+<para>  
+</para>
+<para>By default, the encoding-list option argument of '-e' option is
+used only for the current session. If this option is specified,
+however, fsexam makes the encoding-list option argument
+permanent. This option may override the default, system
+pre-defined encoding list. If you do not want that to happen,
+use with -p or -P to prepend or append, respectively.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-s</option></term>
+<term><option>-restore</option></term>
+<listitem>
+<para>  
+</para>
+<para>Restores file names to their original names. To restore file
+contents, specify with -t option.
+
+This option is useful when you want to restore files to 
+their last states in case wrong conversions have been made.
+
+When this option is used on a file, fsexam restores its name or
+content. When used on a directory together with -R option, fsexam
+restores all files and subdirectories under the directory including
+the directory to their original names or contents.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-t</option></term>
+<term><option>-conv-content</option></term>
+<listitem>
+<para>  
+</para>
+<para>
+Converts file contents rather than file names. fsexam mainly 
+handles plain text files only.
+
+Internally, fsexam uses file(1) to determine whether a file is
+a plain text file or not.
+
+First convert file names before converting contents if there are
+files or directories that contain multi-byte characters in their
+files names. Otherwise, you may get illegible characters in your
+log-file or dry-run-result-file.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-w</option></term>
+<term><option>-follow</option></term>
+<listitem>
+<para>  
+</para>
+<para>
+If specified with -R, fsexam follows symbolic links if they are
+symbolic links to directories as if they were regular and normal
+directories. If no -R option is specified, fsexam tries to
+convert symbolic links and it source only. If the source is
+a symbolic link too, fsexam keep convert source's source and so on.
+By default, fsexam does not follow symbolic links.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-V</option></term>
+<term><option>-version</option></term>
+<listitem>
+<para>  
+</para>
+<para>
+Print the version number of fsexam and halt.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option role="nodash">-?</option></term>
+<term><option>-help</option></term>
+<listitem>
+<para>  
+</para>
+<para>
+Print usage information and halt.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1 id="fsexam-1-operands"><title>OPERANDS</title>
+<para>The following operand is supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash">pathname </option></term><listitem>
+<para>The pathname of a file or a directory to be converted. All
+arguments behind "--" will be treated as an operand, even if they 
+begin with '-' character. If fsexam encounters '-' as an operand
+or no operand at all, fsexam will read pathnames from the standard
+input.
+</para>
+</listitem></varlistentry>
+</refsect1>
+
+
+<refsect1 id="fsexam-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Convert the name of a file</filename></title>
+<para>The following will convert the name of file "myfile" using the system
+pre-defined encoding list:
+</para>
+<para>
+<screen><userinput>example% fsexam myfile</userinput></screen>
+</para>
+<para>If there is no pre-defined encoding for the current locale, fsexam will
+exit with error messages.
+</para>
+</example>
+
+<example role="example">
+<title>Recursively convert the names of files and subdirectories under
+the directory "mydir" with the given encoding list
+</title>
+<para><screen><userinput>example% fsexam -e GB18030:BIG5:EUC-TW --recursive mydir</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Dry run fsexam with auto-detected encoding </title>
+<para>The following will scan the directory "mydir" and try to convert 
+file and directory names under the directory with the system pre-defined
+plus auto-detected encodings to UTF-8 and store the result into the file,
+"mydryrunresult" without actually changing the names:
+</para>
+<para><screen><userinput>example% fsexam --auto-detect --dry-run -d mydryrunresult \\
+ --recursive mydir</userinput></screen></para>
+</example>
+
+
+<example role="example">
+<title>Perform scenario based conversions using a dry run result file
+</title>
+<para>The following will perform scenario based conversions by using the
+"mydryrunresult." The first candidate for each file name is used. If 
+there is no candidate, no action will be taken on the file:
+</para>
+<para><screen><userinput>example% fsexam -d mydryrunresult
+</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Forcibly convert a file name
+</title>
+<para>The following will convert the file "myfile" by using the system
+pre-defined encodings even if fsexam thinks it is UTF-8 encoding already.
+This option should be used with caution as it may corrupt the already
+UTF-8 file names and contents:
+</para>
+<para><screen><userinput>example% fsexam --force myfile</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Convert files generated by other utility
+</title>
+<para>The following two examples have the same effect and it will convert files 
+generated by find(1) command with the system pre-defined and auto-detected 
+encodings:
+</para>
+<para><screen><userinput>example% /usr/bin/find . -name "*.txt" | fsexam --auto-detect</userinput></screen></para>
+<para><screen><userinput>example% fsexam --auto-detect `/usr/bin/find . -name "*.txt"`</userinput></screen></para>
+<para>The following is similar to the above two examples except the following
+uses the system pre-defined encodings only and files generated by ls(1)
+utility:
+</para>
+<para><screen><userinput>example% /usr/bin/ls *.txt | fsexam </userinput></screen></para>
+<para>
+The following will search all files trailing with '.txt' under the
+current directory and convert any of them using the system pre-defined
+encoding list:
+</para>
+<para><screen><userinput>example% fsexam -f '. -name "*.txt"'</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Batch mode conversion</title>
+<para>
+The following will use GB18030 and BIG5 to recursively convert file names
+under the directory "mydir" and use the first candidate to convert the
+file names.
+</para>
+<para><screen><userinput>example% fsexam --batch -e GB18030:BIG5 --recursive mydir</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Follow symbolic links and handle hidden files
+</title>
+<para>The following will follow all symbolic links in the directory "mydir" and 
+symbolic links in the symbolic link source's directory. Hidden files under
+the directory will be converted also:
+</para>
+<para><screen><userinput>example% fsexam --follow --hidden --recursive mydir
+</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Convert file contents recursively using specified encoding list
+</title>
+<para>
+The following will recursively scan files under the directory "mydir."
+For each plain text file, it will automatically detect its possible
+encodings, combine them with GB18030 or BIG5, and try to convert the file
+using the encodings formulated one by one. If the conversion is successful,
+fsexam is done with the file and rest of the encodings will not be tried.
+If a file is a compressed or archived file, fsexam will first uncompress
+and unarchive them into a temporary directory and perform above operation,
+compress and archive them again, and replace the original file:
+</para>
+<para><screen><userinput>example% fsexam --conv-content --recursive -e GB18030:BIG5 \\
+--auto-detect --enable-module COMPRESS mydir
+</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Restore a file name or a file content
+</title>
+<para>The following restores the file "myfile" to its original name:
+</para>
+<para><screen><userinput>example% fsexam  --restore myfile</userinput></screen></para>
+<para><screen><userinput>example% fsexam  --conv-content --restore myfile</userinput></screen></para>
+<para>The following restores the content of "myfile" to its original content:
+</para>
+</example>
+</refsect1>
+
+<refsect1 id="fsexam-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+
+<varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>File names or contents are converted successfully or
+corresponding information is written to a dry run result file
+successfully.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><returnvalue>\>0</returnvalue></term>
+<listitem><para>An error occurred. More information can be retrieved from
+a log file if "-L log-file" option and option argument are
+supplied.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id="fsexam-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWfsexam
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Committed</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<refsect1 id="fsexam-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>file</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>find</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>locale</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>tar</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>libauto_ef</refentrytitle><manvolnum>3LIB</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>fsexam</refentrytitle><manvolnum>4</manvolnum>
+</citerefentry></para>
+</refsect1>
+
+<refsect1 id="fsexam-1-notes"><title>&note-tt;</title>
+<para>When you want to convert names of many files, do not convert them one by
+one in a loop. Try to construct a list of files and give the list to
+fsexam for conversions. For example, the following is not recommended:
+
+    for file in *
+    do
+       fsexamc -b $file
+    done
+
+It is highly recommended to run this utility with UTF-8 locale. Otherwise,
+you may see some illegible or garbled characters. Since fsexam has
+the system pre-defined and the most popular encodings for every language,
+considering the best multiscript capability, it will be more smooth if
+you run on a UTF-8 locale environment of your language.
+
+As shown in the NOTES section of the tar(1) man page, if an archive is
+created that contains files whose names were created by processes running
+in multiple or different locales, a locale that uses a full 8-bit coding
+space, i.e., 0x0 to 0xff, such as en_US.ISO8859-1 should be used both to
+create the archive and to extract files from the archive. Due to that,
+when you specify COMPRESS module with -E option, fsexam(1) tries to use
+en_US.ISO8859-1, fr_FR.ISO8859-1, de_DE.ISO8859-1, es_ES.ISO8859-1,
+it_IT.ISO8859-1, or sv_SE.ISO8859-1 locales. If there is no such locale
+in the current system, use of -E option is ignored and a warning message is
+issued.
+</para>
+</refsect1>
+</refentry>

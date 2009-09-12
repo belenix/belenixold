@@ -1,0 +1,215 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/116 XDG User Dirs-->
+<!ENTITY cmd "xdg-user-dirs-update">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="xdg-user-dirs-update-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>xdg-user-dirs-update</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">03 Apr 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>xdg-user-dirs-update</primary></indexterm><indexterm><primary>Create and configure default desktop user directories.</primary></indexterm>
+<refnamediv id="xdg-user-dirs-update-1-name"><refname>xdg-user-dirs-update</refname><refpurpose>Create and configure default desktop user directories.</refpurpose></refnamediv>
+
+<refsynopsisdiv id="xdg-user-dirs-update-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option><option>force</option></option></arg>
+<arg choice="opt"><option><option>dummy-output<arg choice="plain">path</arg></option></option></arg>
+<arg choice="opt"><option><option>set<arg choice="plain"><replaceable>DIR</replaceable></arg><arg choice="plain">path</arg></option></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+
+<refsect1 id="xdg-user-dirs-update-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> is used to create the default desktop user
+directories such as :
+</para>
+<para>
+    Desktop
+    Download
+    Templates
+    Public
+    Documents
+    Music
+    Pictures
+    Videos
+</para>
+<para>
+In general this is run at user login to an XDG compatible desktop such as GNOME or KDE. The directories are created using the user's locale - and this information is then stored in the <filename>${HOME}/.config/user-dirs.dirs</filename> file such that if the user then changes the locale they log in as, the directories will still be referenced correctly, but will remain in the original locale unless you run the <command>&cmd;</command> command with the --force option. 
+</para>
+<para>
+The default names used to create these directories are configured in the system configuration file <filename>/etc/xdg/user-dirs.defaults</filename>.
+</para>
+<para>
+Other configuration is stored in the file <filename>/etc/xdg/user-dirs.conf</filename>. In this file you can disable this functionality system-wide and define what encoding is used in the creation of the directories. By default this is UTF-8 since this is the main encoding used in the desktops.
+</para>
+<para>
+Continuous monitoring is done by the file manager - nautilus in GNOME - and if these directories are renamed or removed nautilus will update the user's configuration file to reflect this change.
+</para>
+</refsect1>
+
+<refsect1 id="xdg-user-dirs-update-1-opts"><title>&opts-tt;</title>
+<variablelist termlength="short">
+<varlistentry>
+<term><option><option>force</option></option></term>
+<listitem><para>Force an update of the directories to the current locale.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option><option>dummy-output<arg choice="plain">path</arg></option></option></term>
+<listitem><para>Simulate the creation of the user configuration file and write to the specified path.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option><option>set<arg choice="plain"><replaceable>DIR</replaceable></arg><arg choice="plain">path</arg></option></option></term>
+<listitem><para>Update the user's configuration changing the <replaceable>DIR</replaceable> to point to the specified path.</para><para>Valid desktop directories (<replaceable>DIR</replaceable>) are:
+
+        DESKTOP
+        DOWNLOAD
+        TEMPLATES
+        PUBLICSHARE
+        DOCUMENTS
+        MUSIC
+        PICTURES
+        VIDEOS
+
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1 id="xdg-user-dirs-update-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="short">
+
+<varlistentry>
+<term><filename>/usr/bin/&cmd;</filename></term>
+<listitem><para>XDG User Directory management utility.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><filename>/etc/xdg/user-dirs.conf</filename></term>
+<listitem><para>Used to configure the operation of <command>&cmd;</command>.</para>
+<para>Can be used to totally disable the the creation of these directories and also
+to define what locale encoding should be used by default - by default this is
+UTF-8 which is the preferred encoding used by the GNOME Virtual File System
+layer.</para> </listitem>
+</varlistentry>
+
+<varlistentry>
+<term><filename>/etc/xdg/user-dirs.defaults</filename></term>
+<listitem><para>Used to configure the default locations that <command>&cmd;</command> will create/manage relative to the user's ${HOME}.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><filename>${HOME}/.config/user-dirs.dirs</filename></term>
+<listitem><para>Location of the user-specific configuration including the current
+list of directories and what they map to.</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><filename>${HOME}/.config/user-dirs.locale</filename></term>
+<listitem><para>Contains the name of the locale (excluding encoding) that was used to create the initial set of directories.</listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1 id="xdg-user-dirs-update-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Determine what may happen if you force an update.</title>
+<para>
+<userinput>% &cmd; --force --dummy-output /tmp/dummy.out</userinput>
+<screen>Moving DOWNLOAD directory from Downloads to Download</screen>
+</para>
+<para>
+Also will write output like the following to /tmp/dummy.out:
+</para>
+<screen>
+# This file is written by xdg-user-dirs-update
+# If you want to change or add directories, just edit the line you're
+# interested in. All local changes will be retained on the next run
+# Format is XDG_xxx_DIR="$HOME/yyy", where yyy is a shell-escaped
+# homedir-relative path, or XDG_xxx_DIR="/yyy", where /yyy is an
+# absolute path. No other format is supported.
+# 
+XDG_DESKTOP_DIR="$HOME/Desktop"
+XDG_DOWNLOAD_DIR="$HOME/Download"
+XDG_TEMPLATES_DIR="$HOME/Templates"
+XDG_PUBLICSHARE_DIR="$HOME/Public"
+XDG_DOCUMENTS_DIR="$HOME/Documents"
+XDG_MUSIC_DIR="$HOME/Music"
+XDG_PICTURES_DIR="$HOME/Pictures"
+XDG_VIDEOS_DIR="$HOME/Videos"
+</screen>
+</example>
+
+<example role="example">
+<title>Change location of my pictures.</title>
+<para>
+<userinput>% &cmd; --set PICTURES \\
+    /home/user/Documents/MyPictures</userinput>
+</para>
+<para>
+Modifies the <filename>${HOME}/.config/user-dirs.dirs</filename> file to have the line:
+</para>
+<screen>
+...
+XDG_PICTURES_DIR="$HOME/Documents/MyPictures"
+...
+</screen>
+</example>
+
+</refsect1>
+
+<refsect1 id="xdg-user-dirs-update-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWxdg-user-dirs</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="xdg-user-dirs-update-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+More information can be found at:
+</para>
+<para>
+<literal>http://www.freedesktop.org/wiki/Software/xdg-user-dirs</literal>
+</para>
+<para>
+<citerefentry><refentrytitle>xdg-user-dirs-gtk-update</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>xdg-user-dir</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+
+<refsect1 id="xdg-user-dirs-update-1-note"><title>&note-tt;</title>
+<para>Written by Darren Kenny, Sun Microsystems Inc, 2008</para>
+</refsect1>
+</refentry>

@@ -1,0 +1,139 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734  GNOME For Nevada-->
+<!ENTITY cmd "create-branching-keyboard">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub EntList brvbar bull cross dash diam diams frac12 frac13 frac14 hellip
+ laquo lArr loz mdash nabla ndash para pound rArr raquo sect yen eacute>
+<?Pub Inc>
+<refentry id="create-branching-keyboard-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>
+1</manvolnum>
+<refmiscinfo class="date">13 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm>
+<primary>create branching keyboards for GOK</primary></indexterm>
+<refnamediv id="create-branching-keyboard-1-name"><refname>&cmd;</refname>
+<refpurpose>create branching keyboards for GOK</refpurpose></refnamediv>
+<refsynopsisdiv id="create-branching-keyboard-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><replaceable>infile</replaceable></arg><arg choice="opt"><option
+role="nodash"><replaceable>n-desired-rows</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="create-branching-keyboard-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> takes an input data file and creates a family
+of branching keyboard XML files in the format that GOK expects. Given an input
+file named test.data, <command>&cmd;</command> creates test.data.kbd, which
+in turn refers to a family of *.kbd files that are created based on data in
+the input file.</para>
+</refsect1>
+<refsect1 id="create-branching-keyboard-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash"><replaceable>infile</replaceable></option></term>
+<listitem><para>The name of the input file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>n-desired-rows</replaceable></option></term>
+<listitem><para>
+If specified, <command>&cmd;</command> attempts to create keyboards with the
+specified number of rows. The recommended values are between 2 and 6.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="create-branching-keyboard-1-exde"><title>&exde-tt;</title>
+<para>
+<command>&cmd;</command> can be used to create families of branching keyboards
+from UTF-8 input files. The format of the input files is as follows:
+</para>
+<itemizedlist>
+<listitem>Lines beginning with '#' are ignored.</listitem>
+<listitem>The rest of the input file consists of consecutive pairs of lines.
+The first line of a pair is typically ignored, but should serve as a UTF-8
+label describing the "primary key" in the next line. The second line of the
+pair consists of a single UTF-8 character followed by a ':' color delimiter,
+and a string of UTF-8 characters to which the initial character may branch.
+</listitem>
+</itemizedlist>
+<para>
+The resulting XML file, after processing, defines <filename>.kbd</filename>
+files such that each prefix 'primary key' forms a key on the GOK keyboard
+whose label is the "primary key" UTF-8 character, and which branches to a
+keyboard consisting of the following UTF-8 characters, one per key.
+</para>
+<para>
+<command>&cmd;</command> is particularly useful in creating branching keyboards
+for ideographic languages. For instance, the primary key for a given line may
+consist of the UTF-8 character for a 'radical' such as h&eacute;ng.
+</para>
+</refsect1>
+<refsect1 id="create-branching-keyboard-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Creating Branching Keyboards From a File Called test.data</title>
+<para><screen>example% <userinput>&cmd; test.data</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="create-branching-keyboard-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="create-branching-keyboard-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable to create branching keyboards for GOK</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="create-branching-keyboard-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-a11y-gok
+</para><para>SUNWgnome-a11y-gok</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="create-branching-keyboard-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para>
+<citerefentry><refentrytitle>gok</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="create-branching-keyboard-1-note"><title>&note-tt;</title>
+<para>The <command>&cmd;</command> utility is experimental and
+unsupported.</para>
+<para>Written by Bill Haneman, Sun Microsystems Inc., 2004, 2006, 2007.</para>
+</refsect1>
+</refentry>

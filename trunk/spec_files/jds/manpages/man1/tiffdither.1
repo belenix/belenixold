@@ -1,0 +1,151 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY exam-tt "EXAMPLES">
+<!ENTITY cmd "tiffdither">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="tiffdither-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>tiffdither</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>tiffdither</primary></indexterm><indexterm><primary>convert
+a grayscale image to bilevel using dithering</primary></indexterm>
+<refnamediv id="tiffdither-1-name"><refname>tiffdither</refname><refpurpose>
+convert a grayscale image to bilevel using dithering</refpurpose></refnamediv>
+<refsynopsisdiv id="tiffdither-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash"><replaceable>
+options</replaceable></option></arg><arg choice="plain" rep="norepeat"><option
+role="nodash"><replaceable>input.tif</replaceable></option></arg><arg choice="plain"
+rep="norepeat"><option role="nodash"><replaceable>output.tif</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="tiffdither-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> converts a single-channel 8-bit grayscale image
+to a bilevel image using Floyd-Steinberg error propagation with thresholding.
+</para>
+</refsect1>
+<refsect1 id="tiffdither-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>c</option></term><listitem><para>Specify a compression
+scheme to use when writing image data:</para>
+<variablelist>
+<varlistentry><term><option>c g3</option></term><listitem><para>CCITT Group
+3 compression algorithm.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>c g4</option></term><listitem><para>CCITT Group
+4 compression algorithm.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>c lzw</option></term><listitem><para>Lempel-Ziv
+and Welch algorithm.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>c none</option></term><listitem><para>No compression.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>c packbits</option></term><listitem><para>PackBits
+compression algorithm.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>c zip</option></term><listitem><para>Deflate compression
+algorithm.</para>
+</listitem></varlistentry>
+</variablelist><para>By default, <command>&cmd;</command> compresses data
+according to the value of the Compression tag found in the source file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>f</option></term><listitem><para>Specify the bit
+fill order to use to write output data. By default, <command>&cmd;</command>
+creates a new file with the same fill order as the original. Specify <option>
+f lsb2msb</option> to force data to be written with the FillOrder tag set
+to LSB2MSB. Specify <option>f msb2lsb</option> to force data to be written
+with the FillOrder tag set to MSB2LSB.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>t</option></term><listitem><para>Set the threshold
+value for dithering. By default, the threshold value is 128.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="tiffdither-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash"><replaceable>input.tif</replaceable></option></term>
+<listitem><para>The name of the input file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>output.tif</replaceable></option></term>
+<listitem><para>The name of the output file.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="tiffdither-1-exde"><title>&exde-tt;</title>
+<para>The CCITT Group 3 and Group 4 compression algorithms can only be used
+with bilevel data.</para>
+<para>Group 3 compression can be specified together with several T.4-specific
+options:</para>
+<variablelist>
+<varlistentry><term><option role="nodash">1d</option></term><listitem><para>
+1-dimensional encoding</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">2d</option></term><listitem><para>
+2-dimensional encoding</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">fill</option></term><listitem><para>
+Force each encoded scanline to be zero-filled so that the terminating EOL
+code lies on a byte boundary.</para>
+</listitem></varlistentry>
+</variablelist><para>Group 3-specific options are specified by appending a
+colon-separated list to the <option role="nodash">g3</option> option. For
+example, specify <option>c</option> <option role="nodash">g3:2d:fill</option>
+to get 2D-encoded data with byte-aligned EOL codes.</para>
+<para>LZW compression can be specified together with a predictor value. A
+predictor value of 2 causes each scanline of the output image to undergo horizontal
+differencing before being encoded. A predictor value of 1 forces each scanline
+to be encoded without differencing.</para>
+<para>LZW-specific options are specified by appending a colon-separated list
+to the <option role="nodash">lzw</option> option. For example, specify <option>
+c</option> <option role="nodash">lzw:2</option> for LZW compression with horizontal
+differencing.</para>
+</refsect1>
+<refsect1 id="tiffdither-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="tiffdither-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>pal2rgb</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>fax2tiff</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffinfo</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffcp</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiff2bw</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="tiffdither-1-note"><title>&note-tt;</title>
+<para>Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>

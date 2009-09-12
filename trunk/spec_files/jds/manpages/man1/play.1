@@ -1,0 +1,184 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2002/464 GNOME 2.x sound recorder-->
+<!ENTITY cmd "play">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="play-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>play</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">3 Apr 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>play</primary></indexterm><indexterm><primary>play a sound
+file</primary></indexterm><indexterm><primary>rec</primary></indexterm><indexterm>
+<primary>record audio to a specified sound file format</primary></indexterm>
+<refnamediv id="play-1-name"><refname>play</refname><refname>rec</refname>
+<refpurpose>play a sound file; record audio to a specified sound file format
+</refpurpose></refnamediv>
+<refsynopsisdiv id="play-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt" rep="repeat"><option
+role="nodash"><replaceable>option</replaceable></option></arg><arg choice="plain"><option
+role="nodash"><replaceable>infile</replaceable></option></arg><arg choice="opt"><option
+role="nodash"><replaceable>effect</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>rec</command><arg choice="opt" rep="repeat"><option
+role="nodash"><replaceable>option</replaceable></option></arg><arg choice="plain"><option
+role="nodash"><replaceable>outfile</replaceable></option></arg><arg choice="opt"><option
+role="nodash"><replaceable>effect</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="play-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> and <command>rec</command> allow you to play
+and record different types of sound files from the command line. Both of these
+commands use the <application>sox</application> application. Normally, the <command>&cmd;</command>
+command automatically detects the type and other parameters of the sound file.
+If the <command>&cmd;</command> command cannot do this, you can use the command
+options to change the parameters.</para>
+<para>For both <command>&cmd;</command> and <command>rec</command>, <replaceable>
+effect</replaceable> can be one of the following: <literal>avg</literal>, <literal>
+band</literal>, <literal>chorus</literal>, <literal>copy</literal>, <literal>
+cut</literal>, <literal>deemph</literal>, <literal>echo</literal>, <literal>
+echos</literal>, <literal>flanger</literal>, <literal>highp</literal>, <literal>
+lowp</literal>, <literal>map</literal>, <literal>mask</literal>, <literal>
+phaser</literal>, <literal>pick</literal>, <literal>polyphase</literal>, <literal>
+rate</literal>, <literal>resample</literal>, <literal>reverb</literal>, <literal>
+reverse</literal>, <literal>split</literal>, <literal>stat</literal>, or <literal>
+vibro</literal>. For more information about these effects, see <citerefentry>
+<refentrytitle>sox</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+and <citerefentry><refentrytitle>soxexam</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>.</para>
+</refsect1>
+<refsect1 id="play-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported for both <command>&cmd;</command>
+and <command>rec</command>:</para>
+<variablelist termlength="medium"><varlistentry><term><option>c</option>, <option>-channels=<replaceable>
+channels</replaceable></option></term><listitem><para>Define the number of
+channels in the file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>d</option>, <option>-device=<replaceable>device</replaceable></option></term>
+<listitem><para>Specify the device to which the sound file should be played.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>f</option>, <option>-format=<replaceable>format</replaceable></option></term>
+<listitem><para>Specify the bit format of the sample. The supported values
+for <replaceable>format</replaceable> are <literal>A</literal>, <literal>
+a</literal>, <literal>g</literal>, <literal>s</literal>, <literal>U</literal>,
+or <literal>u</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-help</option></term><listitem><para>Show usage
+and basic help information.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>r</option>, <option>-rate=<replaceable>rate</replaceable></option></term>
+<listitem><para>Specify the sample rate of the audio data, in samples per
+second.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>s</option>, <option>-size=<replaceable>size</replaceable></option></term>
+<listitem><para>Specify the width of each sample. The supported values for <replaceable>
+size</replaceable> are <literal>b</literal>, <literal>D</literal>, <literal>
+d</literal>, <literal>f</literal>, <literal>l</literal>, and <literal>w</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>t</option>, <option>-type=<replaceable>type</replaceable></option></term>
+<listitem><para>Specify the audio file format to use. This option is useful
+if the audio file format cannot be automatically determined.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-version</option></term><listitem><para>Show version
+information.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>v</option>, <option>-volume=<replaceable>volume</replaceable></option></term>
+<listitem><para>Change the audio volume.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>x</option>, <option>-xinu</option></term><listitem><para>Reverse the
+byte order of the sample. This option only works with 16&ndash; and 32-bit
+data.</para>
+</listitem></varlistentry>
+</variablelist><para>For more information about these options, see <citerefentry>
+<refentrytitle>sox</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+</para>
+</refsect1>
+<refsect1 id="play-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium"><varlistentry><term><option role="nodash"><replaceable>
+infile</replaceable></option></term><listitem><para>Specifies the name of
+the sound file to be played by the <command>&cmd;</command> command.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>outfile</replaceable></option></term>
+<listitem><para>Specifies the name of the file to which the sound recorded
+by the <command>rec</command> command should be saved.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="play-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Playing a File at Half Speed</title>
+<para><screen>example% <userinput>&cmd; <replaceable>file.wav</replaceable> stretch 2
+</userinput></screen></para>
+</example>
+<example role="example"><title>Playing a File at Double Speed</title>
+<para><screen>example% <userinput>&cmd; <replaceable>file.wav</replaceable> stretch .5
+</userinput></screen></para>
+</example>
+<example role="example"><title>Recording a Sound</title>
+<para><screen>example% <userinput>rec <replaceable>file.wav</replaceable></userinput></screen></para>
+<para>Use <literal>Ctrl-C</literal> to stop recording.</para>
+<para>For more examples, see <citerefentry><refentrytitle>soxexam</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry>.</para>
+</example>
+</refsect1>
+<refsect1 id="play-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="play-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium"><varlistentry><term><filename>/usr/bin/&cmd;</filename> 
+</term><listitem><para>The command-line executable for the <command>&cmd;</command>
+application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/rec</filename> </term><listitem><para>
+The command-line executable for the <command>rec</command> application.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="play-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-sound-recorder
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="play-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>sox</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>soxexam</refentrytitle><manvolnum>
+5</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="play-1-note"><title>&note-tt;</title>
+<para>Updated by Ghee Teo, Sun Microsystems Inc., 2003.  Written by
+Guenter Geiger (geiger@iem.mhsg.ac.at) for Debian GNU/Linux. </para>
+</refsect1>
+</refentry>

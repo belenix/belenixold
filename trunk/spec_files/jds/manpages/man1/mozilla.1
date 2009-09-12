@@ -1,0 +1,179 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY envr-tt "ENVIRONMENT VARIABLES">
+<!ENTITY cmd "mozilla">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="mozilla-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>mozilla</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">9 Oct 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>mozilla</primary></indexterm><indexterm><primary>Mozilla
+</primary></indexterm>
+<refnamediv id="mozilla-1-name"><refname>mozilla</refname><refpurpose>start
+the Mozilla application</refpurpose></refnamediv>
+<refsynopsisdiv id="mozilla-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option>addressbook
+</option></arg><arg choice="opt"><option>chrome <replaceable>url</replaceable></option></arg>
+<arg choice="opt"><option>compose <replaceable>url</replaceable></option></arg>
+<arg choice="opt"><option>CreateProfile <replaceable>profile</replaceable></option></arg>
+<arg choice="opt"><option>edit <replaceable>url</replaceable></option></arg>
+<arg choice="opt"><option>help</option></arg><arg choice="opt"><option>jsconsole
+</option></arg><arg choice="opt"><option>mail</option></arg><arg choice="opt"><option>
+news</option></arg><arg choice="opt"><option>P <replaceable>profile</replaceable></option></arg>
+<arg choice="opt"><option>ProfileManager</option></arg><arg choice="opt"><option>
+ProfileWizard</option></arg><arg choice="opt"><option>SelectProfile</option></arg>
+<arg choice="opt"><option>splash</option></arg><arg choice="opt"><option>
+version</option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="mozilla-1-desc"><title>&desc-tt;</title>
+<para>Mozilla is a web browser and editor, an email client, and a news client.
+You can use Mozilla to perform the following tasks:</para>
+<itemizedlist>
+<listitem><para>To browse web pages, use the Navigator component.</para></listitem>
+<listitem><para>To create simple web pages, use the Composer component.</para>
+</listitem>
+<listitem><para>To read and compose electronic mail, use the Mail &amp; Newsgroups
+component.</para></listitem>
+<listitem><para>To read and compose network newsgroup messages, use the Mail
+&amp; Newsgroups component.</para></listitem>
+<listitem><para>To create different browser profiles, use the Profile Wizard.
+</para>
+<para>A profile stores information about browser settings and bookmarks, and
+preferences such as proxies, mail server, preferred font, and instant messenger
+screen name. To view or change the preference information, choose Edit &mdash;>
+Preferences. </para>
+<para>A user can have several profiles. For example, profiles are useful if
+you use the same browser from the same account at work and at home, but with
+different web proxy settings.</para></listitem>
+</itemizedlist>
+</refsect1>
+<refsect1 id="mozilla-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option>addressbook</option></term><listitem><para>Start
+the <command>&cmd;</command> Address Book component.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>chrome <replaceable>url</replaceable></option></term>
+<listitem><para>Start the <command>&cmd;</command> Navigator component.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>compose <replaceable>url</replaceable></option></term>
+<listitem><para>Open a <command>&cmd;</command> Mail &amp; Newsgroups window
+to compose a new mail message.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>CreateProfile <replaceable>profile</replaceable></option></term>
+<listitem><para>Create a new profile.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>edit <replaceable>url</replaceable></option></term>
+<listitem><para>Start the <command>&cmd;</command> Composer component.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>h</option>, <option>help</option></term><listitem><para>Display help
+text.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>jsconsole</option></term><listitem><para>Start
+the <command>&cmd;</command> JavaScript Console.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>mail</option></term><listitem><para>Start the <command>&cmd;</command>
+Mail &amp; Newsgroups component.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>news</option></term><listitem><para>Start the <command>&cmd;</command>
+Mail &amp; Newsgroups component.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>P <replaceable>profile</replaceable></option></term>
+<listitem><para>Start <command>&cmd;</command> with the specified profile.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>ProfileManager</option></term><listitem><para>
+Start the Profile Manager. The Profile Manager enables you to create, rename,
+or delete a profile.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>ProfileWizard</option></term><listitem><para>
+Start the Profile Wizard. The Profile Wizard guides you through the steps
+required to create a profile. </para>
+</listitem></varlistentry>
+<varlistentry><term><option>SelectProfile</option></term><listitem><para>
+Display the Select User Profile dialog. Use the Select User Profile dialog
+to select a previously saved profile.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>splash</option></term><listitem><para>Enable the
+splash screen when you launch the application.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>v</option>, <option>version</option></term><listitem><para>Display
+version information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="mozilla-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Launching Mozilla</title>
+<para><screen>example% <userinput>&cmd; </userinput></screen></para>
+</example>
+<example role="example">
+<title>Launching Mozilla With the work Profile</title>
+<para><screen>example% <userinput>&cmd; -P work</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="mozilla-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>1</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="mozilla-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename> </term><listitem>
+<para>Executable for Mozilla application</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>$HOME/.mozilla</filename> </term><listitem>
+<para>User configuration files for Mozilla</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="mozilla-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para></para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="mozilla-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><literal>http://www.mozilla.org</literal></para>
+<para><citetitle>Mozilla Help</citetitle></para>
+</refsect1>
+<refsect1 id="mozilla-1-note"><title>&note-tt;</title>
+<para>This man page was originally written by The Mozilla Organization
+(<literal>http://www.mozilla.org/about.html</literal>).
+</para>
+<para>Updated by Leon Sha, Sun Microsystems Inc., 2003. </para>
+</refsect1>
+</refentry>

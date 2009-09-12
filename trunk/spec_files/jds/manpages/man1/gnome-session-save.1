@@ -1,0 +1,132 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/348 GNOME Panel-->
+<!ENTITY cmd "gnome-session-save">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-session-save-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-session-save</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">07 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-session-save</primary></indexterm><indexterm><primary>
+saves or terminates the current  GNOME session</primary></indexterm><refnamediv
+id="gnome-session-save-1-name"><refname>gnome-session-save</refname><refpurpose>saves or
+terminates the current GNOME session</refpurpose></refnamediv>
+<refsynopsisdiv id="gnome-session-save-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-gui</option></arg>
+<arg choice="opt"><option>-kill</option></arg>
+<arg choice="opt"><option>-session-name=<replaceable>name</replaceable></option></arg>
+<arg choice="opt"><option>-silent</option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>
+gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnome-session-save-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> can be used from a GNOME session to save a snapshot
+of the currently running applications. This session will be later restored at your
+next GNOME startup session.</para>
+</refsect1>
+<refsect1 id="gnome-session-save-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><option>-gui</option></term><listitem>
+<para>If specified, then any errors will be displayed in a dialog box.
+Otherwise, such messages are displayed to <literal>stderr</literal>.
+Note that this option has no affect any dialogs that the window
+manager might display.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-kill</option></term><listitem>
+<para>Terminates the GNOME session.  The session will not be saved if
+this option is provided, unless the user has configured their session
+to always save on logout.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>s</option>, <option>-session-name=<replaceable>name</replaceable></option></term><listitem>
+<para>Set <replaceable>name</replaceable> of session to save.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-silent</option></term><listitem>
+<para>Avoids displaying any confirmation or dialogs, including ones
+that are displayed by the window manager (such as dialogs informing
+the user about any windows that cannot save session, or session logout
+confirmation when the <option>-kill</option> option is also used).</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-session-save-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Saving the user's current session</title>
+<para><screen>example% <userinput>&cmd; </userinput></screen></para>
+</example>
+<example role="example"><title>Terminating the user's current session</title>
+<para><screen>example% <userinput>&cmd; --kill</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnome-session-save-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-session-save-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide"><varlistentry><term><filename>/usr/bin/&cmd;</filename> 
+</term><listitem><para>The command-line executable for the application.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-session-save-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-session
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-session-save-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gnome-session</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>metacity</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gnome-session-save-1-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2003, 2006, 2007.</para>
+</refsect1>
+</refentry>

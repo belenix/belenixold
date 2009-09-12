@@ -1,0 +1,197 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2007/175 - Virtual Machine Manager-->
+<!ENTITY cmd "virt-manager">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2007, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="virt-manager-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>virt-manager</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">8 Oct 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>virt-manager</primary></indexterm>
+<indexterm><primary>Virtual Machine Manager</primary></indexterm>
+<refnamediv id="virt-manager-1-name"><refname>virt-manager</refname>
+<refpurpose>Desktop application for managing virtual machines</refpurpose></refnamediv>
+<refsynopsisdiv id="virt-manager-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option role="nodash"><replaceable>-h, --help</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>--profile=FILE</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>--no-dbus</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>--show-domain-creator</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>--show-domain-editor=UUID</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>--show-domain-performance=UUID</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>--show-domain-console=UUID</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>--show-host-summary</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+
+<refsect1 id="virt-manager-1-desc"><title>&desc-tt;</title>
+<para>The "Virtual Machine Manager" (virt-manager for short 
+package name) is a desktop application for managing virtual 
+machines.  </para>
+<para>It presents a summary view of running domains and their live performance & resource utilization statistics. A detailed view presents graphs showing performance & utilization over time. Ultimately it will allow creation of new domains, and configuration & adjustment of a domain's resource allocation & virtual hardware. Finally an embedded VNC client viewer presents a full graphical console to the guest domain.</para>
+<para>You need root right to run virt-manager. </para></refsect1>
+
+<refsect1 id="virt-manager-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+    <varlistentry>
+      <term><option>-h, --help</option></term>
+      <listitem>
+        <para>show this help message and exit.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><option>--profile=FILE</option></term>
+      <listitem>
+        <para>Generate runtime performance profile stats.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><option>-c URI, --connect=URI</option></term>
+      <listitem>
+        <para>Connect to hypervisor at URI.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><option>--no-dbus </option></term>
+      <listitem>
+        <para>Disable DBus service for controlling UI.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><option>--show-domain-creator</option></term>
+      <listitem>
+        <para>Create a new virtual machine.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><option>--show-domain-editor=UUID</option></term>
+      <listitem>
+        <para>Edit a domain configuration.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><option>--show-domain-performance=UUID</option></term>
+      <listitem>
+        <para>Show a domain performance.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><option>--show-domain-console=UUID</option></term>
+      <listitem>
+        <para>Show a domain console.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><option>--show-host-summary</option></term>
+      <listitem>
+        <para>Show a host summary.</para>
+      </listitem>
+    </varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="virt-manager-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Launching virtual machine manager</title>
+<para><screen>example% <userinput>&cmd;</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Show option information for virt-manager</title>
+<para><screen>example% <userinput>&cmd; -h</userinput></screen></para>
+</example>
+</refsect1>
+
+<refsect1 id="virt-manager-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="virt-manager-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+  <varlistentry>
+     <term><filename>/usr/bin/&cmd;</filename></term>
+     <listitem>
+       <para>Executable for the virtual manager</para>
+     </listitem>
+   </varlistentry>
+
+    <varlistentry>
+      <term><filename>$HOME/.virt-manager/virt-manager.log</filename></term>
+      <listitem>
+        <para></para>
+        <para>Used to store the log for virt-manager.</para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><filename>/usr/share/virt-manager/*</filename></term>
+      <listitem>
+        <para>All of the python source codes are stored here.</para>
+      </listitem>
+    </varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="virt-manager-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWvirt-manager</para></entry>
+<entry><para>SUNWvirt-manager-root</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<refsect1 id="virt-manager-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>virt-inst</refentrytitle></citerefentry>,
+<citerefentry><refentrytitle>virsh</refentrytitle><manvolnum>1M</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>xm</refentrytitle><manvolnum>1M</manvolnum></citerefentry>
+</para>
+</refsect1>
+
+<refsect1 id="virt-manager-1-note"><title>&note-tt;</title>
+<para>Written by Henry Zhang, Sun Microsystems Inc., 2007.</para>
+</refsect1>
+</refentry>
+<?Pub *0000004990>

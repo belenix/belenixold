@@ -1,0 +1,176 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/534 libcanberra -->
+<!ENTITY cmd "canberra-gtk-play">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="canberra-gtk-play-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>canberra-gtk-play</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">20 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+play a sound event
+</primary></indexterm>
+<refnamediv id="canberra-gtk-play-1-name"><refname>&cmd;</refname>
+<refpurpose>
+play a sound event
+</refpurpose></refnamediv>
+<refsynopsisdiv id="canberra-gtk-play-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-cache-control=<replaceable>permanent|volatile|never</replaceable</option></arg>
+<arg choice="opt"><option>-description=<replaceable>description</replaceable</option></arg>
+<arg choice="opt"><option>-display=<replaceable>display</replaceable</option></arg>
+<arg choice="opt"><option>-file=<replaceable>file</replaceable</option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-id=<replaceable>identifier</replaceable</option></arg>
+<arg choice="opt"><option>-loop=<replaceable>times</replaceable></option></arg>
+<arg choice="opt"><option>-version</option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="canberra-gtk-play-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> is an application for playing sound events that
+are specified by the FreeDesktop &quot;XDG Sound Theme and Name
+Specification&quot;.
+</para>
+</refsect1>
+<refsect1 id="totem-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><option>-c</option>, <option>-cache-control=<replaceable>[permanent|volatile|never]</option></term>
+<listitem><para>
+Specify how &cmd; will manage its cache control.  The value of
+&quot;permanent&quot; will cause the sample to be cached in the server
+permanently.  This is useful for very frequently used sounds.  The value of
+&quot;volatile&quot; may be used for caching sounds in the sound server
+temporarily.  They will expire after some time or on cache pressure.  The
+value of &quot;never&quot; may be used that should never be cached, because
+they are only generated very seldomly or only once.
+</para>
+<para>
+Not all libcanberra backends support caching, and this option is only
+functional if the backend being used does support this functionality.
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>d</option>, <option>-description=<replaceable>description</option></term>
+<listitem><para>
+Specify a <replaceable>description</replaceable> for the sound event.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-display=<replaceable>display</option></term>
+<listitem><para>
+Specify the X display to use.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>f</option>, <option>-file=<replaceable>file</option></term>
+<listitem><para>
+Specify a <replaceable>file</replaceable> to play.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>?</option>, <option>-help</term>
+<listitem><para>
+Display usage information.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+
+<term><option>i</option>, <option>-id=<replaceable>identifier</option></term>
+<listitem><para>
+Specify the event <replaceable>identifier</replaceable> to play.  These
+<replaceable>identifier</replaceable> values are specified in the &quot;XDG
+Sound Theme and Name Specification&quot;.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>l</option>, <option>-loop=<replaceable>times</option></term>
+<listitem><para>
+Specify the number of <replaceable>times</replaceable> to play the file.  The
+default value is 1.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>v</option>, <option>-version</option></term>
+<listitem><para>
+Display &cmd; version number.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option role="nodash"><replaceable>gnome-std-options</replaceable></option
+></term>
+<listitem><para>
+Standard options available for use with most GNOME applications.  See
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manv
+olnum></citerefentry>
+for more information.</para>
+</listitem></varlistentry>
+
+<refsect1 id="canberra-gtk-play-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Play the &quot;desktop-login&quot; sound event</title>
+<para><screen>example% <userinput><command>&cmd; --id desktop-login --description="GNOME Login"</command></userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="canberra-gtk-play-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable to play an sound events</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="canberra-gtk-play-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWlibcanberra
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="canberra-gtk-play-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>libcanberra</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gst-feedback-1-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2009.</para>
+</refsect1>
+</refentry>

@@ -1,0 +1,384 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734 GNOME For Nevada -->
+<!ENTITY cmd "gst-launch">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gst-launch-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gst-launch</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">12 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gst-launch</primary></indexterm><indexterm><primary>
+build and run a GStreamer pipeline</primary></indexterm>
+<refnamediv id="gst-launch-1-name"><refname>gst-launch</refname>
+<refpurpose>build and run a GStreamer pipeline</refpurpose>
+</refnamediv>
+<refsynopsisdiv id="gst-launch-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option>-exclude=<replaceable>
+type</replaceable>,<replaceable>type2</replaceable>,<replaceable>...</replaceable></option></arg>
+<arg choice="opt"><option>-no-fault</option></arg>
+<arg choice="opt"><option>-messages</option></arg>
+<arg choice="opt"><option>output=<replaceable>file</replaceable></option></arg>
+<arg choice="opt"><option>-tags</option></arg><arg choice="opt"><option>-trace
+</option></arg><arg choice="opt"><option>-verbose</option></arg>
+<arg choice="opt"><option>-version</option></arg>
+<arg choice="opt"><option
+role="nodash"><replaceable>gst-std-options</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>pipeline-description</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gst-launch-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> builds and runs basic GStreamer pipelines.
+</para>
+<para>In simple form, a <replaceable>pipeline-description</replaceable> is
+a list of elements separated by exclamation marks (!). Properties can be
+appended to elements, in the form
+<replaceable>property</replaceable>=<replaceable>value</replaceable>.</para>
+<para>For a complete description of possible values for
+<replaceable>pipeline-description</replaceable>, see the section Pipeline
+Description below or consult the GStreamer documentation.</para>
+<para>Please note that <command>gst-launch</command> is primarily a debugging
+tool for developers and users. You should not build applications on top of it.
+For applications, use the gst_parse_launch() function of the GStreamer API as
+an easy way to construct pipelines from pipeline descriptions.
+</para>
+</refsect1>
+<refsect1 id="gst-launch-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported by <command>&cmd;</command>:</para>
+<variablelist termlength="wide">
+<varlistentry><term><option>X</option>, <option>-exclude=<replaceable>type1</replaceable>,<replaceable>type2</replaceable>,<replaceable>...</replaceable></option></term>
+<listitem><para>
+Do not output status information of specified <replaceable>type</replaceable>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>m</option>, <option>-messages</option></term>
+<listitem><para>
+Output messages posted on the pipeline's bus.
+</listitem></varlistentry>
+<varlistentry><term><option>f</option>, <option>-no-fault</option></term>
+<listitem><para>
+Do not install a fault handler.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>o</option>, <option>output-=<replaceable>file</replaceable></option></term>
+<listitem><para>
+Save XML representation of pipeline to <replaceable>file</replaceable>, then exit.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>t</option>, <option>-tags</option></term>
+<listitem><para>
+Output tags, also known as metadata.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>T</option>, <option>-trace</option></term>
+<listitem><para>
+Print memory allocation trace, if enabled at compile time.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>v</option>, <option>-verbose</option></term>
+<listitem><para>
+Output status information and property notifications.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-version</option></term>
+<listitem><para>
+Print GStreamer version number.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>gst-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GStreamer applications.  See
+<citerefentry><refentrytitle>gst-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+for more information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gst-launch-1-exde"><title>&exde-tt;</title>
+<refsect2 id="gst-launch-1-exde-pipedesc">
+<title>Pipeline Description</title>
+
+<para>
+A pipeline consists <replaceable>elements</replaceable> and
+<replaceable>links</replaceable>. <replaceable>elements</replaceable>
+can be put into <replaceable>bins</replaceable> of different sorts.
+<replaceable>elements</replaceable>, <replaceable>links</replaceable>
+and <replaceable>bins</replaceable> can be specified in a pipeline
+description in any order.
+</para>
+
+<refsect3 id="gst-launch-1-exde-pipedesc-elements">
+<title>Elements</title>
+
+<para>
+<screen><userinput><replaceable>elementtype</replaceable> [<replaceable>property1</replaceable> ...]</userinput></screen></para>
+
+<para>Creates an element of type <replaceable>elementtype</replaceable> and sets the <replaceable>properties</replaceable>.</para>
+</refsect3>
+<refsect3 id="gst-launch-1-exde-pipedesc-properties">
+<title>Properties</title>
+
+<para>
+<screen><userinput><replaceable>property</replaceable>=<replaceable>value</replaceable> ...</userinput></screen></para>
+
+<para>
+Sets the property to the specified value. You can use
+<citerefentry><refentrytitle>gst-inspect</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+to find out about properties and allowed values of different elements.
+</para>
+<para>Enumeration properties can be set by name, nick or value.</para>
+</refsect3>
+<refsect3 id="gst-launch-1-exde-pipedesc-bins">
+<title>Bins</title>
+
+<para><screen><userinput>[<replaceable>bintype</replaceable>.] ( [<replaceable>property1</replaceable> ...] <replaceable>pipeline-description</replaceable> )</userinput></screen>
+</para>
+
+<para>Specifies that a bin of type <replaceable>bintype</replaceable>
+is created and the given properties are set. Every element between the braces
+is put into the bin. Please note the dot that has to be used
+after the <replaceable>bintype</replaceable>. You will almost never need this
+functionality, it is only really useful for applications using
+the gst_launch_parse() API with 'bin' as bintype. That way
+it is possible to build partial pipelines instead of a
+full-fledged top-level pipeline.
+</para>
+</refsect3>
+<refsect3 id="gst-launch-1-exde-pipedesc-links">
+<title>Links</title>
+
+<para><screen><userinput>
+[[<replaceable>srcelement</replaceable>].[<replaceable>pad1</replaceable>,...]] ! [[<replaceable>
+sinkelement</replaceable>].[<replaceable>pad1</replaceable>,...]]
+[[<replaceable>srcelement</replaceable>].[<replaceable>pad1</replaceable>,...]] ! <replaceable>
+caps</replaceable> !
+[[<replaceable>sinkelement</replaceable>].[<replaceable>pad1</replaceable>,...]]
+</userinput></screen></para>
+
+<para>
+Links the element with name <replaceable>srcelement</replaceable> to the element with
+name <replaceable>sinkelement</replaceable>, using the caps specified in <replaceable>caps</replaceable> as a
+filter. Names can be set on elements with the name property.
+If the name is omitted, the element that was specified directly
+in front of or after the link is used. This works across bins.
+If a padname is given, the link is done with these pads. If no pad
+names are given all possibilities are tried and a matching pad is used.
+If multiple padnames are given, both sides must have the same
+number of pads specified and multiple links are done in the given order.
+So the simplest link is a simple exclamation mark, that
+links the element to the left of it to the element right of it.
+</para>
+</refsect3>
+<refsect3 id="gst-launch-1-exde-pipedesc-links">
+<title>Caps</title>
+
+<para>
+<screen><userinput><replaceable>mimetype</replaceable> [, <replaceable>property</replaceable>[, <replaceable>property</replaceable> ...]]] [; <replaceable>caps</replaceable>[; <replaceable>caps</replaceable> ...]]</userinput></screen></para>
+
+<para>
+Creates a capability with the given mimetype and optionally
+with given properties. The mimetype can be escaped using "
+or '. If you want to chain caps, you can add more caps in
+the same format afterwards.
+</para>
+</refsect3>
+<refsect3 id="gst-launch-1-exde-pipedesc-links">
+<title>Properties</title>
+
+<para><screen><userinput><replaceable>name</replaceable>[:<replaceable>type</replaceable>]=<replaceable>value</replaceable>
+in lists and ranges: [<replaceable>type</replaceable>=]<replaceable>value</replaceable></userinput></screen></para>
+
+<para>
+Sets the requested property in capabilities. The name is an
+alphanumeric value and the type can have the following
+case-insensitive values:
+</para>
+<itemizedlist>
+<listitem>i or int for integer values or ranges</listitem>
+<listitem>f or float for float values or ranges</listitem>
+<listitem>4 or fourcc for FOURCC values</listitem>
+<listitem>b, bool, or boolean for boolean values</listitem>
+<listitem>s, str, or string for strings</listitem>
+<listitem>l or list for lists</listitem>
+</itemizedlist>
+<para>
+If no type was given, the following order is tried: integer,
+float, boolean, string.
+Integer values must be parsable by strtol(), floats by
+strtod(). FOURCC values may either be integers or strings.
+Boolean values are (case insensitive) yes, no, true or false
+and may like strings be escaped with " or '.
+<screen>
+Ranges are in this format:  [ <replaceable>property</replaceable>, <replaceable>property</replaceable> ]
+Lists use this format:      ( <replaceable>property</replaceable> [, <replaceable>property</replaceable> ...] )
+</screen>
+</para>
+</refsect3>
+</refsect2>
+<refsect2 id="gst-launch-1-exde-control">
+<title>Pipeline Control</title>
+<para>
+A pipeline can be controlled by signals. SIGUSR2 will stop
+the pipeline (GST_STATE_NULL); SIGUSR1 will put it back to
+play (GST_STATE_PLAYING). By default, the pipeline will
+start in the playing state.
+There are currently no signals defined to go into the ready
+or pause (GST_STATE_READY and GST_STATE_PAUSED) state explicitly.
+</para>
+</refsect2>
+</refsect1>
+<refsect1 id="gst-launch-1-exam"><title>&exam-tt;</title>
+<para>The examples below assume that you have the correct plugins available.
+In general, "sunaudiosink" can be substituted with another audio output plugin
+such as "esdsink", "alsasink", "osxaudiosink", or "artsdsink". Likewise, "xvimagesink" can
+be substituted with "ximagesink", "sdlvideosink", "osxvideosink", or "aasink".
+Keep in mind though that different sinks might accept different formats and even the
+same sink might accept different formats on different machines, so you might
+need to add converter elements like audioconvert and audioresample (for audio)
+or ffmpegcolorspace (for video) in front of the sink to make things work.
+</para>
+<example role="example">
+<title>Audio Playback</title>
+<para>Play the WAV music file "music.wav":
+<screen>example% <userinput>gst-launch filesrc location=music.wav ! wavparse ! sunaudiosink</userinput></screen></para>
+<para>Play the mp3 music file "music.mp3":
+<screen>example% <userinput>gst-launch filesrc location=music.mp3 ! flump3dec ! sunaudiosink</userinput></screen></para>
+<para>Play the Ogg Vorbis file "music.ogg":
+<screen>example% <userinput>gst-launch filesrc location=music.ogg ! oggdemux ! vorbisdec ! audioconvert ! sunaudiosink</userinput></screen>
+</para>
+<para>Play an mp3 file or an http stream using GNOME-VFS:
+<screen>example% <userinput>gst-launch gnomevfssrc location=music.mp3 ! flump3dec ! sunaudiosink</userinput></screen>
+<screen>example% <userinput>gst-launch gnomevfssrc location=<literal>http://domain.com/music.mp3</literal> ! flump3dec ! sunaudiosink</userinput></screen>
+</para>
+<para>Use GNOME-VFS to play an mp3 file located on an SMB server:
+<screen>example% <userinput>gst-launch gnomevfssrc location=smb://computer/music.mp3 ! flump3dec ! sunaudiosink</userinput></screen>
+</para>
+</example>
+<example role="example">
+<title>Video Playback</title>
+<para>Play an Ogg video file:
+<screen>example% <userinput>gst-launch filesrc location=video.ogg ! oggdemux ! theoradec ! ffmpegcolorspace ! xvimagesink</screen>
+</para>
+</example>
+<example role="example">
+<title>Format Conversion</title>
+<para>Convert an mp3 music file to the Ogg Vorbis format:
+<screen>example% <userinput>gst-launch filesrc location=music.mp3 ! flump3dec ! audioconvert ! vorbisenc ! oggmux ! filesink location=music.ogg</userinput></screen>
+</para>
+<para>Convert an mp3 music file to the FLAC format:
+<screen>example% <userinput>gst-launch filesrc location=music.mp3 ! flump3dec ! audioconvert ! flacenc ! filesink location=test.flac</userinput></screen>
+</para>
+<para>Convert a .WAV file to the Ogg Vorbis format:
+<screen>example% <userinput>gst-launch filesrc location=music.wav ! wavparse ! audioconvert ! vorbisenc ! oggmux ! filesink location=music.ogg</userinput></screen>
+</para>
+</example>
+<example role="example">
+<title>Recording Audio</title>
+<para>Record sound from your audio input and encode it into an Ogg file:
+<screen>example% <userinput>gst-launch sunaudiosrc ! audioconvert ! vorbisenc ! oggmux ! filesink location=music.ogg</userinput></screen>
+</para>
+</example>
+<example role="example">
+<title>Compact Disk (CDDA)</title>
+<para>Play track number 3 from compact disc:
+<screen>example% <userinput>gst-launch cddasrc track=3 ! sunaudiosink </userinput></screen>
+</para>
+<para>Play track number 5 from compact disc:
+<screen>example% <userinput>gst-launch cdda://5 ! sunaudiosink </userinput></screen>
+</para>
+</example>
+<example role="example">
+<title>Diagnostic</title>
+<para>Generate a null stream and ignore it:
+<screen>example% <userinput>gst-launch fakesrc ! fakesink</userinput></screen>
+</para>
+<para>Generate a pure tone to test the audio output:
+<screen>example% <userinput>gst-launch audiotestsrc ! sunaudiosink</userinput></screen>
+</para>
+<para>Generate a familiar test pattern to test the video output:
+<screen>example% <userinput>gst-launch videotestsrc ! xvimagesink</userinput></screen>
+</para>
+<para>Generate a familiar test pattern to test the video output:
+<screen>example% <userinput>gst-launch videotestsrc ! ximagesink</userinput></screen>
+</para>
+</example>
+<example role="example">
+<title>Automatic Linking</title>
+<para>You can use the decodebin element  to  automatically  select the right
+elements to get a working pipeline.</para>
+<para>Play any supported audio format:
+<screen>example% <userinput>gst-launch filesrc location=musicfile ! decodebin ! sunaudiosink</userinput></screen>
+</para>
+<para>Play any supported video format with video and audio output.  Threads are used
+automatically.
+<screen>example% <userinput>gst-launch filesrc location=videofile ! decodebin name=decoder decoder. ! queue ! audioconvert ! audioresample ! osssink decoder. ! ffmpegcolorspace ! xvimagesink</userinput></screen>
+</para>
+<para>To make this even easier, you can use the playbin element:
+<screen>example% <userinput>gst-launch playbin uri=<literal>file:///home/joe/foo.avi</literal></userinput></screen>
+</para>
+</example>
+<example role="example">
+<title>Filtered Connections</title>
+<para>These examples show how to use filtered capabilities.</para>
+<para>Show a test image and use the YUY2 or YV12 video format for this:
+<screen>example% <userinput>gst-launch videotestsrc ! video/x-raw-yuv,format=urcc)YUY2;video/x-raw-yuv,format=urcc)YV12 ! xvimagesink</userinput></screen>
+</para>
+<para>Record audio and write it to a .wav file.  Force usage of signed
+16 to 32 bit samples and a sample rate between 32kHz and 64KHz:
+<screen>example% <userinput>gst-launch sunaudiosrc ! 'audio/x-raw-int,rate=[32000,64000],width=[16,32],depth={16,24,32},signed=(boolean)true' ! wavenc ! filesink location=recording.wav</userinput></screen>
+</para>
+</example>
+</refsect1>
+<refsect1 id="gst-launch-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable to build and run a GStreamer pipeline</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>~/gstreamer-0.10/registry-*.xml</filename></term>
+<listitem><para>
+GStreamer registry</para>
+</listitem></varlistentry>
+</variablelist>
+</refsect1>
+<refsect1 id="gst-launch-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-media
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gst-launch-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gst-feedback</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-inspect</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-typefind</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-xmlinspect</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-xmllaunch</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gstreamer-properties</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgstreamer-0.10</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="gst-launch-1-note"><title>&note-tt;</title>
+<para>Original man page written by the GStreamer team at <literal>http://www.gstreamer.net/</literal>.
+</para>
+<para>Updated by Brian Cameron, Sun Microsystems Inc., 2004, 2006, 2007.</para>
+</refsect1>
+</refentry>

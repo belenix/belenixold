@@ -1,0 +1,703 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2007/520 GNOME 2.20-->
+<!ENTITY cmd "ipython">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="ipython-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>ipython</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">30 Sept 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>ipython</primary></indexterm><indexterm><primary>An Enhanced Interactive Python</primary></indexterm>
+<refnamediv id="ipython-1-name"><refname>ipython</refname><refpurpose>An Enhanced Interactive Python</refpurpose></refnamediv>
+<refsynopsisdiv id="ipython-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>gthread</option></arg>
+<arg choice="opt"><option>qthread</option></arg>
+<arg choice="opt"><option>q4thread</option></arg>
+<arg choice="opt"><option>wthread</option></arg>
+<arg choice="opt"><option>pylab</option></arg>
+<arg choice="opt"><option>tk</option></arg>
+<arg choice="opt"><option>autocall <replaceable>value</replaceable></option></arg>
+<arg choice="opt"><option>[no]autoedit_syntax</option></arg>
+<arg choice="opt"><option>[no]autoindent</option></arg>
+<arg choice="opt"><option>[no]automagic</option></arg>
+<arg choice="opt"><option>[no]banner</option></arg>
+<arg choice="opt"><option>c <command>command</replaceable></option></arg>
+<arg choice="opt"><option>cache_size <replaceable>n</replaceable></option></arg>
+<arg choice="opt"><option>classic</arg>
+<arg choice="opt"><option>colors <replaceable>scheme</replaceable></arg>
+<arg choice="opt"><option>[no]color_info</option></arg>
+<arg choice="opt"><option>[no]confirm_exit</option></arg>
+<arg choice="opt"><option>[no]debug</option></arg>
+<arg choice="opt"><option>[no]deep_reload</option></arg>
+<arg choice="opt"><option>editor <replaceable>name</replaceable></option></arg>
+<arg choice="opt"><option>help</option></arg>
+<arg choice="opt"><option>ipythondir <replaceable>directory</replaceable></option></arg>
+<arg choice="opt"><option>log</option></arg>
+<arg choice="opt"><option>logfile</option></arg>
+<arg choice="opt"><option>logplay</option></arg>
+<arg choice="opt"><option>[no]messages</option></arg>
+<arg choice="opt"><option>[no]pdb</option></arg>
+<arg choice="opt"><option>[no]pprint</option></arg>
+<arg choice="opt"><option>profile <replaceable>name</replaceable></option></arg>
+<arg choice="opt"><option>prompt_in1 <replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>prompt_in2 <replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>prompt_out <replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>quick</option></arg>
+<arg choice="opt"><option>rcfile <replaceable>file</replaceable></option></arg>
+<arg choice="opt"><option>[no]readline</option></arg>
+<arg choice="opt"><option>screen_lengths <replaceable>n</replaceable></option></arg>
+<arg choice="opt"><option>separate_in <replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>separate_out <replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>separate_out2 <replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>nosep</option></arg>
+<arg choice="opt"><option>upgrade</option></arg>
+<arg choice="opt"><option>Version</option></arg>
+<arg choice="opt"><option>wxversion <replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>xmode <replaceable>modename</replaceable></option></arg>
+<arg rep="repeat"><option role="nodash">files</option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="ipython-1-desc"><title>&desc-tt;</title>
+<para>
+An interactive Python shell with automatic history (input and output), dynamic
+object introspection, easier configuration, command completion, access to the
+system shell, integration with numerical and scientific computing tools, and
+more.
+</para>
+<para>
+If invoked with no options, &cmd; executes all the files listed in sequence and
+drops you into the interpreter while still acknowledging any options you may
+have set in your ipythonrc file.  This behavior is different from standard
+Python, which when called as <command>python <option>i</option></command>
+will only execute one file and will ignore your configuration setup.
+</para>
+<para>
+Please note that some of the configuration options are not available at the
+command line, simply because they are not practical here.  Look into your
+ipythonrc configuration file for details on those.  This file is typically
+installed in the <filename>$HOME/.ipython</filename> directory.
+In the rest of this text, this directory is referred to as IPYTHONDIR.
+</para>
+<para>
+</para>
+</refsect1>
+
+<refsect1 id="ipython-1-embe"><title>&embe-tt;</title>
+<term>EMBEDDING</term>
+<para>
+It is possible to start an IPython instance inside your own Python programs.
+In the documentation example files there are some illustrations on how to do
+this.
+</para>
+
+<para>
+This feature allows you to evaluate dynamically the state of your code, operate
+with your variables, analyze them, etc.  Note however that any changes you make
+to values while in the shell do NOT propagate back to the running code, so it
+is safe to modify your values because you won't break your code in bizarre ways
+by doing so.
+</para>
+</refsect1>
+
+<refsect1 id="ipython/usr-1-opts"><title>&opts-tt;</title>
+<term>SPECIAL THREADING OPTIONS</term>
+<para>The following special options are ONLY valid at the beginning of the
+command line, and not later.  This is because they control the initialization
+of ipython itself, before the normal option-handling mechanism is active.
+</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><option>gthread</option>, <option>qthread</option>, <option>q4thread</option>, <option>wthread</option>, <option>pylab</option></term>
+<listitem><para>
+Only ONE of these can be given, and it can only be given as the first option
+passed to IPython (it will have no effect in any other position).  They provide
+threading support for the GTK, QT3, QT4 and WXWidgets toolkits, and for the
+matplotlib library.
+</para>
+
+<para>
+With any of the first four options, IPython starts running a separate thread
+for the graphical toolkit's operation, so that you can open and control
+graphical elements from within an IPython command line, without blocking.  All
+four provide essentially the same functionality, respectively for GTK, QT3, QT4
+and WXWidgets (via their Python interfaces).
+</para>
+
+<para>
+Note that with <option>wthread</option>, you can additionally use the
+<option>wxversion</option> option to request a specific version of wx to be
+used.  This requires that you have the 'wxversion' Python module installed,
+which is part of recent wxPython distributions.
+</para>
+
+<para>
+If <option>pylab</option> is given, IPython loads special support for the
+matplotlib library (<literal>http://matplotlib.sourceforge.net</literal>),
+allowing interactive usage of any of its backends as defined in the user's
+.matplotlibrc file.  It automatically activates GTK, QT or WX threading for
+IPyhton if the choice of matplotlib backend requires it.  It also modifies
+the %run command to correctly execute (without blocking) any
+matplotlib-based script which calls show() at the end.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>tk</option></term>
+<listitem><para>
+The -g/q/q4/wthread options, and <option>pylab</option> (if matplotlib is
+configured to use GTK, QT or WX), will normally block Tk graphical interfaces.
+This means that when GTK, QT or WX threading is active, any attempt to open a
+Tk GUI will result in a dead window, and possibly cause the Python interpreter
+to crash.  An extra option, <option>tk</option>, is available to address this
+issue.  It can ONLY be given as a SECOND option after any of the above
+(<option>gthread</option>, <option>qthread</option>, <option>q4thread</option>,
+<option>wthread</option>, or <option>pylab</option>).
+</para>
+
+<para>
+If <option>tk</option> is given, IPython will try to coordinate Tk threading
+with GTK, QT or WX.  This is however potentially unreliable, and you will have
+to test on your platform and Python configuration to determine whether it works
+for you.  Debian users have reported success, apparently due to the fact that
+Debian builds all of Tcl, Tk, Tkinter and Python with pthreads support.  Under
+other Linux environments (such as Fedora Core 2), this option has caused random
+crashes and lockups of the Python interpreter.  Under other operating systems
+(Mac OSX and Windows), you'll need to try it to find out, since currently no
+user reports are available.
+</para>
+
+<para>
+There is unfortunately no way for IPython to determine at runtime whether
+<option>tk</option> will work reliably or not, so you will need to do some
+experiments before relying on it for regular work.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term>A WARNING ABOUT SIGNALS AND THREADS</term>
+<listitem><para>
+When any of the thread systems (GTK, QT or WX) are active, either directly or
+via <option>pylab</option> with a threaded backend, it is impossible to
+interrupt long-running Python code via Ctrl-C.  IPython can not pass the
+KeyboardInterrupt exception (or the underlying SIGINT) across threads, so any
+long-running process started from IPython will run to completion, or will have
+to be killed via an external (OS-based) mechanism.
+</para>
+
+<para>
+To the best of my knowledge, this limitation is imposed by the Python
+interpreter itself, and it comes from the difficulty of writing portable
+signal/threaded code.  If any user is an expert on this topic and can suggest
+a better solution, I would love to hear about it.  In the IPython sources,
+look at the Shell.py module, and in particular at the runcode() method.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term>REGULAR OPTIONS</term>
+<listitem><para>
+After the above threading options have been given, regular options can follow
+in any order.  All options can be abbreviated to their shortest non-ambiguous
+form and are case-sensitive.  One or two dashes can be used.
+</para>
+
+<para>
+Most options can also be set from your ipythonrc configuration file.  See the
+provided examples for assistance.  Options given on the commandline override
+the values set in the ipythonrc file.
+</para>
+
+<para>
+All options with a [no] prepended can be specified in negated form (-nooption
+instead of -option) to turn the feature off.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>autocall <replaceable>value</replaceable></option></term>
+<listitem><para>
+Make IPython automatically call any callable object even if you did not type
+explicit parentheses.  For example, 'str 43' becomes 'str(43) automatically.
+The value can be '0' to disable the feature, '1' for 'smart' auto-call, where
+it is not applied if there are no more arguments on the line, and '2' for
+'full' autocall where all callable objects are automatically called (even if
+no arguments are present).  The default is '1'. 
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]autoindent</option></term>
+<listitem><para>
+Turn automatic indentation on/off.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]automagic</option></term>
+<listitem><para>
+Make magic commands automatic (without needing their first character to be %).  Type %magic at the IPython prompt for more information.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]autoedit_syntax</option></term>
+<listitem><para>
+When a syntax error occurs after editing a file, automatically open the file to
+the trouble causing line for convenient fixing.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]banner</option></term>
+<listitem><para>
+Print the intial information banner (default on).
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>c (command)</option></term>
+<listitem><para>
+Execute the given command string, and set sys.argv to ['c'].  This is similar
+to the <option>c</option> option in the normal Python interpreter.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>cs</option>, <option>cache_size <replaceable>n</replaceable></option></term>
+<listitem><para>
+Size of the output cache (maximum number of entries to hold in memory).  The
+default is 1000, you can change it permanently in your config file.  Setting it
+to 0 completely disables the caching system, and the minimum value accepted is
+20 (if you provide a value less than 20, it is reset to 0 and a warning is
+issued).  This limit is defined because otherwise you will spend more time
+reflushing a too small cache than working.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>cl</option>, <option>classic</option></term>
+<listitem><para>
+Gives IPython a similar feel to the classic Python prompt.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>colors <replaceable>scheme</replaceable></option></term>
+<listitem><para>
+Color <replaceable>scheme</replaceable> for prompts and exception reporting.
+Currently implemented: NoColor, Linux, and LightBG.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]color_info </option></term>
+<listitem><para>
+IPython can display information about objects via a set of functions, and
+optionally can use colors for this, syntax highlighting source code and various
+other elements.  However, because this information is passed through a pager
+(like 'less') and many pagers get confused with color codes, this option is off
+by default. You can test it and turn it on permanently in you ipythonrc file if
+it works for you.
+</para>
+<para>
+Test it and turn it on permanently if it works with your system.  The magic
+function @color_info allows you to toggle this interactively for testing.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]confirm_exit</option></term>
+<listitem><para>Set to confirm when you try to exit IPython with an EOF
+(Control-D in Unix). Note that using the magic functions @Exit or @Quit you
+can force a direct exit, bypassing any confirmation.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]debug</option></term>
+<listitem><para>
+Show information about the loading process.  Very useful to pin down
+problems with your configuration files or to get details about session
+restores.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]deep_reload</option></term>
+<listitem><para>
+IPython can use the deep_reload module which reloads changes in modules
+recursively (it replaces the reload() function, so you do not need to change
+anything to use it).  deep_reload() forces a full reload of modules whose code
+may have changed, which the default reload() function does not.
+
+When deep_reload is off, IPython will use the normal reload(), but deep_reload
+will still be available as dreload(). This feature is off by default [which
+means that you have both normal reload() and dreload()].
+</para>
+</listitem></varlistentry>
+
+
+<varlistentry>
+<term><option>editor <replaceable>name</replaceable></option></term>
+<listitem><para>
+Which editor to use with the @edit command. By default, IPython will honor your
+EDITOR environment variable (if not set, vi is the Unix default).  Since this
+editor is invoked on the fly by IPython and is meant for editing small code
+snippets, you may want to use a small, lightweight editor here (in case your
+default EDITOR is something like Emacs).
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>h</option>, <option>-help</option></term>
+<listitem><para>
+Show summary of options.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>ipythondir <replaceable>directory</replaceable></option></term>
+<listitem><para>
+The name of your IPython configuration <replaceable>directory</replaceable>
+IPYTHONDIR.  This can also be specified through the environment variable
+IPYTHONDIR.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>l</option>, <option>log</option></term>
+<listitem><para>
+Generate a log file of all input.  The file is named
+<filename>ipython_log.py</filename> in your current directory (which
+prevents logs from multiple IPython sessions from trampling each other).
+You can use this to later restore a session by loading your logfile as
+a file to be executed with option <option>logplay</option> (see below).
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>lf</option>, <option>logfile</option></term>
+<listitem><para>
+Specify the name of your logfile.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>lp</option>, <option>logplay</option></term>
+<listitem><para>
+Replay a previous log. For restoring a session as close as possible to the
+state you left it in, use this option (do not just run the logfile).  With
+<option>logplay</option>, IPython will try to reconstruct the previous working
+environment in full, not just execute the commands in the logfile.
+</para>
+<para>
+When a session is restored, logging is automatically turned on again with the
+name of the logfile it was invoked with (it is read from the log header).  So
+once you have turned logging on for a session, you can quit IPython and reload
+it as many times as you want and it will continue to log its history and
+restore from the beginning every time.
+</para>
+
+<para>
+Caveats: there are limitations in this option. The history variables _i*,_* and
+_dh do not get restored properly. In the future we will try to implement full
+session saving by writing and retrieving a failed because of inherent
+limitations of Python's Pickle module, so this may have to wait.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]messages</option></term>
+<listitem><para>
+Print messages which IPython collects about its startup process (default on).
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]pdb</option></term>
+<listitem><para>
+Automatically call the pdb debugger after every uncaught exception. If you are
+used to debugging using pdb, this puts you automatically inside of it after any
+call (either in IPython or in code called by it) which triggers an exception
+which goes uncaught.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]pprint</option></term>
+<listitem><para>
+IPython can optionally use the pprint (pretty printer) module for displaying
+results. pprint tends to give nicer display of nested data structures.  If you
+like it, you can turn it on permanently in your config file (default off).
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>p</option>, <option>profile <replaceable>name</replaceable></option></term>
+<listitem><para>Assume that your config file is ipythonrc-&lt;name&gt; (looks in
+current dir first, then in IPYTHONDIR). This is a quick way to keep and load
+multiple config files for different tasks, especially if you use the include
+option of config files.  You can keep a basic IPYTHONDIR/ipythonrc file and
+then have other 'profiles' which include this one and load extra things for
+particular tasks. For example:
+</para>
+
+<para>
+1) <filename>$HOME/.ipython/ipythonrc</filename> : load basic things you
+always want.
+
+2) <filename>$HOME/.ipython/ipythonrc-math</filename> : load (1) and basic
+math-related modules.
+
+3) <filename>$HOME/.ipython/ipythonrc-numeric</filename> : load (1) and
+Numeric and plotting modules.
+</para>
+
+<para>
+Since it is possible to create an endless loop by having circular file
+inclusions, IPython will stop if it reaches 15 recursive inclusions.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>pi1</option>, <option>prompt_in1 <replaceable>string</replaceable></option></term>
+<listitem><para>
+Specify the <replaceable>string</replaceable> used for input prompts.
+Note that if you are using numbered prompts, the number is represented
+with a '\\#' in the string.  Do not forget to quote strings with spaces
+embedded in them.  Default 'In [\\#]: '.
+</para>
+
+<para>
+Most bash-like escapes can be used to customize IPython's prompts, as well as
+a few additional ones which are IPython-specific.  All valid prompt escapes
+are described in detail in the Customization section of the IPython HTML/PDF
+manual.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>pi2</option>, <option>prompt_in2 <replaceable>string</replaceable></option></term>
+<listitem><para>
+Similar to the previous option, but used for the continuation prompts. The
+special sequence '\\D' is similar to '\\#', but with all digits replaced dots (so
+you can have your continuation prompt aligned with your input prompt).
+Default: '   .\\D.: ' (note three spaces at the start for alignment with
+'In [\\#]').
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>po</option>, <option>prompt_out <replaceable>string</replaceable><string></option></term>
+<listitem><para>
+The <replaceable>string</replaceable> used for output prompts, also uses numbers
+like prompt_in1.  Default: 'Out[\\#]:'.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>quick</option></term>
+<listitem><para>
+Start in bare bones mode (no config file loaded).
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>rcfile <replaceable>file</replaceable></option></term>
+<listitem><para>
+Name of your IPython resource configuration <replaceable>file</replaceable>.
+Normally IPython loads ipythonrc (from current directory) or
+IPYTHONDIR/ipythonrc.  If the loading of your config file fails, IPython starts
+with a bare bones configuration (no modules loaded at all).
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>[no]readline</option></term>
+<listitem><para>
+Use the readline library, which is needed to support name completion and
+command history, among other things.  It is enabled by default, but may cause
+problems for users of X/Emacs in Python comint or shell buffers.
+
+Note that emacs 'eterm' buffers (opened with M-x term) support IPython's
+readline and syntax coloring fine, only 'emacs' (M-x shell and C-c !) buffers
+do not.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>sl</option>, <option>screen_length <replaceable>n</replaceable></option></term>
+<listitem><para>
+Number of lines of your screen.  This is used to control printing of very long
+strings.  Strings longer than this number of lines will be sent through a
+pager instead of directly printed.
+
+The default value for this is 0, which means IPython will auto-detect your
+screen size every time it need to print certain potentially long strings (this
+does not change the behavior of the 'print' keyword, it's only triggered
+internally). If for some reason this is not working well (it needs curses
+support), specify it yourself. Otherwise do not change the default.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>si</option>, <option>separate_in <replaceable>string</replaceable></option></term>
+<listitem><para>
+Separator before input prompts.  Default 0.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>so</option>, <option>separate_out <replaceable>string</replaceable></option></term>
+<listitem><para>
+Separator before output prompts.  Default: 0 (nothing).
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>so2</option>, <option>separate_out2 <replaceable>string</replaceable></option></term>
+<listitem><para>
+Separator after output prompts.  Default: 0 (nothing).
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>nosep</option></term>
+<listitem><para>
+Shorthand for '<option>separate_in</option> 0 <option>separate_out</option> 0
+<option>separate_out2</option> 0'.  Simply removes all input/output separators.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>upgrade</option></term>
+<listitem><para>
+Allows you to upgrade your IPYTHONDIR configuration when you install a
+new version of IPython.  Since new versions may include new command lines
+options or example files, this copies updated ipythonrc-type files.  However,
+it backs up (with a .old extension) all files which it overwrites so that you
+can merge back any customizations you might have in your personal files.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>Version</option></term>
+<listitem><para>
+Print version information and exit.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>wxversion <replaceable>string</replaceable></option></term>
+<listitem><para>
+Select a specific version of wxPython (used in conjunction with
+<option>wthread</option>).  Requires the wxversion module, part of
+recent wxPython distributions.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>xmode <replaceable>modename</replaceable></option></term>
+<listitem><para>
+Mode for exception reporting.  The valid modes are Plain, Context, and Verbose.
+
+<itemizedlist>
+<listitem>
+Plain: similar to python's normal traceback printing.
+</listitem>
+
+<listitem>
+Context: prints 5 lines of context source code around each line in the
+traceback.
+</listitem>
+
+<listitem>
+Verbose: similar to Context, but additionally prints the variables currently
+visible where the exception happened (shortening their strings if too long).
+This can potentially be very slow, if you happen to have a huge data
+structure whose string representation is complex to compute.  Your computer
+may appear to freeze for a while with cpu usage at 100%.  If this occurs, you
+can cancel the traceback with Ctrl-C (maybe hitting it more than once).
+</listitem>
+</itemizedlist>
+</para>
+</listitem></varlistentry>
+
+<refsect1 id="ipython-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>files</replaceable></option></term>
+<listitem><para>
+Files to be executed.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="ipython-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of environment variables.</para>
+
+<variablelist termlength="medium">
+<varlistentry><term>
+<envar>IPYTHONDIR</envar></term><listitem>
+<para>
+The location of the user's python configuration file,
+<filename>$HOME/.ipython</filename> by default.
+</literal>.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="ipython-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5">
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</olink>
+for descriptions of the following attributes:</para>
+
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWIPython
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<refsect1 id="ipython-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>pycolor</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+
+<refsect1 id="ipython-1-note"><title>&note-tt;</title>
+<para>
+IPython was written by Fernando Perez (fperez@colorado.edu), based on earlier
+code by Janko Hauser (jh@comunit.de) and Nathaniel Gray (n8gray@caltech.edu).
+This manual page was written by Jack Moffitt (jack@xiph.org), for the Debian
+project (but may be used by others).
+</para>
+</refsect1>
+</refentry>

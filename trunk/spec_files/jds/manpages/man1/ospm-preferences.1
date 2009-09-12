@@ -1,0 +1,114 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/389 Presto Phase II: Opensolaris Print Manager-->
+<!ENTITY cmd "ospm-preferences">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="ospm-preferences-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">04 Jul 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd&</primary></indexterm><indexterm><primary>&cmd;</primary></indexterm>
+<refnamediv id="ospm-preferences-1-name"><refname>&cmd;</refname><refpurpose>customize the Print Monitor and Print Manager on how user interacts on detection or discovery of printer</refpurpose></refnamediv>
+<refsynopsisdiv id="ospm-preferences-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="ospm-preferences-1-desc"><title>&desc-tt;</title>
+<para>
+The Print Monitor preferences properties dialog allows the user to configure
+printer detection/discovery, and the interactive behavior of the Print Manager,
+<citerefentry><refentrytitle>ospm-pm</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+It is used to configure how frequently the Print Manager refreshes its
+Queue/Job View, and how it displays unaccessible printers. It is used to
+configure the behavior of the monitoring applet when a printer is
+connected, disconnected, or reconnected. It is also used to configure the
+monitoring agent when auto-discovering network printers.
+</para>
+<para>
+These configuration values are set through GConf keys. Their values can
+therefore be read from and written to using
+<citerefentry><refentrytitle>libgconf-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>
+or the GConf tools,
+<citerefentry><refentrytitle>gconf-editor</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gconftool-2</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+</para>
+</refsect1>
+<refsect1 id="glade-3-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wide">
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist>
+</refsect1>
+<refsect1 id="ospm-preferences-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Launching the Print Monitor properties dialog tool</title>
+<para><screen>example% <userinput>&cmd;</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="ospm-preferences-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="ospm-preferences-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename> </term><listitem>
+<para>Executable for the <application>ospm preferences</application>
+application.</para>
+</listitem></varlistentry>
+</variablelist>
+
+</refsect1>
+<refsect1 id="ospm-preferences-1-attr"><title>&attr-tt;</title>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWprint-monitor</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="ospm-preferences-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<citerefentry><refentrytitle>gconf-editor</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gconftool-2</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ospm-pm</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgconf-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</refsect1>
+<refsect1 id="ospm-preferences-1-note"><title>&note-tt;</title>
+<para>Written by Ghee Teo, Halton Huo and Evan Yan, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+</refentry>

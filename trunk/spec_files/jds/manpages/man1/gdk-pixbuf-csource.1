@@ -1,0 +1,285 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "gdk-pixbuf-csource">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gdk-pixbuf-csource-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gdk-pixbuf-csource</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">02 April 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>C code
+generator for GdkPixbuf images</primary></indexterm>
+<refnamediv id="gdk-pixbuf-csource-1-name"><refname>gdk-pixbuf-csource</refname><refpurpose>
+C code generator for GdkPixbuf images.</refpurpose></refnamediv>
+<refsynopsisdiv id="gdk-pixbuf-csource-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-decoder</option></arg>
+<arg choice="opt"><option>-extern</option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-g-fatal-warnings</option></arg>
+<arg choice="opt"><option>-macros</option></arg>
+<arg choice="opt"><option>-name=<replaceable>identifier</replaceable></option></arg>
+<arg choice="opt"><option>-raw</option></arg>
+<arg choice="opt"><option>-rle</option></arg>
+<arg choice="opt"><option>-static</option></arg>
+<arg choice="opt"><option>-stream</option></arg>
+<arg choice="opt"><option>-struct</option></arg>
+<arg choice="opt"><option>-version</option></arg>
+<arg choice="req"><replaceable>image</replaceable></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-decoder</option></arg>
+<arg choice="opt"><option>-extern</option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-g-fatal-warnings</option></arg>
+<arg choice="opt"><option>-macros</option></arg>
+<arg choice="opt"><option>-raw</option></arg>
+<arg choice="opt"><option>-rle</option></arg>
+<arg choice="opt"><option>-static</option></arg>
+<arg choice="opt"><option>-stream</option></arg>
+<arg choice="opt"><option>-struct</option></arg>
+<arg choice="opt"><option>-version</option></arg>
+<arg choice="opt"><option>-build-list</option></arg>
+<arg choice="req">[<replaceable>name image</replaceable>]...
+</arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gdk-pixbuf-csource-1-desc"><title>&desc-tt;</title>
+<para>The <application>gdk-pixbuf-csource</application> utility generates
+C code containing images. You can use <application>gdk-pixbuf-csource</application>
+to compile images directly into programs.</para>
+<para>You can use the following types of input with <application>gdk-pixbuf-csource
+</application>:</para>
+<itemizedlist>
+<listitem>A single file, to generate code for the file.</listitem>
+<listitem>A list of [<replaceable>name</replaceable> <replaceable>image
+</replaceable>] pairs, using the <option>-build-list</option>
+option, to generate code for a list of images into named variables.
+</listitem>
+</itemizedlist>
+</refsect1>
+<refsect1 id="gdk-pixbuf-csource-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option>-build-list</option></term><listitem>
+<para>Enable [<replaceable>name</replaceable> <replaceable>image</replaceable>]
+pair parsing mode.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-decoder</option></term><listitem>
+<para>Provide the following macro definition to decode run-length encoded
+image data:</para>
+<itemizedlist mark="none">
+<listitem>*_RUN_LENGTH_DECODE
+image_buf, rle_data, size, bpp
+</listitem>
+</itemizedlist>
+</listitem></varlistentry>
+<varlistentry><term><option>-extern</option></term><listitem>
+<para>Generate extern symbols. This option is only useful with <option>
+-stream</option> or <option>-struct</option>. The <option>
+--extern</option> option causes the structure created to be defined as: <literal>
+const [...]</literal></para>
+</listitem></varlistentry>
+<varlistentry><term><option>h</option>, <option>--help</option></term><listitem>
+<para>Print brief help and exit.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-g-fatal-warnings</option></term>
+<listitem><para>Make warnings fatal. This option causes the program
+to abort when warnings occur.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-macros</option></term><listitem>
+<para>Generate the following macro definitions for the image:
+</para>
+<itemizedlist>
+<listitem>*_ROWSTRIDE
+</listitem>
+<listitem>*_WIDTH
+</listitem>
+<listitem>*_HEIGHT
+</listitem>
+<listitem>*_BYTES_PER_PIXEL
+</listitem>
+<listitem>*_RLE_PIXEL_DATA or *_PIXEL_DATA
+</listitem>
+</itemizedlist>
+</listitem></varlistentry>
+<varlistentry><term><option>-name=<replaceable>identifier</replaceable></option></term>
+<listitem><para>Specify the identifier name, or prefix, for  the generated
+variables or macros. This option is useful only if you do not specify <option>-build-list</option>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-raw</option></term><listitem>
+<para>Disable run-length encoding for the generated pixel data. The
+<option>-raw</option> option dumps out each &ldquo;(line of data)&rdquo;
+in raw image format</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-rle</option></term><listitem>
+<para>Enable run-length encoding for the generated pixel data. The
+<option>-rle</option> option dumps out each line of data in run-length-encoding
+format. This is a default setting.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-static</option></term><listitem>
+<para>Generate static symbols. This is a default setting. This option is only
+useful with <option>-stream</option> or
+<option>-struct</option>. The <option>-static</option> option causes
+the structure created to be defined as: <literal>static const [...]</literal></para>
+</listitem></varlistentry>
+<varlistentry><term><option>-stream</option></term><listitem>
+<para>Generate a pixbuf data stream; a single string containing a serialized
+GdkPixdata structure in network byte order. </para>
+</listitem></varlistentry>
+<varlistentry><term><option>-struct</option></term><listitem>
+<para>Generate GdkPixdata structure; needs the GdkPixdata           structure
+definition from gdk-pixdata.h.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>v</option>,
+<option>-version</option></term><listitem><para>Print version and exit.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gdk-pixbuf-csource-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>To Generate Code From a File</title>
+<para><screen>example% <userinput>&cmd; <replaceable>input_filename</replaceable></userinput></screen></para>
+<para>Running <command>&cmd;</command> without any options is the same as
+specifying the following options: </para>
+<itemizedlist>
+<listitem><option>-stream</option></listitem>
+<listitem><option>-rle</option></listitem>
+<listitem><option>-static</option></listitem>
+</itemizedlist>
+</example>
+<example role="example">
+<title>To Specify a Value for the Structure in the Generated Output</title>
+<para><screen>example% <userinput>&cmd; --name=my_struct --struct <replaceable>
+input_filename</replaceable></userinput></screen></para>
+<para>The <option>-name</option> option affects the name of
+the structure in the generated output when you use either the
+<option>-stream</option> option or the <option>-struct</option> option.
+The <option>-name</option> option affects the name of the macro
+when you use the <option>-macros</option> option.</para>
+<para>If you use either the <option>-stream</option> option
+or the <option>-struct</option> option, but you do not specify
+the <option>-name</option> option, then the default name of
+the structure in the generated output is <literal>my_pixbuf</literal>.</para>
+<para>If you use the <option>-macros</option> option,
+but you do not specify the <option>-name</option> option, then
+the default macro names are prefixed with <literal>MY_PIXBUF_</literal>.</para>
+</example>
+<example role="example">
+<title>To Display the Command Output as an Array of Strings</title>
+<para><screen>example% <userinput>&cmd; --name=my_struct --stream <replaceable>
+input_filename</replaceable></userinput></screen><screen>static const guint8 my_struct[] = 
+{ ""
+  /* Pixbuf magic (0x47646b50) */
+  "GdkP"
+  /* length: header (24) + pixel_data (215281) */
+  "\0\3I\11"
+  /* pixdata_type (0x2010001) */
+  "\2\1\0\1"
+  /* rowstride (960) */
+  "\0\0\3\300"
+  /* width (320) */
+  "\0\0\1@"
+  /* height (240) */
+  "\0\0\0\360"
+  /* pixel_data: */
+  "(line of data)"
+[...]</screen></para>
+</example>
+<example role="example">
+<title>To Display the Output as a GdkPixdata Structure</title>
+<para><screen>example% <userinput>&cmd; --name=my_struct --struct <replaceable>
+input_filename</replaceable></userinput></screen><screen>const GdkPixdata my_struct = {
+  0x47646b50, /* Pixbuf magic: 'GdkP' */
+  24 + 215281, /* header length + pixel_data length */
+  0x2010001, /* pixdata_type */
+  960, /* rowstride */
+  320, /* width */
+  240, /* height */
+  /* pixel_data: */
+  "(line of data)"
+[...]</screen></para>
+</example>
+<example role="example">
+<title>To Display the Output as C Macros</title>
+<para><screen>example% <userinput>&cmd; --name=my_struct --macros <replaceable>
+input_filename</replaceable></userinput></screen><screen>#define MY_STRUCT_ROWSTRIDE (960)
+#define MY_STRUCT_WIDTH (320)
+#define MY_STRUCT_HEIGHT (240)
+#define MY_STRUCT_BYTES_PER_PIXEL (3) /* 3:RGB, 4:RGBA */
+#define MY_STRUCT_RLE_PIXEL_DATA ((guint8*) \
+  "(line of data)" \
+[...]</screen></para>
+</example>
+</refsect1>
+<refsect1 id="gdk-pixbuf-csource-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully.</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>1</returnvalue></term><listitem><para>Application
+exited with failure, if any file specified on the command line cannot be read.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gdk-pixbuf-csource-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholelength">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem>
+<para>The command-line executable for the application.</para></listitem>
+</varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/gdk-pixbuf</filename></term><listitem>
+<para>Location of developer documentation</para></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+<refsect1 id="gdk-pixbuf-csource-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-base-libs-devel</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry colname="COLSPEC1"><para>Committed</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gdk-pixbuf-csource-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gdk-pixbuf-query-loaders</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-genmarshal</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-gettextize</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-mkenums</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gobject-query</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gtk-query-immodules-2.0</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gtk-update-icon-cache</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgdk_pixbuf-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+<para>
+</refsect1>
+<refsect1 id="gdk-pixbuf-csource-1-note"><title>&note-tt;</title>
+<para>Updated by Brian Cameron, Sun Microsystems Inc., April 2003, 2006.</para>
+<para>Written by Tim Janik timj@gtk.org</para>
+</refsect1>
+</refentry>

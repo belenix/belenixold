@@ -1,0 +1,261 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY cmd "jpegtran">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="jpegtran-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>jpegtran</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>jpegtran</primary></indexterm><indexterm><primary>lossless
+transformation of JPEG files</primary></indexterm>
+<refnamediv id="jpegtran-1-name"><refname>jpegtran</refname><refpurpose>lossless
+transformation of JPEG files</refpurpose></refnamediv>
+<refsynopsisdiv id="jpegtran-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash"><replaceable>
+options</replaceable></option></arg><arg choice="opt"><option role="nodash"><replaceable>
+filename</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="jpegtran-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> performs various useful transformations of
+JPEG files. <command>&cmd;</command> can translate the coded representation
+from one variant of JPEG to another, for example from baseline JPEG to progressive
+JPEG or vice versa. <command>&cmd;</command> can also perform some rearrangements
+of the image data, for example turning an image from landscape to portrait
+format by rotation.</para>
+<para><command>&cmd;</command> works by rearranging the compressed data (DCT
+coefficients), without ever fully decoding the image. Therefore, <command>&cmd;</command>
+transformations are lossless: there is no image degradation at all, which
+would not be true if you used <command>djpeg</command> followed by <command>
+cjpeg</command> to accomplish the same conversion. However, <command>&cmd;</command>
+cannot perform lossy operations such as changing the image quality.</para>
+<para><command>&cmd;</command> reads the named JPEG/JFIF file, or the standard
+input if no file is named, and produces a JPEG/JFIF file on the standard output.
+</para>
+</refsect1>
+<refsect1 id="jpegtran-1-opts"><title>&opts-tt;</title>
+<para>All options may be abbreviated. For example, <option>optimize</option>
+may be written <option>opt</option> or <option>o</option>. Upper and lower
+case are equivalent. British spellings are also accepted. For example, <option>
+optimise</option>.</para>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option>copy all</option></term><listitem><para>Copy all
+extra markers. This option preserves miscellaneous markers found in the source
+file, such as JFIF thumbnails and source-application settings. In some files,
+these extra markers can be sizable.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>copy comments</option></term><listitem><para>
+Copy only comment markers. This option copies comments from the source file,
+but discards any other inessential data. This is the default.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>copy none</option></term><listitem><para>Copy
+no extra markers from the source file. This option suppresses all comments
+and other excess information present in the source file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>flip horizontal</option></term><listitem><para>
+Create a mirror image horizontally, that is, from left to right. This is a
+lossless transformation.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>flip vertical</option></term><listitem><para>
+Create a mirror image vertically, that is, from top to bottom. This is a lossless
+transformation.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>grayscale</option></term><listitem><para>Force
+grayscale output. This is not a lossless transformation. For more information
+about the <option>grayscale</option> option, see the Extended Description
+section.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>maxmemory <replaceable>N</replaceable></option></term>
+<listitem><para>Set the limit for the amount of memory to use in processing
+large images. <replaceable>N</replaceable> is specified in thousands of bytes,
+or in millions of bytes if "M" is specified with the number. For example, <option>
+max 4m</option> selects 4000000 bytes. If more space is needed, temporary
+files are used.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>optimize</option></term><listitem><para>Optimize
+the entropy encoding parameters. For more information about the <option>optimize
+</option> option, see <citerefentry><refentrytitle>cjpeg</refentrytitle><manvolnum>
+1</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>outfile <replaceable>name</replaceable></option></term>
+<listitem><para>Send the output image to the named file, instead of to the
+standard output.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>progressive</option></term><listitem><para>Create
+a progressive JPEG file. For more information about the <option>progressive
+</option> option, see <citerefentry><refentrytitle>cjpeg</refentrytitle><manvolnum>
+1</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>restart <replaceable>N</replaceable></option></term>
+<listitem><para>Emit a JPEG restart marker every <replaceable>N</replaceable>
+MCU rows, or every <replaceable>N</replaceable> MCU blocks if "B" is specified
+with the number. For more information about the <option>restart</option> option,
+see <citerefentry><refentrytitle>cjpeg</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>rotate 90</option></term><listitem><para>Rotate
+the image 90 degrees clockwise. This is a lossless transformation.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>rotate 180</option></term><listitem><para>Rotate
+the image 180 degrees clockwise. This is a lossless transformation.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>rotate 270</option></term><listitem><para>Rotate
+the image 270 degrees clockwise, or 90 degrees anticlockwise. This is a lossless
+transformation.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>scans <replaceable>file</replaceable></option></term>
+<listitem><para>Use the scan script provided in the specified text file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>transpose</option></term><listitem><para>Transpose
+the image, that is, across the UL-to-LR axis. This is a lossless transformation.
+For more information about the <option>transpose</option> option, see the
+Extended Description section.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>transverse</option></term><listitem><para>Transverse
+transpose the image, that is, across the UR-to-LL axis. This is a lossless
+transformation.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>trim</option></term><listitem><para>Drop non-transformable
+edge blocks. This is not a lossless transformation. For more information about
+the <option>trim</option> option, see the Extended Description section.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>verbose</option></term><listitem><para>Display
+version information at startup, and enable debug printout. The <option>vv
+</option> option displays more verbose output than the <option>v</option>
+option. The <option>vvv</option> option displays the most verbose output.
+</para>
+<para>You can also use <option>debug</option> to specify this option.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="jpegtran-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>filename</replaceable></option></term>
+<listitem><para>The name of the JPEG file to be transformed.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="jpegtran-1-exde"><title>&exde-tt;</title>
+<para>If you do not specify one of the following options, you get a plain
+baseline-JPEG output file: <option>optimize</option>, <option>progressive
+</option>, <option>restart <replaceable>N</replaceable></option>, <option>
+scans <replaceable>file</replaceable></option>. In such cases, the quality
+setting and other settings are determined by the input file.</para>
+<refsect2 id="jpegtran-1-exde-lossless">
+<title>Lossless Transformations</title>
+<para>The transpose transformation has no restrictions as regards image dimensions.
+The other transformations operate rather oddly if the image dimensions are
+not a multiple of the iMCU siz, usually 8 or 16 pixels, because they can only
+transform complete blocks of DCT coefficient data in the desired way. The
+default behavior when transforming an odd-size image is designed to preserve
+exact reversibility and mathematical consistency of the transformation set.
+</para>
+<para>As stated, transpose can flip the entire image area. Horizontal mirroring
+leaves any partial iMCU column at the right edge untouched, but is able to
+flip all rows of the image. Similarly, vertical mirroring leaves any partial
+iMCU row at the bottom edge untouched, but is able to flip all columns.</para>
+<para>The other transforms can be built up as sequences of transpose and flip
+operations. For consistency, their actions on edge pixels are defined to be
+the same as the end result of the corresponding transpose-and-flip sequence.
+</para>
+</refsect2>
+<refsect2 id="jpegtran-1-exde-notlossless">
+<title>Not-Lossless Transformations</title>
+<para>You may prefer to discard any untransformable edge pixels rather than
+have a strange-looking strip along the right or bottom edges of a transformed
+image. To do this, use the <option>trim</option> option. Obviously, a transformation
+with <option>trim</option> is not reversible, so strictly speaking <command>&cmd;</command>
+with this option is not lossless. Also, the expected mathematical equivalences
+between the transformations no longer hold. For example, <option>rot 270</option> <option>
+trim</option> trims only the bottom edge, but <option>rot 90</option> <option>
+trim</option> followed by <option>rot 180</option> <option>trim</option> trims
+both edges.</para>
+<para>Another not-strictly-lossless transformation option is <option>grayscale
+</option>. This option discards the chrominance channels if the input image
+is YCbCr (that is, a standard color JPEG), which results in a grayscale JPEG
+file. The luminance channel is preserved exactly, so this is a better method
+of reducing to grayscale than decompression, conversion, and recompression.
+The <option>grayscale</option> option is particularly useful for fixing a
+monochrome picture that was mistakenly encoded as a color JPEG. In such a
+case, the space saved by discarding the near-empty chrominance channels is
+not large, but the decoding time for a grayscale JPEG is substantially less
+than that for a color JPEG.</para>
+</refsect2>
+</refsect1>
+<refsect1 id="jpegtran-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Converting a Baseline JPEG File to Progressive Form</title>
+<para><screen>example% <userinput>&cmd; -progressive test.jpg > testprog.jpg
+</userinput></screen></para>
+</example>
+<example role="example">
+<title>Rotating an Image 90 Degrees Clockwise, Discarding Any Unrotatable
+Edge Pixels</title>
+<para><screen>example% <userinput>&cmd; rot 90 -trim test.jpg > test90.jpg
+</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="jpegtran-1-envr"><title>&envr-tt;</title>
+<para><command>&cmd;</command> uses the following environment variables:</para>
+<variablelist>
+<varlistentry><term>JPEGMEM</term><listitem><para>The value of this environment
+variable, if set, is the default memory limit. The value is specified as described
+for the <option>maxmemory</option> option. JPEGMEM overrides the default value
+specified when the program was compiled, and is in turn overridden by an explicit <option>
+maxmemory</option> option.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="jpegtran-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWjpg</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="jpegtran-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Wallace, Gregory K., <citetitle>The JPEG Still Picture Compression Standard
+</citetitle> Communications of the ACM, April 1991 (vol. 34, no. 4), pp. 30-44.
+</para>
+<para><citerefentry><refentrytitle>cjpeg</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>djpeg</refentrytitle><manvolnum>
+1</manvolnum></citerefentry>, <citerefentry><refentrytitle>rdjpgcom</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>wrjpgcom
+</refentrytitle><manvolnum>1</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="jpegtran-1-note"><title>&note-tt;</title>
+<para>Arithmetic coding is not supported. </para>
+<para>The entire image is read into memory and then written out again, even
+in cases where this is not really necessary. Expect swapping on large images,
+especially when using the more complex transform options.</para>
+<para>This man page was originally written by the Independent JPEG Group.
+Updated by Breda McColgan, Sun Microsystems Inc., 2004. </para>
+</refsect1>
+</refentry>

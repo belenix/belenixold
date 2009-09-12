@@ -1,0 +1,145 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/173 Realplayer 11-->
+<!ENTITY cmd "realplay">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="realplay-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>realplay</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">30 Nov 2005</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>realplay</primary></indexterm><indexterm><primary>Realplayer for JDS on Solaris
+</primary></indexterm>
+<refnamediv id="realplay-1-name"><refname>realplay</refname><refpurpose>Realplayer for JDS on Solaris.</refpurpose></refnamediv>
+<refsynopsisdiv id="realplay-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash">
+-r</option></arg>
+<arg choice="opt"><option role="nodash">-h</option></arg>
+<arg choice="opt"><option role="nodash">-e <replaceable>FD</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-c <replaceable>FD</replaceable></option></arg>
+<arg choice="opt"><option role="nodash">-f</option></arg>
+<arg choice="opt"><option role="nodash">-n</option></arg>
+<arg choice="opt"><option role="nodash">-q</option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="realplay-1-desc"><title>&desc-tt;</title>
+<para><application>RealPlayer</application> retrieves audio, video, text, animation and 
+other media to your desktop faster by using streaming technology. The media files, 
+or clips, you play are specially created so that they come to your desktop in much 
+smaller pieces that are ready to be used. Because of this, you don't have to wait for 
+a whole video file, for instance, to be downloaded before you begin to enjoy it.  With 
+<application>RealPlayer</application>, the video plays as your Player receives the information.
+</para><para>
+<application>RealPlayer</application> plays a wide variety of media both locally and over 
+the Internet.</para>
+<para>When you start the application from the command line, you can specify
+a media file.</para>
+</refsect1>
+<refsect1 id="realplay-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash">-r
+</option></term><listitem><para>Send a running Player a command.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">-h</option></term><listitem>
+<para>Print the command line options.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">-e <replaceable>FD</replaceable></option></term><listitem>
+<para>Run player in embedded mode, receive commands on descriptor FD.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">-c <replaceable>FD</replaceable></option></term><listitem>
+<para>Use with -e, receive callbacks on descriptor FD.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">-f</option></term><listitem>
+<para>Run the player in fullscreen mode on startup.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">-n</option></term><listitem>
+<para>Open in new player (do not reuse a running player).</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">-q</option></term><listitem>
+<para>Quit when playback is completed (used in conjunction with a URL).</para>
+</listitem></varlistentry>
+
+</variablelist></refsect1>
+<refsect1 id="realplay-1-exdesc"><title>EXTENDED DESCRIPTION</title>
+<para>By default the <application>realplay</application> application waits if an instance of the application is already running.  To run multiple instances of the <application>realplay</application> 
+application use the new player option (-n). For example: </para>
+<para><screen><userinput>example% &cmd; -n</userinput></screen></para>
+</refsect1>
+<refsect1 id="realplay-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>To access remote media specify the URL on the commandline</filename></title>
+<para><screen><userinput>example% &cmd; <literal>http://webcast-east.sun.com/ramgen/archives/VIP-2179/VIP-2179_01_016.rm</literal></userinput></screen></para>
+</example>
+<example role="example">
+<title>To cause the player to quit at the end of playing media use the quit option (-q):</title>
+<para><screen><userinput>example% &cmd; -q <literal>http://webcast-east.sun.com/ramgen/archives/VIP-2179/VIP-2179_01_016.rm</literal></userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="realplay-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue><replaceable>0</replaceable></returnvalue></term>
+<listitem><para>&cmd; exited successfully.</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue><replaceable>=1</replaceable></returnvalue></term>
+<listitem><para>An error occurred in &cmd;.</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue><replaceable>=10</replaceable></returnvalue></term>
+<listitem><para>&cmd; needs to be restarted.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="realplay-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename>
+</term><listitem><para>
+The command-line executable for the application.
+</para></listitem></varlistentry>
+<varlistentry><term><filename>$HOME/.realplayerrc</filename>
+</term><listitem><para>
+User preference file for <application>&cmd;</application>
+</para></listitem></varlistentry>
+</variablelist
+</refsect1>
+<refsect1 id="realplay-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWrealplayer
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+
+</refsect1>
+<refsect1 id="realplay-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Helix Community site for <application>&cmd;</application>
+<literal>http://helixcommunity.org/</literal></para>
+</refsect1>
+</refentry>

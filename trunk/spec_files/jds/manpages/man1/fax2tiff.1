@@ -1,0 +1,181 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY cmd "fax2tiff">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="fax2tiff-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>fax2tiff</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>fax2tiff</primary></indexterm><indexterm><primary>create
+a TIFF Class F fax file from raw fax data</primary></indexterm>
+<refnamediv id="fax2tiff-1-name"><refname>fax2tiff</refname><refpurpose>create
+a TIFF Class F fax file from raw fax data</refpurpose></refnamediv>
+<refsynopsisdiv id="fax2tiff-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash"><replaceable>
+options</replaceable></option></arg><arg choice="opt"><option>o <replaceable>
+output.tif</replaceable></option></arg><arg choice="plain"><option role="nodash"><replaceable>
+input.g3</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="fax2tiff-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> creates a TIFF file containing CCITT Group
+3 or Group 4 encoded data from one or more files containing &ldquo;raw&rdquo;
+Group 3 encoded data, typically obtained directly from a fax modem.</para>
+<para>By default, each row of data in the resultant TIFF file is 2-dimensionally
+encoded and padded or truncated to 1728 pixels, as needed. The resultant image
+is a set of low resolution (98 lines per inch) or medium resolution (196 lines
+per inch) pages, each of which is a single strip of data. </para>
+</refsect1>
+<refsect1 id="fax2tiff-1-opts"><title>&opts-tt;</title>
+<refsect2 id="fax2tiff-1-opts-input">
+<title>Input Data Options</title>
+<para>The following input data options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>2</option></term><listitem><para>Assume input
+data is 2-d Huffman encoded.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>B</option></term><listitem><para>Assume input
+data was encoded with black as 0 and white as 1.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>L</option></term><listitem><para>Treat input data
+as having bits filled from least significant bit (LSB) to most significant
+bit (MSB). This is the default.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>M</option></term><listitem><para>Treat input data
+as having bits filled from most significant bit (MSB) to least significant
+bit (LSB).</para>
+</listitem></varlistentry>
+<varlistentry><term><option>R</option></term><listitem><para>Specify the vertical
+resolution, in lines per inch, of the input images. By default, input images
+are assumed to have a vertical resolution of 196 lines per inch. If images
+are low resolution facsimile, specify a value of 98 lines per inch.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>W</option></term><listitem><para>Assume input
+data was encoded with black as 1 and white as 0. This is the default.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="fax2tiff-1-opts-output">
+<title>Output File Options</title>
+<para>The following output file options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>1</option></term><listitem><para>Force output
+to be compressed with the 1-dimensional version of the CCITT Group 3 Huffman
+encoding algorithm.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>4</option></term><listitem><para>Force output
+to be compressed with the CCITT Group 4 Huffman encoding.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>o</option></term><listitem><para>Specify the name
+of the output file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>p</option></term><listitem><para>Force the last
+bit of each End Of Line (EOL) code to land on a byte boundary. This &ldquo;zero
+padding&rdquo; is reflected in the contents of the Group3Options tag of the
+resultant TIFF file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>s</option></term><listitem><para>Stretch the input
+image vertically by writing each input row of data twice to the output file.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>v</option></term><listitem><para>Force <command>&cmd;</command>
+to print the number of rows of data retrieved from the input file.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="fax2tiff-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash"><replaceable>input.g3</replaceable></option></term>
+<listitem><para>The name of the input file that contains raw fax data.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="fax2tiff-1-exde"><title>&exde-tt;</title>
+<para>The generated file conforms to the TIFF Class F (FAX) specification
+for storing facsimile data. This means, in particular, that each page of the
+data does not include the trailing return to control (RTC) code, as required
+for transmission by the CCITT Group 3 specifications. The old, &ldquo;classic&rdquo;
+format is created if the <option>c</option> option is used. The Class F format
+can also be requested with the <option>f</option> option.</para>
+<para>The default name of the output image is <filename>fax.tif</filename>.
+You can use the <option>o</option> option to change the output filename.</para>
+<para>Each input file is assumed to be a separate page of facsimile data from
+the same document. The order in which input files are specified on the command
+line is the order in which the resultant pages appear in the output file.
+</para>
+<refsect2 id="fax2tiff-1-exde-diags">
+<title>Diagnostics</title>
+<para>The following warnings and errors come from the decoding routines in
+the library.</para>
+<variablelist>
+<varlistentry><term>Warning, %s: Premature EOL at scanline %d (x %d).\n.</term>
+<listitem><para>The input data had a row that was shorter than the expected
+value of 1728. The row is padded with white.</para>
+</listitem></varlistentry>
+<varlistentry><term>%s: Premature EOF at scanline %d (x %d).\n.</term><listitem>
+<para>The decoder ran out of data in the middle of a scanline. The resultant
+row is padded with white.</para>
+</listitem></varlistentry>
+<varlistentry><term>%s: Bad code word at row %d, x %d\n.</term><listitem>
+<para>An invalid Group 3 code was encountered while decoding the input file.
+The row number and horizontal position is given. The remainder of the input
+row is discarded, while the corresponding output row is padded with white.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>%s: Bad 2D code word at scanline %d.\n.</term><listitem>
+<para>An invalid Group 4 or 2D Group 3 code was encountered while decoding
+the input file. The row number and horizontal position is given. The remainder
+of the input row is discarded, while the corresponding output row is padded
+with white.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="fax2tiff-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="fax2tiff-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citetitle>CCITT Recommendation T.4 (Standardization of Group 3 Facsimile
+Apparatus for Document Transmission).</citetitle></para>
+<para><citetitle>The Spirit of TIFF Class F, an appendix to the TIFF 5.0 specification
+prepared by Cygnet Technologies.</citetitle></para>
+<para><citerefentry><refentrytitle>tiffinfo</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>tiffdither</refentrytitle><manvolnum>
+1</manvolnum></citerefentry>, <citerefentry><refentrytitle>tiffgt</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>libtiff
+</refentrytitle><manvolnum>3</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="fax2tiff-1-note"><title>&note-tt;</title>
+<para>Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>

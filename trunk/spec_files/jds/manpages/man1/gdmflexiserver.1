@@ -1,0 +1,1038 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/417 GDM2 as default Solaris Display Manager -->
+<!--ARC : LSARC 2008/207 GNOME 2.22 -->
+<!ENTITY cmd "gdmflexiserver">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gdmflexiserver-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gdmflexiserver</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">1 Sep 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gdmflexiserver</primary></indexterm><indexterm><primary>
+runs flexible (on demand) X servers</primary></indexterm>
+<refnamediv id="gdmflexiserver-1-name"><refname>gdmflexiserver</refname><refpurpose>
+runs flexible (on demand) X servers</refpurpose></refnamediv>
+<refsynopsisdiv id="gdmflexiserver-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option>-authenticate
+</option></arg><arg choice="opt"><option>-command=<replaceable>command</replaceable></option></arg>
+<arg choice="opt"><option>-debug</option></arg><arg choice="opt"><option>
+-monte-carlo-pi</option></arg><arg choice="opt"><option>-no-lock</option></arg>
+<arg choice="opt"><option>-xnest</option></arg><arg choice="opt"><option role="nodash"><replaceable>
+gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gdmflexiserver-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> runs flexible (on demand) X servers. <command>&cmd;</command>
+allows a user to log in once and then quits. This is useful if you are logged
+in as user A, and user B wants to log in quickly but user A does not wish
+to log out. The X server ensures that the virtual terminal switching works
+transparently.</para>
+<para>You can use <command>&cmd;</command> to run a flexi-server as an Xnest,
+that is, an X server in a window. If more than one server is defined with <literal>
+flexible=true</literal>, a dialog is displayed that lists all available flexible
+servers..</para>
+</refsect1>
+<refsect1 id="gdmflexiserver-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option>a</option>, <option>-authenticate</option></term><listitem><para>
+Authenticate before running <option>-command</option>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>c</option>, <option>-command=<replaceable>command</replaceable></option></term>
+<listitem><para>Send the specified protocol command to GDM.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>d</option>, <option>-debug</option></term><listitem><para>Debugging
+output.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-monte-carlo-pi</option></term><listitem></listitem>
+</varlistentry>
+<varlistentry><term><option>l</option>, <option>-no-lock</option></term><listitem><para>Do not
+lock current screen.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>n</option>, <option>-xnest</option></term><listitem><para>Xnest mode.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gdmflexiserver-1-exde"><title>&exde-tt;</title>
+<para><command>&cmd;</command> accepts the following commands with the <option>
+-command</option> option:</para>
+<itemizedlist>
+<listitem><command>ADD_DYNAMIC_DISPLAY</command></listitem>
+<listitem><command>ALL_SERVERS</command></listitem>
+<listitem><command>ATTACHED_SERVERS</command></listitem>
+<listitem><command>AUTH_LOCAL</command></listitem>
+<listitem><command>CLOSE</command></listitem>
+<listitem><command>FLEXI_XNEST</command></listitem>
+<listitem><command>FLEXI_XSERVER</command></listitem>
+<listitem><command>GET_CONFIG</command></listitem>
+<listitem><command>GET_CONFIG_FILE</command></listitem>
+<listitem><command>GET_CUSTOM_CONFIG_FILE</command></listitem>
+<listitem><command>GET_SERVER_DETAILS</command></listitem>
+<listitem><command>GET_SERVER_LIST</command></listitem>
+<listitem><command>GREETERPIDS</command></listitem>
+<listitem><command>QUERY_LOGOUT_ACTION</command></listitem>
+<listitem><command>QUERY_VT</command></listitem>
+<listitem><command>RELEASE_DYNAMIC_DISPLAYS</command></listitem>
+<listitem><command>SERVER_BUSY</command></listitem>
+<listitem><command>SET_LOGOUT_ACTION</command></listitem>
+<listitem><command>SET_SAFE_LOGOUT_ACTION</command></listitem>
+<listitem><command>SET_VT</command></listitem>
+<listitem><command>UPDATE_CONFIG</command></listitem>
+<listitem><command>VERSION</command></listitem>
+</itemizedlist>
+<para>Each command is described in detail in the following sections.</para>
+
+<refsect2 id="gdmflexiserver-1-exde-ADD_DYNAMIC_DISPLAYS">
+<title>ADD_DYNAMIC_DISPLAYS</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>
+Create a new server definition that will run on the specified display
+leaving it in DISPLAY_CONFIG state.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.8.0.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>display
+</replaceable>=<replaceable>server</replaceable>, where <replaceable>server</replaceable>
+is either a configuration named in the GDM configuration or a literal command name.</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK</para></listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>2</term><listitem><para>Existing display</para>
+</listitem></varlistentry>
+<varlistentry><term>3</term><listitem><para>No server string</para>
+</listitem></varlistentry>
+<varlistentry><term>4</term><listitem><para>Display startup failure</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-ALL_SERVERS">
+<title>ALL_SERVERS</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>List all displays, including
+console, remote, Xnest. This can be useful to figure out if the server you
+are on is managed by the <literal>gdm</literal> daemon, by seeing whether
+it is in the list. It is also somewhat like the 'w' command but for graphical
+sessions.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.4.2.96</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>server</replaceable>;<replaceable>server</replaceable>;...
+</para>
+<itemizedlist>
+<listitem><para><replaceable>server</replaceable> is <replaceable>display
+</replaceable>,<replaceable>logged-in-user</replaceable></para>
+</listitem>
+<listitem><para><replaceable>logged-in-user</replaceable> can be empty if
+no user is logged in.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-ATTACHED_SERVERS">
+<title>ATTACHED_SERVERS</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>List all attached displays,
+Does not list XDMCP and Xnest non-attached displays.  THis command used to be
+named CONSOLE_SERVERS, which is still recognized for backwards compatibility.
+The optional pattern argument is supported as of version 2.8.0.0.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.2.4.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>pattern</replaceable> (Optional)</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>server</replaceable>;<replaceable>server</replaceable>;...
+</para>
+<itemizedlist>
+<listitem><para><replaceable>server</replaceable> is <replaceable>display
+</replaceable>,<replaceable>logged-in-user</replaceable>,<replaceable>vt-or-xnest-display
+</replaceable></para>
+</listitem>
+<listitem><para><replaceable>logged-in-user</replaceable> can be empty if
+no user is logged in.</para>
+</listitem>
+<listitem><para><replaceable>vt</replaceable> can be -1 if not known or not
+supported. For example, on non-Linux.</para>
+</listitem>
+<listitem><para>If the display is an Xnest display and is a console display
+(that is, an Xnest inside another console display), the display is listed.
+Instead of <replaceable>vt</replaceable>, lists the parent display in standard
+form.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-AUTH_LOCAL">
+<title>AUTH_LOCAL</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Set up this connection
+as authenticated for FLEXI_SERVER. All full-blown (non-Xnest) servers can
+be started only from users logged in locally. Here, GDM assumes only users
+logged in from GDM. Users must pass the xauth MIT-MAGIC-COOKIE-1 that they
+were passed before the connection is authenticated.</para>
+<para>Note: The AUTH LOCAL command requires the <option>-authenticate</option>
+option, although only FLEXI_XSERVER uses this currently.</para>
+<para>Note: Since 2.6.0.6 you can also use a global
+<replaceable>ServAuthDir</replaceable>/.cookie, which works for all 
+authentication except for SET_LOGOUT_ACTION, QUERY_LOGOUT_ACTION, and
+SET_SAFE_LOGOUT_ACTION which require a logged in display.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.2.4.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>xauth-cookie
+</replaceable>, in hex form with no 0x prefix</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK</para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-CLOSE">
+<title>CLOSE</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Close sockets connection</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.2.4.0
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem><para>None</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-FLEXI_XNEST">
+<title>FLEXI_XNEST</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Start a new flexible
+Xnest server.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.3.90.4</para>
+<para>Note: Supported on older versions from 2.2.4.0, later 2.2.4.2, but since
+2.3.90.4 you must supply four arguments or ERROR 100 will be returned. This
+will start Xnest using the XAUTHORITY file supplied and with the same uid
+as the owner of that file (and the same as you supply). You must also supply
+the cookie as the third argument for this display, to prove that you indeed
+are this user. Also, this file must be readable ONLY by this user, that is,
+have a mode of 0600.  If all of these conditions are not met, ERROR 100 is
+returned.</para>
+<para>Note: The cookie should be the MIT-MAGIC-COOKIE-1, the first one that
+GDM can find in the XAUTHORITY file for this display. If that is not what
+you use, you should generate one first. The cookie should be in hex form.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>display-to-run-on
+</replaceable> <replaceable>uid-of-requesting-user</replaceable> <replaceable>
+xauth-cookie-for-the-display</replaceable> <replaceable>xauth-file</replaceable></para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>display</replaceable></para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>1</term><listitem><para>No more flexi servers</para>
+</listitem></varlistentry>
+<varlistentry><term>2</term><listitem><para>Startup errors</para>
+</listitem></varlistentry>
+<varlistentry><term>3</term><listitem><para>X failed</para>
+</listitem></varlistentry>
+<varlistentry><term>4</term><listitem><para>X too busy</para>
+</listitem></varlistentry>
+<varlistentry><term>5</term><listitem><para>Xnest can't connect</para>
+</listitem></varlistentry>
+<varlistentry><term>6</term><listitem><para>No server binary</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-FLEXI_XSERVER">
+<title>FLEXI_XSERVER</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Start a new X flexible
+server. Only supported on connection that passed AUTH_LOCAL.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.2.4.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>xserver-type
+</replaceable></para>
+<para>If no argument specified, starts the standard x server.</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>display</replaceable></para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>1</term><listitem><para>No more flexi servers</para>
+</listitem></varlistentry>
+<varlistentry><term>2</term><listitem><para>Startup errors</para>
+</listitem></varlistentry>
+<varlistentry><term>3</term><listitem><para>X failed</para>
+</listitem></varlistentry>
+<varlistentry><term>4</term><listitem><para>X too busy</para>
+</listitem></varlistentry>
+<varlistentry><term>6</term><listitem><para>No server binary</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-GET_CONFIG">
+<title>GET_CONFIG</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Get configuration value
+for the specified key.  Useful so that other applications can request 
+configuration information from GDM.  Any key defined as GDM_KEY_* in gdm.h
+is supported.  Starting with version 2.13.0.2 translated keys (such as
+<replaceable>greeter/GdmWelcome[cs]</replaceable> are supported via 
+GET_CONFIG.  Also starting with version 2.13.0.2 it is no longer necessary
+to include the default value (i.e. you can use key
+<replaceable>greeter/IncludeAll</replaceable> instead of having to use
+<replaceable>greeter/IncludeAll=false</replaceable>.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.6.0.9</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>key</replaceable></para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>value</replaceable></para></listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>50</term><listitem><para>Unsupported key</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-GET_CONFIG_FILE">
+<title>GET_CONFIG_FILE</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Get config file location
+used by the daemon.  If the GDM daemon was started with the --config option, it
+will return the value passed in via the argument.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.8.0.2</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>full-path-to-config-file</replaceable></para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-GET_CUSTOM_CONFIG_FILE">
+<title>GET_CUSTOM_CONFIG_FILE</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Get custom config file
+location being used by the daemon</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.14.0.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>full-path-to-config-file</replaceable></para>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>1</term><listitem><para>File not found</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-GET_SERVER_DETAILS">
+<title>GET_SERVER_DETAILS</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Get detail information
+for a specific server.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.13.0.4</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>server</replaceable>
+<replaceable>key</replaceable></para>
+<para>Valid key values include:</para>
+<itemizedlist>
+<listitem><para>NAME: Returns the server name</para>
+</listitem>
+<listitem><para>COMMAND: Returns the server command</para>
+</listitem>
+<listitem><para>FLEXIBLE: Returns "true" if flexible, "false" otherwise</para>
+</listitem>
+<listitem><para>CHOOSABLE: Returns "true" if choosable, "false" otherwise</para>
+</listitem>
+<listitem><para>HANDLED: Returns "true" if handled, "false" otherwise</para>
+</listitem>
+<listitem><para>CHOOSER: Returns "true" if chooser, "false" otherwise</para>
+</listitem>
+<listitem><para>PRIORITY: Returns process priority</para>
+</listitem>
+</itemizedlist>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>value</replaceable></para></listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>1</term><listitem><para>Server not found</para>
+</listitem></varlistentry>
+<varlistentry><term>2</term><listitem><para>Key not valid</para>
+</listitem></varlistentry>
+<varlistentry><term>50</term><listitem><para>Unsupported key</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-GET_SERVER_LIST">
+<title>GET_SERVER_LIST</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Get a list of the
+server sections defined in the configuration file</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.13.0.4</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>full-path-to-config-file</replaceable></para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>1</term><listitem><para>No servers found</para>
+</listitem></varlistentry>
+<varlistentry><term>50</term><listitem><para>Unsupported key</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-GREETERPIDS">
+<title>GREETERPIDS</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>List all greeter pids
+so that one can send HUP to them to re-read config. Only the root user can
+send such a HUP.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.3.90.2</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>pid</replaceable>;<replaceable>pid</replaceable>;...
+</para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-QUERY_LOGOUT_ACTION">
+<title>QUERY_LOGOUT_ACTION</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Query which logout
+actions are possible. Only supported on connection that passed AUTH_LOCAL.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.5.90.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>action</replaceable>;<replaceable>action</replaceable>;...
+</para>
+<para><replaceable>action</replaceable> is <literal>HALT</literal>, <literal>
+REBOOT</literal>, or <literal>SUSPEND</literal>. An empty list can also be
+returned if no action is possible. A '!' is appended to an action if it was
+already set with <literal>SET_LOGOUT_ACTION</literal> or <literal>SET_SAFE_LOGOUT_ACTION
+</literal>. Note that <literal>SET_LOGOUT_ACTION</literal> has precedence
+over <literal>SET_SAFE_LOGOUT_ACTION</literal>.</para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-QUERY_VT">
+<title>QUERY_VT</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Ask the daemon about
+the current virtual terminal. This is useful for logins that do not own <filename>
+/dev/console</filename> but are still console logins. Only supported on Linux
+currently, otherwise will get ERROR 8. This is also the way to query whether
+VT support is available in the daemon. Only supported on connection that passed
+AUTH_LOCAL.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.5.90.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>vt-number</replaceable></para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>8</term><listitem><para>Virtual terminals not supported
+</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-RELEASE_DYNAMIC_DISPLAYS">
+<title>RELEASE_DYNAMIC_DISPLAYS</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>
+Release dynamic displays currently in DISPLAY_CONFIG state.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.8.0.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>display</replaceable></para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>vt-number</replaceable></para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>1</term><listitem><para>Bad display number</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-REMOVE_DYNAMIC_DISPLAYS">
+<title>REMOVE_DYNAMIC_DISPLAYS</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>
+Remove a dynamic display, killing the session and purging the display
+configuration </para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.8.0.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>display</replaceable></para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>display</replaceable></para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>1</term><listitem><para>Bad display number</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-SERVER_BUSY">
+<title>SERVER_BUSY</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Returns true if half or
+more of the daemon's sockets are busy, false otherwise.  Used by slave programs
+which want to ensure they do not overwhelm the sever.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.13.0.8</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK <replaceable>true</replaceable> | <replaceable>false</replaceable></para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-SET_LOGOUT_ACTION">
+<title>SET_LOGOUT_ACTION</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Tell the daemon to
+halt, reboot, or suspend after slave process exits. Only supported on connection
+that passed AUTH_LOCAL.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.5.90.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>action</replaceable></para>
+<para><replaceable>action</replaceable> is one of the following:</para>
+<itemizedlist>
+<listitem><para>NONE: Set exit action to 'none'</para>
+</listitem>
+<listitem><para>HALT: Set exit action to 'halt'</para>
+</listitem>
+<listitem><para>REBOOT: Set exit action to 'reboot'</para>
+</listitem>
+<listitem><para>SUSPEND: Set exit action to 'suspend'</para>
+</listitem>
+</itemizedlist>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK</para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>7</term><listitem><para>Unknown logout action, or not
+available</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-SET_SAFE_LOGOUT_ACTION">
+<title>SET_SAFE_LOGOUT_ACTION</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Tell the daemon to
+halt, reboot, or suspend after all users log out. If only one person logs
+out, this is the same as SET_LOGOUT_ACTION. Note that SET_LOGOUT_ACTION has
+precendence over SET_SAFE_LOGOUT_ACTION if set to something other than NONE.
+If no user is logged in, the action takes effect immediately. Only supported
+on connection that passed AUTH_LOCAL.</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.5.90.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>action</replaceable></para>
+<para><replaceable>action</replaceable> is one of the following:</para>
+<itemizedlist>
+<listitem><para>NONE: Set exit action to 'none'</para>
+</listitem>
+<listitem><para>HALT: Set exit action to 'halt'</para>
+</listitem>
+<listitem><para>REBOOT: Set exit action to 'reboot'</para>
+</listitem>
+<listitem><para>SUSPEND: Set exit action to 'suspend'</para>
+</listitem>
+</itemizedlist>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK</para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>7</term><listitem><para>Unknown logout action, or not
+available</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-SET_VT">
+<title>SET_VT</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Change to the specified
+virtual terminal. This is useful for logins that do not own <filename>/dev/console
+</filename> but are still console logins. Only supported on Linux currently,
+otherwise will get ERROR 8. Only supported on connection that passed AUTH_LOCAL.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.5.90.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>vt</replaceable></para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK</para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>8</term><listitem><para>Virtual terminals not supported
+</para>
+</listitem></varlistentry>
+<varlistentry><term>9</term><listitem><para>Invalid virtual terminal number
+</para>
+</listitem></varlistentry>
+<varlistentry><term>100</term><listitem><para>Not authenticated</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-UPDATE_CONFIG">
+<title>UPDATE_CONFIG</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Tell the daemon to
+update the configuration of the specified key.  Any user can request
+that values are re-read but the daemon will only do so if the file has
+been modified since GDM first read the file.  Only users who can change
+the GDM configuration file (normally writable only by the root user) can
+actually modify the GDM configuration.  This command is useful to cause
+the GDM to update itself to recognize a change made to the GDM
+configuration file by the root user.</para>
+<para>Supported with limited keys since 2.3.90.2.  Starting with version 2.13.0.0, all GDM keys are supported except
+for the following:</para>
+<itemizedlist>
+<listitem><para>daemon/PidFile</para></listitem>
+<listitem><para>daemon/ConsoleNotify</para></listitem>
+<listitem><para>daemon/User</para></listitem>
+<listitem><para>daemon/Group</para></listitem>
+<listitem><para>daemon/ServAuthDir</para></listitem>
+<listitem><para>daemon/UserAuthDir</para></listitem>
+<listitem><para>daemon/UserAuthFile</para></listitem>
+<listitem><para>daemon/UserAuthFBDir</para></listitem>
+</itemizedlist>
+<para>GDM also supports the following psuedokeys:</para>
+<itemizedlist>
+<listitem><para>xdmcp/PARAMETERS - All xdmcp keys</para></listitem>
+<listitem><para>xservers/PARAMETERS - all [server-foo] sections</para></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para><replaceable>key</replaceable>
+<para><replaceable>key</replaceable> is 
+the base part of the key such as "security/AllowRemoteRoot"</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>OK</para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term>0</term><listitem><para>Not implemented</para>
+</listitem></varlistentry>
+<varlistentry><term>50</term><listitem><para>Unsupported key</para>
+</listitem></varlistentry>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+
+<refsect2 id="gdmflexiserver-1-exde-VERSION">
+<title>VERSION</title>
+<variablelist>
+<varlistentry><term>Description:</term><listitem><para>Query GDM version</para>
+</listitem></varlistentry>
+<varlistentry><term>Supported since:</term><listitem><para>2.2.4.0</para>
+</listitem></varlistentry>
+<varlistentry><term>Arguments:</term><listitem><para>None</para>
+</listitem></varlistentry>
+<varlistentry><term>Answers:</term><listitem>
+<itemizedlist>
+<listitem><para>GDM <replaceable>gdm-version</replaceable></para>
+</listitem>
+<listitem><para>ERROR <replaceable>error-number</replaceable> <replaceable>
+error-description</replaceable></para>
+<variablelist>
+<varlistentry><term>200</term><listitem><para>Too many messages</para>
+</listitem></varlistentry>
+<varlistentry><term>999</term><listitem><para>Unknown error</para>
+</listitem></varlistentry>
+</variablelist></listitem>
+</itemizedlist>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+
+<refsect1 id="gdmflexiserver-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>To See Console GDM Version</title>
+<para><screen>example% <userinput>&cmd; <option>-command</option>=VERSION
+</userinput>
+<computeroutput>GDM 2.6.0.2</computeroutput></screen></para>
+</example>
+<example role="example">
+<title>To See All Servers</title>
+<para><screen>example% <userinput>&cmd; <option>-command</option>=ALL_SERVERS
+</userinput>
+<computeroutput>OK :0,username</computeroutput></screen></para>
+</example>
+<example role="example">
+<title>To See Console Servers</title>
+<para><screen>example% <userinput>&cmd; <option>-command</option>=ATTACHED_SERVERS
+</userinput>
+<computeroutput>OK :0,username,-1</computeroutput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gdmflexiserver-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable for flexible (on demand) X servers</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gdmflexiserver-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-display-mgr
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gdmflexiserver-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para>
+<citerefentry><refentrytitle>gdmdynamic</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmphotosetup</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmthemetester</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmXnestchooser</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdm</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmsetup</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdm-restart</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gdmflexiserver-1-note"><title>&note-tt;</title>
+<para>Original man page written by Martin K. Petersen &lt;mkp@mkp.net>, George
+Lebl &lt;jirka@5z.com>. Copyright (c) 1998, 1999 by Martin K. Petersen. Copyright
+(c) 2001, 2003, 2004 by George Lebl. Copyright (c) 2003 by Red Hat, Inc.</para>
+<para>Updated by Brian Cameron, Sun Microsystems Inc., 2004, 2006.</para>
+</refsect1>
+</refentry>
