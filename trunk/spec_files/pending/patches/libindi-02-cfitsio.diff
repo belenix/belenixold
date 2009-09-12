@@ -1,0 +1,28 @@
+diff -ur libindi0-0.6/CMakeLists.txt libindi0-0.6.new/CMakeLists.txt
+--- libindi0-0.6/CMakeLists.txt	2009-02-14 17:11:38.000000000 +0100
++++ libindi0-0.6.new/CMakeLists.txt	2009-02-14 17:14:04.000000000 +0100
+@@ -15,13 +15,14 @@
+ include (MacroLogFeature)
+ include (MacroBoolTo01)
+ include (CheckIncludeFiles)
++include (FindPkgConfig)
+ 
+ find_package(ZLIB REQUIRED)
+ 
+ macro_optional_find_package(USB)
+ macro_log_feature(LIBUSB_FOUND "libusb" "User level access to USB devices" "http://indi.sf.net" FALSE "" "Provides support for USB based drivers in INDI.")
+ 
+-macro_optional_find_package(CFITSIO)
++pkg_check_modules(CFITSIO REQUIRED cfitsio)
+ macro_bool_to_01(CFITSIO_FOUND HAVE_CFITSIO_H)
+ macro_log_feature(CFITSIO_FOUND "libcfitsio" "A library for reading and writing data files in FITS (Flexible Image Transport System) data format" "http://indi.sf.net" FALSE "3.03" "Provides INDI with FITS I/O support.")
+ 
+@@ -45,7 +46,7 @@
+ include_directories( ${CMAKE_SOURCE_DIR}/libs/webcam)
+ 
+ if (CFITSIO_FOUND)
+-  include_directories(${CFITSIO_INCLUDE_DIR})
++  include_directories(${CFITSIO_INCLUDE_DIRS})
+ endif (CFITSIO_FOUND)
+ 
+ if (NOVA_FOUND)
