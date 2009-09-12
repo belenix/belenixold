@@ -1,0 +1,198 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2002/445 GNOME 2.X text editor (gedit)-->
+<!ENTITY cmd "gedit">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gedit-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gedit</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">31 Aug 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>gnome-text-editor</primary></indexterm>
+<indexterm><primary>Symlink to text editor for the GNOME desktop
+</primary></indexterm>
+<refnamediv id="gedit-1-name"><refname>&cmd;</refname>
+<refname>gnome-text-editor</refname>
+<refpurpose>Text Editor for the GNOME desktop.</refpurpose>
+</refnamediv>
+<refsynopsisdiv id="gedit-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-encoding=<replaceable>encoding</replaceable></option></arg>
+<arg choice="opt"><option>-new-document</option></arg>
+<arg choice="opt"><option>-new-window</option></arg>
+<arg choice="opt"><option role="nodash">+[<replaceable>num</replaceable>]</option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>filename</replaceable></option></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+<refsect1 id="gedit-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> is the official text editor of the GNOME desktop environment.
+</para>
+
+<para>
+While aiming at simplicity and ease of use, <command>&cmd;</command> is a
+powerful general purpose text editor. It can be used to create and edit all
+kinds of text files. Multiple documents can be edited at the same time.
+Each document resides in a specific tabbed section of the application
+window.</para>
+</para>
+<para>
+<command>&cmd;</command> features a flexible plugin system which can be used to
+dynamically add new advanced features to <command>&cmd;</command> itself.
+</para>
+<para>
+<refentrytitle>gnome-text-editor</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+has been deprecated and is now a symbolic link to &cmd;.
+</para>
+
+<refsect1 id="gedit-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+
+<varlistentry><term><option>-encoding=<replaceable>encoding</replaceable></option></term><listitem>
+<para>
+Set the character encoding to be used to open the files listed on the
+command line.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>-new-document</option></term><listitem>
+<para>Create a new top-level document or tabbed section in an existing instance
+of <command>&cmd;</command>.</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>-new-window</option></term><listitem>
+<para>Create a new top-level window in an existing instance of
+<command>&cmd;</command>.</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option role="nodash">+[<replaceable>num</replaceable>]</option></term><listitem>
+<para>
+For the first file, go to the line specified by <replaceable>num</replaceable> (do not insert
+a space between the "+" sign and the number). If <replaceable>num</replaceable> is missing, go
+to the last line.
+</listitem></varlistentry>
+
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="gedit-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>filename</replaceable></option></term>
+<listitem><para>The name of the image file to edit.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="gedit-1-exdesc"><title>EXTENDED DESCRIPTION</title>
+<para>The <command>&cmd;</command> application accepts pipes, so you
+can specify a pipe after another command, to load the output of the command
+into gedit. For example: </para>
+<para><screen><userinput>example% ls -l | &cmd;</userinput></screen></para>
+</refsect1>
+<refsect1 id="gedit-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>To Edit an ASCII File Named <filename>document.txt</filename></title>
+<para><screen><userinput>example% gedit document.txt</userinput></screen></para>
+</example>
+<example role="example">
+<title>To Add a New Tab That Contains an ASCII File Named <filename>book.txt
+</filename> </title>
+<para><screen><userinput>example% gedit --new-document book.txt</userinput></screen></para>
+</example>
+<example role="example">
+<title>To Add a New Top-Level Window That Contains an ASCII File Named testfile.txt
+</title>
+<para><screen><userinput>example% gedit --new-window testfile.txt</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gedit-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue><replaceable>0</replaceable></returnvalue></term>
+<listitem><para>Application exited successfully.</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue><replaceable>>0</replaceable></returnvalue></term>
+<listitem><para>An error occurred.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gedit-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem>
+<para>
+Executable for the <command>&cmd;</command> application.
+</para></listitem>
+</varlistentry>
+<varlistentry><term><filename>/usr/bin/gnome-text-editor</filename></term><listitem>
+<para>
+A symbolic link to the <filename>gedit</filename> executable file.
+</para></listitem>
+</varlistentry>
+<varlistentry><term><filename>/usr/lib/gedit/plugins</filename></term><listitem>
+<para>
+Location of gedit plugins.
+</para></listitem>
+</varlistentry>
+</varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/gedit</filename></term><listitem>
+<para>
+Location of developer documentation for writing a gedit plugin.
+</para></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+<refsect1 id="gedit-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-text-editor</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gedit-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>libgtksourceview-1.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>Online Help <command>&cmd;</command> manual.</para>
+</refsect1>
+<refsect1 id="gedit-1-note"><title>&note-tt;</title>
+<para>This man page was written by the following people: Paolo Maggi,
+Paolo Borelli, Chema Celorio, James Willcox, Federico Mena Quintero.</para>
+<para>Updated by Brian Cameron, Sun Microsystems Inc., 2003, 2004, 2006.</para>
+</refsect1>
+</refentry>

@@ -1,0 +1,244 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/701 dia  - Diagram Editor-->
+<!ENTITY envr-tt "ENVIRONMENT VARIABLES">
+<!ENTITY cmd "dia">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+
+<refentry id="dia-1">
+
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">31 Oct 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>a diagram drawing program</primary></indexterm>
+
+<refnamediv id="dia-1-name">
+<refname>&cmd;</refname>
+<refpurpose>a diagram drawing program</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="dia-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice ="opt"><option>-credits</option></arg>
+<arg choice ="opt"><option>-export=<replaceable>_file_</replaceable></option></arg>
+<arg choice ="opt"><option>-help</option></arg>
+<arg choice ="opt"><option>-nosplash</option></arg>
+<arg choice ="opt"><option>-size=<replaceable>WxH</replaceable></option></arg>
+<arg choice ="opt"><option>-filter=<replaceable>TYPE</replaceable></option></arg>
+<arg choice ="opt"><option>-version</option></arg>
+<arg choice ="opt"><option>-log-to-stderr</option></arg>
+<arg choice ="opt"><option>-show-layers</option></arg>
+<arg choice ="opt"><option>-verbose</option></arg>
+<arg choice ="opt"><option>-nonew</option></arg>
+<arg>file ...</arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1 id="dia-1-desc"><title>&desc-tt;</title>
+<para>Dia is a general purpose diagram editor.  Dia has a number of basic tools,
+like lines and boxes but can also dynamically load
+<replaceable>sheets</replaceable>. A sheet is a 
+collection of tools that are used in a certain type of diagram. Dia is easily
+extensible through the use of user defined sheets.</para>
+
+<para>All diagram objects in Dia have <replaceable>handles</replaceable>.
+Handles are small boxes on an object which allow the object to be resized, or
+connected to. Lines can be connected to each other and other objects with these
+handles and in this way graph structures can be formed. When objects are moved or resized
+the connections will follow the objects.</para>
+
+<para>Diagrams drawn in Dia can be exported to numerous formats which are
+described in the EXPORT FORMATS section.</para>
+</refsect1>
+
+<refsect1 id="dia-1-opts">
+<title>&opts-tt;</title>
+<para>Dia accepts the following options:</para>
+
+<variablelist termlength="large">
+<varlistentry>
+<term><option>c</option>, <option>-credits</option></term>
+<listitem><para>Display credits and exit.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>e</option>, <option>-export=<replaceable>_file_</replaceable></option></term>
+<listitem><para>Export loaded file to <replaceable>_file_</replaceable>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>h</option>, <option>-help</option></term>
+<listitem><para>Display a list of all command line options.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>n</option>, <option>-nosplash</option></term>
+<listitem><para>Do not show the splash screen.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>s</option>, <option>-size=<replaceable>WxH</replaceable></option></term>
+<listitem><para>Export loaded file in decimal given width and/or height. You may only specify width or height. E.g. --size=<replaceable>520x</replaceable> exports an image that is 520 pixels wide, while --size=<replaceable>x900</replaceable> exports an image of 900 pixels in height.</para>
+<para>Note this option is currently only implemented for the PNG export filter.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>t</option>, <option>-filter=<replaceable>TYPE</replaceable></option></term>
+<listitem><para>Export loaded file in format TYPE and exit. Formats are described below.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>v</option>, <option>-version</option></term>
+<listitem><para>Display Dia version and exit.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>l</option>, <option>-log-to-stderr</option></term>
+<listitem><para>Send error messages to stderr instead of showing dialogs.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>L</option>, <option>-show-layer=<replaceable>LAYER,LAYER,...</replaceable></option></term>
+<listitem><para>Show only specified layers (e.g. when exporting). Can be either the layer name or a range of layer numbers (X-Y).</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-verbose</option></term>
+<listitem><para>Generate verbose output.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-nonew</option></term>
+<listitem><para>Do not create an empty diagram.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<!-- Export Formats -->
+<refsect1 id="dia-1-exam">
+<title>EXPORT FORMATS</title>
+<para>The following export formats are suppored by Dia: </para>
+<itemizedlist>
+<listitem>cgm (Computer Graphics Metafile, ISO 8632)</listitem>
+<listitem>dia (Native dia diagram)</listitem>
+<listitem>dxf (Drawing Interchange File)</listitem>
+<listitem>eps or epsi or eps-builtin or eps-pango (Encapsulated Postscript)<para>The format specifications eps, epsi, and eps-pango all use the font renderer of the Pango library, while eps-builtin uses a dia specific font renderer. If you have problems with Pango rendering, e.g. Unicode, try eps-builtin instead.</para></listitem>
+<listitem>fig (XFig format)</listitem>
+<listitem>mp (TeX MetaPost macros)</listitem>
+<listitem>plt or hpgl (HP Graphics Language)</listitem>
+<listitem>png (Portable Network Graphics)</listitem>
+<listitem>shape (Dia shape file)</listitem>
+<listitem>svg (Scalable Vector Graphics)</listitem>
+<listitem>tex (TeX PSTricks macros)</listitem>
+<listitem>wpg (WordPerfect Graphics)</listitem>
+<listitem>wmf (Windows Metafile)</listitem>
+</itemizedlist>
+</refsect1>
+
+<!-- Examples -->
+<refsect1 id="dia-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Launching dia</title>
+<para><screen>example% <userinput>&cmd;</userinput></screen></para>
+</example>
+<example role="example"><title>Exporting dia file to cgm format</title>
+<para><screen>example% <userinput>&cmd; --export=dia-test.sgm --filter=cgm dia-test.dia</userinput></screen></para>
+</example>
+</refsect1>
+
+<!-- Exit values -->
+<refsect1 id="dia-1-exit">
+<title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry>
+<term><returnvalue>&ndash;1</returnvalue></term>
+<listitem><para> Error</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><returnvalue>0</returnvalue></term>
+<listitem><para>OK</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+
+<!-- Files -->
+<refsect1 id="dia-1-file">
+<title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+
+<varlistentry>
+<term><filename>/usr/bin/&cmd;</filename></term>
+<listitem> <para>Executable for Dia.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+
+<!-- Attributes -->
+<refsect1 id="dia-1-attr">
+<title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWdia</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volitile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+
+</refsect1>
+
+
+<!-- See also -->
+<refsect1 id="dia-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citetitle>Dia Manual</citetitle></para>
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+
+<refsect1 id="dia-1-note"><title>&note-tt;</title>
+<para>Written by Frederik Hallenberg, W. Borgert, Matt Keenan, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+
+<refsect1 id="dia-1-copyright"><title>&copyright-tt;</title>
+<para>Copyright 1991 Alexander Larsson.</para>
+</refsect1>
+
+
+</refentry>

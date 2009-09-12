@@ -1,0 +1,230 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "orbit-idl-2">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="orbit-idl-2-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>orbit-idl-2</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">11 Jan 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>orbit-idl-2</primary></indexterm><indexterm><primary>
+ORBit IDL compiler</primary></indexterm><refnamediv id="orbit-idl-2-1-name">
+<refname>orbit-idl-2</refname><refpurpose>ORBit IDL compiler</refpurpose></refnamediv>
+<refsynopsisdiv id="orbit-idl-2-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option>-define=<replaceable>
+string</replaceable></option> </arg><arg choice="opt"><option>-include=<replaceable>
+string</replaceable></option></arg><arg choice="opt"><option>-libIDL-version
+</option></arg><arg choice="opt"><option>-lang=<replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>-debug=<replaceable>int</replaceable></option></arg>
+<arg choice="opt"><option>-idlwarnlevel=<replaceable>int</replaceable></option></arg>
+<arg choice="opt"><option>-imodule</option></arg><arg choice="opt"><option>
+-showcpperrors</option></arg><arg choice="opt"><option>-nostubs</option></arg>
+<arg choice="opt"><option>-noskels</option></arg><arg choice="opt"><option>
+-nocommon</option></arg><arg choice="opt"><option>-noheaders</option></arg>
+<arg choice="opt"><option>-noidata</option></arg><arg choice="opt"><option>
+-add-imodule</option></arg><arg choice="opt"><option>-skeleton-impl</option></arg>
+<arg choice="opt"><option>-backenddir=<replaceable>dir</replaceable></option></arg>
+<arg choice="opt"><option>-c-output-formatter=<replaceable>program</replaceable></option></arg>
+<arg choice="opt"><option>-onlytop</option></arg><arg choice="opt"><option>
+-pidl</option></arg><arg choice="opt"><option>-nodefskels</option></arg><arg
+choice="opt"><option>-deps=<replaceable>filename</replaceable></option></arg>
+<arg choice="opt"><option>-headerguardprefix=<replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>-usage</option></arg><arg choice="opt"><option>
+-version</option></arg><arg choice="opt"><option>-help</option></arg><arg
+choice="plain"><option role="nodash">idlfile</option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="orbit-idl-2-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> is the ORBit Interface Definition Language
+(IDL) compiler. It takes as input an IDL file, and produces as output a set
+of source code files which you can use to develop an application that implements
+and/or uses the CORBA interface defined in the IDL file.</para>
+</refsect1>
+<refsect1 id="orbit-idl-2-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wide"><varlistentry><term><option>-add-imodule
+</option></term><listitem><para>Output an interface type data file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-backenddir=<replaceable>dir</replaceable></option></term>
+<listitem><para>Override the IDL backend library directory.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-c-output-formatter=<replaceable>program</replaceable></option></term>
+<listitem><para>Specify the program with which to format output (normally,
+indent).</para>
+</listitem></varlistentry>
+<varlistentry><term><option>d</option>, <option>-debug=<replaceable>int</replaceable></option></term>
+<listitem><para>Set the debug level. Valid values are in the range 0 to 4
+inclusive.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>D</option><option>-define=<replaceable>string</replaceable></option></term>
+<listitem><para>Define value in preprocessor. This option is passed directly
+to <citerefentry><refentrytitle>cpp</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-deps=<replaceable>filename</replaceable></option></term>
+<listitem><para>Generate dependency information suitable for inclusion in
+a Makefile.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-headerguardprefix=<replaceable>string</replaceable></option></term>
+<listitem><para>Prefix for <literal>#ifdef</literal> header guards. Sometimes
+useful to avoid conflicts.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>?</option>, <option>-help</option></term><listitem><para>Show help
+information on standard output, and exit.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-idlwarnlevel=<replaceable>int</replaceable></option></term>
+<listitem><para>Set the IDL warning level. Valid values are in the range 0
+to 4 inclusive. The default value is 2.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>i</option>, <option>-imodule</option></term><listitem><para>Output
+only an interface type data file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>I</option>, <option>-include=<replaceable>string</replaceable></option></term>
+<listitem><para>Add search path for include files. This option is passed directly
+to <citerefentry><refentrytitle>cpp</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>l</option>, <option>-lang=<replaceable>string</replaceable></option></term>
+<listitem><para>Display the language (the default is C).</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-libIDL-version</option></term><listitem><para>
+Show version of <filename>libIDL</filename> used. See <citerefentry><refentrytitle>
+libIDL-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-nocommon</option></term><listitem><para>Do not
+output a common file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-nodefskels</option></term><listitem><para>Do
+not output definitions for skeletals in header.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-noheaders</option></term><listitem><para>Do not
+output a header file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-noidata</option></term><listitem><para>Do not
+generate interface type data.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-noskels</option></term><listitem><para>Do not
+output a skeletals file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-nostubs</option></term><listitem><para>Do not
+output a stubs file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-onlytop</option></term><listitem><para>Inhibit
+inclusion of IDL files.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-pidl</option></term><listitem><para>Treat the
+input as Pseudo IDL.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-showcpperrors</option></term><listitem><para>
+Show C preprocessor errors.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-skeleton-impl</option></term><listitem><para>
+Output a skeletal object implementation.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-usage</option></term><listitem><para>Display
+brief usage information.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>v</option>, <option>-version</option></term><listitem><para>Display
+the compiler version and serial.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="orbit-idl-2-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="wide"><varlistentry><term><option role="nodash"><replaceable>
+filename</replaceable></option></term><listitem><para>The name of the input
+IDL file to be processed by the compiler.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="orbit-idl-2-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Compiling an IDL file</title>
+<para><screen>example% <userinput>&cmd; example.idl</userinput></screen></para>
+<para>The following files are output:</para>
+<para><screen><computeroutput>example.h example-stubs.c example-skels.c example-common.c
+</computeroutput></screen></para>
+</example>
+<example role="example"><title>Compiling an IDL file for use as a client of
+the interface only</title>
+<para><screen>example% <userinput>&cmd; --noskels example.idl</userinput></screen></para>
+<para>The following files are output:</para>
+<para><screen><computeroutput>example.h example-stubs.c example-common.c</computeroutput></screen></para>
+</example>
+<example role="example"><title>Compiling an IDL file for use as a servant
+of the interface only</title>
+<para><screen>example% <userinput>&cmd; --nostubs example.idl</userinput></screen></para>
+<para>The following files are output:</para>
+<para><screen><computeroutput>example.h example-skels.c example-common.c</computeroutput></screen></para>
+</example>
+<example role="example"><title>Compiling an IDL file that includes IDL files
+located in a non-standard directory</title>
+<para><screen>example% <userinput>&cmd; -I /example-idl-location example.idl
+</userinput></screen></para>
+<para>In this example, <filename>example.idl</filename> includes <filename>
+example-included.idl</filename>, which is located in <filename>/example-idl-location/example-included.idl
+</filename>.</para>
+</example>
+</refsect1>
+<refsect1 id="orbit-idl-2-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="orbit-idl-2-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium"><varlistentry><term><filename>/usr/bin/&cmd;</filename></term>
+<listitem><para>Executable for the ORBit IDL compiler</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="orbit-idl-2-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-component-devel
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="orbit-idl-2-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>cpp</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libIDL-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libORBit-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="orbit-idl-2-1-note"><title>&note-tt;</title>
+<para>The output source code is specific to ORBit and should not be used with
+any other Object Request Broker (ORB), with any other version of ORBit, or
+on a platform other than the one on which the IDL compiler was itself compiled.
+</para>
+<para>Written by Mark McLoughlin, Sun Microsystems Inc., 2003, 2006.</para>
+</refsect1>
+</refentry>

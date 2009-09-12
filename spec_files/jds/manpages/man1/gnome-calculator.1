@@ -1,0 +1,305 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2002/319 GNOME 2.x gnome-calculator-->
+<!ENTITY cmd "gnome-calculator">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2006, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-calculator-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-calculator</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">12 Sep 2006</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-calculator</primary></indexterm><indexterm><primary>
+gucharmap</primary></indexterm><indexterm><primary>insert special characters
+into a document</primary></indexterm>
+<refnamediv id="gnome-calculator-1-name"><refname>gnome-calculator</refname>
+<refname>gcalctool</refname><refpurpose>perform basic, financial, and scientific
+calculations</refpurpose></refnamediv>
+<refsynopsisdiv id="gnome-calculator-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd; | gcalctool</command>
+<arg><option>a <replaceable>accuracy</replaceable></option></arg>
+<arg><option>D</option></arg><arg><option>E</option></arg>
+<arg><option>v</option></arg>
+<arg><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnome-calculator-1-desc"><title>&desc-tt;</title>
+<para>Gnome calculator is a desktop calculator. It has been designed to be used with
+either the mouse or the keyboard. It is visually similar to a lot of hand-held 
+calculators.</para>
+<para>
+Calculator has the following modes:
+</para>
+<variablelist>
+<varlistentry>
+<term>Basic Mode</term>
+<listitem><para>
+Provides standard calculator functions. You can store numbers in 10 different
+memory registers, and easily retrieve and replace the numbers in the memory
+registers.  Basic Mode is the default mode. You can use all of the Basic Mode
+functions in each of the other modes.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>Financial Mode</term>
+<listitem><para>
+Provides several complex financial functions.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>Scientific Mode</term>
+<listitem><para>
+Provides many additional mathematical functions, including trigonometric and
+logical functions. You can also store your own functions and constants, when
+you use Scientific Mode.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-calculator-1-exde"><title>&exde-tt;</title>
+<para>
+Some of the calculator keys have menu marks, this indicates that there is a
+menu associated with that key.
+</para>
+<para>
+One of the most important things to remember about gnome-calculator is that
+calculations are performed from left to right, with no arithmetic precedence.
+If you need arithmetic precedence, then you should use parentheses.
+</para>
+<para>
+Internal arithmetic is now down with multi-precision floating point numbers.
+Accuracy can be adjusted from zero to nine numeric places in fixed notation,
+but numbers can be displayed in engineering and scientific notation as well.
+There is also an option to show or remove trailing zeroes after the numeric
+point. The calculator reverts to scientific notation when the number is larger
+than the display would allow in fixed notation. In the scientific mode, the
+base of operation can be changed between binary, octal, decimal and
+hexidecimal.  Numbers are initially displayed in fixed notation to nine
+numeric places, with trailing zeroes removed, in the decimal base.
+</para>
+<para>
+You can use the Copy and Paste functions in conjunction with the numeric
+display to store or retrieve characters from the clipboard. You can also remove
+the last digit entered, completely clear the displayed entry and totally reset
+the calculator.
+</para>
+<para>
+There are ten memory registers. Numbers can be stored or retrieved in these
+locations, and arithmetic can be performed upon register contents.
+</para>
+<para>
+Context sensitive help is also available. Control-F1 toggles whether a tooltip
+is displayed for the item which currently has focus.
+</para>
+<para>On startup, Calculator uses the following configuration resources stored
+in a GConf database. </para>
+<informaltable frame="none">
+<tgroup cols="2" colsep="0" rowsep="0"><colspec colwidth="18.18*"><colspec
+colwidth="81.82*">
+<tbody>
+<row><entry><para>Resource:</para></entry><entry><para>/schemes/apps/gcalctool/accuracy
+</para></entry></row>
+<row><entry><para>Values:</para></entry><entry><para>Accuracy value</para></entry>
+</row>
+<row><entry><para>Description:</para></entry><entry><para>The number of digits
+displayed after the numeric point. This value must be in the range 0 to 9.
+</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+<informaltable frame="none">
+<tgroup cols="2" colsep="0" rowsep="0"><colspec colwidth="18.18*"><colspec
+colwidth="81.82*">
+<tbody>
+<row><entry><para>Resource:</para></entry><entry><para>/schemes/apps/gcalctool/base
+</para></entry></row>
+<row><entry><para>Values:</para></entry><entry><para>Numeric Base</para></entry>
+</row>
+<row><entry><para>Description:</para></entry><entry><para>The initial numeric
+base. Valid values are "BIN" (binary), "OCT" (octal), "DEC" (decimal), and
+"HEX" (hexadecimal).</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+<informaltable frame="none">
+<tgroup cols="2" colsep="0" rowsep="0"><colspec colwidth="18.18*"><colspec
+colwidth="81.82*">
+<tbody>
+<row><entry><para>Resource:</para></entry><entry><para>/schemes/apps/gcalctool/display
+</para></entry></row>
+<row><entry><para>Values:</para></entry><entry><para>Display mode</para></entry>
+</row>
+<row><entry><para>Description:</para></entry><entry><para>The initial display
+mode. Valid values are "ENG" (engineering), "FIX" (fixed-point), and SCI"
+(scientific).</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+<informaltable frame="none">
+<tgroup cols="2" colsep="0" rowsep="0"><colspec colwidth="18.18*"><colspec
+colwidth="81.82*">
+<tbody>
+<row><entry><para>Resource:</para></entry><entry><para>/schemes/apps/gcalctool/mode
+</para></entry></row>
+<row><entry><para>Values:</para></entry><entry><para>Mode</para></entry></row>
+<row><entry><para>Description:</para></entry><entry><para>The initial calculator
+mode. Valid values are "BASIC", "FINANCIAL", and "SCIENTIFIC".</para></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<informaltable frame="none">
+<tgroup cols="2" colsep="0" rowsep="0"><colspec colwidth="18.18*"><colspec
+colwidth="81.82*">
+<tbody>
+<row><entry><para>Resource:</para></entry><entry><para>/schemes/apps/gcalctool/showzeroes
+</para></entry></row>
+<row><entry><para>Values:</para></entry><entry><para>true, false (true)</para></entry>
+</row>
+<row><entry><para>Description:</para></entry><entry><para>Whether to show
+trailing zeroes after the numeric point in the display value.</para></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<informaltable frame="none">
+<tgroup cols="2" colsep="0" rowsep="0"><colspec colwidth="18.18*"><colspec
+colwidth="81.82*">
+<tbody>
+<row><entry><para>Resource:</para></entry><entry><para>/schemes/apps/gcalctool/showthousands
+</para></entry></row>
+<row><entry><para>Values:</para></entry><entry><para>true, false (false)</para></entry>
+</row>
+<row><entry><para>Description:</para></entry><entry><para>Whether fixed numbers
+in the decimal base are displayed with thousands separated.</para></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<informaltable frame="none">
+<tgroup cols="2" colsep="0" rowsep="0"><colspec colwidth="18.18*"><colspec
+colwidth="81.82*">
+<tbody>
+<row><entry><para>Resource:</para></entry><entry><para>/schemes/apps/gcalctool/showregisters
+</para></entry></row>
+<row><entry><para>Values:</para></entry><entry><para>true, false (true)</para></entry>
+</row>
+<row><entry><para>Description:</para></entry><entry><para>Whether to display
+the memory register window when Calculator starts.</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+<informaltable frame="none">
+<tgroup cols="2" colsep="0" rowsep="0"><colspec colwidth="18.18*"><colspec
+colwidth="81.82*">
+<tbody>
+<row><entry><para>Resource:</para></entry><entry><para>/schemes/apps/gcalctool/trigtype
+</para></entry></row>
+<row><entry><para>Values:</para></entry><entry><para>Trig. type</para></entry>
+</row>
+<row><entry><para>Description:</para></entry><entry><para>The initial trigonometric
+type. Valid values are "DEG" (degrees), "GRAD" (grads), and "RAD" (radians).
+</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+<para>Any constants or functions that the user defines are also stored in
+the GConf database.</para>
+</refsect1>
+<refsect1 id="gnome-calculator-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option>a <replaceable>accuracy</replaceable></option></term>
+<listitem><para>Specifies the number of digits displayed after the numeric
+point. This value must be in the range 0 to 9.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>D</option></term><listitem><para>Enable debug
+mode.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>E</option></term><listitem><para>Enable debug
+mode in the multiple-precision arithmetic package.</para>
+</listitem></varlistentry>
+<varlistentry<term><option>v</option></term><listitem><para>Show the version number
+and usage information.</para></listitem</varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-calculator-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Launching Calculator</title>
+<para><screen>example% <userinput>&cmd; </userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnome-calculator-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-calculator-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/bin/gcalctool</filename> </term><listitem>
+<para>Executable for Calculator.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/&cmd;</filename> </term><listitem>
+<para>Symbolic link to <command>gcalctool</command>.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>~/.gcalctoolrc</filename> </term><listitem>
+<para>User-specific resources for customizing the appearance and color of
+Calculator.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-calculator-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-calculator
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-calculator-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citetitle>Calculator Manual</citetitle></para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gnome-calculator-1-note"><title>&note-tt;</title>
+<para>Written by Glynn Foster and Rich Burridge, Sun Microsystems Inc., 2003.
+</para>
+<para>Updated  by Matt Keenan, Sun Microsystems Inc., 2006.</para>
+</refsect1>
+</refentry>

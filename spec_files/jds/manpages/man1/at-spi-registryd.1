@@ -1,0 +1,94 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2006/202  GNOME 2.14-Vermillion-->
+<!ENTITY envr-tt "ENVIRONMENT VARIABLES">
+<!ENTITY cmd "at-spi-registryd">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+
+<refentry id="at-spi-registryd-1">
+
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>at-spi-registryd</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">3 Dec 2006</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>at-spi-registryd</primary></indexterm>
+<indexterm><primary>The AT-SPI registry daemon</primary></indexterm>
+
+<refnamediv id="at-spi-registryd-1-name">
+<refname>at-spi-registryd</refname>
+<refpurpose>The AT-SPI registry daemon</refpurpose>
+</refnamediv>
+
+<refsect1 id="at-spi-registryd-1-desc"><title>DESCRIPTION</title>
+<para>
+at-spi-registryd is the AT-SPI registry daemon. It provides a mechanism for all
+assistive technologies to discover and interact with applications running on
+the desktop. Usually, at-spi-registryd is started by gnome-session when
+accessibility is enabled.
+</para>
+<refsect1>
+
+
+<refsect1 id="at-spi-registryd-1-file">
+<title>FILES</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholepage">
+<varlistentry><term><filename>/usr/lib/&cmd;</filename></term><listitem><para>An application running the AT-SPI registry</para></listitem></varlistentry>
+
+</variablelist>
+</refsect1>
+
+
+<!-- Attributes -->
+<refsect1 id="at-spi-registryd-1-attr">
+<title>ATTRIBUTES</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-a11y-libs</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<!-- See also -->
+<refsect1 id="at-spi-registryd-1-also"><title>SEE ALSO</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>libatk-1.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libcspi</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+
+<refsect1 id="at-spi-registryd-1-note"><title>NOTES</title>
+<para>at-spi-registryd module is in at-spi package.
+</para>
+</refsect1>
+</refentry>

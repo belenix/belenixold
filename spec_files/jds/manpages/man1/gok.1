@@ -1,0 +1,264 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2002/292 GOK On-Screen Reader/Magnifier for the GNOME desktop-->
+<!ENTITY cmd "gok">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub EntList brvbar bull cross dash diam diams frac12 frac13 frac14 hellip
+ laquo lArr loz mdash nabla ndash para pound rArr raquo sect yen lt gt>
+<?Pub Inc>
+<refentry id="gok-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gok</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">12 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gok</primary></indexterm><indexterm><primary>an on-screen
+keyboard written for GNOME</primary></indexterm>
+<refnamediv id="gok-1-name"><refname>gok</refname><refpurpose>GNOME on-screen
+keyboard</refpurpose></refnamediv>
+<refsynopsisdiv id="gok-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-access-method=<replaceable>name</replaceable></option></arg>
+<arg choice="opt"><option>-editor</option></arg>
+<arg choice="opt"><option>-extras</option></arg>
+<arg choice="opt"><option>-geometry=<replaceable>geometry</replaceable></option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-input-device=<replaceable>device</replaceable></option></arg>
+<arg choice="opt"><option>-keyboard=<replaceable>keyboard</replaceable></option></arg>
+<arg choice="opt"><option>-list-accessmethods</option></arg>
+<arg choice="opt"><option>-list-actions</option></arg>
+<arg choice="opt"><option>-login</option></arg>
+<arg choice="opt"><option>-remembergeometry</option></arg>
+<arg choice="opt"><option>-scan-action=<replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>-select-action=<replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option>-settings</option></arg>
+<arg choice="opt"><option>-usage</option></arg>
+<arg choice="opt"><option>-valuator-sensitivity=<replaceable>double</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gok-1-desc"><title>&desc-tt;</title>
+<para>The GNOME On-screen Keyboard (GOK) is a dynamic on-screen keyboard for
+UNIX and UNIX-like operating systems. <command>&cmd;</command> enables users
+to control their computer without having to rely on a standard keyboard or
+mouse. Many individuals must control the computer using alternative input
+methods. With the right hardware support and <command>&cmd;</command>, individuals
+have full access to applications that support the AT SPI, and therefore, full
+access to the functionality that these applications provide.</para>
+</refsect1>
+<refsect1 id="gok-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wide">
+<varlistentry><term><option>a</option>, <option>-access-method=<replaceable>name</replaceable></option></term>
+<listitem><para>Use the specified access method. <replaceable>name</replaceable>
+is a string and can be found in the various access method files (<filename>
+.xam</filename>) assigned to the "name" property of the <literal>&lt;gok:accessmethod>
+</literal> tag. Note that this is not necessarily the same as the name of
+the <filename>.xam</filename> file, see <option>-list-accessmethods
+</option>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>e</option>, <option>-editor</option></term><listitem><para>Start the
+GOK keyboard editor.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-extras</option></term><listitem><para>Use special,
+but possibly unstable, <command>&cmd;</command> functionality.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-geometry=<replaceable>geometry</replaceable></option></term>
+<listitem><para>If <option>-geometry</option> is not specified, <command>&cmd;</command>
+remembers its position between invocations and starts in the same position
+as when last shut down.</para>
+<para>If <option>-geometry</option> is specified, <command>&cmd;</command>
+positions itself within the rectangular area of screen described by the given
+X11 geometry specification, but does not remember its position when shut down.
+This behavior can be changed with the <option>-remembergeometry</option>
+option, which forces <command>&cmd;</command> to remember its position when
+shut down, even when started with <option>-geometry</option>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-help</option></term><listitem><para>Displays
+the command line options.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>i</option>, <option>-input-device=<replaceable>device</replaceable></option></term>
+<listitem><para>Use the specified input device.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>k</option>, <option>-keyboard=<replaceable>keyboard</replaceable></option></term>
+<listitem><para>Start GOK with the specified keyboard.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-list-accessmethods</option></term><listitem>
+<para>List the access methods that can used as options to other arguments.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-list-actions</option></term><listitem><para>
+List the actions that can used as options to other arguments.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>l</option>, <option>-login</option></term><listitem><para>Specify
+that GOK is used to log in.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-remembergeometry</option></term><listitem><para>
+Can be used with the <option>-geometry</option> option. Forces GOK to remember
+its position when shut down, even if started with the <option>-geometry</option>
+option. See <option>-geometry</option>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-scan-action=<replaceable>string</replaceable></option></term>
+<listitem><para>Start GOK and hook this action to scan operations. See <option>
+-list-actions</option>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-select-action=<replaceable>string</replaceable></option></term>
+<listitem><para>Start GOK and hook this action to select operations. See <option>
+-list-actions</option>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>s</option>, <option>-settings</option></term><listitem><para>Open
+the settings dialog box when GOK starts.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-usage</option></term><listitem><para>Displays
+a brief usage message.</para>
+</listitem></varlistentry>
+<varlistentry><term><option><option>-valuator-sensitivity=<replaceable>double
+</replaceable></option></option></term><listitem><para>A multiplier to be
+applied to input device valuator events before processing.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>
+Standard options available for use with most GNOME applications.  See
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+for more information.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gok-1-exde"><title>&exde-tt;</title>
+<para>GOK features Direct Selection, Dwell Selection, Automatic Scanning and
+Inverse Scanning access methods, and includes word completion.</para>
+<para>GOK includes an alphanumeric keyboard and a keyboard for launching applications.
+Keyboards are specified in XML, enabling existing keyboards to be modified
+and new keyboards to be created. The access methods are also specified in
+XML, providing the ability to modify existing access methods and create new
+ones. GOK is not limited to presenting keyboards that have been designed by
+hand, and can dynamically create keyboards to adapt to the user's current
+situation.</para>
+<para>GOK can redisplay components of the user interfaces of running applications
+directly within GOK as keyboards. This provides efficient access to elements
+of the user interface, removing the need to navigate the interface indirectly
+though keyboard accelerators. GOK supports the redisplay of application menus
+and toolbars. GOK contains a window activator keyboard that lists the current
+windows on the desktop and provides the ability to switch between them.</para>
+<para>Users have the option of setting key width, height, and spacing as well
+as visual and auditory feedback on highlighting and selection. GOK can be
+further customized if you have programming skills, and contributions are welcome.
+</para>
+<para>If you build GOK from source, you can find some documentation about
+the internal GOK APIs in the  gok/docs/reference/html directory.</para>
+<para>Note: Although GOK can be operated via the "core pointer" device, that
+is, the system mouse or a device that controls the primary onscreen pointer,
+this mode of operation is not supported or recommended for most users. This
+is because the operating system and primary GUI toolkits reserve the core
+pointer for their own use, resulting in conflicts with GOK that can "lock
+out" a GOK user who cannot activate the keyboard or use the core pointer to
+"point and click" in the usual way. GOK can be operated via "auxiliary" input
+devices, which act as secondary or additional button or pointing devices.
+See the GOK online reference manual and the GNOME Accessibility Guide for
+more information on how to configure GOK to use auxiliary input devices.</para>
+</refsect1>
+<refsect1 id="gok-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Specifying an Access Method to Use for GOK</title>
+<para><screen>example% <userinput>&cmd; <option>-access-method=dwellselection
+</option></userinput></screen></para>
+</example>
+<example role="example">
+<title>Automatically Open the GOK Preferences Dialog When GOK Starts</title>
+<para><screen>example% <userinput>&cmd; <option>-settings</option></userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gok-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully.</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>1</returnvalue></term><listitem><para>Application
+exited with error.</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>2</returnvalue></term><listitem><para>GOK
+cannot be initialized from configuration data.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gok-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable for GNOME on-screen keyboard</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gok/*.kbd</filename></term><listitem>
+<para>GOK branching keyboards (C locale)</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gok/*.xam</filename></term><listitem>
+<para>Access Method definition files</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gok/<replaceable>locale</replaceable>/*.kbd
+</filename></term><listitem><para>Localized GOK branching keyboards</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gok/dictionary.txt</filename></term>
+<listitem><para>Primary GOK word-completion dictionary</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gok/*.png</filename></term><listitem>
+<para>Image files for GOK branching keyboards</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gok/goksound*.wav</filename></term>
+<listitem><para>Example GOK audio feedback</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gok.rc</filename></term><listitem>
+<para>GtkRC file defining GOK color scheme</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gok-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-a11y-gok
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gok-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+
+<para>GOK online reference manual.</para>
+<para>Latest version of the <citetitle>GNOME Accessibility Guide</citetitle>
+for your platform.</para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para><citerefentry><refentrytitle>create-branching-keyboard</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="gok-1-note"><title>&note-tt;</title>
+<para>
+Written by Bill Haneman and David Bolter, Sun Microsystems Inc., 2004, 2006,
+2007.
+</para>
+</refsect1>
+</refentry>

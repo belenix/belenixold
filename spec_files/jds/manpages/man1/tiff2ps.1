@@ -1,0 +1,161 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY exam-tt "EXAMPLES">
+<!ENTITY cmd "tiff2ps">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="tiff2ps-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>tiff2ps</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>tiff2ps</primary></indexterm><indexterm><primary>convert
+a TIFF image to PostScript</primary></indexterm>
+<refnamediv id="tiff2ps-1-name"><refname>tiff2ps</refname><refpurpose>convert
+a TIFF image to PostScript</refpurpose></refnamediv>
+<refsynopsisdiv id="tiff2ps-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash"><replaceable>
+options</replaceable></option></arg><arg choice="plain" rep="repeat"><option
+role="nodash"><replaceable>input.tif</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="tiff2ps-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> reads TIFF images and writes PostScript or
+Encapsulated PostScript (EPS) on the standard output. By default, <command>&cmd;</command>
+writes Encapsulated PostScript for the first image in the specified TIFF image
+file.</para>
+<para>By default, <command>&cmd;</command> generates PostScript that fills
+a printed area specified by the TIFF tags in the input file. If the file does
+not contain XResolution or YResolution tags, then the printed area is set
+according to the image dimensions. You can use the <option>w</option> and <option>
+h</option> options to set the dimensions of the printed area in inches, overriding
+any relevant TIFF tags.</para>
+<para>The PostScript generated for RGB, palette, and CMYK images uses the
+colorimage operator. The PostScript generated for grayscale and bilevel images
+uses the image operator. When the colorimage operator is used, PostScript
+code to emulate this operator on older PostScript printers is also generated.
+Note that this emulation code can be very slow.</para>
+<para>Color images with associated alpha data are composited over a white
+background.</para>
+</refsect1>
+<refsect1 id="tiff2ps-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>1</option></term><listitem><para>Generate PostScript
+Level I. This is the default.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>2</option></term><listitem><para>Generate PostScript
+Level II.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>a</option></term><listitem><para>Generate output
+for all IFDs (pages) in the input file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>d</option></term><listitem><para>Set the initial
+TIFF directory to the specified directory number. Note that directories are
+numbered starting at zero. This option is useful for selecting individual
+pages in a multipage file, for example facsimile.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>e</option></term><listitem><para>Force the generation
+of Encapsulated PostScript.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>h</option></term><listitem><para>Specify the vertical
+size of the printed area in inches.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>o</option></term><listitem><para>Set the initial
+TIFF directory to the IFD at the specified file offset.  This option is useful
+for selecting thumbnail images, which are hidden using the SubIFD tag.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>p</option></term><listitem><para>Force the generation
+of non-Encapsulated PostScript.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>s</option></term><listitem><para>Generate output
+for a single IFD (page) in the input file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>w</option></term><listitem><para>Specify the horizontal
+size of the printed area in inches.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>z</option></term><listitem><para>When generating
+PostScript Level II, data is scaled so that the data does not image into the
+deadzone on a page, that is, the outer margin that the printing device is
+unable  to mark. This option suppresses this behavior. When PostScriptLevel
+I is generated, data is imaged to the entire printed page and this option
+has no affect.</para>
+</listitem></varlistentry>
+</variablelist>
+<variablelist termlength="narrow"></variablelist></refsect1>
+<refsect1 id="tiff2ps-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash"><replaceable>input.tif</replaceable></option></term>
+<listitem><para>The name of the input TIFF file.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="tiff2ps-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Generating PostScript Level II for All Pages of a Facsimile</title>
+<para><screen>example% <userinput>&cmd; -a2 fax.tif | lpr</userinput></screen></para>
+<para>Note that if you have version 2.6.1 or newer of Ghostscript, you can
+efficiently preview facsimile generated by the above command.</para>
+</example>
+<example role="example">
+<title>Generating Encapsulated PostScript for the Image at Directory 2 of
+an Image</title>
+<para><screen>example% <userinput>&cmd; -d 1 foo.tif</userinput></screen></para>
+<para>Note that directories are numbered starting at zero.</para>
+</example>
+</refsect1>
+<refsect1 id="tiff2ps-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="tiff2ps-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>pal2rgb</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>tiffinfo</refentrytitle><manvolnum>
+1</manvolnum></citerefentry>, <citerefentry><refentrytitle>tiffcp</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>tiffgt
+</refentrytitle><manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>
+tiffmedian</refentrytitle><manvolnum>1</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>tiff2bw</refentrytitle><manvolnum>1</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>tiffsv</refentrytitle><manvolnum>1</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="tiff2ps-1-note"><title>&note-tt;</title>
+<para>PostScript does not support colormaps. Therefore, 8-bit
+palette images produce 24-bit PostScript&nbsp; images. This conversion results
+in output that is six times bigger than the original image and which takes
+a long time to send to a printer over a serial line. Matters are even worse
+for 4-, 2-, and 1-bit palette images.</para>
+<para>Does not support tiled images when generating PostScript Level I output.
+</para>
+<para>Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>

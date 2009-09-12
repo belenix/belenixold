@@ -1,0 +1,85 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734 GNOME For Nevada -->
+<!ENTITY cmd "oil-bugreport">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="oil-bugreport-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>oil-bugreport</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">20 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+generate debug information for liboil bug reports</primary></indexterm>
+<refnamediv id="oil-bugreport-1-name"><refname>&cmd;</refname>
+<refpurpose>
+generate debug information for liboil bug reports</refpurpose></refnamediv>
+<refsynopsisdiv id="oil-bugreport-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command></cmdsynopsis></refsynopsisdiv>
+<refsect1 id="oil-bugreport-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> scans the system for information that is useful to
+liboil developers to help diagnose user problems.  It is generally useful
+to attach <command>&cmd;</command> output when reporting bugs about liboil.
+</para>
+</refsect1>
+<refsect1 id="oil-bugreport-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Generating Feedback Information</title>
+<para><screen>example% <userinput><command>&cmd;</command></userinput></screen></para>
+</example>
+<example role="example">
+<title>Generating Feedback Information and Redirecting Output to a File</title>
+<para><screen>example% <userinput><command>&cmd;</command> &amp;> myfeedback
+</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="oil-bugreport-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable to generate debug info for liboil bug reports</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="oil-bugreport-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWliboil
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="oil-bugreport-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>liboil-0.3</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<para>Updated by Brian Cameron, Sun Microsystems Inc., 2009.</para>
+</refsect1>
+</refentry>

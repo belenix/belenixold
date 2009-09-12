@@ -1,0 +1,168 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!--ARC : LSARC 2001/317 Scrollkeeper Open Documentation Cataloging System-->
+<!--ARC : LSARC 2003/033 GNOME 2.x Scrollkeeper scripts-->
+<!ENTITY cmd "scrollkeeper-devel">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="scrollkeeper-devel-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>scrollkeeper-devel</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">01 Apr 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>scrollkeeper-devel</primary></indexterm><indexterm><primary>
+working with OMF documents and the scrolkeeper database</primary></indexterm>
+<indexterm><primary>scrollkeeper-extract</primary></indexterm><indexterm>
+<primary>convert DocBook/SGML files to Docbook/XML files if necessary, and
+apply a number of transformations to the XML file to extract information from
+the XML file</primary></indexterm><indexterm><primary>scrollkeeper-gen-seriesid
+</primary></indexterm><indexterm><primary>generates a globally unique series
+ID for an OMF file.</primary></indexterm><indexterm><primary>scrollkeeper-preinstall
+</primary></indexterm><indexterm><primary>points OMF files to the correct
+location on the target machine before registration in the <application>scrollkeeper
+</application> database</primary></indexterm><refnamediv id="scrollkeeper-devel-1-name">
+<refdescriptor>&cmd;</refdescriptor><refname>scrollkeeper-extract</refname>
+<refname>scrollkeeper-gen-seriesid</refname><refname>scrollkeeper-preinstall
+</refname><refpurpose>utilities for working with OMF documents and the <application>
+scrollkeeper</application> database</refpurpose></refnamediv>
+<refsynopsisdiv id="scrollkeeper-devel-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>scrollkeeper-extract</command><arg choice="plain"><option
+role="nodash"><replaceable>file</replaceable></option></arg><arg choice="plain"><option
+role="nodash"><replaceable>stylesheet</replaceable></option> <option role="nodash"><replaceable>
+output</replaceable></option></arg><arg choice="opt" rep="repeat"><option
+role="nodash"><replaceable>stylesheet</replaceable></option> <option role="nodash"><replaceable>
+output</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>scrollkeeper-gen-seriesid</command>
+</cmdsynopsis>
+<cmdsynopsis><command>scrollkeeper-preinstall</command><arg choice="plain"><option
+role="nodash"><replaceable>docfile</replaceable></option></arg><arg choice="plain"><option
+role="nodash"><replaceable>omf-file1</replaceable></option></arg><arg choice="plain"><option
+role="nodash"><replaceable>omf-file2</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="scrollkeeper-devel-1-desc"><title>&desc-tt;</title>
+<para><command>scrollkeeper-extract</command> is used internally by <application>
+scrollkeeper</application> to convert DocBook/SGML files to Docbook/XML files
+if necessary, and to apply a number of transformations to the XML file to
+extract information from the XML file.</para>
+<para><command>scrollkeeper-gen-seriesid</command> generates a globally unique
+series ID for an OMF file.</para>
+<para><command>scrollkeeper-preinstall</command> reads <filename><replaceable>
+omf_file1</replaceable></filename>, changes the URL attribute of the identifier
+tag to <replaceable>doc_file</replaceable> and writes the output to <filename><replaceable>
+omf_file2</replaceable></filename>. <command>scrollkeeper-preinstall</command>
+can be used during the document installation process to point OMF files to
+the correct location on the target machine before registration in the <application>
+scrollkeeper</application> database.</para>
+</refsect1>
+<refsect1 id="scrollkeeper-devel-1-opts"><title>&opts-tt;</title>
+<para>None.</para>
+</refsect1>
+<refsect1 id="scrollkeeper-devel-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow"><varlistentry><term><option role="nodash"><replaceable>
+docfile</replaceable></option></term><listitem><para>Specifies the file path
+to the document that <replaceable>omf-file1</replaceable> describes.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>file</replaceable></option></term>
+<listitem><para>Specifies the XML file that is to be used as input for XSLT
+transformations.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>omf-file1</replaceable></option></term>
+<listitem><para>Specifies the OMF file that contains metadata for <replaceable>
+docfile</replaceable>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>omf-file2</replaceable></option></term>
+<listitem><para>Specifies the file created by <command>scrollkeeper-preinstall
+</command>, which contains the same data as <replaceable>omf-file1</replaceable> except
+that the URL attribute of the identifier tag is changed to <replaceable>docfile
+</replaceable>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>output</replaceable></option></term>
+<listitem><para>Specifies the file that contains the result when the preceding <replaceable>
+stylesheet</replaceable> has been applied to <replaceable>file</replaceable>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>stylesheet</replaceable></option></term>
+<listitem><para>Specifies an XSLT transformation to apply.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="scrollkeeper-devel-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Creating a New scrollkeeper Series ID</title>
+<para><screen>example% <userinput>scrollkeeper-gen-seriesid</userinput></screen></para>
+</example>
+<example role="example"><title>Extracting a TOC From a Document</title>
+<para><screen>example% <userinput>scrollkeeper-extract <replaceable>/path/to/xml/file.xml
+</replaceable> /usr/share/scrollkeeper/stylesheets/toc.xsl <replaceable>/path/to/toc.xml
+</replaceable></userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="scrollkeeper-devel-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="scrollkeeper-devel-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline"><varlistentry><term><filename>
+/usr/bin/scrollkeeper-extract</filename> </term><listitem><para>The command-line
+executable for the <filename>scrollkeeper-extract</filename> application.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-gen-seriesid</filename> 
+</term><listitem><para>The command-line executable for the <filename>scrollkeeper-gen-seriesid
+</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-preinstall</filename> 
+</term><listitem><para>The command-line executable for the <filename>scrollkeeper-preinstall
+</filename> application.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="scrollkeeper-devel-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-libs-devel
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Obsolete</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="scrollkeeper-devel-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>scrollkeeper</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="scrollkeeper-devel-1-note"><title>&note-tt;</title>
+<para>Written by Sander Vesik, Sun Microsystems Inc., 2003.</para>
+<para>Updated by Ghee Teo, Sun Microsystems Inc., 2007.</para>
+</refsect1>
+</refentry>

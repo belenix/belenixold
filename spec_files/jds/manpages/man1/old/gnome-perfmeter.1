@@ -1,0 +1,168 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "gnome-perfmeter">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-perfmeter-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-perfmeter</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">2 Oct 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-perfmeter</primary></indexterm><indexterm><primary>
+GNOME performance meter</primary></indexterm><refnamediv id="gnome-perfmeter-1-name">
+<refname>gnome-perfmeter</refname><refpurpose>GNOME performance meter</refpurpose></refnamediv>
+<refsynopsisdiv id="gnome-perfmeter-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option>aflDHLSV</option></arg>
+<arg choice="opt"><option>-logfile=<replaceable>filename</replaceable></option></arg>
+<arg choice="opt"><option>-pagelength=<replaceable>length</replaceable></option></arg>
+<arg choice="opt"><option>-sampletime=<replaceable>time</replaceable></option></arg>
+<arg choice="opt"><option>-meter=<replaceable>meter</replaceable></option> 
+</arg><arg choice="opt"><option>-ceiling=<replaceable>meter</replaceable> <replaceable>
+ceiling</replaceable></option></arg><arg choice="opt"><option>-maxvalue=<replaceable>
+meter </replaceable><replaceable>curr </replaceable><replaceable>min </replaceable><replaceable>
+max</replaceable></option></arg><arg><option role="nodash"><replaceable>gnome-std-options
+</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnome-perfmeter-1-desc"><title>&desc-tt;</title>
+<para>Performance Meter monitors the performance of a system and displays
+a dynamic, graphical overview of how the system is performing. The application
+displays strip charts and bar charts to represent system performance for the
+main performance parameters.</para>
+</refsect1>
+<refsect1 id="gnome-perfmeter-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wide"><varlistentry><term>
+<option>a</option>, <option>all</option></term>
+<listitem><para>Display all of the performance statistic meters simultaneously.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>C</option>, <option>-ceiling=<replaceable>meter</replaceable> <replaceable>
+ceiling</replaceable></option></term><listitem><para>Set a ceiling value for
+a given meter.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>D</option>, <option>-debug</option></term><listitem><para>Turn debugging
+on.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>H</option>, <option>-horizontal</option></term><listitem><para>Display
+meters in a horizontal orientation.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>L</option>, <option>-line</option></term><listitem><para>Display the
+meters as line strip charts.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>l</option>, <option>-log</option></term><listitem><para>Turn statistic
+logging on.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>n</option>, <option>-logfile= <replaceable>filename</replaceable></option></term>
+<listitem><para>Specify the name of the file to which statistics should be
+logged.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>M</option>, <option>-maxvalue=<replaceable>meter </replaceable><replaceable>
+curr </replaceable><replaceable>min </replaceable><replaceable>max</replaceable></option></term>
+<listitem><para>Set a current, minimum, and maximum value for the given meter.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>t</option>, <option>-meter=<replaceable>meter</replaceable></option></term>
+<listitem><para>Specify a meter to display.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>p</option>, <option>-pagelength=<replaceable>length</replaceable></option></term>
+<listitem><para>Page length for samples written to the log file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>f</option>, <option>-panel</option></term><listitem><para>Display
+the performance meter in the CDE front panel.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>s</option>, <option>-sampletime=<replaceable>time</replaceable></option></term>
+<listitem><para>Set the sample time interval in seconds.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>S</option>, <option>-solid</option></term><listitem><para>Display
+the meters as solid line strip charts.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>V</option>, <option>-vertical</option></term><listitem><para>Display
+meters in a vertical orientation.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-perfmeter-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Launching the performance meter, setting the
+sample rate to 15 seconds:</title>
+<para><screen>example% <userinput>&cmd; -s 15</userinput></screen>or <screen>
+example% <userinput>&cmd; -s=15</userinput></screen>or <screen>example% <userinput>&cmd; -sampletime=15
+</userinput></screen></para>
+</example>
+<example role="example"><title>Launching the performance meter, and displaying
+all performance statistics:</title>
+<para><screen>example% <userinput>&cmd; -a</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnome-perfmeter-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables:</para>
+<variablelist><varlistentry><term>HOME</term><listitem><para>User's home directory.
+This variable is used to locate <filename>dtperf</filename> resources in the <filename>
+$HOME/.dt/sessions/dtperf</filename> file. This variable is also used to determine
+the location of $HOME/gnome-perfmeter.log<replaceable>PID</replaceable>, the
+default log file.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-perfmeter-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-perfmeter-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide"><varlistentry><term><filename>/usr/bin/&cmd;</filename> 
+</term><listitem><para>Executable for GNOME performance meter</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-perfmeter-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-performance-meter
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-perfmeter-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citetitle>Performance Meter Manual</citetitle></para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle> for your platform.</para>
+<para><citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry>, <citerefentry><refentrytitle>environ</refentrytitle>
+<manvolnum>5</manvolnum></citerefentry><?Pub Caret></para>
+</refsect1>
+<refsect1 id="gnome-perfmeter-1-note"><title>&note-tt;</title>
+<para>Written by Matt Keenan, Sun Microsystems  Inc., 2003, 2006.</para>
+</refsect1>
+</refentry>
+<?Pub *0000009712>

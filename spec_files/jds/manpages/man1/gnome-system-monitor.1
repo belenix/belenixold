@@ -1,0 +1,135 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2006/347 - Gnome System Monitor-->
+<!ENTITY envr-tt "ENVIRONMENT VARIABLES">
+<!ENTITY cmd "gnome-system-monitor">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-system-monitor-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-system-monitor</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">1 Oct 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-system-monitor</primary></indexterm><indexterm>
+<primary>view PDF documents</primary></indexterm>
+<refnamediv id="gnome-system-monitor-1-name"><refname>gnome-system-monitor
+</refname><refpurpose>view system processes and monitor system usage on your
+computer</refpurpose></refnamediv>
+<refsynopsisdiv id="gnome-system-monitor-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg><option role="nodash"><replaceable>
+gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnome-system-monitor-1-desc"><title>&desc-tt;</title>
+<para>The System Monitor application displays a list of system processes,
+and monitors system usage. System Monitor shows which processes are running
+and how the processes are related. </para>
+<para>System Monitor also provides detailed information about individual processes,
+and enables the user to control which processes are running. System Monitor
+displays how much processor (CPU) capacity the system is using, and how much
+disk space the system is using on each device. </para>
+<para>System Monitor displays this information in a graphical interface so
+that users can see what the system is doing. Users can then use the same graphical
+interface to modify the behavior of the system.</para>
+</refsect1>
+<refsect1 id="gnome-system-monitor-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-system-monitor-1-oper"><title>&oper-tt;</title>
+<para>None.</para>
+</refsect1>
+<refsect1 id="gnome-system-monitor-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Launching the System Monitor</title>
+<para><screen>example% <userinput>&cmd; </userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnome-system-monitor-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables that affect the execution of <command>&cmd;</command>: NLSPATH.
+</para>
+</refsect1>
+<refsect1 id="gnome-system-monitor-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-system-monitor-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename> </term><listitem>
+<para>Executable for System Monitor.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-system-monitor-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-system-monitor</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-system-monitor-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citetitle>System Monitor Manual</citetitle></para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gnome-system-monitor-1-note"><title>&note-tt;</title>
+<para>You may disable System Monitor at SunRay. Because this application use /proc and 
+keep polling for information, they may adversely effect the performance of the system. 
+But we will not change the default behavior and configuration for SunRay, if it give big
+impact to SunRay performance, administrators should disable them by using gconfd/APOC.</para>
+<para>The method to disable Monitor applet:</para>
+<para>They may use Gnome lockdown features to modify the mandatory settings of the Gnome 
+configuration on their servers to add that applet identifier to the list of disabled applets. 
+you may use the following command (Note: Depending on when this is set, a logout may be required to take effect)
+%gconftool-2 --type list --list-type string --set /apps/panel/global/disabled_applets [OAFIID:GNOME_MultiLoadApplet]</para>
+<para>The method to disable Monitor application: </para>
+<para>You may just remove the package containing it on their servers, or just change the permissions
+on the binary: %chmod 700 /bin/gnome-system-monitor. </para> 
+
+<para>Written by Niall Power, Sun Microsystems Inc., 2003.
+Updated by Henry Zhang, Sun Microsystems Inc., 2006.</para>
+</refsect1>
+</refentry>

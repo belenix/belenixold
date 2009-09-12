@@ -1,0 +1,125 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2002/146 GNOME 2.0 Configuration - GConf-->
+<!ENTITY cmd "gconf-editor">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gconf-editor-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gconf-editor</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">09 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gconf-editor</primary></indexterm><indexterm><primary>
+view and edit personal desktop configuration preferences</primary></indexterm>
+<refnamediv id="gconf-editor-1-name"><refname>gconf-editor</refname><refpurpose>
+view and edit personal desktop configuration preferences</refpurpose></refnamediv>
+<refsynopsisdiv id="gconf-editor-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gconf-editor-1-desc"><title>&desc-tt;</title>
+<para>The GConf Editor application enables you to view and edit all of your
+current personal desktop preferences. The GConf Editor window provides a tree
+view to navigate through the hierarchy of preferences, an edit pane to make
+changes to individual preferences, and a description pane to highlight the
+documentation associated with the currently selected preference.</para>
+</refsect1>
+<refsect1 id="gconf-editor-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id="gconf-editor-1-oper"><title>&oper-tt;</title>
+<para>None.</para>
+</refsect1>
+
+<refsect1 id="gconf-editor-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Launching GConf Editor</title>
+<para><screen>example% <userinput>&cmd;</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gconf-editor-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gconf-editor-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename> </term><listitem>
+<para>Executable for GConf Editor.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/schemas</filename> </term><listitem>
+<para>Directory containing the schema definition files.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/<replaceable>version_number</replaceable>/path
+</filename> </term><listitem><para>The location of the GConf path file.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/schemas</filename> </term><listitem>
+<para>Directory containing the schema definition files.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/<replaceable>version_number</replaceable
+>/path
+</filename> </term><listitem><para>The location of the GConf path file.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gconf-editor-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gconf-editor-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the <citetitle>GNOME Desktop System Administration
+Guide</citetitle> for your platform.</para>
+<para>
+<citerefentry><refentrytitle>gconftool-2</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgconf-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gconf-editor-1-note"><title>&note-tt;</title>
+<para>Written by Stephen Browne, updated by Brian Cameron, Sun Microsystems Inc., 2003, 2007.</para>
+</refsect1>
+</refentry>

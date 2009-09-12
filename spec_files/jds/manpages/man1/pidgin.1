@@ -1,0 +1,818 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2007/309  GNOME Multi-protocol instant messaging client Pidgin -->
+<!ENTITY cmd "pidgin">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="pidgin-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>pidgin</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">12 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>pidgin</primary></indexterm><indexterm><primary>Instant
+Messaging client</primary></indexterm>
+<refnamediv id="pidgin-1-name"><refname>pidgin</refname><refpurpose>Instant Messaging
+client</refpurpose></refnamediv>
+<refsynopsisdiv id="pidgin-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg><option>-config</option>=<replaceable>directory</replaceable></arg>
+<arg><option>-debug</option></arg>
+<arg><option>-login</option>=<replaceable>name</replaceable></arg>
+<arg><option>-nologin</option></arg>
+<arg choice="opt"><option><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="pidgin-1-desc"><title>&desc-tt;</title>
+<para>&cmd; is a graphical modular messaging client based on libpurple.  It
+supports multiple protocols including AIM, MSN, Yahoo!, XMPP, ICQ, IRC,
+GroupWise and GTalk all at once.  It has many common features found in other clients,
+as well as many unique features. 
+</para>
+</refsect1>
+<refsect1 id="pidgin-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wide">
+<varlistentry>
+<term><option>c</option>, <option>-config=<replaceable>directory</replaceable></option></term>
+<listitem><para>
+Use <replaceable>directory</replaceable> as the directory for config files
+instead of <filename>~/.purple</filename>.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>d</option>, <option>-debug</option></term>
+<listitem><para>
+Print debug messages to <literal>stdout</literal>. These are the same debug
+messages that are displayed in the Debug window.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>l</option>, <option>-login[=<replaceable>name</replaceable>,<replaceable>name</replaceable>,...]</option></term>
+<listitem><para>
+Log in with the comma-separated list of accounts provided, in addition to any
+accounts that are configured to be logged in automatically.  If no argument
+is provided, your first account will be signed in.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>n</option>, <option>-nologin</option></term>
+<listitem><para>
+Do not automatically login when &cmd; starts.  Sets the global status
+to Offline.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>
+Standard options available for use with most GNOME applications. See
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="pidgin-1-exde"><title>&exde-tt;</title>
+<refsect2 id="pidgin-1-exde-buddylist">
+
+<title>Buddy List</title>
+<para>
+The Buddy List window is &cmd;'s main interface window. Using this window you
+can see which of your buddies is online, away, idle, etc.  You can also add and
+remove buddies from your buddy list.
+</para>
+<para>
+The Buddy List window contains a list of your buddies who are online and have
+allowed you to be notified of their presence.  The icon to the left of each
+buddy indicates the buddy's current state and the protocol they are using.
+Double clicking a buddy will open a new Conversation window.  Right clicking
+will pop up a menu:
+</para>
+
+<variablelist termlength="wholeline">
+<varlistentry>
+<term>Get Info</term>
+<listitem><para>
+Retrieves and displays information about the buddy.  This information is also
+known as a Profile.
+</para></listitem></varlistentry>
+
+<varlistentry><term>IM</term>
+<listitem><para>
+Opens a new Conversation window to the selected buddy.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Send File</term>
+<listitem><para>
+Sends a file to the selected buddy (only available on protocols that support
+file transfer).
+</para></listitem></varlistentry>
+
+<varlistentry><term>Add Buddy Pounce</term>
+<listitem><para>
+A Buddy Pounce is a configurable automated action to be performed when the
+buddy's state changes.  This will open the Buddy Pounce dialog to be discussed
+later.
+</para></listitem></varlistentry>
+
+<varlistentry><term>View Log</term>
+<listitem><para>
+&cmd; is capable of automatically log its activities.  These logs are either
+plain text files (with a .txt extension) or html files (with a .html extension)
+located under the <filename>~/.purple/logs</filename> directory.  This menu
+command will display &cmd;'s log viewer with logs loaded for that buddy or
+chat.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Alias</term>
+<listitem><para>
+Create an alias for this buddy.  This will open up a new dialog in which one
+can give this buddy an alternate name to appear on the buddy list and in
+conversations.
+</para>
+<para>
+For example, if a buddy's name screen name was jsmith1281xx and his real name
+was 'John Q. Smith,' one could create an alias as to identify the buddy by his
+common name.
+</para>
+</listitem></varlistentry>
+</variablelist>
+
+<para>
+The remainder of the menu will consist of protocol specific commands.  These
+commands vary depending on the protocol.
+</para>
+<para>
+At the bottom of the Buddy List are several buttons (if enabled in
+Preferences):
+</para>
+
+<variablelist termlength="xtranarrow">
+<varlistentry><term>IM</term>
+<listitem><para>
+Opens a new Conversation window to to the selected buddy, or brings up the New
+Message dialog box if no buddy is selected.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Info</term>
+<listitem><para>
+Retrieves and displays information about the selected buddy, or brings up the
+Get User Info dialog box if no buddy is selected.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Chat</term>
+<listitem><para>
+Brings up the Join Chat dialog box, prompting the user to select which
+username to use and what chat group to join.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Away</term>
+<listitem><para>
+Brings up a menu of all available Away Messages.  If an item is selected, all
+online accounts will use this item as their away message.
+</para></listitem></varlistentry>
+</variablelist>
+</refsect2>
+
+<refsect2 id="pidgin-1-exde-acct-editor">
+<title>ACCOUNT EDITOR </title>
+<para>
+The account editor consists of a list of accounts and information about them.
+Clicking <replaceable>Delete</replaceable> will delete the currently selected
+account. Clicking <replaceable>Add</replaceable> or
+<replaceable>Modify</replaceable> will invoke a Modify Account window.  Here,
+you can add or alter account information.  When creating a new account, you
+will submit your screen name and password.  You will also choose your protocol.
+</para>
+<para>
+If <replaceable>Remember Password</replaceable> is chosen, the password will be
+saved in &cmd;'s configuration file.
+</para>
+<para>
+If <replaceable>Auto-Login</replaceable> is chosen, this account will
+automatically login upon starting &cmd;.
+</para>
+<para>
+Each protocol has it's own specific options that can be found in the modify
+screen.
+</para>
+</refsect2>
+
+<refsect2 id="pidgin-1-exde-prefs">
+<title>PREFERENCES</title>
+<para>All options take effect immediately.</para>
+<variablelist termlength="wholescreen">
+<varlistentry><term>Interface</term>
+<listitem><para>
+<replaceable>Display remote nicknames if no alias is set</replaceable>:
+Toggles whether server nickname data should be used if no local alias exists.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Buddy List</term>
+<listitem>
+<para>
+<replaceable>Sorting</replaceable>:  Toggles the order in which buddies are
+shown in your Buddy List between none, alphabetical, by status and by log size. </para>
+<para>
+<replaceable>Show buttons as</replaceable>:  Toggles between picture-only,
+text-only, picture and text or no buttons view of the buttons on the Buddy
+List.
+</para>
+<para>
+<replaceable>Raise window on events</replaceable>:  Tells &cmd; to bring the
+Buddy List window to the top when buddies sign in or out.
+</para>
+<para>
+<replaceable>Show numbers in groups</replaceable>:  The number of buddies from
+each group currently logged in will be shown along with the total number of
+buddies in the group.
+</para>
+<para>
+<replaceable>Show buddy icons</replaceable>:  Toggles the display of buddies'
+custom icons.
+</para>
+<para>
+<replaceable>Show warning levels</replaceable>:  Each buddy's warning level
+will be displayed next to the screen name.  As a buddy's warning level
+increases, outgoing messages are more and more severely rate-limited.
+</para>
+<para>
+<replaceable>Show idle times</replaceable>:  The amount of time each buddy has
+been idle will be displayed next to the screen name (if the buddy has opted to
+have their client report this information).
+</para>
+<para>
+<replaceable>Dim idle buddies</replaceable>:  If enabled, idle buddies will be
+displayed in grey text instead of black text.
+</para>
+<para>
+<replaceable>Automatically expand contacts</replaceable>:  If enabled, contacts
+will automatically expand to show the associated buddies when the mouse is held over the contact for a short period.
+</para>
+</listitem>
+
+<varlistentry><term>Conversations</term>
+<listitem>
+<para>
+<replaceable>Show buttons as</replaceable>...:  The selected item will
+determine whether picture-only, text-only, combined picture/text, or no buttons
+will be used for Conversation windows.
+</para>
+<para>
+<replaceable>Show formatting toolbar</replaceable>:  Display the formatting
+toolbar between the upper and lower text boxes in conversations.
+</para>
+<para>
+<replaceable>Show aliases in tabs/titles</replaceable>:  Displays buddy alias
+instead of screen name in window tabs and titles.
+</para>
+<para>
+<replaceable>Show buddy icons</replaceable>:  For protocols that support it,
+buddy icons allow buddies to send small pictures to be displayed during the
+course of a conversation.  Turning this option off hides those pictures.
+</para>
+<para>
+<replaceable>Enable buddy icon animation</replaceable>:  If these pictures
+happen to be animated, this option will enable the animation, otherwise only
+the first frame will be displayed.
+</para>
+<para>
+<replaceable>Notify buddies that you are typing to them</replaceable>:  Some
+protocols allow clients to tell their buddies when they are typing. This option
+enables this feature for protocols that supports it.
+</para>
+<para>
+<replaceable>Raise IM windows on events</replaceable>:  If enabled, IM
+Conversation windows will be brought to the top when new messages are received.
+</para>
+<para>
+<replaceable>Raise Chat windows on events</replaceable>:  If enabled, chat
+ Conversation windows will be brought to the top when new messages are
+received.
+</para>
+<para>
+<replaceable>Use multi-colored screen names in chats</replaceable>:  Color code
+the screen names of users in chat rooms.
+</para>
+<variablelist termlength="wholeline">
+<varlistentry><term>Tab Options</term>
+<listitem>
+<para>
+<replaceable>Show IMs and chat in tabbed windows</replaceable>:  Tabbed
+chatting allows one to have multiple conversations without multiple windows.
+</para>
+<para>
+<replaceable>Show close buttons on tabs</replaceable>:  Adds a close button
+to each tab.</replaceable>
+</para>
+<para>
+<replaceable>Tab Placement</replaceable>...:  Specifies where tabs are shown
+in the conversation window.
+</para>
+<para>
+<replaceable>New conversation placement</replaceable>...:  Determines where
+new conversations will be placed (Last created window / New window / windows
+grouped by group or account / separate windwos for IMs and Chats).
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Message Text</term>
+<listitem>
+<para>
+<replaceable>Show timestamp on messages</replaceable>:  Toggles the timestamp
+behavior for conversations.  Per-conversation behavior can be changed by
+pressing <replaceable>F2</replaceable> in the Conversation window.
+</para>
+<para>
+<replaceable>Highlight misspelled words</replaceable>:  Toggles highlighting of
+misspelled words as you type.
+</para>
+<para>
+<replaceable>Ignore colors/font faces/font sizes</replaceable>:  Tells &cmd;
+to disregard buddies' color/font/isze information in displaying IMs or Chats.
+</para>
+<para>
+<replaceable>Default Formatting</replaceable>:  Allows specifying the default
+formatting to apply to all outgoing messages (only applicable to protocols
+that support formatting in messages).
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Shortcuts</term>
+<listitem>
+<para>
+Allows the user to determine which keyboard shortcuts are available.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Smiley Themes</term>
+<para>
+Allows the user to choose between different smiley themes.  The "none" theme
+will disable graphical emoticons - they will be displayed as text instead.
+</para>
+</listitem></varlistentry>
+</variablelist>
+</listitem></varlistentry>
+<varlistentry><term>Sounds</term>
+<listitem>
+<para>
+<replaceable>Sounds while away</replaceable>: Determines whether sounds are
+played when an away message is up.
+</para>
+<para><replaceable>Sound Method</replaceable>: lets the user choose between
+different playback methods. The user can also manually enter a command to be
+executed when a sound is to be played (<replaceable>%s</replaceable> expands to
+the full path of the file name).
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Sound Events</term>
+<listitem>
+<para>
+Lets the user choose when and what sounds are to be played.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Network</term>
+<listitem>
+<variablelist termlength="wholeline">
+<varlistentry><term>IP Address</term>
+<listitem>
+<replaceable>Autodetect IP Address</replaceable>: &cmd; will attempt to
+automatically determine your IP address for use in file transfers and Direct 
+IMs.
+</para>
+<para>
+<replaceable>Public IP</replaceable>: What IP address to use for file transfer
+and Direct IMs. This is mainly useful for users with multiple network
+interfaces or behind NAT.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Ports</term>
+<listitem>
+<replaceable>Manually specify range of ports to listen on</replaceable>:
+Specify specific ports to listen on, overriding any defaults.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Proxy Server</term>
+<listitem>
+The configuration section to enable &cmd; to operate through a proxy server.
+&cmd; currently supports SOCKS 4/5 and HTTP proxies.
+</para>
+</listitem></varlistentry>
+</variablelist>
+</listitem></varlistentry>
+<varlistentry><term>Browser</term>
+<listitem>
+<para>
+Allows the user to select &cmd;'s default web browser.  Firefox, Galeon,
+Konqueror, Mozilla, Netscape and Opera are supported natively.  The user can
+also manually enter a command to be executed when a link is clicked
+(<replaceable>%s</replaceable> expands to the URL).  For example,
+<replaceable>xterm -e lynx "%s"</replaceable> will open the link with lynx.
+<replaceable>Open new window by default</replaceable> makes the browser use a
+new window instead of using the current window (or spawning a new tab).
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Logging</term>
+<listitem><para>
+<replaceable>Message Logs</replaceable> lets the user choose whether
+Conversations and/or Buddy Chats will be logged as well as whether logs will be
+in HTML or plain text format.  <replaceable>System Logs</replaceable> describes
+the types of events to be logged.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Away / Idle</term>
+<listitem>
+<para>
+<replaceable>Queue new messages when away</replaceable>:  Messages received
+since going Away will not be shown until away status is removed.
+</para>
+<para>
+<replaceable>Send auto-response</replaceable>:  If someone messages you while
+away, your auto-response will be sent.
+<para>
+<replaceable>Only send auto-response when idle</replaceable>:  If someone
+messages you while away, your auto-response will only be sent if &cmd; decides
+that the connection is idle.
+</para>
+<para>
+<replaceable>Idle time reporting</replaceable>:  If
+<replaceable>None</replaceable> is selected, account idle time will not be
+reported. <replaceable>&cmd; usage</replaceable> infers your idle time from
+your usage of &cmd;. <replaceable>X usage</replaceable> infers your idle time
+from X (this option may not be universally available).
+</para>
+<para>
+<replaceable>Auto-away</replaceable>: Determines if and under what conditions
+&cmd; will automatically turn on the Away status.
+</para>
+<variablelist termlength="wholeline">
+<varlistentry><term>Away Messages</term>
+<para>
+Lets the user add/edit/remove available Away Messages.
+</para>
+</listitem></varlistentry>
+</variablelist>
+</listitem></varlistentry>
+<varlistentry><term>Plugins</term>
+<listitem>
+<para>
+Allows the user to enable add-on plugins for &cmd;.  Several of these come
+with &cmd;, while others must be downloaded separately.  The
+<replaceable>Description</replaceable> field gives the plugin author's
+description of the plugin, while the <replaceable>Details</replaceable> field
+gives the plugin's authorship, URL, and file name/location information.
+</para>
+<para>
+Some plugins can be configured.  If you load such a plugin, its configuration
+preferences will appear as a submenu to Plugins, with the submenu title
+determined by the plugin's name.
+</para>
+<listitem></varlistentry>
+<varlistentry><term>Protocols</term>
+<listitem>
+<para>
+Protocols provide protocol specific preferences here.
+</para>
+</listitem></varlistentry>
+</variablelist>
+</refsect2>
+
+<refsect2 id="pidgin-1-exde-conversations">
+<title>CONVERSATIONS</title>
+<para>
+When starting a new conversation, the user is presented with the Conversation
+window. The conversation appears in the upper text box and the user types
+his/her message in the lower text box. Between the two is a row of settings,
+represented by icons. Some or all buttons may not be active if the protocol
+does not support the specific formatting.
+</para>
+<para>
+From left to right:
+</para>
+
+<variablelist termlength="wide">
+<varlistentry><term>Bold</term>
+<listitem><para>
+Turns on/off bold.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Italics</term>
+<listitem><para>
+Turns on/off italics.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Underline</term>
+<listitem><para>
+Turns on/off underline.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Decrease font size</term>
+<listitem><para>
+Decreases the size of the message text.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Increase font size</term>
+<listitem><para>
+Increases the size of the message text.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Select a foreground color</term>
+<listitem><para>
+Changes the foreground color of the message text.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Select a background color</term>
+<listitem><para>
+Changes the background color of the message text.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Add image</term>
+<listitem><para>
+Inserts an in-line image in the message.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Add hyperlink</term>
+<listitem><para>
+Adds a clickable link to the message.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Add smiley</term>
+<listitem><para>
+Adds an emoticon (smiley) to your message.
+</para>
+<para>
+Beneath the lower text box is a row of buttons that execute commands:
+</para>
+</para></listitem></varlistentry>
+
+<varlistentry><term>Warn</term>
+<listitem><para>
+This issues a warning to the other person in the conversation (not available in
+all protocols).
+</para></listitem></varlistentry>
+
+<varlistentry><term>Block</term>
+<listitem><para>
+This adds the other person to your deny list (not available in all protocols).
+</para></listitem></varlistentry>
+
+<varlistentry><term>Send File</term>
+<listitem><para>
+Send a file to this user. This option is only available on protocols where
+&cmd; supports file transfer.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Add</term>
+<listitem><para>
+This adds this user to your buddy list. This option is not available if the
+user is already on your list.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Remove</term>
+<listitem><para>
+This removes this user from your buddy list. This option is not available if
+the user is not on your list.
+</para></listitem></varlistentry>
+
+<varlistentry><term>Info</term>
+<listitem><para>
+This gets information (a profile) about the other person in the conversation
+(not available in all protocols).
+</para></listitem></varlistentry>
+
+<varlistentry><term>Send</term>
+<listitem><para>
+This sends what is currently in the lower text box
+</para></listitem></varlistentry>
+
+</variablelist>
+</refsect2>
+
+<refsect2 id="pidgin-1-exde-buddy-chats">
+<title>BUDDY CHATS</title>
+<para>
+For protocols that allow it, Buddy Chats can be entered through the
+<replaceable>File</replaceable> menu or the <replaceable>Chat</replaceable>
+button at the bottom of the Buddy List's Online tab.
+</para>
+<para>
+Additional commands available in chat, depending on the protocol are:
+</para>
+
+<variablelist>
+<varlistentry>
+<term>Whisper</term>
+<listitem><para>
+The text will appear in the chat conversation, but it will only be visible to
+the sender and the receiver.
+</para></listitem></varlistentry>
+
+<varlistentry>
+<term>Invite</term>
+<listitem><para>
+Invite other people to join the chat room.
+</para></listitem></varlistentry>
+
+<varlistentry>
+<term>Ignore</term>
+<listitem><para>
+Ignore anything said by the chosen person.
+</para></listitem></varlistentry>
+
+<varlistentry>
+<term>Set Topic</term>
+<listitem><para>
+Set the topic of the chat room. This is usually a brief sentence describing
+the nature of the chat; an explanation of the chat room's name.
+</para></listitem></varlistentry>
+
+</variablelist>
+</refsect2>
+
+<refsect2 id="pidgin-1-exde-away-msgs">
+<title>AWAY MESSAGES </title>
+
+<para>
+Most protocols allow for away messages.  When a user is
+<replaceable>Away</replaceable>, he can leave an informative message for others
+to see. The Away submenu of the Tools menu is used to add and remove away
+messages.
+</para>
+<para>
+<replaceable>New Away Message</replaceable> provides space for one to enter an
+away message and a title for that message. If <replaceable>Save</replaceable>
+or <replaceable>Save & Use</replaceable> are chosen, this message will be
+saved.  It can later be referred to by the title given to it.
+</para>
+<para>
+<replaceable>Remove Away Message</replaceable> is a submenu containing the
+titles of saved away messages.  Clicking on one of these titles will remove the
+away message associated with it.
+</para>
+<para>
+The rest of the <replaceable>away</replaceable> menu provides the user with a
+way to assign different away messages to different connections.  Choosing 
+<replaceable>Set All Away</replaceable> will set away all the connections
+capable of the away state.
+</para>
+</refsect2>
+
+<refsect2 id="pidgin-1-exde-buddy-pounce">
+<title>BUDDY POUNCE</title>
+<para>
+A Buddy Pounce is an automated trigger that occurs when a buddy returns to a
+normal state from an away state. The New Buddy Pounce dialog box can be
+activated by selecting the <replaceable>Buddy Pounce</replaceable> submenu from
+the Tools menu.  A pounce can be set to occur on any combination of the events
+listed, and any combination of actions can result. If <replaceable>Save this
+pounce after activation</replaceable> is checked, the trigger will remain until
+it is removed from the Remove <replaceable>Buddy Pounce</replaceable> menu.
+</para>
+</refsect2>
+
+<refsect2 id="pidgin-1-exde-plugins">
+<title>PLUGINS</title>
+<para>
+&cmd; allows for dynamic loading of plugins to add extra functionality to
+&cmd;.  Plugins can be enabled and configured from the Preferences window.
+See <replaceable>plugins/HOWTO</replaceable> for more information on writing
+plugins.
+</para>
+</refsect2>
+
+<refsect2 id="pidgin-1-exde-perl">
+<title>PERL</title>
+<para>
+&cmd; allows for perl scripting.  See <replaceable>Perl Scripting
+HOWTO</replaceable> in the &cmd; documentation for more information about
+perl scripting.
+</para>
+</refsect2>
+
+<refsect2 id="pidgin-1-exde-tcl">
+<title>TCL</title>
+<para>
+&cmd; allows for Tcl scripting.  See
+<replaceable>plugins/tcl/TCL-HOWTO</replaceable>
+for more information about Tcl scripting.
+</para>
+</refsect2>
+</refsect1>
+
+<refsect1 id="pidgin-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Launching &cmd;</title>
+<para><screen>example% <userinput>&cmd;</userinput></screen></para>
+</example>
+</refsect1>
+
+<refsect1 id="pidgin-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="pidgin-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application: </para>
+<variablelist termlength="wide">
+
+<varlistentry><term><filename>/usr/bin/&cmd;
+</filename></term><listitem><para>
+Executable for &cmd;
+</para></listitem></varlistentry>
+
+<varlistentry><term><filename>/usr/lib/&cmd;
+</filename></term><listitem><para>
+Location of &cmd; plugins.
+</para></listitem></varlistentry>
+
+<varlistentry><term><filename>~/.purple/prefs.xml
+</filename></term><listitem><para>
+&cmd; configuration file.
+</para></listitem></varlistentry>
+
+<varlistentry><term><filename>~/.purple/accounts.xml
+</filename></term><listitem><para>
+Information about your accounts.
+</para></listitem></varlistentry>
+
+<varlistentry><term><filename>~/.purple/status.xml
+</filename></term><listitem><para>
+Stores your away messages.
+</para></listitem></varlistentry>
+
+<varlistentry><term><filename>~/.purple/pounces.xml
+</filename></term><listitem><para>
+Stores your buddy pounces.
+</para></listitem></varlistentry>
+
+<varlistentry><term><filename>~/.purple/logs/PROTOCOL/ACCOUNT/SCREENNAME/DATE.{html,txt}:
+</filename></term><listitem><para></para><para>
+Conversation logs
+ </para></listitem></varlistentry>
+
+<varlistentry><term><filename>~/.purple/blist.xml
+</filename></term><listitem><para>
+The buddy list.
+</para></listitem></varlistentry>
+
+<varlistentry><term><filename>~/.purple/plugins/
+</filename></term><listitem><para>
+User's local plugins.
+</para></listitem></varlistentry>
+
+</variablelist></refsect1>
+
+<refsect1 id="pidgin-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry>
+<entry><para>SUNWgnome-im-client</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry>
+<entry colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<refsect1 id="pidgin-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>otr_parse</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>
+<citetitle>&cmd; Manual</citetitle>,
+<literal>http://pidgin.im/</literal>
+</para>
+</refsect1>
+<refsect1 id="pidgin-1-note"><title>&note-tt;</title>
+<para>
+This man page was originally written by Dennis Ristuccia (dennis@dennisr.net).
+Updated and largely rewritten by Sean Egan (bj91704@binghamton.edu) and Ben
+Tegarden (tegarden@uclink.berkeley.edu).  Updated by Stephen Browne, Rick Ju,
+and Brian Cameron, Sun Microsystems Inc, 2003, 2006, 2007.
+</para>
+</refsect1>
+</refentry>

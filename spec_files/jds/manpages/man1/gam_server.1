@@ -1,0 +1,95 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2007/398 Gamin - the File Alteration Monitor-->
+<!ENTITY cmd "gam_server">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gam_server-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta>
+  <refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+  <refmiscinfo class="date">25 Mar 2008</refmiscinfo>
+  <refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+  <refmiscinfo class="software">&release;</refmiscinfo>
+  <refmiscinfo class="arch">generic</refmiscinfo>
+  <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary></primary></indexterm>
+<refnamediv id="gam_server-1-name"><refname>&cmd;</refname>
+<refpurpose>The Gamin server gathers file events from the kernel and sends
+these events to clients.</refpurpose></refnamediv>
+
+<refsynopsisdiv id="gam_server-1-synp"><title>&synp-tt;</title>
+  <cmdsynopsis>
+   /usr/lib/<command>&cmd;</command>
+  </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1 id="gam_server-1-desc"><title>&desc-tt;</title>
+  <para>
+Gamin uses a client-server model.  &cmd; is the server which centralizes
+client requests for monitoring files, gathers file events via File Event
+Notification kernel API methods (see
+<citerefentry><refentrytitle>port_create</refentrytitle><manvolnum>3C</manvolnum></citerefentry>), 
+and then sends modification events to application clients.  It also shares
+file events when multiple applications monitor the same file.
+  </para>
+  <para>
+For configuring &cmd; refer to
+<literal>http://www.gnome.org/~veillard/gamin/config.html</literal>
+  </para>
+</refsect1>
+
+<refsect1 id="gam_server-1-attr"><title>&attr-tt;</title>
+  <para>
+See <olink targetdocent="REFMAN5" localinfo="attributes-5">
+<citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry></olink>
+for descriptions of the following attributes:
+  </para>
+  <informaltable frame="all">
+    <tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+	   <colspec colname="COLSPEC1" colwidth="1*">
+		<thead>
+		  <row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center" valign="middle">ATTRIBUTE VALUE</entry></row>
+		</thead>
+		<tbody>
+		  <row>
+		    <entry>Availability</entry><entry>SUNWgamin</entry>
+		  </row>
+		  <row>
+		    <entry colname="COLSPEC0">Interface stability</entry>
+		    <entry colname="COLSPEC1">Volatile</entry>
+		  </row>
+		</tbody>
+    </tgroup>
+  </informaltable>
+</refsect1>
+
+<refsect1 id="gam_server-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>port_create</refentrytitle><manvolnum>3C</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgamin-1</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>Gamin Homepage: <literal>http://www.gnome.org/~veillard/gamin</literal>
+</para>
+</refsect1>
+
+<refsect1 id="gam_server-1-note"><title>&note-tt;</title>
+<para>Written by Lin Ma, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+
+</refentry>

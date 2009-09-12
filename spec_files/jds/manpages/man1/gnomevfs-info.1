@@ -1,0 +1,130 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "gnomevfs-info">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnomevfs-info-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnomevfs-info</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">14 May 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnomevfs-info</primary></indexterm><indexterm><primary>
+display a list of file information</primary></indexterm>
+<refnamediv id="gnomevfs-info-1-name"><refname>gnomevfs-info</refname><refpurpose>
+display a list of file information</refpurpose></refnamediv>
+<refsynopsisdiv id="gnomevfs-info-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="plain"><option role="nodash"><replaceable>
+URI</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnomevfs-info-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> is obsolete.  It has been superseded by gvfs-info.  See
+<citerefentry><refentrytitle>gvfs-info</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+</para>
+
+<para><command>&cmd;</command> displays the following information about a
+file:</para>
+<itemizedlist>
+<listitem>Name: <replaceable>filename</replaceable></listitem>
+<listitem>Type: [Regular|Directory]</listitem>
+<listitem>MIME type: <replaceable>mime-type</replaceable></listitem>
+<listitem>Size: <replaceable>file-size</replaceable></listitem>
+<listitem>Blocks: <replaceable>#blocks</replaceable></listitem>
+<listitem>I/O block size: <replaceable>block-size</replaceable></listitem>
+<listitem>Local: [YES|NO]</listitem>
+<listitem>SUID: [YES|NO]</listitem>
+<listitem>SGID: [YES|NO]</listitem>
+<listitem>Sticky: [YES|NO]</listitem>
+<listitem>Permissions: octal permissions</listitem>
+<listitem>Link count: <replaceable>#links</replaceable></listitem>
+<listitem>UID: <replaceable>owner-uid</replaceable></listitem>
+<listitem>GID: <replaceable>owner-gid</replaceable></listitem>
+<listitem>Access time: <replaceable>date-and-time</replaceable></listitem>
+<listitem>Modification time: <replaceable>date-and-time</replaceable>
+</listitem>
+<listitem>Change time: <replaceable>date-and-time</replaceable></listitem>
+<listitem>Device #: <replaceable>device#</replaceable></listitem>
+<listitem>Inode #: <replaceable>inode#</replaceable></listitem>
+<listitem>Readable: [YES|NO]</listitem>
+<listitem>Writable: [YES|NO]</listitem>
+<listitem>Executable: [YES|NO]</listitem>
+</itemizedlist>
+</refsect1>
+<refsect1 id="gnomevfs-info-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash"><replaceable>URI</replaceable></option></term>
+<listitem><para>Specifies the file or directory location in standard URI format.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnomevfs-info-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Getting File Information for a Local File</title>
+<para><screen>example% <userinput>&cmd; <literal>file:///etc/nsswitch.conf</literal></userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnomevfs-info-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables: NLSPATH.</para>
+</refsect1>
+<refsect1 id="gnomevfs-info-1-exit"><title>&exit-tt;</title>
+<para>The exit value 0 is returned regardless of success or failure.</para>
+</refsect1>
+<refsect1 id="gnomevfs-info-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable to display a list of file information</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnomevfs-info-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-vfs</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Obsolete Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnomevfs-info-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gnomevfs-cat</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-copy</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-ls</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-mkdir</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-info</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gnomevfs-info-1-note"><title>&note-tt;</title>
+<para>Written by Stephen Browne, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>

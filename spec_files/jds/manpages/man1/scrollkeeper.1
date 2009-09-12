@@ -1,0 +1,320 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!--ARC : LSARC 2001/317 Scrollkeeper Open Documentation Cataloging System-->
+<!--ARC : LSARC 2003/033 GNOME 2.x Scrollkeeper scripts-->
+<!--ARC : LSARC 2003/191 Scrollkeeper rc update-->
+<!--ARC : LSARC 2003/214 Scrollkeeper CLI change-->
+<!ENTITY cmd "scrollkeeper">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="scrollkeeper-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>scrollkeeper</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">12 Sep 2006</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>scrollkeeper</primary></indexterm><indexterm><primary>
+manage document metadata</primary></indexterm>
+<refnamediv id="scrollkeeper-1-name"><refdescriptor>&cmd;</refdescriptor>
+<refname>scrollkeeper.conf</refname><refname>scrollkeeper-get-cl</refname>
+<refname>scrollkeeper-get-content-list</refname><refname>scrollkeeper-get-extended-content-list
+</refname><refname>scrollkeeper-get-index-from-docpath</refname><refname>
+scrollkeeper-get-toc-from-docpath</refname><refname>scrollkeeper-get-toc-from-id
+</refname><refname>scrollkeeper-install</refname><refname>scrollkeeper-rebuilddb
+</refname><refname>scrollkeeper-uninstall</refname><refname>scrollkeeper-update
+</refname><refpurpose>manage document metadata</refpurpose></refnamediv>
+<refsynopsisdiv id="scrollkeeper-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;-get-cl</command><arg choice="opt"><option>v</option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>locale</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>file</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>&cmd;-get-content-list</command><arg choice="plain"><option
+role="nodash"><replaceable>locale</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>&cmd;-get-extended-content-list</command><arg choice="plain"><option
+role="nodash"><replaceable>locale</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>&cmd;-get-toc-from-docpath</command><arg choice="plain"><option
+role="nodash"><replaceable>file</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>&cmd;-get-toc-from-id</command><arg choice="plain"><option
+role="nodash"><replaceable>series-id</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>&cmd;-install</command><arg choice="opt"><option>p <replaceable>
+path</replaceable></option></arg><arg choice="opt"><option>q</option></arg>
+<arg choice="opt"><option>v</option></arg><arg choice="opt"><option>n</option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>
+omf-file</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>&cmd;-rebuilddb</command><arg choice="opt"><option>
+p <replaceable>path</replaceable></option></arg><arg choice="opt"><option>
+q</option></arg><arg choice="opt"><option>v</option></arg><arg choice="opt"><option>
+o <replaceable>path</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>&cmd;-uninstall</command><arg choice="opt"><option>
+p <replaceable>path</replaceable></option></arg><arg choice="opt"><option>
+q</option></arg><arg choice="opt"><option>v</option></arg><arg choice="plain"><option
+role="nodash"><replaceable>omf-file</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>&cmd;-update</command><arg choice="opt"><option>p <replaceable>
+path</replaceable></option></arg><arg choice="opt"><option>q</option></arg>
+<arg choice="opt"><option>v</option></arg><arg choice="opt"><option>n</option></arg>
+<arg choice="opt"><option>o <replaceable>
+path</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="scrollkeeper-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> manages document metadata and keeps track of
+various document attributes such as language, format, subject, classification,
+copyright, and so on. <command>&cmd;</command> supports OMF (Open Metadata
+Format), which is a simple 16-element XML file format. OMF is a subset of
+the Dublin Core metadata specification developed by the Dublin Core Metadata
+Initiative. Currently, <command>&cmd;</command> can extract table of contents
+and index information only from DocBook documents.</para>
+</refsect1>
+<refsect1 id="scrollkeeper-1-exde"><title>&exde-tt;</title>
+<para>The following commands are supported:</para>
+<variablelist termlength="wholeline">
+<varlistentry><term><command>&cmd;-get-cl</command></term><listitem><para>
+Exports the <command>&cmd;</command> contents list for the specified locale
+and the specified contents file into a temporary file, and displays the name
+of the temporary file.</para>
+</listitem></varlistentry>
+<varlistentry><term><command>&cmd;-get-content-list</command></term><listitem>
+<para>Exports the <command>&cmd;</command> contents list for the specified
+locale into a temporary file, and displays the name of the temporary file.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><command>&cmd;-get-extended-content-list</command></term>
+<listitem><para>Exports the <command>&cmd;</command> extended contents list
+for the specified locale into a temporary file, and displays the name of the
+temporary file. The extended contents list contains both the document tree
+and the table of contents for each document.</para>
+</listitem></varlistentry>
+<varlistentry><term><command>&cmd;-get-toc-from-docpath</command></term><listitem>
+<para>Displays the path to the file containing the table of contents of a
+document registered in the OMF database. Otherwise, displays a message to
+indicate that the requested document is not installed.</para>
+</listitem></varlistentry>
+<varlistentry><term><command>&cmd;-get-toc-from-id</command></term><listitem>
+<para>Displays the path to the file containing the table of contents of the
+document with the specified <command>&cmd;</command> series ID.</para>
+</listitem></varlistentry>
+<varlistentry><term><command>&cmd;-install</command></term><listitem><para>
+Registers a document in the <command>&cmd;</command> database.</para>
+</listitem></varlistentry>
+<varlistentry><term><command>&cmd;-rebuilddb</command></term><listitem><para>
+Removes the existing <command>&cmd;</command> database and creates a new database
+by registering the documents described by the OMF files found in the OMF search
+path. This command is useful if the <command>&cmd;</command> database becomes
+corrupted. For more information about the <command>&cmd;-rebuilddb</command>
+command, see the Examples section.</para>
+</listitem></varlistentry>
+<varlistentry><term><command>&cmd;-uninstall</command></term><listitem><para>
+Removes a document from the <command>&cmd;</command> database and removes
+any related files from the <command>&cmd;</command> database and contents
+lists. The document and the OMF file are not removed or modified.</para>
+</listitem></varlistentry>
+<varlistentry><term><command>&cmd;-update</command></term><listitem><para>
+Rescans the list of directories in the OMF search path for new and removed
+documents, and updates the <command>&cmd;</command> database accordingly.
+Unless a search path is specified with the <option>o</option> option, all
+directories in the default OMF search path are rescanned.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="scrollkeeper-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>n</option></term><listitem><para>Use the network to retrieve the DTD if it is not available via the system's XML catalog.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>o <replaceable>path</replaceable></option></term>
+<listitem><para>Specifies the search path for OMF files.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>p <replaceable>path</replaceable></option></term>
+<listitem><para>Specifies the location of the <command>&cmd;</command> database.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>q</option></term><listitem><para>Suppresses warnings
+and error messages.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>v</option></term><listitem><para>Displays all
+warnings and error messages, in addition to logging these messages in the <filename>
+/var/log/scrollkeeper.log</filename> file.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="scrollkeeper-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><replaceable>file</replaceable></term><listitem><para>
+Specifies the location of the contents file.</para>
+</listitem></varlistentry>
+<varlistentry><term><replaceable>locale</replaceable></term><listitem><para>
+Specifies the locale.</para>
+</listitem></varlistentry>
+<varlistentry><term><replaceable>omf-file</replaceable></term><listitem><para>
+Specifies the location of the OMF file.</para>
+</listitem></varlistentry>
+<varlistentry><term><replaceable>series-id</replaceable></term><listitem>
+<para>Specifies the <command>&cmd;</command> series ID.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="scrollkeeper-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Removing a Document From the &cmd; Database</title>
+<para><screen>example% <userinput>&cmd;-uninstall /usr/share/omf/example/<replaceable>
+filename</replaceable>.omf</userinput></screen></para>
+</example>
+<example role="example">
+<title>Getting the &cmd; Extended Contents List for the C Locale</title>
+<para><screen>example% <userinput>&cmd;-get-extended-content-list C</userinput></screen></para>
+</example>
+<example role="example">
+<title>Setting Up the scrollkeeper Database for a Diskless Client Clone Area
+</title>
+<screen>example% <userinput>scrollkeeper-rebuilddb -p /export/root/clone/Solaris_9/sun4u/var/lib/scrollkeeper -o /export/exec/Solaris_9_sparc.all/usr/share/omf
+</userinput></screen>
+<para>If the <command>&cmd;</command> database must be installed in a location
+other than the standard location, use the <option>p <replaceable>path</replaceable></option>
+option to specify the location of the <command>&cmd;</command> database, where <replaceable>
+path</replaceable> is an empty directory. The <command>scrollkeeper-rebuilddb
+</command> command will not proceed if you specify a populated
+path for this option.</para>
+<para>If the OMF files must be read from a location other than the standard
+location, use the <option>o <replaceable>path</replaceable></option> option
+to specify the location of the OMF files. Specify the complete pathname, for
+example, <literal>/usr/share/omf</literal>. If you specify a partial pathname,
+for example, <literal>/usr/share</literal>, the <command>scrollkeeper-rebuilddb
+</command> command will take a long time, produce many warnings, and may crash.
+</para>
+</example>
+</refsect1>
+<refsect1 id="scrollkeeper-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables that affect the execution of <command>&cmd;</command>: NLSPATH.
+</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>OMF_PATH</filename> </term><listitem><para>
+Provides <command>&cmd;</command> with an alternative list of directories
+in which to search for OMF files. This variable overrides the default search
+path. If the list contains multiple directories, the entries should be separated
+by colons.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="scrollkeeper-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry><term><returnvalue>0</returnvalue></term><listitem><para>Application
+exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="scrollkeeper-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline">
+<varlistentry><term><filename>/var/lib/&cmd;</filename> </term><listitem>
+<para>The location of the default <command>&cmd;</command> database.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/var/log/scrollkeeper.log</filename></term>
+<listitem><para>A log file containing log entries for database updates and
+error or warning messages.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/&cmd;</filename></term><listitem>
+<para>The directory containing the &cmd; templates and <filename>xslt</filename>
+files.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/scrollkeeper.conf</filename></term><listitem>
+<para>The default search path for <filename>omf</filename> files.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-config</filename></term>
+<listitem><para>The command-line executable for the <filename>scrollkeeper-config
+</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-get-cl</filename></term>
+<listitem><para>The command-line executable for the <filename>scrollkeeper-get-cl
+</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-get-content-list</filename></term>
+<listitem><para>The command-line executable for the <filename>scrollkeeper-get-content-list
+</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-get-extended-content-list
+</filename></term><listitem><para>The command-line executable for the <filename>
+scrollkeeper-get-extended-content-list</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-get-index-from-docpath
+</filename></term><listitem><para>The command-line executable for the <filename>
+scrollkeeper-get-index-from-docpath</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-get-toc-from-docpath</filename></term>
+<listitem><para>The command-line executable for the <filename>scrollkeeper-get-toc-from-docpath
+</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-get-toc-from-id</filename></term>
+<listitem><para>The command-line executable for the <filename>scrollkeeper-get-toc-from-id
+</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-install</filename></term>
+<listitem><para>The command-line executable for the <filename>scrollkeeper-install
+</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-rebuilddb</filename></term>
+<listitem><para>The command-line executable for the <filename>scrollkeeper-rebuilddb
+</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-uninstall</filename></term>
+<listitem><para>The command-line executable for the <filename>scrollkeeper-uninstall
+</filename> application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/scrollkeeper-update</filename></term>
+<listitem><para>The command-line executable for the <filename>scrollkeeper-update
+</filename> application.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="scrollkeeper-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-libs</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Obsolete</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="scrollkeeper-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>scrollkeeper-config</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>scrollkeeper-devel</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="scrollkeeper-1-note"><title>&note-tt;</title>
+<para>Written by Sander Vesik, Sun Microsystems Inc., 2003.</para>
+<para>Updated by Matt Keenan, Sun Microsystems Inc., 2006.</para>
+<para>Updated by Ghee Teo, Sun Microsystems Inc., 2007.</para>
+</refsect1>
+</refentry>

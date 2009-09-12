@@ -1,0 +1,215 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!-- ARC : LSARC 2006/685  Off-the-Record (OTR) Messaging plugin for GAIM -->
+<!ENTITY cmd "otr_parse">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2007, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="otr_parse-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>otr_parse</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">13 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>otr_parse</primary></indexterm><indexterm><primary>
+manage document metadata</primary></indexterm>
+<refnamediv id="otr_parse-1-name">
+<refdescriptor>&cmd;</refdescriptor>
+<refname>otr_sesskeys</refname>
+<refname>otr_mackey</refname>
+<refname>otr_readforge</refname>
+<refname>otr_modify</refname>
+<refname>otr_remac</refname>
+<refpurpose>process Off-the-Record Messaging transcripts</refpurpose></refnamediv>
+<refsynopsisdiv id="otr_parse-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis>
+<command>otr_parse</command>
+</cmdsynopsis>
+<cmdsynopsis>
+<command>otr_sesskeys</command>
+<arg choice="plain"><option role="nodash"><replaceable>our_privkey</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>their_pubkey</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis>
+<command>otr_mackey</command>
+<arg choice="plain"><option role="nodash"><replaceable>aes_enc_key</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis>
+<command>otr_readforge</command>
+<arg choice="plain"><option role="nodash"><replaceable>aes_enc_key</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>newmsg</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis>
+<command>otr_modify</command>
+<arg choice="plain"><option role="nodash"><replaceable>mackey</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>old_text</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>new_text</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>offset</replaceable></option></arg>
+</cmdsynopsis>
+<cmdsynopsis><command>otr_remac</command>
+<arg choice="plain"><option role="nodash"><replaceable>mackey</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>flags</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>snd_keyd</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>rcv_keyd</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>pubkey</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>counter</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>encdata</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>revealed_mackeys</replaceable></option></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+<refsect1 id="otr_parse-1-desc"><title>&desc-tt;</title>
+<para>
+Off-the-Record (OTR) Messaging allows you to have private conversations
+over IM by providing:
+</para>
+<itemizedlist>
+<listitem>
+Encryption
+</listitem>
+<listitem>
+No one else can read your instant messages.
+</listitem>
+<listitem>
+Authentication
+</listitem>
+<listitem>
+You are assured the correspondent is who you think it is.
+</listitem>
+<listitem>
+Deniability
+</listitem>
+<listitem>
+The messages you send do not have digital signatures that are checkable
+by a third party.  Anyone can forge messages after a conversation to
+make them look like they came from you.  However, during a conversation,
+your correspondent is assured the messages he sees are authentic and
+unmodified.
+</listitem>
+<listitem>
+Perfect forward secrecy
+</listitem>
+<listitem>
+If you lose control of your private keys,  no  previous conversation
+is compromised.
+</listitem>
+</itemizedlist>
+
+<para>
+The OTR Toolkit is useful for analyzing and/or forging OTR messages.
+Why do we offer this?  Primarily, to make absolutely sure that
+transcripts of OTR conversations are really easy to forge after the
+fact.  [Note that during an OTR conversation, messages can not be
+forged without real-time access to the secret keys on the
+participants' computers, and in that case, all security has already
+been lost.]  Easily-forgeable transcripts help us provide the
+"Deniability" property: if someone claims you said something over
+OTR, they will have no proof, as anyone at all can modify a
+transcript to make it say whatever they like, and still have all the
+verification come out correctly.
+</para>
+
+</refsect1>
+<refsect1 id="otr_parse-1-exde"><title>&exde-tt;</title>
+<para>The following commands are supported:</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><command>otr_parse</command></term>
+<listitem><para>
+Parse OTR messages given on <literal>stdin</literal>, showing the values of all
+the fields in OTR protocol messages.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><command>otr_sesskeys <option role="nodash"><replaceable>our_privkey</replaceable></option> <option role="nodash"><replaceable>their_pubkey</replaceable></option></command></term>
+<listitem><para>
+Shows our public key, the session id, two AES and two MAC keys derived
+from the given Diffie-Hellman keys (one private, one public).
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><command>otr_mackey <option role="nodash"><replaceable>aes_enc_key</replaceable></option></command></term>
+<listitem><para>
+Shows the MAC key derived from the given AES key.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><command>otr_readforge <option role="nodash"><replaceable>aes_enc_key</replaceable></option> <option role="nodash">[<replaceable>newmsg</replaceable>]</option></command></term>
+<listitem><para>
+Decrypts an OTR Data message using the given AES key, and displays
+the message.  If newmsg is given, replace the message with that one,
+encrypt and MAC it properly, and output the resulting OTR Data
+Message.  This works even if the given key was not correct for
+the original message, so as to enable complete forgeries.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><command>otr_modify_mackey <option role="nodash"><replaceable>old_text</replaceable></option> <option role="nodash"><replaceable>new_text</replaceable></option> <option role="nodash"><replaceable>offset</replaceable></option></command></term>
+<listitem><para>
+Even if you can't read the data because you do not know
+either the AES key or the Diffie-Hellman private key, but you
+can make a good guess that the substring "old_text" appears at the
+given offset in the message, replace the old_text with the
+new_text (which must be of the same length), recalculate the MAC
+with the given mackey, and output the resulting Data message.
+Note that, even if you don't know any text in an existing message,
+you can still forge messages of your choice using the otr_readforge
+command, above.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><command>otr_remac <option role="nodash"><replaceable>mackey</replaceable></option> <option role="nodash"><replaceable>flags</replaceable></option> <option role="nodash"><replaceable>snd_keyid</replaceable></option> <option role="nodash"><replaceable>rcv_keyid</replaceable></option> <option role="nodash"><replaceable>pubkey</replaceable></option> <option role="nodash"><replaceable>counter</replaceable></option> <option role="nodash"><replaceable>encdata</replaceable></option> <option role="nodash"><replaceable>revealed_mackeys</replacable></option></command></term>
+<listitem><para>
+Make a new OTR Data Message, with the given pieces (note that the
+data part is already encrypted).  MAC it with the given mackey.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="otr_parse-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-im-client</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="otr_parse-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>pidgin</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>
+Off-the-Record Messaging, at <literal>http://www.cypherpunks.ca/otr/</literal>
+</para>
+</refsect1>
+<refsect1 id="otr_parse-1-note"><title>&note-tt;</title>
+<para>
+Written by the OTR Dev team (otr@cypherpunks.ca).  
+Updated by Brian Cameron, Sun Microsystems Inc., 2007.
+</para>
+</refsect1>
+</refentry>

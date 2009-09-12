@@ -1,0 +1,197 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2002/445 GNOME 2.x help viewer (yelp)-->
+<!ENTITY cmd "yelp">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2007, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="yelp-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">08 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>gnome-help
+</primary></indexterm><indexterm><primary>GNOME help browser</primary></indexterm>
+<refnamediv id="yelp-1-name"><refname>&cmd;</refname><refname>gnome-help</refname>
+<refpurpose>GNOME help browser</refpurpose></refnamediv>
+<refsynopsisdiv id="yelp-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-private-session</option></arg>
+<arg choice="opt"><option>-with-cache-dir=<replaceable>string</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+<arg choice="plain"><option role="nodash"><replaceable>url</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="yelp-1-desc"><title>&desc-tt;</title>
+<para>
+The GNOME help browser is a utility that allows users to view documentation
+for GNOME in several formats including man pages, HTML, SGML(DocBook), and
+GNU info files.
+</para>
+</refsect1>
+<refsect1 id="yelp-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wide">
+<varlistentry>
+<term><option>-private-session</option></term>
+<listitem><para>
+Use a private session.
+</para></listitem></varlistentry>
+<varlistentry>
+<term><option>-with-cache-dir=<replaceable>directory</replaceable></option></term>
+<listitem><para>
+Specify which cache <replaceable>directory</replaceable> to use.
+</para></listitem></varlistentry>
+<varlistentry>
+<term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>
+Standard options available for use with most GNOME applications.  See
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+for more information.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="yelp-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry>
+<term><option role="nodash"><replaceable>url</replaceable></option></term>
+<listitem><para>
+This allows you to view a specific help document by providing the complete
+<replaceable>url</replaceable> to the documentation that you wish to view.
+</para>
+<para>
+If <replaceable>url</replaceable> starts with &ldquo;ghelp:&rdquo;,
+<command>&cmd;</command> opens the help document within
+<command>ghelp</command>.
+</para>
+<para>
+If <replaceable>url</replaceable> does not start with &ldquo;ghelp:&rdquo;,
+<command>&cmd;</command> attempts to launch a default Internet browser window
+and display the contents of the help document within this browser window.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="yelp-1-exde"><title>&exde-tt;</title>
+<para>Refer to the GNOME Handbook of Writing Software Documentation:</para>
+<para><literal>http://developer.gnome.org/projects/gdp/handbook.html</literal></para>
+<para>To access the API documentation for including help in applications,
+you must install the developer version of the package.</para>
+</refsect1>
+<refsect1 id="yelp-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Launching GNOME Help Browser</title>
+<para><screen>example% <userinput>&cmd;</userinput></screen></para>
+</example>
+<example role="example">
+<title>Launching GNOME Help Browser and loading the help information for the GNOME Accessibility guide.
+</title>
+<para><screen>example% <userinput>&cmd; ghelp:///usr/share/gnome/help/gnome-access-guide/C/gnome-access-guide.xml
+</userinput></screen></para>
+</example>
+<example role="example">
+<title>Launching GNOME Help Browser with a standard Internet URL</title>
+<para><screen>example% <userinput>&cmd; <literal>http://www.gnome.org</literal></userinput></screen></para>
+<para>The default Internet browser is launched (unless a browser is already
+running), and this URL is displayed within the browser window.</para>
+</example>
+</refsect1>
+<refsect1 id="yelp-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables:</para>
+<variablelist>
+<varlistentry>
+<term>INFOPATH</term>
+<listitem><para>
+Location of GNU Info files.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>MANPATH</term>
+<listitem><para>
+Location of man pages.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="yelp-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry>
+<term><returnvalue>0</returnvalue></term>
+<listitem><para>
+Application exited successfully
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><returnvalue>>0</returnvalue></term>
+<listitem><para>
+Application exited with failure
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="yelp-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry>
+<term><filename>/usr/bin/&cmd;</filename></term>
+<listitem><para>
+Executable for GNOME help browser.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><filename>/usr/bin/gnome-help</filename></term>
+<listitem><para>
+Symbolic link to run <command>&cmd;</command>.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="yelp-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-help-viewer
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="yelp-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para>
+<citerefentry><refentrytitle>scrollkeeper-config</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>scrollkeeper</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>scrollkeeper-devel</refentrytitle><manvolnum>1</manvolnum>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</citerefentry></para>
+</refsect1>
+<refsect1 id="yelp-1-note"><title>&note-tt;</title>
+<para><command>&cmd;</command> and gnome-help are both the same application.
+</para>
+<para>Written by Matt Keenan, Sun Microsystems Inc., 2003, 2007.</para>
+</refsect1>
+</refentry>

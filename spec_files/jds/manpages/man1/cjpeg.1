@@ -1,0 +1,309 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY cmd "cjpeg">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="cjpeg-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>cjpeg</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>cjpeg</primary></indexterm><indexterm><primary>compress
+an image file to a JPEG file</primary></indexterm>
+<refnamediv id="cjpeg-1-name"><refname>cjpeg</refname><refpurpose>compress
+an image file to a JPEG file</refpurpose></refnamediv>
+<refsynopsisdiv id="cjpeg-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash"><replaceable>
+options</replaceable></option></arg><arg choice="opt"><option role="nodash"><replaceable>
+filename</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="cjpeg-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> compresses the named image file, or the standard
+input if no file is named, and produces a JPEG/JFIF file on the standard output.
+The following input file formats are currently supported:</para>
+<itemizedlist>
+<listitem><para>BMP</para></listitem>
+<listitem><para>PGM, the PBMPLUS gray-scale format</para></listitem>
+<listitem><para>PPM, the PBMPLUS color format</para></listitem>
+<listitem><para>RLE, the Utah Raster Toolkit format</para></listitem>
+<listitem><para>Targa</para></listitem>
+</itemizedlist>
+<para>RLE is supported only if the URT library is available.</para>
+</refsect1>
+<refsect1 id="cjpeg-1-opts"><title>&opts-tt;</title>
+<para>All options may be abbreviated. For example, <option>grayscale</option>
+may be written <option>gray</option> or <option>gr</option>.  Upper and lower
+case are equivalent. For example, <option>BMP</option> is the same as <option>
+bmp</option>. British spellings are also accepted. For example, <option>greyscale
+</option>.</para>
+<refsect2 id="cjpeg-1-opts-basic">
+<title>Basic Options</title>
+<para>The following basic options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option>grayscale</option></term><listitem><para>Create
+a monochrome JPEG file from color input. You should use this switch when compressing
+a grayscale BMP file, because <command>&cmd;</command> cannot detect whether
+a BMP file uses only shades of gray. By specifying the <option>grayscale</option>
+option, you create a smaller JPEG file that takes less time to process.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>optimize</option></term><listitem><para>Optimize
+the entropy encoding parameters. If you do not specify this option, default
+encoding parameters are used. <option>optimize</option> usually makes the
+JPEG file a little smaller, but <command>&cmd;</command> runs more slowly
+and needs much more memory. Image quality and speed of decompression are unaffected
+by the <option>optimize</option> option.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>progressive</option></term><listitem><para>Create
+a progressive JPEG file. For more information about the <option>progressive
+</option> option, see the Extended Description section.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>quality <replaceable>N</replaceable></option></term>
+<listitem><para>Scale the quantization tables to adjust image quality. <replaceable>
+N</replaceable> ranges from 0 (worst) to 100 (best). The default value is
+75. For more information about the <option>quality</option> option, see the
+Extended Description section.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>targa</option></term><listitem><para>Specify that
+the input file is in Targa format. Targa files that contain an "identification"
+field are not automatically recognized by <command>&cmd;</command>. For such
+files, you must specify <option>targa</option> to make <command>&cmd;</command>
+treat the input as Targa format. For most Targa files, you do not need this
+switch.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="cjpeg-1-opts-int">
+<title>Intermediate Options</title>
+<para>The following intermediate options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option>dct fast</option></term><listitem><para>Use the
+fast integer DCT method. This method is less accurate than the integer DCT
+method or the floating-point DCT method.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>dct float</option></term><listitem><para>Use the
+floating-point DCT method. The float method is very slightly more accurate
+than the int method, but is much slower unless your machine has very fast
+floating-point hardware. The results of the floating-point method may vary
+slightly across machines, while the integer methods should give the same results
+everywhere.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>dct int</option></term><listitem><para>Use the
+integer DCT method. This is the default method.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>maxmemory <replaceable>N</replaceable></option></term>
+<listitem><para>Set the limit for the amount of memory to use in processing
+large images. <replaceable>N</replaceable> is specified in thousands of bytes,
+or in millions of bytes if "M" is specified with the number. For example, <option>
+max 4m</option> selects 4000000 bytes. If more space is needed, temporary
+files are used.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>outfile <replaceable>name</replaceable></option></term>
+<listitem><para>Send the output image to the named file, instead of to the
+standard output.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>restart <replaceable>N</replaceable></option></term>
+<listitem><para>Emit a JPEG restart marker every <replaceable>N</replaceable>
+MCU rows, or every <replaceable>N</replaceable> MCU blocks if "B" is specified
+with the number. The default value is <option>restart 0</option>, which means
+no restart markers. For more information about the <option>restart</option>
+option, see the Extended Description section.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>smooth <replaceable>N</replaceable></option></term>
+<listitem><para>Smooth the input image to eliminate dithering noise. <replaceable>
+N</replaceable> ranges from 1 to 100, and indicates the strength of smoothing.
+The default value is <option>smooth 0</option>, which means no smoothing.
+For more information about the <option>smooth</option> option, see the Extended
+Description section.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>verbose</option></term><listitem><para>Display
+version information at startup, and enable debug printout. The <option>vv
+</option> option displays more verbose output than the <option>v</option>
+option. The <option>vvv</option> option displays the most verbose output.
+</para>
+<para>You can also use <option>debug</option> to specify this option.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="cjpeg-1-opts-adv">
+<title>Advanced Options</title>
+<para>The following advanced options are supported for advanced users only:
+</para>
+<variablelist termlength="medium">
+<varlistentry><term><option>baseline</option></term><listitem><para>Force
+baseline-compatible quantization tables to be generated. This clamps the quantization
+values to 8 bits, even at low quality settings. This option is poorly named,
+because <option>baseline</option> does not ensure that the output is actually
+baseline JPEG. For example,  you can use the <option>baseline</option> and <option>
+progressive</option> options together.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>qslots <replaceable>N</replaceable>[,...]</option></term>
+<listitem><para>Select which quantization table to use for each color component.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>qtables <replaceable>file</replaceable></option></term>
+<listitem><para>Use the quantization tables provided in the specified text
+file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>sample HxV[,...]</option></term><listitem><para>
+Set the JPEG sampling factors for each color component.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>scans <replaceable>file</replaceable></option></term>
+<listitem><para>Use the scan script provided in the specified text file.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="cjpeg-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>filename</replaceable></option></term>
+<listitem><para>The name of the image file to be compressed.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="cjpeg-1-exde"><title>&exde-tt;</title>
+<refsect2 id="cjpeg-1-exde-quality">
+<title>The <option>quality</option> Option</title>
+<para>The <option>quality</option> option enables you to trade compressed
+file size against the quality of the reconstructed image: the higher the quality
+setting, the larger the JPEG file, and the greater the similarity between
+the output image and the original input. Normally, you use the lowest quality
+setting that decompresses into an output image that is visually indistinguishable
+from the original image. For this purpose, the quality setting should be between
+50 and 95. The default value of 75 is often just right. If you see defects
+at <option>quality 75</option>, increase the quality by 5 until you are happy
+with the output image. The optimal setting varies from one image to another.
+</para>
+<para>A value of <option>quality 100</option> generates a quantization table
+of ones. This minimizes loss in the quantization step, but information is
+still lost in subsampling, as well as roundoff error. The <option>quality
+100</option> setting is mainly of interest for experimental purposes. Quality
+values above 95 are not recommended for normal use, as the compressed file
+size increases dramatically for very little gain in output image quality.
+</para>
+<para>Quality values below 50 produce very small files of low image quality.
+Settings of 5 to 10 might be useful in preparing an index of a large image
+library, for example. Quality values below 25 generate 2-byte quantization
+tables, which are considered optional in the JPEG standard. <command>&cmd;</command>
+emits a warning message when you specify such a quality value, because some
+other JPEG programs might be unable to decode the resulting file. Use <option>
+baseline</option> if you need to ensure compatibility at low quality values.
+</para>
+</refsect2>
+<refsect2 id="cjpeg-1-exde-prog">
+<title>The <option>progressive</option> Option</title>
+<para>The <option>progressive</option> option creates a "progressive JPEG"
+file. In this type of JPEG file, the data is stored in multiple scans of increasing
+quality. If the file is transmitted over a slow communications link, the decoder
+can use the first scan to display a low-quality image very quickly, and can
+then improve the display with each subsequent scan. The final image is exactly
+equivalent to a standard JPEG file of the same quality setting, and the total
+file size is about the same, or a little smaller. Caution: progressive JPEG
+is not yet widely implemented, so many decoders are unable to view a progressive
+JPEG file at all.</para>
+</refsect2>
+<refsect2 id="cjpeg-1-exde-restart">
+<title>The <option>restart</option> Option</title>
+<para>The <option>restart</option> option inserts extra markers that allow
+a JPEG decoder to resynchronize after a transmission error. Without restart
+markers, any damage to a compressed file usually ruins the image from the
+point of the error to the end of the image. With restart markers, the damage
+is usually confined to the portion of the image from the point of the error
+to the next restart marker. The restart markers occupy extra space. We recommend <option>
+restart 1</option> for images that are transmitted across unreliable networks.
+</para>
+</refsect2>
+<refsect2 id="cjpeg-1-exde-smooth">
+<title>The <option>smooth</option> Option</title>
+<para>The <option>smooth</option> option filters the input to eliminate fine-scale
+noise. This option is often useful when you convert dithered images to JPEG:
+a moderate smoothing factor of 10 to 50 deletes dithering patterns from the
+input file, resulting in a smaller JPEG file and a better-looking image. If
+the smoothing factor is too large, the image visibly blurs.</para>
+</refsect2>
+<refsect2 id="cjpeg-1-exde-hints">
+<title>Hints</title>
+<para>Color GIF files are not the ideal input for JPEG. JPEG is really intended
+for the compression of full-color 24-bit images. In particular, do not try
+to convert cartoons, line drawings, or other images that have only a few distinct
+colors. GIF works well on these, but JPEG does not. If you want to convert
+a GIF file to JPEG, you should experiment with the <option>quality</option>
+and <option>smooth</option> options to get a satisfactory conversion. A value
+of <option>smooth 10</option> is often helpful.</para>
+<para>Avoid running an image through a series of JPEG compression/decompression
+cycles. Image quality loss will accumulate. After ten cycles, the image may
+be noticeably worse than it was after one cycle. Use a lossless format while
+manipulating an image, then convert to JPEG format when you are ready to file
+the image away. </para>
+<para>Use the <option>optimize</option> option when you make a "final" version
+for posting or archiving. Also, when you use low quality settings, make very
+small JPEG files. The percentage improvement is often much greater than on
+larger files. At present, the <option>optimize</option> option is always selected
+when generating progressive JPEG files.</para>
+</refsect2>
+</refsect1>
+<refsect1 id="cjpeg-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Compressing the PPM File test.ppm With a Quality Factor of 60 and Saving
+the Output as test.jpg</title>
+<para><screen>example% <userinput>&cmd; -quality 60 test.ppm > test.jpg
+</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="cjpeg-1-envr"><title>&envr-tt;</title>
+<para><command>&cmd;</command> uses the following environment variables:</para>
+<variablelist>
+<varlistentry><term>JPEGMEM</term><listitem><para>The value of this environment
+variable, if set, is the default memory limit. The value is specified as described
+for the <option>maxmemory</option> option. JPEGMEM overrides the default value
+specified when the program was compiled, and is in turn overridden by an explicit <option>
+maxmemory</option> option.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="cjpeg-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWjpg</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="cjpeg-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Wallace, Gregory K., <citetitle>The JPEG Still Picture Compression Standard
+</citetitle> Communications of the ACM, April 1991 (vol. 34, no. 4), pp. 30-44.
+</para>
+<para><citerefentry><refentrytitle>djpeg</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>jpegtran</refentrytitle><manvolnum>
+1</manvolnum></citerefentry>, <citerefentry><refentrytitle>rdjpgcom</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>wrjpgcom
+</refentrytitle><manvolnum>1</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="cjpeg-1-note"><title>&note-tt;</title>
+<para>Arithmetic coding is not supported. GIF input files are not supported.
+Not all variants of BMP and Targa file formats are supported.</para>
+<para>This man page was originally written by the Independent JPEG Group.
+Updated by Breda McColgan, Sun Microsystems Inc., 2004. </para>
+</refsect1>
+</refentry>

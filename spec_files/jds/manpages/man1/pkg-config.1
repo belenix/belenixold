@@ -1,0 +1,692 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2002/747 GNOME 2.0 pkg-config-->
+<!ENTITY cmd "pkg-config">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub EntList brvbar bull cross dash diam diams frac12 frac13 frac14 hellip
+ laquo lArr loz mdash nabla ndash para pound rArr raquo sect yen bsol>
+<?Pub Inc>
+<refentry id="pkg-config-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">08 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>return
+meta information about installed libraries</primary></indexterm>
+<refnamediv id="pkg-config-1-name"><refname>&cmd;</refname><refpurpose>
+return meta information about installed libraries</refpurpose></refnamediv>
+<refsynopsisdiv id="pkg-config-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-atleast-pkgconfig-version=<replaceable>version</replaceable></option></arg>
+<arg choice="opt"><option>-atleast-version=<replaceable>version</replaceable></option></arg>
+<arg choice="opt"><option>-cflags</option></arg>
+<arg choice="opt"><option>-cflags-only-I</option></arg>
+<arg choice="opt"><option>-cflags-only-other</option></arg>
+<arg choice="opt"><option>-debug</option></arg>
+<arg choice="opt"><option>-define-variable=<replaceable>variablename=value</replaceable></option></arg>
+<arg choice="opt"><option>-errors-to-stdout</option></arg>
+<arg choice="opt"><option>-exact-version=<replaceable>version</replaceable></option></arg>
+<arg choice="opt"><option>-exists</option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-libs</option></arg>
+<arg choice="opt"><option>-libs-only-L</option></arg>
+<arg choice="opt"><option>-libs-only-l</option></arg>
+<arg choice="opt"><option>-libs-only-other</option></arg>
+<arg choice="opt"><option>-list-all</option></arg>
+<arg choice="opt"><option>-max-version=<replaceable>version</replaceable></option></arg>
+<arg choice="opt"><option>-modversion</option></arg>
+<arg choice="opt"><option>-print-errors</option></arg>
+<arg choice="opt"><option>-silence-errors</option></arg>
+<arg choice="opt"><option>-short-errors</option></arg>
+<arg choice="opt"><option>-static</option></arg>
+<arg choice="opt"><option>-uninstalled</option></arg>
+<arg choice="opt"><option>-usage</option></arg>
+<arg choice="opt"><option>-variable=<replaceable>variablename</replaceable></option></arg>
+<arg choice="opt"><option>-version</option></arg>
+<arg choice="opt"><replaceable>libraries</replaceable></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="pkg-config-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> retrieves information about installed libraries in the
+system. <command>&cmd;</command> is typically used to compile and link against
+one or more libraries. The following example shows how to use
+<command>&cmd;</command> in a Makefile:
+</para>
+<literallayout>program: program.c
+	 cc program.c `&cmd; --cflags --libs gtk+-2.0`</literallayout>
+<para>
+<command>&cmd;</command> retrieves information about packages from special
+metadata files. These files have the same name as the package, with the
+extension <filename>.pc</filename>. By default, <command>&cmd;</command> looks
+in the directory <filename>/usr/lib/pkgconfig</filename> for these files.  It
+also looks in the colon-separated list of directories specified by the
+<envar>PKG_CONFIG_PATH</envar> environment variable.
+</para>
+<para>
+The package name specified on the <command>&cmd;</command> command line is
+defined to be the name of the metadata file, without the
+<filename>.pc</filename> extension. If a library can install multiple versions
+simultaneously, it must give each version its own name. For example, GTK 1.2
+might have the package name <literal>gtk+</literal> while GTK 2.0 has the
+package name <literal>gtk+-2.0</literal>.
+</para>
+</refsect1>
+<refsect1 id="pkg-config-1-exde"><title>&exde-tt;</title>
+<refsect2>
+<para>A <filename>.pc</filename> file has two kinds of lines:</para>
+<itemizedlist>
+<listitem><para>Keyword lines start with a keyword and a colon.</para></listitem>
+<listitem><para>
+Variable definitions start with an alphanumeric string and an equals sign.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+Keywords are defined in advance and have special meaning to
+<command>&cmd;</command>.  Variables do not have special meaning, you can
+specify any variables that you wish. However, users may expect to retrieve the
+usual directory name variables.
+</para>
+<para>
+Note that variable references are written "${foo}"; you can escape literal
+"${" as "$${".
+</para>
+<para>
+<command>&cmd;</command> supports the following keywords:
+</para>
+<variablelist termlength="medium">
+<varlistentry>
+<term><literal>Name</literal></term>
+<listitem><para>
+A human-readable name for the package. Note that it is not the name passed as
+an argument to <command>&cmd;</command>.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><literal>Description</literal></term>
+<listitem><para>
+A brief description of the package.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><literal>URL</literal></term>
+<listitem><para>
+A URL where people can get more information about and download the package.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><literal>Version</literal></term>
+<listitem><para>
+The most-specific-possible package version string.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><literal>Requires</literal></term>
+<listitem><para>
+A comma-separated list of packages that are required by your package.  Flags
+from dependent packages will be merged in to the flags reported for your
+package.  Optionally, you can specify the version of the required package
+(using the operators =, &lt;, &gt;, &gt;=, &lt;=). Specifying a version allows
+<command>&cmd;</command> to perform extra sanity checks. You may only mention
+the same package once on the Requires: line. If the version of a package is not
+specified, any version will be used with no checking.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><literal>Conflicts</literal></term>
+<listitem><para>
+Optional.  Allows <command>&cmd;</command> to perform additional sanity checks,
+primarily to detect broken user installations. The syntax is the same as
+Requires: except that you can list the same package more than once, for example
+"foobar = 1.2.3, foobar = 1.2.5, foobar >= 1.3", if you have reason to do so.
+If a version is not specified, your package conflicts with all versions of the
+mentioned package. If a user tries to use your package and a conflicting
+package at the same time, <command>&cmd;</command> complains.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><literal>Libs</literal></term>
+<listitem><para>
+The link flags specific to your package. Do not add any flags for required
+packages, <command>&cmd;</command> adds these automatically.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><literal>Libs.private</literal></term>
+<listitem><para>
+This line should list any private libraries in use.  Private libraries are
+libraries which are not exposed through your library, but are needed in the
+case of static linking.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><literal>Cflags</literal></term>
+<listitem><para>
+The compile flags specific to your package. Do not add any flags for required
+packages, <command>&cmd;</command> adds these automatically.
+</para>
+</listitem></varlistentry>
+
+</variablelist>
+<para>See the EXAMPLES section below for a sample <filename>.pc</filename>
+file.</para>
+</refsect2>
+<refsect2>
+<title>autoconf Macros</title>
+<para><literal>PKG_CHECK_MODULES([<replaceable>variablebase</replaceable>], [<replaceable>modulelist</replaceable>], [<replaceable>action-if-found</replaceable>], [<replaceable>action-if-not-found</replaceable>]) </literal></para>
+
+<para>
+The macro PKG_CHECK_MODULES can be used in <filename>configure.ac</filename>
+to check whether modules exist, as shown in the following example:
+</para>
+<screen>PKG_CHECK_MODULES([MYSTUFF], [gtk+-2.0 >= 1.3.5 libxml = 1.8.4])</screen>
+<para>
+In this example, the MYSTUFF_LIBS and MYSTUFF_CFLAGS substitution variables
+are set to the <literal>libs</literal> and <literal>cflags</literal> values
+for the given module list. If a module is missing or has the wrong version,
+by default <literal>configure</literal> will abort with a message. To replace
+the default action, specify an <replaceable>action-if-found</replaceable>.
+PKG_CHECK_MODULES will not print any error messages if you specify your own
+<replaceable>action-if-not-found</replaceable>. However, it will set the
+variable <envar>MYSTUFF_PKG_ERRORS</envar>, which you can use to find out what
+went wrong.
+</para>
+<para>
+Note that if there is a possibility the first call to PKG_CHECK_MODULES might
+not happen, you should be sure to include an explicit call to
+PKG_PROG_PKG_CONFIG in your configure.ac
+</para>
+<para>
+<literal>PKG_PROG_PKG_CONFIG([<replaceable>minversion</replaceable>])
+</para>
+<para>
+The macro PKG_PROG_PKG_CONFIG defines the PKG_CONFIG variable to the best
+pkg-config available, useful if you need &cmd;, but do not want to use
+the PKG_CHECK_MODULES macro.
+</para>
+<para>
+<literal>PKG_CHECK_EXISTS(<replaceable>modules</replaceable>, [<replaceable>action-if-found</replaceable>], [<replaceable>action-if-not-found</replaceable>])
+</para>
+<para>
+Check to see whether a particular set of modules exists.  Similar to
+PKG_CHECK_MODULES(), but does not set variables or print errors.
+</para>
+<para>
+As with PKG_CHECK_MODULES, make sure that the first instance of this or
+PKG_CHECK_MODULES is called, or make sure to call PKG_CHECK_EXISTS manually.
+</para>
+</refsect2>
+<refsect2>
+<title>Compiling 64&ndash;Bit Binaries</title>
+<para>To compile 64&ndash;bit binaries, <command>&cmd;</command> must use
+metadata files that specify the flags for the 64-bit libraries. To ensure
+that <command>&cmd;</command> can find the metadata files for 64-bit libraries,
+set the <envar>PKG_CONFIG_PATH</envar> environment variable to <filename>
+/usr/lib/64/pkgconfig/</filename> when compiling 64-bit software.
+</para>
+</refsect2>
+</refsect1>
+<refsect1 id="pkg-config-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wholeline">
+
+<varlistentry>
+<term><option>-atleast-pkgconfig-version=<replaceable>version</replaceable></option></term>
+<listitem><para>
+Require a specific <replaceable>version</replaceable> of &cmd;.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-atleast-version=<replaceable>version</replaceable></option></term>
+<listitem><para>
+See the entry for the <option>-exists</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-cflags</option></term>
+<listitem><para>
+Prints pre-processor and compile flags required to compile the packages on the
+command line, including flags for all their dependencies.  Flags are
+"compressed" so that each identical flag appears only once.
+<command>&cmd;</command> exits with a nonzero code if it cannot find metadata
+for one or more of the packages on the command line.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-cflags-only-I</option></term>
+<listitem><para>
+Same as <option>cflags</option> except it prints only -I flags.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-cflags-only-other</option></term>
+<listitem><para>
+Same as <option>cflags</option> except it prints only flags not covered by the
+<option>cflags-only-I</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-debug</option></term>
+<listitem><para>
+Show verbose debug information.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-define-variable=<replaceable>variablename</replaceable>=<replaceable>value</replaceable></option></term>
+<listitem><para>
+Sets a global value for a variable, overriding the value in any
+<filename>.pc</filename> files.  Most packages define the variable "prefix" in
+their <filename>.pc</filename>, so to override this, for example:
+</para>
+<screen>
+$ <userinput>&cmd; --print-errors --define-variable=prefix=/foo \\
+                   --variable=prefix glib-2.0
+ /foo</userinput></screen>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-errors-to-stdout</option></term>
+<listitem><para>
+If printing errors, print them to <literal>stdout</literal> rather than the
+default <literal>stderr</literal>.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-exact-version=<replaceable>version</replaceable></option></term>
+<listitem><para>
+See the entry for the <option>-exists</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-exists</option></term>
+<listitem><para>
+The <option>-exists</option>,
+<option>-atleast-version=<replaceable>version</replaceable></option>,
+<option>-exact-version=<replaceable>version</replaceable></option>, and
+<option>-max-version=<replaceable>version</replaceable></option> options test
+whether the packages on the command line are known to <command>&cmd;</command>,
+and optionally whether the version number of a package meets certain
+constraints. If all packages exist and meet the specified version constraints,
+<command>&cmd;</command> exits successfully.  Otherwise,
+<command>&cmd;</command> exits unsuccessfully. Rather than using the
+version-test options, you can simply give a version constraint after each
+package name, as shown in the following example:
+</para>
+<screen>$ <userinput>&cmd; --exists 'glib-2.0 >= 1.3.4 libxml = 1.8.3'</userinput></screen>
+<para>
+Remember to use the <option>-print-errors</option> option if you want
+to display error messages.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-help</option></term>
+<listitem><para>
+Displays help and usage information.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-libs</option></term>
+<listitem><para>
+Identical to <option>-cflags</option> option but only prints the link flags.
+Duplicate flags are merged, maintaining proper ordering, and flags for
+dependencies are included in the output.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-libs-only-L</option></term>
+<listitem><para>
+Same as <option>libs</option> except it prints only -L and -R flags.  That is,
+it defines the library search path, but does not specify which libraries to
+link with.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-libs-only-l</option></term>
+<listitem><para>
+Same as <option>libs</option> except it prints only -l flags.  Note that the
+union of <option>-libs-only-l</option> and <option>-libs-only-L</option> may
+be smaller than <option>-libs</option> due to flags such as -rdynamic.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-libs-only-other</option></term>
+<listitem><para>
+Same as <option>libs</option> except it prints only flags not covered by the
+<option>libs-only-L</option> and <option>libs-only-l</option> options, such as
+"-pthread".
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-list-all</option></term>
+<listitem><para>
+List all known packages.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-max-version=<replaceable>version</replaceable></option></term>
+<listitem><para>
+See the entry for the <option>-exists</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-modversion</option></term>
+<listitem><para>
+Requests that the version information of the libraries specified on the command
+line be displayed. If <command>&cmd;</command> can find all of the libraries on
+the command line, each library's version string is printed to
+<literal>stdout</literal>, one version per line. In this case
+<command>&cmd;</command> exits successfully. If one or more libraries is
+unknown, <command>&cmd;</command> exits with a nonzero code, and the contents
+of <literal>stdout</literal> are undefined.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-print-errors</option></term>
+<listitem><para>
+Displays an error if one or more of the modules on the command line, or their
+dependencies, are not found, or if an error occurs in parsing.  With
+"predicate" options such as <option>--exists</option>, &cmd; runs silently by
+default, because it is usually used in scripts that want to control what is
+output.  This option can be used alone to just print errors encountered
+locating modules on the command line, or with other options.  The
+<envar>PKG_CONFIG_DEBUG_SPEW</envar> environment variable overrides this
+option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-silence-errors</option></term>
+<listitem><para>
+Does not display an error if one or more of the modules on the command line,
+or their dependencies, are not found, or if an error occurs in parsing. With
+predicate options such as <option>-exists</option>, <command>&cmd;</command>
+runs silently by default, because it is usually used in scripts that want
+to control what is output. This option is only useful with options that print
+errors by default, such as <option>-cflags</option> or <option>-modversion
+</option>. The <envar>PKG_CONFIG_DEBUG_SPEW</envar> environment variable
+overrides this option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-short-errors</option></term>
+<listitem><para>
+Prints short errors.  Refer to <option>print-errors</option> for more detail
+about how &cmd; manages error messages.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-static</option></term>
+<listitem><para>
+Output libraries suitable for static linking.  This means including any private
+libraries in the output.  This relies on proper tagging in the .pc files, 
+otherwise too many libraries will be output.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-uninstalled</option></term>
+<listitem><para>
+Normally, if you request the package <filename>foo</filename> and the package
+<filename>foo-uninstalled</filename> exists, <command>&cmd;</command> will
+prefer the uninstalled variant. This allows compilation/linking against
+uninstalled packages.  If you specify the <option>-uninstalled</option> option,
+<command>&cmd;</command> returns successfully if any uninstalled packages are
+being used. Otherwise, <command>&cmd;</command> fails. The
+<envar>PKG_CONFIG_DISABLE_UNINSTALLED</envar> environment variable prevents
+<command>&cmd;</command> from implicitly choosing uninstalled packages.  If the
+<envar>PKG_CONFIG_DISABLE_UNINSTALLED</envar> variable is set, uninstalled
+packages are used only if you explicitly pass a name such as
+<filename>foo-uninstalled</filename> on the command line.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-usage</option></term>
+<listitem><para>
+Displays help and usage information.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-variable=<replaceable>variablename</replaceable></option></term>
+<listitem><para>
+Returns the value of a variable defined in a package's <filename>.pc</filename>
+file. For example, most packages define the variable <literal>prefix</literal>:
+</para>
+<screen>
+$ <userinput>&cmd; --variable=prefix glib-2.0
+/usr/</userinput></screen>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>-version</option></term>
+<listitem><para>
+Displays version of &cmd;.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="pkg-config-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>libraries</replaceable></option></term>
+<listitem><para>
+List of libraries specified by the metadata file found in
+<filename>/usr/lib/pkgconfig</filename, without the <filename>.pc</filename>
+extension.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="pkg-config-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of environment variables.</para>
+
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><envar>PKG_CONFIG_ALLOW_SYSTEM_CFLAGS</envar></term>
+<listitem><para>
+Do not strip <literal>-I/usr/include</literal> from <literal>cflags</literal>.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><envar>PKG_CONFIG_ALLOW_SYSTEM_LIBS</envar></term>
+<listitem><para>
+Do not strip <literal>-L/usr/lib</literal> from <literal>libs</literal>.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><envar>PKG_CONFIG_DEBUG_SPEW</envar></term>
+<listitem><para>
+If set, causes <command>&cmd;</command> to print all debugging information and
+report all errors.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><envar>PKG_CONFIG_DISABLE_UNINSTALLED</envar></term>
+<listitem><para>
+Normally, if you request the package <filename>foo</filename> and the package
+<filename>foo-uninstalled</filename> exists, <command>&cmd;</command> prefers
+the uninstalled variant. This allows compilation/linking against uninstalled
+packages.  If the <envar>PKG_CONFIG_DISABLE_UNINSTALLED</envar> environment
+variable is set, <command>&cmd;</command> prefers the installed variant.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><envar>PKG_CONFIG_LIBDIR</envar></term>
+<listitem><para>
+Replaces the default &cmd; search directory.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><envar>PKG_CONFIG_PATH</envar></term>
+<listitem><para>
+A colon-separated list of directories to search for <filename>.pc</filename>
+files. The default directory is always searched after searching the path
+specified by <envar>PKG_CONFIG_PATH</envar>.  The default value of
+<envar>PKG_CONFIG_PATH</envar> is
+<filename>/usr/lib/pkgconfig</filename>:<filename>/usr/share/pkgconfig</filename>.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><envar>PKG_CONFIG_TOP_BUILD_DIR</envar></term>
+<listitem><para>
+Sets the value of the magic variable <literal>pc_top_builddir</literal>, which
+may appear in <filename>.pc</filename> files. If this environment variable
+is not set, the default value <literal>'$(top_builddir)'</literal> is used.
+The <envar>PKG_CONFIG_TOP_BUILD_DIR</envar> variable should refer to the top
+builddir of the Makefile where the compile/link flags reported by
+<command>&cmd;</command> are used. The <envar>PKG_CONFIG_TOP_BUILD_DIR</envar>
+variable is only used when compiling/linking against a package that has not yet
+been installed.
+</para></listitem></varlistentry>
+
+</variablelist></refsect1>
+<refsect1 id="pkg-config-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Example .pc File</title>
+<para>Here is an example <filename>.pc</filename> file: </para>
+<programlisting># This is a comment
+prefix=/usr # this defines a variable
+exec_prefix=${prefix} # defining another variable in terms of the first
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: GObject                            # human-readable name
+Description: Object/type system for GLib # human-readable description
+Version: 1.3.1
+Requires: glib-2.0 = 1.3.1
+Conflicts: foobar &lt;= 4.5
+Libs: -L${libdir} -lgobject-1.3
+Cflags: -I${includedir}/glib-2.0 -I${libdir}/glib/include
+
+</programlisting>
+</example>
+<example role="example">
+<title>Adding a Library to the Set of Packages Known to &cmd;</title>
+<para>
+To add a library to the set of packages known to <command>&cmd;</command>, you
+must install the library-specific <filename>.pc</filename> file in the
+<filename>/usr/lib/pkgconfig</filename> directory.
+</para>
+<para>
+If the .pc file does not exist, generate the file by running the
+<command>configure</command> command, building, and installing the module that
+provides it.  Generating the file in this way ensures that the prefix and other
+variables are set to the correct values.
+</para>
+</example>
+<example role="example">
+<title>Getting the Compile Flags Required for the libgnomeui-2.0 Package</title>
+<para>
+<screen>example% <userinput>&cmd; --cflags libgnomeui-2.0</userinput></screen>
+</para>
+</example>
+</refsect1>
+<refsect1 id="pkg-config-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry>
+<term><filename>/usr/bin/&cmd;</filename></term>
+<listitem><para>
+Executable for installed library helper script
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><filename>/usr/lib/pkgconfig</filename></term>
+<listitem><para>
+Default location of <filename>.pc</filename> used by &cmd;
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><filename>/usr/share/pkgconfig</filename></term>
+<listitem><para>
+Default location of <filename>.pc</filename> used by &cmd;
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="pkg-config-1-attr"><title>&attr-tt;</title>
+<para>
+See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:
+</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle"><para>ATTRIBUTE TYPE</para></entry>
+<entry align="center" valign="middle"><para>ATTRIBUTE VALUE</para></entry>
+</row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-common-devel
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Committed</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="pkg-config-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+</refsect1>
+<refsect1 id="pkg-config-1-note"><title>&note-tt;</title>
+<para>
+Written by James Henstridge, Martijn van Beers, Havoc Pennington, Tim Janik,
+Owen Taylor, Raja Harinath, Miguel de Icaza.  Updated by Brian Cameron, Sun
+Microsystems Inc., 2003, 2004, 2007.
+</para>
+</refsect1>
+</refentry>

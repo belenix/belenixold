@@ -1,0 +1,162 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/529 GNOME Nettool-->
+<!ENTITY cmd "gnome-nettool">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-nettool-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-nettool</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">25 Aug 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-nettool</primary></indexterm><indexterm><primary>
+Graphical front end to network clients</primary></indexterm><refnamediv id="gnome-nettool-1-name">
+<refname>gnome-nettool</refname><refpurpose>Graphical front end to network clients
+</refpurpose></refnamediv>
+<refsynopsisdiv id="gnome-nettool-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-info=<replaceable>DEVICE</replaceable></option></arg>
+<arg choice="opt"><option>-ping=<replaceable>HOST</replaceable></option></arg>
+<arg choice="opt"><option>-netstat=<replaceable>COMMAND</replaceable></option></arg>
+<arg choice="opt"><option>-traceroute=<replaceable>HOST</replaceable></option></arg>
+<arg choice="opt"><option>-port-scan=<replaceable>HOST</replaceable></option></arg>
+<arg choice="opt"><option>-lookup=<replaceable>HOST</replaceable></option></arg>
+<arg choice="opt"><option>-finger=<replaceable>USER</replaceable></option></arg>
+<arg choice="opt"><option>-whois=<replaceable>DOMAIN</replaceable></option></arg>
+<arg choice="opt"><option>-display=<replaceable>DISPAY</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnome-nettool-1-desc"><title>&desc-tt;</title>
+<para>The <command>&cmd;</command> application is a GTK+ front end for a number of 
+network client command line applications including ping(1M), netstat(1M), 
+traceroute(1M), dig(1M), finger(1), whois(1) and also showing the network 
+interface devices and scanning for services. Each of these functions is 
+grouped into a tab on its own. When gnome-nettool is invoked without any 
+option, it displays its first tab which is showing the machine's network 
+devices. However, it can also be invoked with any one of the option above.  
+These option can only be invoked one at a time, except the --display option.
+
+
+</refsect1>
+<refsect1 id="gnome-nettool-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wide">
+<varlistentry><term><option>-info=<replaceable>DEVICE</replaceable></option></term><listitem>
+<para>
+launches gnome-nettool showing the device tab with the DEVICE specified. DEVICE is the actual device name.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-ping=<replaceable>HOST</replaceable></option></term><listitem>
+<para>
+launches gnome-nettool showing the ping tab and pinging the HOST. HOST is either hostname of host IP address,
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-netstat=<replaceable>COMMAND</replaceable></option></term><listitem>
+<para>
+launches gnome-nettool in the netstat tab with the COMMAND option, 
+the valid values for COMMAND are {route, active, multicast}.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-traceroute=<replaceable>HOST</replaceable></option></term><listitem>
+<para>
+launches gnome-nettool in the traceroute tab and showing the routes to the HOST.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-port-scan=<replaceable>HOST</replaceable></option></term><listitem>
+<para>
+launches gnome-nettool in the Port Scan tab and showing the open ports for HOST.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-lookup=<replaceable>HOST</replaceable></option></term><listitem>
+<para>
+launches gnome-nettool in the Lookup tab and showing the HOST information.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-finger=<replaceable>USER</replaceable></option></term><listitem>
+<para>
+launches gnome-nettool in the Finger tab showing the USER in local host. 
+This option can also be invoked with --lookup option together.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-whois=<replaceable>DOMAIN</replaceable></option></term><listitem>
+<para>
+launches gnome-nettool in the Whois tab showing the domain information for DOMAIN.  
+</para>
+</listitem></varlistentry>
+
+<refsect1 id="gnome-nettool-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Starting gnome-nettool in the Device tab for ath0</title>
+<para><screen>example% <userinput>&cmd; --info=ath0</userinput></screen></para>
+</example>
+<example role="example"><title>Starting gnome-nettool in the Ping tab with COMMAND=multicast</title>
+<para><screen>example% <userinput>&cmd; --netstat=multicast</userinput></screen></para>
+</example>
+</refsect1>
+
+<refsect1 id="gnome-nettool-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-nettool-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><filename>/usr/bin/&cmd;</filename></term><listitem>
+<para>The command-line executable for the application.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><filename>/usr/share/applications/gnome-nettool.destop</filename></term><listitem>
+<para>Location of the desktop file.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="gnome-nettool-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-nettool
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-nettool-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>ping</refentrytitle><manvolnum>1M</manvolnum>,
+<citerefentry><refentrytitle>netstat</refentrytitle><manvolnum>1M</manvolnum>,
+<citerefentry><refentrytitle>traceroute</refentrytitle><manvolnum>1M</manvolnum>,
+<citerefentry><refentrytitle>dig</refentrytitle><manvolnum>1M</manvolnum>,
+<citerefentry><refentrytitle>finger</refentrytitle><manvolnum>1M</manvolnum>,
+<citerefentry><refentrytitle>whois</refentrytitle><manvolnum>1M</manvolnum>,
+</refsect1>
+<refsect1 id="gnome-nettool-1-note"><title>&note-tt;</title>
+<para>Written by Ghee Teo, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+</refentry>

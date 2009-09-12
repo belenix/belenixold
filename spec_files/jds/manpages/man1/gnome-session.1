@@ -1,0 +1,208 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/348 GNOME Panel-->
+<!ENTITY cmd "gnome-session">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-session-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-session</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">13 Jan 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-session</primary></indexterm><indexterm><primary>
+starts up the GNOME desktop environment</primary></indexterm><refnamediv id="gnome-session-1-name">
+<refname>gnome-session</refname><refpurpose>starts up the GNOME desktop environment
+</refpurpose></refnamediv>
+<refsynopsisdiv id="gnome-session-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-choose-session=<replaceable>MySession</replaceable></option></arg>
+<arg choice="opt"><option>-failsafe</option></arg>
+<arg choice="opt"><option>-purge-delay=<replaceable>delay</replaceable></option></arg>
+<arg choice="opt"><option>-warn-delay=<replaceable>delay</replaceable></option></arg>
+<arg choice="opt"><option>-suicide-delay=<replaceable>delay</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>session-name</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gnome-session-1-desc"><title>&desc-tt;</title>
+<para>The <command>&cmd;</command> program starts up the GNOME desktop environment.
+This command is typically executed by your login manager (e.g. <filename>GDM</filename>,
+<filename>dtlogin</filename>, <filename>XDM</filename>, or from
+your X startup scripts).  It will either load your last session, or provide a
+default session for the user as defined by the system administrator (or the
+default GNOME installation on your system).  You can optionally specify a
+specific session name to restore.
+</para>
+<para><command>&cmd;</command> is an X11R6 session manager. It can manage
+GNOME applications as well as any X11R6 SM compliant sessions. If the user
+has previously saved a session, the session is loaded from the
+<filename>~/.gnome2/session</filename> file.  Various default values are
+provided in case this file does not exist.   If the user session file does
+not exist, &cmd; will use the contents of the
+<filename>default.session</filename> file.
+</para>
+
+<para>
+<command>&cmd;</command> also exports an X Atom called GNOME_SM_DESKTOP
+on the root window, to indicate that <command>&cmd;</command> has started.
+Some applications may require such information to proceed correctly.
+</para>
+
+</refsect1>
+<refsect1 id="gnome-session-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wide">
+<varlistentry><term><option>-choose-session=<replaceable>MySession</replaceable></option></term><listitem>
+<para>
+User can specify a session to load, as opposed to the session specified in the
+<filename>~/.gnome/session-options</filename> file. If that entry does not exist
+in the <filename>~/.gnome/session</filename> file (or if that file does not exist),
+<command>&cmd;</command> will use the default session, and all saves to that
+session will be to the new session name.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-failsafe</option></term><listitem><para>Fail-safe
+operations mode: <command>&cmd;</command> only reads saved sessions from the <filename>
+default.session</filename> file.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-purge-delay=<replaceable>delay</replaceable></option></term>
+<listitem><para>The number of milliseconds that <command>&cmd;</command> will
+wait for clients to register. If <replaceable>delay</replaceable> is 0, <command>&cmd;</command>
+will wait forever. The default value is 30,000 milliseconds.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-suicide-delay=<replaceable>delay</replaceable></option></term>
+<listitem><para>The number of milliseconds that <command>&cmd;</command> will
+wait for clients to die. If <replaceable>delay</replaceable> is 0, <command>&cmd;</command>
+will wait forever. The default value is 10,000 milliseconds.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-warn-delay=<replaceable>delay</replaceable></option></term>
+<listitem><para>The number of milliseconds that <command>&cmd;</command> will
+wait for clients to respond. If <replaceable>delay</replaceable> is 0, <command>&cmd;</command>
+will wait forever. The default value is 10,000 milliseconds.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-session-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="wide"><varlistentry><term><option role="nodash"><replaceable>
+session-name</replaceable></option></term><listitem><para>The name of the
+session to be loaded.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-session-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Starting a session named "MySession"</title>
+<para><screen>example% <userinput>&cmd; --choose-session=MySession</userinput></screen></para>
+</example>
+<example role="example"><title>Starting the system default session, ignoring
+the user's session</title>
+<para><screen>example% <userinput>&cmd; --failsafe</userinput></screen></para>
+</example>
+<example role="example"><title>Setting the purge delay to 50000ms</title>
+<para><screen>example% <userinput>&cmd; --purge-delay=50000</userinput></screen></para>
+</example>
+<example role="example"><title>Setting the suicide delay to 50000ms</title>
+<para><screen>example% <userinput>&cmd; --suicide-delay=50000</userinput></screen></para>
+</example>
+<example role="example"><title>Setting the warning delay to 50000ms</title>
+<para><screen>example% <userinput>&cmd; --warn-delay=50000</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnome-session-1-envr"><title>&envr-tt;</title>
+<para><command>&cmd;</command> accepts all of the standard environment variables
+used by GNOME programs, as well as the SESSION_MANAGER environment variable. <command>&cmd;</command>
+also sets several environment variables for the use of its child processes.
+</para>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables:</para>
+<variablelist><varlistentry><term>SESSION_MANAGER</term><listitem><para>Used
+by session-manager-aware clients to contact <command>&cmd;</command>.</para>
+</listitem></varlistentry>
+<varlistentry><term>DISPLAY</term><listitem><para>Set to the X display being
+used by <command>&cmd;</command>.  Note that the <option>-display</option>
+option, if specified, overrides the setting of the DISPLAY environment variable.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-session-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-session-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><filename>/usr/bin/&cmd;</filename></term><listitem>
+<para>The command-line executable for the application.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><filename>/usr/share/gnome/default.session</filename></term><listitem>
+<para>Location of default session file.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><filename>~/.gnome2/session-options</filename></term><listitem>
+<para>User session options.  This file is created if the user saves a
+session using <command>gnome-session-save</command> and specifies a 
+different session name than the default.  The key
+CurrentSession in this file specifies which session to start by
+default.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><filename>~/.gnome2/session</filename></term><listitem>
+<para>User session file.  This file is created if the user saves a
+session either by running <command>gnome-session-save</command>
+or by other means, such as selecting to save session on logout.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-session-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-session
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-session-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gnome-session-save</refentrytitle><manvolnum>1</manvolnum>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</citerefentry></para>
+</refsect1>
+<refsect1 id="gnome-session-1-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2003, 2006.</para>
+</refsect1>
+</refentry>

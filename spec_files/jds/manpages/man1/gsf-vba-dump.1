@@ -1,0 +1,81 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/345  libgsf GNOME Structured File Library  -->
+<!ENTITY cmd "gsf-vba-dump">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gsf-vba-dump-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gsf-vba-dump</refentrytitle><manvolnum>1</manvolnum>
+  <refmiscinfo class="date">22 Oct 2008</refmiscinfo>
+  <refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+  <refmiscinfo class="software">&release;</refmiscinfo>
+  <refmiscinfo class="arch">generic</refmiscinfo>
+  <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+  </refmeta>
+
+<indexterm>
+  <primary>gsf-vba-dump</primary></indexterm>
+<indexterm>
+  <primary>Extract Visual Basic for Applications macros</primary></indexterm>
+
+<refnamediv id="gsf-vba-dump-1-name">
+  <refname>gsf-vba-dump</refname>
+  <refpurpose>Extract Visual Basic for Applications macros</refpurpose></refnamediv>
+
+<refsynopsisdiv id="gsf-vba-dump-1-synp">
+  <title>&synp-tt;</title>
+  <cmdsynopsis><command>&cmd;</command>
+    <arg choice="opt">Files</arg>
+    ...
+    </cmdsynopsis></refsynopsisdiv>
+
+<refsect1 id="gsf-vba-dump-1-desc"><title>&desc-tt;</title>
+  <para>Various Microsoft binary data formats, including Excel (.xls), Word(.doc) and PowerPoint (.ppt) can embed macro code streams. These macro streams are in P-code (intermediate language) compiled from Visual Basic for Applications (VBA). The &cmd; utility extracts these macro streams.
+  </para> </refsect1>
+
+<refsect1 id="gsf-vba-dump-1-opts"><title>&opts-tt;</title>
+</refsect1>
+
+<refsect1 id="gsf-vba-dump-1-attr"><title>&attr-tt;</title>
+  <para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+    <refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+    for descriptions of the following attributes:</para>
+
+  <informaltable frame="all">
+    <tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+    <colspec colname="COLSPEC1" colwidth="1*">
+    <thead>
+      <row>
+        <entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+        <entry align="center" valign="middle">ATTRIBUTE VALUE</entry></row> </thead>
+    <tbody>
+      <row>
+        <entry><para>Availability</para></entry><entry><para>SUNWlibgsf</para></entry></row>
+      <row>
+        <entry colname="COLSPEC0"><para>Interface stability</para></entry>
+        <entry colname="COLSPEC1"><para>Volatile</para></entry></row> </tbody> </tgroup> </informaltable> </refsect1>
+
+<refsect1 id="gsf-vba-dump-1-also"><title>&also-tt;</title>
+  <!--Reference to another man page-->
+  <!--Reference to a Help manual-->
+  <!--Reference to a book.-->
+  <para>
+    <citerefentry><refentrytitle>gsf</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+    <citerefentry><refentrytitle>gsf-office-thumbnailer</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+    <citerefentry><refentrytitle>gsf-vba-dump</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+    <citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry> </para>
+  <para>
+    <citetitle>The GNOME project page</citetitle>
+    <literal>http://www.gnome.org/</literal> </para> </refsect1>
+
+<refsect1 id="gsf-vba-dump-1-note"><title>&note-tt;</title>
+ <para>libgsf's primary authors are Morten Welinder <terra@gnome.org> and Jody Goldberg <jody@gnome.org>. The initial version of this manpage was written by J.H.M. Dassen (Ray) <jdassen@debian.org>. Updated by Lei Ju, Sun Microsystems Inc., 2008. </para>
+  </refsect1>
+  </refentry>

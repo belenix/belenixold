@@ -1,0 +1,108 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734 GNOME For Nevada -->
+<!ENTITY cmd "gst-feedback">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gst-feedback-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">14 Oct 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+generate debug information for GStreamer bug reports</primary></indexterm>
+<refnamediv id="gst-feedback-1-name"><refname>&cmd;</refname>
+<refpurpose>generate debug information for
+GStreamer bug reports</refpurpose></refnamediv>
+<refsynopsisdiv id="gst-feedback-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command></cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gst-feedback-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> scans the system for information that is useful to
+GStreamer developers to help diagnose user problems.  It is generally useful
+to attach <command>&cmd;</command> output when reporting bugs about GStreamer.
+</para>
+<para>
+Note: The current version of this script scans many directories:
+<filename>/usr/lib</filename>, <filename>/usr/local/lib</filename>,
+<filename>/home</filename>, <filename>/usr/include</filename>,
+<filename>/usr/local/include</filename>, and <filename>/home</filename>
+(again) for various GStreamer installations. Depending on your system, you
+might not want to do this.
+</para>
+<para>
+Note: <command>&cmd;</command> reports a lot of information about a system.
+Some of this information might be considered sensitive. If this is a concern,
+review the information before posting to a public forum such as the GStreamer
+bug tracking system.
+</para>
+</refsect1>
+<refsect1 id="gst-feedback-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Generating Feedback Information</title>
+<para><screen>example% <userinput><command>&cmd;</command></userinput></screen></para>
+</example>
+<example role="example">
+<title>Generating Feedback Information and Redirecting Output to a File</title>
+<para><screen>example% <userinput><command>&cmd;</command> &amp;> myfeedback
+</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gst-feedback-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable to generate debug info for GStreamer bug reports</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gst-feedback-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-media
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gst-feedback-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gst-inspect</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-launch</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-typefind</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-xmlinspect</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-xmllaunch</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gstreamer-properties</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgstreamer-0.10</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gst-feedback-1-note"><title>&note-tt;</title>
+<para>Original man page written by the GStreamer team at <literal>http://www.gstreamer.net/</literal>.
+</para>
+<para>Updated by Brian Cameron, Sun Microsystems Inc., 2004, 2006.</para>
+</refsect1>
+</refentry>

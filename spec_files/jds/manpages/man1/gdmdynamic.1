@@ -1,0 +1,199 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/417 GDM2 as default Solaris Display Manager -->
+<!--ARC : LSARC 2008/207 GNOME 2.22 -->
+<!ENTITY cmd "gdmdynamic">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gdmdynamic-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gdmdynamic</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">1 Sep 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gdmdynamic</primary></indexterm><indexterm><primary>
+GDM GDM Dynamic Server Management</primary></indexterm>
+<refnamediv id="gdmdynamic-1-name"><refname>gdmdynamic</refname><refpurpose>
+GDM GDM Dynamic Server Management</refpurpose></refnamediv>
+<refsynopsisdiv id="gdmdynamic-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>a <replaceable>display</replaceable></option> | <option>b <replaceable>display</replaceable></option> | <option>d <replaceable>display</replaceable></option> | <option>l <replaceable>pattern</replaceable></option></arg>
+<arg choice="opt"><option>r <replaceable>display</replaceable></option></arg>
+<arg choice="opt"><option>s <replaceable>int</replaceable></option></arg>
+<arg choice="opt"><option>t <replaceable>int</replaceable></option></arg>
+<arg choice="opt"><option>v <replaceable>int</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gdmdynamic-1-desc"><title>&desc-tt;</title>
+<para>&cmd;<command></command> allows the management of displays in a dynamic
+fashion.  It is typically used in environments where it is not possible to list
+the possible displays in the GDM configuration files.  The
+<command>&cmd;</command> command can be used to create a new display on a
+particular display number, run all newly created displays, or remove a display.
+The <command>&cmd;</command> can also be used to list all attached displays, or
+only attached displays that match a pattern.</para>
+
+<para>
+This program is designed to manage multiple simultaneous requests and
+works to avoid flooding the daemon with requests.  If the socket connection
+is busy, it will sleep and retry a certain number of times that can be tuned
+with the <option>s</option> and <option>t</option> options.</para>
+</refsect1>
+<refsect1 id="gdmdynamic-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="narrow">
+
+<varlistentry>
+<term><option>a <replaceable>display</replaceable></option></term>
+<listitem><para>
+Add a new display configuration, leaving it in the DISPLAY_CONFIG state.  The
+display will not actually be started until the display is released by calling
+<command>&cmd;</command> again with the <option>r</option> option.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>b</option></term>
+<listitem><para>
+Background mode.  Fork child to do the work and return immediately.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>d <replaceable>display</replaceable></option></term>
+<listitem><para>
+Delete a display, killing the X server and purging the display configuration.
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><option>l <replaceable>pattern</replaceable></option></term><listitem><para>
+List displays via the ATTACHED_SERVERS 
+<citerefentry><refentrytitle>gdmflexiserver</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+command.  Without a pattern, all attached displays are lsited.  With a pattern, all 
+attached displays match using glob characters '*', '?' and '[]'.</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>r <replaceable>display</replaceable></option></term>
+<listitem><para>
+Release (run) the specified <replaceable>display</replaceable> waiting in the
+DISPLAY_CONFIG state.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>s <replaceable>int</replaceable></option></term>
+<listitem><para>
+If the daemon socket is busy, <command>&cmd;</command> will sleep an amount of
+time between retries.  A random number of seconds 0-5 is added to the
+<replaceable>int</replaceable> value to help ensure that multiple calls to
+gdmdynamic do not all try to restart at the same time.  A value of zero causes
+the sleep time to be 1 second.  Default value is 8 seconds.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>t <replaceable>int</replaceable></option></term>
+<listitem><para>
+If the daemon socket is busy, <command>&cmd;</command> will retry to open the
+connection the specified number of times.  Default value is 15.
+</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><option>v</option></term>
+<listitem><para>
+Verbose mode.  Print diagnostic messages about each message sent to GDM.
+</para>
+</listitem></varlistentry>
+
+</variablelist></refsect1>
+<refsect1 id="gdmdynamic-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Adding display 2 using the [server-Standard] display configuration defined in the GDM configuration file.</title>
+<para><screen>example% <userinput>&cmd; -a "2=Standard"</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Adding display 3 providing the command to use.</title>
+<para><screen>example% <userinput>&cmd; -a "3=/usr/X11R6/bin/X -dev /dev/fb2"</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Release display 3.</title>
+<para><screen>example% <userinput>&cmd; -r 3</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Deleting display 3.</title>
+<para><screen>example% <userinput>&cmd; -d 3</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>List all displays via the ATTACHED_SERVERS command</title>
+<para><screen>example% <userinput>&cmd; -l</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>List all displays via the ATTACHED_SERVERS command using a pattern to match</title>
+<para><screen>example% <userinput>&cmd; -l "Xorg*"</userinput></screen></para>
+</example>
+
+</refsect1>
+<refsect1 id="gdmdynamic-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable for GDM Dynamic Server Management</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gdmdynamic-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-display-mgr
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gdmdynamic-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para>
+<citerefentry><refentrytitle>gdmflexiserver</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmphotosetup</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmthemetester</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmXnestchooser</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdm</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmsetup</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdm-restart</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gdmdynamic-1-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2006.</para>
+</refsect1>
+</refentry>

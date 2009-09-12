@@ -1,0 +1,149 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/384 Gtk+ 2.0 / glib 2.0-->
+<!--ARC : LSARC 2001/781 location of GTK/Glib-->
+<!--ARC : PSARC 2001/804 GTK/Glib becomes Contracted External-->
+<!ENTITY cmd "glib-gettextize">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="glib-gettextize-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>glib-gettextize</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">2 Oct 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>glib-gettextize</primary></indexterm><indexterm><primary>
+maintain the internationalization of a package that uses the GNU <command>
+gettext</command> command</primary></indexterm><refnamediv id="glib-gettextize-1-name">
+<refname>glib-gettextize</refname><refpurpose>maintain the internationalization of a
+package that uses the GNU <command>gettext</command> command</refpurpose>
+</refnamediv>
+<refsynopsisdiv id="glib-gettextize-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-copy</option></arg>
+<arg choice="opt"><option>-force</option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-version</option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>package-directory</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="glib-gettextize-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> helps to prepare a source package for being
+internationalized through 
+<citerefentry><refentrytitle>gettext</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+It is a variant of the <command>gettextize</command> that ships with
+<citerefentry><refentrytitle>gettext</refentrytitle><manvolnum>1</manvolnum></citerefentry>.</para>
+<para>
+&cmd; differs from gettextize in that it does not create an <filename>intl</filename>
+subdirectory and does not modify <filename>po/ChangeLog</filename> (note that newer
+versions of gettextize behave like this when called with the <option>-no-changelog</option> option.</para>
+
+</refsect1>
+<refsect1 id="glib-gettextize-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium"><varlistentry><term><option>c</option>, <option>-copy</option></term>
+<listitem><para>Copy the files instead of creating symbolic links.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>f</option>, <option>-force</option></term><listitem><para>Force new
+files to be created even if old versions of the files exist.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-help</option></term><listitem><para>Show usage
+and basic help information.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>-version</option></term><listitem><para>Show version
+information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="glib-gettextize-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>package-directory</replaceable></option></term><listitem>
+<para>Specify the package directory in which <command>&cmd;</command> should
+run. If no directory is specified, <command>&cmd;</command> runs in the
+current directory.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="glib-gettextize-1-exam"><title>&exam-tt;</title>
+<example role="example"><title>Set Up the Internationalization Framework for
+a Package</title>
+<para><screen>example% <userinput>&cmd;</userinput></screen></para>
+</example>
+<para>In this example, <command>&cmd;</command> is run in the package base
+directory.</para>
+</refsect1>
+<refsect1 id="glib-gettextize-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables that affect the execution of <command>&cmd;</command>: NLSPATH.
+</para>
+</refsect1>
+<refsect1 id="glib-gettextize-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow"><varlistentry><term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry><term><returnvalue>>0</returnvalue></term><listitem><para>Application
+exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="glib-gettextize-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide"><varlistentry><term><filename>/usr/bin/&cmd;</filename> 
+</term><listitem><para>The command-line executable for the application.</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/glib</filename></term><listitem>
+<para>Location of developer documentation</para></listitem>
+</varlistentry>
+</variablelist></refsect1>
+<refsect1 id="glib-gettextize-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-base-libs-devel
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Committed</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="glib-gettextize-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gdk-pixbuf-csource</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdk-pixbuf-query-loaders</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gettext</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-genmarshal</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-mkenums</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gobject-query</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gtk-query-immoedules-2.0</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gtk-update-icon-cache</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libglib-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle> for your platform.</para>
+</refsect1>
+<refsect1 id="glib-gettextize-1-note"><title>&note-tt;</title>
+<para>Written by Erwann Chenede, Sun Microsystems Inc., 2003, 2006.</para>
+</refsect1>
+</refentry>

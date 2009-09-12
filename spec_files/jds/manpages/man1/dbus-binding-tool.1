@@ -1,0 +1,299 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2006/368 D-BUS Message Bus System -->
+<!ENTITY cmd "dbus-binding-tool">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="dbus-binding-tool-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+audio previewer for the GNOME desktop.
+</primary></indexterm>
+<refnamediv id="dbus-binding-tool-1-name"><refname>&cmd;</refname><refpurpose>
+audio previewer for the GNOME desktop.</refpurpose></refnamediv>
+<refsynopsisdiv id="dbus-binding-tool-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-force</option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-ignore-unsupported</option></arg>
+<arg choice="opt"><option>-mode=<replaceable>pretty|glib-client|glib-server</replaceable></option></arg>
+<arg choice="opt"><option>-output=<replaceable>file</replaceable></option></arg>
+<arg choice="opt"><option>-prefix=<replaceable>symbol-prefix</replaceable></option></arg>
+<arg choice="opt"><option>-version</option></arg>
+<arg rep="repeat"><option role="nodash"><replaceable>file</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="dbus-binding-tool-1-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> is used to expose a GObject via D\-Bus.  As input, 
+<command>&cmd;</command> uses a D\-Bus Introspection XML file.  As output,
+the client-side or server-side bindings is generated.  This output is a header
+file which eases the use of a remote D\-Bus object.  Output is sent to standard
+out or to the filename specified with the <option>-output</option> argument.
+</para>
+</refsect2>
+</refsect1>
+<refsect1 id="pkg-config-1-exde"><title>&exde-tt;</title>
+<refsect2>
+<para>
+The following is a sample D\-Bus Introspection XML file which describes an
+object that exposes one method, named ManyArgs:
+</para>
+<screen>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;node name=&quot;/com/example/MyObject&quot;&gt;
+  &lt;interface name=&quot;com.example.MyObject&quot;&gt;
+    &lt;method name=&quot;ManyArgs&quot;&gt;
+      &lt;arg type=&quot;u&quot; name=&quot;x&quot; direction=&quot;in&quot; /&gt;
+      &lt;arg type=&quot;s&quot; name=&quot;str&quot; direction=&quot;in&quot; /&gt;
+      &lt;arg type=&quot;d&quot; name=&quot;trouble&quot; direction=&quot;in&quot; /&gt;
+      &lt;arg type=&quot;d&quot; name=&quot;d_ret&quot; direction=&quot;out&quot; /&gt;
+      &lt;arg type=&quot;s&quot; name=&quot;str_ret&quot; direction=&quot;out&quot; /&gt;
+    &lt;/method&gt;
+  &lt;/interface&gt;
+&lt;/node&gt;
+</screen>
+<para>
+<command>&cmd;</command> supports annotations in the XML format to further
+control how the bindings are generated.
+</refsect2>
+<refsect2>
+<title>client-side bindings</title>
+<para>
+When building client-side bindings, the <option>-mode=glib-client</option>
+argument is used.  The client-side bindings support the
+&quot;org.freedesktop.DBus.Glib.NoReply&quot; annotation.  This is specified
+within the &lt;method&gt; tag to indicate that the client is not expecting
+a reply to the method call, so a reply should not be sent.  This is
+often used to speed up rapid method calls where there are no &quot;out&quot;
+arguments, and not knowing if the method succeeded is an acceptable compromise
+to halve the traffic on the bus.  For example:
+</para>
+<screen>
+&lt;method name &quot;FooMethod&quot;&gt;
+  [...]
+  &lt;annotation name=&quot;org.freedesktop.DBus.GLib.NoReply&quot; value=&quot;yes&quot;/&gt;
+  [...]
+&lt;/method&gt;
+</screen>
+</para>
+</refsect2>
+<refsect2>
+<title>server-side bindings</title>
+<para>
+When building server-side bindings, the <option>-mode=glib-server</option>
+argument is used.  Also the <option>-prefix</option> argument must be used when
+building server-side bindings so that functions in the generated output are
+prefexed with the specified value.  The server-side bindings support the
+following annotations:
+</para>
+<para>
+&quot;org.freedesktop.DBus.GLib.CSymbol&quot;
+</para>
+<para>
+This annotation is used to specify the C symbol names for the various types
+(interface, method, etc.), if it differs from the name D\-Bus generates. 
+</para>
+<para>
+<screen>
+&lt;interface name=&quot;com.example.MyObject&quot;&gt;
+  &lt;annotation name=&quot;org.freedesktop.DBus.GLib.CSymbol&quot; value=&quot;my_object&quot;/&gt;
+  [...]
+  &lt;method name &quot;ManyArgs&quot;&gt;
+    &lt;annotation name=&quot;org.freedesktop.DBus.GLib.CSymbol&quot; value=&quot;my_object_many_args&quot;/&gt;
+    [...]
+  &lt;/method&gt;
+&lt;/interface&gt;
+</screen>
+</para>
+<para>
+&quot;org.freedesktop.DBus.GLib.Async&quot;
+</para>
+<para>
+This annotation marks the method implementation as an asynchronous function,
+which does not return a response straight away but will send the response at
+some later point to complete the call. This is used to implement non-blocking
+services where method calls can take time.
+</para>
+<para>
+When a method is asynchronous, the function prototype is different. It is
+required that the function conform to the following rules:
+</para>
+<itemizedlist>
+<listitem>The function must return a value of type gboolean; TRUE on success,
+and FALSE otherwise.</listitem>
+<listitem>The first parameter is a pointer to an instance of the object.
+</listitem
+<listitem>Following the object instance pointer are the method input values.
+</listitem>
+<listitem>The final parameter must be a (DBusGMethodInvocation *). This is used
+when sending the response message back to the client, by calling
+dbus_g_method_return or dbus_g_method_return_error.</listitem>
+</itemizedlist>
+<para>
+For example:
+</para>
+<screen>
+&lt;method name &quot;FooMethod&quot;&gt;
+  [...]
+  &lt;annotation name=&quot;org.freedesktop.DBus.GLib.Async&quot; value=&quot;yes&quot;/&gt;
+  [...]
+&lt;/method&gt;
+</screen>
+<para>
+&quot;org.freedesktop.DBus.GLib.Const&quot;
+</para>
+<para>
+This attribute can only be applied to &quot;out&quot; &lt;arg&gt; nodes, and
+specifies that the parameter is not being copied when returned. For example,
+this turns a 's' argument from a (char **) to a (const char **), and results in
+the argument not being freed by D\-Bus after the message is sent.  For example:
+</para>
+<screen>
+  &lt;arg type=&quot;u&quot; name=&quot;x&quot; direction=&quot;out&quot;&gt;
+    &lt;annotation name=&quot;org.freedesktop.DBus.GLib.Const&quot; value=&quot;&quot;/&gt;
+  &lt;/arg&gt;
+</screen>
+<para>
+&quot;org.freedesktop.DBus.GLib.ReturnVal&quot;
+</para>
+<para>
+This attribute can only be applied to &quot;out&quot; &lt;arg&gt; nodes, and
+alters the expected function signature. It currently can be set to two values:
+&quot;&quot; or &quot;error&quot;. The argument marked with this attribute is
+not returned via a pointer argument, but by the function's return value. If the
+attribute's value is the empty string, the (GError *) argument is also omitted
+so there is no standard way to return an error value. This is very useful for
+interfacing with existing code, as it is possible to match existing APIs. If
+the attribute's value is &quot;error&quot;, then the final argument is a
+(GError *) as usual.  For example:
+</para>
+<screen>
+  &lt;arg type=&quot;u&quot; name=&quot;x&quot; direction=&quot;out&quot;&gt;
+    &lt;annotation name=&quot;org.freedesktop.DBus.GLib.ReturnVal&quot; value=&quot;&quot;/&gt;
+  &lt;/arg&gt;
+</screen>
+
+</refsect1>
+<refsect1 id="dbus-binding-tool-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><option>-force</option></term>
+<listitem><para>
+Overwrite the output file if it already exists with a newer timestamp than the
+source files.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-help</option></term>
+<listitem><para>
+Display usage information.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-ignore-unsupported</option></term>
+<listitem><para>
+If set, then unsupported signatures for &lt;method&gt; parameters are
+ignored.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-mode=<replaceable>pretty|glib-client|glib-server</replaceable></option></term>
+<listitem><para>
+If the value is &quot;glib-client&quot;, then client bindings are generated.
+If the value is &quot;glib-server&quot;, then server bindings are generated.
+If the value is &quot;pretty&quot;, then the output is in a more human readable
+format.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-output=<replaceable>file</replaceable></option></term>
+<listitem><para>
+Specify the output <replaceable>file</replaceable>.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-prefix=<replaceable>symbol-prefix</replaceable></option></term>
+<listitem><para>
+Functions in the generated output are prefixed with the
+<replaceable>symbol-prefix</replaceable> value.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-version</option></term>
+<listitem><para>
+Display the version number of the <command>&cmd;</command> command.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-audio-preview-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry>
+<term><option role="nodash"><replaceable>file</replaceable></option></term>
+<listitem><para>
+A list of one or more input D\-Bus Introspection XML files to include in the
+generated output.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="dbus-binding-tool-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename> </term><listitem>
+<para>Executable for the D\-Bus Binding Tool application.</para>
+</listitem></varlistentry>
+</variablelist>
+</refsect1>
+<refsect1 id="dbus-binding-tool-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWdbus-glib
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="dbus-binding-tool-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>dbus-cleanup-sockets</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>dbus-daemon</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>dbus-monitor</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>dbus-send</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>dbus-uuidgen</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libdbus-glib-1</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="rhythmbox-1-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2009.</para>
+</refsect1>
+</refentry>

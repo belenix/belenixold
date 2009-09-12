@@ -1,0 +1,272 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY cmd "djpeg">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="djpeg-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>djpeg</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>djpeg</primary></indexterm><indexterm><primary>decompress
+a JPEG file to an image file</primary></indexterm>
+<refnamediv id="djpeg-1-name"><refname>djpeg</refname><refpurpose>decompress
+a JPEG file to an image file</refpurpose></refnamediv>
+<refsynopsisdiv id="djpeg-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash"><replaceable>
+options</replaceable></option></arg><arg choice="opt"><option role="nodash"><replaceable>
+filename</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="djpeg-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> decompresses the named JPEG file, or the standard
+input if no file is named, and produces an image file on the standard output.
+The following output file formats are currently supported:</para>
+<itemizedlist>
+<listitem><para>BMP</para></listitem>
+<listitem><para>GIF</para></listitem>
+<listitem><para>PGM, the PBMPLUS gray-scale format</para></listitem>
+<listitem><para>PPM, the PBMPLUS color format</para></listitem>
+<listitem><para>RLE, the Utah Raster Toolkit format</para></listitem>
+<listitem><para>Targa</para></listitem>
+</itemizedlist>
+<para>RLE is supported only if the URT library is available.</para>
+</refsect1>
+<refsect1 id="djpeg-1-opts"><title>&opts-tt;</title>
+<para>All options may be abbreviated. For example, <option>grayscale</option>
+may be written <option>gray</option> or <option>gr</option>.  Upper and lower
+case are equivalent. For example, <option>BMP</option> is the same as <option>
+bmp</option>. British spellings are also accepted. For example, <option>greyscale
+</option>.</para>
+<refsect2 id="djpeg-1-opts-basic">
+<title>Basic Options</title>
+<para>The following basic options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>bmp</option></term><listitem><para>Specify that
+the output file is in BMP format, Windows flavor. 8-bit colormapped format
+is displayed if <option>colors</option> or <option>grayscale</option> is specified,
+or if the JPEG file is grayscale. Otherwise, 24-bit full-color format is displayed.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>colors <replaceable>N</replaceable></option></term>
+<listitem><para>Reduce the image to at most <replaceable>N</replaceable> colors.
+This option reduces the number of colors used in the output image, so that
+the output image can be displayed on a colormapped display or stored in a
+colormapped file format. For example, if you have an 8-bit display, you must
+reduce to 256 colors or less. </para>
+<para>You can also use <option>quantize</option> to specify this option. However, <option>
+colors</option> is the recommended option name. The <option>quantize</option>
+option is provided only for backwards compatibility.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>fast</option></term><listitem><para>Select the
+recommended processing options for fast, low-quality output. The default options
+are chosen for highest quality output. Currently, this is equivalent to <option>
+dct fast</option> <option>nosmooth</option> <option>onepass</option> <option>
+dither ordered</option>.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>gif</option></term><listitem><para>Specify that
+the output file is in GIF format. GIF does not support more than 256 colors,
+so <option>colors 256</option> is assumed unless you specify a smaller number
+of colors.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>grayscale</option></term><listitem><para>Create
+a monochrome image file even if the JPEG file is a color file. This option
+is useful for viewing images on monochrome displays. <command>&cmd;</command>
+runs noticeably faster in this mode.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>os2</option></term><listitem><para>Specify that
+the output file is in BMP format, OS/2 1.x flavor. 8-bit colormapped format
+is displayed if <option>colors</option> or <option>grayscale</option> is specified,
+or if the JPEG file is grayscale. Otherwise, 24-bit full-color format is displayed.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option>pnm</option></term><listitem><para>Specify that
+the output file is in PBMPLUS format. PGM format is displayed if <option>
+grayscale</option> is specified, or if the JPEG file is grayscale. Otherwise,
+PPM format is displayed.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>rle</option></term><listitem><para>Specify that
+the output file is in RLE format. This option requires the URT library.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>scale <replaceable>M</replaceable>/<replaceable>
+N</replaceable></option></term><listitem><para>Scale the output image by a
+factor <replaceable>M</replaceable>/<replaceable>N</replaceable>. Currently,
+the scale factor must be 1/1, 1/2, 1/4, or 1/8. Scaling is useful if the image
+is larger than  your screen. <command>&cmd;</command> runs much faster when
+scaling down the output.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>targa</option></term><listitem><para>Specify that
+the output file is in Targa format. Grayscale format is displayed if <option>
+grayscale</option> is specified, or if the JPEG file is grayscale. Colormapped
+format is displayed if <option>colors</option> is specified. Otherwise, 24-bit
+full-color format is displayed.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="djpeg-1-opts-int">
+<title>Intermediate Options</title>
+<para>The following intermediate options are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option>dct fast</option></term><listitem><para>Use the
+fast integer DCT method. This method is less accurate than the integer DCT
+method or the floating-point DCT method.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>dct float</option></term><listitem><para>Use the
+floating-point DCT method. The float method is very slightly more accurate
+than the int method, but is much slower unless your machine has very fast
+floating-point hardware. The results of the floating-point method may vary
+slightly across machines, while the integer methods should give the same results
+everywhere.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>dct int</option></term><listitem><para>Use the
+integer DCT method. This is the default method.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>dither fs</option></term><listitem><para>Use Floyd-Steinberg
+dithering in color quantization. By default, Floyd-Steinberg dithering is
+applied when quantizing colors. This process is slow but usually produces
+the best results. This option has no effect unless color quantization is being
+done.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>dither none</option></term><listitem><para>Do
+not use dithering in color quantization. No dithering is fast but is usually
+of poor quality. This option has no effect unless color quantization is being
+done.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>dither ordered</option></term><listitem><para>
+Use ordered dithering in color quantization. Ordered dither is a compromise
+between speed and quality. Ordered dither is only available in <option>onepass
+</option> mode. This option has no effect unless color quantization is being
+done.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>map <replaceable>file</replaceable></option></term>
+<listitem><para>Quantize to the colors used in the specified image file. This
+option is useful for producing multiple files with identical color maps, or
+for forcing a predefined set of colors to be used. <replaceable>file</replaceable>
+must be a GIF or PPM file. This option overrides the <option>colors</option>
+and <option>onepass</option> options.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>maxmemory <replaceable>N</replaceable></option></term>
+<listitem><para>Set the limit for the amount of memory to use in processing
+large images. <replaceable>N</replaceable> is specified in thousands of bytes,
+or in millions of bytes if "M" is specified with the number. For example, <option>
+max 4m</option> selects 4000000 bytes. If more space is needed, temporary
+files are used.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>nosmooth</option></term><listitem><para>Use a
+faster, lower-quality upsampling routine.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>onepass</option></term><listitem><para>Use one-pass
+instead of two-pass color quantization. The one-pass method is faster and
+requires less memory, but produces a lower-quality image. The <option>onepass
+</option> option is ignored unless you also specify the <option>colors <replaceable>
+N</replaceable></option> option. The one-pass method is always used for grayscale
+output, the two-pass method provides no improvement for such output.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>outfile <replaceable>name</replaceable></option></term>
+<listitem><para>Send the output image to the named file, instead of to the
+standard output.</para>
+</listitem></varlistentry>
+<varlistentry><term><option>verbose</option></term><listitem><para>Display
+version information at startup, and enable debug printout. The <option>vv
+</option> option displays more verbose output than the <option>v</option>
+option. The <option>vvv</option> option displays the most verbose output.
+You can also use <option>debug</option> to specify the verbose option.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="djpeg-1-oper"><title>&oper-tt;</title>
+<para>The following operands are supported:</para>
+<variablelist termlength="narrow">
+<varlistentry><term><option role="nodash"><replaceable>filename</replaceable></option></term>
+<listitem><para>The name of the JPEG file to be decompressed.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="djpeg-1-exde"><title>&exde-tt;</title>
+<refsect2 id="djpeg-1-exde-hints">
+<title>Hints</title>
+<para>To get a quick preview of an image, use the <option>grayscale</option>
+or <option>scale</option> options, or a combination of both options. For example, <option>
+grayscale</option> <option>scale 1/8</option> is the fastest case.</para>
+<para>Several options trade image quality to gain speed. The <option>fast
+</option> option configures the recommended settings.</para>
+<para>The <option>dct fast</option> and <option>nosmooth</option> options
+gain speed for a small sacrifice in quality. When producing a color-quantized
+image, <option>onepass</option> <option>dither ordered</option> is fast but
+much lower quality than the default behavior. <option>dither none</option>
+may give acceptable results in two-pass mode, but is seldom tolerable in one-pass
+mode. </para>
+<para>If you have very fast floating point hardware, <option>dct float</option>
+may be even faster than <option>dct fast</option>. However, on most machines, <option>
+dct float</option> is slower than <option>dct int</option>. In such cases,
+do not use <option>dct float</option>, because the theoretical accuracy advantage
+is too small to be significant in practice.</para>
+</refsect2>
+</refsect1>
+<refsect1 id="djpeg-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Decompressing the JPEG File test.jpg, Quantizing to 256 Colors, and
+Saving the Output in 8&ndash;bit BMP Format as test.bmp</title>
+<para><screen>example% <userinput>&cmd; -colors 256 -bmp test.jpg > test.bmp
+</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="djpeg-1-envr"><title>&envr-tt;</title>
+<para><command>&cmd;</command> uses the following environment variables:</para>
+<variablelist>
+<varlistentry><term>JPEGMEM</term><listitem><para>The value of this environment
+variable, if set, is the default memory limit. The value is specified as described
+for the <option>maxmemory</option> option. JPEGMEM overrides the default value
+specified when the program was compiled, and is in turn overridden by an explicit <option>
+maxmemory</option> option.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="djpeg-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWjpg</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="djpeg-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Wallace, Gregory K., <citetitle>The JPEG Still Picture Compression Standard
+</citetitle> Communications of the ACM, April 1991 (vol. 34, no. 4), pp. 30-44.
+</para>
+<para><citerefentry><refentrytitle>cjpeg</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>jpegtran</refentrytitle><manvolnum>
+1</manvolnum></citerefentry>, <citerefentry><refentrytitle>rdjpgcom</refentrytitle>
+<manvolnum>1</manvolnum></citerefentry>, <citerefentry><refentrytitle>wrjpgcom
+</refentrytitle><manvolnum>1</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="djpeg-1-note"><title>&note-tt;</title>
+<para>Arithmetic coding is not supported. <command>&cmd;</command> produces
+uncompressed GIF files. These large files are readable by standard GIF decoders.
+</para>
+<para>This man page was originally written by the Independent JPEG Group.
+Updated by Breda McColgan, Sun Microsystems Inc., 2004. </para>
+</refsect1>
+</refentry>

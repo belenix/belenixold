@@ -1,0 +1,142 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2006/182 a videoconferencing and VOIP/IP-Telephony application-->
+<!ENTITY cmd "ekiga">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2007, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="ekiga-1">
+<!-- %Z%%M% %I% %E% SMI; --> 
+<refmeta><refentrytitle>ekiga</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">08 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>ekiga</primary></indexterm><indexterm><primary>SIP and H.323 Voice over IP and Videoconferencing</primary></indexterm>
+<refnamediv id="ekiga-1-name"><refname>ekiga</refname><refpurpose>SIP and H.323 Voice over IP and Videoconferencing</refpurpose></refnamediv>
+<refsynopsisdiv id="ekiga-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg><option>-debug=<replaceable>level</replaceable></option></arg>
+<arg><option>-call=<replaceable>url</replaceable></option></arg>
+<arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="ekiga-1-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> is a SIP and H.323 VoIP, IP Telephony and Video
+Conferencing application which complies to the SIP and H.323 protocols.  It can
+connect to a variety of other SIP and H323 applications including specific
+hardware. &cmd; can work with or without a webcam, and is able to create pure
+audio communications or traditional audio+video communications. &cmd; was
+formerly known as GnomeMeeting. &cmd; has been designed for the GNOME desktop
+and therefore uses the GConf daemon (gconfd-2) for storing its userdata.
+</para>
+</refsect1>
+<refsect1 id="ekiga-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para><variablelist termlength="medium">
+<varlistentry>
+<term><option>d</option>, <option>-debug</option>=<replaceable>level</replaceable></option></term>
+<listitem><para>
+Turn on debugging (on the console), <replaceable>level</replaceable> should be
+between 1 and 6.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>c</option>, <option>-call</option>=<replaceable>url</replaceable></option></term>
+<listitem><para>
+Calls the given <replaceable>url</replaceable>. &cmd; can be running or not
+when invoking that option. SIP, H.323 and CALLTO URLs are supported.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications. See
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="ekiga-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline">
+
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem>
+<para>
+Executable for &cmd;
+</para>
+</listitem></varlistentry>
+
+<varlistentry><term><filename>/etc/gconf/gconf.xml.defaults/apps/&cmd;</filename></term></listitem>
+<para>The system wide configuration file. See
+<citerefentry><refentrytitle>gconftool-2</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+for further details on GConf.  The actual place can differ depending on your
+system's configuration</para>
+</listitem></varlistentry>
+
+<varlistentry>
+<term><filename>$HOME/.gconf/apps/&cmd;</filename></term><listitem>
+<para>Per user configuration file. See
+<citerefentry><refentrytitle>gconftool-2</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+for further details</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="ekiga-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>Launching &cmd;</title>
+<para><screen>example% <userinput>&cmd; </userinput></screen></para>
+</example></refsect1>
+
+<refsect1 id="ekiga-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry>
+<term><returnvalue>0</returnvalue></term>
+<listitem><para>Application exited successfully</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><returnvalue>>0</returnvalue></term>
+<listitem><para>Application exited with failure</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="ekiga-1-attr"><title>&attr-tt;</title><informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-meeting</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<refsect1 id="ekiga-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gconftool-2</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>More documentation is available in the manual available through Ekiga's
+Help menu.  There is also a FAQ at <literal>http://www.ekiga.org/</literal></para>
+</refsect1>
+
+<refsect1 id="ekiga-1-note"><title>&note-tt;</title>
+<para>Original man page written by Damien Sandras(dsandras at seconix dot com) </para>
+<para>Updated by Elaine Xiong, Sun Microsystems Inc., 2007.</para>
+</refsect1>
+</refentry>

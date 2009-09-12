@@ -1,0 +1,358 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2006/368 D-BUS Message Bus System -->
+<!ENTITY cmd "dbus-launch">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2007,2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="dbus-launch-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">25 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+Utility to start a message bus from a shell script
+</primary></indexterm><refnamediv id="dbus-launch-1-name">
+<refname>&cmd;</refname><refpurpose>
+Utility to start a message bus from a shell script
+</refpurpose></refnamediv>
+<refsynopsisdiv id="dbus-launch-1-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-auto-syntax</option></arg>
+<arg choice="opt"><option>-config-file=<replaceable>filename</replaceable></option></arg>
+<arg choice="opt"><option>-close-stderr</option></arg>
+<arg choice="opt"><option>-csh-syntax</option></arg>
+<arg choice="opt"><option>-exit-with-session</option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-sh-syntax</option></arg>
+<arg choice="opt"><option>-version</option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="dbus-launch-1-desc"><title>&desc-tt;</title>
+<para>
+The <command>&cmd;</command> command is used to start a session bus instance of
+<command>dbus-daemon</command> from a shell script.  It would normally be
+called from a user's login scripts.  Unlike the daemon itself,
+<command>&cmd;</command> exits, so backticks or the $() construct can be used
+to read information from <command>&cmd;</command>.
+</para>
+<para>
+With no arguments, <command>&cmd;</command> will launch a session bus instance
+and print the address and pid of that instance to standard output.
+</para>
+<para>
+You may specify a program to be run; in this case, <command>&cmd;</command>
+will launch a session bus instance, set the appropriate environment variables
+so the specified program can find the bus, and then execute the specified
+program, with the specified arguments.  See below for examples.
+</para>
+<para>
+If you launch a program, <command>&cmd;</command> will not print the
+information about the new bus to standard output.
+</para>
+<para>
+When <command>&cmd;</command> prints bus information to standard output, by
+default it is in a simple key-value pairs format.  However, you may request
+several alternate syntaxes using the <option>-sh-syntax</option>,
+<option>-csh-syntax</option>, <option>-binary-syntax</option>, or
+<option>-auto-syntax</option> options.  Several of these cause
+<command>&cmd;</command> to emit shell code to set up the environment.
+</para>
+<para>
+With the <option>-auto-syntax</option> option, <command>&cmd;</command> looks
+at the value of the SHELL environment variable to determine which shell syntax
+should be used.  If SHELL ends in &quot;csh&quot;, then csh-compatible code is
+emitted; otherwise Bourne shell code is emitted.  Instead of passing
+<option>-auto-syntax</option>, you may explicity specify a particular one by
+using <option>-sh-syntax</option> for Bourne syntax, or
+<option>-csh-syntax</option> for csh syntax.  In scripts, it is more robust to
+avoid <option>-auto-syntax</option> and you hopefully know which shell your
+script is written in.
+</para>
+<para>
+See <literal>http://www.freedesktop.org/software/dbus/</literal> for more
+information about D\-Bus.  Also see the man page for
+<command>dbus-daemon</command>.
+</para>
+</refsect1>
+<refsect1 id="dbus-launch-1-exde"><title>&exde-tt;</title>
+<refsect2>
+<title>AUTOMATIC LAUNCHING</title>
+<para>
+If DBUS_SESSION_BUS_ADDRESS is not set for a process that tries to use D\-Bus,
+by default the process will attempt to invoke <command>&cmd;</command> with the
+<option>-autolaunch</option> option to start up a new session bus or find the
+existing bus address on the X display or in a file in
+<filename>~/.dbus/session-bus/</filename>.
+</para>
+<para>
+Whenever an autolaunch occurs, the application that had to start a new bus will
+be in its own little world; it can effectively end up starting a whole new
+session if it tries to use a lot of bus services. This can be suboptimal or
+even totally broken, depending on the application and what it tries to do.
+</para>
+<para>
+There are two common reasons for autolaunch. One is
+<citerefentry><refentrytitle>ssh</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+to a remote machine.  The ideal fix for that would be forwarding of
+DBUS_SESSION_BUS_ADDRESS in the same way that DISPLAY is forwarded.  In the
+meantime, you can edit the <filename>session.conf</filename> config file to
+have your session bus listen on TCP, and manually set
+DBUS_SESSION_BUS_ADDRESS, if you like.
+</para>
+<para>
+The second common reason for autolaunch is an
+<citerefentry><refentrytitle>su</refentrytitle><manvolnum>1m</manvolnum></citerefentry>.
+to another user, and display of X applications running as the second user on
+the display belonging to the first user. Perhaps the ideal fix in this case
+would be to allow the second user to connect to the session bus of the first
+user, just as they can connect to the first user's display.  However, a
+mechanism for that has not been coded.
+</para>
+<para>
+You can always avoid autolaunch by manually setting DBUS_SESSION_BUS_ADDRESS.
+Autolaunch happens because the default address (if none is set) is
+&quot;autolaunch:&quot;, so if any other address is set there will be no
+autolaunch.  You can however include autolaunch in an explicit session bus
+address as a fallback, for example
+DBUS_SESSION_BUS_ADDRESS=&quot;something:,autolaunch:&quot; - in that case if
+the first address doesn't work, processes will auto- launch. (The bus address
+variable contains a comma-separated list of addresses to try.)
+</para>
+<para>
+The <option>-autolaunch</option> option is considered an internal
+implementation detail of libdbus, and in fact there are plans to change it.
+There is no real reason to use it outside of the libdbus implementation anyhow.
+</para>
+</refsect2>
+</refsect1>
+<refsect1 id="dbus-launch-1-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><option>-autolaunch=<replaceable>machineid</replaceable></option></term>
+<listitem><para>
+This option implies that <command>&cmd;</command> should scan for a
+previously-started session and reuse the values found there.  If no session is
+found, it will start a new session.  The <option>-exit-with-session</option>
+option is implied if <option>-autolaunch</option> is given.  This option is for
+the exclusive use of libdbus, you do not want to use it manually.  It may
+change in the future.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-auto-syntax</option></term>
+<listitem><para>
+Choose <option>-csh-syntax</option> or <option>-sh-syntax</option> based on
+the SHELL environment variable.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-binary-syntax</option></term>
+<listitem><para>
+Write to <literal>stdout</literal> a null-terminated bus address, then the bus
+PID as a binary integer of size sizeof(pid_t), then the bus X window ID as a
+binary integer of size sizeof(long).  Integers are in the machine's byte order,
+not network byte order or any other canonical byte order.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-close-stderr</option></term>
+<listitem><para>
+Close the standard error output stream before starting the D\-Bus daemon.  This
+is useful if you want to capture <command>&cmd;</command> error messages but
+you do not want <command>dbus\-daemon</command> to keep the stream open to your
+application.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-config-file=<replaceable>filename</replaceable></option></term>
+<listitem><para>
+Pass <option>-config-file=<replaceable>filename</replaceable></option> to the
+bus daemon, instead of passing it the <option>-session</option> argument.  See
+the man page for <command>dbus\-daemon</command>.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-csh-syntax</option></term>
+<listitem><para>
+Emit csh compatible code to set up environment variables.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-exit-with-session</option></term>
+<listitem><para>
+If this option is provided, a persistent &quot;babysitter&quot; process will be
+created that watches <literal>stdin</literal> for HUP and tries to connect to
+the X server.  If this process gets a HUP on <literal>stdin</literal> or loses
+its X connection, it kills the message bus daemon.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>?</option>, <option>-help</option></term>
+<listitem><para>
+Show help information on standard output and exit.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-sh-syntax</option></term>
+<listitem><para>
+Emit Bourne-shell compatible code to set up environment variables.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-version</option></term>
+<listitem><para>
+Print the version of <command>&cmd;</command>.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="dbus-launch-1-exam"><title>&exam-tt;</title>
+<example role="example">
+<title>How to use <command>&cmd;</command> with a sh-compatible shell to start
+the per-session bus daemon</title>
+<para><screen>
+       ## test for an existing bus daemon, just to be safe
+       if test -z &quot;$DBUS_SESSION_BUS_ADDRESS&quot; ; then
+           ## if not found, launch a new one
+           eval `&cmd; --sh-syntax --exit-with-session`
+           echo &quot;D\-Bus per-session daemon address is: $DBUS_SESSION_BUS_ADDRESS&quot;
+       fi
+</screen></para>
+</example>
+<example role="example">
+<title>Use <command>&cmd;</command> to run your main session program</title>
+<para><screen>
+       example% <userinput>&cmd; --exit-with-session gnome-session</userinput>
+</screen></para>
+<para>
+The above would likely be appropriate for <filename>~/.xsession</filename> or
+<filename>~/.Xclients</filename>.
+</example>
+</refsect1>
+<refsect1 id="dbus-launch-1-envr"><title>&envr-tt;</title>
+<para>
+See
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+for descriptions of the following environment variables:
+</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term>DBUS_SESSION_BUS_ADDRESS</term>
+<listitem><para>
+The address of the login session message bus.  If this variable is not set,
+applications may also try to read the address from the X Window System root
+window property _DBUS_SESSION_BUS_ADDRESS.  The root window property
+must have type STRING.  The environment variable should have precedence over the root window property.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>DBUS_VERBOSE</term>
+<listitem><para>
+Set DBUS_VERSION=1 to enable debugging, if D\-Bus was compiled with verbose
+debug mode enabled.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>SHELL</term>
+<listitem><para>
+When the <option>-auto-syntax</option> is used, then <command>&cmd;</command>
+checks the SHELL environment variable.  If it ends in &quot;csh&quot;, then the
+<option>-csh-syntax</option> option will be used, otherwise the
+<option>-sh-syntax</option> will be used.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="dbus-launch-1-exit"><title>&exit-tt;</title>
+<para>The following exit values are returned:</para>
+<variablelist termlength="xtranarrow">
+<varlistentry>
+<term><returnvalue>0</returnvalue></term>
+<listitem><para>
+Application exited successfully
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><returnvalue>>0</returnvalue></term>
+<listitem><para>
+Application exited with failure
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="dbus-launch-1-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry>
+<term><filename>/usr/bin/&cmd;</filename></term>
+<listitem><para>
+Executable for <command>&cmd;</command>
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><filename>/etc/dbus-1/session.conf</filename></term>
+<listitem><para>
+Configuration file for D\-Bus session services.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="dbus-launch-1-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry>
+<para>Availability</para>
+</entry><entry>
+<para>SUNWdbus</para>
+</entry></row><row><entry colname="COLSPEC0">
+<para>Interface stability</para>
+</entry><entry colname="COLSPEC1">
+<para>Volatile</para>
+</entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="dbus-launch-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>dbus-cleanup-sockets</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>dbus-daemon</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>dbus-monitor</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>dbus-send</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>dbus-uuidgen</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libdbus-glib-1</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="dbus-launch-1-note"><title>&note-tt;</title>
+<para>
+For authorship information refer to
+<literal>http://www.freedesktop.org/software/dbus/doc/AUTHORS</literal>.
+Updated by Brian Cameron, Sun Microsystems Inc., 2007.
+</para>
+<para>
+Please send bug reports to the D\-Bus mailing list or bug
+tracker, see
+<literal>http://www.freedesktop.org/software/dbus/</literal>
+</para>
+</refsect1>
+</refentry>

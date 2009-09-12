@@ -1,0 +1,214 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/207  -->
+<!ENTITY cmd "mousetweaks">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<!--**************************************************************************************************-->
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<!--**************************************************************************************************-->
+<refentry id="mousetweaks-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<!--**************************************************************************************************-->
+<refmeta>
+<refentrytitle>&cmd;</refentrytitle>
+<manvolnum>1</manvolnum>
+<refmiscinfo class="date">29 Oct 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<!--**************************************************************************************************-->
+<indexterm><primary>&cmd;</primary></indexterm>
+<!--**************************************************************************************************-->
+<refnamediv id="mousetweaks-1-name">
+<refname>&cmd;</refname>
+<refpurpose>Accessibility enhancements for the mouse</refpurpose>
+</refnamediv>
+<!--**************************************************************************************************-->
+<refsect1 id="mousetweaks-1-syno">
+<title>SYNOPSIS</title>
+
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="opt"><option>-enable-dwell</option></arg>
+<arg choice="opt"><option>-enable-secondary</option></arg>
+<arg choice="opt"><option>-dwell-time=<replaceable>FLOAT</replaceable></option></arg>
+<arg choice="opt"><option>-secondary-time=<replaceable>FLOAT</replaceable></option></arg>
+<arg choice="opt"><option>m|--dwell-mode=<replaceable>STRING</replaceable></option></arg>
+<arg choice="opt"><option>c|--show-ctw</option></arg>
+<arg choice="opt"><option>x|--ctw-x=<replaceable>INT</replaceable></option></arg>
+<arg choice="opt"><option>y|--ctw-y=<replaceable>INT</replaceable></option></arg>
+<arg choice="opt"><option>t|--threshold=<replaceable>INT</replaceable></option></arg>
+<arg choice="opt"><option>a|--animate-cursor</option></arg>
+<arg choice="opt"><option>s|--shutdown</option></arg>
+<arg choice="opt"><option>?|--help</option></arg>
+</cmdsynopsis>
+</refsect1>
+
+<!--**************************************************************************************************-->
+<refsect1 id="mousetweaks-1-desc">
+<title>DESCRIPTION</title>
+<para>
+mousetweaks is a daemon that provides various mouse features for the GNOME desktop.
+It depends on the Assistive Technology Service Provider Interface (AT-SPI).
+<para>
+</refsect1>
+<!--**************************************************************************************************-->
+<refsect1 id="mousetweaks-1-opti">
+<title>OPTION</title>
+<variablelist termlength="wholepage">
+<varlistentry>
+<term><filename>--enable-dwell</filename></term>
+<listitem><para>Automatically perform mouse clicks without using a physical button.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>--enable-secondary</filename></term>
+<listitem><para>Trigger the secondary mouse button 
+when the primary mouse button is held down for a specified amount of time.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>--dwell-time=FLOAT</filename></term>
+<listitem><para>Time to keep the pointer motionless before a dwell click is performed.
+Range: 0.2 - 3.0 seconds.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>--secondary-time=FLOAT</filename></term>
+<listitem><para>Time to hold the primary mouse button before a simulated secondary
+click is performed. Range: 0.5 - 3.0 seconds.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>-m, --dwell-mode=STRING</filename></term>
+<listitem><para>Select a dwelling mode. Available arguments are: window, gesture</para>
+<para>WINDOW:Select the active click type from a window or a panel applet.</para>
+<para>GESTURE:Perform clicks by moving in different directions after the cursor changes its shape.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>-c, --show-ctw</filename></term>
+<listitem><para>Show the click-type window. Only useful in combination with dwell-mode=window.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>-x, --ctw-x=INT</filename></term>
+<listitem><para>X Position of the click-type window on screen.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>-y, --ctw-y=INT</filename></term>
+<listitem><para>Y Position of the click-type window on screen.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>-t, --threshold=INT</filename></term>
+<listitem><para>Ignore small pointer movements. Range 0 - 30 pixels.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>-a, --animate-cursor</filename></term>
+<listitem><para>Show elapsed time as cursor overlay.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>-s, --shutdown</filename></term>
+<listitem><para>Stop the mousetweaks daemon.</para></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+<!--**************************************************************************************************-->
+<refsect1 id="mousetweaks-1-attr">
+<title>ATTRIBUTES</title>
+<para>See 
+<olink targetdocent="REFMAN5" localinfo="attributes-5">
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</olink>
+for descriptions of the following attributes:
+</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1">
+<colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row>
+<entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+<entry align="center" valign="middle">ATTRIBUTE VALUE</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><para>Availability</para></entry>
+<entry><para>SUNWgnome-a11y-mousetweaks</para></entry>
+</row>
+<row>
+<entry colname="COLSPEC0"><para>Interface stability</para></entry>
+<entry colname="COLSPEC1"><para>Volatile</para></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<!--**************************************************************************************************-->
+<refsect1 id="mousetweaks-1-file">
+<title>FILES</title>
+<variablelist termlength="wholepage">
+<varlistentry>
+<term><filename>~/.mousetweaks.pid</filename></term>
+<listitem><para>The daemon creates a lock file in the users home directory to keep track.</para></listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+<!--**************************************************************************************************-->
+<refsect1 id="mousetweaks-1-also">
+<title>SEE ALSO</title>
+<!--Reference to another man page-->
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>dwell-click-applet</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>pointer-capture-applet</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+Assistive Technology Service Provider Interface (AT-SPI)
+</para>
+<para>
+the homepage of Mousetweaks :
+<itemizedlist mark='none'>
+<listitem>
+<para><olink>http://live.gnome.org/Mousetweaks/Home</olink></para>
+</listitem>
+</para>
+</refsect1>
+<!--**************************************************************************************************-->
+<refsect1 id="mousetweaks-1-bugs">
+<title>BUGS</title>
+<para>
+Report bugs to <olink>http://bugzilla.gnome.org/</olink>
+</para>
+</refsect1>
+<!--**************************************************************************************************-->
+<refsect1 id="mousetweaks-1-lice">
+<title>LICENSE</title>
+<para>
+Licenced under the GNU General Public License v3 or later.
+</para>
+</refsect1>
+<!--**************************************************************************************************-->
+<refsect1 id="mousetweaks-1-hist">
+<title>HISTORY</title>
+<para>
+mousetweaks was written by Gerd Kohlberger (lowfi@chello.at)
+</para>
+<para>
+October 29 2008:
+This man pages was modified by Yue Wang (Yue.Wang@Sun.COM).
+</para>
+</refsect1>
+<!--**************************************************************************************************-->
+</refentry>
+
+
+
+
+
+
+
+
+
+

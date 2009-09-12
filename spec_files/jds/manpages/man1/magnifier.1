@@ -1,0 +1,380 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/504  Orca Screen Reader/Magnifier for the JDS-->
+<!ENTITY envr-tt "ENVIRONMENT VARIABLES">
+<!ENTITY cmd "magnifier">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+
+<refentry id="magnifier-1">
+
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>1</manvolnum>
+<refmiscinfo class="date">7 Aug 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>standalone magnification service for GNOME</primary></indexterm>
+
+<refnamediv id="magnifier-1-name">
+<refname>&cmd;</refname>
+<refpurpose>standalone magnification service for GNOME</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="magnifier-1-synp"><title>&synp-tt;</title>
+
+<!-- Calendar Dialog -->
+<cmdsynopsis><command>&cmd;</command>
+<arg choice="plain"><option>-fullscreen</option> | <option>-horizontal</option> | <option>-vertical</option></arg>
+<arg><option>-border-color=<replaceable>long</replaceable></option></arg>
+<arg><option>-border-size=<replaceable>int</replaceable></option></arg>
+<arg><option>-cursor-color=<replaceable>long</replaceable></option></arg>
+<arg><option>-cursor-scale-factor=<replaceable>float</replaceable></option></arg>
+<arg><option>-cursor-set=<replaceable>string</replaceable></option></arg>
+<arg><option>-cursor-size=<replaceable>int</replaceable></option></arg>
+<arg choice="opt"><option>-help</option></arg>
+<arg choice="opt"><option>-invert-image</option></arg>
+<arg choice="opt"><option>-mouse-follow</option></arg>
+<arg><option>-mouse-latency=<replaceable>int</replaceable></option></arg>
+<arg><option>-no-initial-region</option></arg>
+<arg><option>-override-redirect</option></arg>
+<arg><option>-refresh-time=<replaceable>int</replaceable></option></arg>
+<arg choice="opt"><option>-smooth-scrolling</option></arg>
+<arg><option>-smoothing-type=<replaceable>string</replaceable></option></arg>
+<arg><option>-source-display=<replaceable>string</replaceable></option></arg>
+<arg><option>-target-display=<replaceable>string</replaceable></option></arg>
+<arg><option>-timing-delta-x=<replaceable>int</replaceable></option></arg>
+<arg><option>-timing-delta-y=<replaceable>int</replaceable></option></arg>
+<arg><option>-timing-iterations=<replaceable>int</replaceable></option></arg>
+<arg choice="opt"><option>-timing-output</option></arg>
+<arg><option>-timing-pan-rate=<replaceable>int</replaceable></option></arg>
+<arg choice="opt"><option>-usage</option></arg>
+<arg choice="opt"><option>-use-test-pattern</option></arg>
+<arg><option>-zoom-factor=<replaceable>float</replaceable></option></arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+
+<refsect1 id="magnifier-1-desc"><title>DESCRIPTION</title>
+<para>
+&cmd; provides a simple fullscreen or splitscreen magnifier for GNOME.
+</para>
+<para>
+&cmd; also provides a magnification service API for use
+by assistive technologies such as orca, and is more
+commonly used in this service mode.
+</para>
+<para></para>
+
+
+<refsect1 id="magnifier-1-opts"><title>OPTIONS</title>
+<para>The following options are supported:</para>
+
+<varlistentry>
+<term><option>-border-color=<replaceable>long</replaceable></option></term>
+<listitem><para>
+Specify the border color as (A)RGB 23-bit value, Alpha-MSB. You can also use
+<option>c</option> to specify this option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-border-size=<replaceable>int</replaceable></option></term>
+<listitem><para>
+Specify the width of the border. You can also use <option>b</option> to specify
+this option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-cursor-color=<replaceable>long</replaceable></option></term>
+<listitem><para>Specify the cursor color, applied to 'black'pixels.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-cursor-scale-f=<replaceable>float</replaceable></option></term>
+<listitem><para>Specify the cursor scale factor.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-cursor-set=<replaceable>string</replaceable></option></term>
+<listitem><para>Specify the cursor set touse in the target display.</para></listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term><option>-cursor-size=<replaceable>int</replaceable></option></term>
+<listitem><para>Specify the cursor size to use. This option overrides the
+<option>-cursor-scale-factor</option> option.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-fullscreen</option></term>
+<listitem><para>
+Specify fullscreen magnification, which covers the entire target display. If
+you specify this option, you must also specify the
+<option>-source-display</option> and <option>-target-display</option> options.
+You can also use <option>f</option> to specify this option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-help</option></term>
+<listitem><para>
+Display help message. You can also use <option>?</option> to specify this
+option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-horizontal</option></term>
+<listitem><para>
+Split the screen horizontally, if the target display is the same as the source
+display. You can also use <option>h</option> to specify this option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-invert-image</option></term>
+<listitem><para>
+Invert the image colormap. You can also use <option>i</option> to specify this
+option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-mouse-follow</option></term>
+<listitem><para>
+Track mouse movements. You can also use <option>m</option> to specify this
+option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-mouse-latency=<replaceable>int</replaceable></option></term>
+<listitem><para>Specify the maximum mouse latency time, in ms.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-no-initial-region</option></term>
+<listitem><para>Do not create an initial zoom region.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-override-redirect</option></term>
+<listitem><para>Make the magnifier window completely unmanaged by the window manager.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-refresh-time=<replaceable>int</replaceable></option></term>
+<listitem>
+<para>
+Specify the minimum refresh time for idle, in ms. You can also use
+<option>r</option> to specify this option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-smooth-scrolling</option></term>
+<listitem><para>Use smooth scrolling.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-smoothing-type=<replaceable>string</replaceable></option></term>
+<listitem><para>Specify the image smoothing algorithm to apply: either bilinear-interpolation or none.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-source-display=<replaceable>string</replaceable></option></term>
+<listitem>
+<para>
+Specify the display to magnify. You can also use <option>s</option> to specify
+this option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-target-display=<replaceable>string</replaceable></option></term>
+<listitem><para>
+Specify the display on which to show the magnifie view. You can also use
+<option>t</option> to specify this option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-timing-delta-x=<replaceable>int</replaceable></option></term>
+<listitem><para>Specify the number of pixels to pan in the x-dimension each frame in the timing update test.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-timing-delta-y=<replaceable>int</replaceable></option></term>
+<listitem><para>Specify the number of pixels to pan in the y-dimension each frame in the timing update test.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-timing-iterations=<replaceable>int</replaceable></option></term>
+<listitem><para>Specify the number of iterations to run the timing benchmark test (0=continuous)</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-timing-output</option></term>
+<listitem><para>Display performance output.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-timing-pan-rate=<replaceable>int</replaceable></option></term>
+<listitem><para>Specify the timing pan rate in lines per frame.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-usage</option></term>
+<listitem><para>Display a brief usage message.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-use-test-pattern</option></term>
+<listitem><para>Use the test pattern as the source.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-vertical</option></term>
+<listitem><para>
+Split the screen vertically, if the target display is the same as the source
+display. You can also use <option>v</option> to specify this option.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>-zoom-factor=<replaceable>float</replaceable></option></term>
+<listitem><para>
+Specify the zoom (scale) factor used to mag-nify the source display. You can
+also use <option>z</option> to specify this option.</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+
+<refsect1 id="manifier-1-exdesc"><title>EXTENDED DESCRIPTION</title>
+<para>
+&cmd; provides a simple screen magnification utility for GNOME, offering splitscreen or fullscreen magnification. You should specify one of the following options: -v (vertical splitscreen magnification), -h (horizontal splitscreen mag-nification), or -f (fullscreen magnification). If fullscreen
+magnification is specified, the source and target displays must also be specified.
+</para>
+
+<para>
+Note that fullscreen magnification requires that two separate X server graphical screens are available. The source display can be virtual, that is, not connected to a physical graphics subsystem. The target display must be connected to a physical display device. Source and target displays are of the following form:
+</para>
+
+<para>
+[hostname]:server_number.screen_number
+</para>
+
+<para>
+Most users of &cmd; in standalone mode specify the -m option, which causes the magnified region to be continually recentered on the onscreen pointer position in the source display.
+
+</para>
+
+<para>
+magnifier capabilities include recoloring the mouse pointer, specifying the magnification factor for source to target conversion, separate magnification factors for the mouse pointer, and whether or not to apply smoothing or averaging to the resized image.
+</para>
+</refsect1>
+
+
+<!-- Examples -->
+<refsect1 id="magnifier-1-exam">
+<title>EXAMPLES</title>
+
+<example role="example">
+<title>Displaying a Fullscreen Magnified Image of Screen ":0.0" on Target Display ":0.1", at a Magnification Factor of 3.5, With Mouse Tracking:
+</title>
+<para><screen>example% <userinput>magnifier -f -m -s:0.0 -t:0.1 -z3.5</userinput></screen></para>
+</example>
+
+<example role="example">
+<title>Displaying a Vertical Splitscreen Magnified Image on the Default Display, With a Scale Factor of 4 and a Horizontal Scale Factor of 3, Using Bilinear Interpolation to Smooth Resulting Image</title>
+<para><screen>example% <userinput>magnifier -v -m -z 4 --cursor-scale-factor=3 --smoothing-type=bilinear-interpolation</userinput></screen></para>
+</example>
+</refsect1>
+
+
+<!-- Environmental variables -->
+<refsect1 id="magnifier-1-envr">
+<title>&envr-tt;</title>
+<para>magnifier uses $DISPLAY if the source or target displays are unspecified at startup.
+</para>
+</refsect1>
+
+
+<refsect1 id="magnifier-1-file">
+<title>FILES</title>
+<para>The following files are used by this application:</para>
+
+<varlistentry>
+<term><filename>/usr/bin/magnifier<filename></term>
+<listitem><para>Executable for standalone magnification service for GNOME
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+
+<!-- Attributes -->
+<refsect1 id="magnifier-1-attr">
+<title>ATTRIBUTES</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-a11y-reader</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+
+<!-- See also -->
+<refsect1 id="magnifier-1-also"><title>SEE ALSO</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the GNOME Accessibility Guide for your platform.</para>
+
+<para>
+<citerefentry><refentrytitle>orca</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libatk-1.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libcspi</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+
+<refsect1 id="magnifier-1-note"><title>NOTES</title>
+<para>If you need fullscreen magnification due to visual difficulties, you might benefit from using a full-featured assistive technology such as orca instead.
+</para>
+<para>Written by Bill Haneman, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>

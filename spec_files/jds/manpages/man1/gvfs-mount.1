@@ -1,0 +1,157 @@
+x<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "gvfs-mount">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gvfs-mount-1">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta>
+  <refentrytitle>gvfs-mount</refentrytitle><manvolnum>1</manvolnum>
+  <refmiscinfo class="date">25 Mar 2008</refmiscinfo>
+  <refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+  <refmiscinfo class="software">&release;</refmiscinfo>
+  <refmiscinfo class="arch">generic</refmiscinfo>
+  <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>gvfs-mount</primary></indexterm>
+<indexterm><primary>mount, unmount and list file systems using the VFS system</primary></indexterm>
+<refnamediv id="gvfs-mount-1-name"><refname>gvfs-mount</refname>
+<refpurpose>mount, unmount and list file systems using the VFS system</refpurpose></refnamediv>
+
+<refsynopsisdiv id="gvfs-mount-1-synp"><title>&synp-tt;</title>
+  <cmdsynopsis>
+    <command>&cmd;</command>
+    <arg choice="opt"><option>m</option></arg>
+    <arg choice="opt"><option>u</option></arg>
+    <arg choice="opt"><option>l</option></arg>
+    <arg choice="opt"><option>i</option></arg>
+    <arg choice="plain"><option role="nodash"><replaceable>URI</replaceable></option></arg>
+  </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1 id="gvfs-mount-1-desc"><title>&desc-tt;</title>
+  <para>
+<command>&cmd;</command> mounts, unmounts and lists file systems using the VFS
+system.
+  </para>
+</refsect1>
+
+<refsect1 id="gvfs-mount-1-opts"><title>&opts-tt;</title>
+  <para>The following options are supported:</para>
+  <variablelist termlength="xtranarrow">
+    <varlistentry>
+	 <term><option>m</option></term>
+	 <listitem><para>Mount a file system</para></listitem>
+    </varlistentry>
+    <varlistentry>
+	 <term><option>u</option></term>
+	 <listitem><para>Unmount a file system</para></listitem>
+    </varlistentry>
+    <varlistentry>
+	 <term><option>l</option></term>
+	 <listitem><para>List connected drives, volumes and mounts</para></listitem>
+    </varlistentry>
+    <varlistentry>
+	 <term><option>i</option></term>
+	 <listitem><para>When used with -l, prints additional information</para></listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
+
+<refsect1 id="gvfs-mount-1-exam"><title>&exam-tt;</title>
+  <example role="example">
+    <title>Print information about the mounts and drives</title>
+    <para><screen>example% <userinput>&cmd; <literal>-i</literal></userinput></screen></para>
+  </example>
+  <example role="example">
+    <title>Unmount a file system</title>
+    <para><screen>example% <userinput>&cmd; <literal>/mnt/example</literal></userinput></screen></para>
+  </example>
+</refsect1>
+
+<refsect1 id="gvfs-mount-1-envr"><title>&envr-tt;</title>
+  <para>
+See
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+for descriptions of the following environment variables: NLSPATH.
+  </para>
+</refsect1>
+
+<refsect1 id="gvfs-mount-1-exit"><title>&exit-tt;</title>
+  <para>The exit value 0 is returned regardless of success or failure.</para>
+</refsect1>
+
+<refsect1 id="gvfs-mount-1-file"><title>&file-tt;</title>
+  <para>The following files are used by this application:</para>
+  <variablelist termlength="medium">
+    <varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem>
+	   <para>Executable to mount, unmount and list file systems using the VFS system</para>
+    </listitem></varlistentry>
+  </variablelist>
+</refsect1>
+
+<refsect1 id="gvfs-mount-1-attr"><title>&attr-tt;</title>
+  <para>
+See <olink targetdocent="REFMAN5" localinfo="attributes-5">
+<citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry></olink>
+for descriptions of the following attributes:
+  </para>
+  <informaltable frame="all">
+    <tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+	   <colspec colname="COLSPEC1" colwidth="1*">
+		<thead>
+		  <row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center" valign="middle">ATTRIBUTE VALUE</entry></row>
+		</thead>
+		<tbody>
+		  <row>
+		    <entry><para>Availability</para></entry><entry>SUNWgnome-gvfs<para></para></entry>
+		  </row>
+		  <row>
+		    <entry colname="COLSPEC0"><para>Interface stability</para></entry>
+		    <entry colname="COLSPEC1"><para>Volatile</para></entry>
+		  </row>
+		</tbody>
+    </tgroup>
+  </informaltable>
+</refsect1>
+
+<refsect1 id="gvfs-mount-1-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gvfs-copy</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-cat</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-less</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-ls</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-mkdir</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+<citerefentry><refentrytitle>gvfs-monitor-dir</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-monitor-file</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-info</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-move</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-rename</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-open</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-rm</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-save</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-trash</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gvfs-tree</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+
+<refsect1 id="gvfs-mount-1-note"><title>&note-tt;</title>
+<para>Written by Alvaro Lopez Ortega, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+
+</refentry>
+<?Pub *0000004990>
