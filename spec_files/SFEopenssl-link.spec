@@ -7,7 +7,7 @@
 
 Name:                SFEopenssl-link
 Summary:             Temporary /usr/sfw openssl links to accommodate openssl package change
-Version:             1.0
+Version:             1.1
 
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
@@ -28,12 +28,12 @@ mkdir -p usr/sfw/lib
 mkdir -p usr/sfw/lib/%{_arch64}
 
 cd usr/sfw/lib
-ln -sf ../../lib/libcrypto.so.0.9.8
-ln -sf ../../lib/libssl.so.0.9.8
+ln -sf ../../../lib/libcrypto.so.0.9.8
+ln -sf ../../../lib/libssl.so.0.9.8
 
 cd %{_arch64}
-ln -sf ../../../lib/%{_arch64}/libcrypto.so.0.9.8
-ln -sf ../../../lib/%{_arch64}/libssl.so.0.9.8
+ln -sf ../../../../lib/%{_arch64}/libcrypto.so.0.9.8
+ln -sf ../../../../lib/%{_arch64}/libssl.so.0.9.8
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -48,6 +48,8 @@ rm -rf $RPM_BUILD_ROOT
 /usr/sfw/lib/%{_arch64}/libssl.so.0.9.8
 
 %changelog
+* Sat Sep 12 2009 - moinakg(at)belenix<dot>org
+- Fix links, uprev version.
 * Sun Apr 19 2009 - moinakg@gmail.com
 - Initial spec
 - Temporary compatibility package to adjust to OpenSSL moving to /usr prefix.

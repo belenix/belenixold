@@ -1,0 +1,14 @@
+diff -up qt-x11-opensource-src-4.5.0/src/corelib/tools/qstring.cpp.gcc_hack qt-x11-opensource-src-4.5.0/src/corelib/tools/qstring.cpp
+--- qt-x11-opensource-src-4.5.0/src/corelib/tools/qstring.cpp.gcc_hack	2009-02-25 15:09:22.000000000 -0600
++++ qt-x11-opensource-src-4.5.0/src/corelib/tools/qstring.cpp	2009-03-27 11:56:51.000000000 -0500
+@@ -102,8 +102,8 @@ static QHash<void *, QByteArray> *asciiC
+ // internal
+ int qFindString(const QChar *haystack, int haystackLen, int from,
+     const QChar *needle, int needleLen, Qt::CaseSensitivity cs);
+-int qFindStringBoyerMoore(const QChar *haystack, int haystackLen, int from,
+-    const QChar *needle, int needleLen, Qt::CaseSensitivity cs);
++//int qFindStringBoyerMoore(const QChar *haystack, int haystackLen, int from,
++//    const QChar *needle, int needleLen, Qt::CaseSensitivity cs);
+ 
+ 
+ // Unicode case-insensitive comparison

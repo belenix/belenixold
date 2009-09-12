@@ -55,9 +55,13 @@ mkdir %name-%version/%{base_arch}
 rm -rf $RPM_BUILD_ROOT
 %ifarch amd64 sparcv9
 %libsndfile64.install -d %name-%version/%_arch64
+(cd $RPM_BUILD_ROOT%{_libdir}/%{_arch64}
+ ln -s libsndfile.so.%{version} libsndfile.so.1.0.19)
 %endif
 
 %libsndfile.install -d %name-%version/%{base_arch}
+(cd $RPM_BUILD_ROOT%{_libdir}
+ ln -s libsndfile.so.%{version} libsndfile.so.1.0.19)
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -111,6 +115,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Sep 12 2009 - moinakg(at)belenix<dot>org
+- Bump version to .20, add compatibility symlinks.
 * Tue Apr 28 2009 - moinakg@belenix.,org
 - Rebuild with Jack support and add dep on SFEjack.
 - Comment out upstream patch.

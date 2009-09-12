@@ -1,0 +1,20 @@
+--- libofa-0.9.3/examples/example.cpp.orig	2009-09-11 09:09:11.750142248 +0530
++++ libofa-0.9.3/examples/example.cpp	2009-09-11 09:09:27.811319867 +0530
+@@ -8,6 +8,7 @@
+ -------------------------------------------------------------------*/
+ 
+ #include "protocol.h"
++#include <string.h>
+ 
+ AudioData* loadWaveFile(char *file);
+ AudioData* loadDataUsingLAME(char *file);
+--- libofa-0.9.3/examples/protocol.cpp.orig	2009-09-11 09:11:54.634232007 +0530
++++ libofa-0.9.3/examples/protocol.cpp	2009-09-11 09:12:35.728343374 +0530
+@@ -8,6 +8,7 @@
+ -------------------------------------------------------------------*/
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <string>
+ #include <map>
+ #include <expat.h>

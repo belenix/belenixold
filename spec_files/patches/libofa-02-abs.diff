@@ -1,0 +1,10 @@
+--- libofa-0.9.3/lib/signal_op.cpp.orig	2009-09-11 09:07:21.299090697 +0530
++++ libofa-0.9.3/lib/signal_op.cpp	2009-09-11 09:07:33.960476857 +0530
+@@ -12,6 +12,7 @@
+ // DATE CREATED: 1/12/06
+ 
+ 
++#include <stdlib.h>
+ #include <math.h>
+ #include "signal_op.h"
+ #include "AFLIB/aflibConverter.h"

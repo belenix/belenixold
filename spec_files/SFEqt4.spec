@@ -12,7 +12,7 @@
 
 Name:                   SFEqt4
 Summary:		Qt4 is an X11 toolkit.
-Version:                4.4.3
+Version:                4.5.2
 URL:                    http://www.qtsoftware.com/products/
 Source:                 ftp://ftp.trolltech.com/qt/source/qt-x11-opensource-src-%{version}.tar.gz
 Source1:                assistant.desktop
@@ -34,13 +34,15 @@ Patch10:                qt4-10-largefiletest.cpp.diff
 Patch11:                qt4-11-main.cpp.diff
 Patch12:                qt4-12-phonon.pro.diff
 Patch13:                qt4-13-qt.prf.diff
-Patch14:                qt4-14-mediaplayer.h.diff
 Patch17:                qt4-17-qsql-unicode.diff
 Patch18:                qt4-18-thread.pri.diff
-Patch19:                qt4-19-regexp.h.diff
 Patch20:                qt4-20-arch.pri.diff
 Patch21:                qt4-21-xfixes.pro.diff
 Patch22:                qt4-22-xcursor.pro.diff
+Patch23:                qt4-23-timestamp.diff
+Patch24:                qt4-24-CVE-2009-1725.diff
+Patch25:                qt4-25-gcc_hack.diff
+Patch26:                qt4-26-iconv_hack.diff
 
 %define src_dir         qt-x11-opensource-src-%{version}
 License:		LICENSE.GPL
@@ -108,11 +110,11 @@ Requires:               SUNWTiff-devel
 Requires:               SUNWpng-devel
 Requires:               SUNWgnome-media-devel
 
-%package debug
-Summary:                 %{summary} - debug libraries
-SUNW_BaseDir:            %{_basedir}
-%include default-depend.inc
-Requires: %{name}-devel
+#%package debug
+#Summary:                 %{summary} - debug libraries
+#SUNW_BaseDir:            %{_basedir}
+#%include default-depend.inc
+#Requires: %{name}-devel
 
 %package doc
 Summary:                 %{summary} - documentation files
@@ -135,13 +137,15 @@ cd %{src_dir}
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
-%patch14 -p1
 %patch17 -p1
 %patch18 -p1
-%patch19 -p1
 %patch20 -p1
 %patch21 -p1
 %patch22 -p1
+%patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
 cd ..
 
 %ifarch amd64 sparcv9
@@ -156,7 +160,7 @@ fi
 
 export CC=/usr/gnu/bin/gcc
 export CXX=/usr/gnu/bin/g++
-OPATH=$PATH
+OPATH="$PATH"
 PDIR=`pwd`
 
 #
@@ -165,8 +169,8 @@ PDIR=`pwd`
 # since we are using Gcc. We delete -lpgport and -ledit from
 # pg_config since those two static libs are not needed.
 #
-mkdir bin
-mkdir bin/%{_arch64}
+mkdir -p bin
+mkdir -p bin/%{_arch64}
 cat %{mysql_dir}/bin/mysql_config | sed "s#ldflags='-L/opt/SUNWspro/lib -lCrun -lrt'#ldflags=''#" > bin/mysql_config
 cat %{mysql_dir}/bin/%{_arch64}/mysql_config | sed "s#ldflags='-L/opt/SUNWspro/lib -lCrun -lrt'#ldflags=''#" > bin/%{_arch64}/mysql_config
 
@@ -182,97 +186,21 @@ cat %{postgres_dir}/bin/%{_arch64}/pg_config | sed '{
 chmod 0755 bin/*
 chmod 0755 bin/%{_arch64}/*
 
-%ifarch amd64 sparcv9
-cd %{src_dir}-64
-
-INCL_PATHS="-I/usr/X11/include -I/usr/gnu/include -I%{postgres_dir}/include -I%{postgres_dir}/include/server -I%{mysql_dir}/include -I/usr/sfw/include -D_REENTRANT -DSOLARIS -D_POSIX_PTHREAD_SEMANTICS -D__EXTENSIONS__ -D_LARGEFILE_SOURCE"
-export CFLAGS="-O3 -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -ftree-loop-distribution -fno-gcse -fivopts -ftree-loop-im -m64 -fPIC -DPIC -Xlinker -i -march=opteron -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
-
-LPATHS="-L/usr/X11/lib/%{_arch64} -R/usr/X11/lib/%{_arch64} -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64} -L%{postgres_dir}/lib/%{_arch64} -R%{postgres_dir}/lib/%{_arch64} -L%{mysql_dir}/lib/%{_arch64} -R%{mysql_dir}/lib/%{_arch64} -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64} -L%{_builddir}/%{src_dir}-64/lib"
-export LDFLAGS="%_ldflags64 ${LPATHS}"
-
-export CXXFLAGS=${CFLAGS}
-export QMAKE_LFLAGS="-L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64}"
-export PATH="${PDIR}/bin/%{_arch64}:%{_prefix}/bin/%{_arch64}:${OPATH}"
-
-echo yes | ./configure -prefix %{_prefix} \
-           -platform solaris-g++-64 \
-           -bindir %{_prefix}/qt4/bin/%{_arch64} \
-           -docdir %{_docdir}/qt4 \
-           -headerdir %{_includedir}/qt4 \
-           -libdir %{_libdir}/%{_arch64} \
-           -plugindir %{_libdir}/%{_arch64}/qt4/plugins \
-           -datadir %{_datadir}/qt4 \
-           -translationdir %{_datadir}/qt4/translations \
-           -examplesdir %{_datadir}/qt4/examples \
-           -demosdir %{_datadir}/qt4/demos \
-           -sysconfdir %{_sysconfdir} \
-           -release -shared \
-           -no-fast \
-           -largefile \
-           -exceptions \
-           -accessibility \
-           -stl \
-           -plugin-sql-mysql \
-           -plugin-sql-odbc \
-           -plugin-sql-sqlite \
-           -plugin-sql-psql -system-sqlite -webkit \
-           -assistant-webkit \
-           -system-libpng \
-           -system-libjpeg \
-           -system-libmng \
-           -system-zlib \
-           -system-libtiff \
-           -xcursor \
-           -xrandr \
-           -xrender \
-           -sm -xshape \
-           -xinerama \
-           -xfixes \
-           -fontconfig \
-           -no-tablet \
-           -xkb -opengl \
-           -glib \
-           -system-nas-sound \
-           -xmlpatterns \
-           -svg \
-           -no-phonon \
-           -qt-gif \
-           -dbus-linked \
-           -iconv \
-           -cups \
-           -openssl-linked \
-           -no-optimized-qmake \
-           -freetype \
-           -no-pch \
-           -nis \
-           -no-tablet \
-           -verbose \
-           -make libs \
-           -make tools \
-           -make examples \
-           -make demos \
-           -make docs \
-           ${INCL_PATHS} \
-           ${LPATHS}
-
-make -j$CPUS
-cd ..
-%endif
-
 cd %{src_dir}
+INCL_PATHS="-I`pwd`/include -I`pwd`/include/phonon -I/usr/X11/include -I/usr/gnu/include -I%{postgres_dir}/include -I%{postgres_dir}/include/server -I%{mysql_dir}/include -I/usr/sfw/include -D_REENTRANT -DSOLARIS -D_POSIX_PTHREAD_SEMANTICS -D__EXTENSIONS__ -D_LARGEFILE_SOURCE"
+export CFLAGS="-O3 -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -ftree-loop-distribution -fno-gcse -fivopts -ftree-loop-im -fPIC -DPIC -march=pentium3 -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
+#export CFLAGS="-pipe -fPIC -DPIC -march=pentium3 -fno-omit-frame-pointer -fno-strict-aliasing -DQFONTDATABASE_DEBUG -DQFONTCACHE_DEBUG -DFONT_MATCH_DEBUG ${INCL_PATHS}"
 
-INCL_PATHS="-I/usr/X11/include -I/usr/gnu/include -I%{postgres_dir}/include -I%{postgres_dir}/include/server -I%{mysql_dir}/include -I/usr/sfw/include -D_REENTRANT -DSOLARIS -D_POSIX_PTHREAD_SEMANTICS -D__EXTENSIONS__ -D_LARGEFILE_SOURCE"
-export CFLAGS="-O3 -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -ftree-loop-distribution -fno-gcse -fivopts -ftree-loop-im -fPIC -DPIC -Xlinker -i -march=pentium4 -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
-
-LPATHS="-L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L%{postgres_dir}/lib -R%{postgres_dir}/lib -L%{mysql_dir}/lib -R%{mysql_dir}/lib -L/usr/sfw/lib -R/usr/sfw/lib -L%{_builddir}/%{src_dir}/lib"
+LPATHS="-L/lib -R/lib -L/usr/X11/lib -R/usr/X11/lib -L/usr/gnu/lib -R/usr/gnu/lib -L%{postgres_dir}/lib -R%{postgres_dir}/lib -L%{mysql_dir}/lib -R%{mysql_dir}/lib -L/usr/sfw/lib -R/usr/sfw/lib -L%{_builddir}/%{src_dir}/lib"
 export LDFLAGS="%_ldflags ${LPATHS}"
 
-export CXXFLAGS=${CFLAGS}
+export CXXFLAGS="${CFLAGS} -frtti"
 export QMAKE_LFLAGS="-L/usr/gnu/lib -R/usr/gnu/lib"
 export PATH="${PDIR}/bin:${OPATH}"
 
-echo yes | ./configure -prefix %{_prefix} \
+./configure -prefix %{_prefix} \
+           -confirm-license \
+           -opensource \
            -platform solaris-g++ \
            -bindir %{_prefix}/qt4/bin \
            -docdir %{_docdir}/qt4 \
@@ -294,7 +222,6 @@ echo yes | ./configure -prefix %{_prefix} \
            -plugin-sql-odbc \
            -plugin-sql-sqlite \
            -plugin-sql-psql -system-sqlite -webkit \
-           -assistant-webkit \
            -system-libpng \
            -system-libjpeg \
            -system-libmng \
@@ -307,7 +234,6 @@ echo yes | ./configure -prefix %{_prefix} \
            -xinerama \
            -xfixes \
            -fontconfig \
-           -no-tablet \
            -xkb -opengl \
            -glib \
            -system-nas-sound \
@@ -321,10 +247,10 @@ echo yes | ./configure -prefix %{_prefix} \
            -cups \
            -openssl-linked \
            -no-optimized-qmake \
+           -no-separate-debug-info \
            -freetype \
            -no-pch \
            -nis \
-           -no-tablet \
            -verbose \
            -make libs \
            -make tools \
@@ -334,8 +260,87 @@ echo yes | ./configure -prefix %{_prefix} \
            ${INCL_PATHS} \
            ${LPATHS}
 
-make -j$CPUS
+gmake -j $CPUS
 cd ..
+
+%ifarch amd64 sparcv9
+cd %{src_dir}-64
+
+INCL_PATHS="-I`pwd`/include -I`pwd`/include/phonon -I/usr/X11/include -I/usr/gnu/include -I%{postgres_dir}/include -I%{postgres_dir}/include/server -I%{mysql_dir}/include -I/usr/sfw/include -D_REENTRANT -DSOLARIS -D_POSIX_PTHREAD_SEMANTICS -D__EXTENSIONS__ -D_LARGEFILE_SOURCE"
+export CFLAGS="-O3 -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -ftree-loop-distribution -fno-gcse -fivopts -ftree-loop-im -m64 -fPIC -DPIC -Xlinker -i -march=opteron -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
+#export CFLAGS="-pipe -m64 -fPIC -DPIC -march=opteron -fno-omit-frame-pointer -fno-strict-aliasing ${INCL_PATHS}"
+
+LPATHS="-L/lib/%{_arch64} -R/lib/%{_arch64} -L/usr/X11/lib/%{_arch64} -R/usr/X11/lib/%{_arch64} -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64} -L%{postgres_dir}/lib/%{_arch64} -R%{postgres_dir}/lib/%{_arch64} -L%{mysql_dir}/lib/%{_arch64} -R%{mysql_dir}/lib/%{_arch64} -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64} -L%{_builddir}/%{src_dir}-64/lib"
+export LDFLAGS="%_ldflags64 ${LPATHS}"
+
+export CXXFLAGS=${CFLAGS}
+export QMAKE_LFLAGS="-L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64}"
+export PATH="${PDIR}/bin/%{_arch64}:%{_prefix}/bin/%{_arch64}:${OPATH}"
+
+./configure -prefix %{_prefix} \
+           -confirm-license \
+           -opensource \
+           -platform solaris-g++-64 \
+           -bindir %{_prefix}/qt4/bin/%{_arch64} \
+           -docdir %{_docdir}/qt4 \
+           -headerdir %{_includedir}/qt4 \
+           -libdir %{_libdir}/%{_arch64} \
+           -plugindir %{_libdir}/%{_arch64}/qt4/plugins \
+           -datadir %{_datadir}/qt4 \
+           -translationdir %{_datadir}/qt4/translations \
+           -examplesdir %{_datadir}/qt4/examples \
+           -demosdir %{_datadir}/qt4/demos \
+           -sysconfdir %{_sysconfdir} \
+           -release -shared \
+           -no-fast \
+           -largefile \
+           -exceptions \
+           -accessibility \
+           -stl \
+           -plugin-sql-mysql \
+           -plugin-sql-odbc \
+           -plugin-sql-sqlite \
+           -plugin-sql-psql -system-sqlite -webkit \
+           -system-libpng \
+           -system-libjpeg \
+           -system-libmng \
+           -system-zlib \
+           -system-libtiff \
+           -xcursor \
+           -xrandr \
+           -xrender \
+           -sm -xshape \
+           -xinerama \
+           -xfixes \
+           -fontconfig \
+           -xkb -opengl \
+           -glib \
+           -system-nas-sound \
+           -xmlpatterns \
+           -svg \
+           -no-phonon \
+           -qt-gif \
+           -dbus-linked \
+           -iconv \
+           -cups \
+           -openssl-linked \
+           -no-optimized-qmake \
+           -no-separate-debug-info \
+           -freetype \
+           -no-pch \
+           -nis \
+           -verbose \
+           -make libs \
+           -make tools \
+           -make examples \
+           -make demos \
+           -make docs \
+           ${INCL_PATHS} \
+           ${LPATHS}
+
+gmake -j $CPUS
+cd ..
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -501,200 +506,210 @@ cd ..
 %{_libdir}/libQt3Support.prl
 %{_libdir}/libQt3Support.so
 %{_libdir}/libQt3Support.so.4
-%{_libdir}/libQt3Support.so.4.4
-%{_libdir}/libQt3Support.so.4.4.3
+%{_libdir}/libQt3Support.so.4.5
+%{_libdir}/libQt3Support.so.4.5.2
 %{_libdir}/libQtAssistantClient.prl
 %{_libdir}/libQtAssistantClient.so
 %{_libdir}/libQtAssistantClient.so.4
-%{_libdir}/libQtAssistantClient.so.4.4
-%{_libdir}/libQtAssistantClient.so.4.4.3
+%{_libdir}/libQtAssistantClient.so.4.5
+%{_libdir}/libQtAssistantClient.so.4.5.2
 %{_libdir}/libQtCLucene.prl
 %{_libdir}/libQtCLucene.so
 %{_libdir}/libQtCLucene.so.4
-%{_libdir}/libQtCLucene.so.4.4
-%{_libdir}/libQtCLucene.so.4.4.3
+%{_libdir}/libQtCLucene.so.4.5
+%{_libdir}/libQtCLucene.so.4.5.2
 %{_libdir}/libQtCore.prl
 %{_libdir}/libQtCore.so
 %{_libdir}/libQtCore.so.4
-%{_libdir}/libQtCore.so.4.4
-%{_libdir}/libQtCore.so.4.4.3
+%{_libdir}/libQtCore.so.4.5
+%{_libdir}/libQtCore.so.4.5.2
 %{_libdir}/libQtDBus.prl
 %{_libdir}/libQtDBus.so
 %{_libdir}/libQtDBus.so.4
-%{_libdir}/libQtDBus.so.4.4
-%{_libdir}/libQtDBus.so.4.4.3
+%{_libdir}/libQtDBus.so.4.5
+%{_libdir}/libQtDBus.so.4.5.2
 %{_libdir}/libQtDesigner.prl
 %{_libdir}/libQtDesigner.so
 %{_libdir}/libQtDesigner.so.4
-%{_libdir}/libQtDesigner.so.4.4
-%{_libdir}/libQtDesigner.so.4.4.3
+%{_libdir}/libQtDesigner.so.4.5
+%{_libdir}/libQtDesigner.so.4.5.2
 %{_libdir}/libQtDesignerComponents.prl
 %{_libdir}/libQtDesignerComponents.so
 %{_libdir}/libQtDesignerComponents.so.4
-%{_libdir}/libQtDesignerComponents.so.4.4
-%{_libdir}/libQtDesignerComponents.so.4.4.3
+%{_libdir}/libQtDesignerComponents.so.4.5
+%{_libdir}/libQtDesignerComponents.so.4.5.2
 %{_libdir}/libQtGui.prl
 %{_libdir}/libQtGui.so
 %{_libdir}/libQtGui.so.4
-%{_libdir}/libQtGui.so.4.4
-%{_libdir}/libQtGui.so.4.4.3
+%{_libdir}/libQtGui.so.4.5
+%{_libdir}/libQtGui.so.4.5.2
 %{_libdir}/libQtHelp.prl
 %{_libdir}/libQtHelp.so
 %{_libdir}/libQtHelp.so.4
-%{_libdir}/libQtHelp.so.4.4
-%{_libdir}/libQtHelp.so.4.4.3
+%{_libdir}/libQtHelp.so.4.5
+%{_libdir}/libQtHelp.so.4.5.2
 %{_libdir}/libQtNetwork.prl
 %{_libdir}/libQtNetwork.so
 %{_libdir}/libQtNetwork.so.4
-%{_libdir}/libQtNetwork.so.4.4
-%{_libdir}/libQtNetwork.so.4.4.3
+%{_libdir}/libQtNetwork.so.4.5
+%{_libdir}/libQtNetwork.so.4.5.2
 %{_libdir}/libQtOpenGL.prl
 %{_libdir}/libQtOpenGL.so
 %{_libdir}/libQtOpenGL.so.4
-%{_libdir}/libQtOpenGL.so.4.4
-%{_libdir}/libQtOpenGL.so.4.4.3
+%{_libdir}/libQtOpenGL.so.4.5
+%{_libdir}/libQtOpenGL.so.4.5.2
 %{_libdir}/libQtPhonon.prl
 %{_libdir}/libQtPhonon.so
 %{_libdir}/libQtPhonon.so.4
-%{_libdir}/libQtPhonon.so.4.1
-%{_libdir}/libQtPhonon.so.4.1.3
+%{_libdir}/libQtPhonon.so.4.3
+%{_libdir}/libQtPhonon.so.4.3.1
 %{_libdir}/libQtScript.prl
 %{_libdir}/libQtScript.so
 %{_libdir}/libQtScript.so.4
-%{_libdir}/libQtScript.so.4.4
-%{_libdir}/libQtScript.so.4.4.3
+%{_libdir}/libQtScript.so.4.5
+%{_libdir}/libQtScript.so.4.5.2
 %{_libdir}/libQtSql.prl
 %{_libdir}/libQtSql.so
 %{_libdir}/libQtSql.so.4
-%{_libdir}/libQtSql.so.4.4
-%{_libdir}/libQtSql.so.4.4.3
+%{_libdir}/libQtSql.so.4.5
+%{_libdir}/libQtSql.so.4.5.2
 %{_libdir}/libQtSvg.prl
 %{_libdir}/libQtSvg.so
 %{_libdir}/libQtSvg.so.4
-%{_libdir}/libQtSvg.so.4.4
-%{_libdir}/libQtSvg.so.4.4.3
+%{_libdir}/libQtSvg.so.4.5
+%{_libdir}/libQtSvg.so.4.5.2
 %{_libdir}/libQtTest.prl
 %{_libdir}/libQtTest.so
 %{_libdir}/libQtTest.so.4
-%{_libdir}/libQtTest.so.4.4
-%{_libdir}/libQtTest.so.4.4.3
+%{_libdir}/libQtTest.so.4.5
+%{_libdir}/libQtTest.so.4.5.2
 %{_libdir}/libQtUiTools.a
 %{_libdir}/libQtUiTools.prl
 %{_libdir}/libQtWebKit.prl
 %{_libdir}/libQtWebKit.so
 %{_libdir}/libQtWebKit.so.4
-%{_libdir}/libQtWebKit.so.4.4
-%{_libdir}/libQtWebKit.so.4.4.3
+%{_libdir}/libQtWebKit.so.4.5
+%{_libdir}/libQtWebKit.so.4.5.2
 %{_libdir}/libQtXml.prl
 %{_libdir}/libQtXml.so
 %{_libdir}/libQtXml.so.4
-%{_libdir}/libQtXml.so.4.4
-%{_libdir}/libQtXml.so.4.4.3
+%{_libdir}/libQtXml.so.4.5
+%{_libdir}/libQtXml.so.4.5.2
 %{_libdir}/libQtXmlPatterns.prl
 %{_libdir}/libQtXmlPatterns.so
 %{_libdir}/libQtXmlPatterns.so.4
-%{_libdir}/libQtXmlPatterns.so.4.4
-%{_libdir}/libQtXmlPatterns.so.4.4.3
+%{_libdir}/libQtXmlPatterns.so.4.5
+%{_libdir}/libQtXmlPatterns.so.4.5.2
+%{_libdir}/libQtScriptTools.prl
+%{_libdir}/libQtScriptTools.so
+%{_libdir}/libQtScriptTools.so.4
+%{_libdir}/libQtScriptTools.so.4.5
+%{_libdir}/libQtScriptTools.so.4.5.2
 
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_libdir}/%_arch64
 %{_libdir}/%_arch64/libQt3Support.prl
 %{_libdir}/%_arch64/libQt3Support.so
 %{_libdir}/%_arch64/libQt3Support.so.4
-%{_libdir}/%_arch64/libQt3Support.so.4.4
-%{_libdir}/%_arch64/libQt3Support.so.4.4.3
+%{_libdir}/%_arch64/libQt3Support.so.4.5
+%{_libdir}/%_arch64/libQt3Support.so.4.5.2
 %{_libdir}/%_arch64/libQtAssistantClient.prl
 %{_libdir}/%_arch64/libQtAssistantClient.so
 %{_libdir}/%_arch64/libQtAssistantClient.so.4
-%{_libdir}/%_arch64/libQtAssistantClient.so.4.4
-%{_libdir}/%_arch64/libQtAssistantClient.so.4.4.3
+%{_libdir}/%_arch64/libQtAssistantClient.so.4.5
+%{_libdir}/%_arch64/libQtAssistantClient.so.4.5.2
 %{_libdir}/%_arch64/libQtCLucene.prl
 %{_libdir}/%_arch64/libQtCLucene.so
 %{_libdir}/%_arch64/libQtCLucene.so.4
-%{_libdir}/%_arch64/libQtCLucene.so.4.4
-%{_libdir}/%_arch64/libQtCLucene.so.4.4.3
+%{_libdir}/%_arch64/libQtCLucene.so.4.5
+%{_libdir}/%_arch64/libQtCLucene.so.4.5.2
 %{_libdir}/%_arch64/libQtCore.prl
 %{_libdir}/%_arch64/libQtCore.so
 %{_libdir}/%_arch64/libQtCore.so.4
-%{_libdir}/%_arch64/libQtCore.so.4.4
-%{_libdir}/%_arch64/libQtCore.so.4.4.3
+%{_libdir}/%_arch64/libQtCore.so.4.5
+%{_libdir}/%_arch64/libQtCore.so.4.5.2
 %{_libdir}/%_arch64/libQtDBus.prl
 %{_libdir}/%_arch64/libQtDBus.so
 %{_libdir}/%_arch64/libQtDBus.so.4
-%{_libdir}/%_arch64/libQtDBus.so.4.4
-%{_libdir}/%_arch64/libQtDBus.so.4.4.3
+%{_libdir}/%_arch64/libQtDBus.so.4.5
+%{_libdir}/%_arch64/libQtDBus.so.4.5.2
 %{_libdir}/%_arch64/libQtDesigner.prl
 %{_libdir}/%_arch64/libQtDesigner.so
 %{_libdir}/%_arch64/libQtDesigner.so.4
-%{_libdir}/%_arch64/libQtDesigner.so.4.4
-%{_libdir}/%_arch64/libQtDesigner.so.4.4.3
+%{_libdir}/%_arch64/libQtDesigner.so.4.5
+%{_libdir}/%_arch64/libQtDesigner.so.4.5.2
 %{_libdir}/%_arch64/libQtDesignerComponents.prl
 %{_libdir}/%_arch64/libQtDesignerComponents.so
 %{_libdir}/%_arch64/libQtDesignerComponents.so.4
-%{_libdir}/%_arch64/libQtDesignerComponents.so.4.4
-%{_libdir}/%_arch64/libQtDesignerComponents.so.4.4.3
+%{_libdir}/%_arch64/libQtDesignerComponents.so.4.5
+%{_libdir}/%_arch64/libQtDesignerComponents.so.4.5.2
 %{_libdir}/%_arch64/libQtGui.prl
 %{_libdir}/%_arch64/libQtGui.so
 %{_libdir}/%_arch64/libQtGui.so.4
-%{_libdir}/%_arch64/libQtGui.so.4.4
-%{_libdir}/%_arch64/libQtGui.so.4.4.3
+%{_libdir}/%_arch64/libQtGui.so.4.5
+%{_libdir}/%_arch64/libQtGui.so.4.5.2
 %{_libdir}/%_arch64/libQtHelp.prl
 %{_libdir}/%_arch64/libQtHelp.so
 %{_libdir}/%_arch64/libQtHelp.so.4
-%{_libdir}/%_arch64/libQtHelp.so.4.4
-%{_libdir}/%_arch64/libQtHelp.so.4.4.3
+%{_libdir}/%_arch64/libQtHelp.so.4.5
+%{_libdir}/%_arch64/libQtHelp.so.4.5.2
 %{_libdir}/%_arch64/libQtNetwork.prl
 %{_libdir}/%_arch64/libQtNetwork.so
 %{_libdir}/%_arch64/libQtNetwork.so.4
-%{_libdir}/%_arch64/libQtNetwork.so.4.4
-%{_libdir}/%_arch64/libQtNetwork.so.4.4.3
+%{_libdir}/%_arch64/libQtNetwork.so.4.5
+%{_libdir}/%_arch64/libQtNetwork.so.4.5.2
 %{_libdir}/%_arch64/libQtOpenGL.prl
 %{_libdir}/%_arch64/libQtOpenGL.so
 %{_libdir}/%_arch64/libQtOpenGL.so.4
-%{_libdir}/%_arch64/libQtOpenGL.so.4.4
-%{_libdir}/%_arch64/libQtOpenGL.so.4.4.3
+%{_libdir}/%_arch64/libQtOpenGL.so.4.5
+%{_libdir}/%_arch64/libQtOpenGL.so.4.5.2
 #%{_libdir}/%_arch64/libQtPhonon.prl
 #%{_libdir}/%_arch64/libQtPhonon.so
 #%{_libdir}/%_arch64/libQtPhonon.so.4
 #%{_libdir}/%_arch64/libQtPhonon.so.4.1
-#%{_libdir}/%_arch64/libQtPhonon.so.4.1.3
+#%{_libdir}/%_arch64/libQtPhonon.so.4.1.2
 %{_libdir}/%_arch64/libQtScript.prl
 %{_libdir}/%_arch64/libQtScript.so
 %{_libdir}/%_arch64/libQtScript.so.4
-%{_libdir}/%_arch64/libQtScript.so.4.4
-%{_libdir}/%_arch64/libQtScript.so.4.4.3
+%{_libdir}/%_arch64/libQtScript.so.4.5
+%{_libdir}/%_arch64/libQtScript.so.4.5.2
 %{_libdir}/%_arch64/libQtSql.prl
 %{_libdir}/%_arch64/libQtSql.so
 %{_libdir}/%_arch64/libQtSql.so.4
-%{_libdir}/%_arch64/libQtSql.so.4.4
-%{_libdir}/%_arch64/libQtSql.so.4.4.3
+%{_libdir}/%_arch64/libQtSql.so.4.5
+%{_libdir}/%_arch64/libQtSql.so.4.5.2
 %{_libdir}/%_arch64/libQtSvg.prl
 %{_libdir}/%_arch64/libQtSvg.so
 %{_libdir}/%_arch64/libQtSvg.so.4
-%{_libdir}/%_arch64/libQtSvg.so.4.4
-%{_libdir}/%_arch64/libQtSvg.so.4.4.3
+%{_libdir}/%_arch64/libQtSvg.so.4.5
+%{_libdir}/%_arch64/libQtSvg.so.4.5.2
 %{_libdir}/%_arch64/libQtTest.prl
 %{_libdir}/%_arch64/libQtTest.so
 %{_libdir}/%_arch64/libQtTest.so.4
-%{_libdir}/%_arch64/libQtTest.so.4.4
-%{_libdir}/%_arch64/libQtTest.so.4.4.3
+%{_libdir}/%_arch64/libQtTest.so.4.5
+%{_libdir}/%_arch64/libQtTest.so.4.5.2
 %{_libdir}/%_arch64/libQtUiTools.a
 %{_libdir}/%_arch64/libQtUiTools.prl
 %{_libdir}/%_arch64/libQtWebKit.prl
 %{_libdir}/%_arch64/libQtWebKit.so
 %{_libdir}/%_arch64/libQtWebKit.so.4
-%{_libdir}/%_arch64/libQtWebKit.so.4.4
-%{_libdir}/%_arch64/libQtWebKit.so.4.4.3
+%{_libdir}/%_arch64/libQtWebKit.so.4.5
+%{_libdir}/%_arch64/libQtWebKit.so.4.5.2
 %{_libdir}/%_arch64/libQtXml.prl
 %{_libdir}/%_arch64/libQtXml.so
 %{_libdir}/%_arch64/libQtXml.so.4
-%{_libdir}/%_arch64/libQtXml.so.4.4
-%{_libdir}/%_arch64/libQtXml.so.4.4.3
+%{_libdir}/%_arch64/libQtXml.so.4.5
+%{_libdir}/%_arch64/libQtXml.so.4.5.2
 %{_libdir}/%_arch64/libQtXmlPatterns.prl
 %{_libdir}/%_arch64/libQtXmlPatterns.so
 %{_libdir}/%_arch64/libQtXmlPatterns.so.4
-%{_libdir}/%_arch64/libQtXmlPatterns.so.4.4
-%{_libdir}/%_arch64/libQtXmlPatterns.so.4.4.3
+%{_libdir}/%_arch64/libQtXmlPatterns.so.4.5
+%{_libdir}/%_arch64/libQtXmlPatterns.so.4.5.2
+%{_libdir}/%_arch64/libQtScriptTools.prl
+%{_libdir}/%_arch64/libQtScriptTools.so
+%{_libdir}/%_arch64/libQtScriptTools.so.4
+%{_libdir}/%_arch64/libQtScriptTools.so.4.5
+%{_libdir}/%_arch64/libQtScriptTools.so.4.5.2
 %endif
 
 %dir %attr (0755, root, sys) %{_datadir}
@@ -728,7 +743,6 @@ cd ..
 %{_datadir}/qt4/translations/qt_help_zh_CN.qm
 %{_datadir}/qt4/translations/qt_help_zh_TW.qm
 %{_datadir}/qt4/translations/qt_iw.qm
-%{_datadir}/qt4/translations/qt_ja_jp.qm
 %{_datadir}/qt4/translations/qt_pl.qm
 %{_datadir}/qt4/translations/qt_pt.qm
 %{_datadir}/qt4/translations/qt_ru.qm
@@ -743,6 +757,18 @@ cd ..
 %{_datadir}/qt4/translations/qvfb_pl.qm
 %{_datadir}/qt4/translations/qvfb_zh_CN.qm
 %{_datadir}/qt4/translations/qvfb_zh_TW.qm
+%{_datadir}/qt4/translations/assistant_untranslated.qm
+%{_datadir}/qt4/translations/qt_help_untranslated.qm
+%{_datadir}/qt4/translations/designer_untranslated.qm
+%{_datadir}/qt4/translations/qvfb_untranslated.qm
+%{_datadir}/qt4/translations/qt_ja_JP.qm
+%{_datadir}/qt4/translations/qt_help_ja.qm
+%{_datadir}/qt4/translations/qt_untranslated.qm
+%{_datadir}/qt4/translations/assistant_ja.qm
+%{_datadir}/qt4/translations/assistant_adp_untranslated.qm
+%{_datadir}/qt4/translations/linguist_fr.qm
+%{_datadir}/qt4/translations/linguist_untranslated.qm
+%{_datadir}/qt4/translations/qtconfig_untranslated.qm
 
 %dir %attr (0755, root, other) %{_datadir}/applications
 %{_datadir}/applications/assistant.desktop
@@ -776,6 +802,7 @@ cd ..
 %{_libdir}/qt4/plugins/designer/libqwebview.so
 %{_libdir}/qt4/plugins/designer/libtaskmenuextension.so
 %{_libdir}/qt4/plugins/designer/libworldtimeclockplugin.so
+%{_libdir}/qt4/plugins/designer/libphononwidgets.so
 %{_libdir}/qt4/plugins/iconengines/libqsvgicon.so
 %{_libdir}/qt4/plugins/imageformats/libqgif.so
 %{_libdir}/qt4/plugins/imageformats/libqico.so
@@ -790,6 +817,7 @@ cd ..
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlmysql.so
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlodbc.so
 %{_libdir}/qt4/plugins/sqldrivers/libqsqlpsql.so
+%{_libdir}/qt4/plugins/graphicssystems/libqglgraphicssystem.so
 #
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_libdir}/%_arch64/qt4
@@ -804,6 +832,7 @@ cd ..
 %{_libdir}/%_arch64/qt4/plugins/designer/libcontainerextension.so
 %{_libdir}/%_arch64/qt4/plugins/designer/libcustomwidgetplugin.so
 %{_libdir}/%_arch64/qt4/plugins/designer/libqt3supportwidgets.so
+#%{_libdir}/%_arch64/qt4/plugins/designer/libphononwidgets.so
 %{_libdir}/%_arch64/qt4/plugins/designer/libqwebview.so
 %{_libdir}/%_arch64/qt4/plugins/designer/libtaskmenuextension.so
 %{_libdir}/%_arch64/qt4/plugins/designer/libworldtimeclockplugin.so
@@ -821,6 +850,7 @@ cd ..
 %{_libdir}/%_arch64/qt4/plugins/sqldrivers/libqsqlmysql.so
 %{_libdir}/%_arch64/qt4/plugins/sqldrivers/libqsqlodbc.so
 %{_libdir}/%_arch64/qt4/plugins/sqldrivers/libqsqlpsql.so
+%{_libdir}/%_arch64/qt4/plugins/graphicssystems/libqglgraphicssystem.so
 %endif
 
 %files devel
@@ -830,6 +860,7 @@ cd ..
 %{_bindir}/linguist-qt4
 %{_bindir}/lrelease-qt4
 %{_bindir}/lupdate-qt4
+%{_bindir}/lconvert
 %{_bindir}/moc-qt4
 %{_bindir}/pixeltool
 %{_bindir}/qcollectiongenerator
@@ -866,6 +897,7 @@ cd ..
 %{_prefix}/qt4/bin/linguist-qt4
 %{_prefix}/qt4/bin/lrelease-qt4
 %{_prefix}/qt4/bin/lupdate-qt4
+%{_prefix}/qt4/bin/lconvert
 %{_prefix}/qt4/bin/moc-qt4
 %{_prefix}/qt4/bin/qmake-qt4
 %{_prefix}/qt4/bin/qtconfig-qt4
@@ -883,6 +915,7 @@ cd ..
 %{_bindir}/%_arch64/linguist-qt4
 %{_bindir}/%_arch64/lrelease-qt4
 %{_bindir}/%_arch64/lupdate-qt4
+%{_bindir}/%_arch64/lconvert
 %{_bindir}/%_arch64/moc-qt4
 %{_bindir}/%_arch64/pixeltool
 %{_bindir}/%_arch64/qcollectiongenerator
@@ -904,6 +937,7 @@ cd ..
 %{_prefix}/qt4/bin/%{_arch64}/linguist
 %{_prefix}/qt4/bin/%{_arch64}/lrelease
 %{_prefix}/qt4/bin/%{_arch64}/lupdate
+%{_prefix}/qt4/bin/%{_arch64}/lconvert
 %{_prefix}/qt4/bin/%{_arch64}/moc
 %{_prefix}/qt4/bin/%{_arch64}/qmake
 %{_prefix}/qt4/bin/%{_arch64}/qtconfig
@@ -951,6 +985,7 @@ cd ..
 %{_includedir}/qt4/QtXmlPatterns/*
 %{_includedir}/qt4/QtHelp/*
 %{_includedir}/qt4/QtWebKit/*
+%{_includedir}/qt4/QtScriptTools/*
 
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_datadir}/qt4
@@ -990,6 +1025,7 @@ cd ..
 %{_libdir}/pkgconfig/QtWebKit.pc
 %{_libdir}/pkgconfig/QtXml.pc
 %{_libdir}/pkgconfig/QtXmlPatterns.pc
+%{_libdir}/pkgconfig/QtScriptTools.pc
 
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_libdir}/%_arch64
@@ -1014,6 +1050,7 @@ cd ..
 %{_libdir}/%_arch64/pkgconfig/QtWebKit.pc
 %{_libdir}/%_arch64/pkgconfig/QtXml.pc
 %{_libdir}/%_arch64/pkgconfig/QtXmlPatterns.pc
+%{_libdir}/%_arch64/pkgconfig/QtScriptTools.pc
 %endif
 
 %files doc
@@ -1025,48 +1062,52 @@ cd ..
 %{_datadir}/qt4/q3porting.xml
 %{_datadir}/qt4/doc
 
-%files debug
-%defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_prefix}/qt4
-%dir %attr (0755, root, bin) %{_prefix}/qt4/bin
-%{_prefix}/qt4/bin/*.debug
-
-%dir %attr (0755, root, bin) %{_libdir}
-%{_libdir}/*.debug
-%dir %attr (0755, root, bin) %{_libdir}/qt4
-%dir %attr (0755, root, bin) %{_libdir}/qt4/plugins
-%{_libdir}/qt4/plugins/designer/libqt3supportwidgets.so.debug
-%{_libdir}/qt4/plugins/designer/libcontainerextension.so.debug
-%{_libdir}/qt4/plugins/designer/libcustomwidgetplugin.so.debug
-%{_libdir}/qt4/plugins/designer/libtaskmenuextension.so.debug
-%{_libdir}/qt4/plugins/designer/libarthurplugin.so.debug
-%{_libdir}/qt4/plugins/designer/libworldtimeclockplugin.so.debug
-%{_libdir}/qt4/plugins/designer/libqwebview.so.debug
-%{_libdir}/qt4/plugins/accessible/libqtaccessiblewidgets.so.debug
-%{_libdir}/qt4/plugins/accessible/libqtaccessiblecompatwidgets.so.debug
-%{_libdir}/qt4/plugins/codecs/libqcncodecs.so.debug
-%{_libdir}/qt4/plugins/codecs/libqtwcodecs.so.debug
-%{_libdir}/qt4/plugins/codecs/libqkrcodecs.so.debug
-%{_libdir}/qt4/plugins/codecs/libqjpcodecs.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqsvg.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqtiff.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqmng.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqico.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqgif.so.debug
-%{_libdir}/qt4/plugins/imageformats/libqjpeg.so.debug
-%{_libdir}/qt4/plugins/iconengines/libqsvgicon.so.debug
-%{_libdir}/qt4/plugins/inputmethods/libqimsw-multi.so.debug
-%{_libdir}/qt4/plugins/script/libqtscriptdbus.so.debug
-%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so.debug
-%{_libdir}/qt4/plugins/sqldrivers/libqsqlite.so.debug
-%{_libdir}/qt4/plugins/sqldrivers/libqsqlpsql.so.debug
-%{_libdir}/qt4/plugins/sqldrivers/libqsqlodbc.so.debug
-%{_libdir}/qt4/plugins/sqldrivers/libqsqlmysql.so.debug
-
-%dir %attr (0755, root, bin) %{_bindir}
-%{_bindir}/*.debug
+#%files debug
+#%defattr (-, root, bin)
+#%dir %attr (0755, root, bin) %{_prefix}/qt4
+#%dir %attr (0755, root, bin) %{_prefix}/qt4/bin
+#%{_prefix}/qt4/bin/*.debug
+#
+#%dir %attr (0755, root, bin) %{_libdir}
+#%{_libdir}/*.debug
+#%dir %attr (0755, root, bin) %{_libdir}/qt4
+#%dir %attr (0755, root, bin) %{_libdir}/qt4/plugins
+#%{_libdir}/qt4/plugins/designer/libqt3supportwidgets.so.debug
+#%{_libdir}/qt4/plugins/designer/libcontainerextension.so.debug
+#%{_libdir}/qt4/plugins/designer/libcustomwidgetplugin.so.debug
+#%{_libdir}/qt4/plugins/designer/libtaskmenuextension.so.debug
+#%{_libdir}/qt4/plugins/designer/libarthurplugin.so.debug
+#%{_libdir}/qt4/plugins/designer/libworldtimeclockplugin.so.debug
+#%{_libdir}/qt4/plugins/designer/libqwebview.so.debug
+#%{_libdir}/qt4/plugins/accessible/libqtaccessiblewidgets.so.debug
+#%{_libdir}/qt4/plugins/accessible/libqtaccessiblecompatwidgets.so.debug
+#%{_libdir}/qt4/plugins/codecs/libqcncodecs.so.debug
+#%{_libdir}/qt4/plugins/codecs/libqtwcodecs.so.debug
+#%{_libdir}/qt4/plugins/codecs/libqkrcodecs.so.debug
+#%{_libdir}/qt4/plugins/codecs/libqjpcodecs.so.debug
+#%{_libdir}/qt4/plugins/imageformats/libqsvg.so.debug
+#%{_libdir}/qt4/plugins/imageformats/libqtiff.so.debug
+#%{_libdir}/qt4/plugins/imageformats/libqmng.so.debug
+#%{_libdir}/qt4/plugins/imageformats/libqico.so.debug
+#%{_libdir}/qt4/plugins/imageformats/libqgif.so.debug
+#%{_libdir}/qt4/plugins/imageformats/libqjpeg.so.debug
+#%{_libdir}/qt4/plugins/iconengines/libqsvgicon.so.debug
+#%{_libdir}/qt4/plugins/inputmethods/libqimsw-multi.so.debug
+#%{_libdir}/qt4/plugins/script/libqtscriptdbus.so.debug
+#%{_libdir}/qt4/plugins/phonon_backend/libphonon_gstreamer.so.debug
+#%{_libdir}/qt4/plugins/sqldrivers/libqsqlite.so.debug
+#%{_libdir}/qt4/plugins/sqldrivers/libqsqlpsql.so.debug
+#%{_libdir}/qt4/plugins/sqldrivers/libqsqlodbc.so.debug
+#%{_libdir}/qt4/plugins/sqldrivers/libqsqlmysql.so.debug
+#
+#%dir %attr (0755, root, bin) %{_bindir}
+#%{_bindir}/*.debug
 
 %changelog
+* Sat Sep 05 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to build Qt 4.5.
+- Reduce arch to pentium3.
+- Disable debug package for now due to issues with GNU objcopy on Solaris.
 * Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Update MySQL dependency to 5.1.x package.
 - Remove duplicate options.

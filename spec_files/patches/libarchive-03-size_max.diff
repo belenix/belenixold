@@ -1,0 +1,18 @@
+--- libarchive-2.7.1/configure.orig	2009-09-05 21:39:23.750267350 +0530
++++ libarchive-2.7.1/configure	2009-09-05 21:41:33.703717906 +0530
+@@ -27505,6 +27505,7 @@
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ $ac_includes_default
++#include <inttypes.h>
+ int
+ main ()
+ {
+@@ -27572,6 +27573,7 @@
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ $ac_includes_default
++#include <inttypes.h>
+ int
+ main ()
+ {

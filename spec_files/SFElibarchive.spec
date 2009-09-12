@@ -14,12 +14,13 @@
 
 Name:                    SFElibarchive
 Summary:                 A library for handling streaming archive formats
-Version:                 2.6.2
+Version:                 2.7.1
 License:                 BSD
 URL:                     http://code.google.com/p/libarchive/
 Source:                  http://libarchive.googlecode.com/files/libarchive-%{version}.tar.gz
 Patch1:                  libarchive-01-write_disk.c.diff
 Patch2:                  libarchive-02-tar-write.c.diff
+Patch3:                  libarchive-03-size_max.diff
 
 SUNW_BaseDir:            %{_basedir}
 SUNW_Copyright:          %{name}.copyright
@@ -51,6 +52,7 @@ error "This spec file requires /usr/gnu/bin/g++. Please set your environment var
 cd libarchive-%version
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 cd ..
 
 %ifarch amd64 sparcv9
@@ -69,7 +71,7 @@ export LFS_CFLAGS=`/usr/bin/getconf LFS_CFLAGS`
 cd libarchive-%{version}-64
 
 export LDFLAGS="%_ldflags64"
-export CFLAGS="%optflags64"
+export CFLAGS="%optflags64 -D_POSIX_PTHREAD_SEMANTICS"
 
 ./configure --prefix=%{_prefix}         \
             --bindir=%{_bindir}/%{_arch64} \
@@ -86,7 +88,7 @@ cd ..
 
 cd libarchive-%{version}
 export LDFLAGS="%_ldflags"
-export CFLAGS="%optflags ${LFS_CFLAGS}"
+export CFLAGS="%optflags -D_POSIX_PTHREAD_SEMANTICS ${LFS_CFLAGS}"
 
 ./configure --prefix=%{_prefix}         \
             --mandir=%{_mandir}         \
@@ -142,5 +144,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Sep 12 2009 - moinakg(at)belenix<dot>org
+- Bump version, add new patch.
 * Fri Jul 03 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version
