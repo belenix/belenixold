@@ -34,7 +34,7 @@ Requires: SUNWpostrun
 
 %package -n SFEgcc
 Summary:                 GNU gcc
-Version:                 4.4
+Version:                 4.4.1
 
 SUNW_BaseDir:            %{_basedir}
 SUNW_Copyright:          SFEgcc.copyright
@@ -226,6 +226,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Sep 12 2009 - moinakg(at)belenix<dot>org
+- Fix package version.
 * Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Bump version to 4.4.1.
 - Add patch required for successful Wine build.

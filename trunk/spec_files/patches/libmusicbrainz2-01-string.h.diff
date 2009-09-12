@@ -1,0 +1,50 @@
+--- libmusicbrainz-2.1.5/lib/c_wrapper.cpp.orig	2009-09-11 08:33:22.854453615 +0530
++++ libmusicbrainz-2.1.5/lib/c_wrapper.cpp	2009-09-11 08:34:49.645746484 +0530
+@@ -24,6 +24,7 @@
+ #include "musicbrainz.h"
+ #include "trm.h"
+ #include "mb_c.h"
++#include <string.h>
+ 
+ extern "C"
+ {
+--- libmusicbrainz-2.1.5/lib/comhttpsocket.cpp.orig	2009-09-11 08:37:50.157340399 +0530
++++ libmusicbrainz-2.1.5/lib/comhttpsocket.cpp	2009-09-11 08:38:05.106629549 +0530
+@@ -20,6 +20,7 @@
+ #endif
+ #include <stdlib.h>
+ #include <assert.h>
++#include <string.h>
+ 
+ const char* g_strCOMVer = "libmusicbrainz/"VERSION;
+ 
+--- libmusicbrainz-2.1.5/lib/comsocket.cpp.orig	2009-09-11 08:39:07.127273218 +0530
++++ libmusicbrainz-2.1.5/lib/comsocket.cpp	2009-09-11 08:39:38.661125323 +0530
+@@ -43,6 +43,7 @@
+ #include <fcntl.h>
+ #include <net/if.h>
+ #include <sys/ioctl.h>
++#include <string.h>
+ #endif
+ 
+ #define mb_socklen_t ACCEPT_ARG3
+--- libmusicbrainz-2.1.5/lib/http.cpp.orig	2009-09-11 08:41:29.427089779 +0530
++++ libmusicbrainz-2.1.5/lib/http.cpp	2009-09-11 08:41:54.312718630 +0530
+@@ -24,6 +24,7 @@
+ ----------------------------------------------------------------------------*/
+ #include <stdlib.h>
+ #include <stdio.h> 
++#include <string.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <ctype.h>
+--- libmusicbrainz-2.1.5/lib/sigclient.cpp.orig	2009-09-11 08:43:23.557781643 +0530
++++ libmusicbrainz-2.1.5/lib/sigclient.cpp	2009-09-11 08:43:38.771317785 +0530
+@@ -35,6 +35,7 @@
+ 
+ #include "sigclient.h"
+ #include "comhttpsocket.h"
++#include <string.h>
+ 
+ #include "sigxdr.h"
+ 
