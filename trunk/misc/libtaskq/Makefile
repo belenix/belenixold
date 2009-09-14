@@ -18,22 +18,37 @@
 #
 # CDDL HEADER END
 #
-
 #
-# Copyright 2006 Sun Microsystems, Inc.  All rights reserved.
+# Copyright 2008 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 #
-# ident	"@(#)pkginfo.tmpl	1.18	06/03/27 SMI"
+# Author: moinakg@belenix.org
 #
 
-#
-# This required package information file describes characteristics of the
-# package, such as package abbreviation, full package name, package version,
-# and package architecture.
-#
-PKG=kde4-devel
-NAME=kde4-devel
-VERSION=1.1
-CATEGORY=development
-DESC=KDE4 Development packages group
-VENDOR=BeleniX
+objs = taskq.o kernel.o
+CFLAGS = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -std=c99 -D__EXTENSIONS__ -fPIC -DPIC
+LDFLAGS = -lthread -lumem
+INC = 
+
+# Uncomment this for debugging information in the files
+DEBUG = -g
+
+all: libtaskq.so.1
+
+libtaskq.so.1: $(objs)
+	@echo Linking
+	@gcc -shared $(DEBUG) $(CFLAGS) $(LDFLAGS) $(objs) -o libtaskq.so.1
+
+.c.o:
+	@echo Compiling $<
+	@gcc -c $< $(DEBUG) $(INC) $(CFLAGS)
+
+clean:
+	@rm -f *.o
+	@rm -f libtaskq.so.1
+
+install:
+	@mkdir -p $(DESTDIR)/usr/lib
+	@cp  btaskq.so.1 $(DESTDIR)/usr/lib
+	@chmod 0755 $(DESTDIR)/usr/lib/libtaskq.so.1
+	@ln -s $(DESTDIR)/usr/lib/libtaskq.so libtaskq.so.1
