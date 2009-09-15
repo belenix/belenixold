@@ -31,19 +31,12 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/processor.h>
-#include <sys/utsname.h>
 #include <sys/systeminfo.h>
 #include "taskq.h"
 
 /*
  * Emulation of some kernel services in userland.
  */
-
-uint64_t physmem;
-
-struct utsname utsname = {
-	"userland", "libzpool", "1", "1", "na"
-};
 
 /*
  * =========================================================================
@@ -456,41 +449,6 @@ delay(clock_t ticks)
 }
 
 /*
- * Find highest one bit set.
- *	Returns bit number + 1 of highest bit that is set, otherwise returns 0.
- * High order bit is 31 (or 63 in _LP64 kernel).
- */
-int
-highbit(ulong_t i)
-{
-	register int h = 1;
-
-	if (i == 0)
-		return (0);
-#ifdef _LP64
-	if (i & 0xffffffff00000000ul) {
-		h += 32; i >>= 32;
-	}
-#endif
-	if (i & 0xffff0000) {
-		h += 16; i >>= 16;
-	}
-	if (i & 0xff00) {
-		h += 8; i >>= 8;
-	}
-	if (i & 0xf0) {
-		h += 4; i >>= 4;
-	}
-	if (i & 0xc) {
-		h += 2; i >>= 2;
-	}
-	if (i & 0x2) {
-		h += 1;
-	}
-	return (h);
-}
-
-/*
  * =========================================================================
  * kernel emulation setup & teardown
  * =========================================================================
@@ -509,40 +467,10 @@ void
 libtaskq_init(int mode)
 {
 	umem_nofail_callback(umem_out_of_memory);
-
-	physmem = sysconf(_SC_PHYS_PAGES);
-
-	dprintf("physmem = %llu pages (%.2f GB)\n", physmem,
-	    (double)physmem * sysconf(_SC_PAGE_SIZE) / (1ULL << 30));
-
 	system_taskq_init();
 }
 
 void
 libtaskq_fini(void)
 {
-}
-
-uid_t
-crgetuid(cred_t *cr)
-{
-	return (0);
-}
-
-gid_t
-crgetgid(cred_t *cr)
-{
-	return (0);
-}
-
-int
-crgetngroups(cred_t *cr)
-{
-	return (0);
-}
-
-gid_t *
-crgetgroups(cred_t *cr)
-{
-	return (NULL);
 }

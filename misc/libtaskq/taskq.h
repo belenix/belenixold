@@ -36,10 +36,6 @@ extern "C" {
 #define	_SYS_SYSTM_H
 #define	_SYS_DEBUG_H
 #define	_SYS_T_LOCK_H
-#define	_SYS_VNODE_H
-#define	_SYS_VFS_H
-#define	_SYS_SUNDDI_H
-#define	_SYS_CALLB_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,10 +57,10 @@ extern "C" {
 #include <time.h>
 #include <sys/note.h>
 #include <sys/types.h>
-#include <sys/cred.h>
-#include <sys/sysmacros.h>
-#include <sys/bitmap.h>
-#include <sys/resource.h>
+/*#include <sys/cred.h>*/
+/*#include <sys/sysmacros.h>*/
+/*#include <sys/bitmap.h>*/
+/*#include <sys/resource.h>*/
 #include <sys/byteorder.h>
 #include <sys/list.h>
 
@@ -225,11 +221,6 @@ extern int rw_tryupgrade(krwlock_t *rwlp);
 extern void rw_exit(krwlock_t *rwlp);
 #define	rw_downgrade(rwlp) do { } while (0)
 
-extern uid_t crgetuid(cred_t *cr);
-extern gid_t crgetgid(cred_t *cr);
-extern int crgetngroups(cred_t *cr);
-extern gid_t *crgetgroups(cred_t *cr);
-
 /*
  * Condition variables
  */
@@ -306,17 +297,6 @@ extern void delay(clock_t ticks);
 
 #define	minclsyspri	60
 #define	maxclsyspri	99
-
-#define	CPU_SEQID	(thr_self() & (max_ncpus - 1))
-
-#define	kcred		NULL
-#define	CRED()		NULL
-
-#define	ptob(x)		((x) * PAGESIZE)
-
-extern uint64_t physmem;
-
-extern int highbit(ulong_t i);
 
 extern void libtaskq_init(int);
 extern void libtaskq_fini(void);
