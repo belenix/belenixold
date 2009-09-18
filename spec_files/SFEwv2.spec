@@ -14,10 +14,6 @@ Version:             0.2.3
 URL:                 http://wvware.sourceforge.net/
 Source:              %{sf_download}/wvware/wv2-%{version}.tar.bz2
 Source1:             %{sf_download}/wvware/word_helper.h.diff
-## owner:halton date:2007-09-18 bugid:11195 type:bug
-#Patch1:              wv-01-solaris-iconv.diff
-## owner:halton date:2007-09-18 bugid:11196 type:bug
-#Patch2:              wv-02-w3m-dump.diff
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -47,8 +43,6 @@ Requires:                %{name}
 
 %prep
 %setup -q -n wv2-%version
-#%patch1 -p1
-#%patch2 -p1
 
 %build
 
@@ -94,5 +88,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Fri Sep 18 2009 - moinakg(at)belenix<dot>org
+- Remove commented patch lines.
 * Sat Jan 26 2008 - moinak.ghosh@sun.com
 - Initial spec.

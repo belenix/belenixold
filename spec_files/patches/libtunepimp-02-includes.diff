@@ -1,0 +1,121 @@
+--- libtunepimp-0.5.3/lib/utf8/utf8util.cpp.orig	2009-09-11 19:03:54.682794188 +0530
++++ libtunepimp-0.5.3/lib/utf8/utf8util.cpp	2009-09-11 19:04:10.211988081 +0530
+@@ -26,6 +26,7 @@
+ ----------------------------------------------------------------------------*/
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include "utf8util.h"
+ #include "utf8.h"
+ #ifdef WIN32
+--- libtunepimp-0.5.3/lib/tunepimp.cpp.orig	2006-11-18 16:22:33.000000000 +0530
++++ libtunepimp-0.5.3/lib/tunepimp.cpp	2009-09-11 19:07:35.841330523 +0530
+@@ -31,6 +31,7 @@
+ #endif
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <map>
+ using namespace std;
+ 
+--- libtunepimp-0.5.3/include/tunepimp-0.5/metadata.h.orig	2009-09-11 19:10:44.617099746 +0530
++++ libtunepimp-0.5.3/include/tunepimp-0.5/metadata.h	2009-09-11 19:11:46.319767735 +0530
+@@ -29,6 +29,7 @@
+ 
+ #include <string>
+ #include <cstdio>
++#include <cstring>
+ 
+ #include "defs.h"
+ #include "tp_c.h"
+--- libtunepimp-0.5.3/lib/metadata.cpp.orig	2009-09-11 19:31:51.242131346 +0530
++++ libtunepimp-0.5.3/lib/metadata.cpp	2009-09-11 19:32:07.447450418 +0530
+@@ -26,6 +26,7 @@
+ ----------------------------------------------------------------------------*/
+ #include <math.h>
+ #include <stdio.h>
++#include <stdlib.h>
+ #include "metadata.h"
+ #include "../config.h"
+ using namespace std;
+--- libtunepimp-0.5.3/lib/c_wrapper.cpp.orig	2009-09-11 19:48:17.267606638 +0530
++++ libtunepimp-0.5.3/lib/c_wrapper.cpp	2009-09-11 19:48:38.785258948 +0530
+@@ -28,6 +28,7 @@
+ #include "mutex.h"
+ #include "tp_c.h"
+ #include "astrcmp.h"
++#include <stdlib.h>
+ 
+ #define DB printf("%s:%d\n", __FILE__, __LINE__);
+ 
+--- libtunepimp-0.5.3/lib/readmeta.cpp.orig	2009-09-11 19:52:31.426264090 +0530
++++ libtunepimp-0.5.3/lib/readmeta.cpp	2009-09-11 19:53:15.216208778 +0530
+@@ -31,6 +31,7 @@
+ #endif
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #ifndef WIN32
+ #include <unistd.h>
+ #endif
+--- libtunepimp-0.5.3/lib/fileio.cpp.orig	2009-09-11 19:53:38.947888295 +0530
++++ libtunepimp-0.5.3/lib/fileio.cpp	2009-09-11 19:54:09.649675102 +0530
+@@ -28,6 +28,8 @@
+ #include <assert.h>
+ #include <errno.h>
+ #include <string>
++#include <cstring>
++#include <cstdlib>
+ #ifndef WIN32
+ #include <unistd.h>
+ #endif
+--- libtunepimp-0.5.3/lib/protocol.cpp.orig	2009-09-11 19:54:43.005599316 +0530
++++ libtunepimp-0.5.3/lib/protocol.cpp	2009-09-11 19:55:00.394944460 +0530
+@@ -8,6 +8,7 @@
+ -------------------------------------------------------------------*/
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <string>
+ #include <map>
+ #include <expat.h>
+--- libtunepimp-0.5.3/plugins/wma/wma.cpp.orig	2009-09-11 19:58:26.595368213 +0530
++++ libtunepimp-0.5.3/plugins/wma/wma.cpp	2009-09-11 19:58:36.632527225 +0530
+@@ -27,6 +27,7 @@
+ 
+ #include <string.h>
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <wmafile.h>
+ #include "metadata.h"
+ #include "plugin.h"
+--- libtunepimp-0.5.3/plugins/wma/wmafile.cpp.orig	2009-09-11 19:58:52.316008389 +0530
++++ libtunepimp-0.5.3/plugins/wma/wmafile.cpp	2009-09-11 20:00:13.315062561 +0530
+@@ -23,6 +23,7 @@
+ #include <wmafile.h>
+ #include <wmatag.h>
+ #include <wmaproperties.h>
++#include <string.h>
+ 
+ using namespace TagLib;
+ 
+--- libtunepimp-0.5.3/plugins/mp3/id3_meta.cpp.orig	2009-09-11 20:01:56.568889822 +0530
++++ libtunepimp-0.5.3/plugins/mp3/id3_meta.cpp	2009-09-11 20:02:12.126277907 +0530
+@@ -26,6 +26,7 @@
+ ----------------------------------------------------------------------------*/
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <time.h>
+ #include <ctype.h>
+ #include <musicbrainz/mb_c.h>
+--- libtunepimp-0.5.3/plugins/mp3/id3_2_3_meta.cpp.orig	2009-09-11 20:02:32.137778050 +0530
++++ libtunepimp-0.5.3/plugins/mp3/id3_2_3_meta.cpp	2009-09-11 20:02:48.095148196 +0530
+@@ -26,6 +26,7 @@
+ ----------------------------------------------------------------------------*/
+ 
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <assert.h>
+ #include <ctype.h>
+ #include <musicbrainz/mb_c.h>

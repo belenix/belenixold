@@ -53,19 +53,19 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
 
-# -L/usr/sfw/lib added to CFLAGS to workaround what seems to be a libtool bug
-export CPPFLAGS="-I/usr/sfw/include"
+# -L/lib added to CFLAGS to workaround what seems to be a libtool bug
+export CPPFLAGS="-I/usr/include"
 export MSGFMT="/usr/bin/msgfmt"
 
 %ifarch amd64 sparcv9
-export CFLAGS="%optflags64 -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib/%_arch64 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
+export CFLAGS="%optflags64 -I/usr/include -DANSICPP -L/lib/%_arch64 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 export RPM_OPT_FLAGS="$CFLAGS"
-export LDFLAGS="-m64 %{gnu_lib_path64} %{sfw_lib_path64}"
+export LDFLAGS="-m64 %{gnu_lib_path64} -L/lib/%_arch64 -R/lib/%_arch64"
 %curl64.build -d %name-%version/%_arch64
 %endif
 
-export LDFLAGS="%{gnu_lib_path} %{sfw_lib_path}"
-export CFLAGS="%optflags -I/usr/sfw/include -DANSICPP -L/usr/sfw/lib -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
+export LDFLAGS="%{gnu_lib_path} -L/lib -R/lib"
+export CFLAGS="%optflags -I/usr/include -DANSICPP -L/lib -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 export RPM_OPT_FLAGS="$CFLAGS"
 %curl.build -d %name-%version/%{base_arch}
 
@@ -75,6 +75,8 @@ rm -rf ${RPM_BUILD_ROOT}
 %curl64.install -d %name-%version/%_arch64
 mkdir -p ${RPM_BUILD_ROOT}/%{_includedir}/curl/64
 mv ${RPM_BUILD_ROOT}/%{_includedir}/curl/curlbuild.h ${RPM_BUILD_ROOT}/%{_includedir}/curl/64
+rm -f ${RPM_BUILD_ROOT}/%{_libdir}/%{_arch64}/*.a
+rm -f ${RPM_BUILD_ROOT}/%{_libdir}/%{_arch64}/*.la
 %endif
 
 %curl.install -d %name-%version/%{base_arch}
@@ -83,6 +85,8 @@ cp ${RPM_BUILD_ROOT}/%{_includedir}/curl/curl.h .
 cat curl.h | sed '{
     s@curlbuild.h@curlbuild_wrapper.h@
 }' > ${RPM_BUILD_ROOT}/%{_includedir}/curl/curl.h
+rm -f ${RPM_BUILD_ROOT}/%{_libdir}/*.a
+rm -f ${RPM_BUILD_ROOT}/%{_libdir}/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -108,9 +112,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/curl-config
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
-%dir %attr (0755, root, bin) %{_libdir}
-%{_libdir}/*.la
-%{_libdir}/*.a
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*
 %dir %attr(0755, root, sys) %{_datadir}
@@ -120,15 +121,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr(0755, root, bin) %{_mandir}/man3
 %{_mandir}/man3/*
 %ifarch amd64 sparcv9
-%dir %attr(0755, root, bin) %{_libdir}/%_arch64
-%{_libdir}/%_arch64/*.la
-%{_libdir}/%_arch64/*.a
 %dir %attr(0755, root, other) %{_libdir}/%_arch64/pkgconfig
 %{_libdir}/%_arch64/pkgconfig/libcurl.pc
 %{_bindir}/%_arch64/curl-config
 %endif
 
 %changelog
+* Fri Sep 18 2009 - moinakg(at)belenix<dot>org
+- Nuke libtool archives and fix build to locate OpenSSL in /lib.
 * Tue Jul 07 2009 - moinakg(at)belenix<dot>org
 - Fix paths to pick up correct libgcc.
 * Fri May 22 2009 - moinakg@belenix.org

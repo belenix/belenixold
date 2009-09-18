@@ -8,8 +8,8 @@
 
 Name:                    SFEeigen
 Summary:                 A C++ template library for linear algebra
-Version:                 2.0.1
-Source:                  http://download.tuxfamily.org/eigen/eigen-%{version}.tar.bz2
+Version:                 2.0.5
+Source:                  http://bitbucket.org/eigen/eigen2/get/%{version}.tar.bz2
 License:                 LGPL3
 
 SUNW_BaseDir:            %{_basedir}
@@ -27,7 +27,7 @@ error "This spec file requires /usr/gnu/bin/g++. Please set your environment var
 %endif
 
 %setup -q -c -n %name-%version
-cd eigen-%version
+cd eigen2
 cd ..
 
 %build
@@ -42,7 +42,7 @@ export GCC="yes"
 export CC=/usr/gnu/bin/gcc
 export CXX=/usr/gnu/bin/gcc
 
-cd eigen-%{version}
+cd eigen2
 export LDFLAGS="-L/usr/gnu/lib -R/usr/gnu/lib -lstdc++"
 export CFLAGS="-O3 -fno-omit-frame-pointer -fPIC -DPIC"
 export CXXFLAGS="-O3 -fno-omit-frame-pointer -fPIC -DPIC"
@@ -68,13 +68,12 @@ export SHELL="/bin/bash"
 export CONFIG_SHELL="/bin/bash"
 export MAKESHELL="/bin/bash"
 
-cd eigen-%{version}
+cd eigen2
 make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/doc/eigen
 cp -r html ${RPM_BUILD_ROOT}%{_datadir}/doc/eigen
 cp COPYING COPYING.LESSER ${RPM_BUILD_ROOT}%{_datadir}/doc/eigen
 cd ..
-
 
 
 %clean
@@ -90,6 +89,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/doc/eigen/*
 
 %changelog
+* Fri Sep 18 2009 - moinakg(at)belenix<dot>org
+- Bump version.
 * Thu Jul 16 2009 - moinakg(at)belenix<dot>org
 - Remove unused devel package definition.
 * Mon May 04 2009 - moinakg@belenix.org

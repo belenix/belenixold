@@ -19,6 +19,8 @@ Version:       0.5.3
 License:       GPLv2
 Source:        ftp://ftp.musicbrainz.org/pub/musicbrainz/libtunepimp-%{version}.tar.gz
 Patch1:        libtunepimp-01-statvfs.diff
+Patch2:        libtunepimp-02-includes.diff
+
 SUNW_BaseDir:  %{_prefix}
 BuildRoot:     %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -36,8 +38,8 @@ BuildRequires: SFElibiconv-devel
 BuildRequires: SFElibmad-devel
 BuildRequires: SUNWogg-vorbis-devel
 BuildRequires: SUNWflac-devel
-Requires:      SFElibmusicbrainz3
-BuildRequires: SFElibmusicbrainz3-devel
+Requires:      SUNWmusicbrainz
+BuildRequires: SUNWmusicbrainz-devel
 Requires:      SUNWlexpt
 Requires:      SUNWcurl
 Requires:      SUNWzlib
@@ -58,6 +60,7 @@ Requires:  %{name}
 %prep
 %setup -q -n libtunepimp-%{version}
 %patch1 -p1
+%patch2 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -65,8 +68,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
      CPUS=1
 fi
 
-export CFLAGS="%optflags"
-export LDFLAGS="%_ldflags"
+export LDFLAGS="%_ldflags -L/lib -R/lib %{gnu_lib_path}"
 
 ./configure \
     --prefix=%{_prefix} \
@@ -116,6 +118,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/tunepimp/plugins/wma.tpp
 
 %changelog
+* Fri Sep 18 2009 - moinakg(at)belenix<dot>org
+- Fix build issue and dependencies.
 * Sun Feb 24 2008 - moinakg@gmail.com
 - Add dependency on SUNWgnu-iconv/gettext.
 * Fri Jan 18 2008 - moinakg@gmail.com
