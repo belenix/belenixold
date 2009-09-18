@@ -657,21 +657,21 @@ Index: server/fen-helper.c
 +#else
 +    if (port_add (&data->fobj, &data->len, data) ||
 +      g_file_test (FN_NAME(data), G_FILE_TEST_EXISTS)) {
-+        gam_server_emit_one_event (FN_NAME(data),
-+          gam_subscription_is_dir (sub), GAMIN_EVENT_EXISTS, sub, 1);
++        /* gam_server_emit_one_event (FN_NAME(data),
++          gam_subscription_is_dir (sub), GAMIN_EVENT_EXISTS, sub, 1); */
 +        if (is_mondir) {
 +            scan_children_init (f, sub);
 +        }
-+        gam_server_emit_one_event (FN_NAME(data),
-+          gam_subscription_is_dir (sub), GAMIN_EVENT_ENDEXISTS, sub, 1);
++        /* gam_server_emit_one_event (FN_NAME(data),
++          gam_subscription_is_dir (sub), GAMIN_EVENT_ENDEXISTS, sub, 1); */
 +        fdata_sub_add (data, sub);
 +    } else {
 +        fdata_sub_add (data, sub);
-+        gam_server_emit_one_event (FN_NAME(data),
-+          gam_subscription_is_dir (sub), GAMIN_EVENT_DELETED, sub, 1);
++        /* gam_server_emit_one_event (FN_NAME(data),
++          gam_subscription_is_dir (sub), GAMIN_EVENT_DELETED, sub, 1); */
 +        fdata_adjust_deleted (data);
-+        gam_server_emit_one_event (FN_NAME(data),
-+          gam_subscription_is_dir (sub), GAMIN_EVENT_ENDEXISTS, sub, 1);
++        /* gam_server_emit_one_event (FN_NAME(data),
++          gam_subscription_is_dir (sub), GAMIN_EVENT_ENDEXISTS, sub, 1); */
 +    }
 +#endif
 +    G_UNLOCK (fen_lock);
