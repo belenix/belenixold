@@ -13,7 +13,7 @@ P SUNWagph
 P SUNWaconf
 P SUNWpiclh
 P SUNWprd
-P SFEcurl-devel
+P SUNWcurl-devel
 P SUNWsvn
 P SUNWsqlite3-devel
 P SUNWsfwhea
@@ -140,3 +140,4 @@ P SFElibdiscid-devel
 P SFElibzip-devel
 P SFEqtscriptbindings
 P SFElensfun-devel
+P SUNWlibsoup-devel
