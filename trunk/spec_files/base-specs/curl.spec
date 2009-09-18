@@ -13,6 +13,7 @@ SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 Requires: SUNWopenssl-libraries
+Requires: SUNWopensslr
 BuildRequires: SUNWopenssl-include
 Requires: SUNWzlib
 
@@ -38,7 +39,7 @@ cat configure.orig | sed 's/-lgssapi/-lgss/' > configure
 	    --mandir=%{_mandir}			\
             --libdir=%{_libdir}                 \
             --enable-rpath			\
-	    --with-ssl=%{_prefix}/sfw           \
+	    --with-ssl=%{_prefix}               \
 	    --with-gssapi-includes=%{_prefix}/include/gssapi \
 	    --with-gssapi-libs=%{_prefix}/lib
 
@@ -51,6 +52,8 @@ make DESTDIR=${RPM_BUILD_ROOT} install
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Sep 18 2009 - moinakg(at)belenix<dot>org
+- OpenSSL is now located in /lib.
 * Tue Oct 28 2008 - moinakg@belenix.org
 - Bump version, pull in patch from SFW gate and fix make invocation.
 * Wed Dec 12 2997   Michal Bielicki

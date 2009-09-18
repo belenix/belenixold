@@ -33,6 +33,7 @@ Requires: SUNWzlib
 Requires: SUNWmlib
 Requires: SUNWdbus-libs
 Requires: SUNWcurl
+Requires: SUNWlibsoup
 Requires: SUNWlxml
 Requires: SUNWgnome-media
 Requires: SFEqt4
@@ -44,8 +45,11 @@ Requires: SUNWfreetype2
 Requires: SUNWgnome-libs
 Requires: SUNWgnome-vfs
 Requires: SFExulrunner
+Requires: SUNWltdl
+Requires: SFElibdv
 
 BuildRequires: SUNWcurl-devel
+BuildRequires: SUNWlibsoup-devel
 BuildRequires: SUNWlxml-devel
 BuildRequires: SUNWdbus-devel
 BuildRequires: SUNWgnome-media-devel
@@ -59,6 +63,8 @@ BuildRequires: SUNWgnome-libs-devel
 BuildRequires: SUNWgnome-common-devel
 BuildRequires: SUNWgtk2-devel
 BuildRequires: SFExulrunner-devel
+BuildRequires: SUNWlibtool
+BuildRequires: SFElibdv-devel
 
 %package qt
 Summary:                 Qt front-end for %{name}
@@ -80,6 +86,7 @@ Requires: %{name}
 Requires: %{name}-qt
 Requires: %{name}-gtk
 Requires: SUNWcurl-devel
+Requires: SUNWlibsoup-devel
 Requires: SUNWlxml-devel
 Requires: SUNWdbus-devel
 Requires: SUNWgnome-media-devel
@@ -93,6 +100,8 @@ Requires: SUNWgnome-libs-devel
 Requires: SUNWgnome-common-devel
 Requires: SUNWgtk2-devel
 Requires: SFExulrunner-devel
+Requires: SUNWltdl
+Requires: SUNWlibtool
 
 %prep
 %setup -q -n google-gadgets-for-linux-%{version}
@@ -101,8 +110,8 @@ Requires: SFExulrunner-devel
 %patch4 -p1
 
 %build
-export CXXFLAGS="-O3 -march=pentium4 -fno-omit-frame-pointer -D_REENTRANT -D__EXTENSIONS__ -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_POSIX_PTHREAD_SEMANTICS"
-export LDFLAGS="-lc -lm  %{gnu_lib_path} -lstdc++"
+export CXXFLAGS="-O3 -march=pentium3 -fno-omit-frame-pointer -D_REENTRANT -D__EXTENSIONS__ -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_POSIX_PTHREAD_SEMANTICS"
+export LDFLAGS="-lc -lm  -L%{_libdir} -R%{_libdir} %{gnu_lib_path} -lstdc++ %{xorg_lib_path} -lX11 -lXrender"
 export CPPFLAGS="-I%{gnu_inc}"
 export QTDIR=%{_prefix}
 export QT_INCLUDES=%{_includedir}/qt4
@@ -111,12 +120,15 @@ OPATH=${PATH}
 export PATH="%{qt4_bin_path}:${OPATH}"
 export MOC=%{qt4_bin_path}/moc
 
-./autotools/bootstrap.sh
-cp /usr/share/automake-1.10/mkinstalldirs libltdl/
-chmod a+x libltdl/mkinstalldirs
+#./autotools/bootstrap.sh
+#cp /usr/share/automake-1.10/mkinstalldirs libltdl/
+#chmod a+x libltdl/mkinstalldirs
 ./configure --prefix=%{_prefix} \
             --disable-static \
+            --with-libcurl=%{_prefix} \
             --with-browser-plugins-dir=%{_libdir}/firefox/plugins
+
+export echo=echo
 make
 
 export PATH=$OPATH
@@ -214,6 +226,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/google-gadgets/include/*
 
 %changelog
+* Fri Sep 18 2009 - moinakg(at)belenix<dot>org
+- Add missing dependencies.
+- Do not bootstrap to avoid building duplicate libltdl.
+- Downgrade platform to pentium3.
 * Sun Jul 26 2009 - moinakg<at>belenix(dot)org
 - Bump version to get new features. Add patch to use latest XULRunner.
 * Sat Jul 04 2009 - moinakg@belenix(dot)org

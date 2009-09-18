@@ -12,9 +12,7 @@ Source:                  http://builds.nightly.webkit.org/files/trunk/src/WebKit
 URL:                     http://www.webkit.org/
 
 # owner:alfred date:2008-11-26 type:bug
-#Patch1:                  webkit-01-sun-studio-build-hack.diff
 # owner:alfred date:2008-11-26 type:bug
-#Patch2:                  webkit-02-explicit-const.diff
 Patch0:                  webkit_preproc.0.diff
 
 SUNW_BaseDir:            %{_basedir}
@@ -40,8 +38,6 @@ BuildRequires: SFEgcc
 %prep
 %setup -q -n %name-%version -c -a1
 cd WebKit-r%version
-#%patch1 -p0
-#%patch2 -p0
 %patch0 -p1
 
 %build
@@ -97,6 +93,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_localedir}/*
 
 %changelog
+* Fri Sep 18 2009 - moinakg(at)belenix<dot>org
+- Remove commented patch lines.
 * Tue Apr 28 2009 - moinakg@belenix.org
 - Fix install script and update paths.
 * Tue Apr 21 2009 - moinakg@belenix.org

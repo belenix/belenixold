@@ -24,7 +24,6 @@ Patch9:                  mediastreamer-9-msconf.c.8.diff
 Patch10:                 mediastreamer-10-msfileplayer.c.9.diff
 Patch11:                 mediastreamer-11-msfilerec.c.10.diff
 Patch12:                 mediastreamer-12-msjoin.c.11.diff
-#Patch13:                 mediastreamer-13-msresample.c.12.diff
 Patch14:                 mediastreamer-14-msrtp.c.13.diff
 Patch15:                 mediastreamer-15-msspeex.c.14.diff
 Patch16:                 mediastreamer-16-msv4l.c.15.diff
@@ -36,7 +35,6 @@ Patch21:                 mediastreamer-21-oss.c.20.diff
 Patch22:                 mediastreamer-22-pasnd.c.21.diff
 Patch23:                 mediastreamer-23-pixconv.c.22.diff
 Patch24:                 mediastreamer-24-rfc3984.c.23.diff
-#Patch25:                 mediastreamer-25-sdlout.c.24.diff
 Patch26:                 mediastreamer-26-sizeconv.c.25.diff
 Patch27:                 mediastreamer-27-speexec.c.26.diff
 Patch28:                 mediastreamer-28-tee.c.27.diff
@@ -126,7 +124,6 @@ cd mediastreamer-%version
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-#%patch13 -p1
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
@@ -138,7 +135,6 @@ cd mediastreamer-%version
 %patch22 -p1
 %patch23 -p1
 %patch24 -p1
-#%patch25 -p1
 %patch26 -p1
 %patch27 -p1
 %patch28 -p1
@@ -236,5 +232,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/images/*
 
 %changelog
+* Fri Sep 18 2009 - moinakg(at)belenix<dot>org
+- Remove commented patches.
 * Thu May 14 2009 - moinakg@belenix.org
 - Initial version
