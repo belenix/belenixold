@@ -1,0 +1,74 @@
+diff --git a/gfx/thebes/src/gfxFontUtils.cpp b/gfx/thebes/src/gfxFontUtils.cpp
+--- a/gfx/thebes/src/gfxFontUtils.cpp
++++ b/gfx/thebes/src/gfxFontUtils.cpp
+@@ -512,38 +512,58 @@ nsresult gfxFontUtils::MakeUniqueUserFon
+ 
+ 
+ // TrueType/OpenType table handling code
+ 
+ // need byte aligned structs
+ #pragma pack(1)
+ 
+ struct AutoSwap_PRUint16 {
++#ifdef __SUNPRO_CC
++    AutoSwap_PRUint16& operator = (const PRUint16 aValue)
++      { this->value = NS_SWAP16(aValue); return *this; }
++#else
+     AutoSwap_PRUint16(PRUint16 aValue) { value = NS_SWAP16(aValue); }
++#endif
+     operator PRUint16() const { return NS_SWAP16(value); }
+     operator PRUint32() const { return NS_SWAP16(value); }
+     operator PRUint64() const { return NS_SWAP16(value); }
+     PRUint16 value;
+ };
+ 
+ struct AutoSwap_PRInt16 {
++#ifdef __SUNPRO_CC
++    AutoSwap_PRInt16& operator = (const PRInt16 aValue)
++      { this->value = NS_SWAP16(aValue); return *this; }
++#else
+     AutoSwap_PRInt16(PRInt16 aValue) { value = NS_SWAP16(aValue); }
++#endif
+     operator PRInt16() const { return NS_SWAP16(value); }
+     operator PRUint32() const { return NS_SWAP16(value); }
+     PRInt16  value;
+ };
+ 
+ struct AutoSwap_PRUint32 {
++#ifdef __SUNPRO_CC
++    AutoSwap_PRUint32& operator = (const PRUint32 aValue)
++      { this->value = NS_SWAP32(aValue); return *this; }
++#else
+     AutoSwap_PRUint32(PRUint32 aValue) { value = NS_SWAP32(aValue); }
++#endif
+     operator PRUint32() const { return NS_SWAP32(value); }
+     PRUint32  value;
+ };
+ 
+ struct AutoSwap_PRUint64 {
++#ifdef __SUNPRO_CC
++    AutoSwap_PRUint64& operator = (const PRUint64 aValue)
++      { this->value = NS_SWAP64(aValue); return *this; }
++#else
+     AutoSwap_PRUint64(PRUint64 aValue) { value = NS_SWAP64(aValue); }
++#endif
+     operator PRUint64() const { return NS_SWAP64(value); }
+     PRUint64  value;
+ };
+ 
+ struct SFNTHeader {
+     AutoSwap_PRUint32    sfntVersion;            // Fixed, 0x00010000 for version 1.0.
+     AutoSwap_PRUint16    numTables;              // Number of tables.
+     AutoSwap_PRUint16    searchRange;            // (Maximum power of 2 <= numTables) x 16.
+@@ -1615,9 +1635,9 @@ gfxFontUtils::MakeEOTHeader(const PRUint
+ 
+     eotHeader->eotSize = aHeader->Length() + fontDataSize;
+ 
+     // DumpEOTHeader(aHeader->Elements(), aHeader->Length());
+ 
+     return NS_OK;
+ }
+ 
+-#endif
+\ No newline at end of file
++#endif
