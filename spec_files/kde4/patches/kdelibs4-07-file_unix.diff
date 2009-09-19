@@ -1,0 +1,30 @@
+--- kdelibs-4.3.0/kioslave/file/file_unix.cpp.orig	2009-09-05 08:47:00.811637605 +0530
++++ kdelibs-4.3.0/kioslave/file/file_unix.cpp	2009-09-05 08:50:33.133967225 +0530
+@@ -42,6 +42,7 @@
+ #include <grp.h>
+ #include <utime.h>
+ #include <pwd.h>
++#include <sys/stat.h>
+ 
+ #if defined(HAVE_LIMITS_H)
+ #include <limits.h>  // PATH_MAX
+@@ -338,15 +339,17 @@
+     // files where QFile::encodeName(QFile::decodeName(a)) != a.
+     QList<QByteArray> entryNames;
+     KDE_struct_dirent *ep;
++    KDE_struct_stat sbuf;
+     if (details == 0) {
+         // Fast path (for recursive deletion, mostly)
+         // Simply emit the name and file type, nothing else.
+         while ( ( ep = KDE_readdir( dp ) ) != 0 ) {
+             entry.clear();
+             entry.insert(KIO::UDSEntry::UDS_NAME, QFile::decodeName(ep->d_name));
++            KDE_lstat(ep->d_name, &sbuf);
+             entry.insert(KIO::UDSEntry::UDS_FILE_TYPE,
+-                         (ep->d_type & DT_DIR) ? S_IFDIR : S_IFREG );
+-            if (ep->d_type & DT_LNK) {
++                         (S_ISDIR(sbuf.st_mode)) ? S_IFDIR : S_IFREG);
++            if (S_ISLNK(sbuf.st_mode)) {
+                 // for symlinks obey the UDSEntry contract and provide UDS_LINK_DEST
+                 // even if we don't know the link dest (and DeleteJob doesn't care...)
+                 entry.insert(KIO::UDSEntry::UDS_LINK_DEST, QLatin1String("Dummy Link Target"));

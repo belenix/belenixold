@@ -16,7 +16,7 @@
 %define src_dir          kdelibs
 Name:                    SFEkdelibs4
 Summary:                 Libraries for K Desktop Environment Version 4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 LGPLv2+
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdelibs-%{version}.tar.bz2
@@ -26,12 +26,14 @@ Patch3:                  kdelibs4-03-kcrash.cpp.diff
 Patch4:                  kdelibs4-04-install-all-css.diff
 Patch5:                  kdelibs4-05-cmake.diff
 Patch6:                  kdelibs4-06-kstandarddirs.diff
-Patch7:                  kdelibs4-07-kde149705.diff
-Patch8:                  kdelibs4-08-AllowExternalPaths.patch
-Patch9:                  kdelibs-09-kpixmapcache.cpp.diff
+Patch7:                  kdelibs4-07-file_unix.diff
+Patch9:                  kdelibs4-09-nepomuk-rcgen.diff
 Patch10:                 kdelibs4-10-klocale.cpp.diff
-Patch11:                 kdelibs4-11-fixPopupForPlasmaboard.diff
 Patch12:                 kdelibs4-12-kpty.diff
+
+# New ones for 4.3.0
+Patch13:                 kdelibs4-13-bookmarks.diff
+Patch14:                 kdelibs4-14-CVE-2009-2702.diff
 
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
@@ -48,6 +50,9 @@ Requires:      SFEredland
 Requires:      SFEraptor
 Requires:      SFEclucene-core
 Requires:      SFEgccruntime
+Requires:      SFEopenexr
+Requires:      SFEilmbase
+Requires:      SFElzma
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEphonon-devel
 BuildRequires: SFEstrigi-devel
@@ -60,6 +65,9 @@ BuildRequires: SFEdoxygen
 BuildRequires: SFEgraphviz
 BuildRequires: SFEclucene-core-devel
 BuildRequires: SUNWgnome-spell-devel
+BuildRequires: SFEopenexr-devel
+BuildRequires: SFEilmbase-devel
+BuildRequires: SFElzma-devel
 Conflicts:     SFEkdelibs3
 Conflicts:     SFEkdelibs3-root
 Conflicts:     SFEkdeaddons3
@@ -85,6 +93,13 @@ Requires: SFEcmake
 Requires: SFEdoxygen
 Requires: SFEgraphviz
 Requires: SUNWgnome-spell-devel
+Requires: SFEaspell-devel
+Requires: SFEstrigi-devel
+Requires: SFEsoprano-devel
+Requires: SFEphonon-devel
+Requires: SFEopenexr-devel
+Requires: SFEilmbase-devel
+Requires: SFElzma-devel
 Conflicts: SFEkdelibs3-devel
 Conflicts: SFEkdeedu3-devel
 Conflicts: SFEkdesdk3-devel
@@ -109,11 +124,11 @@ cd %{src_dir}-%{version}
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
-%patch9 -p1
+%patch9 -p0
 %patch10 -p1
-%patch11 -p1
 %patch12 -p1
+%patch13 -p1
+%patch14 -p1
 cd ..
 
 #%ifarch amd64 sparcv9
@@ -135,6 +150,8 @@ export QTDIR=%{_prefix}
 export QT_INCLUDES=%{_includedir}/qt4
 export CMAKE_INCLUDE_PATH="%{gnu_inc}:%{xorg_inc}"
 export JAVA_HOME=%{_prefix}/java
+export QMAKESPEC=%{_datadir}/qt4/mkspecs/solaris-g++
+export 
 OPATH=${PATH}
 
 #%ifarch amd64 sparcv9
@@ -168,8 +185,8 @@ OPATH=${PATH}
 mkdir -p kdebld
 cd kdebld
 
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -floop-interchange -floop-block -ftree-loop-distribution -fPIC -DPIC -I%{gnu_inc} -DSOLARIS -DUSE_SOLARIS -D_OS_SOLARIS_"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -floop-interchange -floop-block -ftree-loop-distribution -fPIC -DPIC -I%{gnu_inc} -DSOLARIS -DUSE_SOLARIS -D_OS_SOLARIS_"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -floop-interchange -floop-block -ftree-loop-distribution -fPIC -DPIC -I%{gnu_inc} -DSOLARIS -DUSE_SOLARIS -D_OS_SOLARIS_"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -floop-interchange -floop-block -ftree-loop-distribution -fPIC -DPIC -I%{gnu_inc} -DSOLARIS -DUSE_SOLARIS -D_OS_SOLARIS_"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path}"
 export PATH="%{qt4_bin_path}:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -186,6 +203,7 @@ cmake   ../%{src_dir}-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
         -DSYSCONF_INSTALL_DIR=%{_sysconfdir}                            \
         -DDBUS_INTERFACES_INSTALL_DIR=%{_datadir}/dbus-1/interfaces     \
         -DDBUS_SERVICES_INSTALL_DIR=%{_datadir}/dbus-1/services         \
+        -DKRB5_CONFIG=%{_bindir}/krb5-config                            \
         -DBUILD_SHARED_LIBS=On                                          \
         -DKDE4_ENABLE_HTMLHANDBOOK=On                                   \
         -DCMAKE_VERBOSE_MAKEFILE=1 > config.log 2>&1
@@ -274,6 +292,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Sep 19 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
 * Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Rebuild with Solaris build flags.
 * Sun Jul 26 2009 - moinakg<at>belenix(dot)org
