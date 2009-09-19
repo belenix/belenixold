@@ -1,0 +1,13 @@
+<</FeatureLockdown [/c <<	/DefaultLaunchAttachmentPerms [/c <<		/BuiltInPermList [/t (version:1|.ade:3|.adp:3|.app:3|.asp:3|.bas:3|.bat:3|.bz:3|.bz2:3|.chm:3|.class:3|.cmd:3|.com:3|.command:3|.cpl:3|.crt:3|.csh:3|.desktop:3|.dll:3|.exe:3|.fxp:3|.gz:3|.hex:3|.hlp:3|.hqx:3|.hta:3|.inf:3|.ini:3|.ins:3|.isp:3|.its:3|.job:3|.js:3|.jse:3|.ksh:3|.lnk:3|.lzh:3|.mad:3|.maf:3|.mag:3|.mam:3|.maq:3|.mar:3|.mas:3|.mat:3|.mau:3|.mav:3|.maw:3|.mda:3|.mdb:3|.mde:3|.mdt:3|.mdw:3|.mdz:3|.msc:3|.msi:3|.msp:3|.mst:3|.ocx:3|.ops:3|.pcd:3|.pi:3|.pif:3|.prf:3|.prg:3|.pst:3|.rar:3|.reg:3|.scf:3|.scr:3|.sct:3|.sea:3|.shb:3|.shs:3|.sit:3|.tar:3|.tgz:3|.tmp:3|.url:3|.vb:3|.vbe:3|.vbs:3|.vsmacros:3|.vss:3|.vst:3|.vsw:3|.webloc:3|.ws:3|.wsc:3|.wsf:3|.wsh:3|.zip:3|.zlo:3|.zoo:3|.pdf:2|.fdf:2|.so:3|.a:3|.sh:3)]
+>>]
+
+	/DefaultExecMenuItems [/c <<            /WhiteList [/t (Close|GeneralInfo|Quit|FirstPage|PrevPage|NextPage|LastPage|ActualSize|FitPage|FitWidth|FitHeight|SinglePage|OneColumn|TwoPages|TwoColumns|ZoomViewIn|ZoomViewOut|ShowHideBookmarks|ShowHideThumbnails|Print|GoToPage|ZoomTo|GeneralPrefs|SaveAs|FullScreen|OpenOrganizer|Scan|Web2PDF:OpnURL|AcroSendMail:SendMail|Spelling:Check Spelling|PageSetup|Find|FindSearch|GoBack|GoForward|FitVisible|ShowHideToolbarEditing|ShowHideToolbarCommenting|ShowHideToolbarEdit|ShowHideToolbarFile|ShowHideToolbarFind|ShowHideToolbarForms|ShowHideToolbarMeasuring|ShowHideToolbarData|ShowHideToolbarPageDisplay|ShowHideToolbarNavigation|ShowHideToolbarPrintProduction|ShowHideToolbarRedaction|ShowHideToolbarBasicTools|ShowHideToolbarTasks|ShowHideToolbarTypewriter|PropertyToolbar|ShowHideArticles|ShowHideFileAttachment|ShowHideAnnotManager|ShowHideFields|ShowHideOptCont|ShowHideModelTree|ShowHideSignatures|InsertPages|ExtractPages|ReplacePages|DeletePages|CropPages|RotatePages|AddFileAttachment|FindCurrentBookmark|BookmarkShowLocation|GoBackDoc|GoForwardDoc)]
+>>]
+
+	/DefaultLaunchURLPerms [/c <<		/SchemePerms [/t (version:1|shell:3|hcp:3|ms-help:3|ms-its:3|ms-itss:3|its:3|mk:3|mhtml:3|help:3|disk:3|afp:3|disks:3|telnet:3|ssh:3|acrobat:2|mailto:2|file:1)]
+>>]
+>>]
+/Downtown [/c <<	/DontShowAtLaunch [/b true]
+>>]
+>>
+

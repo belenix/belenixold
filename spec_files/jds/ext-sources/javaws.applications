@@ -1,0 +1,6 @@
+javaws
+	requires_terminal=false
+	command=/usr/java/j2redefault/javaws/javaws
+	can_open_multiple_files=false
+	name=Java Web Start
+

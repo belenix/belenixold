@@ -1,0 +1,676 @@
+#!/bin/ksh
+#
+# Script for starting a postponed post-installation command in
+# a Live-Upgrade-safe environment
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2004-2005 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+export PATH=/usr/bin
+LC_ALL=C
+export LC_ALL
+MYDIR=$(cd $(dirname $0); pwd)
+SPOOLDIR="$MYDIR/../../spool/postrun"
+LOCKFILE="/var/run/postrun.lock"
+LOGFILE="$MYDIR/../../log/postrun.log"
+SEQFILE="$SPOOLDIR/.seq"
+
+id | grep " euid=" && \
+    myuid=`id | sed -e 's/.* euid=\([0-9][0-9]*\).*$/\1/'` || \
+    myuid=`id | sed -e 's/uid=\([0-9][0-9]*\).*/\1/'`
+
+if [ "$myuid" != 0 ]; then
+    echo "postrun: error: run this script as root"
+    exit 1
+fi
+
+umask 0133
+
+usage() {
+    echo 'Usage: postrun [options]'
+    echo
+    echo 'Options:'
+    echo '    -u, --uniq'
+    echo '        If the same command is requested multiple times, the command'
+    echo '        is only run once.  If it is safe to execute the command'
+    echo '        immediately, it will be delayed by 5 minutes, or as set'
+    echo '        using the --timeout option'
+    echo
+    echo '    -t <n>, --timeout <n>'
+    echo '        Delay the execution of uniq commands by <n> minutes.'
+    echo
+    echo '    -b, --bg'
+    echo '        Run the command in the background and return control'
+    echo '        immediately'
+    echo
+    echo '    -f <file>'
+    echo '        Read the commands from <file> instead of the standard'
+    echo '        input.'
+    echo
+    echo '    -c <class>'
+    echo '        Assign this job to class <class>.  Useful for querying'
+    echo '        jobs with postrun-query'
+    echo
+    echo '    -i'
+    echo '        Ignore this job if it cannot be executed immediately.'
+    echo
+    echo '    -h, -?, --help'
+    echo '        Display this help'
+    exit 1
+}
+
+# Solaris 9 doesn't have mktemp, need a substitute in order to be
+# Live Upgrade compliant
+# Note: only creating tmp files is implemented, directories are not
+postrun_mktemp () {
+    test -x /usr/bin/mktemp && {
+	/usr/bin/mktemp $1
+	return
+    }
+    tempname="$1.$$.`date +%H%M%S`"
+    while [ -f $tempname ]; do
+	tempname="$tempname.`date +%S`"
+    done
+    touch $tempname && chmod 700 $tempname || exit 1
+    echo $tempname
+}
+
+#LOCK_UNLOCK_FUNCTIONS_START
+postrun_debug() {
+    if [ "x$POSTRUN_DEBUG" = xyes ]; then
+	for msg in "${@}"; do
+	    echo '<POSTRUN_DEBUG>' "[$$]" "$msg" 1>&2
+	done    
+    fi
+}
+
+is_number() {
+    echo "$1" | egrep -vs '^[0-9]+$' && return 1
+    echo "$1" | egrep -s '^[0-9]+$' || return 1
+    return 0
+}
+
+# lock the postrun spool or log file
+# if $1 is 'log' then lock the log file, otherwise log the spool
+postrun_lock() {
+    typeset this_lock=$LOCKFILE
+    if [ "x$1" = xlog ]; then
+	this_lock=${LOCKFILE}.log
+    fi
+    postrun_debug "Taking lock on $this_lock"
+
+    while true ; do
+	# Try to take the lock
+    	ln -s $$ $this_lock 2>/dev/null
+    	if [ $? = 0 ] ; then
+	    postrun_debug "Lock on $this_lock taken"
+	    return
+    	fi
+
+	# Read who has the lock.  If this process has the lock return
+	typeset pid=$(ls -ld $this_lock \
+		| nawk -F' -> ' '$1 ~ /^l/ && NF == 2 { print $NF }')
+	if [ "$pid" = $$ ] ; then
+	    postrun_debug "Lock on $this_lock already held by this pid ($$)"
+	    return
+	fi
+
+	# check to be sure the process that holds the lock is still running
+	# if so, wait for it to be freed.  If the lock is stale, remove it
+	# so that the next iteration of the loop can take the lock.
+	if is_number "$pid" && kill -0 "$pid" 2>/dev/null ; then
+	    postrun_debug "Waiting for $pid to release $this_lock"
+	    sleep 1
+	else
+	    postrun_debug "Stale lock $this_lock from $pid being released"
+	    rm -f $this_lock
+	fi
+    done
+    postrun_debug "postrun_lock escaped the loop - should not b here"
+
+}
+
+# release the lock
+# unlock the log file if $1 == 'log', unlock the spool otherwise
+postrun_unlock() {
+    typeset this_lock=$LOCKFILE
+    if [ "x$1" = xlog ]; then
+	this_lock=${LOCKFILE}.log
+    fi
+    postrun_debug "Releasing lock on $this_lock"
+
+    typeset pid=$(ls -ld $this_lock \
+    	| nawk -F' -> ' '$1 ~ /^l/ && NF == 2 { print $NF }')
+
+    if ! rm -f $this_lock; then
+	echo "postrun: error: cannot remove lock file $this_lock" 1>&2
+	exit 1
+    fi
+    postrun_debug "Released lock on $this_lock taken by pid $pid"
+}
+#LOCK_UNLOCK_FUNCTIONS_END
+
+# get the next job id
+postrun_get_seq() {
+    postrun_lock
+    seq=`cat $SEQFILE 2>/dev/null`
+    next_seq=$(($seq + 1))
+    echo $next_seq > $SEQFILE
+    postrun_unlock
+    echo $next_seq
+}
+
+postrun_spool_command() {
+    if [ $postrun_no_spool = yes ]; then
+	postrun_debug "Ignoring job, because -i was used and it's not possible to run it now"
+	return 1
+    fi
+    cd $SPOOLDIR
+    # check if there's already a spooled job for the same command
+    new_job=0
+    uniq_job_nr=
+    job_seq=`postrun_get_seq`
+    IFS=' '
+    postrun_lock
+    for f in *.cmd; do
+	test -f "$f" || continue
+	cmp -s $postrun_command_file $f && {
+	    if [ $postrun_is_uniq = yes ]; then
+		uniq_job_nr=`basename $f .cmd`
+		break
+	    fi
+	    egrep -s '^uniq_command: yes' `basename $f .cmd`.ctrl && {
+		uniq_job_nr=`basename $f .cmd`
+		break
+	    }
+	}
+    done
+    if [ "x$uniq_job_nr" != x ]; then
+	postrun_debug "matching spooled uniq job (#${uniq_job_nr}) found"
+	# we found a matching spooled uniq job
+	# we need to update the uniq time and make sure it's
+	# flagged as a uniq job
+
+	new_job=1
+
+	#
+	# FIXME: shouldn't use sed for this, safer to simply append
+	#        and process the duplicate entries when reading the file
+	#
+	sed -e 's/^uniq_command: .*/uniq_command: yes/' \
+	    -e 's/^\(pkginst: .*\)/\1, '$PKGINST'/' \
+	    -e 's/^uniq_time: /resubmit_time: /' \
+	    -e 's/^uniq_timeout: .*/uniq_timeout: '"$postrun_uniq_timeout"'/' \
+	    $uniq_job_nr.ctrl > $uniq_job_nr.ctrl.new
+	echo 'uniq_time: '`date +%Y.%m.%d.%H.%M.%S` >> $uniq_job_nr.ctrl.new
+        grep "^class: $postrun_job_class$" $uniq_job_nr.ctrl.new \
+	    >/dev/null || \
+	    echo "class: $postrun_job_class" >> $uniq_job_nr.ctrl.new
+	#
+	# FIXME: add the user name to the control file
+	#
+
+	# Use a new job id so that the job moves to the end of the queue.
+	# Need to do this such a whay that if this process is interrupted at
+        # any stage, the job is not lost and is not in the queue twice:
+
+	# Step 1: copy the job to the new id:
+	cp $uniq_job_nr.cmd $job_seq.cmd
+
+	# Step 2: move the original job ctrl file to the new id:
+	mv $uniq_job_nr.ctrl $job_seq.ctrl
+
+	# Step 3: replace the original job ctrl file with the updated one:
+	mv $uniq_job_nr.ctrl.new $job_seq.ctrl
+
+	# Step 4: delete the original cmd file
+	rm -f $uniq_job_nr.cmd
+    else
+	postrun_debug "spooling command as job #${job_seq}"
+	user_name=${EMAIL:-root}
+	ctrl_file="$SPOOLDIR/$job_seq.ctrl"
+	cmd_file="$SPOOLDIR/$job_seq.cmd"
+	cat $postrun_command_file > $cmd_file
+	cat /dev/null > $ctrl_file
+	echo "pkginst: $PKGINST"                        >> $ctrl_file
+	echo "submit_time: `date +%Y.%m.%d.%H.%M.%S`"   >> $ctrl_file
+	echo "uniq_command: $postrun_is_uniq"           >> $ctrl_file
+	echo "uniq_time: `date +%Y.%m.%d.%H.%M.%S`"     >> $ctrl_file
+	echo "uniq_timeout: $postrun_uniq_timeout"      >> $ctrl_file
+	echo "background: $postrun_bg_job"              >> $ctrl_file
+	echo "user: $user_name"                         >> $ctrl_file
+	echo "class: $postrun_job_class"                >> $ctrl_file
+    fi
+    postrun_unlock
+
+    return $new_job
+}
+
+postrun_run_command() {
+    cmdout=`mktemp /tmp/postrun.out.XXXX`
+    # create a background jobs script that executes the commands
+    # then locks the spool/log file and appends the output to the
+    # log file and finally unlocks
+    cmdfile=`mktemp /tmp/postrun.job.XXXX`
+    cat /dev/null > $cmdfile
+    cat /dev/null > $cmdout
+    echo '#!/bin/ksh'                                      >> $cmdfile
+    # copy the postrun_lock and postrun_unlock commands from
+    # this script to the background job script
+    echo "LOCKFILE=$LOCKFILE"                              >> $cmdfile
+    sed -e '1,/#LOCK_UNLOCK_FUNCTIONS_START/d' \
+	-e '/#LOCK_UNLOCK_FUNCTIONS_END/,$d' $0            >> $cmdfile
+    # save the stdout file description
+    echo 'exec 3<&1'                                       >> $cmdfile
+    echo "exec >> $cmdout 2>&1"                            >> $cmdfile
+    echo 'PATH=/usr/bin; export PATH'                      >> $cmdfile
+    echo 'echo Starting postrun job at `LC_ALL=C date`'    >> $cmdfile
+    if [ "x$postrun_submit_time" != x ]; then
+	if [ $postrun_bg_job = yes ]; then
+	    echo "echo 'This is a spooled background job (#${postrun_job_number})'"    >> $cmdfile
+	else
+	    echo "echo 'This is a spooled foreground job (#${postrun_job_number})'"    >> $cmdfile
+	fi
+	echo "echo Job submitted by $postrun_pkginst at $postrun_submit_time" \
+	    >> $cmdfile
+    else
+	if [ $postrun_bg_job = yes ]; then
+	    echo 'echo This is an immediate background job' >> $cmdfile
+	else
+	    echo 'echo This is an immediate foreground job' >> $cmdfile
+	fi
+	echo "echo Job submitted by $postrun_pkginst"\
+	    >> $cmdfile
+    fi
+    echo 'echo Running commands:'                          >> $cmdfile
+    echo "echo '>>>' commands follow:"                     >> $cmdfile
+    cat $postrun_command_file | \
+	sed -e "s/'/'\"'\"'/g" | \
+	sed -e "s/^/echo '/" \
+	    -e "s/\$/'/" >> $cmdfile
+    echo "echo '<<<' commands end"                         >> $cmdfile
+    echo "echo '>>>' Command output follows:"              >> $cmdfile
+    echo "chmod 700 $postrun_command_file"                  >> $cmdfile
+    echo "$postrun_command_file"                           >> $cmdfile
+
+    #
+    # FIXME: send email to $postrun_user if the command failed
+    #
+
+    echo "echo '<<<' Command completed with exit status \$?" \
+	>> $cmdfile
+    echo 'echo Job finished at `LC_ALL=C date`'            >> $cmdfile
+    echo 'echo --'                                         >> $cmdfile
+    # restore PATH in case the command changed it
+    echo 'PATH=/usr/bin; export PATH'                      >> $cmdfile
+    # restore stdout
+    echo 'exec 1<&3'                                       >> $cmdfile
+    # close file descriptor 3
+    echo 'exec 3<&-'                                       >> $cmdfile
+    echo 'exec 2>&1'                                       >> $cmdfile
+    # append the messages to the real log file
+    # need to lock the log file to avoid 2 postrun commands
+    # writing at the same time and messing up the log
+    echo 'postrun_lock log'                                >> $cmdfile
+    echo "cat $cmdout >> $LOGFILE"                         >> $cmdfile
+    echo 'postrun_unlock log'                              >> $cmdfile
+    echo "rm -f $cmdout"                                   >> $cmdfile
+    echo "rm -f $cmdfile"                                  >> $cmdfile
+    echo "rm -f $postrun_command_file"                     >> $cmdfile
+    chmod 700 $cmdfile
+    if [ $postrun_bg_job = yes ]; then
+	$cmdfile &
+    else
+	$cmdfile
+    fi
+    exitval=$?
+}
+
+username=${EMAIL:-root}
+
+postrun_defaults() {
+    # default settings
+    postrun_pkginst="$PKGINST"
+    postrun_submit_time=''
+    postrun_uniq_time=''
+    postrun_is_uniq=no
+    postrun_uniq_timeout=5
+    postrun_bg_job=no
+    postrun_command_file=''
+    postrun_user=${username}
+    postrun_job_number='???'
+    postrun_alt_root_okay=no
+    postrun_job_class=other
+    postrun_no_spool=no
+}
+
+# usage: is_leap_year yyyy
+is_leap_year() {
+    cal 02 $1 | egrep -s 29 && return 0
+    return 1
+}
+
+# get_abstime yy mm dd hh mm ss
+#
+# prints the elapsed time in seconds since 1970.01.01.00.00.00
+#Length of the months:
+#              JA FE MA AP MY JN JL AU SE OC NO DE
+set -A MONTH 0 31 28 31 30 31 30 31 31 30 31 30 31
+get_abstime() {
+    # the absolute time since 1970...
+    t=0
+
+    # number of years
+    t=$(($t + ($1 - 1970) * 31536000))
+
+    # add 1 day for each leap year
+    y=1972
+    end_y=$1
+    if [ $2 -lt 2 ]; then
+	end_y=$(($1 - 1))
+    fi
+    while [ $y -le $end_y ]; do
+	is_leap_year $y && t=$(($t + 86400))
+	y=$(($y + 4))
+    done
+
+    # number of months
+    m=1
+    while [ $m -lt $2 ]; do
+	t=$(($t + ${MONTH[$m]} * 86400))
+	m=$(($m + 1))
+    done
+
+    # number of days, hours, minutes and seconds:
+    echo $(($t + ($3 - 1) * 86400 + $4 * 3600 + $5 * 60 + $6))
+}
+
+# get_timediff: prints the difference in seconds between 2 time strings
+#               the time strings should be of the following format:
+#               YYYY.MM.DD.HH.MM.SS as printed by date +%Y.%m.%d.%H.%M.%S
+#
+#               Works for dates after 1970.01.01.00.00.00
+#
+get_timediff() {
+    year1=$(expr "$1" : "^\([^.]*\)\..*")
+    month1=$(expr "$1" : "^[^.]*\.\([^.]*\)\..*")
+    day1=$(expr "$1" : "^[^.]*\.[^.]*\.\([^.]*\)\..*")
+    hour1=$(expr "$1" : "^[^.]*\.[^.]*\.[^.]*\.\([^.]*\)\..*")
+    min1=$(expr "$1" : "^[^.]*\.[^.]*\.[^.]*\.[^.]*\.\([^.]*\)\..*")
+    sec1=$(expr "$1" : "^[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*\.\([^.]*\)")
+
+    year2=$(expr "$2" : "^\([^.]*\)\..*")
+    month2=$(expr "$2" : "^[^.]*\.\([^.]*\)\..*")
+    day2=$(expr "$2" : "^[^.]*\.[^.]*\.\([^.]*\)\..*")
+    hour2=$(expr "$2" : "^[^.]*\.[^.]*\.[^.]*\.\([^.]*\)\..*")
+    min2=$(expr "$2" : "^[^.]*\.[^.]*\.[^.]*\.[^.]*\.\([^.]*\)\..*")
+    sec2=$(expr "$2" : "^[^.]*\.[^.]*\.[^.]*\.[^.]*\.[^.]*\.\([^.]*\)")
+
+    # calculate seconds since 1970.01.01.00.00.00
+    t1=`get_abstime $year1 $month1 $day1 $hour1 $min1 $sec1`
+    t2=`get_abstime $year2 $month2 $day2 $hour2 $min2 $sec2`
+
+    # print difference
+    expr $t1 - $t2
+}
+
+postrun_runq() {
+    cd $SPOOLDIR
+    IFS=' 
+'
+    timeleft=0
+    postrun_lock
+    all_jobs=`/bin/ls -1 *.ctrl | /bin/sort -n`
+    for job in $all_jobs; do
+	test -f "$job" || continue
+	postrun_defaults
+	while read var val; do
+	    case "$var" in
+		pkginst: )
+                    postrun_pkginst="$val"
+		    ;;
+		submit_time: )
+		    postrun_submit_time="$val"
+		    ;;
+		resubmit_time: )
+		    ;;
+	        uniq_command: )
+		    postrun_is_uniq="$val"
+		    ;;
+		uniq_time: )
+		    postrun_uniq_time="$val"
+		    ;;
+		uniq_timeout: )
+		    postrun_uniq_timeout="$val"
+		    ;;
+		background: )
+		    postrun_bg_job="$val"
+		    ;;
+		user: )
+		    postrun_user="$val"
+		    ;;
+		class: )
+		    postrun_job_class="$val"
+		    ;;
+		* )
+		    echo "postrun: WARNING: invalid setting in $job: $var"
+		    ;;
+	    esac
+	done < $job
+	postrun_command_file=$SPOOLDIR/`basename $job .ctrl`.cmd
+	postrun_job_number=`basename $job .ctrl`
+	if [ $postrun_ignore_timeout = no ]; then
+	    # if it's a uniq job, check if it timed out
+	    if [ "x$postrun_is_uniq" = xyes ]; then
+	        # calculate time difference (seconds)
+		tdiff=$(get_timediff $(date +%Y.%m.%d.%H.%M.%S) \
+		        $postrun_uniq_time)
+		timeout_sec=$((postrun_uniq_timeout * 60))
+		if [ $tdiff -ge $timeout_sec ]; then
+		    postrun_run_command
+		    rm -f $job
+		else
+		    # try again in at least $tdiff sec time
+		    tl=$(($tdiff / 60 + 1))
+		    if [ $tl -gt $timeleft ]; then
+			timeleft=$tl
+		    fi
+		fi
+	    else
+		postrun_run_command
+		rm -f $job
+	    fi
+	else
+	    # ignore timeout, just run the job
+	    postrun_run_command
+	    rm -f $job
+	fi
+    done
+    if [ $timeleft -gt 0 ]; then
+	echo "$MYDIR/postrun -q" | 
+	at now "+${timeleft}minutes" \
+	    > /dev/null 2>&1
+    fi
+    postrun_unlock
+    exit 0
+}
+
+postrun_defaults
+exitval=0
+
+postrun_ignore_timeout=no
+if [ $# = 1 -a "x$1" = 'x-qf' ]; then
+    # postrun-runq mode (ignore timeout for uniq jobs, since this is
+    # expected to be run at system boot)
+    postrun_ignore_timeout=yes
+    postrun_runq
+    exit 1
+fi
+
+if [ $# = 1 -a "x$1" = 'x-q' ]; then
+    # postrun-runq mode, to be run from at(1)
+    postrun_runq
+    exit 1
+fi
+
+# process the command line
+while [ $# -gt 0 ]; do
+    case "$1" in
+	-h|-\?|--help)
+            usage
+            ;;
+        -u|--uniq)
+	    postrun_is_uniq=yes
+	    ;;
+        -b|--bg)
+	    postrun_bg_job=yes
+	    ;;
+	-t|--timeout)
+	    opt="$1"
+	    if [ $# == 0 ]; then
+		    echo "postrun: error: argument expected after $opt"
+		    exit 1
+	    fi
+	    shift
+	    timeout=$1
+	    if ! is_number "$timeout"; then
+		    echo "postrun: error: interger number expected after $opt (found \"$timeout\")"
+		    exit 1
+	    fi
+	    postrun_uniq_timeout=$timeout
+	    ;;
+	-i|--ignore)
+	    postrun_no_spool=yes
+	    ;;
+	-f)
+	    opt="$1"
+	    if [ $# == 0 ]; then
+		    echo "postrun: error: argument expected after $opt"
+		    exit 1
+	    fi
+	    shift
+	    postrun_command_file="$1"
+	    ;;
+	-c)
+	    opt="$1"
+	    if [ $# == 0 ]; then
+		    echo "postrun: error: argument expected after $opt"
+		    exit 1
+	    fi
+	    shift
+	    postrun_job_class="$1"
+	    ;;
+	-a)
+	    postrun_alt_root_okay=yes
+	    ;;
+	--)
+	    break
+	    ;;
+	*)
+	    echo "postrun: error: invalid argument: $1"
+	    exit 1
+	    ;;
+    esac
+    shift
+done
+
+check_alt_root_okay () {
+    if [ "x$PKG_INSTALL_ROOT" = x -o "x$PKG_INSTALL_ROOT" = x/ \
+	-o "x$postrun_alt_root_okay" = xno ]; then
+	return 1
+    fi
+    # need to verify if the architecture and Solaris minor version
+    # of / is equal to that of $PKG_INSTALL_ROOT, otherwise 
+    # running the script is not okay
+    pkginfo -q SUNWsolnm || return 1
+
+    this_solnm_pkginfo="`pkginfo -R / -l SUNWsolnm 2>/dev/null`"
+    alt_root_solnm_pkginfo="`pkginfo -R $PKG_INSTALL_ROOT -l SUNWsolnm 2>/dev/null`"
+
+    this_sol_minor=`echo "$this_solnm_pkginfo" |grep VERSION| sed -e 's/^.*VERSION: *\([0-9]*\),REV=.*/\1/'`
+    alt_root_sol_minor=`echo "$alt_root_solnm_pkginfo" |grep VERSION| sed -e 's/^.*VERSION: *\([0-9]*\),REV=.*/\1/'`
+    if [ "x$this_sol_minor" != "x$alt_root_sol_minor" ]; then
+	postrun_debug "/ is Solaris $this_sol_minor, $PKG_INSTALL_ROOT is Solaris $alt_root_sol_minor"
+	return 1
+    fi
+    this_sol_arch=`echo "$this_solnm_pkginfo" |grep ARCH|sed -e 's/^.*ARCH: *\([a-z0-9]*\).*/\1/'`
+    alt_root_sol_arch=`echo "$alt_root_solnm_pkginfo" |grep ARCH|sed -e 's/^.*ARCH: *\([a-z0-9]*\).*/\1/'`
+    if [ "x$this_sol_arch" != "x$alt_root_sol_arch" ]; then
+	postrun_debug "/ is $this_sol_arch, $PKG_INSTALL_ROOT is $alt_root_sol_arch"
+	return 1
+    fi
+    return 0
+}
+
+check_alt_root_okay || postrun_alt_root_okay=no
+
+if [ "x$postrun_command_file" = x ]; then
+    # save the standard input in a temporary file
+    tmp_cmd_file=`postrun_mktemp /tmp/postrun.cmd.XXXX`
+    cat > $tmp_cmd_file
+    postrun_command_file=$tmp_cmd_file
+fi
+
+if [ "$LUBIN" != "" ]; then
+    #
+    # Live Upgrade.  Unsafe to run the command now.
+    # Put into spool and defer to next boot.
+    #
+    postrun_spool_command "${@}"
+elif [ "$PKG_INSTALL_ROOT" != "" -a "$PKG_INSTALL_ROOT" != "/" -a \
+       "x$postrun_alt_root_okay" != xyes ]; then
+    # 
+    # Installation to an alternate root directory
+    # Put command into spool and defer to next boot.
+    #
+    postrun_spool_command "${@}"
+else
+    #
+    # Local package install.  Everything's shiny happy,
+    # safe to run the command right now
+    #
+    # Note: for alt_root_okay jobs, -u only applies to the case
+    #       when we have to spool the job
+    if [ x$postrun_is_uniq = xyes  -a x$postrun_alt_root_okay != xyes ]; then
+	# don't run the command yet in case the same command is requested
+	# within the next postrun_uniq_timeout minutes
+	postrun_spool_command "${@}" && {
+	    echo "$MYDIR/postrun -q" | \
+		at now "+${postrun_uniq_timeout}minutes" > /dev/null 2>&1
+	}
+    else
+	postrun_debug "Executing commands immediately"
+	postrun_run_command "${@}"
+	# do not delete the tmp_cmd_file because it's the only copy of the
+	# commands (since the job is not spooled)
+	tmp_cmd_file=''
+    fi
+fi
+
+if [ "x$tmp_cmd_file" != x ]; then
+    rm -f $tmp_cmd_file
+fi
+
+exit $exitval

@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# Copyright 2002 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+N=/tmp/services.$$
+
+rm -f ${N}
+while read dest
+do
+	[ -f ${dest} ] || continue;
+	
+	sed -e "/^apocd[ 	]*/d" ${dest} > ${N} || exit 2
+	diff -w ${N} ${dest} > /dev/null || cp ${N} ${dest}
+	rm -f ${N}
+done
+
+exit 0

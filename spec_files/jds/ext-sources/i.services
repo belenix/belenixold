@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# Copyright 2002 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+F_A=/tmp/services.add.$$
+F_M=/tmp/s.merged.$$
+
+while read src dest
+do
+	if [ ! -f ${dest} ]
+	then
+		cp -p ${src} ${dest}
+	else
+		rm -f ${F_A}
+		cat ${src} |
+		while read service port rest_of_line
+		do
+			grep "^${service}[ 	]*${port}[ 	]*" ${dest} \
+				> /dev/null
+			if [ $? != 0 ]
+			then
+				grep "^${service}[ 	]*${port}[ 	]*" \
+				    ${src} >> ${F_A}
+			fi
+		done
+		if [ -s ${F_A} ]
+		then
+			cat ${dest} ${F_A} > ${F_M}
+			cp ${F_M} ${dest}
+			rm -f ${F_M}
+		fi
+		rm -f ${F_A}
+	fi
+done
+
+exit 0

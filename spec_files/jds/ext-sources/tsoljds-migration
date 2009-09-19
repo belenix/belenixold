@@ -1,0 +1,28 @@
+#!/bin/sh
+
+#
+# The contents are ported from /usr/dt/bin/Xtsolusersession.
+# Migrate Trusted CDE to Trusted JDS.
+#
+
+DT_INSTALL_CONFIG=/usr/dt/config
+DT_CONFIG=/etc/dt/config
+DT_CONFIG_PATH="$DT_CONFIG $DT_INSTALL_CONFIG"
+DT_XSESSION_DIR=Xsession.d
+
+FILES_LIST="0020.dtims"
+
+DTSTARTIMS=${DTSTARTIMS:-"True"}
+
+for i in $DT_CONFIG_PATH
+do
+  if [ -d $i/$DT_XSESSION_DIR ]; then
+    for SCRIPT in $FILES_LIST; do
+      if [ -x $i/$DT_XSESSION_DIR/$SCRIPT -a \
+          \( ! -d $i/$DT_XSESSION_DIR/$SCRIPT \) ]; then
+               . $i/$DT_XSESSION_DIR/$SCRIPT -xagent
+      fi
+    done
+  fi
+done
+

@@ -1,0 +1,5 @@
+application/x-jnlp-file
+	icon_filename=/usr/java/j2redefault/plugin/desktop/sun_java.png
+	short_list_application_ids_for_novice_user_level=javaws
+        short_list_application_ids_for_intermediate_user_level=javaws
+        short_list_application_ids_for_advanced_user_level=javaws

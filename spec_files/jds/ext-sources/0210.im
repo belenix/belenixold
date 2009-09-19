@@ -1,0 +1,105 @@
+#!/bin/sh
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+
+LING=${LC_CTYPE:-"$LC_ALL"}
+LING=${LING:-"$LANG"}
+LING=${LING:-"C"}
+
+LING=`echo $LING | awk -F_ '{print $1}'`
+
+parse_gtk_im_module_file ()
+{
+  if [ ! -f $1 ] ; then
+    echo ""
+    return 1
+  fi
+
+  cat $1 | grep -v "^#" | while read line
+  do
+    id=`echo "$line" | awk -F'"' '{print $2}'`
+    def_locales=`echo "$line" | awk -F'"' '{print $10}'`
+    if [ "x$def_locales" = x ] ; then
+      continue
+    fi
+    if [ "x$def_locales" = "x*" -a "x$id" != x ] ; then
+        echo "$id"
+        return 0
+    fi
+    for locale in `echo $def_locales | tr "," " "`
+    do
+      if [ "x$LING" = "x$locale" -a "x$id" != x ] ; then
+        echo "$id"
+        return 0
+      fi
+    done
+  done
+
+  echo ""
+  return 0
+}
+
+#Startup XIM stuff
+if [ "x$XMODIFIERS" = "x" ]; then
+ if [ -f "$HOME/.xim" ]; then
+        . $HOME/.xim
+ elif [ -f "/etc/skel/.xim" ]; then
+        . /etc/skel/.xim
+ fi
+fi
+
+im_module=
+if [ "x$GTK_IM_MODULE_FILE" != x ] ; then
+  im_module=`parse_gtk_im_module_file $GTK_IM_MODULE_FILE`
+fi
+if [ "x$im_module" = x ] ; then
+  im_module=`parse_gtk_im_module_file /etc/gtk-2.0/gtk.immodules`
+
+  # Remote IM is xim.
+  if [ "x$im_module" = "xxim" ] ; then
+    im_module="iiim"
+  fi
+fi
+
+GTK_IM_MODULE=${im_module:-"iiim"}
+export GTK_IM_MODULE
+
+#Startup Input methods (SCIM->XIM)
+if [ -f /etc/scim/xsession ]; then
+        . /etc/scim/xsession
+fi
+
+#Startup Input methods (IIIM->XIM)
+if [ "x$DISABLE_IIIM_PANEL" != x  ] && [ -x /usr/bin/iiimx ] ; then
+        /usr/bin/iiimx -iiimd
+
+        DTSTARTIMS=False
+        export DTSTARTIMS
+elif [ -f /etc/iiim/xsession ]; then
+        . /etc/iiim/xsession
+fi
+
