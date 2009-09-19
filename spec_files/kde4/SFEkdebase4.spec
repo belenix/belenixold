@@ -12,20 +12,19 @@
 %define python_version   2.6
 Name:                    SFEkdebase4
 Summary:                 Core applications for the K Desktop Environment 4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdebase-%{version}.tar.bz2
 Source1:                 show_interrupts
-Patch1:                  kdebase4-01-kpci.diff
-Patch2:                  kdebase4-02-kpci.diff
 Patch3:                  kdebase4-03-konsole-session.diff
-Patch4:                  kdebase4-04-konsole-flowcontrol.diff
 Patch5:                  kdebase4-05-kinfocenter_CMakeLists.txt.diff
 Patch6:                  kdebase4-06-kinfocenter_memory_CMakeLists.txt.diff
 Patch7:                  kdebase4-07-kinfocenter_info_CMakeLists.txt.diff
 Patch8:                  kdebase4-08-kinfocenter_config.diff
 Patch9:                  kdebase4-09-info_solaris.cpp.diff
+Patch10:                 kdebase4-10-konsolemenus.diff
+Patch11:                 kdebase4-11-Profile_hack.diff
 
 SUNW_BaseDir:            /
 #SUNW_Copyright:          %{name}.copyright
@@ -38,6 +37,7 @@ Requires:      SFEkdebase4-runtime
 Requires:      SUNWpcre
 Requires:      SFEpciutils
 Requires:      SUNWbzip
+Requires:      SFElibraw1394
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEkdelibs4-devel
 BuildRequires: SFEkdebase4-workspace-devel
@@ -66,6 +66,9 @@ Requires: SFEkdebase4-workspace-devel
 Requires: SFEautomoc
 Requires: SFEcmake
 Requires: SFEkdebase4-runtime
+Requires: SFEpciutils-devel
+Requires: SUNWpcre
+Requires: SFElibraw1394-devel
 Conflicts: SFEkdebase3-devel
 Conflicts: SFEkdemultimedia3-devel
 
@@ -79,15 +82,14 @@ Conflicts:     SFEkdemultimedia3-doc
 %prep
 %setup -q -c -n %name-%version
 cd %{src_dir}-%{version}
-%patch1 -p1
-%patch2 -p0
 %patch3 -p1
-%patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p0
+%patch11 -p1
 cd ..
 
 %build
@@ -113,8 +115,8 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -216,6 +218,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Sep 19 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
 * Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Rebuild with Solaris build flags.
 * Tue Jul 07 2009 - moinakg(at)belenix<dot>org

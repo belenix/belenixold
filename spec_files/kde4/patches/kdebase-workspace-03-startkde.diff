@@ -1,5 +1,5 @@
---- kdebase-workspace-4.2.4/startkde.cmake.orig	2009-06-14 11:01:10.345472323 +0530
-+++ kdebase-workspace-4.2.4/startkde.cmake	2009-06-14 11:04:57.756390934 +0530
+--- kdebase-workspace-4.3.1/startkde.cmake.orig	2009-07-08 20:15:04.000000000 +0530
++++ kdebase-workspace-4.3.1/startkde.cmake	2009-09-05 23:38:51.547642509 +0530
 @@ -1,8 +1,18 @@
 -#!/bin/sh
 +#!/usr/bin/bash
@@ -17,6 +17,6 @@
 +# to change input methods.
 +test -n "$LANG" && LANG=`basename "$LANG" ".UTF-8"`
 +
- # When the X server dies we get a HUP signal from xinit. We must ignore it
- # because we still need to do some cleanup.
- trap 'echo GOT SIGHUP' HUP
+ if test "x$1" = x--failsafe; then
+     KDE_FAILSAFE=1 # General failsafe flag
+     KWIN_COMPOSE=N # Disable KWin's compositing

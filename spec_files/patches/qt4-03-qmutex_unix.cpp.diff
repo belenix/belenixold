@@ -1,8 +1,8 @@
---- qt-4.4.1.orig/src/corelib/thread/qmutex_unix.cpp	2008-07-29 06:23:36.000000000 -0400
-+++ qt-4.4.1/src/corelib/thread/qmutex_unix.cpp	2008-08-31 00:43:29.000000000 -0400
-@@ -63,8 +63,47 @@
+--- qt-x11-opensource-src-4.5.2/src/corelib/thread/qmutex_unix.cpp.orig	2009-08-29 19:17:46.174043586 +0530
++++ qt-x11-opensource-src-4.5.2/src/corelib/thread/qmutex_unix.cpp	2009-08-29 19:21:13.791480878 +0530
+@@ -61,8 +61,47 @@
  QMutexPrivate::QMutexPrivate(QMutex::RecursionMode mode)
-     : recursive(mode == QMutex::Recursive), contenders(0), owner(0), count(0), wakeup(false)
+     : recursive(mode == QMutex::Recursive), contenders(0), lastSpinCount(0), owner(0), count(0), wakeup(false)
  {
 +#if defined(Q_OS_SOLARIS)
 +    pthread_mutexattr_t mutex_attr;

@@ -1,0 +1,70 @@
+diff -up kdebase-workspace-4.2.95/plasma/containments/desktop/desktop.cpp.plasma-konsole kdebase-workspace-4.2.95/plasma/containments/desktop/desktop.cpp
+--- kdebase-workspace-4.2.95/plasma/containments/desktop/desktop.cpp.plasma-konsole	2009-06-17 22:07:42.000000000 +0200
++++ kdebase-workspace-4.2.95/plasma/containments/desktop/desktop.cpp	2009-06-26 12:00:49.000000000 +0200
+@@ -41,6 +41,7 @@
+ #include <KRun>
+ #include <KStandardDirs>
+ #include <KWindowSystem>
++#include <ktoolinvocation.h>
+ 
+ #include <Plasma/Corona>
+ #include <Plasma/Animator>
+@@ -65,6 +66,7 @@ DefaultDesktop::DefaultDesktop(QObject *
+       m_runCommandAction(0),
+       m_lockScreenAction(0),
+       m_logoutAction(0),
++      m_runKonsoleAction(0),
+       dropping(false)
+ {
+     qRegisterMetaType<QImage>("QImage");
+@@ -203,6 +205,11 @@ void DefaultDesktop::runCommand()
+     krunner.display();
+ }
+ 
++void DefaultDesktop::runKonsole()
++{
++    KToolInvocation::invokeTerminal(QString(), QDir::homePath());
++}
++
+ void DefaultDesktop::lockScreen()
+ {
+     if (!KAuthorized::authorizeKAction("lock_screen")) {
+@@ -253,6 +260,10 @@ QList<QAction*> DefaultDesktop::contextu
+             m_addPanelAction->setIcon(KIcon("list-add"));
+         }
+ 
++        m_runKonsoleAction = new QAction(i18n("Konsole"), this);
++        connect(m_runKonsoleAction, SIGNAL(triggered(bool)), this, SLOT(runKonsole()));
++        m_runKonsoleAction->setIcon(KIcon("terminal"));
++
+         m_runCommandAction = new QAction(i18n("Run Command..."), this);
+         m_runCommandAction->setIcon(KIcon("system-run"));
+         connect(m_runCommandAction, SIGNAL(triggered(bool)), this, SLOT(runCommand()));
+@@ -272,6 +283,8 @@ QList<QAction*> DefaultDesktop::contextu
+ 
+     QList<QAction*> actions;
+ 
++    actions.append(m_runKonsoleAction);
++
+     if (KAuthorized::authorizeKAction("run_command")) {
+         actions.append(m_runCommandAction);
+     }
+diff -up kdebase-workspace-4.2.95/plasma/containments/desktop/desktop.h.plasma-konsole kdebase-workspace-4.2.95/plasma/containments/desktop/desktop.h
+--- kdebase-workspace-4.2.95/plasma/containments/desktop/desktop.h.plasma-konsole	2009-04-05 22:00:17.000000000 +0200
++++ kdebase-workspace-4.2.95/plasma/containments/desktop/desktop.h	2009-06-26 11:49:24.000000000 +0200
+@@ -70,6 +70,7 @@ protected:
+     void dropEvent(QGraphicsSceneDragDropEvent *event);
+ 
+ protected Q_SLOTS:
++    void runKonsole();
+     void runCommand();
+ 
+     void lockScreen();
+@@ -89,6 +90,7 @@ private:
+     QAction *m_lockDesktopAction;
+     QAction *m_appletBrowserAction;
+     QAction *m_addPanelAction;
++    QAction *m_runKonsoleAction;
+     QAction *m_runCommandAction;
+     QAction *m_setupDesktopAction;
+     QAction *m_lockScreenAction;
