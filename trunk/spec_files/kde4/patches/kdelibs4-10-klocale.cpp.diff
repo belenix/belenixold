@@ -1,8 +1,8 @@
---- kdelibs-4.2.4/kdecore/localization/klocale.cpp.orig	2009-06-30 21:12:41.623977189 +0530
-+++ kdelibs-4.2.4/kdecore/localization/klocale.cpp	2009-06-30 22:22:56.073055527 +0530
-@@ -2098,10 +2098,16 @@
-   // just like Qt compiled without iconv does. Windows already has its own workaround
-   QByteArray systemLocale = nl_langinfo(CODESET);
+--- kdelibs-4.3.0/kdecore/localization/klocale.cpp.orig	2009-07-08 20:11:53.000000000 +0530
++++ kdelibs-4.3.0/kdecore/localization/klocale.cpp	2009-08-29 13:40:53.462777693 +0530
+@@ -2240,10 +2240,16 @@
+   systemLocale = "UTF-8";
+ #endif
  
 -  if (systemLocale == "ANSI_X3.4-1968") // means ascii, "C"; QTextCodec doesn't know, so avoid warning
 +  QTextCodec* codec;

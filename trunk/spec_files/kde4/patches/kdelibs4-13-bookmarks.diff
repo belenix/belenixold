@@ -1,0 +1,16 @@
+diff -rU5 kdelibs-4.3.0/kio/bookmarks/kbookmark.cc kdelibs-4.3.0.bookmarks/kio/bookmarks/kbookmark.cc
+--- kdelibs-4.3.0/kio/bookmarks/kbookmark.cc	2008-07-08 05:54:18.000000000 -0400
++++ kdelibs-4.3.0.bookmarks/kio/bookmarks/kbookmark.cc	2009-08-28 15:09:07.000000000 -0400
+@@ -681,11 +681,11 @@
+         doc.setContent( payload );
+         QDomElement elem = doc.documentElement();
+         QDomNodeList children = elem.childNodes();
+         for ( int childno = 0; childno < children.count(); childno++)
+         {
+-            bookmarks.append( KBookmark( children.item(childno).cloneNode(true).toElement() ));
++            bookmarks.append( KBookmark( children.item(childno).toElement() ));
+         }
+         return bookmarks;
+     }
+     const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
+     if ( !urls.isEmpty() )
