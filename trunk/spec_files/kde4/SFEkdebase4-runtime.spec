@@ -11,7 +11,7 @@
 %define src_dir          kdebase-runtime
 Name:                    SFEkdebase4-runtime
 Summary:                 K Desktop Environment - Runtime
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdebase-runtime-%{version}.tar.bz2
@@ -36,6 +36,8 @@ Requires:      SUNWsmbar
 Requires:      SUNWxwplt
 Requires:      SUNWimagick
 Requires:      FSWxorg-clientlibs
+Requires:      SFElzma
+Requires:      SFEkdelibs4-experimental
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEqimageblitz-devel
 BuildRequires: SFEkdelibs4-devel
@@ -52,6 +54,8 @@ BuildRequires: SFExine-lib-devel
 BuildRequires: SFElibxcb-devel
 BuildRequires: SUNWimagick-devel
 BuildRequires: FSWxorg-headers
+BuildRequires: SFElzma-devel
+BuildRequires: SFEkdelibs4-experimental-devel
 Conflicts:     SFEkdebase3
 BuildConflicts: SFEkdebase3-devel
 
@@ -185,6 +189,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir %attr (0755, root, bin) %{_mandir}
 %{_mandir}/*
+%dir %attr (0755, root, root) %{_datadir}/mime
+%dir %attr (0755, root, root) %{_datadir}/mime/packages
+%attr (0755, root, root) %{_datadir}/mime/packages/network.xml
 
 %defattr (-, root, other)
 %dir %attr (0755, root, other) %{_datadir}/applications
@@ -218,6 +225,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Sep 19 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
 * Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Rebuild with Solaris build flags.
 * Thu Jul 09 2009 - moinakg<at>belenix(dot)org

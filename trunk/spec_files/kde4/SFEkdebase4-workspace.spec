@@ -14,7 +14,7 @@
 
 Name:                    SFEkdebase4-workspace
 Summary:                 Libraries for PIM data management in KDE4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 LGPLv2+
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdebase-workspace-%{version}.tar.bz2
@@ -27,15 +27,13 @@ Patch3:                  kdebase-workspace-03-startkde.diff
 Patch4:                  kdebase-workspace-04-krdb.diff
 Patch5:                  kdebase-workspace-05-ck-shutdown.diff
 Patch6:                  kdebase-workspace-06-klipper-url.diff
-Patch7:                  kdebase-workspace-07-AllowExternalPaths.diff
-Patch8:                  kdebase-workspace-08-kde#180576.diff
+Patch7:                  kdebase-workspace-07-plasma-konsole.diff
+Patch8:                  kdebase-workspace-08-default_applets.diff
 Patch9:                  kdebase-workspace-09-pykde4.diff
-Patch10:                 kdebase-workspace-10-kde#165726-klipper-crash.diff
-Patch11:                 kdebase-workspace-11-desktopnumbers.diff
-Patch12:                 kdebase-workspace-12-weather-dataengine-nm.diff
 Patch13:                 kdebase-workspace-13-rootprivs.diff
 Patch14:                 kdebase-workspace-14-timedate-kcm.diff
 Patch15:                 kdebase-workspace-15-fadeeffect.cpp.diff
+Patch16:                 kdebase-workspace-16-polkit_pid_t.diff
 
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
@@ -59,6 +57,7 @@ Requires:      SUNWdbus
 Requires:      SUNWxorg-client-programs
 Requires:      SUNWlibusb
 Requires:      SFEconsolekit
+Requires:      SFEpolicykit
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEqimageblitz-devel
 BuildRequires: SFEkdelibs4-devel
@@ -77,6 +76,8 @@ BuildRequires: SFElibxklavier-devel
 BuildRequires: SUNWdbus-devel
 BuildRequires: SUNWsfwhea
 BuildRequires: SFEconsolekit-devel
+BuildRequires: SFEpolicykit-devel
+BuildRequires: SFExmms1-devel
 Conflicts:     SFEkdebase3
 BuildConflicts: SFEkdebase3-devel
 Conflicts:     SFEkdmtheme
@@ -105,6 +106,10 @@ Requires: SFEqedje-devel
 Requires: SFEpython26-pykde4-devel
 Requires: SFElibxklavier-devel
 Requires: SUNWdbus-devel
+Requires: SUNWsfwhea
+Requires: SFEconsolekit-devel
+Requires: SFEpolicykit-devel
+Requires: SFExmms1-devel
 Conflicts: SFEkdebase3-devel
 
 %package doc
@@ -125,12 +130,10 @@ cd %{src_dir}-%{version}
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
-%patch10 -p1
-%patch11 -p0
-%patch12 -p1
-%patch13 -p0
+%patch13 -p1
 %patch14 -p0
 %patch15 -p1
+%patch16 -p1
 cd ..
 
 %build
@@ -156,12 +159,12 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
-export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export LDFLAGS="-L%{_libdir}/polkit -R%{_libdir}/polkit %_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
-export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
-export CMAKE_LIBRARY_PATH="%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
+export PKG_CONFIG_PATH=%{_libdir}/polkit/pkgconfig:%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
+export CMAKE_LIBRARY_PATH="%{_libdir}/polkit:%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
 
 cmake   ../%{src_dir}-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
         -DCMAKE_BUILD_TYPE=Release                                      \
@@ -198,7 +201,7 @@ mv ${RPM_BUILD_ROOT}%{_libdir}/python%{python_version}/site-packages \
    ${RPM_BUILD_ROOT}%{_libdir}/python%{python_version}/vendor-packages
 
 install -d $RPM_BUILD_ROOT%{_sessionsdir}
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sessionsdir}
+cp %{SOURCE1} $RPM_BUILD_ROOT%{_sessionsdir}
 
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/graphical-login
 cp %{SOURCE2} $RPM_BUILD_ROOT%{_localstatedir}/svc/manifest/application/graphical-login
@@ -288,7 +291,13 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_datadir}/doc
 %{_datadir}/doc/*
 
+%dir %attr (0755, root, bin) %{_mandir}
+%dir %attr (0755, root, bin) %{_mandir}/man1
+%{_mandir}/man1/*
+
 %changelog
+* Sat Sep 19 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
 * Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Rebuild with Solaris build flags.
 - Add KDM SMF Manifest.

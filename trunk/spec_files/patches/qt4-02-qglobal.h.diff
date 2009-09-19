@@ -1,7 +1,7 @@
---- qt-x11-opensource-src-4.4.3/src/corelib/global/qglobal.h.orig	2009-05-16 17:49:49.619137366 +0530
-+++ qt-x11-opensource-src-4.4.3/src/corelib/global/qglobal.h	2009-05-16 17:49:10.863322418 +0530
-@@ -55,8 +55,12 @@
- #define QT_PACKAGE_TAG "gc9953de622c6a0f655322e0d9f5bd6dc2803b470"
+--- usr/include/qt4/QtCore/qglobal.h.orig	2009-09-05 08:15:02.000000000 +0530
++++ usr/include/qt4/QtCore/qglobal.h	2009-09-05 20:07:28.323656153 +0530
+@@ -59,8 +59,12 @@
+ #define QT_PACKAGE_TAG "g4b2b47ac6c9fe284dce45cf33ff674d7110c1619"
  
  #if !defined(QT_BUILD_MOC)
 +#ifdef _LP64

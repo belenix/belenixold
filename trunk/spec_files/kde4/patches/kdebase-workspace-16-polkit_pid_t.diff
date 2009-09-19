@@ -1,0 +1,11 @@
+--- kdebase-workspace-4.3.1/PolicyKit-kde/authorization/ExplicitAuthorizationsModel.cpp.orig	2009-09-06 18:44:19.942625006 +0530
++++ kdebase-workspace-4.3.1/PolicyKit-kde/authorization/ExplicitAuthorizationsModel.cpp	2009-09-06 18:44:36.331807373 +0530
+@@ -115,7 +115,7 @@
+     row << first;
+ 
+     QString scopeStr;
+-    int pid;
++    pid_t pid;
+     polkit_uint64_t start;
+     char exe[512];
+     switch (polkit_authorization_get_scope(auth)) {

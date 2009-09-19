@@ -1,0 +1,16 @@
+--- kdebase-4.3.1/apps/konsole/src/Profile.cpp.orig	2009-09-16 22:48:57.249628071 +0530
++++ kdebase-4.3.1/apps/konsole/src/Profile.cpp	2009-09-16 22:44:50.136166495 +0530
+@@ -176,7 +176,12 @@
+     setProperty(UseCustomCursorColor,false);
+     setProperty(CustomCursorColor,Qt::black);
+ 
+-    setProperty(DefaultEncoding,QString(QTextCodec::codecForLocale()->name()));
++    QString codec(QTextCodec::codecForLocale()->name());
++    if (codec == "System") {
++        codec = "ISO-8859-1";
++    }
++
++    setProperty(DefaultEncoding, codec);
+     setProperty(AntiAliasFonts,true);
+ 
+     // default taken from KDE 3

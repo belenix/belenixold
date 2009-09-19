@@ -6,7 +6,7 @@ diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/S
 +#!/bin/bash
  
  DWARF2_SUPPORT=no
- COMPILER=$1
+ DWARF2_SUPPORT_BROKEN=no
 diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/config.tests/unix/bsymbolic_functions.test /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/config.tests/unix/bsymbolic_functions.test
 --- /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/config.tests/unix/bsymbolic_functions.test	2008-09-27 10:58:41.000000000 +0200
 +++ /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/config.tests/unix/bsymbolic_functions.test	2008-11-24 09:02:33.333810266 +0100
@@ -115,33 +115,6 @@ diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/S
  
  QMKSPEC=$1
  XPLATFORM=`basename $1`
-diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/configure /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/configure
---- /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/configure	2008-09-27 10:58:41.000000000 +0200
-+++ /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/configure	2008-11-24 09:02:33.377355914 +0100
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- #
- # Configures to build the Qt library
- #
-@@ -1868,7 +1868,7 @@
-     rm -f "$outpath/bin/syncqt"
-     if [ -x "/usr/bin/perl" ] && [ -x "$relpath/bin/syncqt" ]; then
-         mkdir -p "$outpath/bin"
--        echo "#!/bin/sh" >"$outpath/bin/syncqt"
-+        echo "#!/bin/bash" >"$outpath/bin/syncqt"
-         echo "QTDIR=\"$relpath\"; export QTDIR" >>"$outpath/bin/syncqt"
-         [ "$Edition" = "Trolltech" ] && echo "perl \"$relpath/bin/syncqt\" -outdir \"$relpath\" \$*" >>"$outpath/bin/syncqt"
-         echo "perl \"$relpath/bin/syncqt\" -outdir \"$outpath\"" >>"$outpath/bin/syncqt"
-@@ -6613,7 +6613,7 @@
-     echo "$CONFIG_STATUS" | grep '\-confirm\-license' >/dev/null 2>&1 || CONFIG_STATUS="$CONFIG_STATUS -confirm-license"
- 
-     [ -f "$outpath/config.status" ] && rm -f "$outpath/config.status"
--    echo "#!/bin/sh" > "$outpath/config.status"
-+    echo "#!/bin/bash" > "$outpath/config.status"
-     echo "if [ \"\$#\" -gt 0 ]; then" >> "$outpath/config.status"
-     echo "  $CONFIG_STATUS \"\$@\"" >> "$outpath/config.status"
-     echo "else" >> "$outpath/config.status"
 diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/freetype/autogen.sh /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/freetype/autogen.sh
 --- /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/freetype/autogen.sh	2008-09-27 10:58:44.000000000 +0200
 +++ /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/freetype/autogen.sh	2008-11-24 09:02:33.140634197 +0100
@@ -223,14 +196,14 @@ diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/S
  # Run this to generate all the initial makefiles, etc.
  
  set -e
-diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/kdelibs/phonon/preprocessandextract.sh /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/kdelibs/phonon/preprocessandextract.sh
---- /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/kdelibs/phonon/preprocessandextract.sh	2008-09-27 10:58:44.000000000 +0200
-+++ /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/kdelibs/phonon/preprocessandextract.sh	2008-11-24 09:02:32.964675528 +0100
+diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/phonon/phonon/preprocessandextract.sh /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/phonon/phonon/preprocessandextract.sh
+--- /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/phonon/phonon/preprocessandextract.sh	2008-09-27 10:58:44.000000000 +0200
++++ /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/phonon/phonon/preprocessandextract.sh	2008-11-24 09:02:32.964675528 +0100
 @@ -1,4 +1,4 @@
 -#!/bin/sh
 +#!/bin/bash
  EXTRACT="`dirname $0`/extractmethodcalls.rb"
- IGNORE="^\(path\|platform\|iodevicestream\|medianode\|streaminterface\|mediasource\|abstractmediastream\|audioplayer\|globalconfig\|objectdescriptionmodel\|audiooutputadaptor\|effectwidget\|videoplayer\|seekslider\|volumeslider\).cpp$"
+ IGNORE="^\(streameventqueue\|abstractmediastream2\|lockfreequeue\|path\|platform\|iodevicestream\|medianode\|streaminterface\|mediasource\|abstractmediastream\|audioplayer\|globalconfig\|objectdescriptionmodel\|audiooutputadaptor\|effectwidget\|videoplayer\|seekslider\|volumeslider\).cpp$"
  
 diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/libpng/configure /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/libpng/configure
 --- /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/3rdparty/libpng/configure	2008-09-27 10:58:44.000000000 +0200
@@ -427,9 +400,9 @@ diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/S
 @@ -1,4 +1,4 @@
 -#!/bin/sh
 +#!/bin/bash
- p4 edit ../keywords.cpp
- p4 edit ../ppkeywords.cpp
  qmake
+ make
+ cat licenseheader.txt > ../keywords.cpp
 diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/xmlpatterns/environment/createReportContext.sh /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/xmlpatterns/environment/createReportContext.sh
 --- /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/xmlpatterns/environment/createReportContext.sh	2008-09-27 10:58:48.000000000 +0200
 +++ /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.4.3/src/xmlpatterns/environment/createReportContext.sh	2008-11-24 09:02:33.227441886 +0100
@@ -439,3 +412,30 @@ diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/S
  # Generate ReportContext.h by invoking createReportContext.xsl, which
  # in turns performs a transformation on the specs, fetched from http://www.w3.org/.
  
+diff -ur /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.5.2/configure /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.5.2/configure
+--- /zones/build/root/.zfs/snapshot/qt-original/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.5.2/configure.orig	2009-06-20 10:27:50.000000000 +0530
++++ /zones/build/root/export/home/user/packages/SOURCES/qt-x11-opensource-src-4.5.2/configure	2009-08-29 18:56:24.995623627 +0530
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ #
+ # Configures to build the Qt library
+ #
+@@ -2079,7 +2079,7 @@
+     rm -f "$outpath/bin/syncqt"
+     if [ -x "$relpath/bin/syncqt" ]; then
+         mkdir -p "$outpath/bin"
+-        echo "#!/bin/sh" >"$outpath/bin/syncqt"
++        echo "#!/bin/bash" >"$outpath/bin/syncqt"
+         echo "QTDIR=\"$relpath\"; export QTDIR" >>"$outpath/bin/syncqt"
+         echo "perl \"$relpath/bin/syncqt\" -outdir \"$outpath\" $*" >>"$outpath/bin/syncqt"
+         chmod 755 "$outpath/bin/syncqt"
+@@ -7291,7 +7291,7 @@
+     echo "$CONFIG_STATUS" | grep '\-confirm\-license' >/dev/null 2>&1 || CONFIG_STATUS="$CONFIG_STATUS -confirm-license"
+ 
+     [ -f "$outpath/config.status" ] && rm -f "$outpath/config.status"
+-    echo "#!/bin/sh" > "$outpath/config.status"
++    echo "#!/bin/bash" > "$outpath/config.status"
+     echo "if [ \"\$#\" -gt 0 ]; then" >> "$outpath/config.status"
+     echo "  $CONFIG_STATUS \"\$@\"" >> "$outpath/config.status"
+     echo "else" >> "$outpath/config.status"
