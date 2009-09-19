@@ -1,0 +1,30 @@
+#!/bin/bash
+# $Id: usbcam 733 2003-07-16 10:00:04Z mattk $
+#
+# /etc/hotplug/usb/usbcam
+#
+# Sets up newly plugged in USB camera so that the user who owns
+# the console according to pam_console can access it from user space
+#
+# Note that for this script to work, you'll need all of the following:
+# a) a line in the file /etc/hotplug/usermap that corresponds to the 
+#    camera you are using. You can get the correct lines for all cameras 
+#    supported by gphoto2 by running "gphoto2 --print-usb-usermap".
+# b) a setup using pam_console creates the respective lock files
+#    containing the name of the respective user. You can check for that
+#    by executing "echo `cat /var/{run,lock}/console.lock`" and 
+#    verifying the appropriate user is mentioned somewhere there.
+# c) a Linux kernel supporting hotplug and usbdevfs
+# d) the hotplug package (http://linux-hotplug.sourceforge.net/)
+#
+# In the usermap file, the first field "usb module" should be named 
+# "usbcam" like this script.
+# 
+
+if [ "${ACTION}" = "add" ] && [ -f "${DEVICE}" ]
+then
+    # We reference /dev/audio, since we want to have the same permissions
+    chmod 0000 "${DEVICE}"
+    chown --reference=/dev/audio "${DEVICE}"
+    chmod 0600 "${DEVICE}"
+fi

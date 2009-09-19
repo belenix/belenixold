@@ -1,0 +1,11 @@
+prefix=BASEDIR
+exec_prefix=BASEDIR
+libdir=LIBDIR/NAME
+includedir=INCLUDEDIR/NAME
+
+Name: JavaScript
+Description: The Mozilla JavaScript Library
+Version: 3.1
+Requires: nspr >= 4.7
+Libs: -L${libdir} -lmozjs
+Cflags: -I${includedir}/js -DXP_UNIX -DJS_THREADSAFE

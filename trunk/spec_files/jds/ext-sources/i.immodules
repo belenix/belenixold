@@ -1,0 +1,89 @@
+#!/bin/sh
+#
+# Class Action Script for installing input method modules for libgtk
+#
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2006 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+F_A=/tmp/im.add.$$
+F_M=/tmp/im.merged.$$
+pkg_start="# Start $PKGINST"
+pkg_end="# End $PKGINST"
+
+if [ "sparc" = "`uname -p`" ]; then
+    ARCH=sparcv9
+else
+    ARCH=amd64
+fi
+
+while read src dest; do
+    if [ ! -f ${dest} ]; then
+	echo "$pkg_start"                   > ${dest}
+	sed -e "s/@ARCH@/${ARCH}/g" ${src} >> ${dest}
+	echo "$pkg_end"                    >> ${dest}
+    else
+        sed -e "s/@ARCH@/${ARCH}/g" ${src} > ${F_A}
+	# Check if any of the lines from ${src} are already in the file
+	do_merge=yes
+	# save the standard input as file descriptor 3
+	exec 3<&0
+	exec < ${F_A}
+	while read line; do
+	    # input method spec lines start with quotes
+	    case "$line" in
+		'"'*) ;;
+                *) continue; ;;
+	    esac
+	    if /usr/bin/egrep -s -- "$line" ${dest}; then
+		do_merge=no
+		break
+	    fi
+	done
+	# restore the standard input
+	exec <&3
+	# close file descriptor 3
+	exec 3<&-
+	if [ $do_merge = yes ]; then
+	    if egrep -s 'GTK\+ Input Method Modules file' ${F_A}; then
+		# The original Gtk+ config file should come first
+		# Any additions should be at the end
+		echo "$pkg_start"    >> ${F_M}
+		cat ${F_A}           >> ${F_M}
+		echo "$pkg_end"      >> ${F_M}
+		cat ${dest}          >> ${F_M}
+	    else
+		cat ${dest}          >> ${F_M}
+		echo "$pkg_start"    >> ${F_M}
+		cat ${F_A}           >> ${F_M}
+		echo "$pkg_end"      >> ${F_M}
+	    fi
+	    cp ${F_M} ${dest}
+	    rm -f ${F_M}
+	fi
+        rm -f ${F_A}
+    fi
+done
+
+exit 0

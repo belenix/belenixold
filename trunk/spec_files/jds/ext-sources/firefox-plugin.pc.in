@@ -1,0 +1,10 @@
+prefix=/usr
+exec_prefix=/usr
+libdir=/usr/lib/firefox
+includedir=/usr/include/firefox
+
+Name: Mozilla Plug-In API
+Description: Mozilla Plug-In API
+Version: 3.1
+Requires: firefox-xpcom = 3.1 
+Cflags: -DXP_UNIX -I${includedir}/java -I${includedir}/plugin
