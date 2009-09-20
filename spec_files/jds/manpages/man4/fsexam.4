@@ -1,0 +1,215 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "fsexam">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub EntList brvbar bull cross dash diam diams frac12 frac13 frac14 hellip
+ laquo lArr loz mdash nabla ndash para pound rArr raquo sect yen bsol>
+<?Pub Inc>
+
+<refentry id="fsexam-4">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>fsexam</refentrytitle><manvolnum>4</manvolnum>
+<refmiscinfo class="date">10 May 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man4;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>fsexam</primary></indexterm>
+<indexterm><primary>fsexam dry run result file</primary></indexterm>
+
+<refnamediv id="fsexam-4-name"><refname>fsexam</refname>
+<refpurpose>fsexam dry run result file</refpurpose></refnamediv>
+
+<refsect1 id="fsexam-4-desc"><title>&desc-tt;</title>
+<para>
+fsexam dry run result file is an UTF-8 encoded file that stores the dry
+run result which is produced by invocation of fsexam utility with -n option.
+
+You can edit this file directly using any of your favorite editors as long
+as it supports UTF-8. After editing it, you can re-run fsexam utility with
+this file as its input, using -d option. fsexam will perform conversions
+based on the supplied file by choosing the first candidates to perform
+conversions. Refer to fsexam(1) for more detail.
+
+Note the only recommended edit operations are either deleting wrong
+candidate lines or adding the correct ones as the first candidates.
+
+This file has the following format. Each items are delimitered by
+using one or more of white space characters including tab (0x9) and
+space (0x20) characters:
+
+<variablelist termlength="narrow">
+
+<varlistentry>
+<term>convert_type</term>
+<listitem>
+<para>   
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>"path"</term>
+<listitem>
+<para>   
+</para>
+<para>
+encoding1	string_converted_from_this_encoding
+encoding2	string_converted_from_this_encoding
+encoding3	string_converted_from_this_encoding
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>"path"</term>
+<listitem>
+<para>   
+</para>
+<para>
+encoding1	string_converted_from_this_encoding
+encoding2	string_converted_from_this_encoding
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>"path"</term>
+<listitem>
+<para>   
+</para>
+<para>
+No-proper-encoding
+</para>
+</listitem>
+</varlistentry>
+</para>
+
+</variablelist>
+
+
+<para>
+The descriptions on the above like the following:
+</para>
+
+<variablelist termlength="narrow">
+
+<varlistentry>
+<term>convert_type:</term>
+<listitem>
+<para>   
+</para>
+<para>
+The first line is the conversion type; it is either "name" for name
+conversion or "content" for content conversion.
+
+Any leading or trailing white space characters including tab (0x9)
+and space (0x20) are ignored.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>path:</term>
+<listitem>
+<para> 
+</para>
+<para>
+The full path name of a file for conversion. 
+
+If the path itself is a valid UTF-8 byte sequence, then, the path is
+the actual path name and fsexam does not do any further processing on
+it. If the path is not a valid UTF-8 sequence, then, fsexam converts
+the path to an URI and shows the URI. Refer RFC2396 for more
+information on the URI.
+
+The path is quoted with '"'. Any double-quote character in path is
+escaped as '\\"', and any '\\' in path is escaped as '\\\\'.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>encoding1, encoding2, ...:</term>
+<listitem>
+<para> 
+</para>
+<para>Encoding names. fsexam converts file name or content from this encoding
+to UTF-8.
+
+The allowed encodings can be listed with "fsexam -l" as described in
+the fsexam(1).
+</para>
+</listitem>
+</varlistentry>
+	
+<varlistentry>
+<term>string_converted_from_this_encoding:</term>
+<listitem>
+<para> 
+</para>
+<para>If this is file name conversion, it is a file name in UTF-8 converted
+from the encoding shown; if this is file content conversion, it is
+a single sample line of the file in UTF-8 converted from the encoding
+which contain at least one or more multi-byte characters.
+
+Note that some lines may contain meaningless characters that you
+might want to pay no attention and just delete leaving only
+the right one as the only or the first candidate.
+
+If none of the encodings available yield any correct conversion,
+that means the real encoding of the file name or content is not in
+the list of the available encodings. In this case, the following
+sole line appears in the dry run result file:
+
+	No-proper-encoding
+
+If you do not know anything about the encoding of the file name or
+content, use -a option of fsexam to detect encodings automatically. 
+Note that auto-detected encodings may still be wrong in some 
+circumstances.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</refsect1>
+
+<refsect1 id="fsexam-4-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWfsexam</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Committed</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="fsexam-4-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>fsexam</refentrytitle><manvolnum>1</manvolnum>
+</citerefentry>
+</para>
+</refsect1>
+</refentry>

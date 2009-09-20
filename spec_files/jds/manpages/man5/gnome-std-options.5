@@ -1,0 +1,466 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "gnome-std-options">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-std-options-5">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-std-options.5</refentrytitle><manvolnum>5</manvolnum>
+<refmiscinfo class="date">12 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man5;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-std-options</primary></indexterm><indexterm><primary>
+standard options available for most GNOME applications</primary></indexterm>
+<refnamediv id="gnome-std-options-5-name"><refname>gnome-std-options</refname><refpurpose>
+standard options available for most GNOME applications</refpurpose></refnamediv>
+<refsect1 id="gnome-std-options-5-desc"><title>&desc-tt;</title>
+<para>
+GNOME standard options which are available for most GNOME based
+applications.  Some of these options are only available if the program
+makes use of various GNOME interfaces such as GTK+, Bonobo Activation,
+<filename>libgnome</filename>, <filename>libgnomeui</filename>,
+or GNOME session.  Use the <option>-help</option> option to see which
+arguments are supported by any given program.
+</para>
+
+</refsect1>
+<refsect1 id="gnome-std-options-5-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wholeline">
+
+<varlistentry>
+<term><option>?</option>, <option>-help</option></term>
+<listitem><para>
+Display detailed usage message.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-help-all</option></term>
+<listitem><para>
+Display all help options.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-usage</option></term>
+<listitem><para>
+Display a brief usage message.
+</para>
+</listitem></varlistentry>
+
+<para>The following GTK+ options are supported.</para>
+
+<varlistentry>
+<term><option>-help-gtk</option></term>
+<listitem><para>
+Display GTK+ help options.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-class=<replaceable>class</replaceable></option></term>
+<listitem><para>
+Set the class of a GTK+ program, for use by the window manager.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-display=<replaceable>display</replaceable></option></term>
+<listitem><para>
+Specify an X Display to use, where <replaceable>display</replaceable>
+is in the following format:
+</para>
+<para>
+<replaceable>hostname</replaceable>:<replaceable>displaynumber</replaceable>.<replaceable>
+screennumber</replaceable>
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-g-fatal-warnings</option></term>
+<listitem><para>
+Make all GTK+ warnings fatal. This will cause the application to be killed
+when a warning is issued, rather than reporting this warning to
+ <filename>sdterr</filename>.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gdk-debug=<replaceable>flags</replaceable></option></term>
+<listitem><para>
+Specify a list of GDK debug flags to set, in addition to those specified in the
+GDK_DEBUG environment variable. This option is only available if GTK+ has been
+configured with the <option>-enable-debug=yes</option> option.  Valid
+<replaceable>flags</replaceable> values are as follows:<itemizedlist>
+<listitem><para>all</para>
+</listitem>
+<listitem><para>dnd</para>
+</listitem>
+<listitem><para>events</para>
+</listitem>
+<listitem><para>misc</para>
+</listitem>
+<listitem><para>xim</para>
+</listitem>
+</itemizedlist>
+</para>
+<para>
+For more information, please refer to the GTK+ source code.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gdk-no-debug=<replaceable>flags</replaceable></option></term>
+<listitem><para>
+Specify a list of GDK debug flags to unset. This option is only available if
+GTK+ has been configured with the <option>-enable-debug=yes</option> option.
+Valid <replaceable>flags</replaceable> values are the same as for the
+<option>-gdk-debug</option> option. For more information, please refer to
+the GTK+ source code.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gtk-debug=<replaceable>flags</replaceable></option></term>
+<listitem><para>
+Specify a list of GTK+ options to set, in addition to those specified in the
+GTK_DEBUG environment variable. This option is only available if GTK+ has
+been configured with the <option>-enable-debug=yes</option> option.  Valid
+<replaceable>flags</replaceable> values are as follows:<itemizedlist>
+<listitem><para>all</para>
+</listitem>
+<listitem><para>geometry</para>
+</listitem>
+<listitem><para>icontheme</para>
+</listitem>
+<listitem><para>keybindings</para>
+</listitem>
+<listitem><para>misc</para>
+</listitem>
+<listitem><para>modules</para>
+</listitem>
+<listitem><para>multihead</para>
+</listitem>
+<listitem><para>plugsocket</para>
+</listitem>
+<listitem><para>printing</para>
+</listitem>
+<listitem><para>text</para>
+</listitem>
+<listitem><para>tree</para>
+</listitem>
+<listitem><para>updates</para>
+</listitem>
+</itemizedlist>
+</para>
+<para>
+For more information, please refer to the GTK+ source code.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gtk-no-debug=<replaceable>flags</replaceable></option></term>
+<listitem><para>
+Specify a list of GTK+ options to unset. This option is only available if
+GTK+ has been configured with <option>-enable-debug=yes</option> option.
+Valid <replaceable>flags</replaceable> values are the same as for the
+<option>-gtk-debug</option> option. For more information, please refer
+to the GTK+ source code.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gtk-module=<replaceable>module</replaceable></option></term>
+<listitem><para>
+Specify a list of GTK+ modules to load, in addition to those specifed in the
+GTK_MODULES environment variable.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gxid-host=<replaceable>host</replaceable></option></term>
+<listitem><para>
+Specify a host on which to connect the <filename>gxid</filename> daemon.
+This option overrides the GXID_HOST environment variable. This option is
+only available if GTK+ has been configured with the
+<option>-gdk-target=x11</option> option. <filename>gxid</filename> is
+the GNOME X Input Daemon, which is distributed as part of GTK+.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gxid-port=<replaceable>port</replaceable></option></term>
+<listitem><para>
+Specify a port for the connection to the <filename>gxid</filename> daemon.
+This option overrides the GXID_PORT environment variable. This option is
+only available if GTK+ has been configured with the
+<option>-gdk-target=x11 </option> option. <filename>gxid</filename> is
+the GNOME X Input Daemon, which is distributed as part of GTK+.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-name=<replaceable>name</replaceable></option></term>
+<listitem><para>
+Set the name of a GTK+ program, for use by the window manager.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-screen=<replaceable>screen</replaceable></option></term>
+<listitem><para>
+Specify an X Screen to use. This is only useful if more than one
+physical monitor is available. The default screen is 0.
+<replaceable>screen</replaceable> is an integer value in the range
+0 to {NumberOfScreens - 1}.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-sync</option></term>
+<listitem><para>
+Specify that requests to the X Server should be sent synchronously.
+By default, such requests are sent asynchronously. This option is
+generally used when debugging an application, and should not be
+used in normal execution.
+</para>
+</listitem></varlistentry>
+
+<para>The following Bonobo Activation options are supported.</para>
+
+<varlistentry>
+<term><option>-help-bonobo-activation</option></term>
+<listitem><para>
+Display Bonobo Activation help options.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-oaf-activate-iid=<replaceable>iid</replaceable></option></term>
+<listitem><para>
+Specify an IID to activate.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-oaf-ior-fd=<replaceable>fd</replaceable></option></term>
+<listitem><para>
+Specify a File Descriptor on which to print IOR.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-oaf-private</option></term>
+<listitem><para>
+Prevent registering of server with OAF.
+</para>
+</listitem></varlistentry>
+
+<para>The following GNOME options are supported.</para>
+
+<varlistentry>
+<term><option>-help-gnome</option></term>
+<listitem><para>
+Display GNOME options.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-disable-sound</option></term>
+<listitem><para>
+Disable sound server usage.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-enable-sound</option></term>
+<listitem><para>
+Enable sound server usage.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-espeaker=<replaceable>hostname</replaceable>:<replaceable>port</replaceable></option></term>
+<listitem><para>
+Specify the location of the sound server to use.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-version</option></term>
+<listitem><para>
+Print the version information for the command. You can also use
+<option>v</option> to specify this option.
+</para>
+</listitem></varlistentry>
+
+<para>The following GNOME GUI options are supported.</para>
+
+<varlistentry>
+<term><option>-help-gnome-ui</option></term>
+<listitem><para>
+Display GNOME GUI help options.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-disable-crash-dialog</option></term>
+<listitem><para>
+Disable the crash dialog.
+</para>
+</listitem></varlistentry>
+
+<para>The following GNOME session options are supported.</para>
+
+<varlistentry>
+<term><option>-help-gnome-session</option></term>
+<listitem><para>
+Display session management help options.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-sm-client-id=<replaceable>id</replaceable></option></term>
+<listitem><para>
+Specify a session management ID.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-sm-config-prefix=<replaceable>prefix</replaceable></option></term>
+<listitem><para>
+Specify the prefix of a saved configuration.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-sm-disable</option></term>
+<listitem><para>
+Disable the connection to the session manager.
+</para>
+</listitem></varlistentry>
+
+<para>Common application options that are supported.</para>
+
+<varlistentry>
+<term><option>-geometry=<replaceable>geometry</replaceable></option></term>
+<listitem><para>
+Specify the X geometry location for the application being launched, where
+<replaceable>geometry</replaceable> is in the following format:
+</para>
+<para>
+<replaceable>width</replaceable>x<replaceable>height</replaceable>+<replaceable>
+xoff</replaceable>+<replaceable>yoff</replaceable>
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-std-options-5-exam"><title>&exam-tt;</title>
+<example role="example"><title>Getting gnome-calculator usage</title>
+<para><screen>example% <userinput>gnome-calculator -usage</userinput></screen></para>
+</example>
+<example role="example"><title>Launching ghex2 on host "Labrynth" with display
+0 and screen 0</title>
+<para><screen>example% <userinput>ghex2 --display=Labrynth:0.0</userinput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnome-std-options-5-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables:</para>
+<variablelist><varlistentry>
+<term>DISPLAY</term>
+<listitem><para>
+X Display on which the application should display.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<variablelist><varlistentry>
+<term>G_DEBUG</term>
+<listitem><para>
+This variable can be set to a list of debug options.
+Set to fatal_warnings to make programs abort at the first call to
+g_warning() or g_critical().
+Set to fatal_criticals to abort at the first call to g_critical().
+Set to gc-friendly to cause newly allocated memory that isn't directly
+initialized, as well as memory being freed to be reset to 0.
+Set to resident-modules to cause all modules loaded by GModule to be
+made resident.  Set to bind-now-modules to cause all modules loaded 
+by GModule to bind their symbols at load time, even if the code uses
+%G_MODULE_BIND_LAZY.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GDK_DEBUG</term>
+<listitem><para>
+If GTK+ has been configured with the <option>-enable-debug=yes</option>
+option, this variable can be set to a list of debug options that should
+be set for GDK.  Refer to the <option>-gdk-option</option> option for more
+information.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GTK_DEBUG</term>
+<listitem><para>
+If GTK+ has been configured with the <option>-enable-debug=yes</option>
+option, this variable can be set to a list of debug options that should
+be set for GTK.  Refer to the <option>-gtk-debug</option> option for for
+more information.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GTK_MODULES</term>
+<listitem><para>
+A list of GTK+ modules to load.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GTK_PATH</term>
+<listitem><para>
+A list of directories to search when GTK+ is looking for dynamically
+loaded objects such as the modules specified by GTK_MODULES,
+theme engines, input method modules, file system backends, and
+print backends.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GXID_HOST</term>
+<listitem><para>
+Host to which the <filename>gxid</filename> daemon should connect.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GXID_PORT</term>
+<listitem><para>
+Port for the connection to the <filename>gxid</filename> daemon.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-std-options-5-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-*</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-std-options-5-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gnome-session</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libbonobo-activation</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgdk-x11-2.0</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libglib-2.0</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnome-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomeui-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgtk-x11-2.0</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>X</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+
+<para>GTK+ source code</para>
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle> for your platform.</para>
+</refsect1>
+<refsect1 id="gnome-std-options-5-note"><title>&note-tt;</title>
+<para>Written by Matt Keenan, Sun Microsystems Inc., 2003, 2006, 2007.</para>
+</refsect1>
+</refentry>

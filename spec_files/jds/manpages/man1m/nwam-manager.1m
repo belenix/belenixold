@@ -1,0 +1,166 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "nwam-manager">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="nwam-manager-1m">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta>
+  <refentrytitle>nwam-manager</refentrytitle><manvolnum>1m</manvolnum>
+  <refmiscinfo class="date">1 Sep 2008</refmiscinfo>
+  <refmiscinfo class="sectdesc">&man1m;</refmiscinfo>
+  <refmiscinfo class="software">&release;</refmiscinfo>
+  <refmiscinfo class="arch">generic</refmiscinfo>
+  <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>nwam-manager</primary></indexterm>
+<indexterm><primary>GNOME UI for Network Auto-Magic (NWAM)</primary></indexterm>
+
+<refnamediv id="nwam-manager-1m-name">
+    <refname>nwam-manager</refname>
+    <refpurpose>GNOME UI for Network Auto-Magic (NWAM)</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="nwam-manager-1m-synp">
+  <title>&synp-tt;</title>
+  <cmdsynopsis>
+    <command>&cmd;</command>
+    <arg choice="opt"><option role="nodash"><replaceable>gnome-std-options</replaceable></option></arg>
+  </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1 id="nwam-manager-1m-desc">
+  <title>&desc-tt;</title>
+  <para><command>&cmd;</command> provides a mechanism for users to monitor and interact with the Network Auto-Magic daemon <citerefentry><refentrytitle>nwamd</refentrytitle><manvolnum>1m</manvolnum></citerefentry>, <command>&cmd;</command> is launched automatically in a user's desktop session. It is visibly represented on the user's desktop in the Notification Area.</para>
+  <para>The <command>&cmd;</command> icon provides a visual representation of the current status of the NWAM daemon. Hovering the mouse pointer over the icon produces a tool tip with more information.</para>
+  <para>In case the network state changes (for example, if the user unplugs the network cable), then a notification balloon displays to inform the user of the change. In general, notifications time out after a short period. However, some notifications might remain until the user responds either by clicking on the balloon or closing it. For example, a notification balloon remains displayed until the user provides a wireless security key in order to connect to the selected wireless network. </para>
+  <para>When the user right-clicks on the <command>&cmd;</command> icon, a menu is displayed with the following parts:</para>
+  <variablelist termlength="xtranarrow">
+    <varlistentry>
+      <term>List of Network Interfaces</term>
+      <listitem>
+        <para>
+        </para>
+        <para>The first entry is always the <literal>Automatic</literal> entry, which represents the automatic mode of operation for interface selection by the NWAM daemon. This is the normal mode of operation. The currently active interface is referenced in the menu items' text.</para>
+        <para>The subsequent entries in the menu, up to the separator, allow the user to force the NWAM daemon to use the specific interface referred to in the text of the menu item. To return to Automatic mode, the user selects the <literal>Automatic</literal> first item.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Edit the NWAM Interface Priorities</term>
+      <listitem>
+        <para>
+        </para>
+        <para>This option shows a dialog that allows users to edit the order of priority that NWAM places on a netowrk interface. The default configuration assigns a higher priority to "Wired" interfaces than "Wireless" interfaces.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+  <para>If the system has a wireless network interface, then the following menu items are also available.</para>
+  <variablelist termlength="xtranarrow">
+    <varlistentry>
+      <term>List of Wireless Networks Within Range.</term>
+      <listitem>
+        <para>
+        </para>
+        <para>In an area with visible wireless networks, a list of these wireless networks is displayed for selection. In the case of a higher priority interface being active, selection of wireless networks may result in no change to the network configuration.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Join an Unlisted Wireless Network</term>
+      <listitem>
+        <para>
+        </para>
+        <para>Some wireless networks are hidden unless the name of the network is known. As a result, a hidden wireless network is not listed in as selectable in the menu. To connect to this type of network, the user must type the name (ESSID) of the wireless network in the dialog displayed when this item is selected.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Edit the List of Known Wireless Networks</term>
+      <listitem>
+        <para>
+        </para>
+        <para>This item shows a dialog that enables the user to edit the list of wireless networks known to the NWAM daemon.</para>
+        <para>This list of previously successfully used networks is maintained to allow NWAM to be able to know which networks can be automatically connect to if found. The list also includes hidden wireless networks that the user previously connected to. In this way, the user doesn't have to always enter the name of the hidden network every time that network is used.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+  <para>If NWAM is not used to configure the network, the icon does not appear in the Notification Area. When the user starts Network Auto-Magic, then the icon appears to provide status.</para>
+  <para><command>&cmd;</command> is run automatically in a user's desktop session where that desktop environment conforms with the FreeDesktop.org XDG Autostart specification.
+  </para>
+</refsect1>
+
+<refsect1 id="nwam-manager-1m-opts">
+  <title>&opts-tt;</title>
+  <para>The following options are supported:</para>
+  <variablelist termlength="narrow">
+    <varlistentry>
+      <term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+      <listitem>
+        <para></para>
+        <para>Standard options available for use with most GNOME applications.  See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum> 5</manvolnum></citerefentry> for more information.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
+
+<refsect1 id="nwam-manager-1m-exde"><title>&exde-tt;</title>
+</refsect1>
+
+<refsect1 id="nwam-manager-1m-file">
+  <title>&file-tt;</title>
+  <para>The following files are used by this application:</para>
+  <variablelist termlength="medium">
+    <varlistentry>
+      <term><filename>/usr/lib/&cmd;</filename></term>
+      <listitem>
+        <para>Executable for NWAM Manager daemon</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</refsect1>
+
+<refsect1 id="nwam-manager-1m-attr">
+  <title>&attr-tt;</title>
+  <para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry> <refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink> for descriptions of the following attributes:</para>
+  <informaltable frame="all">
+    <tgroup cols="2" colsep="1" rowsep="1">
+      <colspec colname="COLSPEC0" colwidth="1*">
+      <colspec colname="COLSPEC1" colwidth="1*">
+        <thead>
+          <row>
+            <entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+            <entry align="center" valign="middle">ATTRIBUTE VALUE</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><para>Availability</para></entry>
+            <entry><para></para></entry>
+          </row>
+          <row>
+            <entry colname="COLSPEC0"><para>Interface stability</para></entry>
+            <entry colname="COLSPEC1"><para>Uncommitted</para></entry>
+          </row>
+        </tbody>
+  </tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="nwam-manager-1m-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para><citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="nwam-manager-1m-note"><title>&note-tt;</title>
+<para>Written by Darren Kenny, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+</refentry>
+<?Pub *0000004990>

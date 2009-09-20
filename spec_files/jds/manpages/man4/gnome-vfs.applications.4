@@ -1,0 +1,159 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "gnome-vfs.applications">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-vfsapplications-4">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-vfs.applications.4</refentrytitle><manvolnum>4</manvolnum>
+<refmiscinfo class="date">14 May 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man4;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-vfs.applications</primary></indexterm><indexterm>
+<primary>GNOME VFS application registry</primary></indexterm><refnamediv id="gnome-vfsapplications-4-name">
+<refname>gnome-vfs.applications</refname><refpurpose>GNOME VFS application registry</refpurpose>
+</refnamediv>
+<refsect1 id="gnome-vfsapplications-4-desc"><title>&desc-tt;</title>
+<para>
+GnomeVFS is obsolete.  Refer to the GNOME Desktop System Administration
+Guide for information about how to register MIME type information with
+the GNOME desktop.  The GNOME Desktop System Administration Guide can
+be viewed with
+<citerefentry><refentrytitle>yelp</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+</para>
+<para>The GNOME MIME magic and MIME info files (see <citerefentry><refentrytitle>
+gnome-vfs-mime-magic</refentrytitle><manvolnum>4</manvolnum></citerefentry>)
+enable GNOME VFS to associate a data file with its icon and description. The
+GNOME VFS application registry provides a way to launch the applications associated
+with such files.</para>
+<para>The registration of applications to various MIME types is specified
+in text files placed in the <literal>/usr/share/gnome/application-registry
+</literal> directory. GNOME provides a default registry file called <filename>
+gnome-vfs.applications</filename>. Vendor-specific registry files can also
+be placed in this directory. This information is used extensively by <citerefentry>
+<refentrytitle>nautilus</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+the GNOME file manager.</para>
+</refsect1>
+<refsect1 id="gnome-vfsapplications-4-exde"><title>&exde-tt;</title>
+<para>The format of the application registry file is simple. Each application
+entry is made up of a name followed by a number of key-value pairs. The application
+name must have been specified in one of the <filename>.keys</filename> files.
+The minimum required key fields are as follows:<variablelist><varlistentry>
+<term>command</term><listitem><para>The command to execute.</para>
+</listitem></varlistentry>
+<varlistentry><term>name</term><listitem><para>The descriptive name of the
+command, which will appear in the Open With 	menu in Nautilus.</para>
+</listitem></varlistentry>
+<varlistentry><term>can_open_multiple_files</term><listitem><para>The value
+of this field can be <literal>true</literal> or <literal>false</literal>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>expects_uris</term><listitem><para>The value of this field
+can be <literal>true</literal> or <literal>false</literal>. This field tells
+Nautilus whether the application can accept <literal>http:</literal>, <literal>
+ftp:</literal> and so on specifications to open at the command line.  If
+this is <literal>true</literal>, you must add the <literal>supported_uri_schemes
+</literal> field.</para>
+</listitem></varlistentry>
+<varlistentry><term>requires_terminal</term><listitem><para>The value of this
+field can be <literal>true</literal> or <literal>false</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term>mime_types</term><listitem><para>The list of comma-separated
+mime-types defined by MIME magic or MIME info files.</para>
+</listitem></varlistentry>
+</variablelist></para>
+<para>Optional field:<variablelist><varlistentry><term>supported_uri_schemes
+</term><listitem><para>Specifies the list of protocols supported by the application;
+for example, <literal>http</literal>, <literal>ftp</literal>, <literal>file
+</literal>, <literal>telnet</literal>, <literal>gopher</literal>.</para>
+</listitem></varlistentry>
+</variablelist></para>
+</refsect1>
+<refsect1 id="gnome-vfsapplications-4-exam"><title>&exam-tt;</title>
+<example role="example"><title>Registering CDE Imagetool with GNOME Application
+Registry</title>
+<para><screen><computeroutput>	sdtimage
+		command=sdtimage
+		name=sdtimage
+		can_open_multiple_files=false
+		expects_uris=false
+		requires_terminal=false
+		mime_types=image/tiff,image/gif,application/postscript,image/jpeg,x-xpixmap
+
+</computeroutput></screen></para>
+</example>
+<example role="example"><title>Registering Netscape with GNOME Application
+Registry</title>
+<para><screen><computeroutput>	netscape
+     command=netscape
+		name=Netscape
+		can_open_multiple_files=true
+		expects_uris=true
+		requires_terminal=false
+		supported_uri_schemes=file,http,ftp,telnet,gopher
+		mime_types=text/html,x-directory/webdav,x-directory/webdav-prefer-directory,image/gif,image/jpeg
+</computeroutput></screen></para>
+</example>
+</refsect1>
+<refsect1 id="gnome-vfsapplications-4-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables that affect the execution of <command>&cmd;</command>: NLSPATH.
+</para>
+</refsect1>
+<refsect1 id="gnome-vfsapplications-4-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium"><varlistentry><term><filename>/usr/share/gnome/application-registry/&cmd;</filename> 
+</term><listitem></listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gnome/application-registry/solaris-gnome2.0.applications
+</filename></term><listitem></listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-vfsapplications-4-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-vfs</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Obsolete Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-vfsapplications-4-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>nautilus</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-vfs-mime-magic</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomevfs-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>
+Latest version of the
+<citetitle>GNOME Desktop System Administration Guide</citetitle>
+for your platform.</para>
+</refsect1>
+<refsect1 id="gnome-vfsapplications-4-note"><title>&note-tt;</title>
+<para>Written by Ghee Teo, Sun Microsystems Inc., 2003.</para>
+</refsect1>
+</refentry>

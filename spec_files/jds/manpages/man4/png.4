@@ -1,0 +1,80 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY cmd "png">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub EntList brvbar bull cross dash diam diams frac12 frac13 frac14 hellip
+ laquo lArr loz mdash nabla ndash para pound rArr raquo sect yen bsol>
+<?Pub Inc>
+<refentry id="png-4">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>png.4</refentrytitle><manvolnum>4</manvolnum>
+<refmiscinfo class="date">26 Mar 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man4;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>png</primary></indexterm><indexterm><primary>Portable
+Network Graphics (PNG) format</primary></indexterm>
+<refnamediv id="png-4-name"><refname>png</refname><refpurpose>Portable Network
+Graphics (PNG) format</refpurpose></refnamediv>
+<refsect1 id="png-4-desc"><title>&desc-tt;</title>
+<para>PNG (Portable Network Graphics) is an extensible file format for the
+lossless, portable, well-compressed storage of raster images. PNG provides
+a patent-free replacement for GIF and can also replace many common uses of
+TIFF. Indexed-color, grayscale, and truecolor images are supported, and an
+optional alpha channel. Sample depths range from 1 to 16 bits.</para>
+<para>PNG is designed to work well in online viewing applications, such as
+the World Wide Web, and is fully streamable with a progressive display option.
+PNG is robust, and provides both full file integrity checking, and fast simple
+detection of common transmission errors. PNG can store gamma and chromaticity
+data for improved color matching on heterogeneous platforms.</para>
+</refsect1>
+<refsect1 id="png-4-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWpng</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="png-4-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libpng</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>zlib</refentrytitle><manvolnum>
+3</manvolnum></citerefentry></para>
+<para>PNG 1.2 specification, July 1999: <literal>http://www.libpng.org/pub/png</literal>
+or <literal>ftp://ftp.uu.net/graphics/png/documents</literal>
+</para>
+<para>PNG 1.0 specification, October 1996: RFC 2083
+<literal>ftp://ds.internic.net/rfc/rfc2083.txt</literal>
+or as a W3C Recommendation at
+<literal>http://www.w3.org/TR/REC-png.html</literal></para>
+</refsect1>
+<refsect1 id="png-4-note"><title>&note-tt;</title>
+<para>This man page was originally written by Glenn Randers-Pehrson. Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
