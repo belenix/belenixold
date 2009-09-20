@@ -12,11 +12,10 @@
 
 Name:                    SFEakonadi
 Summary:                 PIM data storage server
-Version:                 1.1.2
+Version:                 1.2.1
 License:                 LGPLv2+
 URL:                     http://pim.kde.org/akonadi/
 Source:                  http://download.akonadi-project.org/akonadi-%{version}.tar.bz2
-#Patch1:                  akonadi-01-mysql_conf.diff
 
 SUNW_BaseDir:            %{_basedir}
 SUNW_Copyright:          %{name}.copyright
@@ -59,9 +58,6 @@ Requires: SUNWmysql5u
 
 %prep
 %setup -q -c -n %name-%version
-#cd %{src_dir}-%{version}
-#%patch1 -p1
-#cd ..
 
 %build
 #
@@ -117,6 +113,13 @@ export PATH="%{qt4_bin_path}:${OPATH}"
 
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.a
+
+cp ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/akonadi.pc akonadi.pc.orig
+cat akonadi.pc.orig | sed '{
+    s#Cflags:#Cflags: -I%{_includedir}/boost/gcc4#
+    s#Libs:#Libs: -L%{_libdir}/boost/gcc4 -R%{_libdir}/boost/gcc4#
+}' > ${RPM_BUILD_ROOT}%{_libdir}/pkgconfig/akonadi.pc
+
 cd ..
 export PATH="${OPATH}"
 
@@ -155,8 +158,13 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*.pc
+%dir %attr (0755, root, bin) %{_libdir}/Akonadi
+%dir %attr (0755, root, bin) %{_libdir}/Akonadi/cmake
+%{_libdir}/Akonadi/cmake/*
 
 %changelog
+* Sat Sep 05 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Bump version to 1.2.1.
 * Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Update MySQL version dependency to 5.1.
 * Fri Jul 17 2009 - moinakg(at)belenix<dot>org

@@ -12,7 +12,7 @@
 %define python_version   2.6
 Name:                    SFEkdemultimedia4
 Summary:                 Multimedia applications for KDE 4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdemultimedia-%{version}.tar.bz2
@@ -31,7 +31,7 @@ Requires:      SFEkdebase4-workspace
 Requires:      SUNWflac
 Requires:      SUNWlibtheora
 Requires:      SFElibtunepimp
-Requires:      SFElibmusicbrainz3
+Requires:      SUNWmusicbrainz
 Requires:      SUNWogg-vorbis
 Requires:      SFEtaglib
 Requires:      SFElibxcb
@@ -44,7 +44,7 @@ BuildRequires: SFEautomoc
 BuildRequires: SFEcmake
 BuildRequires: SUNWflac-devel
 BuildRequires: SUNWlibtheora-devel
-BuildRequires: SFElibmusicbrainz3-devel
+BuildRequires: SUNWmusicbrainz-devel
 BuildRequires: SUNWogg-vorbis-devel
 BuildRequires: SFEtaglib-devel
 BuildRequires: SFElibxcb-devel
@@ -132,8 +132,8 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -189,6 +189,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde4/libaudiocd_encoder_wav.so
 %{_libdir}/kde4/kcm_audiocd.so
 %{_libdir}/kde4/dragonpart.so
+%{_libdir}/kde4/videopreview.so
 
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_datadir}/kde4
@@ -232,5 +233,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sun Sep 20 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
 * Fri Jul 17 2009 - moinakg(at)belenix<dot>org
 - Initial version.

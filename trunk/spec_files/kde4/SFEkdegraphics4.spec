@@ -12,13 +12,11 @@
 %define python_version   2.6
 Name:                    SFEkdegraphics4
 Summary:                 Graphics applications for the K Desktop Environment 4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdegraphics-%{version}.tar.bz2
 Patch1:                  kdegraphics4-01-kolourpaint.diff
-Patch2:                  kdegraphics4-02-libraw_alloc.h.diff
-Patch3:                  kdegraphics4-03-libraw.h.diff
 
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
@@ -45,6 +43,7 @@ Requires:      SFEpoppler
 Requires:      SFEqca
 Requires:      SFEqimageblitz
 Requires:      SFEsoprano
+Requires:      SFEkdebindings4-ruby
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEkdelibs4-devel
 BuildRequires: SFEkdepimlibs4-devel
@@ -64,6 +63,7 @@ BuildRequires: SFEpoppler-devel
 BuildRequires: SFEqca-devel
 BuildRequires: SFEqimageblitz-devel
 BuildRequires: SFEsoprano-devel
+BuildRequires: SFEkdebindings4-ruby-devel
 Conflicts:     SFEkdegraphics3
 Conflicts:     SFElibkdcraw
 Conflicts:     SFElibkexiv2
@@ -110,6 +110,7 @@ Requires: SFEpoppler-devel
 Requires: SFEqca-devel
 Requires: SFEqimageblitz-devel
 Requires: SFEsoprano-devel
+Requires: SFEkdebindings4-ruby-devel
 Conflicts: SFEkdegraphics3-devel
 Conflicts: SFElibkdcraw-devel
 Conflicts: SFElibkexiv2-devel
@@ -126,8 +127,6 @@ Conflicts:     SFEkdegraphics3-doc
 %setup -q -c -n %name-%version
 cd %{src_dir}-%{version}
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 cd ..
 
 %build
@@ -153,14 +152,14 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
 export LDFLAGS="%_ldflags -L%{_prefix}/poppler/lib -R%{_prefix}/poppler/lib -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/poppler/lib/pkgconfig:%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
 export CMAKE_LIBRARY_PATH="%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
 
-cmake   ../%{src_dir}-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
+cmake   --trace ../%{src_dir}-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
         -DCMAKE_BUILD_TYPE=Release                                      \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
@@ -176,6 +175,9 @@ cmake   ../%{src_dir}-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
         -DBOOST_LIBRARYDIR=%{_libdir}/boost/gcc4                        \
         -DLIBUSB_INCLUDE_DIR:PATH=%{sfw_inc}                            \
         -DLIBUSB_LIBRARIES:FILEPATH=%{sfw_lib}/libusb.so                \
+	-DPOPPLER_INCLUDE_DIR=%{_prefix}/poppler/include/poppler/qt4	\
+	-DPOPPLER_LIBRARY=%{_prefix}/poppler/lib/libpoppler-qt4.so	\
+	-DHAVE_POPPLER_0_8=On						\
         -DBUILD_SHARED_LIBS=On                                          \
         -DKDE4_ENABLE_HTMLHANDBOOK=On                                   \
         -DCMAKE_VERBOSE_MAKEFILE=1 > config.log 2>&1
@@ -244,5 +246,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sun Sep 20 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
+- Fix reference to poppler lib for Okular PDF support.
 * Tue Jun 23 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version.

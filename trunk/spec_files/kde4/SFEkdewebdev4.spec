@@ -12,7 +12,7 @@
 %define python_version   2.6
 Name:                    SFEkdewebdev4
 Summary:                 Web development applications for KDE 4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdewebdev-%{version}.tar.bz2
@@ -103,9 +103,9 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
-export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -I%{_includedir}/boost/gcc4"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -I%{_includedir}/boost/gcc4"
+export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path} -L%{_libdir}/boost/gcc4 -R%{_libdir}/boost/gcc4"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
 export CMAKE_LIBRARY_PATH="%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
@@ -203,5 +203,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sun Sep 20 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
 * Fri Jul 17 2009 - moinakg(at)belenix<dot>org
 - Initial version.

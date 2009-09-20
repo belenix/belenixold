@@ -1,0 +1,71 @@
+--- ./akonadi/xml/xmldocument.cpp.orig	2009-06-08 12:54:55.905703590 +0200
++++ ./akonadi/xml/xmldocument.cpp	2009-06-08 13:07:15.899550077 +0200
+@@ -37,6 +37,27 @@
+ 
+ using namespace Akonadi;
+ 
++void _xmlFreeDoc(_xmlDoc *d)
++{
++	xmlFreeDoc(d);
++}
++
++void _xmlSchemaFreeParserCtxt(_xmlSchemaParserCtxt *d)
++{
++	xmlSchemaFreeParserCtxt(d);
++}
++
++void _xmlSchemaFree(_xmlSchema *d)
++{
++	xmlSchemaFree(d);
++}
++
++void _xmlSchemaFreeValidCtxt(_xmlSchemaValidCtxt *d)
++{
++	xmlSchemaFreeValidCtxt(d);
++}
++
++
+ // helper class for dealing with libxml resource management
+ template <typename T, void FreeFunc(T)> class XmlPtr
+ {
+@@ -146,30 +167,30 @@
+ 
+ #ifdef HAVE_LIBXML2
+   // schema validation
+-  XmlPtr<xmlDocPtr, xmlFreeDoc> sourceDoc( xmlParseMemory( data.constData(), data.length() ) );
+-  if ( !sourceDoc ) {
++  XmlPtr<xmlDocPtr, _xmlFreeDoc> sourceDoc( xmlParseMemory( data.constData(), data.length() ) );
++  if ( !bool(sourceDoc) ) {
+     d->lastError = i18n( "Unable to parse data file '%1'.", fileName );
+     return false;
+   }
+ 
+   const QString &schemaFileName = KGlobal::dirs()->findResource( "data", QLatin1String("akonadi/akonadi-xml.xsd") );
+-  XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit(), NULL, XML_PARSE_NONET ) );
+-  if ( !schemaDoc ) {
++  XmlPtr<xmlDocPtr, _xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit(), NULL, XML_PARSE_NONET ) );
++  if ( !bool(schemaDoc) ) {
+     d->lastError = i18n( "Schema definition could not be loaded and parsed." );
+     return false;
+   }
+-  XmlPtr<xmlSchemaParserCtxtPtr, xmlSchemaFreeParserCtxt> parserContext( xmlSchemaNewDocParserCtxt( schemaDoc ) );
+-  if ( !parserContext ) {
++  XmlPtr<xmlSchemaParserCtxtPtr, _xmlSchemaFreeParserCtxt> parserContext( xmlSchemaNewDocParserCtxt( schemaDoc ) );
++  if ( !bool(parserContext) ) {
+     d->lastError = i18n( "Unable to create schema parser context." );
+     return false;
+   }
+-  XmlPtr<xmlSchemaPtr, xmlSchemaFree> schema( xmlSchemaParse( parserContext ) );
+-  if ( !schema ) {
++  XmlPtr<xmlSchemaPtr, _xmlSchemaFree> schema( xmlSchemaParse( parserContext ) );
++  if ( !bool(schema) ) {
+     d->lastError = i18n( "Unable to create schema." );
+     return false;
+   }
+-  XmlPtr<xmlSchemaValidCtxtPtr, xmlSchemaFreeValidCtxt> validationContext( xmlSchemaNewValidCtxt( schema ) );
+-  if ( !validationContext ) {
++  XmlPtr<xmlSchemaValidCtxtPtr, _xmlSchemaFreeValidCtxt> validationContext( xmlSchemaNewValidCtxt( schema ) );
++  if ( !bool(validationContext) ) {
+     d->lastError = i18n( "Unable to create schema validation context." );
+     return false;
+   }

@@ -1,5 +1,5 @@
---- kdegraphics-4.2.4/libs/libkdcraw/libraw/libraw/libraw.h.orig	2009-06-20 15:04:58.281904438 +0530
-+++ kdegraphics-4.2.4/libs/libkdcraw/libraw/libraw/libraw.h	2009-06-20 15:05:50.871548135 +0530
+--- kdegraphics-4.3.1/libs/libkdcraw/libraw/libraw/libraw.h.orig	2009-02-04 23:47:36.000000000 +0530
++++ kdegraphics-4.3.1/libs/libkdcraw/libraw/libraw/libraw.h	2009-09-06 23:43:34.292417113 +0530
 @@ -29,6 +29,9 @@
  #include <stdio.h>
  #include <stdlib.h>
@@ -8,5 +8,5 @@
 +#define bzero(p,sz) memset(p,0,sz)
 +#endif
  
+ #include "libraw_datastream.h"
  #include "libraw_types.h"
- #include "libraw_const.h"
