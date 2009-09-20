@@ -1,0 +1,210 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/417 GDM2 as default Solaris Display Manager -->
+<!--ARC : LSARC 2008/207 GNOME 2.22 -->
+<!ENTITY cmd "gdmsetup">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gdmsetup-1m">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gdmsetup</refentrytitle><manvolnum>1m</manvolnum>
+<refmiscinfo class="date">1 Sep 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gdmsetup</primary></indexterm><indexterm><primary>GDM
+Configuration Tool</primary></indexterm>
+<refnamediv id="gdmsetup-1m-name"><refname>gdmsetup</refname><refpurpose>GDM
+Configuration Tool</refpurpose></refnamediv>
+<refsynopsisdiv id="gdmsetup-1m-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command><arg choice="opt"><option role="nodash"><replaceable>
+gnome-std-options</replaceable></option></arg>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="gdmsetup-1m-desc"><title>&desc-tt;</title>
+<para><command>&cmd;</command> provides a graphical interface that enables
+you to modify the GDM configuration file, <filename>custom.conf</filename>. <command>&cmd;</command>
+can only be run as the root user.  If the "greeter/ConfigAvailable" GDM
+configuration is set to "true", then users can access
+<command>gdmsetup</command> from the login screen, but still need to
+enter the root password before allowed to modify any configuration
+setting.</para>
+
+</refsect1>
+<refsect1 id="gdmsetup-1m-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="medium">
+<varlistentry><term><option role="nodash"><replaceable>gnome-std-options</replaceable></option></term>
+<listitem><para>Standard options available for use with most GNOME applications.
+See <citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for more information.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gdmsetup-1m-exde"><title>&exde-tt;</title>
+<para><command>&cmd;</command> has five tabs: Local, Remote, Accessibility, Security and XDMCP.</para>
+<para>The following sections describe the configuration options that you can
+edit. The affected <filename>custom.conf</filename> section-key pair
+is listed in parentheses.</para>
+
+<refsect2 id="gdmsetup-1m-exde-local">
+<title>Local</title>
+<para>
+Allows the configuration of how GDM behaves on the console.
+</para>
+
+<itemizedlist>
+<listitem>Whether the local greeter program is the Themed, Plain, or Plain with Face Browser (daemon/Greeter)</listitem>
+<listitem>Show actions menu (greeter/SystemMenu)</listitem>
+<listitem>Allow configuration from the login screen (greeter/ConfigAvailable)</listitem>
+<listitem>Allow running XDMCP chooser from the login screen (greeter/ChooserButton)</listitem>
+<listitem>Local Welcome string (greeter/Welcome)</listitem>
+<listitem>If Themed greeter, set theme selection (greeter - GraphicalTheme)</listitem>
+<listitem>If Themed greeter, install new theme</listitem>
+<listitem>If Themed greeter, delete theme</listitem>
+<listitem>If Plain greeter, set background image selection as none, image, or color (greeter/BackgroundType)</listitem>
+<listitem>If Plain greeter, set background image (greeter/BackgroundImage)</listitem>
+<listitem>If Plain greeter, scale background image to fit (greeter/BackgroundScaleToFit)</listitem>
+<listitem>If Plain greeter, set background color (greeter/BackgroundColor)</listitem></listitem>
+<listitem>Logo image (greeter/Logo)</listitem>
+</itemizedlist>
+</refsect2>
+
+<refsect2 id="gdmsetup-1m-exde-remote">
+<title>Local</title>
+<para>
+<para>
+Allows the configuration of how GDM behaves for remote displays via XDMCP.  If remote login is enabled, the "Configure XDMCP" button allows the configuration of XDMCP parameters described below.
+</para>
+
+<itemizedlist>
+<listitem>Whether the remote greeter program is Disabled, enabled using same GUI than Local, or enabled and using a different GUI than Local (daemon/RemoteGreeter).</listitem>
+<listitem>Remote Welcome string (greeter/RemoteWelcome)</listitem>
+<listitem>If Plain greeter, whether background color is shown on remote displays (greeter/BackgroundRemoteOnlyColor)</listitem>
+<listitem>Enable XDMCP (xdmcp/Enable)</listitem>
+<listitem>Honor indirect requests (xdmcp/HonorIndirect)</listitem>
+<listitem>Listen on UDP port (xdmcp/Port)</listitem>
+<listitem>Maximum pending requests (xdmcp/MaxPending)</listitem>
+<listitem>Maximum pending indirect requests (xdmcp/MaxPendingIndirect)</listitem>
+<listitem>Maximum remote sessions (xdmcp/MaxSessions)</listitem>
+<listitem>Maximum wait time (xdmcp/MaxWait)</listitem>
+<listitem>Maximum indirect wait time (xdmcp/MaxWaitIndirect)</listitem>
+<listitem>Displays per host (xdmcp/DisplaysPerHost)</listitem>
+<listitem>Ping interval in seconds (xdmcp/PingIntervalSeconds)</listitem>
+</itemizedlist>
+</refsect2>
+
+<refsect2 id="gdmsetup-1m-exde-accessibility">
+<title>Accessibility</title>
+<para>
+Allows the user to configure accessibility features in GDM.
+</para>
+
+<itemizedlist>
+<listitem>Enable accessible login (daemon/AddGtkModules)</listitem>
+<listitem>Allow users to change fonts and colors of plain greeter (gui/AddAllowGtkThemeChange)
+</listitem>
+<listitem>Make a sound when login window is ready (greeter/SoundOnLogin)</listitem>
+<listitem>Login start sound selection (greeter/SoundOnLogin, greeter/SoundOnLoginFile)</listitem>
+<listitem>Successful login sound selection (greeter/SoundOnLoginSuccess, greeter/SoundOnLoginSuccessFile)</listitem>
+<listitem>Failed login sound selection (greeter/SoundOnLoginFailure, greeter/SoundOnLoginFailureFile)</listitem>
+</itemizedlist>
+</refsect2>
+
+<refsect2 id="gdmsetup-1m-exde-security">
+<title>Security</title>
+<para>
+Configuration choices that affect security.  The "Configure X Server"
+button allows the user to configure the displays found in the
+[servers] section of the GDM configuration.
+</para>
+
+<itemizedlist>
+<listitem>Automatic Login selection (daemon/AutomaticLoginEnable)</listitem>
+<listitem>Automatic Login username (daemon/AutomaticLogin)</listitem>
+<listitem>Timed Login Selection (daemon/TimedLoginEnable)</listitem>
+<listitem>Timed Login username (daemon/TimedLogin)</listitem>
+<listitem>Timed Login delay (daemon/TimedLoginDelay)</listitem>
+<listitem>Allow remote timed logins (security/AllowRemoteAutoLogin)</listitem>
+<listitem>Allow root to login with GDM (security/AllowRoot)</listitem>
+<listitem>Allow root to login remotely with GDM (security/AllowRemoteRoot)</listitem>
+<listitem>Enable debug messages to system log (debug/Enable)</listitem>
+<listitem>Always disallow TCP connections to Xserver (security/DisallowTCP)</listitem>
+</itemizedlist>
+</refsect2>
+
+<refsect2 id="gdmsetup-1m-exde-Users">
+<title>Users</title>
+<para>
+Configure the Face Browser behavior.
+</para>
+
+<itemizedlist>
+<listitem>Show all users in <filename>/etc/passwd</filename> in Face Browser (greeter/IncludeAll)
+</listitem>
+<listitem>Users to include in Face Browser (greeter/Include)
+</listitem>
+<listitem>Users to exclude in Face Browser (greeter/Exclude)
+</listitem>
+</itemizedlist>
+</refsect2>
+</refsect1>
+
+<refsect1 id="gdmsetup-1m-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/sbin/&cmd;</filename></term><listitem><para>
+Executable for GDM Configuration Tool</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/X11/gdm/custom.conf</filename></term><listitem>
+<para>Contains GDM configuration and documentation, can be modified by <command>&cmd;</command></para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gdmsetup-1m-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-display-mgr
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gdmsetup-1m-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para>
+<citerefentry><refentrytitle>gdmXnestchooser</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmdynamic</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmflexiserver</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmphotosetup</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmthemetester</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdm</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdm-restart</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gdmsetup-1m-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2004, 2006.</para>
+</refsect1>
+</refentry>

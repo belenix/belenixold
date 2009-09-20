@@ -1,0 +1,99 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/417 GDM2 as default Solaris Display Manager -->
+<!--ARC : LSARC 2008/207 GNOME 2.22 -->
+<!ENTITY cmd "gdm-restart">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gdm-restart-1m">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gdm-restart</refentrytitle><manvolnum>1m</manvolnum>
+<refmiscinfo class="date">1 Sep 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gdm-restart</primary></indexterm><indexterm><primary>
+stop or restart GDM</primary></indexterm>
+<refnamediv id="gdm-restart-1m-name"><refname>gdm-restart</refname><refname>
+gdm-safe-restart</refname><refname>gdm-stop</refname><refpurpose>stop or restart
+GDM</refpurpose></refnamediv>
+<refsynopsisdiv id="gdm-restart-1m-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>&cmd;</command>
+</cmdsynopsis>
+<cmdsynopsis><command>gdm-safe-restart</command>
+</cmdsynopsis>
+<cmdsynopsis><command>gdm-stop</command>
+</cmdsynopsis></refsynopsisdiv>
+
+<refsect1 id="gdm-restart-1m-desc"><title>&desc-tt;</title>
+<para>&cmd;<command></command> stops and restarts GDM by sending a HUP signal
+to the GDM daemon. This command immediately terminates all sessions and logs
+out users currently logged in with GDM.</para>
+<para><command>gdm-safe-restart</command> stops and restarts GDM by sending
+a USR1 signal to the GDM daemon. GDM is restarted as soon as all users log
+out.</para>
+<para><command>gdm-stop</command> stops GDM by sending a TERM signal to the
+GDM daemon.</para>
+</refsect1>
+<refsect1 id="gdm-restart-1m-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/bin/&cmd;</filename></term><listitem><para>
+Executable to stop and restart GDM</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/gdm-safe-restart</filename></term>
+<listitem><para>Executable to stop and restart GDM safely</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/bin/stop</filename></term><listitem><para>
+Executable to stop GDM</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gdm-restart-1m-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-display-mgr
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gdm-restart-1m-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>Latest version of the <citetitle>GNOME Desktop User Guide</citetitle>
+for your platform.</para>
+<para>
+<citerefentry><refentrytitle>gdmdynamic</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmflexiserver</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmphotosetup</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmthemetester</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmXnestchooser</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdm</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdmsetup</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gdm-restart-1m-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2004, 2006.</para>
+</refsect1>
+</refentry>

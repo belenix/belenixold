@@ -1,0 +1,233 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734 GNOME For Nevada -->
+<!ENTITY cmd "gst-std-options">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2006,2007 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gst-std-options-5">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gst-std-options</refentrytitle><manvolnum>5</manvolnum>
+<refmiscinfo class="date">12 Nov 2007</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gst-std-options</primary></indexterm><indexterm><primary>
+standard options available for most GStreamer applications</primary></indexterm>
+<refnamediv id="gst-std-options-5-name"><refname>gst-std-options</refname>
+<refpurpose>standard options available for most GStreamer applications</refpurpose>
+</refnamediv>
+<refsect1 id="gst-std-options-5-desc"><title>&desc-tt;</title>
+<para>
+GStreamer standard options which are available for most GStreamer
+based applications.
+</para>
+</refsect1>
+<refsect1 id="gst-std-options-5-opts"><title>&opts-tt;</title>
+<para>The following options are supported:</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><option>-help-gst</option></term>
+<listitem><para>
+Display GStreamer help options.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-debug-disable</option></term>
+<listitem><para>
+Disables debugging.</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-debug-help</option></term>
+<listitem><para>
+Prints a list of available debug categories and their default debugging level.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-debug-level=<replaceable>level</replaceable></option></term>
+<listitem><para>
+Sets the threshold for printing debugging  messages. A higher level prints
+more messages. The useful range is 0-5, the default value is 0.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-debug-no-color</option></term>
+<listitem><para>
+GStreamer normally prints debugging messages so that the  messages are
+color-coded when printed to a terminal that handles ANSI escape sequences.
+This option causes GStreamer to print messages without color.  Setting
+the GST_DEBUG_NO_COLOR environment variable achieves the same thing.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-debug=<replaceable>string</replaceable></option></term>
+<listitem><para>
+Specifies debugging levels for each category, where
+<replaceable>string</replaceable> is a colon-separated list of
+<replaceable>category_name=level </replaceable> pairs.
+<replaceable>level</replaceable> is in the range 0-5 where 0 shows no
+messages and 5 shows all messages. The wildcard * can be used to match
+category names. Use the <option>-gst-debug-help</option> option to show
+category names.
+</para>
+<para>
+Example: GST_CAT=5:GST_ELEMENT_*=3
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-disable-registry-fork</option></term>
+<listitem><para>
+Disable the use of
+<citerefentry><refentrytitle>fork</refentrytitle><manvolnum>2</manvolnum></citerefentry>
+when scanning the registry.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-disable-segtrap</option></term>
+<listitem><para>
+Disables trapping of segmentation faults during plugin loading.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-fatal-warnings</option></term>
+<listitem><para>
+Causes GStreamer to abort if a warning message occurs.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-plugin-load=<replaceable>plugins</replaceable></option></term>
+<listitem><para>
+Preloads the plugins specified in a comma-separated list.  Another way to
+specify plugins to preload is to use the environment variable
+GST_PLUGIN_PATH.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>
+<option>-gst-plugin-path=<replaceable>path</replaceable></option></term>
+<listitem><para>
+Adds directories separated with ':' to the plugin search path.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-plugin-spew</option></term>
+<listitem><para>
+GStreamer info flags to set Enable printout of errors while loading GStreamer
+plugins.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><option>-gst-version</option></term>
+<listitem><para>
+Prints the version string of the GStreamer core library.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gst-std-options-5-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of the following environment
+variables:</para>
+<variablelist>
+<varlistentry>
+<term>GST_DEBUG</term>
+<listitem><para>
+Comma-separated list of debug categories and levels.  Values are the same
+as used with the <option>-gst-debug</option> argument.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GST_DEBUG_NO_COLOR</term>
+<listitem><para>
+When this environment variable is set, colored debug output is disabled.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GST_REGISTRY</term>
+<listitem><para>
+Path of the registry file.  Default is <filename>~/.gstreamer-0.10/registry-*.xml</filename>.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GST_PLUGIN_PATH</term>
+<listitem><para>
+Specify a list of directories to scan for additional plugins.  These
+take precedence over the system plugins.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>GST_PLUGIN_SYSTEM_PATH</term>
+<listitem><para>
+Specifies a list of plugins that are always loaded by default.  If not set,
+this defaults to the system-installed path, and the plugins installed in
+the user's home directory.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term>OIL_CPU_FLAGS</term>
+<listitem><para>
+Useful liboil environment variable.  Set OIL_CPU_FLAGS=0 when debugging tools
+trip over liboil's CPU detection.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gst-std-options-5-file"><title>&file-tt;</title>
+<para>The following files are used by GStreamer based applications:</para>
+<variablelist termlength="wholeline"><varlistentry>
+<term><filename>~/gstreamer-0.10/registry-*.xml</filename></term>
+<listitem><para>
+The XML plugin database.  Can be deleted at any time, and it will be 
+recreated automatically when it is needed or when the installed plugins
+change.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gst-std-options-5-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-media
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gst-std-options-5-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gst-feedback</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-inspect</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-launch</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-typefind</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-xmlinspect</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gst-xmllaunch</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gstreamer-properties</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgstreamer-0.10</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gst-std-options-5-note"><title>&note-tt;</title>
+<para>Original man page written by the GStreamer team at
+<literal>http://gstreamer.net/</literal>.
+</para>
+<para>Updated by Brian Cameron, Sun Microsystems Inc., 2004, 2006, 2007.</para>
+</refsect1>
+</refentry>

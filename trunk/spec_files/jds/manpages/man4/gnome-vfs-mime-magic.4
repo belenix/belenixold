@@ -1,0 +1,238 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "gnome-vfs-mime-magic">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub EntList brvbar bull cross dash diam diams frac12 frac13 frac14 hellip
+ laquo lArr loz mdash nabla ndash para pound rArr raquo sect yen bsol>
+<?Pub Inc>
+<refentry id="gnome-vfs-mime-magic-4">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-vfs-mime-magic.4</refentrytitle><manvolnum>4</manvolnum>
+<refmiscinfo class="date">14 May 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man4;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-vfs-mime-magic</primary></indexterm><indexterm>
+<primary>gnome-mime-info</primary></indexterm><indexterm><primary>gnome-mime-keys
+</primary></indexterm><indexterm><primary>GNOME VFS MIME detection</primary>
+</indexterm><refnamediv id="gnome-vfs-mime-magic-4-name"><refname>gnome-vfs-mime-magic</refname>
+<refname>gnome-vfs.mime</refname><refname>gnome-vfs.keys</refname><refpurpose>
+GNOME VFS MIME detection</refpurpose></refnamediv>
+<refsect1 id="gnome-vfs-mime-magic-4-desc"><title>&desc-tt;</title>
+<para>
+GnomeVFS is obsolete.  Refer to the GNOME Desktop System Administration
+Guide for information about how to register MIME type information with
+the GNOME desktop.  The GNOME Desktop System Administration Guide can
+be viewed with
+<citerefentry><refentrytitle>yelp</refentrytitle><manvolnum>1</manvolnum></citerefentry>.
+</para>
+<para>On any modern desktop system, each document type or file type must be
+given a unique identification name and icon. In GNOME, this information is
+used extensively by the file manager, <citerefentry><refentrytitle>nautilus
+</refentrytitle><manvolnum>1</manvolnum></citerefentry>. The primary underlying
+mechanism for providing such definitions is achieved via <command>&cmd;</command>. <command>&cmd;</command>
+contains the default file content sniffers for identifying MIME types. The
+concept of MIME magic is similar to that of Solaris <citerefentry><refentrytitle>
+magic</refentrytitle><manvolnum>4</manvolnum></citerefentry>.</para>
+</refsect1>
+<refsect1 id="gnome-vfs-mime-magic-4-exde"><title>&exde-tt;</title>
+<refsect2 id="gnome-vfs-mime-magic-4-exde-cmd"><title>&cmd;</title>
+<para>Each line in the <filename>/etc/gnome/gnome-vfs-mime-magic</filename>
+file describes a MIME type. The format of each line is as follows:<screen><computeroutput><replaceable>
+offset_start</replaceable>[:<replaceable>offset_end</replaceable>] <replaceable>
+pattern_type</replaceable> <replaceable>pattern</replaceable>  [&amp;<replaceable>
+pattern_mask</replaceable>] <replaceable>mime-type</replaceable></computeroutput></screen></para>
+<para>Each line contains the following fields:</para>
+<variablelist><varlistentry><term><replaceable>offset_start</replaceable></term>
+<listitem><para>Decimal number that, with <replaceable>offset_end</replaceable>,
+specifies the bytes offset within the file.</para>
+</listitem></varlistentry>
+<varlistentry><term><replaceable>offset_end</replaceable></term><listitem>
+<para>Decimal number that, with <replaceable>offset_start</replaceable>, specifies
+the bytes offset within the file.</para>
+</listitem></varlistentry>
+<varlistentry><term><replaceable>pattern_type</replaceable></term><listitem>
+<para>Can be one of the following types:</para>
+<para><literal>byte | short | long | string | date | beshort | belong | bedate
+| leshort | lelong | ledate</literal></para>
+<para>where <literal>be</literal> stands for Big Endian and <literal>le</literal>
+stands for Little Endian.</para>
+</listitem></varlistentry>
+<varlistentry><term><replaceable>pattern</replaceable></term><listitem><para>
+An ASCII string with non-printable characters escaped as hex or octal escape
+sequences, and spaces and other important whitespace escaped with a backslash
+(<literal>\\</literal>).</para>
+</listitem></varlistentry>
+<varlistentry><term><replaceable>pattern_mask</replaceable></term><listitem>
+<para>A string of hex digits. The mask must be the same specification as the
+non-ambiguous patterns.</para>
+</listitem></varlistentry>
+<varlistentry><term><replaceable>mime-type</replaceable></term><listitem>
+<para>A valid MIME type.</para>
+</listitem></varlistentry>
+</variablelist><para>The magic patterns are matched sequentially from the
+first entry to the last entry of the list. Therefore, you should put the non-ambiguous
+patterns at the start of the list. Any pattern that requires a deep seek into
+the file should be placed at the end of the list to reduce performance overhead.
+When designing new document formats, include an easily recognizable unique
+magic pattern near the start of the file. A good pattern is is at least four
+bytes long and contains one or two non-printable characters so that text files
+are not misidentified.</para>
+</refsect2>
+<refsect2 id="gnome-vfs-mime-magic-4-exde-mike"><title>gnome-vfs.mime
+and gnome-vfs.keys</title>
+<para>Apart from file sniffing, GNOME also provide a secondary mechanism to
+determine MIME types. If a file has been sniffed and its type does not match
+any of the magic patterns, GNOME looks for files called <filename>/usr/share/gnome/mime-info/*.mime
+</filename> and processes these. The format of these files is different to
+that of pattern magic. Instead of determining the MIME type by reading the
+content of the file, the MIME type of the file is determined by its extension.
+The mime info file has the following format: <screen><computeroutput><replaceable>
+mime_type</replaceable>
+    ext[,<replaceable>prio</replaceable>]: <replaceable>list of extensions for this mime-type
+</replaceable> 	
+    regex[,<replaceable>prio</replaceable>]: <replaceable>regular expression that matches the filename
+</replaceable></computeroutput></screen></para>
+<para>More than one <literal>ext:</literal> and <literal>regex:</literal>
+field can be present for a given MIME type. You can also associate a priority
+for each field. The default priority (<replaceable>prio</replaceable>) is
+1, a higher numerical value indicates a higher priority. The indentation before <literal>
+ext:</literal> and <literal>regex:</literal> must be a tab character (<literal>
+\\t</literal>). </para>
+<para>The searching sequence implies that the magic pattern file has a higher
+precedence over the mime info files. As the mime info files are read 	alphabetically,
+this also determines matching orders for the file extension. </para>
+<para>For example, the file <filename>FirstFile.mime</filename> contains the
+following definition:<screen><computeroutput>application/foo
+    ext: foo</computeroutput></screen></para>
+<para>and the file <filename>SecondFile.mime</filename> contains the following
+definition:<screen><computeroutput>application/mini
+    ext: foo</computeroutput></screen></para>
+<para>The definition in <filename>FirstFile.mime</filename> will be found
+first and used.</para>
+<para>For each MIME info file there must be an associated keys file in the
+same directory. The key file provides human readable text which can be localized
+into various languages. The data in these keys files is used by the GNOME
+file manager, <citerefentry><refentrytitle>nautilus</refentrytitle><manvolnum>
+1</manvolnum></citerefentry>.</para>
+</refsect2>
+</refsect1>
+<refsect1 id="gnome-vfs-mime-magic-4-exam"><title>&exam-tt;</title>
+<example role="example"><title>Magic pattern definition for PDF file</title>
+<para>The following entry in the <filename>/etc/gnome/gnome-vfs-mime-magic
+</filename> file describes the MIME type of <literal>application/pdf</literal>:<screen><computeroutput>
+  	0	string	%PDF-				application/pdf  </computeroutput>	</screen></para>
+<para>The first 5 characters of a PDF file are <literal>%PDF-</literal>. The
+symbols % and - differentiate the PDF file from a text file.</para>
+</example>
+<example role="example"><title>Magic pattern definition for BMP file</title>
+<para>The following entry in the <filename>/etc/gnome/gnome-vfs-mime-magic
+</filename> file describes the MIME type of <literal>application/bmp</literal>:<screen><computeroutput>
+0	string		BMxxxx\000\000 &amp;0xffff00000000ffff	image/bmp</computeroutput>	
+</screen></para>
+<para>The interpretation of this line is as follows: <itemizedlist>
+<listitem><para>The first two characters are <literal>BM</literal> and the
+seventh and eighth characters are NULL.</para></listitem>
+<listitem><para>The mask <literal>0xffff00000000ffff</literal> allows the
+selction of the first, second, seventh, and eighth characters to be selected
+for comparison.</para></listitem>
+</itemizedlist></para>
+</example>
+<example role="example"><title>MIME info file definition for application/x-compress
+</title>
+<para>The following entry in the <filename>/etc/gnome/gnome-vfs-mime-magic
+</filename> file describes the MIME type of <literal>application/x-compress
+</literal>:<screen><computeroutput>application/x-compress
+		ext: Z</computeroutput>	</screen></para>
+<para>This line indicates that the <literal>x-compress</literal> application
+searches for files with a <literal>.Z</literal> extension.</para>
+<para>The associated keys file entry in the <filename>/usr/share/gnome/mime-info/gnome-vfs.mime
+</filename> 	file is as follows (excluding all localized text):  	<screen><computeroutput>
+application/x-compress
+ 		description=compress-compressed file
+ 		icon_filename=gnome-compressed
+ 		default_action_type=application
+ 		category=Packages
+ 		use_category_default=yes</computeroutput></screen></para>
+</example>
+<example role="example"><title>MIME info file definition for application/x-compressed-tar
+</title>
+<para>The following entry in the <filename>/etc/gnome/gnome-vfs-mime-magic
+</filename> file describes the MIME type of <literal>application/x-compressed-tar
+</literal>:<screen><computeroutput>application/x-compressed-tar
+			regex,2: tar\.gz$
+			ext: tgz</computeroutput>	</screen></para>
+<para>This example uses the priority flag to give <literal>regex</literal>
+a higher priority than <literal>ext</literal>, which means that a file with
+an extension of <literal>tar.gz</literal> should be matched first (to have
+a MIME type of <literal>application/x-compressed-tar)</literal> before <literal>
+tgz</literal>.</para>
+</example>
+</refsect1>
+<refsect1 id="gnome-vfs-mime-magic-4-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium"><varlistentry><term><filename>/etc/gnome/&cmd;</filename> 
+</term><listitem><para></para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gnome/mime-info/gnome-vfs.mime</filename> 
+</term><listitem><para></para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gnome/mime-info/gnome-vfs.keys</filename> 
+</term><listitem><para></para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gnome/mime-info/solaris-gnome2.0.mime
+</filename> </term><listitem><para></para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gnome/mime-info/solaris-gnome2.0.keys
+</filename> </term><listitem><para></para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="gnome-vfs-mime-magic-4-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-vfs</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Obsolete Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-vfs-mime-magic-4-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>nautilus</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-vfs.applications</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomevfs-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>
+Latest version of the
+<citetitle>GNOME Desktop System Administration Guide</citetitle>
+for your platform.
+</para>
+</refsect1>
+<refsect1 id="gnome-vfs-mime-magic-4-note"><title></title>
+<para>Written by Ghee Teo, Sun Microsystems Inc., 2003.</para>
+</refsect1>
+</refentry>

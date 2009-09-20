@@ -1,0 +1,379 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "gnome-interfaces">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2007,2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="gnome-interfaces-5">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>gnome-interfaces.5</refentrytitle><manvolnum>5</manvolnum>
+<refmiscinfo class="date">16 May 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man5;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>gnome-interfaces</primary></indexterm><indexterm><primary>
+GNOME interface classifications</primary></indexterm>
+<refnamediv id="gnome-interfaces-5-name"><refname>gnome-interfaces</refname>
+<refpurpose>GNOME interface classifications</refpurpose></refnamediv>
+<refsect1 id="gnome-interfaces-5-desc"><title>&desc-tt;</title>
+<para>This page describes the interface classifications for items shipped
+with the GNOME desktop. For the definitions of the interface classifications,
+see <citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum>
+</citerefentry>.</para>
+
+<para>
+Those wishing to integrate with the GNOME desktop are recommended to depend on
+interfaces marked as Committed.  These interfaces will not break after upgrade.
+The set of Committed interfaces is a subset of the GNOME Platform libraries
+(plus additional interfaces such as FreeDesktop interfaces and pkg-config).
+</para>
+
+<para>
+Sun believes that the list of Committed interfaces is suitable
+for writing a great GTK+ based application.  Examples of programs that depend
+only on these interfaces include: GIMP, Firefox, Thunderbird, RealPlayer, and
+Adobe Reader.
+</para>
+
+<para>
+Note that when you build software, any configure script may use the
+<command>pkg-config</command> to identify what libraries are installed to
+the system.  Solaris includes pc files for non-Committed interfaces in
+<filename>/usr/lib/pkgconfig</filename>, so be aware of the commitment
+level of any dependencies you may be using.  Some such dependencies are
+optional and configure options can disable them.  It is recommended that
+non-Committed interfaces are not enabled if you require stability.
+</para>
+
+<para>
+GNOME Platform libraries have an API/ABI stability guarantee from
+the external GNOME community.  While it is unlikely that non-Committed
+interfaces in the GNOME Platform would break after upgrade, Sun makes no
+guarantee that these interfaces have any stability.  Refer to the
+GNOME community for a list of Platform libraries for the version of GNOME
+being used.  Use non-Committed interfaces at your own risk.
+</para>
+
+<para>
+GNOME Desktop interfaces have no stability guarantee and are intended only
+for use for programs provided by the GNOME community.  Xiph.org interfaces
+also have no stability guarantee.
+</para>
+
+<para>
+Instructions on how to integrate with the GNOME panel menu, the MIME
+database, and icon integration are discussed in the GNOME System
+Administration Guide.
+</para>
+
+<para>
+You must install the GNOME development packages for access to developer
+applications and API documentation. API documentation for GNOME interfaces
+can be found in related manpages and the API documentation installed to
+/usr/share/gtk-doc in HTML format.
+</para>
+
+<para>
+To do new development work with the latest GNOME code, consider using the
+latest version of OpenSolaris which you can download from the OpenSolaris
+website:
+</para>
+
+<para>
+<literal>http://www.opensolaris.org/</literal>
+</para>
+
+<para>
+Refer to the Java Desktop System project at OpenSolaris.org for instructions
+on how to build GNOME based applications on Solaris.  It is recommended that
+you use the JDS Common Build Environment (CBE) that you can find at the
+project website, the first link below.  The second link provides access to the
+latest GNOME development packages which can be used with recent OpenSolaris
+builds to replace the desktop with an unstable but most modern version, if
+desired.
+</para>
+
+<para>
+<literal>http://www.opensolaris.org/os/project/jds/</literal>
+<literal>http://dlc.sun.com/osol/jds/downloads/current/</literal>
+</para>
+
+<para>
+To contact the desktop team at Sun send an email to
+desktop-discuss@opensolaris.org.
+</para>
+
+<para>
+The interfaces listed below ship with API documentation.  Refer to the specific
+manpage for details.  GNOME interfaces which are not listed in the table below
+should be considered Volatile, even if the interfaces have gtk-docs installed
+in <filename>/usr/share/gtk-doc</filename>.  Interfaces in Committed libraries
+that are not documented in the man page or referenced gtk-doc API documentation
+should be considered Volatile.
+</para>
+
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="left" valign="middle">INTERFACE NAME</entry><entry align="left"
+valign="middle">CLASSIFICATION</entry></row>
+</thead>
+<tbody>
+<row><entry><para><filename>gdk-pixbuf-csource</filename></para></entry><entry><para>
+Committed GNOME Platform</para></entry></row>
+<row><entry><para><filename>gdk-pixbuf-query-loaders</filename></para></entry><entry><para>
+Committed GNOME Platform</para></entry></row>
+<row><entry><para><filename>glib-genmarshal</filename></para></entry><entry><para>
+Committed GNOME Platform</para></entry></row>
+<row><entry><para><filename>glib-gettextize</filename></para></entry><entry><para>
+Committed GNOME Platform</para></entry></row>
+<row><entry><para><filename>glib-mkenums</filename></para></entry><entry><para>
+Committed GNOME Platform</para></entry></row>
+<row><entry><para><filename>gobject-query</filename></para></entry><entry><para>
+Committed GNOME Platform</para></entry></row>
+<row><entry><para><filename>gtk-builder-convert</filename></para></entry><entry><para>
+Committed GNOME Platform</para></entry></row>
+<row><entry><para><filename>gtk-query-immodules-2.0</filename></para></entry><entry><para>
+Committed GNOME Platform</para></entry></row>
+<row><entry><para><filename>gtk-update-icon-cache</filename></para></entry><entry><para>
+Committed GNOME Platform</para></entry></row>
+<row><entry><para><filename>pkg-config</filename></para></entry><entry><para>
+Committed</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libIDL-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libORBit-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libORBitCosNaming-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libart_lgpl_2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libatk-1.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libaudiofile</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libbonobo-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libbonobo-activation</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libbonoboui-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libcairo</filename></para></entry>
+<entry colname="COLSPEC1"><para>Uncommitted FreeDesktop</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libcspi</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>/usr/include/at-spi-1.0/libspi/Accessibility.h</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>/usr/lib/python2.4/site-packages/pyatspi/*</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>at-spi</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libesd</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgailutil</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgconf-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgdk-x11-2.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgdk_pixbuf-2.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgio-2.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libglade-2.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libglib-2.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libglibmm-2.4</filename></para></entry>
+<entry colname="COLSPEC1"><para>Uncommitted GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgiomm-2.4</filename></para></entry>
+<entry colname="COLSPEC1"><para>Uncommitted GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgmodule-2.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgthread-2.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgnome-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgnomecanvas-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgnome-desktop-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Desktop</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgnomeprint-2.2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Desktop</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgnomeprintui-2.2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Obsolete GNOME Desktop</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgnomeui-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgnomevfs-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Obsolete Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgobject-2.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgstreamer-10.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Desktop</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgstbase-10.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Desktop</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libgtk-x11-2.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libogg</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile Xiph.org</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libpanel-applet-2</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Desktop</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libpango-1.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libpangoft2-1.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libpangocairo-1.0.3</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>ibpangoxft-1.0.3</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libpangox-1.0</filename></para></entry>
+<entry colname="COLSPEC1"><para>Committed GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libpopt</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>librsvg</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Desktop</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libvorbis</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile Xiph.org</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>libvte</filename></para></entry>
+<entry colname="COLSPEC1"><para>Volatile GNOME Desktop</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>gnome-vfs-mime-magic</filename></para></entry>
+<entry colname="COLSPEC1"><para>Obsolete Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>gnome-vfs.applications</filename></para></entry>
+<entry colname="COLSPEC1"><para>Obsolete Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>gnome-vfs.keys</filename></para></entry>
+<entry colname="COLSPEC1"><para>Obsolete Volatile GNOME Platform</para></entry></row>
+<row><entry colname="COLSPEC0"><para><filename>gnome-vfs.mime</filename></para></entry>
+<entry colname="COLSPEC1"><para>Obsolete Volatile GNOME Platform</para></entry></row>
+<row><entry><para><filename>default.session</filename></para></entry><entry><para>
+Volatile GNOME Desktop</para></entry></row>
+<row><entry><para><filename>/usr/lib/pkgconfig</filename></para></entry><entry><para>
+Committed</para></entry></row>
+<row><entry><para><filename>/usr/share/applications</filename></para></entry><entry><para>
+Committed FreeDesktop</para></entry></row>
+<row><entry><para><filename>$HOME/.local/share/applications</filename></para></entry><entry><para>
+Committed FreeDesktop</para></entry></row>
+<row><entry><para><filename>/usr/share/gdm/defaults.conf</filename></para></entry><entry><para>
+Volatile</para></entry></row>
+<row><entry><para><filename>/etc/X11/gdm/custom.conf</filename></para></entry><entry><para>
+Volatile</para></entry></row>
+<row><entry><para><filename>/usr/bin/update-mime-database</filename></para></entry><entry><para>
+Committed</para></entry></row>
+<row><entry><para><filename>/usr/bin/update-desktop-database</filename></para></entry><entry><para>
+Committed</para></entry></row>
+<row><entry><para><filename>/usr/bin/pango-querymodules</filename></para></entry><entry><para>
+Committed</para></entry></row>
+<row><entry><para><filename>/usr/lib/libgtop</filename></para></entry><entry><para>
+Volatile GNOME Platform</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-interfaces-5-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-*</para></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="gnome-interfaces-5-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gdk-pixbuf-csource</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdk-pixbuf-query-loaders</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gdm</refentrytitle><manvolnum>1m</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-genmarshal</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-gettextize</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-mkenums</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gobject-query</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gtk-builder-convert</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gtk-query-immodules-2.0</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gtk-update-icon-cache</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>pango-querymodules</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>pkg-config</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>update-desktop-database</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>update-mime-database</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libIDL-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libORBit-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libORBitCosNaming-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libart_lgpl_2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libatk-1.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libaudiofile</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libbonobo-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libbonobo-activation</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libbonoboui-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libcairo</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libcspi</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libesd</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgailutil</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgconf-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgdk-x11-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgdk_pixbuf-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgio-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libglade-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libglib-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libglibmm-2.4</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgiomm-2.4</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnome-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnome-desktop-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomecanvas-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomeprint-2-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomeprintui-2-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomeui-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomevfs-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgobject-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgstreamer-10.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgtk-x11-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libogg</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libpanel-applet-2</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libpango-1.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libpopt</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>librsvg</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libvorbis</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libvte</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgtop</refentrytitle><manvolnum>3</manvolnum></citerefentry>
+<citerefentry><refentrytitle>gnome-vfs-mime-magic</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-vfs.applications</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gnome-interfaces-5-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</olink>
+for descriptions of the above attributes:</para>
+<para>Latest version of the <citetitle>GNOME Desktop System Administration Guide</citetitle> for
+your platform.</para>
+<para>The following web resources are useful for learning more about the GNOME
+desktop and its interfaces:</para>
+<para><literal>http://www.opensolaris.org/os/project/jds/</literal></para>
+<para><literal>http://www.gnome.org/</literal></para>
+<para><literal>http://developer.gnome.org/</literal></para>
+<para><literal>http://live.gnome.org/</literal></para>
+<para><literal>http://www.gtkmm.org/</literal></para>
+<para><literal>http://www.freedesktop.org/</literal></para>
+<para><literal>http://www.xiph.org/</literal></para>
+<refsect1 id="gnome-interfaces-5-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron and Matt Keenan, Sun Microsystems Inc., 2003, 2007, 2008.</para>
+</refsect1>
+</refentry>

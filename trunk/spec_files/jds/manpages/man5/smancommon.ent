@@ -1,0 +1,114 @@
+<!ENTITY  release   "SunOS 5.11">
+<!ENTITY  sun-copy  "Copyright &copy; 1997, Sun Microsystems, Inc. All Rights Reserved.">
+<!-- Division Titles -->
+<!ENTITY man1	"User Commands">
+<!ENTITY man1B	"SunOS/BSD Compatibility Package Commands">
+<!ENTITY man1b	"SunOS/BSD Compatibility Package Commands">
+<!ENTITY man1C	"Communication Commands">
+<!ENTITY man1c	"Communication Commands">
+<!ENTITY man1F	"FMLI Commands">
+<!ENTITY man1f	"FMLI Commands">
+<!ENTITY man1G	"Graphics and CAD Commands">
+<!ENTITY man1g	"Graphics and CAD Commands">
+<!ENTITY man1M	"Maintenance Commands">
+<!ENTITY man1m	"Maintenance Commands">
+<!ENTITY man1S	"SunOS Specific Commands">
+<!ENTITY man1s	"SunOS Specific Commands">
+<!ENTITY man2	"System Calls">
+<!ENTITY man3	"C Library Functions">
+<!ENTITY man3B	"SunOS/BSD Compatibility Library Functions">
+<!ENTITY man3b	"SunOS/BSD Compatibility Library Functions">
+<!ENTITY man3C	"C Library Functions">
+<!ENTITY man3c	"C Library Functions">
+<!ENTITY man3E	"C Library Functions">
+<!ENTITY man3e	"C Library Functions">
+<!ENTITY man3F	"Fortran Library Routines">
+<!ENTITY man3f	"Fortran Library Routines">
+<!ENTITY man3G	"C Library Functions">
+<!ENTITY man3g	"C Library Functions">
+<!ENTITY man3I	"Wide Character Functions">
+<!ENTITY man3i	"Wide Character Functions">
+<!ENTITY man3K	"Kernel VM Library Functions">
+<!ENTITY man3k	"Kernel VM Library Functions">
+<!ENTITY man3L	"Lightweight Processes Library">
+<!ENTITY man3l	"Lightweight Processes Library">
+<!ENTITY man3M	"Mathematical Library">
+<!ENTITY man3m	"Mathematical Library">
+<!ENTITY man3N	"Network Functions">
+<!ENTITY man3n	"Network Functions">
+<!ENTITY man3R	"Realtime Library">
+<!ENTITY man3r	"Realtime Library">
+<!ENTITY man3S	"Standard I/O Functions">
+<!ENTITY man3s	"Standard I/O Functions">
+<!ENTITY man3T	"Threads Library">
+<!ENTITY man3t	"Threads Library">
+<!ENTITY man3W	"C Library Functions">
+<!ENTITY man3w	"C Library Functions">
+<!ENTITY man3X	"Miscellaneous Library Functions">
+<!ENTITY man3x	"Miscellaneous Library Functions">
+<!ENTITY man4	"File Formats">
+<!ENTITY man4B	"SunOS/BSD Compatibility Package File Formats">
+<!ENTITY man4b	"SunOS/BSD Compatibility Package File Formats">
+<!ENTITY man5	"Headers, Tables, and Macros">
+<!ENTITY man6	"Games and Demos">
+<!ENTITY man7	"Device and Network Interfaces">
+<!ENTITY man7B	"SunOS/BSD Compatibility Special Files">
+<!ENTITY man7b	"SunOS/BSD Compatibility Special Files">
+<!ENTITY man7D	"Devices">
+<!ENTITY man7d	"Devices">
+<!ENTITY man7FS	"File Systems">
+<!ENTITY man7fs	"File Systems">
+<!ENTITY man7I	"Ioctl Requests">
+<!ENTITY man7i	"Ioctl Requests">
+<!ENTITY man7M	"STREAMS Modules">
+<!ENTITY man7m	"STREAMS Modules">
+<!ENTITY man7P	"Protocols">
+<!ENTITY man7p	"Protocols">
+<!ENTITY man8	"Maintenance Procedures">
+<!ENTITY man8C	"Maintenance Procedures">
+<!ENTITY man8c	"Maintenance Procedures">
+<!ENTITY man8S	"Maintenance Procedures">
+<!ENTITY man8s	"Maintenance Procedures">
+<!ENTITY man9	"Device Driver Interfaces">
+<!ENTITY man9E	"Driver Entry Points">
+<!ENTITY man9e	"Driver Entry Points">
+<!ENTITY man9F	"Kernel Functions for Drivers">
+<!ENTITY man9f	"Kernel Functions for Drivers">
+<!ENTITY man9S	"Data Structures for Drivers">
+<!ENTITY man9s	"Data Structures for Drivers">
+<!ENTITY manL	"Local Commands">
+<!-- Section Header Titles -->
+<!ENTITY  name-tt	"NAME">
+<!ENTITY  synp-tt	"SYNOPSIS">
+<!ENTITY  desc-tt	"DESCRIPTION">
+<!ENTITY  opts-tt	"OPTIONS">
+<!ENTITY  oper-tt	"OPERANDS">
+<!ENTITY  parm-tt	"PARAMETERS">
+<!ENTITY  exde-tt	"EXTENDED DESCRIPTION">
+<!ENTITY  exit-tt	"EXIT STATUS">
+<!ENTITY  rtrn-tt	"RETURN VALUES">
+<!ENTITY  erro-tt	"ERRORS">
+<!ENTITY  exam-tt	"EXAMPLES">
+<!ENTITY  envr-tt	"ENVIRONMENT VARIABLES">
+<!ENTITY  file-tt	"FILES">
+<!ENTITY  also-tt	"SEE ALSO">
+<!ENTITY  attr-tt	"ATTRIBUTES">
+<!ENTITY  note-tt	"NOTES">
+<!ENTITY  diag-tt	"DIAGNOSTICS">
+<!ENTITY  bugs-tt	"BUGS">
+<!ENTITY  iocl-tt	"IOCTLS">
+<!ENTITY  cntx-tt	"CONTEXT">
+<!ENTITY  strc-tt	"STRUCTURE MEMBERS">
+<!-- OLINK entity declarations for ALL man page BOOKS -->
+<!ENTITY REFMAN1 PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN1 Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN1M PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN1M Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN2 PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN2 Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN3 PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN3 Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN4 PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN4 Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN5 PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN5 Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN6 PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN6 Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN7 PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN7 Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN9 PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN9 Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN9E PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN9E Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN9F PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN9F Version 0.10//EN" NDATA sgml>
+<!ENTITY REFMAN9S PUBLIC "-//Sun::SunSoft//DOCUMENT REFMAN9S Version 0.10//EN" NDATA sgml>

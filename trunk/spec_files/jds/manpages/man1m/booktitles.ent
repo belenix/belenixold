@@ -1,0 +1,4 @@
+<!ENTITY  release   "SunOS 5.11">
+<!ENTITY  sun-copy  "Copyright &copy; 2002, Sun Microsystems, Inc. All Rights Reserved.">
+<!-- Book Titles -->
+<!ENTITY ug	"GNOME 2.0 on Solaris User Guide">
