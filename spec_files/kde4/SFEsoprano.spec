@@ -15,7 +15,7 @@
 %define src_dir          soprano
 Name:                    SFEsoprano
 Summary:                 Qt wrapper API to different RDF storage solutions
-Version:                 2.2.3
+Version:                 2.3.0
 License:                 LGPLv2+
 URL:                     http://soprano.sourceforge.net/
 Source:                  %{sf_download}/soprano/soprano-%{version}.tar.bz2
@@ -214,6 +214,11 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %dir %attr (0755, root, other) %{_libdir}/pkgconfig
 %{_libdir}/pkgconfig/*.pc
+%dir %attr (0755, root, sys) %{_datadir}
+%dir %attr (0755, root, other) %{_datadir}/apps
+%dir %attr (0755, root, other) %{_datadir}/apps/cmake
+%dir %attr (0755, root, other) %{_datadir}/apps/cmake/modules
+%attr (0755, root, other) %{_datadir}/apps/cmake/modules/SopranoAddOntology.cmake
 
 %ifarch amd64 sparcv9
 %dir %attr (0755, root, bin) %{_libdir}/%{_arch64}
@@ -222,5 +227,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Sep 20 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Bump version to 2.3.0.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Initial version.

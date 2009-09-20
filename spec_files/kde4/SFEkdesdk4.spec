@@ -12,7 +12,7 @@
 %define python_version   2.6
 Name:                    SFEkdesdk4
 Summary:                 Software Development Kit for the K Desktop Environment 4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdesdk-%{version}.tar.bz2
@@ -70,6 +70,7 @@ Requires: SFEkdelibs4-devel
 Requires: SFEkdebase4-workspace-devel
 Requires: SUNWlxml-devel
 Requires: SUNWlxsl-devel
+Requires: SUNWsvn-devel
 Requires: SFEautomoc
 Requires: SFEcmake
 Requires: SFEkdepimlibs4-devel
@@ -113,8 +114,8 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{gnu_inc}/apr-1 -I%{sfw_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{gnu_inc}/apr-1 -I%{sfw_inc}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{gnu_inc}/apr-1 -I%{sfw_inc}"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{gnu_inc}/apr-1 -I%{sfw_inc}"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -206,5 +207,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sun Sep 20 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
 * Sun Jul 05 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version.

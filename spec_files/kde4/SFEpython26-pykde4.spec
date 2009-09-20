@@ -10,16 +10,11 @@
 Name:			SFEpython26-pykde4
 Summary:		Python bindings for KDE4
 License:		GPLv3 or GPLv2 with exceptions
-Version:		4.2.4
+Version:		4.3.1
 Source:			http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdebindings-%{version}.tar.bz2
 URL:			http://www.riverbankcomputing.co.uk/software/pykde/
 Patch1:                 python26-pykde4-01-disable-features.diff
-Patch2:                 python26-pykde4-02-typedefs.sip.diff
-Patch3:                 python26-pykde4-03-kptydevice.sip.diff
 Patch4:                 python26-pykde4-04-kstartupinfo.sip.diff
-Patch5:                 python26-pykde4-05-kacl.sip.diff
-Patch6:                 python26-pykde4-06-global.sip.diff
-Patch7:                 python26-pykde4-07-factory.sip.diff
 
 BuildRoot:		%{_tmppath}/%{name}-%{version}-build
 SUNW_BaseDir:		%{_prefix}
@@ -51,12 +46,7 @@ Conflicts: SFEpyqt-devel
 %setup -q -c -n %name-%version
 cd kdebindings-%{version}
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
 cd ..
 mkdir kdebld
 
@@ -67,8 +57,9 @@ OPATH=${PATH}
 
 cd kdebld
 export PYTHON="/usr/bin/python%{python_version}"
-export CFLAGS="%optflags"
-export LDFLAGS="%_ldflags %{gnu_lib_path}"
+export CFLAGS="%optflags -I%{_includedir}/boost/gcc4"
+export CXXFLAGS="%cxx_optflags -I%{_includedir}/boost/gcc4"
+export LDFLAGS="%_ldflags %{gnu_lib_path} -L%{_libdir}/boost/gcc4 -R%{_libdir}/boost/gcc4"
 export QMAKESPEC=%{_datadir}/qt4/mkspecs/solaris-g++
 export PATH="%{qt4_bin_path}:${OPATH}"
 
@@ -120,6 +111,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,bin)
+%dir %attr (0755, root, bin) %{_bindir}
+%{_bindir}/*
 %dir %attr (0755, root, bin) %{_libdir}
 %dir %attr (0755, root, bin) %{_libdir}/kde4
 %{_libdir}/kde4/*
@@ -127,12 +120,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}/python%{python_version}
 %dir %attr (0755, root, bin) %{_libdir}/python%{python_version}/vendor-packages
 %{_libdir}/python%{python_version}/vendor-packages/*
-
-%defattr(-,root,other)
-%dir %attr (0755, root, sys) %{_datadir}
-%dir %attr (0755, root, other) %{_datadir}/apps
-%dir %attr (0755, root, other) %{_datadir}/apps/pykde4
-%{_datadir}/apps/pykde4/kde4.py*
 
 %files devel
 %defattr(-,root,bin)
@@ -144,10 +131,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,other)
 %dir %attr (0755, root, other) %{_datadir}/apps
 %dir %attr (0755, root, other) %{_datadir}/apps/pykde4
-%{_datadir}/apps/pykde4/pykdeuic4.py*
 %dir %attr (0755, root, other) %{_datadir}/apps/pykde4/examples
 %{_datadir}/apps/pykde4/examples/*
 
 %changelog
+ Sun Sep 20 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Initial version.

@@ -1,0 +1,14 @@
+--- kdeedu-4.3.1/kstars/kstars/skycomponents/starcomponent.cpp.orig	2009-09-10 21:21:29.792187514 +0530
++++ kdeedu-4.3.1/kstars/kstars/skycomponents/starcomponent.cpp	2009-09-10 21:23:20.167869534 +0530
+@@ -42,6 +42,11 @@
+ #include <sys/endian.h>
+ #define bswap_16(x) bswap16(x)
+ #define bswap_32(x) bswap32(x)
++
++#elif defined(Q_OS_SOLARIS)
++#include <sys/byteorder.h>
++#define bswap_16(x) BSWAP_16(x)
++#define bswap_32(x) BSWAP_32(x)
+ #else
+ #include <byteswap.h>
+ #endif

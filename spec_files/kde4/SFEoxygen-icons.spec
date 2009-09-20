@@ -1,53 +1,40 @@
 #
-# spec file for package SFEkdeadmin4
+# spec file for package SFEoxygen-icons
 #
-# includes module(s): kdeadmin
+# includes module(s): oxygen-icons
 #
 # No 64Bit build yet since Phonon and dependency GStreamer are still 32Bit
 #
 %include Solaris.inc
 %include base.inc
 
-%define src_dir          kdeadmin
+%define src_dir          oxygen-icons
 %define python_version   2.6
-Name:                    SFEkdeadmin4
-Summary:                 Core applications for the K Desktop Environment 4
+Name:                    SFEoxygen-icons
+Summary:                 Icons needed for the default Oxygen Theme
 Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
-Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdeadmin-%{version}.tar.bz2
-Patch1:                  kdeadmin4-01-globals.diff
-Patch2:                  kdeadmin4-02-printing.diff
+Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/oxygen-icons-%{version}.tar.bz2
 
 SUNW_BaseDir:            /
-SUNW_Copyright:          %{name}.copyright
+#SUNW_Copyright:          %{name}.copyright
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 Requires:      SFEkdelibs4
-Requires:      SFEkdepimlibs4
+Requires:      SFEkdebase4-workspace
+Requires:      SFEkdebase4-runtime
 BuildRequires: SFEkdelibs4-devel
-BuildRequires: SFEkdepimlibs4-devel
+BuildRequires: SFEkdebase4-workspace-devel
 BuildRequires: SFEautomoc
 BuildRequires: SFEcmake
-Conflicts:     SFEkdeadmin3
-BuildConflicts: SFEkdeadmin3-devel
+BuildRequires: SFEkdebase4-runtime
 
 %description
-Core runtime requirements and applications for the K Desktop Environment 4.
-
-%package doc
-Summary:                 %{summary} - documentation files
-SUNW_BaseDir:            /
-%include default-depend.inc
-Requires: %name
-Conflicts:     SFEkdeadmin3-doc
+Icons needed for the default Oxygen Theme.
 
 %prep
 %setup -q -c -n %name-%version
-cd %{src_dir}-%{version}
-%patch1 -p1
-%patch2 -p1
-cd ..
 
 %build
 #
@@ -117,35 +104,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr (-, root, bin)
 %dir %attr (0755, root, sys) %{_prefix}
-%dir %attr (0755, root, bin) %{_bindir}
-%{_bindir}/*
-%dir %attr (0755, root, bin) %{_libdir}
-%dir %attr (0755, root, bin) %{_libdir}/kde4
-%{_libdir}/kde4/*
-
 %dir %attr (0755, root, sys) %{_datadir}
-%dir %attr (0755, root, bin) %{_datadir}/kde4
-%{_datadir}/kde4/*
 
 %defattr (-, root, other)
-%dir %attr (0755, root, other) %{_datadir}/apps
-%{_datadir}/apps/*
-%dir %attr (0755, root, other) %{_datadir}/applications
-%{_datadir}/applications/*
-%dir %attr (0755, root, other) %{_datadir}/config.kcfg
-%{_datadir}/config.kcfg/*
 %dir %attr (0755, root, other) %{_datadir}/icons
 %{_datadir}/icons/*
 
-%files doc
-%defattr (-, root, bin)
-%dir %attr (0755, root, sys) %{_prefix}
-%dir %attr (0755, root, sys) %{_datadir}
-%dir %attr (0755, root, other) %{_datadir}/doc
-%{_datadir}/doc/*
-
 %changelog
 * Sun Sep 20 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
-- Changes for upreving to KDE 4.3.1
-* Sun Jul 05 2009 - moinakg<at>gmail(dot)com
 - Initial version.

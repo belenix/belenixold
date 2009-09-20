@@ -12,12 +12,10 @@
 %define python_version   2.6
 Name:                    SFEkdeutils4
 Summary:                 Utilities for the K Desktop Environment 4.x
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdeutils-%{version}.tar.bz2
-Patch1:                  kdeutils4-01-ark_servicepack.diff
-Patch2:                  kdeutils4-02-kbytearrayedit.diff
 Patch3:                  kdeutils4-03-printer-applet-python26.diff
 
 SUNW_BaseDir:            /
@@ -34,6 +32,7 @@ Requires:      SFElibzip
 Requires:      SFEqimageblitz
 Requires:      SFElibarchive
 Requires:      SFEgmp
+Requires:      SUNWcups-manager
 BuildRequires: SFEkdelibs4-devel
 BuildRequires: SFEkdebase4-workspace-devel
 BuildRequires: SFEautomoc
@@ -78,8 +77,6 @@ Conflicts:     SFEkdeutils3-doc
 %prep
 %setup -q -c -n %name-%version
 cd %{src_dir}-%{version}
-%patch1 -p1
-%patch2 -p0
 %patch3 -p1
 cd ..
 
@@ -106,14 +103,14 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -D__C99FEATURES__"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -D__C99FEATURES__"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -D__C99FEATURES__"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -D__C99FEATURES__"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
 export CMAKE_LIBRARY_PATH="%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
 
-cmake   ../%{src_dir}-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
+cmake  --trace ../%{src_dir}-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
         -DCMAKE_BUILD_TYPE=Release                                      \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
@@ -143,6 +140,10 @@ OPATH=${PATH}
 cd kdebld
 export PATH="%{qt4_bin_path}:${OPATH}"
 make install DESTDIR=$RPM_BUILD_ROOT
+#
+# Delete file also delivered by kdemultimedia4
+#
+rm -f $RPM_BUILD_ROOT%{_datadir}/apps/profiles/kscd.profile.xml
 export PATH="${OPATH}"
 cd ..
 
@@ -191,6 +192,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sun Sep 20 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes for upreving to KDE 4.3.1
 * Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Fix building printer applet.
 * Sun Jul 05 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
