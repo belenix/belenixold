@@ -1,9 +1,0 @@
-#!/bin/sh
-
-SRCDIR=$1
-[ -z "${SRCDIR}" ] && echo "Usage: $0 </path/to/ON/src/root>"
-
-for f in patch.*
-do
-	cat $f | (cd ${SRCDIR}; gpatch -p0)
-done

@@ -1,4 +1,0 @@
-test -x /usr/bin/update-desktop-database || exit 0
-/usr/bin/update-desktop-database
-test -x /usr/bin/scrollkeeper-update || exit 0
-/usr/bin/scrollkeeper-update

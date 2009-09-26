@@ -1,4 +1,0 @@
-xset -b
-#startfluxbox
-exec startfluxbox
-

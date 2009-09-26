@@ -1,2 +1,0 @@
-test -x /usr/bin/scrollkeeper-update || exit 0
-/usr/bin/scrollkeeper-update
