@@ -1,0 +1,35 @@
+--- pstoedit-3.45/src/Makefile.in.orig       2007-09-09 18:07:30.000000000 +0200
++++ pstoedit-3.45/src/Makefile.in   2009-07-09 10:14:02.366021602 +0200
+@@ -329,19 +355,24 @@
+ 
+ libp2edrvstd_la_LIBADD = -L. libpstoedit.la
+ libp2edrvstd_la_LDFLAGS = -no-undefined -module
++libp2edrvstd_la_DEPENDENCIES = libpstoedit.la
+ libp2edrvlplot_la_SOURCES = drvlplot.cpp drvlplot.h initlibrary.cpp
+ libp2edrvlplot_la_LIBADD = $(LIBPLOTTER_LDFLAGS) -L. libpstoedit.la
+ libp2edrvlplot_la_LDFLAGS = -no-undefined -module
++libp2edrvlplot_la_DEPENDENCIES = libpstoedit.la
+ libp2edrvswf_la_SOURCES = drvswf.cpp drvswf.h initlibrary.cpp
+ libp2edrvswf_la_LIBADD = $(LIBMING_LDFLAGS) -L. libpstoedit.la
+ libp2edrvswf_la_LDFLAGS = -no-undefined -module
++libp2edrvswf_la_DEPENDENCIES = libpstoedit.la
+ libp2edrvmagick___la_SOURCES = drvmagick++.cpp drvmagick++.h initlibrary.cpp
+ libp2edrvmagick___la_LIBADD = -L. libpstoedit.la
+ libp2edrvmagick___la_LDFLAGS = -no-undefined ${LIBMAGICK_LDFLAGS}  -module
++libp2edrvmagick___la_DEPENDENCIES = libpstoedit.la
+ @USE_EMFBYSOURCE_FALSE@libp2edrvwmf_la_SOURCES = drvwmf.cpp drvwmf.h initlibrary.cpp
+ @USE_EMFBYSOURCE_TRUE@libp2edrvwmf_la_SOURCES = emflib.cpp drvwmf.cpp drvwmf.h initlibrary.cpp
+ @USE_EMFBYSOURCE_FALSE@libp2edrvwmf_la_LDFLAGS = -no-undefined $(LIBEMF_LDFLAGS) -L. libpstoedit.la -module
+ @USE_EMFBYSOURCE_TRUE@libp2edrvwmf_la_LDFLAGS = -no-undefined -L. libpstoedit.la -module
++libp2edrvwmf_la_DEPENDENCIES = libpstoedit.la
+ libpstoedit_la_SOURCES = \
+ 	dynload.cpp dynload.h			\
+ 	callgs.cpp				\
+@@ -362,6 +393,7 @@
+ libpstoedit_la_LDFLAGS = -no-undefined
+ pstoedit_SOURCES = cmdmain.cpp
+ pstoedit_LDFLAGS = -no-undefined -L. libpstoedit.la ${LIBLD_LDFLAGS}
++pstoedit_DEPENDENCIES = libpstoedit.la
+ pkginclude_HEADERS = \
+ 	pstoedit.h				\
+ 	pstoedll.h				\

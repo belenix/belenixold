@@ -9,13 +9,14 @@
 %include base.inc
 
 %define src_dir          kipi-plugins
-%define kde_version      4.2.4
+%define kde_version      4.3.1
 Name:                    SFEkipi-plugins
 Summary:                 Plugins to use with the KDE Image Plugin Interface
-Version:                 0.2.0
+Version:                 0.6.0
 License:                 GPLv2+ and Adobe
 URL:                     http://www.kipi-plugins.org/
-Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{kde_version}/src/extragear/kipi-plugins-%{version}-kde%{kde_version}.tar.bz2
+#Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{kde_version}/src/extragear/kipi-plugins-%{version}-kde%{kde_version}.tar.bz2
+Source:                  http://ftp.de.debian.org/debian/pool/main/k/kipi-plugins/kipi-plugins_%{version}.orig.tar.gz
 Patch1:                  kipi-plugins-01-errno.diff
 
 SUNW_BaseDir:            /
@@ -49,15 +50,23 @@ BuildRequires: SFEopencv-devel
 This package contains plugins to use with Kipi, the KDE Image Plugin
 Interface. 
 
-%package doc
-Summary:                 %{summary} - documentation files
+#%package doc
+#Summary:                 %{summary} - documentation files
+#SUNW_BaseDir:            %{_basedir}
+#%include default-depend.inc
+#Requires:                %{name}
+
+%if %build_l10n
+%package l10n
+Summary:                 %{summary} - l10n files
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 Requires:                %{name}
+%endif
 
 %prep
 %setup -q -c -n %name-%version
-cd %{src_dir}-%{version}-kde%{kde_version}
+cd %{src_dir}-%{version}
 %patch1 -p1
 cd ..
 
@@ -84,14 +93,14 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
 export LDFLAGS="%_ldflags -lsocket -lnsl -lkio -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} -lX11 %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
 export CMAKE_LIBRARY_PATH="%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
 
-cmake   ../%{src_dir}-%{version}-kde%{kde_version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
+cmake   ../%{src_dir}-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
         -DCMAKE_BUILD_TYPE=Release                                      \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
@@ -149,12 +158,21 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, other) %{_datadir}/icons
 %{_datadir}/icons/*
 
-%files doc
+#%files doc
+#%defattr (-, root, bin)
+#%dir %attr (0755, root, sys) %{_datadir}
+#%dir %attr (0755, root, other) %{_docdir}
+#%{_docdir}/*
+
+%if %build_l10n
+%files l10n
 %defattr (-, root, bin)
 %dir %attr (0755, root, sys) %{_datadir}
-%dir %attr (0755, root, other) %{_docdir}
-%{_docdir}/*
+%attr (-, root, other) %{_datadir}/locale
+%endif
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to bump version and uprev to KDE 4.3.1.
 * Fri Aug 14 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Initial version.

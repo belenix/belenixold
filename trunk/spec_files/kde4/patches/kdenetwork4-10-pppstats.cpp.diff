@@ -1,0 +1,11 @@
+--- kppp/pppstats.cpp.orig	2008-11-16 22:41:17.990616861 +0100
++++ kppp/pppstats.cpp	2008-11-16 22:41:32.248418220 +0100
+@@ -38,6 +38,8 @@
+  *	- Initial distribution.
+  */
+ 
++#define STREAMS 1
++
+ #include <kdefakes.h>
+ #include <config-kppp.h>
+ 

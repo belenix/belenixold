@@ -1,0 +1,11 @@
+--- kopete/libkopete/ui/kopeteinfodialog.cpp.orig	2009-07-10 13:33:19.989231733 +0200
++++ kopete/libkopete/ui/kopeteinfodialog.cpp	2009-07-10 13:33:46.939136762 +0200
+@@ -90,7 +90,7 @@
+ 
+ void InfoDialog::setTitle(const QString &title)
+ {
+-	d->title->setText( title );
++	d->title->setText( title, Qt::AlignLeft );
+ }
+ 
+ void InfoDialog::setIcon(const QString &icon)

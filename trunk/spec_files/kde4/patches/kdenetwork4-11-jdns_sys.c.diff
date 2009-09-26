@@ -1,0 +1,20 @@
+--- kdenetwork-4.3.1/kopete/protocols/jabber/libiris/iris/jdns/jdns_sys.c.orig	2009-09-08 08:38:48.769651431 +0530
++++ kdenetwork-4.3.1/kopete/protocols/jabber/libiris/iris/jdns/jdns_sys.c	2009-09-08 08:41:58.971625343 +0530
+@@ -679,7 +679,7 @@
+ 	return params;
+ }
+ 
+-#if defined(__GLIBC__) && ((__GLIBC__ > 2) || ((__GLIBC__ == 2) && (__GLIBC_MINOR__ >= 3)))
++#if defined(__GLIBC__) && ((__GLIBC__ > 2) || ((__GLIBC__ == 2) && (__GLIBC_MINOR__ >= 3))) || defined(__sun)
+ # define JDNS_MODERN_RES_API
+ #endif
+ 
+@@ -705,7 +705,7 @@
+ /*    a define, so the #ifdef doesn't work.  as a workaround, we'll explicitly */
+ /*    specify the platforms that have __res_state_ext */
+ /* #ifdef __res_state_ext */
+-#if defined(JDNS_OS_MAC) || defined(JDNS_OS_FREEBSD)
++#if defined(JDNS_OS_MAC) || defined(JDNS_OS_FREEBSD) || defined(__sun)
+ # define USE_EXTEXT
+ #endif
+ 

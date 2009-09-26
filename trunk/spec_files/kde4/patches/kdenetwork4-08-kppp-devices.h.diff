@@ -1,0 +1,17 @@
+--- kppp/devices.h.ORIG	2008-12-08 07:58:40.985135929 -0500
++++ kppp/devices.h	2008-12-08 08:01:08.700897606 -0500
+@@ -93,6 +93,14 @@
+   "/dev/cua/b",
+   "/dev/ttya",
+   "/dev/ttyb",
++#if defined(__sun__)
++  "/dev/term/0",	/* for USB WWAN modems */
++  "/dev/term/1",
++  "/dev/term/2",
++  "/dev/term/3",
++  "/dev/evdo",		/* Short link to the WWAN modems */
++  "/dev/e169",		/* Short link to the WWAN modems */
++#endif
+ #endif
+   0};
+ 

@@ -12,12 +12,10 @@
 %define python_version   2.6
 Name:                    SFEkdegames4
 Summary:                 Games collection for KDE 4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdegames-%{version}.tar.bz2
-Patch1:                  kdegames4-01-ksirk-kde#187235.diff
-Patch2:                  kdegames4-02-ksirk-rh#486380.diff
 Patch3:                  kdegames4-03-const_names.diff
 Patch4:                  kdegames4-04-jdns.diff
 Patch5:                  kdegames4-05-undef_sun.diff
@@ -68,8 +66,6 @@ Conflicts:     SFEkdegames3-doc
 %prep
 %setup -q -c -n %name-%version
 cd %{src_dir}-%{version}
-%patch1 -p1
-%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
@@ -98,9 +94,9 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -g -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -g -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
-export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -g -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -g -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export LDFLAGS="%_ldflags -lsocket -lnsl -lresolv -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
 export CMAKE_LIBRARY_PATH="%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
@@ -150,6 +146,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_datadir}/sounds
 %{_datadir}/sounds/*
+%dir %attr (0755, root, bin) %{_datadir}/kde4
+%dir %attr (0755, root, bin) %{_datadir}/kde4/services
+%{_datadir}/kde4/services/*
 
 %defattr (-, root, other)
 %dir %attr (0755, root, other) %{_datadir}/apps
@@ -177,5 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to uprev to KDE4.3.1.
 * Sun Jul 26 2009 - moinakg<at>belenix(dot)org
 - Initial version.

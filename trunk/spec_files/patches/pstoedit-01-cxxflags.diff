@@ -1,0 +1,13 @@
+--- pstoedit-3.45/configure.orig	2007-08-10 22:26:10.000000000 +0200
++++ pstoedit-3.45/configure	2008-08-29 14:06:02.000000000 +0200
+@@ -22282,9 +22282,8 @@
+   else
+     { echo "$as_me:$LINENO: result: GNU" >&5
+ echo "${ECHO_T}GNU" >&6; }
+-    SPECIAL_CXXFLAGS="-DBUGGYGPP -pedantic -Wall -Wwrite-strings -Wcast-qual -Wpointer-arith "
++    SPECIAL_CXXFLAGS="-DBUGGYGPP -Wall -Wwrite-strings -Wcast-qual -Wpointer-arith "
+   fi
+-  CXXFLAGS="-g"
+ elif test `echo "$CXX" | egrep -c 'xlC$'` -eq 1; then
+   { echo "$as_me:$LINENO: result: AIX xlC" >&5
+ echo "${ECHO_T}AIX xlC" >&6; }

@@ -9,16 +9,15 @@
 %include base.inc
 
 %define src_dir          digikam
-%define kde_version      4.2.4
+%define kde_version      4.3.1
 %define python_version   2.6
 Name:                    SFEdigikam
 Summary:                 Advanced digital photo management application
 Version:                 0.10.0
 License:                 GPLv2+
 URL:                     http://www.kde.org/
-Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{kde_version}/src/extragear/digikam-%{version}-kde%{kde_version}.tar.bz2
+Source:                  %{sf_download}/digikam//digikam-%{version}.tar.bz2
 Patch1:                  digikam-kde4-01-geodetictools.cpp.diff
-Patch2:                  digikam-kde4-02-PGFplatform.h.diff
 
 SUNW_BaseDir:            /
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
@@ -33,6 +32,7 @@ Requires:      SFElensfun
 Requires:      SFEkdepimlibs4
 Requires:      SUNWpng
 Requires:      SUNWsqlite3
+Requires:      SFElibmarblewidget
 BuildRequires: SFEkdelibs4-devel
 BuildRequires: SUNWgnome-desktop-prefs-devel
 BuildRequires: SFEautomoc
@@ -45,6 +45,7 @@ BuildRequires: SFElensfun-devel
 BuildRequires: SFEkdepimlibs4-devel
 BuildRequires: SUNWpng-devel
 BuildRequires: SUNWsqlite3-devel
+BuildRequires: SFEkdeedu4-devel
 
 %description
 digiKam is an easy to use and powerful digital photo management application,
@@ -75,12 +76,7 @@ Requires: SFElensfun-devel
 Requires: SFEkdepimlibs4-devel
 Requires: SUNWpng-devel
 Requires: SUNWsqlite3-devel
-
-%package doc
-Summary:                 %{summary} - documentation files
-SUNW_BaseDir:            %{_basedir}
-%include default-depend.inc
-Requires:                %{name}
+Requires: SFEkdeedu4-devel
 
 %if %build_l10n
 %package l10n
@@ -92,9 +88,8 @@ Requires:                %{name}
 
 %prep
 %setup -q -c -n %name-%version
-cd %{src_dir}-%{version}-kde%{kde_version}
+cd %{src_dir}-%{version}
 %patch1 -p1
-%patch2 -p1
 cd ..
 
 %build
@@ -120,14 +115,14 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
 export CMAKE_LIBRARY_PATH="%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
 
-cmake   ../%{src_dir}-%{version}-kde%{kde_version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
+cmake   ../%{src_dir}-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
         -DCMAKE_BUILD_TYPE=Release                                      \
         -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
         -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
@@ -185,20 +180,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/*
 %dir %attr (0755, root, other) %{_datadir}/applications
 %{_datadir}/applications/*
-%dir %attr (0755, root, other) %{_datadir}/icons
-%{_datadir}/icons/*
 
 %files devel
 %defattr (-, root, bin)
 %dir %attr (0755, root, sys) %{_prefix}
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
-
-%files doc
-%defattr (-, root, bin)
-%dir %attr (0755, root, sys) %{_datadir}
-%dir %attr (0755, root, other) %{_docdir}
-%{_docdir}/*
 
 %if %build_l10n
 %files l10n
@@ -208,5 +195,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to uprev to KDE4.3.1.
 * Fri Aug 14 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Initial version.

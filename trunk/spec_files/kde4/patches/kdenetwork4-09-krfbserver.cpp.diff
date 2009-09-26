@@ -1,0 +1,30 @@
+--- krfb/krfbserver.cpp.ORIG	2009-01-07 16:13:08.964249475 -0500
++++ krfb/krfbserver.cpp	2009-01-07 16:14:18.021117907 -0500
+@@ -32,6 +32,7 @@
+ #include "krfbconfig.h"
+ #include "invitationmanager.h"
+ 
++#include <X11/extensions/Xfixes.h>
+ #include <X11/Xutil.h>
+ #include <X11/extensions/XTest.h>
+ 
+--- krfb/connectioncontroller.cpp.ORIG	2009-01-07 16:21:00.699030230 -0500
++++ krfb/connectioncontroller.cpp	2009-01-07 16:21:26.779130857 -0500
+@@ -36,6 +36,7 @@
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
++#include <strings.h>
+ 
+ 
+ static QString peerAddress(int sock) {
+--- krfb/framebuffer.cpp.ORIG	2009-01-07 16:22:27.630396247 -0500
++++ krfb/framebuffer.cpp	2009-01-07 16:22:41.853196708 -0500
+@@ -17,6 +17,7 @@
+ #include "qtframebuffer.h"
+ #include "x11framebuffer.h"
+ 
++#include <X11/extensions/Xfixes.h>
+ #include <X11/Xutil.h>
+ 
+ #ifdef HAVE_XDAMAGE
