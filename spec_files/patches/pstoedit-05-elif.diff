@@ -1,0 +1,11 @@
+--- pstoedit-3.45/src/dynload.cpp~	2007-07-22 13:27:36.000000000 +0200
++++ pstoedit-3.45/src/dynload.cpp	2009-02-10 07:54:14.000000000 +0100
+@@ -138,7 +138,7 @@
+ 		dlclose(handle);
+ #elif defined(_WIN32)
+ 		(void) WINFREELIB((HINSTANCE) handle);
+-#elif
++#else
+ #error "system unsupported so far"
+ #endif
+ 		handle = 0;

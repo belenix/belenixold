@@ -1,0 +1,128 @@
+#sh bld SUNWPython.spec
+#sh bld SUNWPython25.spec
+#sh bld SUNWpostrun.spec
+#sh bld SUNWgnome-xml.spec
+#sh bld SUNWgnome-common-devel.spec
+#sh bld SUNWTiff.spec
+#sh bld SUNWPython26.spec
+#sh bld SUNWglib2.spec 
+#sh bld SUNWgtk2.spec
+#sh bld SUNWmusicbrainz.spec gcc
+#sh bld SUNWgnome-base-libs.spec
+#sh bld SUNWgnome-libs.spec
+#sh bld SUNWlibgcrypt.spec
+#sh bld SUNWgnome-audio.spec
+#sh bld SUNWlibtasn1.spec
+#sh bld SUNWtgnome-tsol-libs.spec
+#sh bld SUNWlibwnck.spec
+#sh bld SUNWfirefox.spec
+#sh bld SFElibsexy.spec
+#sh bld SFElibical.spec
+#sh bld SUNWgnome-themes.spec
+#sh bld SUNWgnome-python26-libs.spec
+#sh bld SFElibgsf.spec
+#sh bld SUNWgnome-utils.spec
+#sh bld SUNWxdg-sound-theme.spec
+#sh bld SUNWxdg-user-dirs.spec
+#sh bld SUNWxdg-user-dirs-gtk.spec
+#sh bld SUNWxdg-utils.spec
+#sh bld SUNWgnome-dialog.spec
+#sh bld SUNWgnome-media.spec
+#sh bld SUNWdbus-python26.spec
+#sh bld SUNWgnome-python26-extras.spec
+#sh bld SUNWgnome-applets.spec
+#sh bld SUNWgnome-pdf-viewer.spec
+#sh bld SUNWevolution.spec
+#sh bld SUNWdesktop-search.spec
+#sh bld SFEwebkit.spec gcc
+#sh bld SUNWbabl.spec
+
+### Patch /usr/include/ffmpeg/avio.h ###
+#sh bld SUNWgegl.spec
+#sh bld SUNWgnome-img-editor.spec
+#sh bld SUNWgnome-img-editor-help.spec
+#sh bld SUNWavahi-bridge-dsd.spec
+#sh bld SUNWgnome-base-libs-java.spec
+#sh bld SUNWgnome-session.spec
+#sh bld SUNWgnome-terminal.spec
+#sh bld SUNWgnome-camera.spec
+#sh bld SUNWgqview.spec
+#sh bld SUNWnwam-manager.spec
+#sh bld SUNWgnome-dtlogin-integration.spec
+#sh bld SUNWgnome-display-mgr.spec
+#sh bld SUNWglibmm.spec gcc
+#sh bld SUNWgtkmm.spec gcc
+#sh bld SUNWgnome-system-monitor.spec gcc
+#sh bld SUNWgnome-system-tools.spec
+#sh bld SUNWgqview.spec
+#sh bld SUNWgnome-im-client.spec
+#sh bld SUNWvirt-manager.spec
+#sh bld SUNWgnome-desklets.spec
+#sh bld SUNWgnome-desklets-extra.spec
+#sh bld SUNWgnome-crash-report.spec
+#sh bld SUNWgnome-config-editor.spec
+#sh bld SUNWgnome-config-java.spec 
+#sh bld SUNWdia.spec
+#sh bld SUNWdrivel.spec
+#sh bld SUNWespeak.spec
+#sh bld SUNWgnome-cd.spec
+#sh bld SUNWgnome-calculator.spec
+#sh bld SUNWgnome-commander.spec gcc
+#sh bld SUNWvinagre.spec
+#sh bld SUNWgnome-gvfs.spec
+#sh bld SUNWseahorse.spec
+#sh bld SUNWgnome-games.spec
+#sh bld SUNWgnome-fonts.spec
+#sh bld SUNWgnome-power-manager.spec
+#sh bld SUNWgnome-nettool.spec
+#sh bld SUNWgnome-python-extras.spec
+#sh bld SUNWcups-manager.spec
+#sh bld SUNWgnome-text-editor.spec
+#sh bld SUNWcheese.spec
+#sh bld SUNWclutter.spec
+#sh bld SUNWclutter-cairo.spec
+#sh bld SUNWclutter-gst.spec
+#sh bld SUNWclutter-gtk.spec
+#>> Fix later sh bld SUNWbrltty.spec gcc
+#sh bld SUNWgnome-devhelp.spec
+#sh bld SUNWhamster.spec
+#sh bld SUNWgnome-meeting.spec gcc
+#sh bld SUNWgnome-menu-editor.spec
+#sh bld SUNWgnome-ps-viewer.spec
+#sh bld SUNWgnome-hex-editor.spec
+#sh bld SUNWevolution.spec
+#sh bld SUNWevolution-exchange.spec
+#sh bld SUNWevolution-jescs.spec
+#sh bld SUNWgnome-devel-docs.spec
+#sh bld SUNWgnome-archive-mgr.spec
+#sh bld SUNWevolution-webcal.spec
+#sh bld SUNWgnome-ui-designer.spec
+#sh bld SUNWgnome-img-organizer.spec
+#sh bld SUNWgnome-img-viewer.spec
+# !sh bld SUNWgnome-remote-desktop.spec!
+#sh bld SUNWgnome-terminal-java.spec
+#sh bld SUNWgnome-a11y-speech.spec
+#sh bld SUNWgnome-a11y-dasher.spec
+#sh bld SUNWgnome-a11y-gok.spec
+#sh bld SUNWgnome-a11y-libs.spec
+#sh bld SUNWgnome-a11y-mousetweaks.spec
+#sh bld SUNWgnome-a11y-poke.spec
+#sh bld SUNWgnome-a11y-reader.spec
+#sh bld SUNWgtkperf.spec
+
+# ===== Rebuild ====== #
+#sh bld SUNWgtk2.spec
+#sh bld SUNWlibcanberra.spec
+#sh bld SUNWgnome-desklets.spec
+#sh bld SUNWevolution-libs.spec
+#sh bld SUNWevolution-data-server.spec
+#sh bld SUNWevolution-webcal.spec
+#sh bld SUNWevolution.spec
+#sh bld SUNWgnome-pdf-viewer.spec
+#sh bld SUNWgksu.spec
+#sh bld SUNWgnome-cd-burner.spec
+#sh bld SUNWgnutls.spec
+#sh bld SUNWgnome-cd.spec
+#sh bld SUNWgnome-file-mgr.spec
+#sh bld SUNWlibwnck.spec
+sh bld SUNWdesktop-search.spec

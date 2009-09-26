@@ -11,7 +11,7 @@
 %define src_dir          kdepimlibs
 Name:                    SFEkdepimlibs4
 Summary:                 Libraries for PIM data management in KDE4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 LGPLv2+
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdepimlibs-%{version}.tar.bz2
@@ -30,11 +30,13 @@ Requires:      SFEqt4
 Requires:      SFEqimageblitz
 Requires:      SFEkdelibs4
 Requires:      SUNWxwplt
+Requires:      SUNWlibgpg-error
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEqimageblitz-devel
 BuildRequires: SFEkdelibs4-devel
 BuildRequires: SFEautomoc
 BuildRequires: SFEcmake
+BuildRequires: SUNWlibgpg-error-devel
 Conflicts:     SFEkdebase3
 BuildConflicts: SFEkdebase3-devel
 
@@ -43,26 +45,13 @@ Summary:                 %{summary} - development files
 SUNW_BaseDir:            /
 %include default-depend.inc
 Requires: %name
-Requires:      SFEqt4
-Requires:      SFEakonadi
-Requires:      SFEgpgme
-Requires:      SFEkdelibs4
-Requires:      SFEboost-gpp
-Requires:      SFEcyrus-sasl
-Requires:      SFElibical
-Requires:      SFEopenldap
-Requires:      SFEphonon
-BuildRequires: SFEqt4-devel
-BuildRequires: SFEakonadi-devel
-BuildRequires: SFEgpgme
-BuildRequires: SFEkdelibs4-devel
-BuildRequires: SFEboost-gpp-devel
-BuildRequires: SFEautomoc
-BuildRequires: SFEcmake
-BuildRequires: SFEcyrus-sasl
-BuildRequires: SFElibical-devel
-BuildRequires: SFEopenldap-devel
-BuildRequires: SFEphonon-devel
+Requires: SFEqt4-devel
+Requires: SFEqt4-devel
+Requires: SFEqimageblitz-devel
+Requires: SFEkdelibs4-devel
+Requires: SFEautomoc
+Requires: SFEcmake
+Requires: SUNWlibgpg-error-devel
 Conflicts:     SFEkdepim3
 BuildConflicts: SFEkdepim3-devel
 
@@ -99,7 +88,7 @@ OPATH=${PATH}
 mkdir kdebld
 cd kdebld
 
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc}"
 export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc}"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path}"
 export PATH="%{qt4_bin_path}:${OPATH}"
@@ -157,6 +146,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_datadir}/dbus-1
 %dir %attr (0755, root, bin) %{_datadir}/dbus-1/interfaces
 %{_datadir}/dbus-1/interfaces/*
+%dir %attr (0755, root, root) %{_datadir}/mime
+%dir %attr (0755, root, root) %{_datadir}/mime/packages
+%attr (0755, root, root) %{_datadir}/mime/packages/kdepimlibs-mime.xml
 
 %defattr (-, root, other)
 %dir %attr (0755, root, other) %{_datadir}/apps
@@ -170,8 +162,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*
 %dir %attr (0755, root, bin) %{_libdir}
-%dir %attr (0755, root, bin) %{_libdir}/KdepimLibs-%{version}
-%{_libdir}/KdepimLibs-%{version}/*
+%dir %attr (0755, root, bin) %{_libdir}/KdepimLibs
+%{_libdir}/KdepimLibs/*
 %dir %attr (0755, root, bin) %{_libdir}/gpgmepp
 %{_libdir}/gpgmepp/*
 
@@ -183,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to uprev to KDE4.3.1.
+- Fix dependencies of devel package.
 * Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Remove dependency on self.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org

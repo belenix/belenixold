@@ -1,0 +1,12 @@
+--- pstoedit-3.45/src/cppcomp.h~	2007-07-22 13:27:40.000000000 +0200
++++ pstoedit-3.45/src/cppcomp.h	2008-02-17 11:53:46.000000000 +0100
+@@ -37,6 +37,9 @@
+ #define _unix
+ #endif
+ 
++#include <cstring>
++#include <cstdlib>
++
+ #if defined (_MSC_VER) && (_MSC_VER >= 1100) 
+ // MSVC 5 and 6 have ANSI C++ header files, but the compilation
+ // is much slower and object files get bigger. 

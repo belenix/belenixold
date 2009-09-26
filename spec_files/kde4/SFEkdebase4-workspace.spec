@@ -34,6 +34,7 @@ Patch13:                 kdebase-workspace-13-rootprivs.diff
 Patch14:                 kdebase-workspace-14-timedate-kcm.diff
 Patch15:                 kdebase-workspace-15-fadeeffect.cpp.diff
 Patch16:                 kdebase-workspace-16-polkit_pid_t.diff
+Patch17:                 kdebase-workspace-17-checkpass_pam.diff
 
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
@@ -58,6 +59,7 @@ Requires:      SUNWxorg-client-programs
 Requires:      SUNWlibusb
 Requires:      SFEconsolekit
 Requires:      SFEpolicykit
+Requires:      SFEpolkit-qt4
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEqimageblitz-devel
 BuildRequires: SFEkdelibs4-devel
@@ -77,6 +79,7 @@ BuildRequires: SUNWdbus-devel
 BuildRequires: SUNWsfwhea
 BuildRequires: SFEconsolekit-devel
 BuildRequires: SFEpolicykit-devel
+BuildRequires: SFEpolkit-qt4-devel
 BuildRequires: SFExmms1-devel
 Conflicts:     SFEkdebase3
 BuildConflicts: SFEkdebase3-devel
@@ -134,6 +137,7 @@ cd %{src_dir}-%{version}
 %patch14 -p0
 %patch15 -p1
 %patch16 -p1
+%patch17 -p0
 cd ..
 
 %build
@@ -223,7 +227,20 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/*.so*
 %dir %attr (0755, root, bin) %{_libdir}/kde4
-%{_libdir}/kde4/*
+%{_libdir}/kde4/*.so
+%dir %attr (0755, root, bin) %{_libdir}/kde4/plugins
+%{_libdir}/kde4/plugins/*
+%dir %attr (0755, root, bin) %{_libdir}/kde4/libexec
+%attr (4755, root, bin) %{_libdir}/kde4/libexec/kcheckpass
+%attr (0755, root, bin) %{_libdir}/kde4/libexec/kcmdatetimehelper
+%attr (0755, root, bin) %{_libdir}/kde4/libexec/kdm_config
+%attr (0755, root, bin) %{_libdir}/kde4/libexec/kdm_greet
+%attr (0755, root, bin) %{_libdir}/kde4/libexec/kfontprint
+%attr (0755, root, bin) %{_libdir}/kde4/libexec/kio_fonts_helper
+%attr (0755, root, bin) %{_libdir}/kde4/libexec/krootimage
+%attr (0755, root, bin) %{_libdir}/kde4/libexec/kscreenlocker
+%attr (0755, root, bin) %{_libdir}/kde4/libexec/polkit-kde-manager
+%attr (0755, root, bin) %{_libdir}/kde4/libexec/test_kcm_xinerama
 %dir %attr (0755, root, bin) %{_libdir}/strigi
 %{_libdir}/strigi/*
 %dir %attr (0755, root, bin) %{_libdir}/KDE4Workspace-%{version}
@@ -296,6 +313,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Make some executables set-uid.
+- Fix policykit dependency and add PAM patch from KDE-Solaris repo.
+- Update KDM configuration.
 * Sat Sep 19 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Changes for upreving to KDE 4.3.1
 * Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>

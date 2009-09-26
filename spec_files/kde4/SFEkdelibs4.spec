@@ -249,8 +249,24 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/*.so*
 %dir %attr (0755, root, bin) %{_libdir}/kde4
-%{_libdir}/kde4/*
-
+%{_libdir}/kde4/*.so
+%dir %attr (0755, root, bin) %{_libdir}/kde4/plugins
+%{_libdir}/kde4/plugins/*
+%dir %attr (0755, root, bin) %{_libdir}/kde4/libexec
+%{_libdir}/kde4/libexec/filesharelist
+%attr (4755, root, bin) %{_libdir}/kde4/libexec/fileshareset
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/kconf_update
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/kdesu_stub
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/kdontchangethehostname
+%attr (4755, root, bin) %{_libdir}/kde4/libexec/kgrantpty
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/kio_http_cache_cleaner
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/kioslave
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/klauncher
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/kmailservice
+%attr (4755, root, bin) %{_libdir}/kde4/libexec/kpac_dhcp_helper
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/ksendbugmail
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/ktelnetservice
+%attr (0555, root, bin) %{_libdir}/kde4/libexec/lnusertemp
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_mandir}
 %{_mandir}/*
@@ -292,6 +308,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Make some executables set-uid.
 * Sat Sep 19 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Changes for upreving to KDE 4.3.1
 * Sat Aug 15 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>

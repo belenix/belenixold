@@ -9,14 +9,13 @@
 %include base.inc
 
 %define src_dir          kgraphviewer
-%define kde_version      4.2.4
+%define kde_version      4.3.1
 Name:                    SFEkgraphviewer
 Summary:                 A Graph viewer for KDE 4
 Version:                 2.0.2
 License:                 GPLv2
 URL:                     http://extragear.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{kde_version}/src/extragear/kgraphviewer-%{version}-kde%{kde_version}.tar.bz2
-#Patch1:                  kdiff3-01-part.desktop.diff
 
 SUNW_BaseDir:            /
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
@@ -55,9 +54,6 @@ Requires:                %{name}
 
 %prep
 %setup -q -c -n %name-%version
-cd %{src_dir}-%{version}-kde%{kde_version}
-#%patch1 -p1
-cd ..
 
 %build
 #
@@ -82,8 +78,8 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -I%{_includedir}/boost/gcc4 -DSOLARIS -DUSE_SOLARIS"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -I%{_includedir}/boost/gcc4 -DSOLARIS -DUSE_SOLARIS"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -I%{_includedir}/boost/gcc4 -DSOLARIS -DUSE_SOLARIS"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -I%{_includedir}/boost/gcc4 -DSOLARIS -DUSE_SOLARIS"
 export LDFLAGS="%_ldflags -lsocket -lnsl -lkio -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} -lX11 %{sfw_lib_path} -L%{_libdir}/boost/gcc4 -R%{_libdir}/boost/gcc4"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -161,5 +157,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to uprev to KDE4.3.1.
 * Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Initial version.

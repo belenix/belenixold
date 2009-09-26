@@ -11,10 +11,9 @@
 Name:			SFEkdebindings4
 Summary:		Various language bindings for KDE4 (except Python)
 License:		GPLv2
-Version:		4.2.4
+Version:		4.3.1
 URL:                    http://developer.kde.org/language-bindings/
 Source:			http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdebindings-%{version}.tar.bz2
-Patch1:                 kdebindings4-01-gcc44.diff
 Patch2:                 kdebindings4-02-qyoto-examples.diff
 
 # Disable building PyKDE as it is packaged separately in SFEpython26-pykde4
@@ -93,10 +92,18 @@ BuildRequires: SUNWj6dev
 %prep
 %setup -q -c -n %name-%version
 cd kdebindings-%{version}
-%patch1 -p1
 %patch2 -p0
 %patch3 -p1
 %patch4 -p1
+
+#
+# Disable Soprano bindings for now, it does not build
+#
+cp CMakeLists.txt CMakeLists.txt.orig
+cat CMakeLists.txt.orig | sed '{
+    s/macro_optional_find_package(Soprano)/#macro_optional_find_package(Soprano)/
+'} > CMakeLists.txt
+
 cd ..
 mkdir kdebld
 
@@ -105,11 +112,12 @@ export QTDIR=%{_prefix}
 export QT_INCLUDES=%{_includedir}/qt4
 OPATH=${PATH}
 PHP5_DIR=%{_prefix}/php5/%{php_version}
+rm -rf $RPM_BUILD_ROOT
 
 cd kdebld
-export CFLAGS="%optflags"
-export CXXFLAGS="%cxx_optflags -I${PHP5_DIR}/include"
-export LDFLAGS="%_ldflags %{gnu_lib_path}"
+export CFLAGS="%optflags -I%{_includedir}/boost/gcc4"
+export CXXFLAGS="%cxx_optflags -I${PHP5_DIR}/include -I%{_includedir}/boost/gcc4"
+export LDFLAGS="%_ldflags %{gnu_lib_path} -L%{_libdir}/boost/gcc4 -R%{_libdir}/boost/gcc4"
 export QMAKESPEC=%{_datadir}/qt4/mkspecs/solaris-g++
 export PATH="%{qt4_bin_path}:${PHP5_DIR}/bin:${OPATH}"
 export JAVA_HOME=%{_prefix}/java
@@ -126,6 +134,8 @@ cmake   ../kdebindings-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}     \
         -DJAVA_INCLUDE_PATH2=${JAVA_HOME}/include/solaris               \
         -DPHP5_CONFIG_EXECUTABLE=${PHP5_DIR}/bin/php-config             \
         -DPHP5_EXECUTABLE=${PHP5_DIR}/bin/php                           \
+        -DBOOST_INCLUDEDIR=%{_includedir}/boost/gcc4                    \
+        -DBOOST_LIBRARYDIR=%{_libdir}/boost/gcc4                        \
         -DBUILD_SHARED_LIBS=On                                          \
         -DKDE4_ENABLE_HTMLHANDBOOK=Off                                  \
         -DENABLE_KORUNDUM=on -DENABLE_SMOKE=on                          \
@@ -136,9 +146,10 @@ cmake   ../kdebindings-%{version} -DCMAKE_INSTALL_PREFIX=%{_prefix}     \
         -DENABLE_PHP=on                                                 \
         -DENABLE_PHP-QT=on                                              \
         -DENABLE_JAVA=on                                                \
+        -DWITH_Soprano:BOOL=OFF                                         \
         -DCMAKE_VERBOSE_MAKEFILE=1 > config.log 2>&1
 
-make
+make install DESTDIR=$RPM_BUILD_ROOT
 cd ..
 export PATH="${OPATH}"
 
@@ -219,5 +230,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde4/kross/kross.jar
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to uprev to KDE4.3.1.
 * Tue Jun 23 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version.

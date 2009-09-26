@@ -601,8 +601,8 @@ Index: server/fen-helper.c
 +#ifdef GIO_COMPILATION
 +            /* fdata_emit_events_once (data, FN_EVENT_CREATED, sub); */
 +#else
-+            gam_server_emit_one_event (NODE_NAME(childf),
-+              gam_subscription_is_dir (sub), GAMIN_EVENT_EXISTS, sub, 1);
++            /* gam_server_emit_one_event (NODE_NAME(childf),
++              gam_subscription_is_dir (sub), GAMIN_EVENT_EXISTS, sub, 1); */
 +#endif
 +        }
 +        g_dir_close (dir);

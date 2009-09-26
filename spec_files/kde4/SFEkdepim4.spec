@@ -12,12 +12,12 @@
 %define python_version   2.6
 Name:                    SFEkdepim4
 Summary:                 PIM ((Personal Information Manager) applications for KDE4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdepim-%{version}.tar.bz2
-Patch1:                  kdepim4-01-kmail.diff
 Patch2:                  kdepim4-02-kmail.diff
+Patch3:                  kdepim4-03-kmail-save-attachments.diff
 
 SUNW_BaseDir:            /
 #SUNW_Copyright:          %{name}.copyright
@@ -27,6 +27,7 @@ Requires:      SFEqt4
 Requires:      SFEkdelibs4
 Requires:      SFEkdepimlibs4
 Requires:      SFEkdebase4-runtime
+Requires:      SFEkdepim4-runtime
 Requires:      SUNWgnome-desktop-prefs
 Requires:      SFEboost-gpp
 Requires:      SFEakonadi
@@ -45,6 +46,7 @@ BuildRequires: SFEqt4-devel
 BuildRequires: SFEkdelibs4-devel
 BuildRequires: SFEkdepimlibs4-devel
 BuildRequires: SFEkdebase4-runtime
+BuildRequires: SFEkdepim4-runtime-devel
 BuildRequires: SUNWgnome-desktop-prefs
 BuildRequires: SFEboost-gpp-devel
 BuildRequires: SFEakonadi-devel
@@ -107,8 +109,8 @@ Conflicts:     SFEkdepim3-doc
 %prep
 %setup -q -c -n %name-%version
 cd %{src_dir}-%{version}
-%patch1 -p0
 %patch2 -p0
+%patch3 -p0
 cd ..
 
 %build
@@ -134,8 +136,8 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
 export LDFLAGS="%_ldflags -lsocket -lnsl -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -195,9 +197,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_datadir}/dbus-1
 %dir %attr (0755, root, bin) %{_datadir}/dbus-1/interfaces
 %{_datadir}/dbus-1/interfaces/*
-%dir %attr (0755, root, bin) %{_mandir}
-%dir %attr (0755, root, bin) %{_mandir}/man1
-%{_mandir}/man1/*
 
 %defattr (-, root, other)
 %dir %attr (0755, root, other) %{_datadir}/apps
@@ -210,8 +209,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config.kcfg/*
 %dir %attr (0755, root, other) %{_datadir}/icons
 %{_datadir}/icons/*
-%dir %attr (0755, root, other) %{_datadir}/akonadi
-%{_datadir}/akonadi/*
 %dir %attr (0755, root, sys) %{_datadir}/autostart
 %{_datadir}/autostart/*
 
@@ -229,5 +226,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to uprev to KDE 4.3.1.
 * Sun Jul 05 2009 - moinakg<at>gmail(dot)com
 - Initial version.

@@ -12,15 +12,18 @@
 %define python_version   2.6
 Name:                    SFEkdenetwork4
 Summary:                 Core applications for the K Desktop Environment 4
-Version:                 4.2.4
+Version:                 4.3.1
 License:                 GPLv2
 URL:                     http://www.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{version}/src/kdenetwork-%{version}.tar.bz2
-Patch1:                  kdenetwork4-01-system-libgadu.diff
-Patch2:                  kdenetwork4-02-kopete-view-history.diff
-Patch3:                  kdenetwork4-03-kopete-ymsg16.diff
 Patch4:                  kdenetwork4-04-kopete-rtf.ll.diff
 Patch5:                  kdenetwork4-05-connectioncontroller-bzero.diff
+Patch6:                  kdenetwork4-06-kde#111537.diff
+Patch7:                  kdenetwork4-07-kopeteinfodialog.diff
+Patch8:                  kdenetwork4-08-kppp-devices.h.diff
+Patch9:                  kdenetwork4-09-krfbserver.cpp.diff
+Patch10:                 kdenetwork4-10-pppstats.cpp.diff
+Patch11:                 kdenetwork4-11-jdns_sys.c.diff
 
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
@@ -52,6 +55,7 @@ Requires:      SUNWsqlite3
 Requires:      SFEjasper
 Requires:      SUNWavahi-bridge-dsd
 Requires:      SUNWgnome-im-client
+Requires:      SFEkdewebkit4
 BuildRequires: SFEkdelibs4-devel
 BuildRequires: SFEkdepimlibs4-devel
 BuildRequires: SFEboost-gpp-devel
@@ -77,6 +81,7 @@ BuildRequires: SUNWavahi-bridge-dsd-devel
 BuildRequires: SUNWgnome-im-client-devel
 BuildRequires: SFEautomoc
 BuildRequires: SFEcmake
+BuildRequires: SFEkdewebkit4-devel
 Conflicts:     SFEkdenetwork3
 BuildConflicts: SFEkdenetwork3-devel
 
@@ -118,6 +123,7 @@ Requires: SUNWavahi-bridge-dsd-devel
 Requires: SUNWgnome-im-client-devel
 Requires: SFEautomoc
 Requires: SFEcmake
+Requires: SFEkdewebkit4-devel
 Conflicts: SFEkdenetwork3-devel
 
 %package doc
@@ -130,11 +136,14 @@ Conflicts:     SFEkdenetwork3-doc
 %prep
 %setup -q -c -n %name-%version
 cd %{src_dir}-%{version}
-%patch1 -p0
-%patch2 -p1
-%patch3 -p0
 %patch4 -p1
 %patch5 -p1
+%patch6 -p0
+%patch7 -p0
+%patch8 -p0
+%patch9 -p0
+%patch10 -p0
+%patch11 -p1
 cd ..
 
 %build
@@ -152,6 +161,7 @@ export QTDIR=%{_prefix}
 export QT_INCLUDES=%{_includedir}/qt4
 export CMAKE_INCLUDE_PATH="%{gnu_inc}:%{xorg_inc}"
 export JAVA_HOME=%{_prefix}/java
+NAME_MAX=`getconf NAME_MAX /`
 OPATH=${PATH}
 
 mkdir kdebld
@@ -160,8 +170,8 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc}"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DNAME_MAX=${NAME_MAX}"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DNAME_MAX=${NAME_MAX}"
 export LDFLAGS="%_ldflags -lsocket -lnsl -lQtGui -lkdeui -lQtNetwork -lX11 -lXext -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -200,6 +210,7 @@ OPATH=${PATH}
 cd kdebld
 export PATH="%{qt4_bin_path}:${OPATH}"
 make install DESTDIR=$RPM_BUILD_ROOT
+mv $RPM_BUILD_ROOT%{_libdir}/mozilla $RPM_BUILD_ROOT%{_libdir}/firefox
 export PATH="${OPATH}"
 cd ..
 
@@ -215,6 +226,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so*
 %dir %attr (0755, root, bin) %{_libdir}/kde4
 %{_libdir}/kde4/*
+%dir %attr (0755, root, bin) %{_libdir}/mozilla
+%{_libdir}/mozilla/*
 
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_datadir}/kde4
@@ -251,5 +264,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/*
 
 %changelog
+* Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to uprev to KDE4.3.1.
 * Thu Jul 02 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version.
