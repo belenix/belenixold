@@ -10,10 +10,11 @@
 Name:                SFEwv2
 License:             GPL
 Summary:             A library that allows access to Microsoft Word files (series 2)
-Version:             0.2.3
+Version:             0.4.0
 URL:                 http://wvware.sourceforge.net/
 Source:              %{sf_download}/wvware/wv2-%{version}.tar.bz2
-Source1:             %{sf_download}/wvware/word_helper.h.diff
+Patch1:              wv2-01-ustring.cpp.diff
+
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -43,6 +44,7 @@ Requires:                %{name}
 
 %prep
 %setup -q -n wv2-%version
+%patch1 -p1
 
 %build
 
@@ -52,22 +54,38 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
 fi
 
 export CFLAGS="%optflags -I%{gnu_inc} -D__C99FEATURES__"
+export CXXFLAGS="%cxx_optflags -I%{gnu_inc}"
 export LDFLAGS="%_ldflags %{gnu_lib_path}"
-(cd src; cat %{SOURCE1} | gpatch -p0)
 gnu_prefix=`dirname %{gnu_bin}`
 
-./configure --prefix=%{_prefix}	\
-            --mandir=%{_mandir}	\
-            --enable-static=no  \
-            --with-pic \
-            --with-libiconv=${gnu_bin}
+export CMAKE_LIBRARY_PATH="%{xorg_lib}:%{gnu_lib}:%{_prefix}/lib:/lib:%{sfw_lib}"
 
-make -j$CPUS
+cmake   . -DCMAKE_INSTALL_PREFIX=%{_prefix}      \
+        -DCMAKE_BUILD_TYPE=Release                                      \
+        -DCMAKE_C_COMPILER:FILEPATH=${CC}                               \
+        -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                              \
+        -DCMAKE_CXX_COMPILER:FILEPATH=${CXX}                            \
+        -DCMAKE_CXX_FLAGS_RELEASE:STRING="${CXXFLAGS}"                  \
+        -DCMAKE_INCLUDE_PATH="%{gnu_inc}"                               \
+        -DCMAKE_SKIP_RPATH:BOOL=YES                                     \
+        -DINCLUDE_INSTALL_DIR=%{_includedir}                            \
+        -DSYSCONF_INSTALL_DIR=%{_sysconfdir}                            \
+        -DICONV_INCLUDE_DIR=%{gnu_inc}					\
+        -DICONV_LIBRARIES=%{gnu_lib}					\
+        -DBUILD_SHARED_LIBS=On                                          \
+        -DCMAKE_VERBOSE_MAKEFILE=1 > config.log 2>&1
+
+make VERBOSE=1 -j $CPUS
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 make install DESTDIR=$RPM_BUILD_ROOT
+
+cp $RPM_BUILD_ROOT/usr/bin/wv2-config $RPM_BUILD_ROOT/usr/bin/wv2-config.orig
+cat $RPM_BUILD_ROOT/usr/bin/wv2-config.orig | sed '{
+    s#\-l/usr/gnu/lib#\-L/usr/gnu/lib \-R/usr/gnu/lib#
+}' > $RPM_BUILD_ROOT/usr/bin/wv2-config
+rm -f $RPM_BUILD_ROOT/usr/bin/wv2-config.orig
 
 find $RPM_BUILD_ROOT -type f -name "*.a" -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
@@ -81,6 +99,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
+%dir %attr (0755, root, bin) %{_libdir}/wvWare
+%{_libdir}/wvWare/*
 
 %files devel
 %defattr (-, root, bin)
@@ -88,6 +108,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Bump version, changes to build with cmake and fix config file.
 * Fri Sep 18 2009 - moinakg(at)belenix<dot>org
 - Remove commented patch lines.
 * Sat Jan 26 2008 - moinak.ghosh@sun.com

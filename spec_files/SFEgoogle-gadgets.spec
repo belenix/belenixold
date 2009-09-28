@@ -46,7 +46,6 @@ Requires: SUNWgnome-libs
 Requires: SUNWgnome-vfs
 Requires: SFExulrunner
 Requires: SUNWltdl
-Requires: SFElibdv
 
 BuildRequires: SUNWcurl-devel
 BuildRequires: SUNWlibsoup-devel
@@ -64,7 +63,6 @@ BuildRequires: SUNWgnome-common-devel
 BuildRequires: SUNWgtk2-devel
 BuildRequires: SFExulrunner-devel
 BuildRequires: SUNWlibtool
-BuildRequires: SFElibdv-devel
 
 %package qt
 Summary:                 Qt front-end for %{name}
@@ -137,6 +135,7 @@ export PATH=$OPATH
 rm -rf $RPM_BUILD_ROOT
 OPATH=${PATH}
 export PATH="%{qt4_bin_path}:${OPATH}"
+export echo=echo
 
 make install DESTDIR=$RPM_BUILD_ROOT
 # doesn't ship *.a and *.la
@@ -226,6 +225,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/google-gadgets/include/*
 
 %changelog
+* Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Remove unnecessary dependency, handle libtool weirdness.
 * Fri Sep 18 2009 - moinakg(at)belenix<dot>org
 - Add missing dependencies.
 - Do not bootstrap to avoid building duplicate libltdl.

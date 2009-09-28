@@ -10,14 +10,16 @@
 Name:                SFEwpd
 License:             LGPL
 Summary:             A library for import/export to WordPerfect files.
-Version:             0.8.13
+Version:             0.8.14
 URL:                 http://libwpd.sourceforge.net/
 Source:              %{sf_download}/libwpd/libwpd-%{version}.tar.gz
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
 Requires:            SUNWgnome-base-libs
+Requires:            SFElibgsf
 BuildRequires:       SUNWgnome-base-libs-devel
+BuildRequires:       SFElibgsf-devel
 
 %package devel
 Summary:                 %{summary} - development files
@@ -76,5 +78,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Bump version and fix dependency.
 * Sat Jan 26 2008 - moinak.ghosh@sun.com
 - Initial spec.

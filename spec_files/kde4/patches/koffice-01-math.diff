@@ -1,0 +1,52 @@
+--- koffice-2.0.82/libs/widgets/KoUnitDoubleSpinBox.cpp.orig	2009-09-21 09:55:29.981010303 +0530
++++ koffice-2.0.82/libs/widgets/KoUnitDoubleSpinBox.cpp	2009-09-21 09:57:01.644056397 +0530
+@@ -23,6 +23,7 @@
+ #include <kdebug.h>
+ #include <KGlobal>
+ #include <KLocale>
++#include <math.h>
+ 
+ // #define DEBUG_VALIDATOR
+ 
+--- koffice-2.0.82/kchart/kdchart/kdablibfakes/src/KDABLibFakes.h.orig	2009-09-21 10:05:23.300082795 +0530
++++ koffice-2.0.82/kchart/kdchart/kdablibfakes/src/KDABLibFakes.h	2009-09-21 10:06:39.394997122 +0530
+@@ -51,7 +51,9 @@
+ #include <cmath>
+ 
+ #ifdef Q_OS_SOLARIS
++#if defined(__SUNPRO_CC)
+ #include <sunmath.h>
++#endif
+ #include <math.h>
+ #endif
+ 
+--- koffice-2.0.82/kchart/kdchart/src/KDChartPercentPlotter_p.cpp.orig	2009-09-21 11:19:56.872087893 +0530
++++ koffice-2.0.82/kchart/kdchart/src/KDChartPercentPlotter_p.cpp	2009-09-21 11:20:39.030118521 +0530
+@@ -183,12 +183,14 @@
+ 
+                 data.first = leftY + ( rightY - leftY ) * ( xValue - leftX ) / ( rightX - leftX );
+                 // if the result is a valid value, let's assign the index, too
+-                if( !ISNAN( data.first ) )
++                double fi = data.first;
++                if( !ISNAN( fi ) )
+                     data.second = left.second;
+             }
+         
+             // sum it up
+-            if( !ISNAN( yValues[ column ].first ) )
++            double fi = yValues[ column ].first;
++            if( !ISNAN( fi ) )
+                 yValueSums[ xValue ] += yValues[ column ].first;
+         }
+     }
+--- koffice-2.0.82/krita/image/brushengine/kis_paintop.cc.orig	2009-09-21 13:39:33.617385767 +0530
++++ koffice-2.0.82/krita/image/brushengine/kis_paintop.cc	2009-09-21 13:46:33.008741016 +0530
+@@ -111,7 +111,7 @@
+     qreal d2 = line.absDistance(control2);
+ 
+     if ((d1 < BEZIER_FLATNESS_THRESHOLD && d2 < BEZIER_FLATNESS_THRESHOLD)
+-#ifdef Q_CC_MSVC
++#if defined(Q_CC_MSVC) || (defined(Q_OS_SOLARIS) && defined(__GNUC__))
+             || isnan(d1) || isnan(d2)) {
+ #else
+             || std::isnan(d1) || std::isnan(d2)) {

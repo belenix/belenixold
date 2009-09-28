@@ -35,6 +35,10 @@ Patch14:                 kdebase-workspace-14-timedate-kcm.diff
 Patch15:                 kdebase-workspace-15-fadeeffect.cpp.diff
 Patch16:                 kdebase-workspace-16-polkit_pid_t.diff
 Patch17:                 kdebase-workspace-17-checkpass_pam.diff
+# 
+# Ksysguard port.
+#
+Patch18:                 kdebase-workspace-18-ksysguard.diff
 
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
@@ -138,6 +142,7 @@ cd %{src_dir}-%{version}
 %patch15 -p1
 %patch16 -p1
 %patch17 -p0
+%patch18 -p1
 cd ..
 
 %build
@@ -157,7 +162,7 @@ export CMAKE_INCLUDE_PATH="%{gnu_inc}:%{xorg_inc}"
 export JAVA_HOME=%{_prefix}/java
 OPATH=${PATH}
 
-mkdir kdebld
+mkdir -p kdebld
 cd kdebld
 
 #
@@ -223,7 +228,48 @@ rm -rf $RPM_BUILD_ROOT
 %defattr (-, root, bin)
 %dir %attr (0755, root, sys) %{_prefix}
 %dir %attr (0755, root, bin) %{_bindir}
-%{_bindir}/*
+%attr (0755, root, bin) %{_bindir}/genkdmconf
+%attr (0755, root, bin) %{_bindir}/kaccess
+%attr (0755, root, bin) %{_bindir}/kapplymousetheme
+%attr (0755, root, bin) %{_bindir}/kblankscrn.kss
+%attr (0755, root, bin) %{_bindir}/kcheckrunning
+%attr (0755, root, bin) %{_bindir}/kcminit
+%attr (0755, root, bin) %{_bindir}/kcminit_startup
+%attr (0755, root, bin) %{_bindir}/kdm
+%attr (0755, root, bin) %{_bindir}/kdmctl
+%attr (0755, root, bin) %{_bindir}/kdostartupconfig4
+%attr (0755, root, bin) %{_bindir}/kfontinst
+%attr (0755, root, bin) %{_bindir}/kfontview
+%attr (0755, root, bin) %{_bindir}/klipper
+%attr (0755, root, bin) %{_bindir}/kmenuedit
+%attr (0755, root, bin) %{_bindir}/krandom.kss
+%attr (0755, root, bin) %{_bindir}/krandrtray
+%attr (0755, root, bin) %{_bindir}/krdb
+%attr (0755, root, bin) %{_bindir}/krunner
+%attr (0755, root, bin) %{_bindir}/ksmserver
+%attr (0755, root, bin) %{_bindir}/ksplashsimple
+%attr (0755, root, bin) %{_bindir}/ksplashx
+%attr (0755, root, bin) %{_bindir}/ksplashx_scale
+%attr (0755, root, bin) %{_bindir}/kstartupconfig4
+%attr (0755, root, bin) %{_bindir}/ksysguard
+%attr (4755, root, bin) %{_bindir}/ksysguardd
+%attr (0755, root, bin) %{_bindir}/ksystraycmd
+%attr (0755, root, bin) %{_bindir}/kwin
+%attr (0755, root, bin) %{_bindir}/kwin_killer_helper
+%attr (0755, root, bin) %{_bindir}/kwin_rules_dialog
+%attr (0755, root, bin) %{_bindir}/kwrited
+%attr (0755, root, bin) %{_bindir}/kxkb
+%attr (0755, root, bin) %{_bindir}/plasma-desktop
+%attr (0755, root, bin) %{_bindir}/plasma-overlay
+%attr (0755, root, bin) %{_bindir}/plasmaengineexplorer
+%attr (0755, root, bin) %{_bindir}/plasmawallpaperviewer
+%attr (0755, root, bin) %{_bindir}/plasmoidviewer
+%attr (0755, root, bin) %{_bindir}/polkit-kde-authorization
+%attr (0755, root, bin) %{_bindir}/safestartkde
+%attr (0755, root, bin) %{_bindir}/setscheduler
+%attr (0755, root, bin) %{_bindir}/solid-action-desktop-gen
+%attr (0755, root, bin) %{_bindir}/startkde
+%attr (0755, root, bin) %{_bindir}/systemsettings
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/*.so*
 %dir %attr (0755, root, bin) %{_libdir}/kde4
@@ -313,6 +359,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Initial port of Ksysguard.
+- make ksysguardd set-uid.
 * Sat Sep 26 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Make some executables set-uid.
 - Fix policykit dependency and add PAM patch from KDE-Solaris repo.

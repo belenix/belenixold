@@ -11,13 +11,15 @@
 
 %include base.inc
 
-%define python_version 2.4
+%define python_version 2.6
 
 Name:                    SFElcms
 Summary:                 Little ColorManagement System
-Version:                 1.17
-Source:                  http://www.littlecms.com/lcms-%{version}.tar.gz
+Version:                 1.18
+Source:                  http://www.littlecms.com/lcms-%{version}a.tar.gz
 Patch1:                  lcms-01-python-libs.diff
+Patch2:                  lcms-02-config-python.diff
+
 URL:                     http://www.littlecms.com
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
@@ -44,6 +46,7 @@ Requires: %name
 %setup -q -c -n %name-%version
 cd lcms-%version
 %patch1 -p1
+%patch2 -p1
 cd ..
 
 %ifarch amd64
@@ -73,14 +76,18 @@ export CXX="${CXX} -norunpath"
 export CFLAGS="$CFLAGS64"
 export CXXFLAGS="$CXXFLAGS64"
 export LDFLAGS="$LDFLAGS64"
+export PYTHON=%{_bindir}/%{_arch64}/python2.6
 
 cd lcms-%version-64
-aclocal $ACLOCAL_FLAGS
-automake -c -f
+aclocal-1.10 $ACLOCAL_FLAGS
+autoconf -f
+automake-1.10 -c -f
 ./configure --prefix=%{_prefix} --bindir=%{_bindir}/%{_arch64}     \
             --libdir=%{_libdir}/%{_arch64}      \
             --includedir=%{_includedir} \
-            --with-python=no --mandir=%{_mandir} --enable-static=no
+            --with-python=yes --mandir=%{_mandir} --enable-static=no
+
+export echo=echo
 make -j$CPUS
 cd ..
 %endif
@@ -88,18 +95,23 @@ cd ..
 export CFLAGS="$CFLAGS32"
 export CXXFLAGS="$CXXFLAGS32"
 export LDFLAGS="$LDFLAGS32"
+export PYTHON=%{_bindir}/python2.6
 
 cd lcms-%version
-aclocal $ACLOCAL_FLAGS
-automake -c -f
+aclocal-1.10 $ACLOCAL_FLAGS
+autoconf -f
+automake-1.10 -c -f
 ./configure --prefix=%{_prefix} --bindir=%{_bindir}/%{base_isa}     \
             --libdir=%{_libdir}/      \
             --includedir=%{_includedir} \
-            --with-python --mandir=%{_mandir} --enable-static=no
+            --with-python=yes --mandir=%{_mandir} --enable-static=no
+
+export echo=echo
 make -j$CPUS
 
 %install
 rm -rf $RPM_BUILD_ROOT
+export echo=echo
 
 %ifarch amd64
 cd lcms-%version-64
@@ -180,6 +192,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Bump version.
+- Build module for Python 2.6.
 * Sat Jun 07 2008 - moinakg@gmail.com
 - Fix symlink depth.
 * Tue Apr 29 2008 - moinakg@gmail.com

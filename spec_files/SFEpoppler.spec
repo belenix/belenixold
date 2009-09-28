@@ -92,14 +92,15 @@ CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
 if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
+unset QTDIR
 
 %ifarch amd64 sparcv9
 cd poppler-%{version}-64
 export CFLAGS="%optflags64"
 export CXXFLAGS="%cxx_optflags64"
-export LDFLAGS="%_ldflags64 -L%{_libdir}/%{_arch64} -R%{_libdir}/%{_arch64} %{gnu_lib_path64} %{xorg_lib_path64}"
-export QTINC=%{_includedir}/qt3
-export QTLIB=%{_libdir}/%{_arch64}
+export LDFLAGS="-L%{_libdir}/%{_arch64} -R%{_libdir}/%{_arch64} %{gnu_lib_path64} %{xorg_lib_path64} %_ldflags64"
+export QTINC=%{_basedir}/include/qt3
+export QTLIB=%{_basedir}/lib/%{_arch64}
 
 ./configure --prefix=%{_prefix}/poppler  \
             --bindir=%{_prefix}/poppler/bin/%{_arch64}          \
@@ -109,6 +110,7 @@ export QTLIB=%{_libdir}/%{_arch64}
             --enable-cairo-output                               \
             --enable-poppler-qt                                 \
             --enable-poppler-qt4                                \
+            --enable-xpdf-headers                               \
             --enable-shared		                        \
             --disable-static
 
@@ -120,8 +122,8 @@ cd poppler-%{version}
 export CFLAGS="%optflags"
 export CXXFLAGS="%cxx_optflags"
 export LDFLAGS="%_ldflags %{gnu_lib_path} %{xorg_lib_path}"
-export QTINC=%{_includedir}/qt3
-export QTLIB=%{_libdir}
+export QTINC=%{_basedir}/include/qt3
+export QTLIB=%{_basedir}/lib
 
 ./configure --prefix=%{_prefix}/poppler  \
             --enable-poppler-glib        \
@@ -143,6 +145,9 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
+unset QTDIR
+ln -s /usr/bin/ginstall install
+export PATH=`pwd`:$PATH
 
 %ifarch amd64 sparcv9
 cd poppler-%{version}-64
@@ -194,5 +199,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Fix build, enable optional xpdf features.
 * Tue Jun 23 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
 - Initial version. Alternate poppler with Qt support.
