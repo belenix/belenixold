@@ -5,7 +5,7 @@
                      -L$(LCMS_PYLIB)/config 
  
 -_lcms_la_LIBADD = $(top_builddir)/src/liblcms.la -lpython$(PYTHON_VERSION)
-+_lcms_la_LIBADD = $(top_builddir)/src/liblcms.la -lpython$(PYTHON_VERSION) -lc -lCrun
++_lcms_la_LIBADD = $(top_builddir)/src/liblcms.la -lpython$(PYTHON_VERSION) -lc
  
  _lcms_la_SOURCES = lcms_wrap.cxx
  

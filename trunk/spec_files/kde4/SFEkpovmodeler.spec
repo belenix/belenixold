@@ -9,7 +9,7 @@
 %include base.inc
 
 %define src_dir          kpovmodeler
-%define kde_version      4.2.4
+%define kde_version      4.3.1
 Name:                    SFEkpovmodeler
 Summary:                 A graphical editor for povray scenes (KDE 4)
 Version:                 1.1.3
@@ -152,5 +152,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to uprev to KDE 4.3.1.
 * Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Initial version.

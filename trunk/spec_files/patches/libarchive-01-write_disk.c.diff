@@ -1,10 +1,10 @@
---- libarchive-2.6.2-64/libarchive/archive_write_disk.c.orig	2009-07-02 21:21:16.716636248 +0530
-+++ libarchive-2.6.2-64/libarchive/archive_write_disk.c	2009-07-02 21:21:38.898445378 +0530
-@@ -50,6 +50,7 @@
+--- libarchive-2.7.1/libarchive/archive_write_disk.c.orig	2009-04-10 11:13:09.000000000 +0530
++++ libarchive-2.7.1/libarchive/archive_write_disk.c	2009-09-05 21:31:03.261486770 +0530
+@@ -74,6 +74,7 @@
+ #include <linux/ext2_fs.h>	/* for Linux file flags */
  #endif
- 
  #if defined(HAVE_EXT2FS_EXT2_FS_H) && !defined(__CYGWIN__)
 +#include <sys/ioccom.h>
  #include <ext2fs/ext2_fs.h>	/* Linux file flags, broken on Cygwin */
  #endif
- #ifdef HAVE_ERRNO_H
+ #ifdef HAVE_LIMITS_H

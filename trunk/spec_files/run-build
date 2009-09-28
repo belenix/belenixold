@@ -27,12 +27,21 @@ fi
 
 export CC=/opt/SUNWspro/bin/cc
 export CXX=/opt/SUNWspro/bin/CC
+export ACLOCAL_FLAGS="-I /usr/gnu/share/aclocal"
+export PYTHON=/usr/bin/python2.6
 unset LDFLAGS CFLAGS CPPFLAGS CXXFLAGS LD_OPTIONS
+
+ls -l /var/run/opengl/lib/libGL.so.1 | grep mesa > /dev/null
+if [ $? -ne 0 ]
+then
+	pfexec /lib/opengl/ogl_select/mesa_vendor_select
+fi
 
 if [ "$cmp" = "gcc" ]
 then
 export CC=/usr/gnu/bin/gcc
 export CXX=/usr/gnu/bin/g++
+export QMAKESPEC=/usr/share/qt4/mkspecs/solaris-g++
 
 export CXXFLAGS_EXTRA="-L/usr/gnu/lib -R/usr/gnu/lib"
 export CFLAGS_EXTRA="-L/usr/gnu/lib -R/usr/gnu/lib"

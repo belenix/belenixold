@@ -1,0 +1,131 @@
+--- koffice-2.0.82/kspread/ValueCalc.h.orig	2009-09-21 12:22:17.313247463 +0530
++++ koffice-2.0.82/kspread/ValueCalc.h	2009-09-21 12:22:50.118674145 +0530
+@@ -104,21 +104,21 @@
+   /** numerical comparison */
+   bool lower (const Value &a, const Value &b);
+   /** string comparison */
+-  bool strEqual (const Value &a, const Value &b, bool CS = true);
++  bool strEqual (const Value &a, const Value &b, bool _CS = true);
+   /** string comparison */
+-  bool strGreater (const Value &a, const Value &b, bool CS = true);
++  bool strGreater (const Value &a, const Value &b, bool _CS = true);
+   /** string comparison - greater or equal */
+-  bool strGequal (const Value &a, const Value &b, bool CS = true);
++  bool strGequal (const Value &a, const Value &b, bool _CS = true);
+   /** string comparison */
+-  bool strLower (const Value &a, const Value &b, bool CS = true);
++  bool strLower (const Value &a, const Value &b, bool _CS = true);
+   /** string or numerical comparison */
+-  bool naturalEqual (const Value &a, const Value &b, bool CS = true);
++  bool naturalEqual (const Value &a, const Value &b, bool _CS = true);
+   /** string or numerical comparison */
+-  bool naturalGreater (const Value &a, const Value &b, bool CS = true);
++  bool naturalGreater (const Value &a, const Value &b, bool _CS = true);
+   /** string or numerical comparison - greater or equal */
+-  bool naturalGequal (const Value &a, const Value &b, bool CS = true);
++  bool naturalGequal (const Value &a, const Value &b, bool _CS = true);
+   /** string or numerical comparison */
+-  bool naturalLower (const Value &a, const Value &b, bool CS = true);
++  bool naturalLower (const Value &a, const Value &b, bool _CS = true);
+   
+   int sign (const Value &a);
+ 
+--- koffice-2.0.82/kspread/ValueCalc.cpp.orig	2009-09-21 12:23:11.578682727 +0530
++++ koffice-2.0.82/kspread/ValueCalc.cpp	2009-09-21 12:23:40.216463022 +0530
+@@ -472,78 +472,78 @@
+   return greater (b, a);
+ }
+ 
+-bool ValueCalc::strEqual (const Value &a, const Value &b, bool CS)
++bool ValueCalc::strEqual (const Value &a, const Value &b, bool _CS)
+ {
+   QString aa = converter->asString (a).asString();
+   QString bb = converter->asString (b).asString();
+-  if (!CS) {
++  if (!_CS) {
+     aa = aa.toLower();
+     bb = bb.toLower();
+   }
+   return (aa == bb);
+ }
+ 
+-bool ValueCalc::strGreater (const Value &a, const Value &b, bool CS)
++bool ValueCalc::strGreater (const Value &a, const Value &b, bool _CS)
+ {
+   QString aa = converter->asString (a).asString();
+   QString bb = converter->asString (b).asString();
+-  if (!CS) {
++  if (!_CS) {
+     aa = aa.toLower();
+     bb = bb.toLower();
+   }
+   return (aa > bb);
+ }
+ 
+-bool ValueCalc::strGequal (const Value &a, const Value &b, bool CS)
++bool ValueCalc::strGequal (const Value &a, const Value &b, bool _CS)
+ {
+   QString aa = converter->asString (a).asString();
+   QString bb = converter->asString (b).asString();
+-  if (!CS) {
++  if (!_CS) {
+     aa = aa.toLower();
+     bb = bb.toLower();
+   }
+   return (aa >= bb);
+ }
+ 
+-bool ValueCalc::strLower (const Value &a, const Value &b, bool CS)
++bool ValueCalc::strLower (const Value &a, const Value &b, bool _CS)
+ {
+-  return strGreater (b, a, CS);
++  return strGreater (b, a, _CS);
+ }
+ 
+-bool ValueCalc::naturalEqual (const Value &a, const Value &b, bool CS)
++bool ValueCalc::naturalEqual (const Value &a, const Value &b, bool _CS)
+ {
+   Value aa = a;
+   Value bb = b;
+-  if (!CS) {
++  if (!_CS) {
+     // not case sensitive -> convert strings to lowercase
+     if (aa.isString()) aa = Value (aa.asString().toLower());
+     if (bb.isString()) bb = Value (bb.asString().toLower());
+   }
+   if (aa.allowComparison (bb)) return aa.equal (bb);
+-  return strEqual (aa, bb, CS);
++  return strEqual (aa, bb, _CS);
+ }
+ 
+-bool ValueCalc::naturalGreater (const Value &a, const Value &b, bool CS)
++bool ValueCalc::naturalGreater (const Value &a, const Value &b, bool _CS)
+ {
+   Value aa = a;
+   Value bb = b;
+-  if (!CS) {
++  if (!_CS) {
+     // not case sensitive -> convert strings to lowercase
+     if (aa.isString()) aa = Value (aa.asString().toLower());
+     if (bb.isString()) bb = Value (bb.asString().toLower());
+   }
+   if (aa.allowComparison (bb)) return aa.greater (bb);
+-  return strEqual (aa, bb, CS);
++  return strEqual (aa, bb, _CS);
+ }
+ 
+-bool ValueCalc::naturalGequal (const Value &a, const Value &b, bool CS)
++bool ValueCalc::naturalGequal (const Value &a, const Value &b, bool _CS)
+ {
+-  return (naturalGreater (a, b, CS) || naturalEqual (a, b, CS));
++  return (naturalGreater (a, b, _CS) || naturalEqual (a, b, _CS));
+ }
+ 
+-bool ValueCalc::naturalLower (const Value &a, const Value &b, bool CS)
++bool ValueCalc::naturalLower (const Value &a, const Value &b, bool _CS)
+ {
+-  return naturalGreater (b, a, CS);
++  return naturalGreater (b, a, _CS);
+ }
+ 
+ Value ValueCalc::roundDown (const Value &a,

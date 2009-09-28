@@ -9,10 +9,10 @@
 %include base.inc
 
 %define src_dir          kphotoalbum
-%define kde_version      4.2.4
+%define kde_version      4.3.1
 Name:                    SFEkphotoalbum
 Summary:                 A Photo Album application for KDE
-Version:                 4.0.1
+Version:                 4.0.2
 License:                 GPLv2+
 URL:                     http://extragear.kde.org/
 Source:                  http://gd.tuwien.ac.at/pub/kde/stable/%{kde_version}/src/extragear/kphotoalbum-%{version}-kde%{kde_version}.tar.bz2
@@ -79,8 +79,8 @@ cd kdebld
 #
 # SFE paths are needed for libusb
 #
-export CFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
-export CXXFLAGS="-march=pentium4 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
+export CXXFLAGS="-march=pentium3 -fno-omit-frame-pointer -fPIC -DPIC -I%{gnu_inc} -I%{sfw_inc} -DSOLARIS -DUSE_SOLARIS"
 export LDFLAGS="%_ldflags -lsocket -lnsl -lkio -L/lib -R/lib %{gnu_lib_path} -lstdc++ %{xorg_lib_path} -lX11 %{sfw_lib_path}"
 export PATH="%{qt4_bin_path}:%{_prefix}/sfw/bin:${OPATH}"
 export PKG_CONFIG_PATH=%{_prefix}/lib/pkgconfig:%{_prefix}/gnu/lib/pkgconfig
@@ -134,8 +134,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/*
 %dir %attr (0755, root, other) %{_datadir}/config
 %{_datadir}/config/*
-%dir %attr (0755, root, other) %{_datadir}/config.kcfg
-%{_datadir}/config.kcfg/*
 %dir %attr (0755, root, other) %{_datadir}/applications
 %{_datadir}/applications/*
 %dir %attr (0755, root, other) %{_datadir}/icons
@@ -155,6 +153,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Changes to uprev to KDE 4.3.1.
 * Sat Aug 29 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Add missing dirs.
 * Fri Aug 14 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>

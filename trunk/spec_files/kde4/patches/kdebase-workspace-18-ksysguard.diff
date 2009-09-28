@@ -1,0 +1,1004 @@
+--- kdebase-workspace-4.3.1/libs/ksysguard/processcore/processes.cpp.orig	2009-09-27 15:23:37.193948618 +0530
++++ kdebase-workspace-4.3.1/libs/ksysguard/processcore/processes.cpp	2009-09-27 17:33:58.285722345 +0530
+@@ -207,8 +207,8 @@
+ 
+ bool Processes::updateProcessInfo(Process *ps) {
+     //Now we can actually get the process info
+-    long oldUserTime = ps->userTime;
+-    long oldSysTime = ps->sysTime;
++    qlonglong oldUserTime = ps->userTime;
++    qlonglong oldSysTime = ps->sysTime;
+     ps->changes = Process::Nothing;
+     bool success = d->mAbstractProcesses->updateProcessInfo(ps->pid, ps);
+ 
+--- kdebase-workspace-4.3.1/libs/ksysguard/processcore/processes_solaris_p.cpp.orig	2009-09-26 22:48:23.842623523 +0530
++++ kdebase-workspace-4.3.1/libs/ksysguard/processcore/processes_solaris_p.cpp	2009-09-28 18:15:23.916978868 +0530
+@@ -17,6 +17,13 @@
+     Boston, MA 02110-1301, USA.
+ */
+ 
++/* Stop <sys/procfs.h> from crapping out on 32-bit architectures. */
++
++#if !defined(_LP64) && _FILE_OFFSET_BITS == 64
++# undef _FILE_OFFSET_BITS
++# define _FILE_OFFSET_BITS 32
++#endif
++
+ #include "processes_local_p.h"
+ #include "process.h"
+ 
+@@ -24,53 +31,188 @@
+ 
+ #include <QSet>
+ 
++#include <stdio.h>
+ #include <sys/param.h>
+ #include <sys/types.h>
+ #include <sys/user.h>
+ #include <sys/resource.h>
++#include <string.h>
++#include <errno.h>
++#include <fcntl.h>
+ #include <signal.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+ #include <sched.h>
++#include <dirent.h>
++#include <pwd.h>
++#include <procfs.h>
++#include <sys/proc.h>
++#include <sys/resource.h>
+ 
+-#ifdef __GNUC__
+-#warning Totally bogus ProcessesLocal implementation
+-#endif
++#define PROCESS_BUFFER_SIZE 512
++#define PROCDIR "/proc"
+ 
+ namespace KSysGuard
+ {
+ 
+ class ProcessesLocal::Private
+ {
+-public:
+-    Private() { };
++  public:
++    Private() { mProcDir = opendir( PROCDIR ); };
+     ~Private() { };
++    char mBuf[PROCESS_BUFFER_SIZE+1]; //used as a buffer to read data into      
++    DIR* mProcDir;
+ } ;
+ 
+-ProcessesLocal::ProcessesLocal() : d(0)
++ProcessesLocal::ProcessesLocal() : d(new Private())
+ {
+ }
+ 
+ long ProcessesLocal::getParentPid(long pid) {
+     long long ppid = 0;
++    int		fd;
++    psinfo_t	psinfo;
++
++    snprintf( d->mBuf, PROCESS_BUFFER_SIZE - 1, "%s/%ld/psinfo", PROCDIR, pid );
++    if( (fd = open( d->mBuf, O_RDONLY )) < 0 ) {
++	return 0; /* process has terminated in the meantime */
++    }
++
++    if( read( fd, &psinfo, sizeof( psinfo_t )) != sizeof( psinfo_t )) {
++	close( fd );
++	return 0;
++    }
++    close( fd );
++    ppid = psinfo.pr_ppid;
++
+     return ppid;
+ }
+ 
+ bool ProcessesLocal::updateProcessInfo( long pid, Process *process)
+ {
++    int		fd, pfd;
++    psinfo_t	psinfo;
++    prusage_t	prusage;
++
++    snprintf( d->mBuf, PROCESS_BUFFER_SIZE - 1, "%s/%ld/psinfo", PROCDIR, pid );
++    if( (fd = open( d->mBuf, O_RDONLY )) < 0 ) {
++	return false; /* process has terminated in the meantime */
++    }
++
++    snprintf( d->mBuf, PROCESS_BUFFER_SIZE - 1, "%s/%ld/usage", PROCDIR, pid );
++    if( (pfd = open( d->mBuf, O_RDONLY )) < 0 ) {
++	close( fd );
++	return false; /* process has terminated in the meantime */
++    }
++
++    process->uid = 0;
++    process->gid = 0;
++    process->tracerpid = 0;
++    process->pid = pid;
++
++    if( read( fd, &psinfo, sizeof( psinfo_t )) != sizeof( psinfo_t )) {
++	close( fd );
++	return false;
++    }
++    close( fd );
++
++    if( read( pfd, &prusage, sizeof( prusage_t )) != sizeof( prusage_t )) {
++	close( pfd );
++	return false;
++    }
++    close( pfd );
++
++    process->setUid( psinfo.pr_uid );
++    process->setEuid( psinfo.pr_euid );
++    process->setGid( psinfo.pr_gid );
++    process->setEgid( psinfo.pr_egid );
++
++    switch( (int) psinfo.pr_lwp.pr_state ) {
++	case SIDL:
++	case SWAIT:
++	case SSLEEP:
++	    process->setStatus(Process::Sleeping);
++	    break;
++	case SONPROC:
++	case SRUN:
++	    process->setStatus(Process::Running);
++	    break;
++	case SZOMB:
++	    process->setStatus(Process::Zombie);
++	    break;
++	case SSTOP:
++	    process->setStatus(Process::Stopped);
++	    break;
++	default:
++	    process->setStatus(Process::OtherStatus);
++	    break;
++    }
++
++    process->setVmRSS(psinfo.pr_rssize);
++    process->setVmSize(psinfo.pr_size);
++    process->setVmURSS(-1);
++
++    if (process->command.isNull()) {
++	QString name(psinfo.pr_fname);
++
++	name = name.trimmed();
++	if(!name.isEmpty()) {
++	    name.remove(QRegExp("^[^ ]*/"));
++	}
++	process->setName(name);
++	name = psinfo.pr_fname;
++	name.append(psinfo.pr_psargs);
++	process->setCommand(name);
++    }
++
++    // Approximations, not quite accurate. Needs more changes in ksysguard to map
++    // RR and FIFO to current Solaris classes.
++    if (strcmp(psinfo.pr_lwp.pr_clname, "TS") == 0 || strcmp(psinfo.pr_lwp.pr_clname, "SYS") == 0 ||
++        strcmp(psinfo.pr_lwp.pr_clname, "FSS") == 0) {
++        process->setscheduler( KSysGuard::Process::Other );
++
++    } else if (strcmp(psinfo.pr_lwp.pr_clname, "FX") == 0 || strcmp(psinfo.pr_lwp.pr_clname, "RT") == 0) {
++        process->setscheduler( KSysGuard::Process::RoundRobin );
++
++    } else if (strcmp(psinfo.pr_lwp.pr_clname, "IA") == 0) {
++        process->setscheduler( KSysGuard::Process::Batch );
++    }
++    process->setNiceLevel( psinfo.pr_lwp.pr_pri );
++    process->setUserTime( prusage.pr_utime.tv_sec * 100 + prusage.pr_utime.tv_nsec / 10000000.0);
++    process->setSysTime( prusage.pr_stime.tv_sec  * 100 + prusage.pr_stime.tv_nsec / 10000000.0);
+     return false;
+ }
+ 
+ QSet<long> ProcessesLocal::getAllPids( )
+ {
+     QSet<long> pids;
++    long pid;
++
++    if(d->mProcDir==NULL) return pids; //There's not much we can do without /proc
++    struct dirent* entry;
++    rewinddir(d->mProcDir);
++    while ( ( entry = readdir( d->mProcDir ) ) )
++	    if ( entry->d_name[ 0 ] >= '0' && entry->d_name[ 0 ] <= '9' ) {
++		    pid = atol( entry->d_name );
++        	    // Skip all processes with parent id = 0 except init
++		    if (pid == 1 || getParentPid(pid) > 0) {
++			pids.insert(pid);
++		    }
++	    }
+     return pids;
+ }
+ 
+ bool ProcessesLocal::sendSignal(long pid, int sig) {
++    if ( kill( (pid_t)pid, sig ) ) {
++	//Kill failed
++        return false;
++    }
+     return false;
+ }
+ 
++/*
++ * 
++ */
+ bool ProcessesLocal::setNiceness(long pid, int priority) {
+     return false;
+ }
+@@ -89,6 +231,8 @@
+ }
+ 
+ long long ProcessesLocal::totalPhysicalMemory() {
++    long long memory = ((long long)sysconf(_SC_PHYS_PAGES)) * (sysconf(_SC_PAGESIZE)/1024);
++    if(memory > 0) return memory;
+     return 0;
+ }
+ 
+--- kdebase-workspace-4.3.1/libs/ksysguard/processcore/process.cpp.orig	2009-09-28 09:36:56.591286036 +0530
++++ kdebase-workspace-4.3.1/libs/ksysguard/processcore/process.cpp	2009-09-28 11:46:45.055649733 +0530
+@@ -79,7 +79,11 @@
+     switch( scheduler ) { 
+         case Fifo: return i18nc("Scheduler", "FIFO");
+         case RoundRobin: return i18nc("Scheduler", "Round Robin");
++#ifdef Q_OS_SOLARIS
++        case Batch: return i18nc("Scheduler", "Interactive");
++#else
+         case Batch: return i18nc("Scheduler", "Batch");
++#endif
+         default: return QString();
+     }
+ }
+--- kdebase-workspace-4.3.1/libs/ksysguard/processui/ProcessModel.cc.orig	2009-09-27 17:15:40.336127418 +0530
++++ kdebase-workspace-4.3.1/libs/ksysguard/processui/ProcessModel.cc	2009-09-28 11:47:20.997434510 +0530
+@@ -769,7 +769,7 @@
+ 				if(total < 1 && process->status != KSysGuard::Process::Sleeping && process->status != KSysGuard::Process::Running)
+ 					return process->translatedStatus();  //tell the user when the process is a zombie or stopped
+ 				if(total < 0.5)
+-					return "";
++					return "0";
+ 				
+ 				return QString::number((int)(total+0.5)) + '%';
+ 			}
+--- kdebase-workspace-4.3.1/libs/ksysguard/processui/ReniceDlg.cc.orig	2009-09-28 09:52:20.863325974 +0530
++++ kdebase-workspace-4.3.1/libs/ksysguard/processui/ReniceDlg.cc	2009-09-28 14:27:03.617998405 +0530
+@@ -88,8 +88,14 @@
+ 
+ 	ioScheduler->setExclusive(true);
+ 
+-	if(ioniceSupported)
++	if(ioniceSupported) {
+ 		ui->sliderIO->setValue(currentIoPrio);
++	} else {
++		ui->radioIONormal->setEnabled(false);
++		ui->radioIdle->setEnabled(false);
++		ui->radioRealTime->setEnabled(false);
++		ui->radioBestEffort->setEnabled(false);
++	}
+ 	ui->sliderCPU->setValue(currentCpuPrio);
+ 
+ 	ui->imgCPU->setPixmap( KIcon("cpu").pixmap(128, 128) );
+@@ -128,12 +134,14 @@
+ }
+ 
+ void ReniceDlg::cpuSliderChanged(int value) {
++#ifndef Q_OS_SOLARIS
+ 	if(cpuScheduler->checkedId() == (int)KSysGuard::Process::Other || cpuScheduler->checkedId() == (int)KSysGuard::Process::Batch) {
+ 		if( ioScheduler->checkedId() == -1 || ioScheduler->checkedId() == (int)KSysGuard::Process::None) {
+ 			//ionice is 'Normal', thus automatically calculated based on cpunice
+ 			ui->sliderIO->setValue((value+20)/5);
+ 		}
+ 	}
++#endif
+ 	ui->sliderCPU->setToolTip(QString::number(value));
+ }
+ 
+--- kdebase-workspace-4.3.1/libs/ksysguard/processui/ReniceDlgUi.ui.orig	2009-09-28 21:41:02.933409187 +0530
++++ kdebase-workspace-4.3.1/libs/ksysguard/processui/ReniceDlgUi.ui	2009-09-28 14:19:32.968009067 +0530
+@@ -105,8 +105,8 @@
+           <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+ p, li { white-space: pre-wrap; }
+ &lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
+-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Normal Scheduling: Default Linux time-sharing  (Other)&lt;/span>&lt;/p>
+-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;">Normal&lt;span style=" font-weight:400;"> is the standard Linux time-sharing scheduler that is intended for all processes that do not  require special static priority real-time mechanisms. The process to run is chosen from the list of other&lt;/span> Normal&lt;span style=" font-weight:400;"> or &lt;/span>Batch&lt;span style=" font-weight:400;"> processes based on a dynamic priority that is determined only inside this list. The dynamic priority is based on the priority level given and increased for each time-quantum the process is ready to run, but denied to run by the scheduler. This ensures fair progress among all Normal processes.&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
++&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Normal Scheduling: Default Solaris time-sharing  (Other)&lt;/span>&lt;/p>
++&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;">Normal&lt;span style=" font-weight:400;"> is the standard Solaris time-sharing scheduler that is intended for all processes that do not  require special static priority real-time mechanisms. The process to run is chosen from the list of other&lt;/span> Normal&lt;span style=" font-weight:400;"> or &lt;/span>Interactive&lt;span style=" font-weight:400;"> processes based on a dynamic priority that is determined only inside this list. The dynamic priority is based on the priority level given and increased for each time-quantum the process is ready to run, but denied to run by the scheduler. This ensures fair progress among all Normal processes.&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+          </property>
+          <property name="text" >
+           <string>Normal</string>
+@@ -125,11 +125,11 @@
+           <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+ p, li { white-space: pre-wrap; }
+ &lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
+-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Batch Scheduling&lt;/span>&lt;/p>
+-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;">&lt;span style=" font-weight:400; font-style:italic;">(Since Linux 2.6.16.)&lt;/span>&lt;span style=" font-weight:400;"> This policy is similar to &lt;/span>Normal&lt;span style=" font-weight:400;">, except that this policy will cause the scheduler to always assume that the process is CPU-intensive.  Consequently, the scheduler will apply a small scheduling penalty so that this process is mildly disfavored in scheduling decisions. This policy is useful for workloads that are non-interactive, but do not want to lower their nice value, and for workloads that want a deterministic scheduling policy without interactivity causing extra preemptions (between the workload's tasks).&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
++&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Interactive Scheduling&lt;/span>&lt;/p>
++&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;">&lt;span style=" font-weight:400; font-style:italic;">(Since Solaris 2.4.)&lt;/span>&lt;span style=" font-weight:400;"> This policy is an enahced version of &lt;/span>Normal&lt;span style=" font-weight:400;">, and will cause the scheduler to to allocate extra resources to the in-focus GUI window.  Its intent is to give extra resources to interactive processes.&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+          </property>
+          <property name="text" >
+-          <string>Batch</string>
++          <string>Interactive</string>
+          </property>
+         </widget>
+        </item>
+@@ -139,7 +139,7 @@
+           <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+ p, li { white-space: pre-wrap; }
+ &lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
+-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Process will run whenever runnable.  Higher priority than Normal or Batch.  Has Timeslicing.&lt;/p>&lt;/body>&lt;/html></string>
++&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Process will run whenever runnable.  Higher priority than Normal or Interactive.  Has Timeslicing.&lt;/p>&lt;/body>&lt;/html></string>
+          </property>
+          <property name="whatsThis" >
+           <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+@@ -159,14 +159,14 @@
+           <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+ p, li { white-space: pre-wrap; }
+ &lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
+-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Process will run whenever runnable.  Higher priority than Normal or Batch.  No timeslicing.&lt;/p>&lt;/body>&lt;/html></string>
++&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Process will run whenever runnable.  Higher priority than Normal or Interactive.  No timeslicing.&lt;/p>&lt;/body>&lt;/html></string>
+          </property>
+          <property name="whatsThis" >
+           <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+ p, li { white-space: pre-wrap; }
+ &lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;">
+ &lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">First In-First Out Scheduling&lt;/span>&lt;/p>
+-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">When  a  &lt;span style=" font-weight:600;">FIFO&lt;/span> process  becomes  runnable,  it  will always immediately preempt any currently running &lt;span style=" font-weight:600;">Normal&lt;/span> or &lt;span style=" font-weight:600;">Batch&lt;/span> process.&lt;/p>&lt;/body>&lt;/html></string>
++&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">When  a  &lt;span style=" font-weight:600;">FIFO&lt;/span> process  becomes  runnable,  it  will always immediately preempt any currently running &lt;span style=" font-weight:600;">Normal&lt;/span> or &lt;span style=" font-weight:600;">interactive&lt;/span> process.&lt;/p>&lt;/body>&lt;/html></string>
+          </property>
+          <property name="text" >
+           <string>FIFO</string>
+--- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/CMakeLists.txt.orig	2009-09-28 15:58:24.312757836 +0530
++++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/CMakeLists.txt	2009-09-28 16:03:40.941783477 +0530
+@@ -6,3 +6,9 @@
+             NetDev.c
+             ProcessList.c)
+ 
++if(EXISTS /dev/kstat)
++  ADD_DEFINITIONS(-DHAVE_KSTAT)
++  FIND_LIBRARY(KSTAT_LIBRARY NAMES kstat)
++  TARGET_LINK_LIBRARIES(libksysguardd ${KSTAT_LIBRARY})
++ENDIF(EXISTS /dev/kstat)
++
+--- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/Memory.c.orig	2009-09-28 15:25:31.790978639 +0530
++++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/Memory.c	2009-09-28 15:55:31.409017078 +0530
+@@ -99,6 +99,8 @@
+ 					printMemFree, printMemFreeInfo, sm );
+ 	registerMonitor( "mem/physical/used", "integer",
+ 					printMemUsed, printMemUsedInfo, sm );
++	registerMonitor( "mem/physical/application", "integer",
++					printMemUsed, printMemUsedInfo, sm );
+ #endif
+ 	registerMonitor( "mem/swap/free", "integer",
+ 					printSwapFree, printSwapFreeInfo, sm );
+--- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/NetDev.c.orig	2009-09-28 18:18:21.698070636 +0530
++++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/NetDev.c	2009-09-28 19:39:12.331488000 +0530
+@@ -31,6 +31,7 @@
+ #include <sys/socket.h>
+ #include <sys/sockio.h>
+ #include <net/if.h>
++#include <sys/time.h>
+ 
+ #ifdef HAVE_KSTAT
+ #include <kstat.h>
+@@ -99,6 +100,10 @@
+ 	unsigned long	OLDipackets;
+ 	unsigned long	opackets;
+ 	unsigned long	OLDopackets;
++	unsigned long	rbytes;
++	unsigned long	OLDrbytes;
++	unsigned long	obytes;
++	unsigned long	OLDobytes;
+ 	unsigned long	ierrors;
+ 	unsigned long	OLDierrors;
+ 	unsigned long	oerrors;
+@@ -121,6 +126,9 @@
+ static NetDevInfo IfInfo[MAXNETDEVS];
+ 
+ static int NetDevCount;
++static float timeInterval = 0;
++static struct timeval lastSampling;
++static struct timeval currSampling;
+ 
+ /*
+  *  insertnetdev()  --  insert device name & flags into our list
+@@ -255,10 +263,10 @@
+ 
+ 	getnetdevlist();
+ 	for( i = 0; i < NetDevCount; i++ ) {
+-		sprintf( mon, "network/%s/ipackets", IfInfo[i].Name );
++		sprintf( mon, "network/interfaces/%s/receiver/packets", IfInfo[i].Name );
+ 		registerMonitor( mon, "integer",
+ 					printIPackets, printIPacketsInfo, sm );
+-		sprintf( mon, "network/%s/opackets", IfInfo[i].Name );
++		sprintf( mon, "network/interfaces/%s/transmitter/packets", IfInfo[i].Name );
+ 		registerMonitor( mon, "integer",
+ 					printOPackets, printOPacketsInfo, sm );
+ 		/*
+@@ -269,54 +277,67 @@
+ 			/*
+ 			 *  recv errors
+ 			 */
+-			sprintf( mon, "network/%s/ierrors",
++			sprintf( mon, "network/interfaces/%s/receiver/errors",
+ 					IfInfo[i].Name );
+ 			registerMonitor( mon, "integer",
+ 					printIErrors, printIErrorsInfo, sm );
+ 			/*
+ 			 *  xmit errors
+ 			 */
+-			sprintf( mon, "network/%s/oerrors",
++			sprintf( mon, "network/interfaces/%s/transmitter/errors",
+ 					IfInfo[i].Name );
+ 			registerMonitor( mon, "integer",
+ 					printOErrors, printOErrorsInfo, sm );
+ 			/*
+ 			 *  collisions
+ 			 */
+-			sprintf( mon, "network/%s/collisions",
++			sprintf( mon, "network/interfaces/%s/transmitter/collisions",
+ 					IfInfo[i].Name );
+ 			registerMonitor( mon, "integer",
+ 					printCollisions, printCollisionsInfo, sm );
+ 			/*
+ 			 *  multicast xmits
+ 			 */
+-			sprintf( mon, "network/%s/multixmt",
++			sprintf( mon, "network/interfaces/%s/transmitter/multicast",
+ 					IfInfo[i].Name );
+ 			registerMonitor( mon, "integer",
+ 					printMultiXmits, printMultiXmitsInfo, sm );
+ 			/*
+ 			 *  multicast recvs
+ 			 */
+-			sprintf( mon, "network/%s/multircv",
++			sprintf( mon, "network/interfaces/%s/receiver/multicast",
+ 					IfInfo[i].Name );
+ 			registerMonitor( mon, "integer",
+ 					printMultiRecvs, printMultiRecvsInfo, sm );
+ 			/*
+ 			 *  broadcast xmits
+ 			 */
+-			sprintf( mon, "network/%s/brdcstxmt",
++			sprintf( mon, "network/interfaces/%s/transmitter/broadcast",
+ 					IfInfo[i].Name );
+ 			registerMonitor( mon, "integer",
+ 					printBcastXmits, printBcastXmitsInfo, sm );
+ 			/*
+ 			 *  broadcast recvs
+ 			 */
+-			sprintf( mon, "network/%s/brdcstrcv",
++			sprintf( mon, "network/interfaces/%s/receiver/broadcast",
+ 					IfInfo[i].Name );
+ 			registerMonitor( mon, "integer",
+ 					printBcastRecvs, printBcastRecvsInfo, sm );
++
++			/*
++			 * Transmitted/Received Data.
++			 */
++			sprintf( mon, "network/interfaces/%s/receiver/data",
++					IfInfo[i].Name );
++			registerMonitor( mon, "integer",
++					printRBytes, printRBytesInfo, sm );
++			sprintf( mon, "network/interfaces/%s/transmitter/data",
++					IfInfo[i].Name );
++			registerMonitor( mon, "integer",
++					printOBytes, printOBytesInfo, sm );
+ 		}
+ 	}
++	gettimeofday(&lastSampling, 0);
+ #endif
+ }
+ 
+@@ -339,6 +360,7 @@
+ 	while( kstat_chain_update( kctl ) != 0 )
+ 		;
+ 
++	gettimeofday(&currSampling, 0);
+ 	for( i = 0; i < NetDevCount; i++ ) {
+ 		char	*name;
+ 		char	*ptr;
+@@ -416,9 +438,22 @@
+ 			IfInfo[i].OLDbrdcstrcv = IfInfo[i].brdcstrcv;
+ 			IfInfo[i].brdcstrcv = kdata->value.ul;
+ 		}
++		kdata = (kstat_named_t *) kstat_data_lookup( ksp, "rbytes" );
++		if( kdata != NULL ) {
++			IfInfo[i].OLDrbytes = IfInfo[i].rbytes;
++			IfInfo[i].rbytes = kdata->value.ul;
++		}
++		kdata = (kstat_named_t *) kstat_data_lookup( ksp, "obytes" );
++		if( kdata != NULL ) {
++			IfInfo[i].OLDobytes = IfInfo[i].obytes;
++			IfInfo[i].obytes = kdata->value.ul;
++		}
+ 	}
+ 
+ 	kstat_close( kctl );
++	timeInterval = currSampling.tv_sec - lastSampling.tv_sec +
++	    ( currSampling.tv_usec - lastSampling.tv_usec ) / 1000000.0;
++	lastSampling = currSampling;
+ #endif /* ! HAVE_KSTAT */
+ 
+ 	return( 0 );
+@@ -437,6 +472,8 @@
+ 	ptr = strchr( cmdcopy, (int) '/' );
+ 	name = ++ptr;
+ 	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
+ 	*ptr = '\0';
+ 
+ 	for( i = 0; i < NetDevCount; i++ ) {
+@@ -465,6 +502,8 @@
+ 	ptr = strchr( cmdcopy, (int) '/' );
+ 	name = ++ptr;
+ 	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
+ 	*ptr = '\0';
+ 
+ 	for( i = 0; i < NetDevCount; i++ ) {
+@@ -480,6 +519,66 @@
+ 	fprintf(CurrentClient, "0\n" );
+ }
+ 
++void printRBytesInfo( const char *cmd ) {
++	fprintf(CurrentClient, "Received Data\t0\t0\tKB/s\n" );
++}
++
++void printRBytes( const char *cmd ) {
++
++	char	*cmdcopy = strdup( cmd );
++	char	*name, *ptr;
++	int	i;
++
++	ptr = strchr( cmdcopy, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
++	*ptr = '\0';
++
++	for( i = 0; i < NetDevCount; i++ ) {
++		if( (IfInfo[i].OLDrbytes > 0)
++				&& (strcmp( IfInfo[i].Name, name ) == 0) ) {
++			long rate = ((float)(IfInfo[i].rbytes - IfInfo[i].OLDrbytes) / timeInterval) / 1024;
++			fprintf(CurrentClient, "%ld\n", rate);
++			free( cmdcopy );
++			return;
++		}
++	}
++	free( cmdcopy );
++	fprintf(CurrentClient, "0\n" );
++}
++
++void printOBytesInfo( const char *cmd ) {
++	fprintf(CurrentClient, "Transmitted Data\t0\t0\tKB/s\n" );
++}
++
++void printOBytes( const char *cmd ) {
++
++	char	*cmdcopy = strdup( cmd );
++	char	*name, *ptr;
++	int	i;
++
++	ptr = strchr( cmdcopy, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
++	*ptr = '\0';
++
++	for( i = 0; i < NetDevCount; i++ ) {
++		if( (IfInfo[i].OLDobytes > 0)
++				&& (strcmp( IfInfo[i].Name, name ) == 0) ) {
++			long rate = ((float)(IfInfo[i].obytes - IfInfo[i].OLDobytes) / timeInterval) / 1024;
++			fprintf(CurrentClient, "%ld\n", rate);
++			free( cmdcopy );
++			return;
++		}
++	}
++	free( cmdcopy );
++	fprintf(CurrentClient, "0\n" );
++}
++
+ void printIErrorsInfo( const char *cmd ) {
+ 	fprintf(CurrentClient, "Input Errors\t0\t0\tPackets\n" );
+ }
+@@ -493,6 +592,8 @@
+ 	ptr = strchr( cmdcopy, (int) '/' );
+ 	name = ++ptr;
+ 	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
+ 	*ptr = '\0';
+ 
+ 	for( i = 0; i < NetDevCount; i++ ) {
+@@ -521,6 +622,8 @@
+ 	ptr = strchr( cmdcopy, (int) '/' );
+ 	name = ++ptr;
+ 	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
+ 	*ptr = '\0';
+ 
+ 	for( i = 0; i < NetDevCount; i++ ) {
+@@ -549,6 +652,8 @@
+ 	ptr = strchr( cmdcopy, (int) '/' );
+ 	name = ++ptr;
+ 	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
+ 	*ptr = '\0';
+ 
+ 	for( i = 0; i < NetDevCount; i++ ) {
+@@ -577,6 +682,8 @@
+ 	ptr = strchr( cmdcopy, (int) '/' );
+ 	name = ++ptr;
+ 	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
+ 	*ptr = '\0';
+ 
+ 	for( i = 0; i < NetDevCount; i++ ) {
+@@ -605,6 +712,8 @@
+ 	ptr = strchr( cmdcopy, (int) '/' );
+ 	name = ++ptr;
+ 	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
+ 	*ptr = '\0';
+ 
+ 	for( i = 0; i < NetDevCount; i++ ) {
+@@ -633,6 +742,8 @@
+ 	ptr = strchr( cmdcopy, (int) '/' );
+ 	name = ++ptr;
+ 	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
+ 	*ptr = '\0';
+ 
+ 	for( i = 0; i < NetDevCount; i++ ) {
+@@ -661,6 +772,8 @@
+ 	ptr = strchr( cmdcopy, (int) '/' );
+ 	name = ++ptr;
+ 	ptr = strchr( name, (int) '/' );
++	name = ++ptr;
++	ptr = strchr( name, (int) '/' );
+ 	*ptr = '\0';
+ 
+ 	for( i = 0; i < NetDevCount; i++ ) {
+--- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/NetDev.h.orig	2009-09-28 19:05:29.588647370 +0530
++++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/NetDev.h	2009-09-28 19:20:28.987865875 +0530
+@@ -35,6 +35,12 @@
+ void printOPacketsInfo( const char *cmd );
+ void printOPackets( const char *cmd );
+ 
++void printRBytesInfo( const char *cmd );
++void printRBytes( const char *cmd );
++
++void printOBytesInfo( const char *cmd );
++void printOBytes( const char *cmd );
++
+ void printIErrorsInfo( const char *cmd );
+ void printIErrors( const char *cmd );
+ 
+--- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/LoadAvg.c.orig	2009-09-28 20:04:56.751917372 +0530
++++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/LoadAvg.c	2009-09-28 21:50:56.286143537 +0530
+@@ -24,6 +24,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <sys/stat.h>
++#include <sys/types.h>
+ 
+ #ifdef HAVE_KSTAT
+ #include <kstat.h>
+@@ -33,11 +34,28 @@
+ #include "Command.h"
+ #include "LoadAvg.h"
+ 
++#define MAX_CPU_COUNT 512
+ double loadavg1 = 0.0;
+ double loadavg5 = 0.0;
+ double loadavg15 = 0.0;
+ 
++typedef struct {
++	int32_t		ks_instance;
++	uint64_t	cpu_ticks_idle;
++	uint64_t	cpu_ticks_kernel;
++	uint64_t	cpu_ticks_user;
++	uint64_t	cpu_ticks_wait;
++	float		idle_load;
++	float		kernel_load;
++	float		user_load;
++	float		wait_load;
++} cpu_loadinfo;
++
++static cpu_loadinfo cpu_load[MAX_CPU_COUNT];
++
+ void initLoadAvg( struct SensorModul* sm ) {
++	long nproc, id;
++
+ #ifdef HAVE_KSTAT
+ 	registerMonitor( "cpu/system/loadavg1", "float", printLoadAvg1, printLoadAvg1Info, sm );
+ 	registerMonitor( "cpu/system/loadavg5", "float", printLoadAvg5, printLoadAvg5Info, sm );
+@@ -47,6 +65,34 @@
+ 	registerLegacyMonitor( "cpu/loadavg1", "float", printLoadAvg1, printLoadAvg1Info, sm );
+ 	registerLegacyMonitor( "cpu/loadavg5", "float", printLoadAvg5, printLoadAvg5Info, sm );
+ 	registerLegacyMonitor( "cpu/loadavg15", "float", printLoadAvg15, printLoadAvg15Info, sm );
++
++	for (id=0; id<MAX_CPU_COUNT; id++) {
++		cpu_load[id].ks_instance = -1;
++		cpu_load[id].cpu_ticks_idle = 0;
++		cpu_load[id].cpu_ticks_kernel = 0;
++		cpu_load[id].cpu_ticks_user = 0;
++		cpu_load[id].cpu_ticks_wait = 0;
++		cpu_load[id].idle_load = 0;
++		cpu_load[id].kernel_load = 0;
++		cpu_load[id].user_load = 0;
++		cpu_load[id].wait_load = 0;
++	}
++
++	nproc = sysconf(_SC_NPROCESSORS_ONLN);
++	for (id=0; id<nproc; id++) {
++		char cmdName[ 24 ];
++		sprintf( cmdName, "cpu/cpu%d/user", id );
++		registerMonitor( cmdName, "float", printCPUxUser, printCPUxUserInfo, sm );
++		sprintf( cmdName, "cpu/cpu%d/sys", id );
++		registerMonitor( cmdName, "float", printCPUxKernel, printCPUxKernelInfo, sm );
++		sprintf( cmdName, "cpu/cpu%d/TotalLoad", id );
++		registerMonitor( cmdName, "float", printCPUxTotalLoad, printCPUxTotalLoadInfo, sm );
++		sprintf( cmdName, "cpu/cpu%d/idle", id );
++		registerMonitor( cmdName, "float", printCPUxIdle, printCPUxIdleInfo, sm );
++		sprintf( cmdName, "cpu/cpu%d/wait", id );
++		registerMonitor( cmdName, "float", printCPUxWait, printCPUxWaitInfo, sm );
++	}
++	updateLoadAvg();
+ #endif
+ }
+ 
+@@ -69,6 +115,7 @@
+ 	kstat_ctl_t		*kctl;
+ 	kstat_t			*ksp;
+ 	kstat_named_t		*kdata;
++	int i;
+ 
+ 	/*
+ 	 *  get a kstat handle and update the user's kstat chain
+@@ -78,27 +125,99 @@
+ 	while( kstat_chain_update( kctl ) != 0 )
+ 		;
+ 
+-	/*
+-	 *  traverse the kstat chain to find the appropriate statistics
+-	 */
+-	if( (ksp = kstat_lookup( kctl, "unix", 0, "system_misc" )) == NULL )
+-		return( 0 );
+-	if( kstat_read( kctl, ksp, NULL ) == -1 )
+-		return( 0 );
++	for (i=0; i<MAX_CPU_COUNT && cpu_load[i].ks_instance != -1; i++) {
++		cpu_load[i].idle_load = 0;
++		cpu_load[i].kernel_load = 0;
++		cpu_load[i].user_load = 0;
++		cpu_load[i].wait_load = 0;
++	}
+ 
+ 	/*
+-	 *  lookup the data
++	 *  traverse the kstat chain to find the appropriate statistics
+ 	 */
+-	 kdata = (kstat_named_t *) kstat_data_lookup( ksp, "avenrun_1min" );
+-	 if( kdata != NULL )
+-	 	loadavg1 = LOAD( kdata->value.ui32 );
+-	 kdata = (kstat_named_t *) kstat_data_lookup( ksp, "avenrun_5min" );
+-	 if( kdata != NULL )
+-	 	loadavg5 = LOAD( kdata->value.ui32 );
+-	 kdata = (kstat_named_t *) kstat_data_lookup( ksp, "avenrun_15min" );
+-	 if( kdata != NULL )
+-	 	loadavg15 = LOAD( kdata->value.ui32 );
+-
++	/* if( (ksp = kstat_lookup( kctl, "unix", 0, "system_misc" )) == NULL )
++		return( 0 );*/
++	for (ksp = kctl->kc_chain; ksp; ksp = ksp->ks_next) {
++		if (strcmp(ksp->ks_module, "unix") == 0 &&
++		    strcmp(ksp->ks_name, "system_misc") == 0) {
++
++			if( kstat_read( kctl, ksp, NULL ) == -1 )
++				continue;
++
++			/*
++			 *  lookup the data
++			 */
++			 kdata = (kstat_named_t *) kstat_data_lookup( ksp, "avenrun_1min" );
++			 if( kdata != NULL )
++			 	loadavg1 = LOAD( kdata->value.ui32 );
++			 kdata = (kstat_named_t *) kstat_data_lookup( ksp, "avenrun_5min" );
++			 if( kdata != NULL )
++			 	loadavg5 = LOAD( kdata->value.ui32 );
++			 kdata = (kstat_named_t *) kstat_data_lookup( ksp, "avenrun_15min" );
++			 if( kdata != NULL )
++			 	loadavg15 = LOAD( kdata->value.ui32 );
++		} else if (strcmp(ksp->ks_module, "cpu") == 0 && 
++		    strcmp(ksp->ks_name, "sys") == 0) {
++			int found;
++
++			found = 0;
++			for (i=0; i<MAX_CPU_COUNT; i++) {
++				if (cpu_load[i].ks_instance == ksp->ks_instance) {
++					found = 1;
++					break;
++				}
++				if (cpu_load[i].ks_instance == -1) {
++					cpu_load[i].ks_instance = ksp->ks_instance;
++					found = 2;
++					break;
++				}
++			}
++			if (found) {
++				uint64_t curr_cpu_ticks_idle, curr_cpu_ticks_kernel;
++				uint64_t curr_cpu_ticks_user, curr_cpu_ticks_wait;
++				uint64_t totalTicks;
++
++				if( kstat_read( kctl, ksp, NULL ) == -1 )
++					continue;
++
++				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_ticks_idle" );
++				if (kdata != NULL)
++					curr_cpu_ticks_idle = LOAD( kdata->value.ui64 );
++				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_ticks_kernel" );
++				if (kdata != NULL)
++					curr_cpu_ticks_kernel = LOAD( kdata->value.ui64 );
++				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_ticks_user" );
++				if (kdata != NULL)
++					curr_cpu_ticks_user = LOAD( kdata->value.ui64 );
++				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_ticks_wait" );
++				if (kdata != NULL)
++					curr_cpu_ticks_wait = LOAD( kdata->value.ui64 );
++
++				if (found == 2) {
++					cpu_load[i].cpu_ticks_idle = curr_cpu_ticks_idle;
++					cpu_load[i].cpu_ticks_kernel = curr_cpu_ticks_kernel;
++					cpu_load[i].cpu_ticks_user = curr_cpu_ticks_user;
++					cpu_load[i].cpu_ticks_wait = curr_cpu_ticks_wait;
++					continue;
++				}
++
++				totalTicks = (curr_cpu_ticks_idle - cpu_load[i].cpu_ticks_idle) +
++				    (curr_cpu_ticks_kernel - cpu_load[i].cpu_ticks_kernel) +
++				    (curr_cpu_ticks_user - cpu_load[i].cpu_ticks_user) +
++				    (curr_cpu_ticks_wait - cpu_load[i].cpu_ticks_wait);
++				if (totalTicks > 10) {
++					cpu_load[i].idle_load = 
++					    (100.0 * (curr_cpu_ticks_idle - cpu_load[i].cpu_ticks_idle)) / totalTicks;
++					cpu_load[i].kernel_load = 
++					    (100.0 * (curr_cpu_ticks_kernel - cpu_load[i].cpu_ticks_kernel)) / totalTicks;
++					cpu_load[i].user_load = 
++					    (100.0 * (curr_cpu_ticks_user - cpu_load[i].cpu_ticks_user)) / totalTicks;
++					cpu_load[i].wait_load = 
++					    (100.0 * (curr_cpu_ticks_wait - cpu_load[i].cpu_ticks_wait)) / totalTicks;
++				}
++			}
++		}
++	}
+ 	kstat_close( kctl );
+ #endif /* ! HAVE_KSTAT */
+ 
+@@ -128,3 +247,76 @@
+ void printLoadAvg15( const char *cmd ) {
+ 	fprintf(CurrentClient, "%f\n", loadavg15 );
+ }
++
++void printCPUxUser( const char* cmd ) {
++	int id;
++	
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "%f\n", cpu_load[ id ].user_load );
++}
++
++void printCPUxUserInfo( const char* cmd ) {
++	int id;
++
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "CPU %d User Load\t0\t100\t%%\n", id );
++}
++
++void printCPUxKernel( const char* cmd ) {
++	int id;
++	
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "%f\n", cpu_load[ id ].kernel_load );
++}
++
++void printCPUxKernelInfo( const char* cmd ) {
++	int id;
++	
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "CPU %d System Load\t0\t100\t%%\n", id );
++}
++
++void printCPUxTotalLoad( const char* cmd ) {
++	int id;
++	
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "%f\n", cpu_load[ id ].user_load + \
++	    cpu_load[ id ].kernel_load + cpu_load[ id ].wait_load );
++}
++
++void printCPUxTotalLoadInfo( const char* cmd ) {
++	int id;
++	
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "CPU %d Total Load\t0\t100\t%%\n", id );
++}
++
++void printCPUxIdle( const char* cmd ) {
++	int id;
++	
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "%f\n", cpu_load[ id ].idle_load );
++}
++
++void printCPUxIdleInfo( const char* cmd ) {
++	int id;
++	
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "CPU %d Idle Load\t0\t100\t%%\n", id );
++}
++
++void printCPUxWait( const char* cmd )
++{
++	int id;
++
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "%f\n", cpu_load[ id ].wait_load );
++}
++
++void printCPUxWaitInfo( const char* cmd )
++{
++	int id;
++
++	sscanf( cmd + 7, "%d", &id );
++	fprintf(CurrentClient, "CPU %d Wait Load\t0\t100\t%%\n", id );
++}
+--- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/LoadAvg.h.orig	2009-09-28 21:37:11.232638794 +0530
++++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/LoadAvg.h	2009-09-28 21:38:05.469129386 +0530
+@@ -38,4 +38,15 @@
+ void printLoadAvg15( const char *cmd );
+ void printLoadAvg15Info( const char *cmd );
+ 
++void printCPUxUser( const char* cmd );
++void printCPUxUserInfo( const char* cmd );
++void printCPUxKernel( const char* cmd );
++void printCPUxKernelInfo( const char* cmd );
++void printCPUxTotalLoad( const char* cmd );
++void printCPUxTotalLoadInfo( const char* cmd );
++void printCPUxIdle( const char* cmd );
++void printCPUxIdleInfo( const char* cmd );
++void printCPUxWait( const char* cmd );
++void printCPUxWaitInfo( const char* cmd );
++
+ #endif /* _LoadAvg_h_ */
+--- kdebase-workspace-4.3.1/ksysguard/gui/setscheduler.c.orig	2009-09-28 11:51:03.357569795 +0530
++++ kdebase-workspace-4.3.1/ksysguard/gui/setscheduler.c	2009-09-28 14:28:52.229656668 +0530
+@@ -2,6 +2,16 @@
+ #include <stdlib.h>
+ #include <sched.h>
+ 
++#if defined(sun) || defined(__sun)
++/*
++ * There is no SCHED_BATCH on Solaris. Instead there is SCHED_IA for Interactive class.
++ */
++#define SCHED_BATCH SCHED_IA
++#define BATCH_STR "Interactive"
++#else
++#define BATCH_STR "Batch"
++#endif
++
+ int main(int argc, char **argv)
+ {
+ 	if(argc != 4) {
+@@ -12,7 +22,7 @@
+ 		fprintf(stderr, "		1	FIFO\n");
+ 		fprintf(stderr, "		2	RoundRobin\n");
+ #ifdef SCHED_BATCH
+-		fprintf(stderr, "		3	Batch\n");
++		fprintf(stderr, "		3	" BATCH_STR "\n");
+ #endif
+ 		exit(EXIT_FAILURE);
+ 	}

@@ -1,0 +1,26 @@
+--- wv2-0.4.0/src/ustring.cpp.orig	2009-09-19 18:47:24.334892605 +0530
++++ wv2-0.4.0/src/ustring.cpp	2009-09-19 18:48:04.020919148 +0530
+@@ -78,9 +78,9 @@
+ {
+ #if defined(HAVE_FUNC_ISINF)
+   return (isinf(d) == 1);
+-#elif HAVE_FUNC_FINITE
++#elif defined(HAVE_FUNC_FINITE)
+   return finite(d) == 0 && d == d; // ### can we distinguish between + and - ?
+-#elif HAVE_FUNC__FINITE
++#elif defined(HAVE_FUNC__FINITE)
+   return _finite(d) == 0 && d == d; // ###
+ #else
+   return false;
+@@ -91,9 +91,9 @@
+ {
+ #if defined(HAVE_FUNC_ISINF)
+   return (isinf(d) == -1);
+-#elif HAVE_FUNC_FINITE
++#elif defined(HAVE_FUNC_FINITE)
+   return finite(d) == 0 && d == d; // ###
+-#elif HAVE_FUNC__FINITE
++#elif defined(HAVE_FUNC__FINITE)
+   return _finite(d) == 0 && d == d; // ###
+ #else
+   return false;

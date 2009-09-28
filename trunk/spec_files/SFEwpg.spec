@@ -3,31 +3,31 @@
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
 #
+#
 
 %include Solaris.inc
 
-%define postgres_dir /usr/postgres/8.3
-
-Name:                SFElibpqxx
-Summary:             Official C++ client API for PostgreSQL.
-Version:             3.0.2
-URL:                 http://pqxx.org/development/libpqxx/
-Source:              ftp://pqxx.org/software/libpqxx/libpqxx-%{version}.tar.gz
+Name:                SFEwpg
+License:             LGPL
+Summary:             A library for import/export to WordPerfect files.
+Version:             0.1.3
+URL:                 http://libwpg.sourceforge.net/
+Source:              %{sf_download}/libwpg/libwpg-%{version}.tar.bz2
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
-Requires:            SUNWpostgr-83-libs
-BuildRequires:       SUNWpostgr-83-devel
+Requires:            SFEwpd
+BuildRequires:       SFEwpd-devel
+BuildRequires:       SFEdoxygen
 
 %package devel
 Summary:                 %{summary} - development files
 SUNW_BaseDir:            %{_basedir}
 %include default-depend.inc
 Requires:                %{name}
-Requires:       SUNWpostgr-83-devel
 
 %prep
-%setup -q -n libpqxx-%version
+%setup -q -n libwpg-%version
 
 %build
 
@@ -36,15 +36,17 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
      CPUS=1
 fi
 
-export CFLAGS="%optflags -I%{postgres_dir}/include"
-export LDFLAGS="-L%{postgres_dir}/lib -R%{postgres_dir}/lib %_ldflags -L/lib -R/lib"
-export PG_CONFIG=%{postgres_dir}/bin/pg_config
+export CFLAGS="%optflags -I%{gnu_inc} -D__C99FEATURES__"
+export LDFLAGS="%_ldflags %{gnu_lib_path}"
+(cd src; cat %{SOURCE1} | gpatch -p0)
 gnu_prefix=`dirname %{gnu_bin}`
 
 ./configure --prefix=%{_prefix}	\
             --mandir=%{_mandir}	\
             --enable-shared=yes \
             --enable-static=no  \
+            --with-pic          \
+            --without-docs
 
 make -j$CPUS
 
@@ -76,7 +78,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
-- Bump version.
-- Build with Postgres 8.3.
-* Sat Jan 26 2008 - moinak.ghosh@sun.com
 - Initial spec.
