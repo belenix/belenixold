@@ -1,0 +1,17 @@
+[Profile]
+FullScreen=false
+Height 768=708
+Name[$e]=Web Browsing
+RootItem=Tabs0
+State=AAAA/wAAAAD9AAAAAAAAAzMAAAKGAAAABAAAAAQAAAAIAAAACPwAAAACAAAAAgAAAAMAAAAWAG0AYQBpAG4AVABvAG8AbABCAGEAcgEAAAAA/////wAAAAAAAAAAAAAAGABlAHgAdAByAGEAVABvAG8AbABCAGEAcgAAAAAA/////wAAAAAAAAAAAAAAHgBsAG8AYwBhAHQAaQBvAG4AVABvAG8AbABCAGEAcgEAAAEu/////wAAAAAAAAAAAAAAAgAAAAIAAAAeAGIAbwBvAGsAbQBhAHIAawBUAG8AbwBsAEIAYQByAAAAAAD/////AAAAAAAAAAAAAAAWAGgAdABtAGwAVABvAG8AbABCAGEAcgAAAAAA/////wAAAAAAAAAA
+Tabs0_Children=ViewT0
+Tabs0_activeChildIndex=0
+ViewT0_LinkedView=false
+ViewT0_LockedLocation=false
+ViewT0_PassiveMode=false
+ViewT0_ServiceName=webkitpart
+ViewT0_ServiceType=text/html
+ViewT0_ToggleView=false
+ViewT0_URL[$e]=http://www.belenix.org/
+Width 1024=819
+XMLUIFile=konqueror.rc

@@ -104,12 +104,18 @@ f none etc/skel/.kde/share/config/kickoffrc=kickoffrc 0644 root other
 f none etc/skel/.kde/share/config/ksmserverrc=ksmserverrc 0644 root other
 f none etc/skel/.kde/share/config/plasmarc=plasmarc 0644 root other
 f none etc/skel/.kde/share/config/plasma-appletsrc=plasma-appletsrc 0644 root other
+f none etc/skel/.kde/share/config/plasma-desktop-appletsrc=plasma-desktop-appletsrc 0644 root other
 f none etc/skel/.kde/share/config/kres-migratorrc=kres-migratorrc 0644 root other
 f none etc/skel/.kde/share/config/kcmfonts=kcmfonts 0644 root other
+f none etc/skel/.kde/share/config/konquerorrc=konquerorrc 0644 root other
 f none etc/skel/.kde/share/config/gtkrc=gtkrc 0644 root other
 f none etc/skel/.kde/share/config/gtkrc-2.0=gtkrc-2.0 0644 root other
+d none etc/skel/.kde/share/apps 0755 root other
+d none etc/skel/.kde/share/apps/konqueror 0755 root other
+d none etc/skel/.kde/share/apps/konqueror/profiles 0755 root other
+f none etc/skel/.kde/share/apps/konqueror/profiles/webbrowsing=webbrowsing 0644 root other
 
-f none etc/skel/.kderc=.kderc 0644 root other
+f none etc/skel/.kderc=kderc 0644 root other
 f none etc/skel/.vimrc=vimrc 0644 root other
 f none etc/skel/.gtkrc-2.0-kde=gtkrc-2.0-kde 0644 root other
 f none etc/skel/.gtkrc-2.0-kde4=gtkrc-2.0-kde4 0644 root other

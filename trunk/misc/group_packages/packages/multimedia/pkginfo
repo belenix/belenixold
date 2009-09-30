@@ -33,7 +33,7 @@
 #
 PKG=multimedia
 NAME=multimedia
-VERSION=1.0
+VERSION=2.0
 CATEGORY=multimedia
 DESC=Multimedia support jumbo Group package
 VENDOR=BeleniX
