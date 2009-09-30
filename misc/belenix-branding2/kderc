@@ -1,7 +1,7 @@
 [General]
-activeFont=DejaVu Sans,9,-1,5,50,0,0,0,0,0
+activeFont=DejaVu Sans,9,-1,5,75,0,0,0,0,0
 desktopFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
-fixed=Monospace,10,-1,5,50,0,0,0,0,0
+fixed=DejaVu Sans Mono,10,-1,5,50,0,0,0,0,0
 font=DejaVu Sans,10,-1,5,50,0,0,0,0,0
 menuFont=DejaVu Sans,10,-1,5,50,0,0,0,0,0
 smallestReadableFont=DejaVu Sans,8,-1,5,50,0,0,0,0,0

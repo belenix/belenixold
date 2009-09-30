@@ -1,24 +1,5 @@
+[$Version]
+update_info=plasma_popupapplet_fix_groups.upd:PlasmaPopupAppletFixGroups2
+
 [Applet Browser]
-used=,launcher,systemtray,folderview,notifier,pager,tasks,digital-clock,sm_cpu,calendar,clock,weatherstation
-
-[Colors]
-CurrentPalette=Forty Colors
-
-[KFileDialog Settings]
-Height 1024=450
-Recent Files[$e]=worldkdeback.jpg,/usr/share/pixmaps/worldkdeback.jpg
-Width 1280=700
-
-[PlasmaAppletBrowserDialog]
-Height 1024=599
-Width 1280=667
-
-[PlasmaViews][1]
-panelVisibility=0
-
-[PlasmaViews][2]
-panelVisibility=0
-
-[ViewIds]
-1=2
-3=1
+used=,notifier,folderview,systemtray,digital-clock,tasks,pager,launcher,calendar,weather

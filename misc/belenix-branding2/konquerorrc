@@ -1,0 +1,22 @@
+[$Version]
+update_info=kfmclient_3_2.upd:kfmclient_3_2
+
+[FMSettings]
+AlwaysTabbedMode=false
+KonquerorTabforExternalURL=false
+MMBOpensTab=true
+MouseMiddleClickClosesTab=false
+NewTabsInFront=false
+OpenAfterCurrentPage=false
+PermanentCloseButton=true
+PopupsWithinTabs=false
+TabCloseActivatePrevious=false
+
+[HTML Settings]
+AutomaticDetectionLanguage=1
+
+[Undo]
+Number of Closed Windows=2
+
+[UserSettings]
+HomeURL=http://www.belenix.org/
