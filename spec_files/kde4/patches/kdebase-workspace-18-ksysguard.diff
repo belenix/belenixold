@@ -356,8 +356,65 @@
 +ENDIF(EXISTS /dev/kstat)
 +
 --- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/Memory.c.orig	2009-09-28 15:25:31.790978639 +0530
-+++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/Memory.c	2009-09-28 15:55:31.409017078 +0530
-@@ -99,6 +99,8 @@
++++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/Memory.c	2009-10-01 23:31:30.999450774 +0530
+@@ -34,39 +34,49 @@
+ #include <sys/stat.h>
+ #include <sys/swap.h>
+ #include <vm/anon.h>
++#include <sys/time.h>
++#include <sys/sysinfo.h>
+ 
+ #ifdef HAVE_KSTAT
+ #include <kstat.h>
++
++static uint64_t swap_resv = 0;
++static uint64_t swap_free = 0;
++static uint64_t swap_avail = 0;
++static uint64_t swap_alloc = 0;
+ #endif
+ 
+ #include "ksysguardd.h"
+ #include "Command.h"
+ #include "Memory.h"
+ 
+-static int Dirty = 1;
+ static t_memsize totalmem = (t_memsize) 0;
+ static t_memsize freemem = (t_memsize) 0;
+-static long totalswap = 0L;
+-static long freeswap = 0L;
++static unsigned long usedswap = 0L;
++static unsigned long freeswap = 0L;
+ static struct anoninfo am_swap;
++static struct timeval lastSampling;
+ 
+ /*
+  *  this is borrowed from top's m_sunos5 module
+  *  used by permission from William LeFebvre
+  */
+ static int pageshift;
+-static long (*p_pagetok) ();
++static unsigned long (*p_pagetok) ();
+ #define pagetok(size) ((*p_pagetok)(size))
+ 
+-long pagetok_none( long size ) {
++unsigned long
++pagetok_none( unsigned long size ) {
+ 	return( size );
+ }
+ 
+-long pagetok_left( long size ) {
++unsigned long
++pagetok_left( unsigned long size ) {
+ 	return( size << pageshift );
+ }
+ 
+-long pagetok_right( long size ) {
++unsigned long
++pagetok_right( unsigned long size ) {
+ 	return( size >> pageshift );
+ }
+ 
+@@ -99,28 +109,82 @@
  					printMemFree, printMemFreeInfo, sm );
  	registerMonitor( "mem/physical/used", "integer",
  					printMemUsed, printMemUsedInfo, sm );
@@ -366,6 +423,237 @@
  #endif
  	registerMonitor( "mem/swap/free", "integer",
  					printSwapFree, printSwapFreeInfo, sm );
+ 	registerMonitor( "mem/swap/used", "integer",
+ 					printSwapUsed, printSwapUsedInfo, sm );
++
++	gettimeofday(&lastSampling, 0);
++	updateMemory();
++	updateSwap(0);
+ }
+ 
+ void exitMemory( void ) {
+ }
+ 
+ int updateMemory( void ) {
++#ifdef HAVE_KSTAT
++	kstat_ctl_t		*kctl;
++	kstat_t			*ksp;
++	kstat_named_t		*kdata;
++
++	/*
++	 *  get a kstat handle and update the user's kstat chain
++	 */
++	if( (kctl = kstat_open()) == NULL )
++		return( 0 );
++	while( kstat_chain_update( kctl ) != 0 )
++		;
+ 
++	totalmem = pagetok( sysconf( _SC_PHYS_PAGES ));
++
++	/*
++	 *  traverse the kstat chain to find the appropriate statistics
++	 */
++	if( (ksp = kstat_lookup( kctl, "unix", 0, "system_pages" )) == NULL ) {
++		goto done;
++	}
++
++	if( kstat_read( kctl, ksp, NULL ) == -1 ) {
++		goto done;
++	}
++
++	/*
++	 *  lookup the data
++	 */
++	 kdata = (kstat_named_t *) kstat_data_lookup( ksp, "freemem" );
++	 if( kdata != NULL )
++	 	freemem = pagetok( kdata->value.ui32 );
++
++done:
++	kstat_close( kctl );
++#endif /* ! HAVE_KSTAT */
++
++	return( 0 );
++}
++
++int updateSwap( int upd ) {
+ 	long			swaptotal;
+ 	long			swapfree;
+ 	long			swapused;
+ #ifdef HAVE_KSTAT
+ 	kstat_ctl_t		*kctl;
+ 	kstat_t			*ksp;
+-	kstat_named_t		*kdata;
++	struct timeval 		sampling;
++	vminfo_t		vmi;
++
++	uint64_t _swap_resv = 0;
++	uint64_t _swap_free = 0;
++	uint64_t _swap_avail = 0;
++	uint64_t _swap_alloc = 0;
++
+ #endif /* HAVE_KSTAT */
+ 	swaptotal = swapused = swapfree = 0L;
+ 
++#ifndef HAVE_KSTAT
+ 	/*
+ 	 *  Retrieve overall swap information from anonymous memory structure -
+ 	 *  which is the same way "swap -s" retrieves it's statistics.
+@@ -135,10 +199,10 @@
+ 	swapused = am_swap.ani_resv;
+ 	swapfree = swaptotal - swapused;
+ 
+-	totalswap = pagetok(swaptotal);
++	usedswap = pagetok(swapused);
+ 	freeswap = pagetok(swapfree);
+ 
+-#ifdef HAVE_KSTAT
++#else /* HAVE_KSTAT */
+ 	/*
+ 	 *  get a kstat handle and update the user's kstat chain
+ 	 */
+@@ -149,73 +213,91 @@
+ 
+ 	totalmem = pagetok( sysconf( _SC_PHYS_PAGES ));
+ 
+-	/*
+-	 *  traverse the kstat chain to find the appropriate statistics
+-	 */
+-	if( (ksp = kstat_lookup( kctl, "unix", 0, "system_pages" )) == NULL )
+-		return( 0 );
+-	if( kstat_read( kctl, ksp, NULL ) == -1 )
+-		return( 0 );
+-
+-	/*
+-	 *  lookup the data
+-	 */
+-	 kdata = (kstat_named_t *) kstat_data_lookup( ksp, "freemem" );
+-	 if( kdata != NULL )
+-	 	freemem = pagetok( kdata->value.ui32 );
++	if( (ksp = kstat_lookup( kctl, "unix", -1, "vminfo" )) == NULL ) {
++		goto done;
++	}
+ 
++	if( kstat_read( kctl, ksp, &vmi ) == -1 ) {
++                goto done;
++        }
++
++	_swap_resv = vmi.swap_resv - swap_resv;
++	if (_swap_resv)
++		swap_resv = vmi.swap_resv;
++
++	_swap_free = vmi.swap_free - swap_free;
++	if (_swap_free)
++		swap_free = vmi.swap_free;
++
++	_swap_avail = vmi.swap_avail - swap_avail;
++	if (_swap_avail)
++		swap_avail = vmi.swap_avail;
++
++	_swap_alloc = vmi.swap_alloc - swap_alloc;
++	if (_swap_alloc)
++		swap_alloc = vmi.swap_alloc;
++
++	if (upd) {
++		long timeInterval;
++
++		gettimeofday(&sampling, 0);
++        	timeInterval = sampling.tv_sec - lastSampling.tv_sec +
++		    ( sampling.tv_usec - lastSampling.tv_usec ) / 1000000.0;
++		lastSampling = sampling;
++		timeInterval = timeInterval > 0 ? timeInterval : 1;
++
++		_swap_resv = _swap_resv / timeInterval;
++		_swap_free = _swap_free / timeInterval;
++		_swap_avail = _swap_avail / timeInterval;
++		_swap_alloc = _swap_alloc / timeInterval;
++
++		if (_swap_alloc)
++			usedswap = pagetok((unsigned long)(_swap_alloc + _swap_free - _swap_avail));
++
++		/*
++		 * Assume minfree = totalmem / 8, i.e. it has not been tuned
++		 */
++		if (_swap_avail)
++			freeswap = pagetok((unsigned long)(_swap_avail + totalmem / 8));
++	}
++done:
+ 	kstat_close( kctl );
+ #endif /* ! HAVE_KSTAT */
+ 
+-	Dirty = 0;
+-
+ 	return( 0 );
+ }
+-
+ void printMemFreeInfo( const char *cmd ) {
+-	if( Dirty )
+-		updateMemory();
+-	fprintf(CurrentClient, "Free Memory\t0\t%ld\tKB\n", totalmem );
++	fprintf(CurrentClient, "Free Memory\t0\t%lu\tKB\n", totalmem );
+ }
+ 
+ void printMemFree( const char *cmd ) {
+-	if( Dirty )
+-		updateMemory();
+-	fprintf(CurrentClient, "%ld\n", freemem );
++	updateMemory();
++	fprintf(CurrentClient, "%lu\n", freemem );
+ }
+ 
+ void printMemUsedInfo( const char *cmd ) {
+-	if( Dirty )
+-		updateMemory();
+-	fprintf(CurrentClient, "Used Memory\t0\t%ld\tKB\n", totalmem );
++	fprintf(CurrentClient, "Used Memory\t0\t%lu\tKB\n", totalmem );
+ }
+ 
+ void printMemUsed( const char *cmd ) {
+-	if( Dirty )
+-		updateMemory();
+-	fprintf(CurrentClient, "%ld\n", totalmem - freemem );
++	updateMemory();
++	fprintf(CurrentClient, "%lu\n", totalmem - freemem );
+ }
+ 
+ void printSwapFreeInfo( const char *cmd ) {
+-	if( Dirty )
+-		updateMemory();
+-	fprintf(CurrentClient, "Free Swap\t0\t%ld\tKB\n", totalswap );
++	fprintf(CurrentClient, "Free Swap\t0\t%lu\tKB\n", freeswap );
+ }
+ 
+ void printSwapFree( const char *cmd ) {
+-	if( Dirty )
+-		updateMemory();
+-	fprintf(CurrentClient, "%ld\n", freeswap );
++	updateSwap(1);
++	fprintf(CurrentClient, "%lu\n", freeswap );
+ }
+ 
+ void printSwapUsedInfo( const char *cmd ) {
+-	if( Dirty )
+-		updateMemory();
+-	fprintf(CurrentClient, "Used Swap\t0\t%ld\tKB\n", totalswap );
++	fprintf(CurrentClient, "Used Swap\t0\t%lu\tKB\n", usedswap );
+ }
+ 
+ void printSwapUsed( const char *cmd ) {
+-	if( Dirty )
+-		updateMemory();
+-	fprintf(CurrentClient, "%ld\n", totalswap - freeswap );
++	updateSwap(1);
++	fprintf(CurrentClient, "%lu\n", usedswap );
+ }
+--- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/Memory.h.orig	2009-10-01 23:31:43.442161072 +0530
++++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/Memory.h	2009-10-01 23:31:57.128192275 +0530
+@@ -32,6 +32,7 @@
+ void exitMemory(void);
+ 
+ int updateMemory(void);
++int updateSwap(int upd);
+ 
+ void printMemFree( const char *cmd );
+ void printMemFreeInfo( const char *cmd );
 --- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/NetDev.c.orig	2009-09-28 18:18:21.698070636 +0530
 +++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/NetDev.c	2009-09-28 19:39:12.331488000 +0530
 @@ -31,6 +31,7 @@
@@ -680,7 +968,7 @@
  void printIErrors( const char *cmd );
  
 --- kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/LoadAvg.c.orig	2009-09-28 20:04:56.751917372 +0530
-+++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/LoadAvg.c	2009-09-28 21:50:56.286143537 +0530
++++ kdebase-workspace-4.3.1/ksysguard/ksysguardd/Solaris/LoadAvg.c	2009-10-02 00:04:10.858281183 +0530
 @@ -24,6 +24,7 @@
  #include <stdlib.h>
  #include <unistd.h>
@@ -700,10 +988,10 @@
  
 +typedef struct {
 +	int32_t		ks_instance;
-+	uint64_t	cpu_ticks_idle;
-+	uint64_t	cpu_ticks_kernel;
-+	uint64_t	cpu_ticks_user;
-+	uint64_t	cpu_ticks_wait;
++	uint64_t	cpu_nsecs_idle;
++	uint64_t	cpu_nsecs_kernel;
++	uint64_t	cpu_nsecs_user;
++	uint64_t	cpu_nsecs_wait;
 +	float		idle_load;
 +	float		kernel_load;
 +	float		user_load;
@@ -725,10 +1013,10 @@
 +
 +	for (id=0; id<MAX_CPU_COUNT; id++) {
 +		cpu_load[id].ks_instance = -1;
-+		cpu_load[id].cpu_ticks_idle = 0;
-+		cpu_load[id].cpu_ticks_kernel = 0;
-+		cpu_load[id].cpu_ticks_user = 0;
-+		cpu_load[id].cpu_ticks_wait = 0;
++		cpu_load[id].cpu_nsecs_idle = 0;
++		cpu_load[id].cpu_nsecs_kernel = 0;
++		cpu_load[id].cpu_nsecs_user = 0;
++		cpu_load[id].cpu_nsecs_wait = 0;
 +		cpu_load[id].idle_load = 0;
 +		cpu_load[id].kernel_load = 0;
 +		cpu_load[id].user_load = 0;
@@ -761,7 +1049,7 @@
  
  	/*
  	 *  get a kstat handle and update the user's kstat chain
-@@ -78,27 +125,99 @@
+@@ -78,27 +125,110 @@
  	while( kstat_chain_update( kctl ) != 0 )
  		;
  
@@ -814,6 +1102,7 @@
 +			 kdata = (kstat_named_t *) kstat_data_lookup( ksp, "avenrun_15min" );
 +			 if( kdata != NULL )
 +			 	loadavg15 = LOAD( kdata->value.ui32 );
++
 +		} else if (strcmp(ksp->ks_module, "cpu") == 0 && 
 +		    strcmp(ksp->ks_name, "sys") == 0) {
 +			int found;
@@ -831,47 +1120,57 @@
 +				}
 +			}
 +			if (found) {
-+				uint64_t curr_cpu_ticks_idle, curr_cpu_ticks_kernel;
-+				uint64_t curr_cpu_ticks_user, curr_cpu_ticks_wait;
-+				uint64_t totalTicks;
++				uint64_t curr_cpu_nsecs_idle, curr_cpu_nsecs_kernel;
++				uint64_t curr_cpu_nsecs_user, curr_cpu_nsecs_wait;
++				double totalNsecs;
 +
 +				if( kstat_read( kctl, ksp, NULL ) == -1 )
 +					continue;
 +
-+				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_ticks_idle" );
++				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_nsec_idle" );
 +				if (kdata != NULL)
-+					curr_cpu_ticks_idle = LOAD( kdata->value.ui64 );
-+				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_ticks_kernel" );
++					curr_cpu_nsecs_idle = LOAD( kdata->value.ui64 );
++				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_nsec_kernel" );
 +				if (kdata != NULL)
-+					curr_cpu_ticks_kernel = LOAD( kdata->value.ui64 );
-+				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_ticks_user" );
++					curr_cpu_nsecs_kernel = LOAD( kdata->value.ui64 );
++				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_nsec_user" );
 +				if (kdata != NULL)
-+					curr_cpu_ticks_user = LOAD( kdata->value.ui64 );
-+				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_ticks_wait" );
++					curr_cpu_nsecs_user = LOAD( kdata->value.ui64 );
++				kdata = (kstat_named_t *) kstat_data_lookup( ksp, "cpu_nsec_wait" );
 +				if (kdata != NULL)
-+					curr_cpu_ticks_wait = LOAD( kdata->value.ui64 );
++					curr_cpu_nsecs_wait = LOAD( kdata->value.ui64 );
 +
 +				if (found == 2) {
-+					cpu_load[i].cpu_ticks_idle = curr_cpu_ticks_idle;
-+					cpu_load[i].cpu_ticks_kernel = curr_cpu_ticks_kernel;
-+					cpu_load[i].cpu_ticks_user = curr_cpu_ticks_user;
-+					cpu_load[i].cpu_ticks_wait = curr_cpu_ticks_wait;
++					cpu_load[i].cpu_nsecs_idle = curr_cpu_nsecs_idle;
++					cpu_load[i].cpu_nsecs_kernel = curr_cpu_nsecs_kernel;
++					cpu_load[i].cpu_nsecs_user = curr_cpu_nsecs_user;
++					cpu_load[i].cpu_nsecs_wait = curr_cpu_nsecs_wait;
 +					continue;
 +				}
 +
-+				totalTicks = (curr_cpu_ticks_idle - cpu_load[i].cpu_ticks_idle) +
-+				    (curr_cpu_ticks_kernel - cpu_load[i].cpu_ticks_kernel) +
-+				    (curr_cpu_ticks_user - cpu_load[i].cpu_ticks_user) +
-+				    (curr_cpu_ticks_wait - cpu_load[i].cpu_ticks_wait);
-+				if (totalTicks > 10) {
++				totalNsecs = (curr_cpu_nsecs_idle - cpu_load[i].cpu_nsecs_idle) +
++				    (curr_cpu_nsecs_kernel - cpu_load[i].cpu_nsecs_kernel) +
++				    (curr_cpu_nsecs_user - cpu_load[i].cpu_nsecs_user) +
++				    (curr_cpu_nsecs_wait - cpu_load[i].cpu_nsecs_wait);
++
++				if (totalNsecs > 10) {
 +					cpu_load[i].idle_load = 
-+					    (100.0 * (curr_cpu_ticks_idle - cpu_load[i].cpu_ticks_idle)) / totalTicks;
++					    (100.0 * (curr_cpu_nsecs_idle - cpu_load[i].cpu_nsecs_idle)) \
++					    / totalNsecs;
 +					cpu_load[i].kernel_load = 
-+					    (100.0 * (curr_cpu_ticks_kernel - cpu_load[i].cpu_ticks_kernel)) / totalTicks;
++					    (100.0 * (curr_cpu_nsecs_kernel - cpu_load[i].cpu_nsecs_kernel)) \
++					    / totalNsecs;
 +					cpu_load[i].user_load = 
-+					    (100.0 * (curr_cpu_ticks_user - cpu_load[i].cpu_ticks_user)) / totalTicks;
++					    (100.0 * (curr_cpu_nsecs_user - cpu_load[i].cpu_nsecs_user)) \
++					    / totalNsecs;
 +					cpu_load[i].wait_load = 
-+					    (100.0 * (curr_cpu_ticks_wait - cpu_load[i].cpu_ticks_wait)) / totalTicks;
++					    (100.0 * (curr_cpu_nsecs_wait - cpu_load[i].cpu_nsecs_wait)) \
++					    / totalNsecs;
++
++					cpu_load[i].cpu_nsecs_idle = curr_cpu_nsecs_idle;
++					cpu_load[i].cpu_nsecs_kernel = curr_cpu_nsecs_kernel;
++					cpu_load[i].cpu_nsecs_user = curr_cpu_nsecs_user;
++					cpu_load[i].cpu_nsecs_wait = curr_cpu_nsecs_wait;
 +				}
 +			}
 +		}
@@ -879,7 +1178,7 @@
  	kstat_close( kctl );
  #endif /* ! HAVE_KSTAT */
  
-@@ -128,3 +247,76 @@
+@@ -128,3 +258,76 @@
  void printLoadAvg15( const char *cmd ) {
  	fprintf(CurrentClient, "%f\n", loadavg15 );
  }
