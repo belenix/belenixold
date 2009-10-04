@@ -1,0 +1,2592 @@
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-panel HEAD\n"
+"POT-Creation-Date: 2006-12-27 22:41+0900\n"
+"PO-Revision-Date: 2008-02-26 14:05+0100\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/timezone-selection.c:181
+#: ../applets/clock/timezone.glade.h:4
+msgid ""
+"Click on your nearest city or select it from the list (left click to zoom "
+"in):"
+msgstr ""
+"Haga clic en la población más próxima a usted o selecciónela en la lista "
+"(haga clic con el botón izquierdo para aumentar):"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/timezone-selection.c:214
+msgid ""
+"Click on your nearest city or select it from the list (right click to zoom "
+"out):"
+msgstr ""
+"Haga clic en la población más próxima a usted o selecciónela en la lista "
+"(haga clic con el botón derecho para reducir):"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:31
+msgid "Antarctica/Rothera"
+msgstr "Antártida/Rothera"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:47
+msgid "America/Argentina/Buenos_Aires"
+msgstr "América/Argentina/Buenos_Aires"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:49
+msgid "America/Argentina/Cordoba"
+msgstr "América/Argentina/Córdoba"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:51
+msgid "America/Argentina/Jujuy"
+msgstr "América/Argentina/Jujuy"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:53
+msgid "America/Argentina/Tucuman"
+msgstr "América/Argentina/Tucumán"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:55
+msgid "America/Argentina/Catamarca"
+msgstr "América/Argentina/Catamarca"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:57
+msgid "America/Argentina/La_Rioja"
+msgstr "América/Argentina/La_Rioja"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:59
+msgid "America/Argentina/San_Juan"
+msgstr "América/Argentina/San_Juan"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:61
+msgid "America/Argentina/Mendoza"
+msgstr "América/Argentina/Mendoza"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:63
+msgid "America/Argentina/Rio_Gallegos"
+msgstr "América/Argentina/Río_Gallegos"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:65
+msgid "America/Argentina/Ushuaia"
+msgstr "América/Argentina/Ushuaia"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:75
+msgid "Australia/Currie"
+msgstr "Australia/Currie"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:95
+msgid "Europe/Mariehamn"
+msgstr "Europa/Mariehamn"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:135
+msgid "America/Bahia"
+msgstr "América/Bahía"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:139
+msgid "America/Campo_Grande"
+msgstr "América/Campo_Grande"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:169
+msgid "America/Moncton"
+msgstr "América/Moncton"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:173
+msgid "America/Blanc-Sablon"
+msgstr "América/Blanc Sablon"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:177
+msgid "America/Toronto"
+msgstr "América/Toronto"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:187
+msgid "America/Atikokan"
+msgstr "América/Atikokan"
+
+#
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:311
+msgid "Europe/Guernsey"
+msgstr "Europa/Guernsey"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:367
+msgid "Europe/Isle_of_Man"
+msgstr "Europa/Isla_de_Man"
+
+#
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:381
+msgid "Europe/Jersey"
+msgstr "Europa/Jersey"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:451
+msgid "Europe/Podgorica"
+msgstr "Europa/Podgorica"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:587
+msgid "Europe/Volgograd"
+msgstr "Europa/Volgogrado"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:707
+msgid "America/Kentucky/Louisville"
+msgstr "América/Kentucky/Louisville"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:711
+msgid "America/Indiana/Indianapolis"
+msgstr "América/Indiana/Indianápolis"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:721
+msgid "America/Indiana/Vincennes"
+msgstr "América/Indiana/Vincennes"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:723
+msgid "America/Indiana/Petersburg"
+msgstr "América/Indiana/Petersburg"
+
+# QUICKSILVER MSG
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:729
+msgid "America/North_Dakota/New_Salem"
+msgstr "América/Dakota_del_Norte/New_Salem"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-panel/menu.c:1902
+msgid "All Applications"
+msgstr "Todas las aplicaciones"
+
+# REVIEWED
+#: ../applets/clock/clock.c:2714 ../applets/clock/clock.c:2901
+#: ../applets/clock/timezone-selection.c:26 ../applets/fish/fish.c:160
+#: ../applets/notification_area/main.c:119
+#: ../applets/wncklet/window-list.c:113 ../applets/wncklet/wncklet.c:128
+#: ../applets/wncklet/workspace-switcher.c:256
+#, c-format
+msgid "There was an error displaying help: %s"
+msgstr "Ha ocurrido un error al mostrar la ayuda: %s"
+
+# REVIEWED
+#: ../applets/clock/clock.c:2845
+msgid "Show _time zones button"
+msgstr "Mostrar botón de _zonas horarias"
+
+# REVIEWED
+#: ../applets/clock/multi-timezone.c:59
+msgid "use daylight savings"
+msgstr "utilizar horario de verano"
+
+# REVIEWED
+# SUN MESSAGE
+#: ../applets/clock/multi-timezone.c:190
+msgid "Edit Time Zones..."
+msgstr "Editar zonas horarias..."
+
+# REVIEWED
+#: ../applets/clock/multi-timezone.c:448
+msgid "Time zone"
+msgstr "Zonas horarias"
+
+#
+# REVIEWED
+#: ../applets/clock/multi-timezone.c:459
+msgid "Comments"
+msgstr "Comentarios"
+
+# REVIEWED
+# SUN MESSAGE
+#: ../applets/clock/timezone.glade.h:2
+msgid "Change Clock Applet Time Zone"
+msgstr "Cambiar zona horaria en la miniaplicación Reloj"
+
+# REVIEWED
+#: ../applets/clock/timezone.glade.h:6
+msgid "Time _zone:"
+msgstr "_Zona horaria:"
+
+# REVIEWED
+#: ../applets/clock/timezone.glade.h:8
+msgid "_Add"
+msgstr "_Agregar"
+
+# REVIEWED
+#: ../applets/clock/timezone.glade.h:10
+msgid "_List:"
+msgstr "_Lista:"
+
+# REVIEWED
+#: ../applets/clock/timezone.glade.h:12
+msgid "_Remove"
+msgstr "Suprimi_r"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:9
+msgid "Europe/Andorra"
+msgstr "Europa/Andorra"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:11
+msgid "Asia/Dubai"
+msgstr "Asia/Dubai"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:13
+msgid "Asia/Kabul"
+msgstr "Asia/Kabul"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:15
+msgid "America/Antigua"
+msgstr "América/Antigua"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:17
+msgid "America/Anguilla"
+msgstr "América/Anguilla"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:19
+msgid "Europe/Tirane"
+msgstr "Europa/Tirana"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:21
+msgid "Asia/Yerevan"
+msgstr "Asia/Yerevan"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:23
+msgid "America/Curacao"
+msgstr "América/Curaçao"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:25
+msgid "Africa/Luanda"
+msgstr "África/Luanda"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:27
+msgid "Antarctica/McMurdo"
+msgstr "Antártida/McMurdo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:29
+msgid "Antarctica/South_Pole"
+msgstr "Antártida/Polo_Sur"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:33
+msgid "Antarctica/Palmer"
+msgstr "Antártida/Palmer"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:35
+msgid "Antarctica/Mawson"
+msgstr "Antártida/Mawson"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:37
+msgid "Antarctica/Davis"
+msgstr "Antártida/Davis"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:39
+msgid "Antarctica/Casey"
+msgstr "Antártida/Casey"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:41
+msgid "Antarctica/Vostok"
+msgstr "Antártida/Vostok"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:43
+msgid "Antarctica/DumontDUrville"
+msgstr "Antártida/DumontDUrville"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:45
+msgid "Antarctica/Syowa"
+msgstr "Antártida/Syowa"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:67
+msgid "Pacific/Pago_Pago"
+msgstr "Pacífico/Pago_Pago"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:69
+msgid "Europe/Vienna"
+msgstr "Europa/Viena"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:71
+msgid "Australia/Lord_Howe"
+msgstr "Australia/Lord_Howe"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:73
+msgid "Australia/Hobart"
+msgstr "Australia/Hobart"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:77
+msgid "Australia/Melbourne"
+msgstr "Australia/Melbourne"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:79
+msgid "Australia/Sydney"
+msgstr "Australia/Sydney"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:81
+msgid "Australia/Broken_Hill"
+msgstr "Australia/Broken_Hill"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:83
+msgid "Australia/Brisbane"
+msgstr "Australia/Brisbane"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:85
+msgid "Australia/Lindeman"
+msgstr "Australia/Lindeman"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:87
+msgid "Australia/Adelaide"
+msgstr "Australia/Adelaida"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:89
+msgid "Australia/Darwin"
+msgstr "Australia/Darwin"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:91
+msgid "Australia/Perth"
+msgstr "Australia/Perth"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:93
+msgid "America/Aruba"
+msgstr "América/Aruba"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:97
+msgid "Asia/Baku"
+msgstr "Asia/Baku"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:99
+msgid "Europe/Sarajevo"
+msgstr "Europa/Sarajevo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:101
+msgid "America/Barbados"
+msgstr "América/Barbados"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:103
+msgid "Asia/Dhaka"
+msgstr "Asia/Dhaka"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:105
+msgid "Europe/Brussels"
+msgstr "Europa/Bruselas"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:107
+msgid "Africa/Ouagadougou"
+msgstr "África/Ouagadougou"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:109
+msgid "Europe/Sofia"
+msgstr "Europa/Sofía"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:111
+msgid "Asia/Bahrain"
+msgstr "Asia/Bahráin"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:113
+msgid "Africa/Bujumbura"
+msgstr "África/Bujumbura"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:115
+msgid "Africa/Porto-Novo"
+msgstr "África/Porto-Novo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:117
+msgid "Atlantic/Bermuda"
+msgstr "Atlántico/Bermudas"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:119
+msgid "Asia/Brunei"
+msgstr "Asia/Brunei"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:121
+msgid "America/La_Paz"
+msgstr "América/La_Paz"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:123
+msgid "America/Noronha"
+msgstr "América/Noronha"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:125
+msgid "America/Belem"
+msgstr "América/Belem"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:127
+msgid "America/Fortaleza"
+msgstr "América/Fortaleza"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:129
+msgid "America/Recife"
+msgstr "América/Recife"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:131
+msgid "America/Araguaina"
+msgstr "América/Araguaina"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:133
+msgid "America/Maceio"
+msgstr "América/Maceio"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:137
+msgid "America/Sao_Paulo"
+msgstr "América/Sao_Paulo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:141
+msgid "America/Cuiaba"
+msgstr "América/Cuiaba"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:143
+msgid "America/Porto_Velho"
+msgstr "América/Porto_Velho"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:145
+msgid "America/Boa_Vista"
+msgstr "América/Boa_Vista"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:147
+msgid "America/Manaus"
+msgstr "América/Manaus"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:149
+msgid "America/Eirunepe"
+msgstr "América/Eirunepe"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:151
+msgid "America/Rio_Branco"
+msgstr "América/Rio_Branco"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:153
+msgid "America/Nassau"
+msgstr "América/Nassau"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:155
+msgid "Asia/Thimphu"
+msgstr "Asia/Thimphu"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:157
+msgid "Africa/Gaborone"
+msgstr "África/Gaborone"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:159
+msgid "Europe/Minsk"
+msgstr "Europa/Minsk"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:161
+msgid "America/Belize"
+msgstr "América/Belice"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:163
+msgid "America/St_Johns"
+msgstr "América/St_Johns"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:165
+msgid "America/Halifax"
+msgstr "América/Halifax"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:167
+msgid "America/Glace_Bay"
+msgstr "América/Glace_Bay"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:171
+msgid "America/Goose_Bay"
+msgstr "América/Goose_Bay"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:175
+msgid "America/Montreal"
+msgstr "América/Montreal"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:179
+msgid "America/Nipigon"
+msgstr "América/Nipigon"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:181
+msgid "America/Thunder_Bay"
+msgstr "América/Thunder_Bay"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:183
+msgid "America/Pangnirtung"
+msgstr "América/Pangnirtung"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:185
+msgid "America/Iqaluit"
+msgstr "América/Iqaluit"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:189
+msgid "America/Rankin_Inlet"
+msgstr "América/Rankin_Inlet"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:191
+msgid "America/Winnipeg"
+msgstr "América/Winnipeg"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:193
+msgid "America/Rainy_River"
+msgstr "América/Rainy_River"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:195
+msgid "America/Cambridge_Bay"
+msgstr "América/Cambridge_Bay"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:197
+msgid "America/Regina"
+msgstr "América/Regina"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:199
+msgid "America/Swift_Current"
+msgstr "América/Swift_Current"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:201
+msgid "America/Edmonton"
+msgstr "América/Edmonton"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:203
+msgid "America/Yellowknife"
+msgstr "América/Yellowknife"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:205
+msgid "America/Inuvik"
+msgstr "América/Inuvik"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:207
+msgid "America/Dawson_Creek"
+msgstr "América/Dawson_Creek"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:209
+msgid "America/Vancouver"
+msgstr "América/Vancouver"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:211
+msgid "America/Whitehorse"
+msgstr "América/Whitehorse"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:213
+msgid "America/Dawson"
+msgstr "América/Dawson"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:215
+msgid "Indian/Cocos"
+msgstr "Índico/Cocos"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:217
+msgid "Africa/Kinshasa"
+msgstr "África/Kinshasa"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:219
+msgid "Africa/Lubumbashi"
+msgstr "África/Lubumbashi"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:221
+msgid "Africa/Bangui"
+msgstr "África/Bangui"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:223
+msgid "Africa/Brazzaville"
+msgstr "África/Brazzaville"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:225
+msgid "Europe/Zurich"
+msgstr "Europa/Zurich"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:227
+msgid "Africa/Abidjan"
+msgstr "África/Abidján"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:229
+msgid "Pacific/Rarotonga"
+msgstr "Pacífico/Rarotonga"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:231
+msgid "America/Santiago"
+msgstr "América/Santiago"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:233
+msgid "Pacific/Easter"
+msgstr "Pacífico/Pascua"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:235
+msgid "Africa/Douala"
+msgstr "África/Douala"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:237
+msgid "Asia/Shanghai"
+msgstr "Asia/Shanghai"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:239
+msgid "America/Bogota"
+msgstr "América/Bogotá"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:241
+msgid "America/Costa_Rica"
+msgstr "América/Costa_Rica"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:243
+msgid "America/Havana"
+msgstr "América/La_Habana"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:245
+msgid "Atlantic/Cape_Verde"
+msgstr "Atlántico/Cabo_Verde"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:247
+msgid "Indian/Christmas"
+msgstr "Índico/Christmas"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:249
+msgid "Asia/Nicosia"
+msgstr "Asia/Nicosia"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:251
+msgid "Europe/Prague"
+msgstr "Europa/Praga"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:253
+msgid "Europe/Berlin"
+msgstr "Europa/Berlín"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:255
+msgid "Africa/Djibouti"
+msgstr "África/Yibuti"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:257
+msgid "Europe/Copenhagen"
+msgstr "Europa/Copenhague"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:259
+msgid "America/Dominica"
+msgstr "América/Dominica"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:261
+msgid "America/Santo_Domingo"
+msgstr "América/Santo_Domingo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:263
+msgid "Africa/Algiers"
+msgstr "África/Argel"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:265
+msgid "America/Guayaquil"
+msgstr "América/Guayaquil"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:267
+msgid "Pacific/Galapagos"
+msgstr "Pacífico/Galápagos"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:269
+msgid "Europe/Tallinn"
+msgstr "Europa/Tallín"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:271
+msgid "Africa/Cairo"
+msgstr "África/El_Cairo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:273
+msgid "Africa/El_Aaiun"
+msgstr "África/El_Aaiún"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:275
+msgid "Africa/Asmera"
+msgstr "África/Asmera"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:277
+msgid "Europe/Madrid"
+msgstr "Europa/Madrid"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:279
+msgid "Africa/Ceuta"
+msgstr "África/Ceuta"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:281
+msgid "Atlantic/Canary"
+msgstr "Atlántico/Canarias"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:283
+msgid "Africa/Addis_Ababa"
+msgstr "África/Addis_Abeba"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:285
+msgid "Europe/Helsinki"
+msgstr "Europa/Helsinki"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:287
+msgid "Pacific/Fiji"
+msgstr "Pacífico/Fiji"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:289
+msgid "Atlantic/Stanley"
+msgstr "Atlántico/Stanley"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:291
+msgid "Pacific/Truk"
+msgstr "Pacífico/Truk"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:293
+msgid "Pacific/Ponape"
+msgstr "Pacífico/Ponape"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:295
+msgid "Pacific/Kosrae"
+msgstr "Pacífico/Kosrae"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:297
+msgid "Atlantic/Faeroe"
+msgstr "Atlántico/Feroes"
+
+#
+# SUN CHANGED MESSAGE
+# REVIEWED
+#: ../applets/clock/zone_tab.h:299
+msgid "Europe/Paris"
+msgstr "Europa/París"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:301
+msgid "Africa/Libreville"
+msgstr "África/Libreville"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:303
+msgid "Europe/London"
+msgstr "Europa/Londres"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:305
+msgid "America/Grenada"
+msgstr "América/Grenada"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:307
+msgid "Asia/Tbilisi"
+msgstr "Asia/Tbilisi"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:309
+msgid "America/Cayenne"
+msgstr "América/Cayena"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:313
+msgid "Africa/Accra"
+msgstr "África/Accra"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:315
+msgid "Europe/Gibraltar"
+msgstr "Europa/Gibraltar"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:317
+msgid "America/Godthab"
+msgstr "América/Godthab"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:319
+msgid "America/Danmarkshavn"
+msgstr "América/Danmarkshavn"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:321
+msgid "America/Scoresbysund"
+msgstr "América/Scoresbysund"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:323
+msgid "America/Thule"
+msgstr "América/Thule"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:325
+msgid "Africa/Banjul"
+msgstr "África/Banjul"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:327
+msgid "Africa/Conakry"
+msgstr "África/Conakry"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:329
+msgid "America/Guadeloupe"
+msgstr "América/Guadalupe"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:331
+msgid "Africa/Malabo"
+msgstr "África/Malabo"
+
+#
+# SUN CHANGED MESSAGE
+# REVIEWED
+#: ../applets/clock/zone_tab.h:333
+msgid "Europe/Athens"
+msgstr "Europa/Atenas"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:335
+msgid "Atlantic/South_Georgia"
+msgstr "Atlántico/Georgia_del_Sur"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:337
+msgid "America/Guatemala"
+msgstr "América/Guatemala"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:339
+msgid "Pacific/Guam"
+msgstr "Pacífico/Guam"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:341
+msgid "Africa/Bissau"
+msgstr "África/Bissau"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:343
+msgid "America/Guyana"
+msgstr "América/Guyana"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:345
+msgid "Asia/Hong_Kong"
+msgstr "Asia/Hong_Kong"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:347
+msgid "America/Tegucigalpa"
+msgstr "América/Tegucigalpa"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:349
+msgid "Europe/Zagreb"
+msgstr "Europa/Zagreb"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:351
+msgid "America/Port-au-Prince"
+msgstr "América/Puerto_Príncipe"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:353
+msgid "Europe/Budapest"
+msgstr "Europa/Budapest"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:355
+msgid "Asia/Jakarta"
+msgstr "Asia/Jakarta"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:357
+msgid "Asia/Pontianak"
+msgstr "Asia/Pontianak"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:359
+msgid "Asia/Makassar"
+msgstr "Asia/Makassar"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:361
+msgid "Asia/Jayapura"
+msgstr "Asia/Jayapura"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:363
+msgid "Europe/Dublin"
+msgstr "Europa/Dublín"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:365
+msgid "Asia/Jerusalem"
+msgstr "Asia/Jerusalén"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:369
+msgid "Asia/Calcutta"
+msgstr "Asia/Calcuta"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:371
+msgid "Indian/Chagos"
+msgstr "Índico/Chagos"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:373
+msgid "Asia/Baghdad"
+msgstr "Asia/Bagdad"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:375
+msgid "Asia/Tehran"
+msgstr "Asia/Teherán"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:377
+msgid "Atlantic/Reykjavik"
+msgstr "Atlántico/Reikiavik"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:379
+msgid "Europe/Rome"
+msgstr "Europa/Roma"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:383
+msgid "America/Jamaica"
+msgstr "América/Jamaica"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:385
+msgid "Asia/Amman"
+msgstr "Asia/Amán"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:387
+msgid "Asia/Tokyo"
+msgstr "Asia/Tokio"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:389
+msgid "Africa/Nairobi"
+msgstr "África/Nairobi"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:391
+msgid "Asia/Bishkek"
+msgstr "Asia/Bishkek"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:393
+msgid "Asia/Phnom_Penh"
+msgstr "Asia/Phnom_Penh"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:395
+msgid "Pacific/Tarawa"
+msgstr "Pacífico/Tarawa"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:397
+msgid "Pacific/Enderbury"
+msgstr "Pacífico/Enderbury"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:399
+msgid "Pacific/Kiritimati"
+msgstr "Pacífico/Kiritimati"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:401
+msgid "Indian/Comoro"
+msgstr "Índico/Comoro"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:403
+msgid "America/St_Kitts"
+msgstr "América/St_Kitts"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:405
+msgid "Asia/Pyongyang"
+msgstr "Asia/Pyongyang"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:407
+msgid "Asia/Seoul"
+msgstr "Asia/Seúl"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:409
+msgid "Asia/Kuwait"
+msgstr "Asia/Kuwait"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:411
+msgid "America/Cayman"
+msgstr "América/Caimán"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:413
+msgid "Asia/Almaty"
+msgstr "Asia/Almaty"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:415
+msgid "Asia/Qyzylorda"
+msgstr "Asia/Qyzylorda"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:417
+msgid "Asia/Aqtobe"
+msgstr "Asia/Aqtobe"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:419
+msgid "Asia/Aqtau"
+msgstr "Asia/Aqtau"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:421
+msgid "Asia/Oral"
+msgstr "Asia/Oral"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:423
+msgid "Asia/Vientiane"
+msgstr "Asia/Vientiane"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:425
+msgid "Asia/Beirut"
+msgstr "Asia/Beirut"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:427
+msgid "America/St_Lucia"
+msgstr "América/St_Lucia"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:429
+msgid "Europe/Vaduz"
+msgstr "Europa/Vaduz"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:431
+msgid "Asia/Colombo"
+msgstr "Asia/Colombo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:433
+msgid "Africa/Monrovia"
+msgstr "África/Monrovia"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:435
+msgid "Africa/Maseru"
+msgstr "África/Maseru"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:437
+msgid "Europe/Vilnius"
+msgstr "Europa/Vilnius"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:439
+msgid "Europe/Luxembourg"
+msgstr "Europa/Luxemburgo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:441
+msgid "Europe/Riga"
+msgstr "Europa/Riga"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:443
+msgid "Africa/Tripoli"
+msgstr "África/Trípoli"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:445
+msgid "Africa/Casablanca"
+msgstr "África/Casablanca"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:447
+msgid "Europe/Monaco"
+msgstr "Europa/Mónaco"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:449
+msgid "Europe/Chisinau"
+msgstr "Europa/Kishinau"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:453
+msgid "Indian/Antananarivo"
+msgstr "Índico/Antananarivo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:455
+msgid "Pacific/Majuro"
+msgstr "Pacífico/Majuro"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:457
+msgid "Pacific/Kwajalein"
+msgstr "Pacifico/Kwajalein"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:459
+msgid "Europe/Skopje"
+msgstr "Europa/Skopje"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:461
+msgid "Africa/Bamako"
+msgstr "África/Bamako"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:463
+msgid "Asia/Rangoon"
+msgstr "Asia/Rangún"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:465
+msgid "Asia/Ulaanbaatar"
+msgstr "Asia/Ulaanbaatar"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:467
+msgid "Asia/Hovd"
+msgstr "Asia/Hovd"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:469
+msgid "Asia/Choibalsan"
+msgstr "Asia/Choibalsan"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:471
+msgid "Asia/Macau"
+msgstr "Asia/Macao"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:473
+msgid "Pacific/Saipan"
+msgstr "Pacífico/Saipan"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:475
+msgid "America/Martinique"
+msgstr "América/Martinica"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:477
+msgid "Africa/Nouakchott"
+msgstr "África/Nouakchott"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:479
+msgid "America/Montserrat"
+msgstr "América/Montserrat"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:481
+msgid "Europe/Malta"
+msgstr "Europa/Malta"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:483
+msgid "Indian/Mauritius"
+msgstr "Índico/Mauricio"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:485
+msgid "Indian/Maldives"
+msgstr "Índico/Maldivas"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:487
+msgid "Africa/Blantyre"
+msgstr "África/Blantyre"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:489
+msgid "America/Mexico_City"
+msgstr "América/Ciudad_de_México"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:491
+msgid "America/Cancun"
+msgstr "América/Cancún"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:493
+msgid "America/Merida"
+msgstr "América/Mérida"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:495
+msgid "America/Monterrey"
+msgstr "América/Monterrey"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:497
+msgid "America/Mazatlan"
+msgstr "América/Mazatlan"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:499
+msgid "America/Chihuahua"
+msgstr "América/Chihuahua"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:501
+msgid "America/Hermosillo"
+msgstr "América/Hermosillo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:503
+msgid "America/Tijuana"
+msgstr "América/Tijuana"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:505
+msgid "Asia/Kuala_Lumpur"
+msgstr "Asia/Kuala_Lumpur"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:507
+msgid "Asia/Kuching"
+msgstr "Asia/Kuching"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:509
+msgid "Africa/Maputo"
+msgstr "África/Maputo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:511
+msgid "Africa/Windhoek"
+msgstr "África/Windhoek"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:513
+msgid "Pacific/Noumea"
+msgstr "Pacífico/Noumea"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:515
+msgid "Africa/Niamey"
+msgstr "África/Niamey"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:517
+msgid "Pacific/Norfolk"
+msgstr "Pacífico/Norfolk"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:519
+msgid "Africa/Lagos"
+msgstr "África/Lagos"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:521
+msgid "America/Managua"
+msgstr "América/Managua"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:523
+msgid "Europe/Amsterdam"
+msgstr "Europa/Amsterdam"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:525
+msgid "Europe/Oslo"
+msgstr "Europa/Oslo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:527
+msgid "Asia/Katmandu"
+msgstr "Asia/Katmandú"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:529
+msgid "Pacific/Nauru"
+msgstr "Pacífico/Nauru"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:531
+msgid "Pacific/Niue"
+msgstr "Pacífico/Niue"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:533
+msgid "Pacific/Auckland"
+msgstr "Pacífico/Auckland"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:535
+msgid "Pacific/Chatham"
+msgstr "Pacífico/Chatham"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:537
+msgid "Asia/Muscat"
+msgstr "Asia/Muscat"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:539
+msgid "America/Panama"
+msgstr "América/Panamá"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:541
+msgid "America/Lima"
+msgstr "América/Lima"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:543
+msgid "Pacific/Tahiti"
+msgstr "Pacífico/Tahití"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:545
+msgid "Pacific/Marquesas"
+msgstr "Pacífico/Marquesas"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:547
+msgid "Pacific/Gambier"
+msgstr "Pacífico/Gambier"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:549
+msgid "Pacific/Port_Moresby"
+msgstr "Pacífico/Port_Moresby"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:551
+msgid "Asia/Manila"
+msgstr "Asia/Manila"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:553
+msgid "Asia/Karachi"
+msgstr "Asia/Karachi"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:555
+msgid "Europe/Warsaw"
+msgstr "Europa/Varsovia"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:557
+msgid "America/Miquelon"
+msgstr "América/Miquelon"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:559
+msgid "Pacific/Pitcairn"
+msgstr "Pacífico/Pitcairn"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:561
+msgid "America/Puerto_Rico"
+msgstr "América/Puerto_Rico"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:563
+msgid "Asia/Gaza"
+msgstr "Asia/Gaza"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:565
+msgid "Europe/Lisbon"
+msgstr "Europa/Lisboa"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:567
+msgid "Atlantic/Madeira"
+msgstr "Atlántico/Madeira"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:569
+msgid "Atlantic/Azores"
+msgstr "Atlántico/Azores"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:571
+msgid "Pacific/Palau"
+msgstr "Pacífico/Palau"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:573
+msgid "America/Asuncion"
+msgstr "América/Asunción"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:575
+msgid "Asia/Qatar"
+msgstr "Asia/Qatar"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:577
+msgid "Indian/Reunion"
+msgstr "Índico/Reunión"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:579
+msgid "Europe/Bucharest"
+msgstr "Europa/Bucarest"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:581
+msgid "Europe/Belgrade"
+msgstr "Europa/Belgrado"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:583
+msgid "Europe/Kaliningrad"
+msgstr "Europa/Kaliningrado"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:585
+msgid "Europe/Moscow"
+msgstr "Europa/Moscú"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:589
+msgid "Europe/Samara"
+msgstr "Europa/Samara"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:591
+msgid "Asia/Yekaterinburg"
+msgstr "Asia/Ekaterinburgo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:593
+msgid "Asia/Omsk"
+msgstr "Asia/Omsk"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:595
+msgid "Asia/Novosibirsk"
+msgstr "Asia/Novosibirsk"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:597
+msgid "Asia/Krasnoyarsk"
+msgstr "Asia/Krasnoyarsk"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:599
+msgid "Asia/Irkutsk"
+msgstr "Asia/Irkutsk"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:601
+msgid "Asia/Yakutsk"
+msgstr "Asia/Yakutsk"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:603
+msgid "Asia/Vladivostok"
+msgstr "Asia/Vladivostok"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:605
+msgid "Asia/Sakhalin"
+msgstr "Asia/Sakhalin"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:607
+msgid "Asia/Magadan"
+msgstr "Asia/Magadán"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:609
+msgid "Asia/Kamchatka"
+msgstr "Asia/Kamchatka"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:611
+msgid "Asia/Anadyr"
+msgstr "Asia/Anadyr"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:613
+msgid "Africa/Kigali"
+msgstr "África/Kigali"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:615
+msgid "Asia/Riyadh"
+msgstr "Asia/Riyadh"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:617
+msgid "Pacific/Guadalcanal"
+msgstr "Pacífico/Guadalcanal"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:619
+msgid "Indian/Mahe"
+msgstr "Índico/Mahe"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:621
+msgid "Africa/Khartoum"
+msgstr "África/Jartum"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:623
+msgid "Europe/Stockholm"
+msgstr "Europa/Estocolmo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:625
+msgid "Asia/Singapore"
+msgstr "Asia/Singapur"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:627
+msgid "Atlantic/St_Helena"
+msgstr "Atlántico/St_Helena"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:629
+msgid "Europe/Ljubljana"
+msgstr "Europa/Liubliana"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:631
+msgid "Arctic/Longyearbyen"
+msgstr "Ártico/Longyearbyen"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:633
+msgid "Atlantic/Jan_Mayen"
+msgstr "Atlántico/Jan_Mayen"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:635
+msgid "Europe/Bratislava"
+msgstr "Europa/Bratislava"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:637
+msgid "Africa/Freetown"
+msgstr "África/Freetown"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:639
+msgid "Europe/San_Marino"
+msgstr "Europa/San_Marino"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:641
+msgid "Africa/Dakar"
+msgstr "África/Dakar"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:643
+msgid "Africa/Mogadishu"
+msgstr "África/Mogadiscio"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:645
+msgid "America/Paramaribo"
+msgstr "América/Paramaribo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:647
+msgid "Africa/Sao_Tome"
+msgstr "África/Santo_Tomé"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:649
+msgid "America/El_Salvador"
+msgstr "América/El_Salvador"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:651
+msgid "Asia/Damascus"
+msgstr "Asia/Damasco"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:653
+msgid "Africa/Mbabane"
+msgstr "África/Mbabane"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:655
+msgid "America/Grand_Turk"
+msgstr "América/Grand_Turk"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:657
+msgid "Africa/Ndjamena"
+msgstr "África/Ndjamena"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:659
+msgid "Indian/Kerguelen"
+msgstr "Índico/Kerguelen"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:661
+msgid "Africa/Lome"
+msgstr "África/Lome"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:663
+msgid "Asia/Bangkok"
+msgstr "Asia/Bangkok"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:665
+msgid "Asia/Dushanbe"
+msgstr "Asia/Dushanbe"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:667
+msgid "Pacific/Fakaofo"
+msgstr "Pacífico/Fakaofo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:669
+msgid "Asia/Dili"
+msgstr "Asia/Dili"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:671
+msgid "Asia/Ashgabat"
+msgstr "Asia/Ashgabat"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:673
+msgid "Africa/Tunis"
+msgstr "África/Túnez"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:675
+msgid "Pacific/Tongatapu"
+msgstr "Pacífico/Tongatapu"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:677
+msgid "Europe/Istanbul"
+msgstr "Europa/Estambul"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:679
+msgid "America/Port_of_Spain"
+msgstr "América/Port_of_Spain"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:681
+msgid "Pacific/Funafuti"
+msgstr "Pacífico/Funafuti"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:683
+msgid "Asia/Taipei"
+msgstr "Asia/Taipei"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:685
+msgid "Africa/Dar_es_Salaam"
+msgstr "África/Dar_es_Salaam"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:687
+msgid "Europe/Kiev"
+msgstr "Europa/Kíev"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:689
+msgid "Europe/Uzhgorod"
+msgstr "Europa/Uzhgorod"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:691
+msgid "Europe/Zaporozhye"
+msgstr "Europa/Zaporozhye"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:693
+msgid "Europe/Simferopol"
+msgstr "Europa/Simferopol"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:695
+msgid "Africa/Kampala"
+msgstr "África/Kampala"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:697
+msgid "Pacific/Johnston"
+msgstr "Pacífico/Johnston"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:699
+msgid "Pacific/Midway"
+msgstr "Pacifico/Midway"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:701
+msgid "Pacific/Wake"
+msgstr "Pacífico/Wake"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:703
+msgid "America/New_York"
+msgstr "América/Nueva_York"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:705
+msgid "America/Detroit"
+msgstr "América/Detroit"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:709
+msgid "America/Kentucky/Monticello"
+msgstr "América/Kentucky/Monticello"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:713
+msgid "America/Indiana/Marengo"
+msgstr "América/Indiana/Marengo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:715
+msgid "America/Indiana/Knox"
+msgstr "América/Indiana/Knox"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:717
+msgid "America/Indiana/Vevay"
+msgstr "América/Indiana/Vevay"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:719
+msgid "America/Chicago"
+msgstr "América/Chicago"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:725
+msgid "America/Menominee"
+msgstr "América/Menominee"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:727
+msgid "America/North_Dakota/Center"
+msgstr "América/Dakota_del_Norte/Centro"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:731
+msgid "America/Denver"
+msgstr "América/Denver"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:733
+msgid "America/Boise"
+msgstr "América/Boise"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:735
+msgid "America/Shiprock"
+msgstr "América/Shiprock"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:737
+msgid "America/Phoenix"
+msgstr "América/Phoenix"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:739
+msgid "America/Los_Angeles"
+msgstr "América/Los_Ángeles"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:741
+msgid "America/Anchorage"
+msgstr "América/Anchorage"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:743
+msgid "America/Juneau"
+msgstr "América/Juneau"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:745
+msgid "America/Yakutat"
+msgstr "América/Yakutat"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:747
+msgid "America/Nome"
+msgstr "América/Nome"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:749
+msgid "America/Adak"
+msgstr "América/Adak"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:751
+msgid "Pacific/Honolulu"
+msgstr "Pacífico/Honolulu"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:753
+msgid "America/Montevideo"
+msgstr "América/Montevideo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:755
+msgid "Asia/Samarkand"
+msgstr "Asia/Samarkanda"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:757
+msgid "Asia/Tashkent"
+msgstr "Asia/Tashkent"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:759
+msgid "Europe/Vatican"
+msgstr "Europa/Vaticano"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:761
+msgid "America/St_Vincent"
+msgstr "América/St_Vincent"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:763
+msgid "America/Caracas"
+msgstr "América/Caracas"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:765
+msgid "America/Tortola"
+msgstr "América/Tortola"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:767
+msgid "America/St_Thomas"
+msgstr "América/St_Thomas"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:769
+msgid "Asia/Saigon"
+msgstr "Asia/Saigón"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:771
+msgid "Pacific/Efate"
+msgstr "Pacífico/Efate"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:773
+msgid "Pacific/Wallis"
+msgstr "Pacífico/Wallis"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:775
+msgid "Pacific/Apia"
+msgstr "Pacífico/Apia"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:777
+msgid "Asia/Aden"
+msgstr "Asia/Adén"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:779
+msgid "Indian/Mayotte"
+msgstr "Índico/Mayotte"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:781
+msgid "Africa/Johannesburg"
+msgstr "África/Johannesburgo"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:783
+msgid "Africa/Lusaka"
+msgstr "África/Lusaka"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:785
+msgid "Africa/Harare"
+msgstr "África/Harare"
+
+# QUICKSILVER MSG
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:787 ../applets/clock/zone_tab.h:789
+#: ../applets/clock/zone_tab.h:791
+msgid "Europe/"
+msgstr "Europa/"
+
+# SUN LING REVIEWED
+#: ../applets/wncklet/GNOME_WorkspaceSwitcherApplet.xml.h:3
+msgid "_Change Workspace Label..."
+msgstr "_Cambiar etiqueta de espacio de trabajo..."
+
+# REVIEWED
+# SUN MESSAGE
+# SUN LING REVIEWED
+#: ../applets/wncklet/workspace-switcher.c:1313
+msgid "Changing Workspace Label"
+msgstr "Cambio de etiqueta de espacio de trabajo"
+
+#
+# REVIEWED
+#: ../gnome-panel/menu.c:1834 ../gnome-panel/panel-action-button.c:318
+msgid "Run Application..."
+msgstr "Ejecutar una aplicación..."
+
+#
+#
+# REVIEWED
+#: ../gnome-panel/menu.c:1922 ../gnome-panel/panel-menu-items.c:712
+msgid "Preferences"
+msgstr "Preferencias"
+
+# REVIEWED
+#: ../gnome-panel/menu.c:1927 ../gnome-panel/panel-menu-items.c:717
+msgid "Administration"
+msgstr "Administración"

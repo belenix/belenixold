@@ -1,0 +1,43 @@
+# Copyright (C) 2009 Sun Microsystems, Inc
+# This file is distributed under the same license as the libgksuui package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: kov@debian.org\n"
+"POT-Creation-Date: 2009-04-06 14:55+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# SUN_BRANDING required_label
+#: ../libgksuui/gksuui-dialog.c:161
+msgid "<span weight=\"bold\" size=\"larger\">Password Required</span>"
+msgstr ""
+
+# SUN_BRANDING label
+#: ../libgksuui/gksuui-dialog.c:173
+msgid ""
+"<span weight=\"normal\" size=\"medium\">Type the root password.</span>\n"
+msgstr ""
+
+# SUN_BRANDING entry label
+#: ../libgksuui/gksuui-dialog.c:192
+msgid "_Password:"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libgksuui/gksuui-dialog.c:434
+msgid "<span weight=\"normal\" size=\"medium\">Caps Locks is turned on</span>"
+msgstr ""
