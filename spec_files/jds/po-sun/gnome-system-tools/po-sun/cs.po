@@ -1,0 +1,1822 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the gnome-system-tools package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-system-tools HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-04-06 22:32+0900\n"
+"PO-Revision-Date: 2008-06-27 11:14+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+# SUN_BRANDING
+#: ../interfaces/boot.glade.in.h:19 ../network-admin.sh:115
+msgid "Manual"
+msgstr ""
+
+# SUN_BRANDING
+#: ../interfaces/network.glade.in.h:11
+msgid "Activate this connection on boot"
+msgstr ""
+
+# SUN_BRANDING
+#: ../interfaces/network.glade.in.h:48
+msgid "_Activate on boot"
+msgstr ""
+
+#: ../interfaces/time.glade.in.h:7
+#, fuzzy
+msgid "Periodically s_ynchronize clock with Internet servers:"
+msgstr "Synchronizovat s internetovým časovým serverem:"
+
+# SUN_BRANDING
+#: ../interfaces/time.glade.in.h:10
+msgid "Synchronize _Now"
+msgstr ""
+
+#: ../interfaces/time.glade.in.h:12
+#, fuzzy
+msgid "Synchronize only once with Internet servers:"
+msgstr "Synchronizovat s internetovým časovým serverem:"
+
+# SUN_BRANDING
+#: ../interfaces/users.glade.in.h:45
+msgid "User roles"
+msgstr ""
+
+# SUN_BRANDING
+#: ../network-admin.sh:112
+msgid "Network Administration"
+msgstr ""
+
+# SUN_BRANDING
+#: ../network-admin.sh:117
+msgid "Cancel"
+msgstr ""
+
+# SUN_BRANDING
+#: ../network-admin.sh:119
+msgid "An error occured switching to Manual mode."
+msgstr ""
+
+# SUN_BRANDING
+#: ../network-admin.sh:121
+msgid ""
+"Your system is currently configured to manage the\\nnetwork automatically. "
+"Click \"%s\" to manually\\nconfigure the network connection."
+msgstr ""
+
+# SUN_BRANDING
+#: ../network-admin.sh:127
+msgid "Automatic"
+msgstr ""
+
+# SUN_BRANDING
+#: ../network-admin.sh:129
+msgid "Continue"
+msgstr ""
+
+# SUN_BRANDING
+#: ../network-admin.sh:131
+msgid "An error occured switching to Automatic mode."
+msgstr ""
+
+# SUN_BRANDING
+#: ../network-admin.sh:133
+msgid ""
+"Your system is currently configured to manage the\\nnetwork manually. Click "
+"\"%s\" to have the\\nnetwork configured automatically.\\n\\nOtherwise click "
+"\"%s\" to continue to\\nconfigure the network manually."
+msgstr ""
+
+#: ../src/common/gst-auth.c:453
+#, c-format
+msgid ""
+"<b>You need %s privileges to use this tool. Enter a password to modify your "
+"system configuration.</b>"
+msgstr ""
+"<b>Pro používání tohoto nástroje potřebujete oprávnění %s. Pro úpravu "
+"nastavení vašeho systému zadejte heslo.</b>"
+
+# SUN_BRANDING
+#: ../src/common/gst-auth.c:482
+#, c-format
+msgid "Authentication fails"
+msgstr ""
+
+#: ../src/common/zone_tab.h:8
+msgid "Europe/Andorra"
+msgstr "Evropa/Andorra"
+
+#: ../src/common/zone_tab.h:10
+msgid "Asia/Dubai"
+msgstr "Asie/Dubai"
+
+#: ../src/common/zone_tab.h:12
+msgid "Asia/Kabul"
+msgstr "Asie/Kabul"
+
+#: ../src/common/zone_tab.h:14
+msgid "America/Antigua"
+msgstr "Amerika/Antigua"
+
+#: ../src/common/zone_tab.h:16
+msgid "America/Anguilla"
+msgstr "Amerika/Anguilla"
+
+#: ../src/common/zone_tab.h:18
+msgid "Europe/Tirane"
+msgstr "Evropa/Tirana"
+
+#: ../src/common/zone_tab.h:20
+msgid "Asia/Yerevan"
+msgstr "Asie/Yerevan"
+
+#: ../src/common/zone_tab.h:22
+msgid "America/Curacao"
+msgstr "Amerika/Curacao"
+
+#: ../src/common/zone_tab.h:24
+msgid "Africa/Luanda"
+msgstr "Afrika/Luanda"
+
+#: ../src/common/zone_tab.h:26
+msgid "Antarctica/McMurdo"
+msgstr "Antarktida/McMurdo"
+
+#: ../src/common/zone_tab.h:28
+msgid "Antarctica/South_Pole"
+msgstr "Antarktida/Jižní_pól"
+
+#: ../src/common/zone_tab.h:30
+#, fuzzy
+msgid "Antarctica/Rothera"
+msgstr "Antarktida/Jižní_pól"
+
+#: ../src/common/zone_tab.h:32
+msgid "Antarctica/Palmer"
+msgstr "Antarktida/Palmer"
+
+#: ../src/common/zone_tab.h:34
+msgid "Antarctica/Mawson"
+msgstr "Antarktida/Mawson"
+
+#: ../src/common/zone_tab.h:36
+msgid "Antarctica/Davis"
+msgstr "Antarktida/Davis"
+
+#: ../src/common/zone_tab.h:38
+msgid "Antarctica/Casey"
+msgstr "Antarktida/Casey"
+
+#: ../src/common/zone_tab.h:40
+msgid "Antarctica/Vostok"
+msgstr "Antarktida/Vostok"
+
+#: ../src/common/zone_tab.h:42
+msgid "Antarctica/DumontDUrville"
+msgstr "Antarktida/DumontDUrville"
+
+#: ../src/common/zone_tab.h:44
+msgid "Antarctica/Syowa"
+msgstr "Antarktida/Syowa"
+
+#: ../src/common/zone_tab.h:46
+#, fuzzy
+msgid "America/Argentina/Buenos_Aires"
+msgstr "Amerika/Buenos_Aires"
+
+#: ../src/common/zone_tab.h:48
+#, fuzzy
+msgid "America/Argentina/Cordoba"
+msgstr "Amerika/Cordoba"
+
+#: ../src/common/zone_tab.h:50
+#, fuzzy
+msgid "America/Argentina/Jujuy"
+msgstr "Amerika/Jujuy"
+
+#: ../src/common/zone_tab.h:52
+#, fuzzy
+msgid "America/Argentina/Tucuman"
+msgstr "Amerika/Antigua"
+
+#: ../src/common/zone_tab.h:54
+#, fuzzy
+msgid "America/Argentina/Catamarca"
+msgstr "Amerika/Catamarca"
+
+#: ../src/common/zone_tab.h:56
+#, fuzzy
+msgid "America/Argentina/La_Rioja"
+msgstr "Amerika/Araguaina"
+
+#: ../src/common/zone_tab.h:58
+#, fuzzy
+msgid "America/Argentina/San_Juan"
+msgstr "Amerika/Antigua"
+
+#: ../src/common/zone_tab.h:60
+#, fuzzy
+msgid "America/Argentina/Mendoza"
+msgstr "Amerika/Mendoza"
+
+#: ../src/common/zone_tab.h:62
+#, fuzzy
+msgid "America/Argentina/Rio_Gallegos"
+msgstr "Amerika/Indiana/Marengo"
+
+#: ../src/common/zone_tab.h:64
+#, fuzzy
+msgid "America/Argentina/Ushuaia"
+msgstr "Amerika/Araguaina"
+
+#: ../src/common/zone_tab.h:66
+msgid "Pacific/Pago_Pago"
+msgstr "Pacifik/Pago_Pago"
+
+#: ../src/common/zone_tab.h:68
+msgid "Europe/Vienna"
+msgstr "Evropa/Vídeň"
+
+#: ../src/common/zone_tab.h:70
+msgid "Australia/Lord_Howe"
+msgstr "Austrálie/Lord_Howe"
+
+#: ../src/common/zone_tab.h:72
+msgid "Australia/Hobart"
+msgstr "Austrálie/Hobart"
+
+#: ../src/common/zone_tab.h:74
+#, fuzzy
+msgid "Australia/Currie"
+msgstr "Austrálie/Brisbane"
+
+#: ../src/common/zone_tab.h:76
+msgid "Australia/Melbourne"
+msgstr "Austrálie/Melbourne"
+
+#: ../src/common/zone_tab.h:78
+msgid "Australia/Sydney"
+msgstr "Austrálie/Sydney"
+
+#: ../src/common/zone_tab.h:80
+msgid "Australia/Broken_Hill"
+msgstr "Austrálie/Broken_Hill"
+
+#: ../src/common/zone_tab.h:82
+msgid "Australia/Brisbane"
+msgstr "Austrálie/Brisbane"
+
+#: ../src/common/zone_tab.h:84
+msgid "Australia/Lindeman"
+msgstr "Austrálie/Lindeman"
+
+#: ../src/common/zone_tab.h:86
+msgid "Australia/Adelaide"
+msgstr "Austrálie/Adelaide"
+
+#: ../src/common/zone_tab.h:88
+msgid "Australia/Darwin"
+msgstr "Austrálie/Darwin"
+
+#: ../src/common/zone_tab.h:90
+msgid "Australia/Perth"
+msgstr "Austrálie/Perth"
+
+#: ../src/common/zone_tab.h:92
+msgid "America/Aruba"
+msgstr "Amerika/Aruba"
+
+#: ../src/common/zone_tab.h:94
+#, fuzzy
+msgid "Europe/Mariehamn"
+msgstr "Evropa/Madrid"
+
+#: ../src/common/zone_tab.h:96
+msgid "Asia/Baku"
+msgstr "Asie/Baku"
+
+#: ../src/common/zone_tab.h:98
+msgid "Europe/Sarajevo"
+msgstr "Evropa/Sarajevo"
+
+#: ../src/common/zone_tab.h:100
+msgid "America/Barbados"
+msgstr "Amerika/Barbados"
+
+#: ../src/common/zone_tab.h:102
+msgid "Asia/Dhaka"
+msgstr "Asie/Dhaka"
+
+#: ../src/common/zone_tab.h:104
+msgid "Europe/Brussels"
+msgstr "Evropa/Brusel"
+
+#: ../src/common/zone_tab.h:106
+msgid "Africa/Ouagadougou"
+msgstr "Afrika/Ouagadougou"
+
+#: ../src/common/zone_tab.h:108
+msgid "Europe/Sofia"
+msgstr "Efropa/Sofia"
+
+#: ../src/common/zone_tab.h:110
+msgid "Asia/Bahrain"
+msgstr "Asie/Bahrain"
+
+#: ../src/common/zone_tab.h:112
+msgid "Africa/Bujumbura"
+msgstr "Afrika/Bujumbura"
+
+#: ../src/common/zone_tab.h:114
+msgid "Africa/Porto-Novo"
+msgstr "Afrika/Porto-Novo"
+
+#: ../src/common/zone_tab.h:116
+msgid "Atlantic/Bermuda"
+msgstr "Atlantik/Bermuda"
+
+#: ../src/common/zone_tab.h:118
+msgid "Asia/Brunei"
+msgstr "Asie/Brunei"
+
+#: ../src/common/zone_tab.h:120
+msgid "America/La_Paz"
+msgstr "Amerika/La_Paz"
+
+#: ../src/common/zone_tab.h:122
+msgid "America/Noronha"
+msgstr "Amerika/Noronha"
+
+#: ../src/common/zone_tab.h:124
+msgid "America/Belem"
+msgstr "Amerika/Belem"
+
+#: ../src/common/zone_tab.h:126
+msgid "America/Fortaleza"
+msgstr "Amerika/Fortaleza"
+
+#: ../src/common/zone_tab.h:128
+msgid "America/Recife"
+msgstr "Amerika/Recife"
+
+#: ../src/common/zone_tab.h:130
+msgid "America/Araguaina"
+msgstr "Amerika/Araguaina"
+
+#: ../src/common/zone_tab.h:132
+msgid "America/Maceio"
+msgstr "Amerika/Maceio"
+
+#: ../src/common/zone_tab.h:134
+#, fuzzy
+msgid "America/Bahia"
+msgstr "Amerika/Boa_Vista"
+
+#: ../src/common/zone_tab.h:136
+msgid "America/Sao_Paulo"
+msgstr "Amerika/Sao_Paulo"
+
+#: ../src/common/zone_tab.h:138
+#, fuzzy
+msgid "America/Campo_Grande"
+msgstr "Amerika/Cayman"
+
+#: ../src/common/zone_tab.h:140
+msgid "America/Cuiaba"
+msgstr "Amerika/Cuiaba"
+
+#: ../src/common/zone_tab.h:142
+msgid "America/Porto_Velho"
+msgstr "Amerika/Porto_Velho"
+
+#: ../src/common/zone_tab.h:144
+msgid "America/Boa_Vista"
+msgstr "Amerika/Boa_Vista"
+
+#: ../src/common/zone_tab.h:146
+msgid "America/Manaus"
+msgstr "Amerika/Manaus"
+
+#: ../src/common/zone_tab.h:148
+msgid "America/Eirunepe"
+msgstr "Amerika/Eirunepe"
+
+#: ../src/common/zone_tab.h:150
+msgid "America/Rio_Branco"
+msgstr "Amerika/Rio_Branco"
+
+#: ../src/common/zone_tab.h:152
+msgid "America/Nassau"
+msgstr "Amerika/Nassau"
+
+#: ../src/common/zone_tab.h:154
+msgid "Asia/Thimphu"
+msgstr "Asie/Thimphu"
+
+#: ../src/common/zone_tab.h:156
+msgid "Africa/Gaborone"
+msgstr "Afrika/Gaborone"
+
+#: ../src/common/zone_tab.h:158
+msgid "Europe/Minsk"
+msgstr "Evropa/Minsk"
+
+#: ../src/common/zone_tab.h:160
+msgid "America/Belize"
+msgstr "Amerika/Belize"
+
+#: ../src/common/zone_tab.h:162
+msgid "America/St_Johns"
+msgstr "Amerika/St_Johns"
+
+#: ../src/common/zone_tab.h:164
+msgid "America/Halifax"
+msgstr "Amerika/Halifax"
+
+#: ../src/common/zone_tab.h:166
+msgid "America/Glace_Bay"
+msgstr "Amerika/Glace_Bay"
+
+#: ../src/common/zone_tab.h:168
+#, fuzzy
+msgid "America/Moncton"
+msgstr "Amerika/Edmonton"
+
+#: ../src/common/zone_tab.h:170
+msgid "America/Goose_Bay"
+msgstr "Amerika/Goose_Bay"
+
+#: ../src/common/zone_tab.h:172
+#, fuzzy
+msgid "America/Blanc-Sablon"
+msgstr "Amerika/Cancun"
+
+#: ../src/common/zone_tab.h:174
+msgid "America/Montreal"
+msgstr "Amerika/Montreal"
+
+#: ../src/common/zone_tab.h:176
+#, fuzzy
+msgid "America/Toronto"
+msgstr "Amerika/Tortola"
+
+#: ../src/common/zone_tab.h:178
+msgid "America/Nipigon"
+msgstr "Amerika/Nipigon"
+
+#: ../src/common/zone_tab.h:180
+msgid "America/Thunder_Bay"
+msgstr "Amerika/Thunder_Bay"
+
+#: ../src/common/zone_tab.h:182
+msgid "America/Iqaluit"
+msgstr "Amerika/Iqaluit"
+
+#: ../src/common/zone_tab.h:184
+msgid "America/Pangnirtung"
+msgstr "Amerika/Pangnirtung"
+
+#: ../src/common/zone_tab.h:186
+#, fuzzy
+msgid "America/Atikokan"
+msgstr "Amerika/Antigua"
+
+#: ../src/common/zone_tab.h:188
+msgid "America/Rankin_Inlet"
+msgstr "Amerika/Rankin_Inlet"
+
+#: ../src/common/zone_tab.h:190
+msgid "America/Winnipeg"
+msgstr "Amerika/Winnipeg"
+
+#: ../src/common/zone_tab.h:192
+msgid "America/Rainy_River"
+msgstr "Amerika/Rainy_River"
+
+#: ../src/common/zone_tab.h:194
+msgid "America/Regina"
+msgstr "Amerika/Regina"
+
+#: ../src/common/zone_tab.h:196
+msgid "America/Swift_Current"
+msgstr "Amerika/Swift_Current"
+
+#: ../src/common/zone_tab.h:198
+msgid "America/Edmonton"
+msgstr "Amerika/Edmonton"
+
+#: ../src/common/zone_tab.h:200
+msgid "America/Cambridge_Bay"
+msgstr "Amerika/Cambridge_Bay"
+
+#: ../src/common/zone_tab.h:202
+msgid "America/Yellowknife"
+msgstr "Amerika/Yellowknife"
+
+#: ../src/common/zone_tab.h:204
+msgid "America/Inuvik"
+msgstr "Amerika/Inuvik"
+
+#: ../src/common/zone_tab.h:206
+msgid "America/Dawson_Creek"
+msgstr "Amerika/Dawson_Creek"
+
+#: ../src/common/zone_tab.h:208
+msgid "America/Vancouver"
+msgstr "Amerika/Vancouver"
+
+#: ../src/common/zone_tab.h:210
+msgid "America/Whitehorse"
+msgstr "Amerika/Whitehorse"
+
+#: ../src/common/zone_tab.h:212
+msgid "America/Dawson"
+msgstr "Amerika/Dawson"
+
+#: ../src/common/zone_tab.h:214
+msgid "Indian/Cocos"
+msgstr "Indický oceán/Cocos"
+
+#: ../src/common/zone_tab.h:216
+msgid "Africa/Kinshasa"
+msgstr "Afrika/Kinshasa"
+
+#: ../src/common/zone_tab.h:218
+msgid "Africa/Lubumbashi"
+msgstr "Afrika/Lubumbashi"
+
+#: ../src/common/zone_tab.h:220
+msgid "Africa/Bangui"
+msgstr "Afrika/Bangui"
+
+#: ../src/common/zone_tab.h:222
+msgid "Africa/Brazzaville"
+msgstr "Afrika/Brazzaville"
+
+#: ../src/common/zone_tab.h:224
+msgid "Europe/Zurich"
+msgstr "Evropa/Curich"
+
+#: ../src/common/zone_tab.h:226
+msgid "Africa/Abidjan"
+msgstr "Afrika/Abidjan"
+
+#: ../src/common/zone_tab.h:228
+msgid "Pacific/Rarotonga"
+msgstr "Pacifik/Rarotonga"
+
+#: ../src/common/zone_tab.h:230
+msgid "America/Santiago"
+msgstr "Amerika/Santiago"
+
+#: ../src/common/zone_tab.h:232
+msgid "Pacific/Easter"
+msgstr "Pacifik/Easter"
+
+#: ../src/common/zone_tab.h:234
+msgid "Africa/Douala"
+msgstr "Afrika/Douala"
+
+#: ../src/common/zone_tab.h:236
+msgid "Asia/Shanghai"
+msgstr "Asie/Shanghai"
+
+#: ../src/common/zone_tab.h:238
+msgid "America/Bogota"
+msgstr "Amerika/Bogota"
+
+#: ../src/common/zone_tab.h:240
+msgid "America/Costa_Rica"
+msgstr "Amerika/Costa_Rica"
+
+#: ../src/common/zone_tab.h:242
+msgid "America/Havana"
+msgstr "Amerika/Havana"
+
+#: ../src/common/zone_tab.h:244
+msgid "Atlantic/Cape_Verde"
+msgstr "Atlantik/Cape_Verde"
+
+#: ../src/common/zone_tab.h:246
+msgid "Indian/Christmas"
+msgstr "Indický oceán/Christmas"
+
+#: ../src/common/zone_tab.h:248
+msgid "Asia/Nicosia"
+msgstr "Asie/Nicosia"
+
+#: ../src/common/zone_tab.h:250
+msgid "Europe/Prague"
+msgstr "Evropa/Praha"
+
+#: ../src/common/zone_tab.h:252
+msgid "Europe/Berlin"
+msgstr "Evropa/Berlín"
+
+#: ../src/common/zone_tab.h:254
+msgid "Africa/Djibouti"
+msgstr "Afrika/Djibouti"
+
+#: ../src/common/zone_tab.h:256
+msgid "Europe/Copenhagen"
+msgstr "Evropa/Copenhagen"
+
+#: ../src/common/zone_tab.h:258
+msgid "America/Dominica"
+msgstr "Amerika/Dominica"
+
+#: ../src/common/zone_tab.h:260
+msgid "America/Santo_Domingo"
+msgstr "Amerika/Santo_Domingo"
+
+#: ../src/common/zone_tab.h:262
+msgid "Africa/Algiers"
+msgstr "Afrika/Alžír"
+
+#: ../src/common/zone_tab.h:264
+msgid "America/Guayaquil"
+msgstr "Amerika/Guayaquil"
+
+#: ../src/common/zone_tab.h:266
+msgid "Pacific/Galapagos"
+msgstr "Pacifik/Galapagos"
+
+#: ../src/common/zone_tab.h:268
+msgid "Europe/Tallinn"
+msgstr "Evropa/Talin"
+
+#: ../src/common/zone_tab.h:270
+msgid "Africa/Cairo"
+msgstr "Afrika/Cairo"
+
+#: ../src/common/zone_tab.h:272
+msgid "Africa/El_Aaiun"
+msgstr "Afrika/El_Aaiun"
+
+#: ../src/common/zone_tab.h:274
+msgid "Europe/Madrid"
+msgstr "Evropa/Madrid"
+
+#: ../src/common/zone_tab.h:276
+msgid "Africa/Ceuta"
+msgstr "Afrika/Ceuta"
+
+#: ../src/common/zone_tab.h:278
+msgid "Atlantic/Canary"
+msgstr "Atlantik/Canary"
+
+#: ../src/common/zone_tab.h:280
+msgid "Africa/Addis_Ababa"
+msgstr "Afrika/Addis_Ababa"
+
+#: ../src/common/zone_tab.h:282
+msgid "Europe/Helsinki"
+msgstr "Evropa/Helsinki"
+
+#: ../src/common/zone_tab.h:284
+msgid "Pacific/Fiji"
+msgstr "Pacifik/Fiji"
+
+#: ../src/common/zone_tab.h:286
+msgid "Atlantic/Stanley"
+msgstr "Atlantik/Stanley"
+
+#: ../src/common/zone_tab.h:288
+msgid "Pacific/Truk"
+msgstr "Pacifik/Truk"
+
+#: ../src/common/zone_tab.h:290
+msgid "Pacific/Ponape"
+msgstr "Pacifik/Ponape"
+
+#: ../src/common/zone_tab.h:292
+msgid "Pacific/Kosrae"
+msgstr "Pacifik/Kosrae"
+
+#: ../src/common/zone_tab.h:294
+msgid "Europe/Paris"
+msgstr "Evropa/Paříž"
+
+#: ../src/common/zone_tab.h:296
+msgid "Africa/Libreville"
+msgstr "Afrika/Libreville"
+
+#: ../src/common/zone_tab.h:298
+msgid "Europe/London"
+msgstr "Evropa/Londýn"
+
+#: ../src/common/zone_tab.h:300
+msgid "America/Grenada"
+msgstr "Amerika/Grenada"
+
+#: ../src/common/zone_tab.h:302
+msgid "Asia/Tbilisi"
+msgstr "Asie/Tbilisi"
+
+#: ../src/common/zone_tab.h:304
+msgid "America/Cayenne"
+msgstr "Amerika/Cayenne"
+
+#: ../src/common/zone_tab.h:306
+#, fuzzy
+msgid "Europe/Guernsey"
+msgstr "Evropa/Athény"
+
+#: ../src/common/zone_tab.h:308
+msgid "Africa/Accra"
+msgstr "Afrika/Accra"
+
+#: ../src/common/zone_tab.h:310
+msgid "Europe/Gibraltar"
+msgstr "Evropa/Gibraltar"
+
+#: ../src/common/zone_tab.h:312
+msgid "America/Godthab"
+msgstr "Amerika/Godthab"
+
+#: ../src/common/zone_tab.h:314
+msgid "America/Danmarkshavn"
+msgstr "Amerika/Danmarkshavn"
+
+#: ../src/common/zone_tab.h:316
+msgid "America/Scoresbysund"
+msgstr "Amerika/Scoresbysund"
+
+#: ../src/common/zone_tab.h:318
+msgid "America/Thule"
+msgstr "Amerika/Thule"
+
+#: ../src/common/zone_tab.h:320
+msgid "Africa/Banjul"
+msgstr "Afrika/Banjul"
+
+#: ../src/common/zone_tab.h:322
+msgid "Africa/Conakry"
+msgstr "Afrika/Conakry"
+
+#: ../src/common/zone_tab.h:324
+msgid "America/Guadeloupe"
+msgstr "Amerika/Guadeloupe"
+
+#: ../src/common/zone_tab.h:326
+msgid "Africa/Malabo"
+msgstr "Afrika/Malabo"
+
+#: ../src/common/zone_tab.h:328
+msgid "Europe/Athens"
+msgstr "Evropa/Athény"
+
+#: ../src/common/zone_tab.h:330
+msgid "Atlantic/South_Georgia"
+msgstr "Atlantik/South_Georgia"
+
+#: ../src/common/zone_tab.h:332
+msgid "America/Guatemala"
+msgstr "Amerika/Guatemala"
+
+#: ../src/common/zone_tab.h:334
+msgid "Pacific/Guam"
+msgstr "Pacifik/Guam"
+
+#: ../src/common/zone_tab.h:336
+msgid "Africa/Bissau"
+msgstr "Afrika/Bissau"
+
+#: ../src/common/zone_tab.h:338
+msgid "America/Guyana"
+msgstr "Amerika/Guyana"
+
+#: ../src/common/zone_tab.h:340
+msgid "Asia/Hong_Kong"
+msgstr "Asie/Hong_Kong"
+
+#: ../src/common/zone_tab.h:342
+msgid "America/Tegucigalpa"
+msgstr "Amerika/Tegucigalpa"
+
+#: ../src/common/zone_tab.h:344
+msgid "Europe/Zagreb"
+msgstr "Evropa/Záhřeb"
+
+#: ../src/common/zone_tab.h:346
+msgid "America/Port-au-Prince"
+msgstr "Amerika/Port-au-Prince"
+
+#: ../src/common/zone_tab.h:348
+msgid "Europe/Budapest"
+msgstr "Evropa/Budapešť"
+
+#: ../src/common/zone_tab.h:350
+msgid "Asia/Jakarta"
+msgstr "Asie/Jakarta"
+
+#: ../src/common/zone_tab.h:352
+msgid "Asia/Pontianak"
+msgstr "Asie/Pontianak"
+
+#: ../src/common/zone_tab.h:354
+msgid "Asia/Makassar"
+msgstr "Asie/Makassar"
+
+#: ../src/common/zone_tab.h:356
+msgid "Asia/Jayapura"
+msgstr "Asie/Jayapura"
+
+#: ../src/common/zone_tab.h:358
+msgid "Europe/Dublin"
+msgstr "Evropa/Dublin"
+
+#: ../src/common/zone_tab.h:360
+msgid "Asia/Jerusalem"
+msgstr "Asie/Jerusalem"
+
+#: ../src/common/zone_tab.h:362
+#, fuzzy
+msgid "Europe/Isle_of_Man"
+msgstr "Evropa/Oslo"
+
+#: ../src/common/zone_tab.h:364
+msgid "Indian/Chagos"
+msgstr "Indický oceán/Chagos"
+
+#: ../src/common/zone_tab.h:366
+msgid "Asia/Baghdad"
+msgstr "Asie/Baghdad"
+
+#: ../src/common/zone_tab.h:368
+msgid "Asia/Tehran"
+msgstr "Asie/Tehran"
+
+#: ../src/common/zone_tab.h:370
+msgid "Atlantic/Reykjavik"
+msgstr "Atlantik/Reykjavik"
+
+#: ../src/common/zone_tab.h:372
+msgid "Europe/Rome"
+msgstr "Evropa/Řím"
+
+#: ../src/common/zone_tab.h:374
+#, fuzzy
+msgid "Europe/Jersey"
+msgstr "Evropa/Paříž"
+
+#: ../src/common/zone_tab.h:376
+msgid "America/Jamaica"
+msgstr "Amerika/Jamaica"
+
+#: ../src/common/zone_tab.h:378
+msgid "Asia/Amman"
+msgstr "Asie/Amman"
+
+#: ../src/common/zone_tab.h:380
+msgid "Asia/Tokyo"
+msgstr "Asie/Tokyo"
+
+#: ../src/common/zone_tab.h:382
+msgid "Africa/Nairobi"
+msgstr "Afrika/Nairobi"
+
+#: ../src/common/zone_tab.h:384
+msgid "Asia/Bishkek"
+msgstr "Asie/Bishkek"
+
+#: ../src/common/zone_tab.h:386
+msgid "Asia/Phnom_Penh"
+msgstr "Asie/Phnom_Penh"
+
+#: ../src/common/zone_tab.h:388
+msgid "Pacific/Tarawa"
+msgstr "Pacifik/Tarawa"
+
+#: ../src/common/zone_tab.h:390
+msgid "Pacific/Enderbury"
+msgstr "Pacifik/Enderbury"
+
+#: ../src/common/zone_tab.h:392
+msgid "Pacific/Kiritimati"
+msgstr "Pacifik/Kiritimati"
+
+#: ../src/common/zone_tab.h:394
+msgid "Indian/Comoro"
+msgstr "Indický oceán/Comoro"
+
+#: ../src/common/zone_tab.h:396
+msgid "America/St_Kitts"
+msgstr "Amerika/St_Kitts"
+
+#: ../src/common/zone_tab.h:398
+msgid "Asia/Pyongyang"
+msgstr "Asie/Pyongyang"
+
+#: ../src/common/zone_tab.h:400
+msgid "Asia/Seoul"
+msgstr "Asie/Seoul"
+
+#: ../src/common/zone_tab.h:402
+msgid "Asia/Kuwait"
+msgstr "Asie/Kuwait"
+
+#: ../src/common/zone_tab.h:404
+msgid "America/Cayman"
+msgstr "Amerika/Cayman"
+
+#: ../src/common/zone_tab.h:406
+msgid "Asia/Almaty"
+msgstr "Asie/Almaty"
+
+#: ../src/common/zone_tab.h:408
+msgid "Asia/Qyzylorda"
+msgstr "Asie/Qyzylorda"
+
+#: ../src/common/zone_tab.h:410
+msgid "Asia/Aqtobe"
+msgstr "Asie/Aqtobe"
+
+#: ../src/common/zone_tab.h:412
+msgid "Asia/Aqtau"
+msgstr "Asie/Aqtau"
+
+#: ../src/common/zone_tab.h:414
+msgid "Asia/Oral"
+msgstr "Asie/Oral"
+
+#: ../src/common/zone_tab.h:416
+msgid "Asia/Vientiane"
+msgstr "Asie/Vientiane"
+
+#: ../src/common/zone_tab.h:418
+msgid "Asia/Beirut"
+msgstr "Asie/Beirut"
+
+#: ../src/common/zone_tab.h:420
+msgid "America/St_Lucia"
+msgstr "Amerika/St_Lucia"
+
+#: ../src/common/zone_tab.h:422
+msgid "Europe/Vaduz"
+msgstr "Evropa/Vaduz"
+
+#: ../src/common/zone_tab.h:424
+msgid "Asia/Colombo"
+msgstr "Asie/Colombo"
+
+#: ../src/common/zone_tab.h:426
+msgid "Africa/Monrovia"
+msgstr "Afrika/Monrovia"
+
+#: ../src/common/zone_tab.h:428
+msgid "Africa/Maseru"
+msgstr "Afrika/Maseru"
+
+#: ../src/common/zone_tab.h:430
+msgid "Europe/Vilnius"
+msgstr "Evropa/Vilnius"
+
+#: ../src/common/zone_tab.h:432
+msgid "Europe/Luxembourg"
+msgstr "Evropa/Luxembourg"
+
+#: ../src/common/zone_tab.h:434
+msgid "Europe/Riga"
+msgstr "Evropa/Riga"
+
+#: ../src/common/zone_tab.h:436
+msgid "Africa/Tripoli"
+msgstr "Afrika/Tripoli"
+
+#: ../src/common/zone_tab.h:438
+msgid "Africa/Casablanca"
+msgstr "Afrika/Casablanca"
+
+#: ../src/common/zone_tab.h:440
+msgid "Europe/Monaco"
+msgstr "Evropa/Monaco"
+
+#: ../src/common/zone_tab.h:442
+msgid "Europe/Chisinau"
+msgstr "Evropa/Kyšiněv"
+
+#: ../src/common/zone_tab.h:444
+#, fuzzy
+msgid "Europe/Podgorica"
+msgstr "Evropa/Andorra"
+
+#: ../src/common/zone_tab.h:446
+msgid "Indian/Antananarivo"
+msgstr "Indický oceán/Antananarivo"
+
+#: ../src/common/zone_tab.h:448
+msgid "Pacific/Majuro"
+msgstr "Pacifik/Majuro"
+
+#: ../src/common/zone_tab.h:450
+msgid "Pacific/Kwajalein"
+msgstr "Pacifik/Kwajalein"
+
+#: ../src/common/zone_tab.h:452
+msgid "Europe/Skopje"
+msgstr "Evropa/Skopje"
+
+#: ../src/common/zone_tab.h:454
+msgid "Africa/Bamako"
+msgstr "Afrika/Bamako"
+
+#: ../src/common/zone_tab.h:456
+msgid "Asia/Rangoon"
+msgstr "Asie/Rangoon"
+
+#: ../src/common/zone_tab.h:458
+msgid "Asia/Ulaanbaatar"
+msgstr "Asie/Ulaanbaatar"
+
+#: ../src/common/zone_tab.h:460
+msgid "Asia/Hovd"
+msgstr "Asie/Hovd"
+
+#: ../src/common/zone_tab.h:462
+msgid "Asia/Choibalsan"
+msgstr "Asie/Choibalsan"
+
+#: ../src/common/zone_tab.h:464
+msgid "Asia/Macau"
+msgstr "Asie/Macau"
+
+#: ../src/common/zone_tab.h:466
+msgid "Pacific/Saipan"
+msgstr "Pacifik/Saipan"
+
+#: ../src/common/zone_tab.h:468
+msgid "America/Martinique"
+msgstr "Amerika/Martinique"
+
+#: ../src/common/zone_tab.h:470
+msgid "Africa/Nouakchott"
+msgstr "Afrika/Nouakchott"
+
+#: ../src/common/zone_tab.h:472
+msgid "America/Montserrat"
+msgstr "Amerika/Montserrat"
+
+#: ../src/common/zone_tab.h:474
+msgid "Europe/Malta"
+msgstr "Evropa/Malta"
+
+#: ../src/common/zone_tab.h:476
+msgid "Indian/Mauritius"
+msgstr "Indický oceán/Mauritius"
+
+#: ../src/common/zone_tab.h:478
+msgid "Indian/Maldives"
+msgstr "Indický oceán/Maldives"
+
+#: ../src/common/zone_tab.h:480
+msgid "Africa/Blantyre"
+msgstr "Afria/Blantyre"
+
+#: ../src/common/zone_tab.h:482
+msgid "America/Mexico_City"
+msgstr "Amerika/Mexico_City"
+
+#: ../src/common/zone_tab.h:484
+msgid "America/Cancun"
+msgstr "Amerika/Cancun"
+
+#: ../src/common/zone_tab.h:486
+msgid "America/Merida"
+msgstr "Amerika/Merida"
+
+#: ../src/common/zone_tab.h:488
+msgid "America/Monterrey"
+msgstr "Amerika/Monterrey"
+
+#: ../src/common/zone_tab.h:490
+msgid "America/Mazatlan"
+msgstr "Amerika/Mazatlan"
+
+#: ../src/common/zone_tab.h:492
+msgid "America/Chihuahua"
+msgstr "Amerika/Chihuahua"
+
+#: ../src/common/zone_tab.h:494
+msgid "America/Hermosillo"
+msgstr "Amerika/Hermosillo"
+
+#: ../src/common/zone_tab.h:496
+msgid "America/Tijuana"
+msgstr "Amerika/Tijuana"
+
+#: ../src/common/zone_tab.h:498
+msgid "Asia/Kuala_Lumpur"
+msgstr "Asie/Kuala_Lumpur"
+
+#: ../src/common/zone_tab.h:500
+msgid "Asia/Kuching"
+msgstr "Asie/Kuching"
+
+#: ../src/common/zone_tab.h:502
+msgid "Africa/Maputo"
+msgstr "Afrika/Maputo"
+
+#: ../src/common/zone_tab.h:504
+msgid "Africa/Windhoek"
+msgstr "Afrika/Windhoek"
+
+#: ../src/common/zone_tab.h:506
+msgid "Pacific/Noumea"
+msgstr "Pacifik/Noumea"
+
+#: ../src/common/zone_tab.h:508
+msgid "Africa/Niamey"
+msgstr "Afrika/Niamey"
+
+#: ../src/common/zone_tab.h:510
+msgid "Pacific/Norfolk"
+msgstr "Pacifik/Norfolk"
+
+#: ../src/common/zone_tab.h:512
+msgid "Africa/Lagos"
+msgstr "Afrika/Lagos"
+
+#: ../src/common/zone_tab.h:514
+msgid "America/Managua"
+msgstr "Amerika/Managua"
+
+#: ../src/common/zone_tab.h:516
+msgid "Europe/Amsterdam"
+msgstr "Evropa/Amsterdam"
+
+#: ../src/common/zone_tab.h:518
+msgid "Europe/Oslo"
+msgstr "Evropa/Oslo"
+
+#: ../src/common/zone_tab.h:520
+msgid "Asia/Katmandu"
+msgstr "Asie/Katmandu"
+
+#: ../src/common/zone_tab.h:522
+msgid "Pacific/Nauru"
+msgstr "Pacifik/Nauru"
+
+#: ../src/common/zone_tab.h:524
+msgid "Pacific/Niue"
+msgstr "Pacifik/Niue"
+
+#: ../src/common/zone_tab.h:526
+msgid "Pacific/Auckland"
+msgstr "Pacifik/Auckland"
+
+#: ../src/common/zone_tab.h:528
+msgid "Pacific/Chatham"
+msgstr "Pacifik/Chatham"
+
+#: ../src/common/zone_tab.h:530
+msgid "Asia/Muscat"
+msgstr "Asie/Muscat"
+
+#: ../src/common/zone_tab.h:532
+msgid "America/Panama"
+msgstr "Amerika/Panama"
+
+#: ../src/common/zone_tab.h:534
+msgid "America/Lima"
+msgstr "Amerika/Lima"
+
+#: ../src/common/zone_tab.h:536
+msgid "Pacific/Tahiti"
+msgstr "Pacifik/Tahiti"
+
+#: ../src/common/zone_tab.h:538
+msgid "Pacific/Marquesas"
+msgstr "Pacifik/Marquesas"
+
+#: ../src/common/zone_tab.h:540
+msgid "Pacific/Gambier"
+msgstr "Pacifik/Gambier"
+
+#: ../src/common/zone_tab.h:542
+msgid "Pacific/Port_Moresby"
+msgstr "Pacifik/Port_Moresby"
+
+#: ../src/common/zone_tab.h:544
+msgid "Asia/Manila"
+msgstr "Asie/Manila"
+
+#: ../src/common/zone_tab.h:546
+msgid "Asia/Karachi"
+msgstr "Asie/Karachi"
+
+#: ../src/common/zone_tab.h:548
+msgid "Europe/Warsaw"
+msgstr "Evropa/Varšava"
+
+#: ../src/common/zone_tab.h:550
+msgid "America/Miquelon"
+msgstr "Amerika/Miquelon"
+
+#: ../src/common/zone_tab.h:552
+msgid "Pacific/Pitcairn"
+msgstr "Pacifik/Pitcairn"
+
+#: ../src/common/zone_tab.h:554
+msgid "America/Puerto_Rico"
+msgstr "Amerika/Puerto_Rico"
+
+#: ../src/common/zone_tab.h:556
+msgid "Asia/Gaza"
+msgstr "Asie/Gaza"
+
+#: ../src/common/zone_tab.h:558
+msgid "Europe/Lisbon"
+msgstr "Evropa/Lisbon"
+
+#: ../src/common/zone_tab.h:560
+msgid "Atlantic/Madeira"
+msgstr "Atlantik/Madeira"
+
+#: ../src/common/zone_tab.h:562
+msgid "Atlantic/Azores"
+msgstr "Atlantik/Azores"
+
+#: ../src/common/zone_tab.h:564
+msgid "Pacific/Palau"
+msgstr "Pacifik/Palau"
+
+#: ../src/common/zone_tab.h:566
+msgid "America/Asuncion"
+msgstr "Amerika/Asuncion"
+
+#: ../src/common/zone_tab.h:568
+msgid "Asia/Qatar"
+msgstr "Asie/Qatar"
+
+#: ../src/common/zone_tab.h:570
+msgid "Indian/Reunion"
+msgstr "Indický oceán/Reunion"
+
+#: ../src/common/zone_tab.h:572
+msgid "Europe/Bucharest"
+msgstr "Evropa/Bukurešť"
+
+#: ../src/common/zone_tab.h:574
+msgid "Europe/Belgrade"
+msgstr "Evropa/Bělehrad"
+
+#: ../src/common/zone_tab.h:576
+msgid "Europe/Kaliningrad"
+msgstr "Evropa/Kaliningrad"
+
+#: ../src/common/zone_tab.h:578
+msgid "Europe/Moscow"
+msgstr "Evropa/Moskva"
+
+#: ../src/common/zone_tab.h:580
+#, fuzzy
+msgid "Europe/Volgograd"
+msgstr "Evropa/Bělehrad"
+
+#: ../src/common/zone_tab.h:582
+msgid "Europe/Samara"
+msgstr "Evropa/Samara"
+
+#: ../src/common/zone_tab.h:584
+msgid "Asia/Yekaterinburg"
+msgstr "Asie/Yekaterinburg"
+
+#: ../src/common/zone_tab.h:586
+msgid "Asia/Omsk"
+msgstr "Asie/Omsk"
+
+#: ../src/common/zone_tab.h:588
+msgid "Asia/Novosibirsk"
+msgstr "Asie/Novosibirsk"
+
+#: ../src/common/zone_tab.h:590
+msgid "Asia/Krasnoyarsk"
+msgstr "Asie/Krasnoyarsk"
+
+#: ../src/common/zone_tab.h:592
+msgid "Asia/Irkutsk"
+msgstr "Asie/Irkutsk"
+
+#: ../src/common/zone_tab.h:594
+msgid "Asia/Yakutsk"
+msgstr "Asie/Yakutsk"
+
+#: ../src/common/zone_tab.h:596
+msgid "Asia/Vladivostok"
+msgstr "Asie/Vladivostok"
+
+#: ../src/common/zone_tab.h:598
+msgid "Asia/Sakhalin"
+msgstr "Asie/Sakhalin"
+
+#: ../src/common/zone_tab.h:600
+msgid "Asia/Magadan"
+msgstr "Asie/Magadan"
+
+#: ../src/common/zone_tab.h:602
+msgid "Asia/Kamchatka"
+msgstr "Asie/Kamchatka"
+
+#: ../src/common/zone_tab.h:604
+msgid "Asia/Anadyr"
+msgstr "Asie/Anadyr"
+
+#: ../src/common/zone_tab.h:606
+msgid "Africa/Kigali"
+msgstr "Afrika/Kigali"
+
+#: ../src/common/zone_tab.h:608
+msgid "Asia/Riyadh"
+msgstr "Asie/Riyadh"
+
+#: ../src/common/zone_tab.h:610
+msgid "Pacific/Guadalcanal"
+msgstr "Pacifik/Guadalcanal"
+
+#: ../src/common/zone_tab.h:612
+msgid "Indian/Mahe"
+msgstr "Indický oceán/Mahe"
+
+#: ../src/common/zone_tab.h:614
+msgid "Africa/Khartoum"
+msgstr "Afrika/Khartoum"
+
+#: ../src/common/zone_tab.h:616
+msgid "Europe/Stockholm"
+msgstr "Evropa/Stockholm"
+
+#: ../src/common/zone_tab.h:618
+msgid "Asia/Singapore"
+msgstr "Asie/Singapore"
+
+#: ../src/common/zone_tab.h:620
+msgid "Atlantic/St_Helena"
+msgstr "Atlantik/St_Helena"
+
+#: ../src/common/zone_tab.h:622
+msgid "Europe/Ljubljana"
+msgstr "Evropa/Ljubljana"
+
+#: ../src/common/zone_tab.h:624
+msgid "Arctic/Longyearbyen"
+msgstr "Arktida/Longyearbyen"
+
+#: ../src/common/zone_tab.h:626
+msgid "Europe/Bratislava"
+msgstr "Evropa/Bratislava"
+
+#: ../src/common/zone_tab.h:628
+msgid "Africa/Freetown"
+msgstr "Afrika/Freetown"
+
+#: ../src/common/zone_tab.h:630
+msgid "Europe/San_Marino"
+msgstr "Evropa/San_Marino"
+
+#: ../src/common/zone_tab.h:632
+msgid "Africa/Dakar"
+msgstr "Afrika/Dakar"
+
+#: ../src/common/zone_tab.h:634
+msgid "Africa/Mogadishu"
+msgstr "Afrika/Mogadishu"
+
+#: ../src/common/zone_tab.h:636
+msgid "America/Paramaribo"
+msgstr "Amerika/Paramaribo"
+
+#: ../src/common/zone_tab.h:638
+msgid "Africa/Sao_Tome"
+msgstr "Afrika/Sao_Tome"
+
+#: ../src/common/zone_tab.h:640
+msgid "America/El_Salvador"
+msgstr "Amerika/El_Salvador"
+
+#: ../src/common/zone_tab.h:642
+msgid "Asia/Damascus"
+msgstr "Asie/Colombo"
+
+#: ../src/common/zone_tab.h:644
+msgid "Africa/Mbabane"
+msgstr "Afrika/Mbabane"
+
+#: ../src/common/zone_tab.h:646
+msgid "America/Grand_Turk"
+msgstr "Amerika/Grand_Turk"
+
+#: ../src/common/zone_tab.h:648
+msgid "Africa/Ndjamena"
+msgstr "Afrika/Ndjamena"
+
+#: ../src/common/zone_tab.h:650
+msgid "Indian/Kerguelen"
+msgstr "Indický oceán/Kerguelen"
+
+#: ../src/common/zone_tab.h:652
+msgid "Africa/Lome"
+msgstr "Afrika/Lome"
+
+#: ../src/common/zone_tab.h:654
+msgid "Asia/Bangkok"
+msgstr "Asie/Bangkok"
+
+#: ../src/common/zone_tab.h:656
+msgid "Asia/Dushanbe"
+msgstr "Asie/Dushanbe"
+
+#: ../src/common/zone_tab.h:658
+msgid "Pacific/Fakaofo"
+msgstr "Pacifik/Fakaofo"
+
+#: ../src/common/zone_tab.h:660
+msgid "Asia/Dili"
+msgstr "Asie/Dili"
+
+#: ../src/common/zone_tab.h:662
+msgid "Asia/Ashgabat"
+msgstr "Asie/Ashgabat"
+
+#: ../src/common/zone_tab.h:664
+msgid "Africa/Tunis"
+msgstr "Afrika/Tunis"
+
+#: ../src/common/zone_tab.h:666
+msgid "Pacific/Tongatapu"
+msgstr "Pacifik/Tongatapu"
+
+#: ../src/common/zone_tab.h:668
+msgid "Europe/Istanbul"
+msgstr "Evropa/Istambul"
+
+#: ../src/common/zone_tab.h:670
+msgid "America/Port_of_Spain"
+msgstr "Amerika/Port_of_Spain"
+
+#: ../src/common/zone_tab.h:672
+msgid "Pacific/Funafuti"
+msgstr "Pacifik/Funafuti"
+
+#: ../src/common/zone_tab.h:674
+msgid "Asia/Taipei"
+msgstr "Asie/Taipei"
+
+#: ../src/common/zone_tab.h:676
+msgid "Africa/Dar_es_Salaam"
+msgstr "Afrika/Dar_es_Salaam"
+
+#: ../src/common/zone_tab.h:678
+msgid "Europe/Kiev"
+msgstr "Evropa/Kyjev"
+
+#: ../src/common/zone_tab.h:680
+msgid "Europe/Uzhgorod"
+msgstr "Evropa/Užhorod"
+
+#: ../src/common/zone_tab.h:682
+msgid "Europe/Zaporozhye"
+msgstr "Evropa/Záporoží"
+
+#: ../src/common/zone_tab.h:684
+msgid "Europe/Simferopol"
+msgstr "Evropa/Simferopol"
+
+#: ../src/common/zone_tab.h:686
+msgid "Africa/Kampala"
+msgstr "Afrika/Kampala"
+
+#: ../src/common/zone_tab.h:688
+msgid "Pacific/Johnston"
+msgstr "Pacifik/Johnston"
+
+#: ../src/common/zone_tab.h:690
+msgid "Pacific/Midway"
+msgstr "Pacifik/Midway"
+
+#: ../src/common/zone_tab.h:692
+msgid "Pacific/Wake"
+msgstr "Pacifik/Wake"
+
+#: ../src/common/zone_tab.h:694
+msgid "America/New_York"
+msgstr "Amerika/New_York"
+
+#: ../src/common/zone_tab.h:696
+msgid "America/Detroit"
+msgstr "Amerika/Detroit"
+
+#: ../src/common/zone_tab.h:698
+#, fuzzy
+msgid "America/Kentucky/Louisville"
+msgstr "Amerika/Louisville"
+
+#: ../src/common/zone_tab.h:700
+msgid "America/Kentucky/Monticello"
+msgstr "Amerika/Kentucky/Monticello"
+
+#: ../src/common/zone_tab.h:702
+#, fuzzy
+msgid "America/Indiana/Indianapolis"
+msgstr "Amerika/Indianapolis"
+
+#: ../src/common/zone_tab.h:704
+#, fuzzy
+msgid "America/Indiana/Vincennes"
+msgstr "Amerika/Indiana/Vevay"
+
+#: ../src/common/zone_tab.h:706
+msgid "America/Indiana/Marengo"
+msgstr "Amerika/Indiana/Marengo"
+
+#: ../src/common/zone_tab.h:708
+#, fuzzy
+msgid "America/Indiana/Petersburg"
+msgstr "Amerika/Indiana/Marengo"
+
+#: ../src/common/zone_tab.h:710
+msgid "America/Indiana/Vevay"
+msgstr "Amerika/Indiana/Vevay"
+
+#: ../src/common/zone_tab.h:712
+msgid "America/Chicago"
+msgstr "Amerika/Chicago"
+
+#: ../src/common/zone_tab.h:714
+msgid "America/Indiana/Knox"
+msgstr "Amerika/Indiana/Knox"
+
+#: ../src/common/zone_tab.h:716
+msgid "America/Menominee"
+msgstr "Amerika/Menominee"
+
+#: ../src/common/zone_tab.h:718
+msgid "America/North_Dakota/Center"
+msgstr "Amerika/North_Dakota/Center"
+
+#: ../src/common/zone_tab.h:720
+#, fuzzy
+msgid "America/North_Dakota/New_Salem"
+msgstr "Amerika/North_Dakota/Center"
+
+#: ../src/common/zone_tab.h:722
+msgid "America/Denver"
+msgstr "Amerika/Denver"
+
+#: ../src/common/zone_tab.h:724
+msgid "America/Boise"
+msgstr "Amerika/Boise"
+
+#: ../src/common/zone_tab.h:726
+msgid "America/Shiprock"
+msgstr "Amerika/Shiprock"
+
+#: ../src/common/zone_tab.h:728
+msgid "America/Phoenix"
+msgstr "Amerika/Phoenix"
+
+#: ../src/common/zone_tab.h:730
+msgid "America/Los_Angeles"
+msgstr "Amerika/Los_Angeles"
+
+#: ../src/common/zone_tab.h:732
+msgid "America/Anchorage"
+msgstr "Amerika/Anchorage"
+
+#: ../src/common/zone_tab.h:734
+msgid "America/Juneau"
+msgstr "Amerika/Juneau"
+
+#: ../src/common/zone_tab.h:736
+msgid "America/Yakutat"
+msgstr "Amerika/Yakutat"
+
+#: ../src/common/zone_tab.h:738
+msgid "America/Nome"
+msgstr "Amerika/Nome"
+
+#: ../src/common/zone_tab.h:740
+msgid "America/Adak"
+msgstr "Amerika/Adak"
+
+#: ../src/common/zone_tab.h:742
+msgid "Pacific/Honolulu"
+msgstr "Pacifik/Honolulu"
+
+#: ../src/common/zone_tab.h:744
+msgid "America/Montevideo"
+msgstr "Amerika/Montevideo"
+
+#: ../src/common/zone_tab.h:746
+msgid "Asia/Samarkand"
+msgstr "Asie/Samarkand"
+
+#: ../src/common/zone_tab.h:748
+msgid "Asia/Tashkent"
+msgstr "Asie/Tashkent"
+
+#: ../src/common/zone_tab.h:750
+msgid "Europe/Vatican"
+msgstr "Evropa/Vatikán"
+
+#: ../src/common/zone_tab.h:752
+msgid "America/St_Vincent"
+msgstr "Amerika/St_Vincent"
+
+#: ../src/common/zone_tab.h:754
+msgid "America/Caracas"
+msgstr "Amerika/Caracas"
+
+#: ../src/common/zone_tab.h:756
+msgid "America/Tortola"
+msgstr "Amerika/Tortola"
+
+#: ../src/common/zone_tab.h:758
+msgid "America/St_Thomas"
+msgstr "Amerika/St_Thomas"
+
+#: ../src/common/zone_tab.h:760
+msgid "Pacific/Efate"
+msgstr "Pacifik/Efate"
+
+#: ../src/common/zone_tab.h:762
+msgid "Pacific/Wallis"
+msgstr "Pacifik/Wallis"
+
+#: ../src/common/zone_tab.h:764
+msgid "Pacific/Apia"
+msgstr "Pacifik/Apia"
+
+#: ../src/common/zone_tab.h:766
+msgid "Asia/Aden"
+msgstr "Asie/Aden"
+
+#: ../src/common/zone_tab.h:768
+msgid "Indian/Mayotte"
+msgstr "Indický oceán/Mayotte"
+
+#: ../src/common/zone_tab.h:770
+msgid "Africa/Johannesburg"
+msgstr "Afrika/Johannesburg"
+
+#: ../src/common/zone_tab.h:772
+msgid "Africa/Lusaka"
+msgstr "Afrika/Lusaka"
+
+#: ../src/common/zone_tab.h:774
+msgid "Africa/Harare"
+msgstr "Afrika/Harare"
+
+#: ../src/common/zone_tab.h:776 ../src/common/zone_tab.h:778
+#: ../src/common/zone_tab.h:780
+msgid "Europe/"
+msgstr "Evropa/"
+
+#: ../src/common/zone_tab.h:782
+msgid "America/Buenos_Aires"
+msgstr "Amerika/Buenos_Aires"
+
+#: ../src/common/zone_tab.h:784
+msgid "America/Cordoba"
+msgstr "Amerika/Cordoba"
+
+#: ../src/common/zone_tab.h:786
+msgid "America/Jujuy"
+msgstr "Amerika/Jujuy"
+
+#: ../src/common/zone_tab.h:788
+msgid "America/Catamarca"
+msgstr "Amerika/Catamarca"
+
+#: ../src/common/zone_tab.h:790
+msgid "America/Mendoza"
+msgstr "Amerika/Mendoza"
+
+#: ../src/common/zone_tab.h:792
+msgid "Australia/LHI"
+msgstr "Austrálie/LHI"
+
+#: ../src/common/zone_tab.h:794
+msgid "Australia/NSW"
+msgstr "Austrálie/NSW"
+
+#: ../src/common/zone_tab.h:796
+msgid "PRC"
+msgstr ""
+
+#: ../src/common/zone_tab.h:798
+msgid "Hongkong"
+msgstr "Hongkong"
+
+#: ../src/common/zone_tab.h:800
+msgid "Japan"
+msgstr "Japonsko"
+
+#: ../src/common/zone_tab.h:802
+msgid "ROK"
+msgstr ""
+
+#: ../src/common/zone_tab.h:804
+msgid "Poland"
+msgstr "Polsko"
+
+#: ../src/common/zone_tab.h:806
+msgid "US/Pacific"
+msgstr "US/Pacifik"
+
+#: ../src/network/network.desktop.in.in.h:3
+msgid "Network"
+msgstr "Síť"
+
+# SUN_BRANDING
+#: ../src/services/services.desktop.in.in.h:3
+msgid "Start and stop daemons and system services"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/services/service.c:38
+msgid "DNS services"
+msgstr "DNS služby"
+
+# SUN_BRANDING
+#: ../src/services/service.c:45
+#, fuzzy
+msgid "Network service"
+msgstr "DNS služby"
+
+# SUN_BRANDING
+#: ../src/services/service.c:45
+msgid "Non-described network-specific service"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/services/service.c:50
+#, fuzzy
+msgid "System service"
+msgstr "DNS služby"
+
+# SUN_BRANDING
+#: ../src/services/service.c:50
+msgid "Non-described system-specific service"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/shares/shares.desktop.in.in.h:2
+msgid "Choose which folders are visible to other users on your network"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/time/main.c:465
+msgid "Synchronzing clock now..."
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/time/main.c:522
+msgid "Install NTP support"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/users/user-settings.c:310
+#, c-format
+msgid "User name new\"%s\" already exists"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/users/user-settings.c:312 ../src/users/user-settings.c:374
+msgid "Please select a different user name."
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/users/user-settings.c:473
+msgid "Cannot create a home directory on an automounted filesystem."
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/users/user-settings.c:475
+msgid "Please pick an alternative base directory for the users home directory."
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/users/user-settings.c:513
+#, c-format
+msgid "User ID \"%s\" already exists"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/users/user-settings.c:515
+msgid "Please select a different User ID."
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/users/users.desktop.in.in.h:2
+msgid "Add, remove or edit the users and groups that may access this computer"
+msgstr ""

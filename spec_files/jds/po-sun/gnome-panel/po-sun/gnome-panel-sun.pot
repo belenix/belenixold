@@ -1,0 +1,67 @@
+# Copyright (C) 2009 Sun Microsystems, Inc
+# This file is distributed under the same license as the gnome-panel package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-03-18 16:27+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# SUN_BRANDING
+#: ../applets/wncklet/GNOME_WorkspaceSwitcherApplet.xml.h:3
+msgid "_Change Workspace Label..."
+msgstr ""
+
+# SUN_BRANDING
+#: ../applets/wncklet/workspace-switcher.c:1320
+msgid "Changing Workspace Label"
+msgstr ""
+
+# SUN_BRANDING
+#: ../gnome-panel/menu.c:1881 ../gnome-panel/panel-action-button.c:329
+msgid "Run Application..."
+msgstr ""
+
+# SUN_BRANDING
+#: ../gnome-panel/menu.c:1941
+msgid "All Applications"
+msgstr ""
+
+# SUN_BRANDING
+#: ../gnome-panel/menu.c:1959 ../gnome-panel/panel-menu-items.c:1200
+msgid "Preferences"
+msgstr ""
+
+# SUN_BRANDING
+#: ../gnome-panel/menu.c:1964 ../gnome-panel/panel-menu-items.c:1205
+msgid "Administration"
+msgstr ""
+
+# SUN_BRANDING tooltip
+#: ../gnome-panel/panel-menu-items.c:608 ../gnome-panel/panel-menu-items.c:709
+#: ../gnome-panel/panel-menu-items.c:744
+#, c-format
+msgid "Open %s"
+msgstr ""
+
+# SUN_BRANDING tooltip
+#. Translators: this string is used ONLY if you translated
+#. * "1" (msgctxt: "panel:showusername") to "1"
+#: ../gnome-panel/panel-menu-items.c:1576
+#, c-format
+msgid "Log out %s from this session and return to log in screen"
+msgstr ""

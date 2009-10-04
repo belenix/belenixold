@@ -1,0 +1,2598 @@
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-panel HEAD\n"
+"POT-Creation-Date: 2006-12-27 22:41+0900\n"
+"PO-Revision-Date: 2003-08-26 01:18+0100\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:47
+msgid "America/Argentina/Buenos_Aires"
+msgstr "アメリカ/アルゼンチン/ブエノスアイレス"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:49
+msgid "America/Argentina/Cordoba"
+msgstr "アメリカ/アルゼンチン/コルドバ"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:51
+msgid "America/Argentina/Jujuy"
+msgstr "アメリカ/アルゼンチン/フフイ"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:53
+msgid "America/Argentina/Tucuman"
+msgstr "アメリカ/アルゼンチン/トゥクマン"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:55
+msgid "America/Argentina/Catamarca"
+msgstr "アメリカ/アルゼンチン/カタマルカ"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:57
+msgid "America/Argentina/La_Rioja"
+msgstr "アメリカ/アルゼンチン/ラリオハ"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:59
+msgid "America/Argentina/San_Juan"
+msgstr "アメリカ/アルゼンチン/サンファン"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:61
+msgid "America/Argentina/Mendoza"
+msgstr "アメリカ/アルゼンチン/メンドーサ"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:63
+msgid "America/Argentina/Rio_Gallegos"
+msgstr "アメリカ/アルゼンチン/リオガイェゴス"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:65
+msgid "America/Argentina/Ushuaia"
+msgstr "アメリカ/アルゼンチン/ウスアイア"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:75
+msgid "Australia/Currie"
+msgstr "オーストラリア/カリー"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:95
+msgid "Europe/Mariehamn"
+msgstr "ヨーロッパ/マリーハムン"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:169
+msgid "America/Moncton"
+msgstr "アメリカ/モンクトン"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:173
+msgid "America/Blanc-Sablon"
+msgstr "アメリカ/ブラン・サブロン"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:187
+msgid "America/Atikokan"
+msgstr "アメリカ/アティコカン"
+
+#
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:311
+msgid "Europe/Guernsey"
+msgstr "ヨーロッパ/ガーンジー島"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:367
+msgid "Europe/Isle_of_Man"
+msgstr "ヨーロッパ/マン島"
+
+#
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:381
+msgid "Europe/Jersey"
+msgstr "ヨーロッパ/ジャージー島"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:451
+msgid "Europe/Podgorica"
+msgstr "ヨーロッパ/ポドゴリツァ"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:587
+msgid "Europe/Volgograd"
+msgstr "ヨーロッパ/ヴォルゴグラード"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:707
+msgid "America/Kentucky/Louisville"
+msgstr "アメリカ/ケンタッキー/ルイビル"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:711
+msgid "America/Indiana/Indianapolis"
+msgstr "アメリカ/インディアナ/インディアナポリス"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:721
+msgid "America/Indiana/Vincennes"
+msgstr "アメリカ/インディアナ/ヴァンセンヌ"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:723
+msgid "America/Indiana/Petersburg"
+msgstr "アメリカ/インディアナ/ピーターズバーグ"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:729
+msgid "America/North_Dakota/New_Salem"
+msgstr "アメリカ/ノースダコタ/ニューセイラム"
+
+#
+# SUN CHANGED MESSAGE
+# SUN MESSAGE
+#: ../applets/clock/clock.c:2714 ../applets/clock/clock.c:2901
+#: ../applets/clock/timezone-selection.c:26 ../applets/fish/fish.c:160
+#: ../applets/notification_area/main.c:119
+#: ../applets/wncklet/window-list.c:113 ../applets/wncklet/wncklet.c:128
+#: ../applets/wncklet/workspace-switcher.c:256
+#, c-format
+msgid "There was an error displaying help: %s"
+msgstr "ヘルプを表示する際にエラーが発生しました: %s"
+
+#
+# SUN CHANGED MESSAGE
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/clock.c:2845
+msgid "Show _time zones button"
+msgstr "タイムゾーンボタンを表示(_T)"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/multi-timezone.c:59
+msgid "use daylight savings"
+msgstr "夏時間を使用"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/multi-timezone.c:190
+msgid "Edit Time Zones..."
+msgstr "タイムゾーンの編集..."
+
+# UNREVIEWED
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/multi-timezone.c:448
+msgid "Time zone"
+msgstr "タイムゾーン"
+
+# msgstr ""
+# "選択したアプリケーション、あるいは、コマンド入力エントリに入力されたコマンド"
+# "を実行するにはこのボタンを押します。"
+# NEW
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/multi-timezone.c:459
+msgid "Comments"
+msgstr "コメント"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/timezone-selection.c:181
+#: ../applets/clock/timezone.glade.h:4
+msgid ""
+"Click on your nearest city or select it from the list (left click to zoom "
+"in):"
+msgstr ""
+"最寄りの都市の上でクリックするか、リストから選択してください (左クリックで拡"
+"大):"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/timezone-selection.c:214
+msgid ""
+"Click on your nearest city or select it from the list (right click to zoom "
+"out):"
+msgstr ""
+"最寄りの都市の上でクリックするか、リストから選択してください (右クリックで縮"
+"小):"
+
+# SUN REVIEWED
+#: ../applets/clock/timezone.glade.h:2
+msgid "Change Clock Applet Time Zone"
+msgstr "クロックアプレットのタイムゾーンを変更"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/timezone.glade.h:6
+msgid "Time _zone:"
+msgstr "タイムゾーン(_Z):"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/timezone.glade.h:8
+msgid "_Add"
+msgstr "追加(_A)"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/timezone.glade.h:10
+msgid "_List:"
+msgstr "リスト(_L):"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/timezone.glade.h:12
+msgid "_Remove"
+msgstr "削除(_R)"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:9
+msgid "Europe/Andorra"
+msgstr "ヨーロッパ/アンドラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:11
+msgid "Asia/Dubai"
+msgstr "アジア/ドゥバイ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:13
+msgid "Asia/Kabul"
+msgstr "アジア/カブール"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:15
+msgid "America/Antigua"
+msgstr "アメリカ/アンティグア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:17
+msgid "America/Anguilla"
+msgstr "アメリカ/アンギラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:19
+msgid "Europe/Tirane"
+msgstr "ヨーロッパ/ティラナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:21
+msgid "Asia/Yerevan"
+msgstr "アジア/エレバン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:23
+msgid "America/Curacao"
+msgstr "アメリカ/キュラソー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:25
+msgid "Africa/Luanda"
+msgstr "アフリカ/ルアンダ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:27
+msgid "Antarctica/McMurdo"
+msgstr "南極大陸/マクマード基地"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:29
+msgid "Antarctica/South_Pole"
+msgstr "南極大陸/南極点"
+
+# SUN LING REVIEWED
+# SUN TECH REVIEWED
+#: ../applets/clock/zone_tab.h:31
+msgid "Antarctica/Rothera"
+msgstr "南極大陸/ロセラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:33
+msgid "Antarctica/Palmer"
+msgstr "南極大陸/パーマー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:35
+msgid "Antarctica/Mawson"
+msgstr "南極大陸/モーソン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:37
+msgid "Antarctica/Davis"
+msgstr "南極大陸/デービス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:39
+msgid "Antarctica/Casey"
+msgstr "南極大陸/キャセイ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:41
+msgid "Antarctica/Vostok"
+msgstr "南極大陸/ボストーク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:43
+msgid "Antarctica/DumontDUrville"
+msgstr "南極大陸/デュモンデュルヴィル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:45
+msgid "Antarctica/Syowa"
+msgstr "南極大陸/昭和基地"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:67
+msgid "Pacific/Pago_Pago"
+msgstr "太平洋/パゴパゴ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:69
+msgid "Europe/Vienna"
+msgstr "ヨーロッパ/ウィーン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:71
+msgid "Australia/Lord_Howe"
+msgstr "オーストラリア/ロードハウ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:73
+msgid "Australia/Hobart"
+msgstr "オーストラリア/ホバート"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:77
+msgid "Australia/Melbourne"
+msgstr "オーストラリア/メルボルン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:79
+msgid "Australia/Sydney"
+msgstr "オーストラリア/シドニー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:81
+msgid "Australia/Broken_Hill"
+msgstr "オーストラリア/ブロークンヒル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:83
+msgid "Australia/Brisbane"
+msgstr "オーストラリア/ブリスベン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:85
+msgid "Australia/Lindeman"
+msgstr "オーストラリア/リンデマン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:87
+msgid "Australia/Adelaide"
+msgstr "オーストラリア/アデレード"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:89
+msgid "Australia/Darwin"
+msgstr "オーストラリア/ダーウィン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:91
+msgid "Australia/Perth"
+msgstr "オーストラリア/パース"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:93
+msgid "America/Aruba"
+msgstr "アメリカ/アルバ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:97
+msgid "Asia/Baku"
+msgstr "アジア/バクー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:99
+msgid "Europe/Sarajevo"
+msgstr "ヨーロッパ/サラエボ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:101
+msgid "America/Barbados"
+msgstr "アメリカ/バルバドス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:103
+msgid "Asia/Dhaka"
+msgstr "アジア/ダッカ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:105
+msgid "Europe/Brussels"
+msgstr "ヨーロッパ/ブリュッセル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:107
+msgid "Africa/Ouagadougou"
+msgstr "アフリカ/ワガドゥーグー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:109
+msgid "Europe/Sofia"
+msgstr "ヨーロッパ/ソフィア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:111
+msgid "Asia/Bahrain"
+msgstr "アジア/バーレーン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:113
+msgid "Africa/Bujumbura"
+msgstr "アフリカ/ブジュンブラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:115
+msgid "Africa/Porto-Novo"
+msgstr "アフリカ/ポルトノボ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:117
+msgid "Atlantic/Bermuda"
+msgstr "大西洋/バミューダ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:119
+msgid "Asia/Brunei"
+msgstr "アジア/ブルネイ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:121
+msgid "America/La_Paz"
+msgstr "アメリカ/ラパス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:123
+msgid "America/Noronha"
+msgstr "アメリカ/ノローニャ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:125
+msgid "America/Belem"
+msgstr "アメリカ/ベレン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:127
+msgid "America/Fortaleza"
+msgstr "アメリカ/フォルタレザ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:129
+msgid "America/Recife"
+msgstr "アメリカ/レシフェ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:131
+msgid "America/Araguaina"
+msgstr "アメリカ/アラグアイナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:133
+msgid "America/Maceio"
+msgstr "アメリカ/マセイオ"
+
+# SUN LING REVIEWED
+# SUN TECH REVIEWED
+#: ../applets/clock/zone_tab.h:135
+msgid "America/Bahia"
+msgstr "アメリカ/バイア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:137
+msgid "America/Sao_Paulo"
+msgstr "アメリカ/サンパウロ"
+
+# SUN LING REVIEWED
+# SUN TECH REVIEWED
+#: ../applets/clock/zone_tab.h:139
+msgid "America/Campo_Grande"
+msgstr "アメリカ/カンポグランデ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:141
+msgid "America/Cuiaba"
+msgstr "アメリカ/クイアバ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:143
+msgid "America/Porto_Velho"
+msgstr "アメリカ/ポルトベーリョ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:145
+msgid "America/Boa_Vista"
+msgstr "アメリカ/ボアビスタ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:147
+msgid "America/Manaus"
+msgstr "アメリカ/マナウス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:149
+msgid "America/Eirunepe"
+msgstr "アメリカ/エイルネペ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:151
+msgid "America/Rio_Branco"
+msgstr "アメリカ/リオブランコ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:153
+msgid "America/Nassau"
+msgstr "アメリカ/ナッソー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:155
+msgid "Asia/Thimphu"
+msgstr "アジア/ティンプー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:157
+msgid "Africa/Gaborone"
+msgstr "アフリカ/ハボローネ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:159
+msgid "Europe/Minsk"
+msgstr "ヨーロッパ/ミンスク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:161
+msgid "America/Belize"
+msgstr "アメリカ/ベリーズ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:163
+msgid "America/St_Johns"
+msgstr "アメリカ/セントジョーンズ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:165
+msgid "America/Halifax"
+msgstr "アメリカ/ハリファックス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:167
+msgid "America/Glace_Bay"
+msgstr "アメリカ/グレースベイ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:171
+msgid "America/Goose_Bay"
+msgstr "アメリカ/グースベイ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:175
+msgid "America/Montreal"
+msgstr "アメリカ/モントリオール"
+
+# SUN LING REVIEWED
+# SUN TECH REVIEWED
+#: ../applets/clock/zone_tab.h:177
+msgid "America/Toronto"
+msgstr "アメリカ/トロント"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:179
+msgid "America/Nipigon"
+msgstr "アメリカ/ニピゴン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:181
+msgid "America/Thunder_Bay"
+msgstr "アメリカ/サンダーベイ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:183
+msgid "America/Pangnirtung"
+msgstr "アメリカ/パングナタング"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:185
+msgid "America/Iqaluit"
+msgstr "アメリカ/イカルーイット"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:189
+msgid "America/Rankin_Inlet"
+msgstr "アメリカ/ランキンインレット"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:191
+msgid "America/Winnipeg"
+msgstr "アメリカ/ウィニペグ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:193
+msgid "America/Rainy_River"
+msgstr "アメリカ/レイニーリバー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:195
+msgid "America/Cambridge_Bay"
+msgstr "アメリカ/キャンブリッジベイ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:197
+msgid "America/Regina"
+msgstr "アメリカ/リジャイナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:199
+msgid "America/Swift_Current"
+msgstr "アメリカ/スウィフトカレント"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:201
+msgid "America/Edmonton"
+msgstr "アメリカ/エドモートン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:203
+msgid "America/Yellowknife"
+msgstr "アメリカ/イエローナイフ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:205
+msgid "America/Inuvik"
+msgstr "アメリカ/イヌービク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:207
+msgid "America/Dawson_Creek"
+msgstr "アメリカ/ドーソンクリーク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:209
+msgid "America/Vancouver"
+msgstr "アメリカ/バンクーバー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:211
+msgid "America/Whitehorse"
+msgstr "アメリカ/ホワイトホース"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:213
+msgid "America/Dawson"
+msgstr "アメリカ/ドーソン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:215
+msgid "Indian/Cocos"
+msgstr "インド/ココス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:217
+msgid "Africa/Kinshasa"
+msgstr "アフリカ/キンシャサ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:219
+msgid "Africa/Lubumbashi"
+msgstr "アフリカ/ルブンバシ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:221
+msgid "Africa/Bangui"
+msgstr "アフリカ/バンギ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:223
+msgid "Africa/Brazzaville"
+msgstr "アフリカ/ブラザビル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:225
+msgid "Europe/Zurich"
+msgstr "ヨーロッパ/チューリヒ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:227
+msgid "Africa/Abidjan"
+msgstr "アフリカ/アビジャン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:229
+msgid "Pacific/Rarotonga"
+msgstr "太平洋/ラロトンガ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:231
+msgid "America/Santiago"
+msgstr "アメリカ/サンティアゴ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:233
+msgid "Pacific/Easter"
+msgstr "太平洋/イースター"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:235
+msgid "Africa/Douala"
+msgstr "アフリカ/ドゥアラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:237
+msgid "Asia/Shanghai"
+msgstr "アジア/上海"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:239
+msgid "America/Bogota"
+msgstr "アメリカ/ボゴタ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:241
+msgid "America/Costa_Rica"
+msgstr "アメリカ/コスタリカ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:243
+msgid "America/Havana"
+msgstr "アメリカ/ハバナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:245
+msgid "Atlantic/Cape_Verde"
+msgstr "大西洋/カーボベルデ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:247
+msgid "Indian/Christmas"
+msgstr "インド/クリスマス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:249
+msgid "Asia/Nicosia"
+msgstr "アジア/ニコシア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:251
+msgid "Europe/Prague"
+msgstr "ヨーロッパ/プラハ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:253
+msgid "Europe/Berlin"
+msgstr "ヨーロッパ/ベルリン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:255
+msgid "Africa/Djibouti"
+msgstr "アフリカ/ジブチ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:257
+msgid "Europe/Copenhagen"
+msgstr "ヨーロッパ/コペンハーゲン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:259
+msgid "America/Dominica"
+msgstr "アメリカ/ドミニカ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:261
+msgid "America/Santo_Domingo"
+msgstr "アメリカ/サントドミンゴ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:263
+msgid "Africa/Algiers"
+msgstr "アフリカ/アルジェ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:265
+msgid "America/Guayaquil"
+msgstr "アメリカ/グアヤキル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:267
+msgid "Pacific/Galapagos"
+msgstr "太平洋/ガラパゴス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:269
+msgid "Europe/Tallinn"
+msgstr "ヨーロッパ/タリン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:271
+msgid "Africa/Cairo"
+msgstr "アフリカ/カイロ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:273
+msgid "Africa/El_Aaiun"
+msgstr "アフリカ/アイウン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:275
+msgid "Africa/Asmera"
+msgstr "アフリカ/アスマラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:277
+msgid "Europe/Madrid"
+msgstr "ヨーロッパ/マドリード"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:279
+msgid "Africa/Ceuta"
+msgstr "アフリカ/セウタ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:281
+msgid "Atlantic/Canary"
+msgstr "大西洋/カナリア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:283
+msgid "Africa/Addis_Ababa"
+msgstr "アフリカ/アディスアベバ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:285
+msgid "Europe/Helsinki"
+msgstr "ヨーロッパ/ヘルシンキ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:287
+msgid "Pacific/Fiji"
+msgstr "太平洋/フィジー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:289
+msgid "Atlantic/Stanley"
+msgstr "大西洋/スタンリー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:291
+msgid "Pacific/Truk"
+msgstr "太平洋/チューク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:293
+msgid "Pacific/Ponape"
+msgstr "太平洋/ポナペ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:295
+msgid "Pacific/Kosrae"
+msgstr "太平洋/コスラエ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:297
+msgid "Atlantic/Faeroe"
+msgstr "大西洋/フェロー"
+
+#
+# SUN CHANGED MESSAGE
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:299
+msgid "Europe/Paris"
+msgstr "ヨーロッパ/パリ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:301
+msgid "Africa/Libreville"
+msgstr "アフリカ/リーブルビル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:303
+msgid "Europe/London"
+msgstr "ヨーロッパ/ロンドン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:305
+msgid "America/Grenada"
+msgstr "アメリカ/グレナダ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:307
+msgid "Asia/Tbilisi"
+msgstr "アジア/トビリシ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:309
+msgid "America/Cayenne"
+msgstr "アメリカ/カイエンヌ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:313
+msgid "Africa/Accra"
+msgstr "アフリカ/アクラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:315
+msgid "Europe/Gibraltar"
+msgstr "ヨーロッパ/ジブラルタル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:317
+msgid "America/Godthab"
+msgstr "アメリカ/ゴッドホーブ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:319
+msgid "America/Danmarkshavn"
+msgstr "アメリカ/ダンマークシャン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:321
+msgid "America/Scoresbysund"
+msgstr "アメリカ/スコルズビスン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:323
+msgid "America/Thule"
+msgstr "アメリカ/ツーレ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:325
+msgid "Africa/Banjul"
+msgstr "アフリカ/バンジュール"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:327
+msgid "Africa/Conakry"
+msgstr "アフリカ/コナクリ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:329
+msgid "America/Guadeloupe"
+msgstr "アメリカ/グアドループ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:331
+msgid "Africa/Malabo"
+msgstr "アフリカ/マラボ"
+
+#
+# SUN CHANGED MESSAGE
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:333
+msgid "Europe/Athens"
+msgstr "ヨーロッパ/アテネ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:335
+msgid "Atlantic/South_Georgia"
+msgstr "大西洋/サウスジョージア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:337
+msgid "America/Guatemala"
+msgstr "アメリカ/グアテマラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:339
+msgid "Pacific/Guam"
+msgstr "太平洋/グアム"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:341
+msgid "Africa/Bissau"
+msgstr "アフリカ/ビサウ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:343
+msgid "America/Guyana"
+msgstr "アメリカ/ガイアナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:345
+msgid "Asia/Hong_Kong"
+msgstr "アジア/香港"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:347
+msgid "America/Tegucigalpa"
+msgstr "アメリカ/テグシガルパ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:349
+msgid "Europe/Zagreb"
+msgstr "ヨーロッパ/ザグレフ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:351
+msgid "America/Port-au-Prince"
+msgstr "アメリカ/ポルトープランス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:353
+msgid "Europe/Budapest"
+msgstr "ヨーロッパ/ブダペスト"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:355
+msgid "Asia/Jakarta"
+msgstr "アジア/ジャカルタ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:357
+msgid "Asia/Pontianak"
+msgstr "アジア/ポンティアナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:359
+msgid "Asia/Makassar"
+msgstr "アジア/マカッサル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:361
+msgid "Asia/Jayapura"
+msgstr "アジア/ジャヤプラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:363
+msgid "Europe/Dublin"
+msgstr "ヨーロッパ/ダブリン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:365
+msgid "Asia/Jerusalem"
+msgstr "アジア/エルサレム"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:369
+msgid "Asia/Calcutta"
+msgstr "アジア/カルカッタ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:371
+msgid "Indian/Chagos"
+msgstr "インド/チャゴス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:373
+msgid "Asia/Baghdad"
+msgstr "アジア/バグダッド"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:375
+msgid "Asia/Tehran"
+msgstr "アジア/テヘラン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:377
+msgid "Atlantic/Reykjavik"
+msgstr "大西洋/レイキャビク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:379
+msgid "Europe/Rome"
+msgstr "ヨーロッパ/ローマ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:383
+msgid "America/Jamaica"
+msgstr "アメリカ/ジャマイカ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:385
+msgid "Asia/Amman"
+msgstr "アジア/アンマン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:387
+msgid "Asia/Tokyo"
+msgstr "アジア/東京"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:389
+msgid "Africa/Nairobi"
+msgstr "アフリカ/ナイロビ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:391
+msgid "Asia/Bishkek"
+msgstr "アジア/ビシュケク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:393
+msgid "Asia/Phnom_Penh"
+msgstr "アジア/プノンペン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:395
+msgid "Pacific/Tarawa"
+msgstr "太平洋/タラワ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:397
+msgid "Pacific/Enderbury"
+msgstr "太平洋/エンダーバリー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:399
+msgid "Pacific/Kiritimati"
+msgstr "太平洋/キリティマティ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:401
+msgid "Indian/Comoro"
+msgstr "インド/コモロ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:403
+msgid "America/St_Kitts"
+msgstr "アメリカ/セントキッツ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:405
+msgid "Asia/Pyongyang"
+msgstr "アジア/平壌"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:407
+msgid "Asia/Seoul"
+msgstr "アジア/ソウル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:409
+msgid "Asia/Kuwait"
+msgstr "アジア/クェート"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:411
+msgid "America/Cayman"
+msgstr "アメリカ/ケイマン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:413
+msgid "Asia/Almaty"
+msgstr "アジア/アルマトイ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:415
+msgid "Asia/Qyzylorda"
+msgstr "アジア/キジルオルダ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:417
+msgid "Asia/Aqtobe"
+msgstr "アジア/アクトベ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:419
+msgid "Asia/Aqtau"
+msgstr "アジア/アクタウ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:421
+msgid "Asia/Oral"
+msgstr "アジア/オラル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:423
+msgid "Asia/Vientiane"
+msgstr "アジア/ビエンチャン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:425
+msgid "Asia/Beirut"
+msgstr "アジア/ベイルート"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:427
+msgid "America/St_Lucia"
+msgstr "アメリカ/セントルシア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:429
+msgid "Europe/Vaduz"
+msgstr "ヨーロッパ/ファドゥーツ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:431
+msgid "Asia/Colombo"
+msgstr "アジア/コロンボ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:433
+msgid "Africa/Monrovia"
+msgstr "アフリカ/モンロビア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:435
+msgid "Africa/Maseru"
+msgstr "アフリカ/マセル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:437
+msgid "Europe/Vilnius"
+msgstr "ヨーロッパ/ビリニュス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:439
+msgid "Europe/Luxembourg"
+msgstr "ヨーロッパ/ルクセンブルグ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:441
+msgid "Europe/Riga"
+msgstr "ヨーロッパ/リガ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:443
+msgid "Africa/Tripoli"
+msgstr "アフリカ/トリポリ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:445
+msgid "Africa/Casablanca"
+msgstr "アフリカ/カサブランカ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:447
+msgid "Europe/Monaco"
+msgstr "ヨーロッパ/モナコ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:449
+msgid "Europe/Chisinau"
+msgstr "ヨーロッパ/キシニョフ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:453
+msgid "Indian/Antananarivo"
+msgstr "インド/アンタナナリボ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:455
+msgid "Pacific/Majuro"
+msgstr "太平洋/マジュロ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:457
+msgid "Pacific/Kwajalein"
+msgstr "太平洋/クウェジェリン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:459
+msgid "Europe/Skopje"
+msgstr "ヨーロッパ/スコピエ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:461
+msgid "Africa/Bamako"
+msgstr "アフリカ/バマコ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:463
+msgid "Asia/Rangoon"
+msgstr "アジア/ラングーン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:465
+msgid "Asia/Ulaanbaatar"
+msgstr "アジア/ウランバートル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:467
+msgid "Asia/Hovd"
+msgstr "アジア/ホブド"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:469
+msgid "Asia/Choibalsan"
+msgstr "アジア/チョイバルサン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:471
+msgid "Asia/Macau"
+msgstr "アジア/マカウ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:473
+msgid "Pacific/Saipan"
+msgstr "太平洋/サイパン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:475
+msgid "America/Martinique"
+msgstr "アメリカ/マルチニーク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:477
+msgid "Africa/Nouakchott"
+msgstr "アフリカ/ヌアクショット"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:479
+msgid "America/Montserrat"
+msgstr "アメリカ/モンセラット"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:481
+msgid "Europe/Malta"
+msgstr "ヨーロッパ/マルタ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:483
+msgid "Indian/Mauritius"
+msgstr "インド/モーリシャス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:485
+msgid "Indian/Maldives"
+msgstr "インド/モルディブ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:487
+msgid "Africa/Blantyre"
+msgstr "アフリカ/ブランタイア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:489
+msgid "America/Mexico_City"
+msgstr "アメリカ/メキシコシティ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:491
+msgid "America/Cancun"
+msgstr "アメリカ/カンクン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:493
+msgid "America/Merida"
+msgstr "アメリカ/メリーダ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:495
+msgid "America/Monterrey"
+msgstr "アメリカ/モンテレイ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:497
+msgid "America/Mazatlan"
+msgstr "アメリカ/マサトラン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:499
+msgid "America/Chihuahua"
+msgstr "アメリカ/チワワ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:501
+msgid "America/Hermosillo"
+msgstr "アメリカ/エルモシージョ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:503
+msgid "America/Tijuana"
+msgstr "アメリカ/ティフアナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:505
+msgid "Asia/Kuala_Lumpur"
+msgstr "アジア/クアラルンプール"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:507
+msgid "Asia/Kuching"
+msgstr "アジア/クチン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:509
+msgid "Africa/Maputo"
+msgstr "アフリカ/マプト"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:511
+msgid "Africa/Windhoek"
+msgstr "アフリカ/ウィントフック"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:513
+msgid "Pacific/Noumea"
+msgstr "太平洋/ヌーメア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:515
+msgid "Africa/Niamey"
+msgstr "アフリカ/ニアメ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:517
+msgid "Pacific/Norfolk"
+msgstr "太平洋/ノーフォーク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:519
+msgid "Africa/Lagos"
+msgstr "アフリカ/ラゴス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:521
+msgid "America/Managua"
+msgstr "アメリカ/マナグア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:523
+msgid "Europe/Amsterdam"
+msgstr "ヨーロッパ/アムステルダム"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:525
+msgid "Europe/Oslo"
+msgstr "ヨーロッパ/オスロ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:527
+msgid "Asia/Katmandu"
+msgstr "アジア/カトマンズ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:529
+msgid "Pacific/Nauru"
+msgstr "太平洋/ナウル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:531
+msgid "Pacific/Niue"
+msgstr "太平洋/ニウエ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:533
+msgid "Pacific/Auckland"
+msgstr "太平洋/オークランド"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:535
+msgid "Pacific/Chatham"
+msgstr "太平洋/チャタム"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:537
+msgid "Asia/Muscat"
+msgstr "アジア/マスカット"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:539
+msgid "America/Panama"
+msgstr "アメリカ/パナマ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:541
+msgid "America/Lima"
+msgstr "アメリカ/リマ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:543
+msgid "Pacific/Tahiti"
+msgstr "太平洋/タヒチ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:545
+msgid "Pacific/Marquesas"
+msgstr "太平洋/マルキーズ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:547
+msgid "Pacific/Gambier"
+msgstr "太平洋/ガンビエル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:549
+msgid "Pacific/Port_Moresby"
+msgstr "太平洋/ポートモレスビー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:551
+msgid "Asia/Manila"
+msgstr "アジア/マニラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:553
+msgid "Asia/Karachi"
+msgstr "アジア/カラチ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:555
+msgid "Europe/Warsaw"
+msgstr "ヨーロッパ/ワルシャワ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:557
+msgid "America/Miquelon"
+msgstr "アメリカ/ミクロン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:559
+msgid "Pacific/Pitcairn"
+msgstr "太平洋/ピトケアン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:561
+msgid "America/Puerto_Rico"
+msgstr "アメリカ/プエルトリコ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:563
+msgid "Asia/Gaza"
+msgstr "アジア/ガザ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:565
+msgid "Europe/Lisbon"
+msgstr "ヨーロッパ/リスボン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:567
+msgid "Atlantic/Madeira"
+msgstr "大西洋/マデイラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:569
+msgid "Atlantic/Azores"
+msgstr "大西洋/アゾレス諸島"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:571
+msgid "Pacific/Palau"
+msgstr "太平洋/パラオ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:573
+msgid "America/Asuncion"
+msgstr "アメリカ/アスンシオン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:575
+msgid "Asia/Qatar"
+msgstr "アジア/カタール"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:577
+msgid "Indian/Reunion"
+msgstr "インド/レユニオン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:579
+msgid "Europe/Bucharest"
+msgstr "ヨーロッパ/ブカレスト"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:581
+msgid "Europe/Belgrade"
+msgstr "ヨーロッパ/ベルグラード"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:583
+msgid "Europe/Kaliningrad"
+msgstr "ヨーロッパ/カリーニングラード"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:585
+msgid "Europe/Moscow"
+msgstr "ヨーロッパ/モスクワ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:589
+msgid "Europe/Samara"
+msgstr "ヨーロッパ/サマーラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:591
+msgid "Asia/Yekaterinburg"
+msgstr "アジア/エカテリンブルク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:593
+msgid "Asia/Omsk"
+msgstr "アジア/オムスク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:595
+msgid "Asia/Novosibirsk"
+msgstr "アジア/ノボシビルスク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:597
+msgid "Asia/Krasnoyarsk"
+msgstr "アジア/クラスノヤルスク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:599
+msgid "Asia/Irkutsk"
+msgstr "アジア/イルクツーク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:601
+msgid "Asia/Yakutsk"
+msgstr "アジア/ヤクーツク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:603
+msgid "Asia/Vladivostok"
+msgstr "アジア/ウラジオストク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:605
+msgid "Asia/Sakhalin"
+msgstr "アジア/サハリン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:607
+msgid "Asia/Magadan"
+msgstr "アジア/マガダン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:609
+msgid "Asia/Kamchatka"
+msgstr "アジア/カムチャツカ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:611
+msgid "Asia/Anadyr"
+msgstr "アジア/アナディリ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:613
+msgid "Africa/Kigali"
+msgstr "アフリカ/キガリ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:615
+msgid "Asia/Riyadh"
+msgstr "アジア/リヤド"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:617
+msgid "Pacific/Guadalcanal"
+msgstr "太平洋/ガダルカナル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:619
+msgid "Indian/Mahe"
+msgstr "インド/マヘー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:621
+msgid "Africa/Khartoum"
+msgstr "アフリカ/ハルツーム"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:623
+msgid "Europe/Stockholm"
+msgstr "ヨーロッパ/ストックホルム"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:625
+msgid "Asia/Singapore"
+msgstr "アジア/シンガポール"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:627
+msgid "Atlantic/St_Helena"
+msgstr "大西洋/セントヘレナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:629
+msgid "Europe/Ljubljana"
+msgstr "ヨーロッパ/リュブリャナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:631
+msgid "Arctic/Longyearbyen"
+msgstr "北極/ロングイェールビーン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:633
+msgid "Atlantic/Jan_Mayen"
+msgstr "大西洋/ヤンマイエン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:635
+msgid "Europe/Bratislava"
+msgstr "ヨーロッパ/ブラチスラバ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:637
+msgid "Africa/Freetown"
+msgstr "アフリカ/フリータウン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:639
+msgid "Europe/San_Marino"
+msgstr "ヨーロッパ/サンマリノ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:641
+msgid "Africa/Dakar"
+msgstr "アフリカ/ダカール"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:643
+msgid "Africa/Mogadishu"
+msgstr "アフリカ/モガディシュ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:645
+msgid "America/Paramaribo"
+msgstr "アメリカ/パラマリボ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:647
+msgid "Africa/Sao_Tome"
+msgstr "アフリカ/サントメ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:649
+msgid "America/El_Salvador"
+msgstr "アメリカ/エルサルバドル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:651
+msgid "Asia/Damascus"
+msgstr "アジア/ダマスカス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:653
+msgid "Africa/Mbabane"
+msgstr "アフリカ/ムババーネ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:655
+msgid "America/Grand_Turk"
+msgstr "アメリカ/グランドターク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:657
+msgid "Africa/Ndjamena"
+msgstr "アフリカ/ヌジャメナ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:659
+msgid "Indian/Kerguelen"
+msgstr "インド/カルガーレン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:661
+msgid "Africa/Lome"
+msgstr "アフリカ/ロメ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:663
+msgid "Asia/Bangkok"
+msgstr "アジア/バンコク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:665
+msgid "Asia/Dushanbe"
+msgstr "アジア/ドゥシャンベ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:667
+msgid "Pacific/Fakaofo"
+msgstr "太平洋/フォカオフォ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:669
+msgid "Asia/Dili"
+msgstr "アジア/ディリ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:671
+msgid "Asia/Ashgabat"
+msgstr "アジア/アシハバード"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:673
+msgid "Africa/Tunis"
+msgstr "アフリカ/チュニス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:675
+msgid "Pacific/Tongatapu"
+msgstr "太平洋/トンガタプ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:677
+msgid "Europe/Istanbul"
+msgstr "アジア/イスタンブール"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:679
+msgid "America/Port_of_Spain"
+msgstr "アメリカ/ポートオブスペイン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:681
+msgid "Pacific/Funafuti"
+msgstr "太平洋/フナフティ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:683
+msgid "Asia/Taipei"
+msgstr "アジア/台北"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:685
+msgid "Africa/Dar_es_Salaam"
+msgstr "アフリカ/ダルエスサラーム"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:687
+msgid "Europe/Kiev"
+msgstr "ヨーロッパ/キエフ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:689
+msgid "Europe/Uzhgorod"
+msgstr "ヨーロッパ/ウシュホロト"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:691
+msgid "Europe/Zaporozhye"
+msgstr "ヨーロッパ/ザポロジェ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:693
+msgid "Europe/Simferopol"
+msgstr "ヨーロッパ/シンフェロポリ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:695
+msgid "Africa/Kampala"
+msgstr "アフリカ/カンパラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:697
+msgid "Pacific/Johnston"
+msgstr "太平洋/ジョンストン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:699
+msgid "Pacific/Midway"
+msgstr "太平洋/ミッドウェー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:701
+msgid "Pacific/Wake"
+msgstr "太平洋/ウェーク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:703
+msgid "America/New_York"
+msgstr "アメリカ/ニューヨーク"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:705
+msgid "America/Detroit"
+msgstr "アメリカ/デトロイト"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:709
+msgid "America/Kentucky/Monticello"
+msgstr "アメリカ/ケンタッキー/モンティセロ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:713
+msgid "America/Indiana/Marengo"
+msgstr "アメリカ/インディアナ/マレンゴ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:715
+msgid "America/Indiana/Knox"
+msgstr "アメリカ/インディアナ/ノックス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:717
+msgid "America/Indiana/Vevay"
+msgstr "アメリカ/インディアナ/ビベー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:719
+msgid "America/Chicago"
+msgstr "アメリカ/シカゴ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:725
+msgid "America/Menominee"
+msgstr "アメリカ/メノミニー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:727
+msgid "America/North_Dakota/Center"
+msgstr "アメリカ/ノースダコタ/中央"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:731
+msgid "America/Denver"
+msgstr "アメリカ/デンバー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:733
+msgid "America/Boise"
+msgstr "アメリカ/ボイジー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:735
+msgid "America/Shiprock"
+msgstr "アメリカ/シップロック"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:737
+msgid "America/Phoenix"
+msgstr "アメリカ/フェニックス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:739
+msgid "America/Los_Angeles"
+msgstr "アメリカ/ロサンジェルス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:741
+msgid "America/Anchorage"
+msgstr "アメリカ/アンカレッジ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:743
+msgid "America/Juneau"
+msgstr "アメリカ/ジュノー"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:745
+msgid "America/Yakutat"
+msgstr "アメリカ/ヤクタット"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:747
+msgid "America/Nome"
+msgstr "アメリカ/ノーム"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:749
+msgid "America/Adak"
+msgstr "アメリカ/エイダック"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:751
+msgid "Pacific/Honolulu"
+msgstr "太平洋/ホノルル"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:753
+msgid "America/Montevideo"
+msgstr "アメリカ/モンテビデオ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:755
+msgid "Asia/Samarkand"
+msgstr "アジア/サマルカンド"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:757
+msgid "Asia/Tashkent"
+msgstr "アジア/タシケント"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:759
+msgid "Europe/Vatican"
+msgstr "ヨーロッパ/バチカン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:761
+msgid "America/St_Vincent"
+msgstr "アメリカ/セントビンセント"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:763
+msgid "America/Caracas"
+msgstr "アメリカ/カラカス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:765
+msgid "America/Tortola"
+msgstr "アメリカ/トルトラ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:767
+msgid "America/St_Thomas"
+msgstr "アメリカ/セントトーマス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:769
+msgid "Asia/Saigon"
+msgstr "アジア/サイゴン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:771
+msgid "Pacific/Efate"
+msgstr "太平洋/エファテ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:773
+msgid "Pacific/Wallis"
+msgstr "太平洋/ワリス"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:775
+msgid "Pacific/Apia"
+msgstr "太平洋/アピア"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:777
+msgid "Asia/Aden"
+msgstr "アジア/アデン"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:779
+msgid "Indian/Mayotte"
+msgstr "インド/マイヨット"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:781
+msgid "Africa/Johannesburg"
+msgstr "アフリカ/ヨハネスブルグ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:783
+msgid "Africa/Lusaka"
+msgstr "アフリカ/ルサカ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:785
+msgid "Africa/Harare"
+msgstr "アフリカ/ハラーレ"
+
+# UNREVIEWED
+# SUN MESSAGE
+#: ../applets/clock/zone_tab.h:787 ../applets/clock/zone_tab.h:789
+#: ../applets/clock/zone_tab.h:791
+msgid "Europe/"
+msgstr "ヨーロッパ/"
+
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+# SUN TECH REVIEWED
+#: ../applets/wncklet/GNOME_WorkspaceSwitcherApplet.xml.h:3
+msgid "_Change Workspace Label..."
+msgstr "ワークスペースラベルを変更(_C)..."
+
+#
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+# SUN TECH REVIEWED
+#: ../applets/wncklet/workspace-switcher.c:1313
+msgid "Changing Workspace Label"
+msgstr "ワークスペースラベルの変更"
+
+#
+# SUN MESSAGE
+#: ../gnome-panel/menu.c:1834 ../gnome-panel/panel-action-button.c:318
+msgid "Run Application..."
+msgstr "アプリケーションの実行..."
+
+#
+# SUN MESSAGE
+#: ../gnome-panel/menu.c:1902
+msgid "All Applications"
+msgstr "すべてのアプリケーション"
+
+#
+#
+# SUN MESSAGE
+#: ../gnome-panel/menu.c:1922 ../gnome-panel/panel-menu-items.c:712
+msgid "Preferences"
+msgstr "設定"
+
+# SUN REVIEWED
+#: ../gnome-panel/menu.c:1927 ../gnome-panel/panel-menu-items.c:717
+msgid "Administration"
+msgstr "管理"

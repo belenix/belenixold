@@ -1,0 +1,552 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the nautilus package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nautilus HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-02-10 22:11+0900\n"
+"PO-Revision-Date: 2007-02-13 10:30+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: ../libnautilus-private/nautilus-column-utilities.c:130
+#, fuzzy
+msgid "Restore information"
+msgstr "Omezené aplikace"
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-column-utilities.c:132
+msgid "Restore information of the file."
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-file.c:6423
+msgid "different date, same size as latest version"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-file.c:6426
+msgid "different date, smaller than latest version"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-file.c:6429
+msgid "different date, bigger than latest version"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-file.c:6433
+msgid "identical to latest version"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-file.c:6440
+#: ../libnautilus-private/nautilus-file.c:6635
+msgid "not present in latest version"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-file.c:6576
+#, fuzzy, c-format
+msgid "no other version"
+msgstr "Jít na pracovní plochu"
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-file.c:6638
+msgid "present in latest version"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-file.c:6646
+msgid "no version"
+msgstr ""
+
+#: ../libnautilus-private/nautilus-global-preferences.c:591
+#: ../nautilus-computer.desktop.in.in.h:3 ../src/nautilus-places-sidebar.c:290
+msgid "Computer"
+msgstr "Počítač"
+
+#: ../libnautilus-private/nautilus-global-preferences.c:610
+#: ../src/nautilus-query-editor.c:350
+msgid "Documents"
+msgstr "Dokumenty"
+
+#: ../libnautilus-private/nautilus-mime-application-chooser.c:575
+#: ../libnautilus-private/nautilus-open-with-dialog.c:950
+#: ../libnautilus-private/nautilus-zfs.c:71
+#: ../libnautilus-private/nautilus-zfs.c:78
+#: ../libnautilus-private/nautilus-zfs.c:140
+msgid "Unknown"
+msgstr "Neznámý"
+
+#: ../libnautilus-private/nautilus-program-choosing.c:252
+msgid "Sorry, This is a restricted application which you may not run."
+msgstr "Promiňte, toto je omezená aplikace, kterou nesmíte spustit."
+
+#: ../libnautilus-private/nautilus-program-choosing.c:255
+msgid "Restricted Application"
+msgstr "Omezené aplikace"
+
+#: ../libnautilus-private/nautilus-program-choosing.c:353
+msgid "Sorry, this command requires a terminal "
+msgstr "Promiňte, tento příkaz vyžaduje teminál"
+
+#: ../libnautilus-private/nautilus-program-choosing.c:355
+msgid "Terminal access is restricted."
+msgstr "Přístup k terminálu je omezen."
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-zfs.c:111
+msgid "Today at %H:%M"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-zfs.c:114
+msgid "Yesterday at %H:%M"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-zfs.c:119
+msgid "%A at %H:%M"
+msgstr ""
+
+# SUN_BRANDING
+#. format = "%x";
+#. Any other date
+#: ../libnautilus-private/nautilus-zfs.c:123
+msgid "%a %b %e %Y @ %Hh%M"
+msgstr ""
+
+# SUN_BRANDING
+#: ../libnautilus-private/nautilus-zfs.c:131
+#, c-format
+msgid "%d days ago"
+msgstr ""
+
+# SUN_BRANDING
+#: ../nautilus-computer.desktop.in.in.h:2
+msgid "Browse all disks and files accessible from this computer"
+msgstr ""
+
+#: ../src/file-manager/fm-desktop-icon-view.c:603
+#: ../src/file-manager/fm-directory-view.c:1204
+#: ../src/file-manager/fm-properties-window.c:5468
+#: ../src/nautilus-connect-server-dialog.c:341
+#: ../src/nautilus-location-dialog.c:108
+msgid "There was an error displaying help."
+msgstr "Došlo k chybě při zobrazování nápovědy."
+
+#: ../src/file-manager/fm-desktop-icon-view.c:648
+msgid "Resolution"
+msgstr "Rozlišení"
+
+#. label, accelerator
+#. name, stock id, label
+#: ../src/file-manager/fm-desktop-icon-view.c:756
+#: ../src/nautilus-window-menus.c:855
+msgid "_Help"
+msgstr "_Nápověda"
+
+#. tooltip
+#: ../src/file-manager/fm-desktop-icon-view.c:759
+msgid "About Sun Java Desktop System"
+msgstr "O Sun Java Desktop systému"
+
+#. label, accelerator
+#: ../src/file-manager/fm-desktop-icon-view.c:772
+#, fuzzy
+msgid "Run Application..."
+msgstr "Omezené aplikace"
+
+# SUN_BRANDING
+#. tooltip
+#: ../src/file-manager/fm-desktop-icon-view.c:775
+msgid "Run an application by typing a command or choosing from a list"
+msgstr ""
+
+#. label, accelerator
+#: ../src/file-manager/fm-desktop-icon-view.c:781
+#, fuzzy
+msgid "Desktop A_ppearance..."
+msgstr "_Pozadí pracovní plochy..."
+
+#. label, accelerator
+#: ../src/file-manager/fm-desktop-icon-view.c:789
+msgid "Screen _Resolution..."
+msgstr "_Rozlišení obrazovky..."
+
+# SUN_BRANDING
+#. tooltip
+#: ../src/file-manager/fm-desktop-icon-view.c:792
+msgid "Show a window that lets you set your desktop screen resolution"
+msgstr "Zobrazit okno, které vám dovoluje nastavení rozlišení obrazovky"
+
+# SUN_BRANDING
+#. name, stock id
+#. label, accelerator
+#: ../src/file-manager/fm-directory-view.c:6769
+#, fuzzy
+msgid "Restore to Desktop"
+msgstr "Jít na pracovní plochu"
+
+# SUN_BRANDING
+#. tooltip
+#: ../src/file-manager/fm-directory-view.c:6771
+msgid "Move each selected item to the Desktop"
+msgstr ""
+
+# SUN_BRANDING
+#. name, stock id
+#. label, accelerator
+#: ../src/file-manager/fm-directory-view.c:6775
+#, fuzzy
+msgid "View versions"
+msgstr "Jít na pracovní plochu"
+
+# SUN_BRANDING
+#. tooltip
+#: ../src/file-manager/fm-directory-view.c:6777
+msgid "View the versions of this file available in ZFS snapshots"
+msgstr ""
+
+# SUN_BRANDING from branch
+#. name, stock id
+#. label, accelerator
+#: ../src/file-manager/fm-directory-view.c:6781
+msgid "Snapshot now"
+msgstr ""
+
+# SUN_BRANDING from branch
+#. tooltip
+#: ../src/file-manager/fm-directory-view.c:6783
+msgid "Take a ZFS snapshot of this directory now"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/file-manager/fm-directory-view.c:7831
+#, fuzzy
+msgid "No versions"
+msgstr "Jít na pracovní plochu"
+
+# SUN_BRANDING
+#: ../src/file-manager/fm-directory-view.c:7838
+#: ../src/file-manager/fm-directory-view.c:8193
+#, fuzzy
+msgid "Explore versions"
+msgstr "Jít na pracovní plochu"
+
+# SUN_BRANDING
+#: ../src/file-manager/fm-directory-view.c:8201
+#, fuzzy
+msgid "Scanning for versions"
+msgstr "Jít na pracovní plochu"
+
+# SUN_BRANDING TJDS
+#: ../src/file-manager/fm-properties-window.c:4842
+msgid "File Label:"
+msgstr "Název souboru:"
+
+# SUN_BRANDING
+#: ../src/nautilus-file-management-properties.ui.h:47
+msgid "Visualize ZFS snapshots timeline"
+msgstr ""
+
+#: ../src/nautilus-navigation-window-menus.c:795
+#: ../src/nautilus-spatial-window.c:1028
+msgid "F_ind Files"
+msgstr "Na_jít soubory"
+
+# SUN_BRANDING
+#. name, stock id, label
+#: ../src/nautilus-navigation-window-menus.c:797
+msgid "Find files, folders, and documents on your computer"
+msgstr "Najít soubory, složky a dokumenty ve vašem počítači"
+
+# SUN_BRANDING
+#: ../src/nautilus-places-sidebar.c:327
+msgid "Burn Folder"
+msgstr "Vypálit složku"
+
+# SUN_BRANDING
+#. name, stock id, label
+#: ../src/nautilus-spatial-window.c:1030
+msgid "Find files, folders, and documents"
+msgstr "Najít soubory, složky a dokumenty"
+
+#. name, stock id
+#. name, stock id
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1033 ../src/nautilus-window-menus.c:923
+msgid "_Desktop"
+msgstr "_Pracovní plocha"
+
+# SUN_BRANDING
+#. label, accelerator
+#. tooltip
+#: ../src/nautilus-spatial-window.c:1035 ../src/nautilus-window-menus.c:925
+msgid "Go to the Desktop"
+msgstr "Jít na pracovní plochu"
+
+#. name, stockid
+#. name, stock id
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1039 ../src/nautilus-window-menus.c:940
+msgid "_Computer"
+msgstr "P_očítač"
+
+# SUN_BRANDING
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1041
+msgid "Go to the computer location"
+msgstr "Jít na umístění počítače"
+
+#. name, stock id
+#. name, stock id
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1045 ../src/nautilus-window-menus.c:929
+msgid "_Documents"
+msgstr "_Dokumenty"
+
+# SUN_BRANDING
+#. label, accelerator
+#. tooltip
+#: ../src/nautilus-spatial-window.c:1047 ../src/nautilus-window-menus.c:931
+msgid "Go to the documents folder"
+msgstr "Jít na složku dokumentů"
+
+#. name, stock id
+#. name, stock id
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1051 ../src/nautilus-window-menus.c:935
+msgid "File _System"
+msgstr "_Systém souborů"
+
+# SUN_BRANDING
+#. label, accelerator
+#. tooltip
+#: ../src/nautilus-spatial-window.c:1053 ../src/nautilus-window-menus.c:937
+msgid "Go to the file system"
+msgstr "Jít na Systém souborů"
+
+#. name, stockid
+#. name, stock id
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1057 ../src/nautilus-window-menus.c:944
+msgid "_Network"
+msgstr "_síť"
+
+# SUN_BRANDING
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1059
+msgid "Go to the network location"
+msgstr "Jít na síťové umístění"
+
+#. name, stock id
+#. name, stock id
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1063 ../src/nautilus-window-menus.c:948
+msgid "T_emplates"
+msgstr "Š_ablony"
+
+# SUN_BRANDING
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1065
+msgid "Go to the templates folder"
+msgstr "Jít na složku vzorů"
+
+# SUN_BRANDING
+#. name, stock id
+#. name, stock id
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1069 ../src/nautilus-window-menus.c:957
+msgid "_Burn Folder"
+msgstr "_Vypálit složku"
+
+# SUN_BRANDING
+#. label, accelerator
+#: ../src/nautilus-spatial-window.c:1071
+msgid "Go to the CD/DVD Creator"
+msgstr "Jít na Vytvoření CD/DVD"
+
+#. name, stock id
+#. label, accelerator
+#: ../src/nautilus-window-menus.c:965
+#, fuzzy
+msgid "R_estore"
+msgstr "_Pracovní plocha"
+
+# SUN_BRANDING
+#. tooltip
+#: ../src/nautilus-window-menus.c:967
+msgid "Browse the current location snapshot history"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:189
+msgid "KB"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:206
+msgid "GB"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:212
+msgid "MB"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:217
+#, c-format
+msgid "%d %s: %.1f %s"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:220
+msgid "snapshot"
+msgid_plural "snapshots"
+msgstr[0] ""
+msgstr[1] ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:258
+msgid "updating"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:263
+#, c-format
+msgid "Details : snapshot taken %s currently using %s"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:269
+msgid "Details : current version"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:274 ../src/nautilus-zfs-bar.c:544
+msgid "Now"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:279
+msgid "No initialized"
+msgstr ""
+
+# SUN_BRANDING from branch
+#: ../src/nautilus-zfs-bar.c:389
+msgid "Delete this snapshot"
+msgstr ""
+
+# SUN_BRANDING from branch
+#: ../src/nautilus-zfs-bar.c:402 ../src/nautilus-zfs-bar.c:581
+msgid "Take a zfs snapshot of this directory now"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:388
+msgid "current directory"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:526
+msgid "Oldest"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:423
+msgid "Today - Now"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/nautilus-zfs-bar.c:561
+msgid "Close Time Slider and return to original directory"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/network-scheme.desktop.in.h:2
+msgid "Browse computers and files on your local network"
+msgstr ""
+
+# SUN_BRANDING
+#: ../nautilus.desktop.in.in.h:2
+msgid "Browse files and folders with the file manager"
+msgstr ""
+
+#~ msgid "Name"
+#~ msgstr "Název"
+
+#~ msgid "Group"
+#~ msgstr "Skupina"
+
+#~ msgid "Network Servers"
+#~ msgstr "Síťové servery"
+
+# SUN_BRANDING
+#~ msgid "Default user"
+#~ msgstr "Výchozí uživatel"
+
+# SUN_BRANDING
+#~ msgid "Default group"
+#~ msgstr "Výchozí skupina"
+
+# SUN_BRANDING
+#~ msgid "Default others"
+#~ msgstr "Výchozí další"
+
+# SUN_BRANDING
+#~ msgid "Default mask"
+#~ msgstr "Výchozí maska"
+
+# SUN_BRANDING
+#~ msgid "Mask"
+#~ msgstr "Maska"
+
+# SUN_BRANDING
+#~ msgid "read"
+#~ msgstr "číst"
+
+# SUN_BRANDING
+#~ msgid "write"
+#~ msgstr "zapisovat"
+
+# SUN_BRANDING
+#~ msgid "exec"
+#~ msgstr "vykonat"
+
+# SUN_BRANDING
+#~ msgid "Effective"
+#~ msgstr "Efektivní"
+
+# SUN_BRANDING
+#~ msgid "Add User/Group"
+#~ msgstr "Přidat uživatele/skupinu"
+
+#, fuzzy
+#~ msgid "User/Group"
+#~ msgstr "Uživatel/skupina"
+
+# SUN_BRANDING
+#~ msgid "User"
+#~ msgstr "Uživatel"
+
+# SUN_BRANDING
+#~ msgid "Access List"
+#~ msgstr "Přístupový seznam"
+
+# SUN_BRANDING
+#~ msgid "Common ACL"
+#~ msgstr "Společné ACL"
+
+# SUN_BRANDING
+#~ msgid "Default ACL"
+#~ msgstr "Výchozí ACL"

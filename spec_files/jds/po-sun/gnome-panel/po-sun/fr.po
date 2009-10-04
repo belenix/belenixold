@@ -1,0 +1,1847 @@
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-panel HEAD\n"
+"POT-Creation-Date: 2006-12-27 22:41+0900\n"
+"PO-Revision-Date: 2008-03-05 12:27+0100\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/timezone-selection.c:181
+#: ../applets/clock/timezone.glade.h:4
+msgid ""
+"Click on your nearest city or select it from the list (left click to zoom "
+"in):"
+msgstr ""
+"Cliquez sur la ville la plus proche de chez vous ou sélectionnez-la dans la "
+"liste (zoom avant avec le bouton gauche de la souris) :"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/timezone-selection.c:214
+msgid ""
+"Click on your nearest city or select it from the list (right click to zoom "
+"out):"
+msgstr ""
+"Cliquez sur la ville la plus proche de chez vous ou sélectionnez-la dans la "
+"liste (zoom arrière avec le bouton droit de la souris)."
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:31
+msgid "Antarctica/Rothera"
+msgstr "Antarctique/Rothera"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:47
+msgid "America/Argentina/Buenos_Aires"
+msgstr "Amérique/Argentine/Buenos_Aires"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:49
+msgid "America/Argentina/Cordoba"
+msgstr "Amérique/Argentine/Córdoba"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:51
+msgid "America/Argentina/Jujuy"
+msgstr "Amérique/Argentine/Jujuy"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:53
+msgid "America/Argentina/Tucuman"
+msgstr "Amérique/Argentine/Tucumán"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:55
+msgid "America/Argentina/Catamarca"
+msgstr "Amérique/Argentine/Catamarca"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:57
+msgid "America/Argentina/La_Rioja"
+msgstr "Amérique/Argentine/La_Rioja"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:59
+msgid "America/Argentina/San_Juan"
+msgstr "Amérique/Argentine/San_Juan"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:61
+msgid "America/Argentina/Mendoza"
+msgstr "Amérique/Argentine/Mendoza"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:63
+msgid "America/Argentina/Rio_Gallegos"
+msgstr "Amérique/Argentine/Rio_Gallegos"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:65
+msgid "America/Argentina/Ushuaia"
+msgstr "Amérique/Argentine/Ushuaia"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:75
+msgid "Australia/Currie"
+msgstr "Australie/Currie"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:95
+msgid "Europe/Mariehamn"
+msgstr "Europe/Mariehamn"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:135
+msgid "America/Bahia"
+msgstr "Amérique/Bahia"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:139
+msgid "America/Campo_Grande"
+msgstr "Amérique/Campo_Grande"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:169
+msgid "America/Moncton"
+msgstr "Amérique/Moncton"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:173
+msgid "America/Blanc-Sablon"
+msgstr "Amérique/Blanc-Sablon"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:177
+msgid "America/Toronto"
+msgstr "Amérique/Toronto"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:187
+msgid "America/Atikokan"
+msgstr "Amérique/Atikokan"
+
+#
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:311
+msgid "Europe/Guernsey"
+msgstr "Europe/Guernesey"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:367
+msgid "Europe/Isle_of_Man"
+msgstr "Europe/Île_de_Man"
+
+#
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:381
+msgid "Europe/Jersey"
+msgstr "Europe/Jersey"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:451
+msgid "Europe/Podgorica"
+msgstr "Europe/Podgorica"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:587
+msgid "Europe/Volgograd"
+msgstr "Europe/Volgograd"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:707
+msgid "America/Kentucky/Louisville"
+msgstr "Amérique/Kentucky/Louisville"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:711
+msgid "America/Indiana/Indianapolis"
+msgstr "Amérique/Indiana/Indianapolis"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:721
+msgid "America/Indiana/Vincennes"
+msgstr "Amérique/Indiana/Vincennes"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:723
+msgid "America/Indiana/Petersburg"
+msgstr "Amérique/Indiana/Petersburg"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../applets/clock/zone_tab.h:729
+msgid "America/North_Dakota/New_Salem"
+msgstr "Amérique/North_Dakota/New_Salem"
+
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-panel/menu.c:1902
+msgid "All Applications"
+msgstr "Toutes les applications"
+
+# REVIEWED
+#: ../applets/clock/clock.c:2714 ../applets/clock/clock.c:2901
+#: ../applets/clock/timezone-selection.c:26 ../applets/fish/fish.c:160
+#: ../applets/notification_area/main.c:119
+#: ../applets/wncklet/window-list.c:113 ../applets/wncklet/wncklet.c:128
+#: ../applets/wncklet/workspace-switcher.c:256
+#, c-format
+msgid "There was an error displaying help: %s"
+msgstr "Erreur lors de l'affichage de l'aide : %s"
+
+#
+# SUN CHANGED MESSAGE
+# REVIEWED
+#: ../applets/clock/clock.c:2845
+msgid "Show _time zones button"
+msgstr "Afficher le bouton des _fuseaux horaires"
+
+# REVIEWED
+#: ../applets/clock/multi-timezone.c:59
+msgid "use daylight savings"
+msgstr "utiliser l'heure d'été"
+
+#
+# REVIEWED
+#: ../applets/clock/multi-timezone.c:190
+msgid "Edit Time Zones..."
+msgstr "Éditer les fuseaux horaires..."
+
+# REVIEWED
+#: ../applets/clock/multi-timezone.c:448
+msgid "Time zone"
+msgstr "Fuseaux horaires"
+
+#
+# REVIEWED
+#: ../applets/clock/multi-timezone.c:459
+msgid "Comments"
+msgstr "Commentaires"
+
+# REVIEWED
+# SUN MESSAGE
+#: ../applets/clock/timezone.glade.h:2
+msgid "Change Clock Applet Time Zone"
+msgstr "Modifier le fuseau horaire de l'applet Horloge"
+
+# REVIEWED
+#: ../applets/clock/timezone.glade.h:6
+msgid "Time _zone:"
+msgstr "Fuseau _horaire :"
+
+# REVIEWED
+#: ../applets/clock/timezone.glade.h:8
+msgid "_Add"
+msgstr "_Ajouter"
+
+# REVIEWED
+#: ../applets/clock/timezone.glade.h:10
+msgid "_List:"
+msgstr "_Liste :"
+
+# REVIEWED
+#: ../applets/clock/timezone.glade.h:12
+msgid "_Remove"
+msgstr "_Supprimer"
+
+#: ../applets/clock/zone_tab.h:9
+msgid "Europe/Andorra"
+msgstr "Europe/Andorre"
+
+#: ../applets/clock/zone_tab.h:11
+msgid "Asia/Dubai"
+msgstr "Asie/Dubay"
+
+#: ../applets/clock/zone_tab.h:13
+msgid "Asia/Kabul"
+msgstr "Asie/Kaboul"
+
+#: ../applets/clock/zone_tab.h:15
+msgid "America/Antigua"
+msgstr "Amérique/Antigua"
+
+#: ../applets/clock/zone_tab.h:17
+msgid "America/Anguilla"
+msgstr "Amérique/Anguilla"
+
+#: ../applets/clock/zone_tab.h:19
+msgid "Europe/Tirane"
+msgstr "Europe/Tirane"
+
+#: ../applets/clock/zone_tab.h:21
+msgid "Asia/Yerevan"
+msgstr "Asie/Yerevan"
+
+#: ../applets/clock/zone_tab.h:23
+msgid "America/Curacao"
+msgstr "Amérique/Curaçao"
+
+#: ../applets/clock/zone_tab.h:25
+msgid "Africa/Luanda"
+msgstr "Afrique/Luanda"
+
+#: ../applets/clock/zone_tab.h:27
+msgid "Antarctica/McMurdo"
+msgstr "Antarctique/McMurdo"
+
+#: ../applets/clock/zone_tab.h:29
+msgid "Antarctica/South_Pole"
+msgstr "Antarctique/Pôle_Sud"
+
+#: ../applets/clock/zone_tab.h:33
+msgid "Antarctica/Palmer"
+msgstr "Antarctique/Terre_de_Graham"
+
+#: ../applets/clock/zone_tab.h:35
+msgid "Antarctica/Mawson"
+msgstr "Antarctique/Mawson"
+
+#: ../applets/clock/zone_tab.h:37
+msgid "Antarctica/Davis"
+msgstr "Antarctique/Davis"
+
+#: ../applets/clock/zone_tab.h:39
+msgid "Antarctica/Casey"
+msgstr "Antarctique/Casey"
+
+#: ../applets/clock/zone_tab.h:41
+msgid "Antarctica/Vostok"
+msgstr "Antarctique/Vostok"
+
+#: ../applets/clock/zone_tab.h:43
+msgid "Antarctica/DumontDUrville"
+msgstr "Antarctique/Dumont d'Urville"
+
+#: ../applets/clock/zone_tab.h:45
+msgid "Antarctica/Syowa"
+msgstr "Antarctique/Syowa"
+
+#: ../applets/clock/zone_tab.h:67
+msgid "Pacific/Pago_Pago"
+msgstr "Pacifique/Pago_Pago"
+
+#: ../applets/clock/zone_tab.h:69
+msgid "Europe/Vienna"
+msgstr "Europe/Vienne"
+
+#: ../applets/clock/zone_tab.h:71
+msgid "Australia/Lord_Howe"
+msgstr "Australie/Lord_Howe"
+
+#: ../applets/clock/zone_tab.h:73
+msgid "Australia/Hobart"
+msgstr "Australie/Hobart"
+
+#: ../applets/clock/zone_tab.h:77
+msgid "Australia/Melbourne"
+msgstr "Australie/Melbourne"
+
+#: ../applets/clock/zone_tab.h:79
+msgid "Australia/Sydney"
+msgstr "Australie/Sydney"
+
+#: ../applets/clock/zone_tab.h:81
+msgid "Australia/Broken_Hill"
+msgstr "Australie/Broken_Hill"
+
+#: ../applets/clock/zone_tab.h:83
+msgid "Australia/Brisbane"
+msgstr "Australie/Brisbane"
+
+#: ../applets/clock/zone_tab.h:85
+msgid "Australia/Lindeman"
+msgstr "Australie/Lindeman"
+
+#: ../applets/clock/zone_tab.h:87
+msgid "Australia/Adelaide"
+msgstr "Australie/Adélaïde"
+
+#: ../applets/clock/zone_tab.h:89
+msgid "Australia/Darwin"
+msgstr "Australie/Darwin"
+
+#: ../applets/clock/zone_tab.h:91
+msgid "Australia/Perth"
+msgstr "Australie/Perth"
+
+#: ../applets/clock/zone_tab.h:93
+msgid "America/Aruba"
+msgstr "Amérique/Aruba"
+
+#: ../applets/clock/zone_tab.h:97
+msgid "Asia/Baku"
+msgstr "Asie/Baku"
+
+#: ../applets/clock/zone_tab.h:99
+msgid "Europe/Sarajevo"
+msgstr "Europe/Sarajevo"
+
+#: ../applets/clock/zone_tab.h:101
+msgid "America/Barbados"
+msgstr "Amérique/La Barbade"
+
+#: ../applets/clock/zone_tab.h:103
+msgid "Asia/Dhaka"
+msgstr "Asie/Dhaka"
+
+#: ../applets/clock/zone_tab.h:105
+msgid "Europe/Brussels"
+msgstr "Europe/Bruxelles"
+
+#: ../applets/clock/zone_tab.h:107
+msgid "Africa/Ouagadougou"
+msgstr "Afrique/Ouagadougou"
+
+#: ../applets/clock/zone_tab.h:109
+msgid "Europe/Sofia"
+msgstr "Europe/Sofia"
+
+#: ../applets/clock/zone_tab.h:111
+msgid "Asia/Bahrain"
+msgstr "Asie/Bahrain"
+
+#: ../applets/clock/zone_tab.h:113
+msgid "Africa/Bujumbura"
+msgstr "Afrique/Bujumbura"
+
+#: ../applets/clock/zone_tab.h:115
+msgid "Africa/Porto-Novo"
+msgstr "Afrique/Porto-Novo"
+
+#: ../applets/clock/zone_tab.h:117
+msgid "Atlantic/Bermuda"
+msgstr "Atlantique/Bermudes"
+
+#: ../applets/clock/zone_tab.h:119
+msgid "Asia/Brunei"
+msgstr "Asie/Brunei"
+
+#: ../applets/clock/zone_tab.h:121
+msgid "America/La_Paz"
+msgstr "Amérique/La_Paz"
+
+#: ../applets/clock/zone_tab.h:123
+msgid "America/Noronha"
+msgstr "Amérique/Noronha"
+
+#: ../applets/clock/zone_tab.h:125
+msgid "America/Belem"
+msgstr "Amérique/Belém"
+
+#: ../applets/clock/zone_tab.h:127
+msgid "America/Fortaleza"
+msgstr "Amérique/Fortaleza"
+
+#: ../applets/clock/zone_tab.h:129
+msgid "America/Recife"
+msgstr "Amérique/Recife"
+
+#: ../applets/clock/zone_tab.h:131
+msgid "America/Araguaina"
+msgstr "Amérique/Araguaína"
+
+#: ../applets/clock/zone_tab.h:133
+msgid "America/Maceio"
+msgstr "Amérique/Maceió"
+
+#: ../applets/clock/zone_tab.h:137
+msgid "America/Sao_Paulo"
+msgstr "Amérique/Sao_Paulo"
+
+#: ../applets/clock/zone_tab.h:141
+msgid "America/Cuiaba"
+msgstr "Amérique/Cuiabá"
+
+#: ../applets/clock/zone_tab.h:143
+msgid "America/Porto_Velho"
+msgstr "Amérique/Pôrto_Velho"
+
+#: ../applets/clock/zone_tab.h:145
+msgid "America/Boa_Vista"
+msgstr "Amérique/Boa_Vista"
+
+#: ../applets/clock/zone_tab.h:147
+msgid "America/Manaus"
+msgstr "Amérique/Manaus"
+
+#: ../applets/clock/zone_tab.h:149
+msgid "America/Eirunepe"
+msgstr "Amérique/Eirunepe"
+
+#: ../applets/clock/zone_tab.h:151
+msgid "America/Rio_Branco"
+msgstr "Amérique/Rio_Branco"
+
+#: ../applets/clock/zone_tab.h:153
+msgid "America/Nassau"
+msgstr "Amérique/Nassau"
+
+#: ../applets/clock/zone_tab.h:155
+msgid "Asia/Thimphu"
+msgstr "Asie/Thimphu"
+
+#: ../applets/clock/zone_tab.h:157
+msgid "Africa/Gaborone"
+msgstr "Afrique/Gaborone"
+
+#: ../applets/clock/zone_tab.h:159
+msgid "Europe/Minsk"
+msgstr "Europe/Minsk"
+
+#: ../applets/clock/zone_tab.h:161
+msgid "America/Belize"
+msgstr "Amérique/Belize"
+
+#: ../applets/clock/zone_tab.h:163
+msgid "America/St_Johns"
+msgstr "Amérique/Saint-Jean"
+
+#: ../applets/clock/zone_tab.h:165
+msgid "America/Halifax"
+msgstr "Amérique/Halifax"
+
+#: ../applets/clock/zone_tab.h:167
+msgid "America/Glace_Bay"
+msgstr "Amérique/Glace_Bay"
+
+#: ../applets/clock/zone_tab.h:171
+msgid "America/Goose_Bay"
+msgstr "Amérique/Goose_Bay"
+
+#: ../applets/clock/zone_tab.h:175
+msgid "America/Montreal"
+msgstr "Amérique/Montréal "
+
+#: ../applets/clock/zone_tab.h:179
+msgid "America/Nipigon"
+msgstr "Amérique/Nipigon"
+
+#: ../applets/clock/zone_tab.h:181
+msgid "America/Thunder_Bay"
+msgstr "Amérique/Thunder_Bay"
+
+#: ../applets/clock/zone_tab.h:183
+msgid "America/Pangnirtung"
+msgstr "Amérique/Pangnirtung"
+
+#: ../applets/clock/zone_tab.h:185
+msgid "America/Iqaluit"
+msgstr "Amérique/Iqaluit"
+
+#: ../applets/clock/zone_tab.h:189
+msgid "America/Rankin_Inlet"
+msgstr "Amérique/Rankin_Inlet"
+
+#: ../applets/clock/zone_tab.h:191
+msgid "America/Winnipeg"
+msgstr "Amérique/Winnipeg"
+
+#: ../applets/clock/zone_tab.h:193
+msgid "America/Rainy_River"
+msgstr "Amérique/Rainy_River"
+
+#: ../applets/clock/zone_tab.h:195
+msgid "America/Cambridge_Bay"
+msgstr "Amérique/Cambridge_Bay"
+
+#: ../applets/clock/zone_tab.h:197
+msgid "America/Regina"
+msgstr "Amérique/Regina"
+
+#: ../applets/clock/zone_tab.h:199
+msgid "America/Swift_Current"
+msgstr "Amérique/Swift_Current"
+
+#: ../applets/clock/zone_tab.h:201
+msgid "America/Edmonton"
+msgstr "Amérique/Edmonton"
+
+#: ../applets/clock/zone_tab.h:203
+msgid "America/Yellowknife"
+msgstr "Amérique/Yellowknife"
+
+#: ../applets/clock/zone_tab.h:205
+msgid "America/Inuvik"
+msgstr "Amérique/Inuvik"
+
+#: ../applets/clock/zone_tab.h:207
+msgid "America/Dawson_Creek"
+msgstr "Amérique/Dawson_Creek"
+
+#: ../applets/clock/zone_tab.h:209
+msgid "America/Vancouver"
+msgstr "Amérique/Vancouver"
+
+#: ../applets/clock/zone_tab.h:211
+msgid "America/Whitehorse"
+msgstr "Amérique/Whitehorse"
+
+#: ../applets/clock/zone_tab.h:213
+msgid "America/Dawson"
+msgstr "Amérique/Dawson"
+
+#: ../applets/clock/zone_tab.h:215
+msgid "Indian/Cocos"
+msgstr "Inde/Îles_Cocos"
+
+#: ../applets/clock/zone_tab.h:217
+msgid "Africa/Kinshasa"
+msgstr "Afrique/Kinshasa"
+
+#: ../applets/clock/zone_tab.h:219
+msgid "Africa/Lubumbashi"
+msgstr "Afrique/Lubumbashi"
+
+#: ../applets/clock/zone_tab.h:221
+msgid "Africa/Bangui"
+msgstr "Afrique/Bangui"
+
+#: ../applets/clock/zone_tab.h:223
+msgid "Africa/Brazzaville"
+msgstr "Afrique/Brazzaville"
+
+#: ../applets/clock/zone_tab.h:225
+msgid "Europe/Zurich"
+msgstr "Europe/Zurich"
+
+#: ../applets/clock/zone_tab.h:227
+msgid "Africa/Abidjan"
+msgstr "Afrique/Abidjan"
+
+#: ../applets/clock/zone_tab.h:229
+msgid "Pacific/Rarotonga"
+msgstr "Pacifique/Rarotonga"
+
+#: ../applets/clock/zone_tab.h:231
+msgid "America/Santiago"
+msgstr "Amérique/Santiago"
+
+#: ../applets/clock/zone_tab.h:233
+msgid "Pacific/Easter"
+msgstr "Pacifique/Île_de_Pâques"
+
+#: ../applets/clock/zone_tab.h:235
+msgid "Africa/Douala"
+msgstr "Afrique/Douala"
+
+#: ../applets/clock/zone_tab.h:237
+msgid "Asia/Shanghai"
+msgstr "Asie/Shanghai"
+
+#: ../applets/clock/zone_tab.h:239
+msgid "America/Bogota"
+msgstr "Amérique/Bogotá"
+
+#: ../applets/clock/zone_tab.h:241
+msgid "America/Costa_Rica"
+msgstr "Amérique/Costa_Rica"
+
+#: ../applets/clock/zone_tab.h:243
+msgid "America/Havana"
+msgstr "Amérique/La_Havane"
+
+#: ../applets/clock/zone_tab.h:245
+msgid "Atlantic/Cape_Verde"
+msgstr "Atlantique/Cap_Vert"
+
+#: ../applets/clock/zone_tab.h:247
+msgid "Indian/Christmas"
+msgstr "Inde/Île_Christmas"
+
+#: ../applets/clock/zone_tab.h:249
+msgid "Asia/Nicosia"
+msgstr "Asie/Nicosie"
+
+#: ../applets/clock/zone_tab.h:251
+msgid "Europe/Prague"
+msgstr "Europe/Prague"
+
+#: ../applets/clock/zone_tab.h:253
+msgid "Europe/Berlin"
+msgstr "Europe/Berlin"
+
+#: ../applets/clock/zone_tab.h:255
+msgid "Africa/Djibouti"
+msgstr "Afrique/Djibouti"
+
+#: ../applets/clock/zone_tab.h:257
+msgid "Europe/Copenhagen"
+msgstr "Europe/Copenhague"
+
+#: ../applets/clock/zone_tab.h:259
+msgid "America/Dominica"
+msgstr "Amérique/République_dominicaine"
+
+#: ../applets/clock/zone_tab.h:261
+msgid "America/Santo_Domingo"
+msgstr "Amérique/Saint-Domingue"
+
+#: ../applets/clock/zone_tab.h:263
+msgid "Africa/Algiers"
+msgstr "Afrique/Alger"
+
+#: ../applets/clock/zone_tab.h:265
+msgid "America/Guayaquil"
+msgstr "Amérique/Guayaquil"
+
+#: ../applets/clock/zone_tab.h:267
+msgid "Pacific/Galapagos"
+msgstr "Pacifique/Îles_Galápagos"
+
+#: ../applets/clock/zone_tab.h:269
+msgid "Europe/Tallinn"
+msgstr "Europe/Tallinn"
+
+#: ../applets/clock/zone_tab.h:271
+msgid "Africa/Cairo"
+msgstr "Afrique/Le Caire"
+
+#: ../applets/clock/zone_tab.h:273
+msgid "Africa/El_Aaiun"
+msgstr "Afrique/El-Aaiun"
+
+#: ../applets/clock/zone_tab.h:275
+msgid "Africa/Asmera"
+msgstr "Afrique/Asmera"
+
+#: ../applets/clock/zone_tab.h:277
+msgid "Europe/Madrid"
+msgstr "Europe/Madrid"
+
+#: ../applets/clock/zone_tab.h:279
+msgid "Africa/Ceuta"
+msgstr "Afrique/Ceuta"
+
+#: ../applets/clock/zone_tab.h:281
+msgid "Atlantic/Canary"
+msgstr "Atlantique/Îles_Canaries"
+
+#: ../applets/clock/zone_tab.h:283
+msgid "Africa/Addis_Ababa"
+msgstr "Afrique/Addis-Abeba"
+
+#: ../applets/clock/zone_tab.h:285
+msgid "Europe/Helsinki"
+msgstr "Europe/Helsinki"
+
+#: ../applets/clock/zone_tab.h:287
+msgid "Pacific/Fiji"
+msgstr "Pacifique/Îles_Fidji"
+
+#: ../applets/clock/zone_tab.h:289
+msgid "Atlantic/Stanley"
+msgstr "Atlantique/Stanley"
+
+#: ../applets/clock/zone_tab.h:291
+msgid "Pacific/Truk"
+msgstr "Pacifique/Truk"
+
+#: ../applets/clock/zone_tab.h:293
+msgid "Pacific/Ponape"
+msgstr "Pacifique/Ponape"
+
+#: ../applets/clock/zone_tab.h:295
+msgid "Pacific/Kosrae"
+msgstr "Pacifique/Kosrae"
+
+#: ../applets/clock/zone_tab.h:297
+msgid "Atlantic/Faeroe"
+msgstr "Atlantique/Îles Féroé"
+
+#
+# REVIEWED
+#: ../applets/clock/zone_tab.h:299
+msgid "Europe/Paris"
+msgstr "Europe/Paris"
+
+#: ../applets/clock/zone_tab.h:301
+msgid "Africa/Libreville"
+msgstr "Afrique/Libreville"
+
+#: ../applets/clock/zone_tab.h:303
+msgid "Europe/London"
+msgstr "Europe/Londres"
+
+#: ../applets/clock/zone_tab.h:305
+msgid "America/Grenada"
+msgstr "Amérique/La_Grenade"
+
+#: ../applets/clock/zone_tab.h:307
+msgid "Asia/Tbilisi"
+msgstr "Asie/Tbilissi"
+
+#: ../applets/clock/zone_tab.h:309
+msgid "America/Cayenne"
+msgstr "Amérique/Cayenne"
+
+#: ../applets/clock/zone_tab.h:313
+msgid "Africa/Accra"
+msgstr "Afrique/Accra"
+
+#: ../applets/clock/zone_tab.h:315
+msgid "Europe/Gibraltar"
+msgstr "Europe/Gibraltar"
+
+#: ../applets/clock/zone_tab.h:317
+msgid "America/Godthab"
+msgstr "Amérique/Godthab"
+
+#: ../applets/clock/zone_tab.h:319
+msgid "America/Danmarkshavn"
+msgstr "Amérique/Danmarkshavn"
+
+#: ../applets/clock/zone_tab.h:321
+msgid "America/Scoresbysund"
+msgstr "Amérique/Scoresbysund"
+
+#: ../applets/clock/zone_tab.h:323
+msgid "America/Thule"
+msgstr "Amérique/Thulé"
+
+#: ../applets/clock/zone_tab.h:325
+msgid "Africa/Banjul"
+msgstr "Afrique/Banjul"
+
+#: ../applets/clock/zone_tab.h:327
+msgid "Africa/Conakry"
+msgstr "Afrique/Conakry"
+
+#: ../applets/clock/zone_tab.h:329
+msgid "America/Guadeloupe"
+msgstr "Amérique/Guadeloupe"
+
+#: ../applets/clock/zone_tab.h:331
+msgid "Africa/Malabo"
+msgstr "Afrique/Malabo"
+
+#
+# REVIEWED
+#: ../applets/clock/zone_tab.h:333
+msgid "Europe/Athens"
+msgstr "Europe/Athènes"
+
+#: ../applets/clock/zone_tab.h:335
+msgid "Atlantic/South_Georgia"
+msgstr "Atlantique/Georgie du sud"
+
+#: ../applets/clock/zone_tab.h:337
+msgid "America/Guatemala"
+msgstr "Amérique/Guatemala"
+
+#: ../applets/clock/zone_tab.h:339
+msgid "Pacific/Guam"
+msgstr "Pacifique/Guam"
+
+#: ../applets/clock/zone_tab.h:341
+msgid "Africa/Bissau"
+msgstr "Afrique/Bissau"
+
+#: ../applets/clock/zone_tab.h:343
+msgid "America/Guyana"
+msgstr "Amérique/Guyane"
+
+#: ../applets/clock/zone_tab.h:345
+msgid "Asia/Hong_Kong"
+msgstr "Asie/Hong_Kong"
+
+#: ../applets/clock/zone_tab.h:347
+msgid "America/Tegucigalpa"
+msgstr "Amérique/Tegucigalpa"
+
+#: ../applets/clock/zone_tab.h:349
+msgid "Europe/Zagreb"
+msgstr "Europe/Zagreb"
+
+#: ../applets/clock/zone_tab.h:351
+msgid "America/Port-au-Prince"
+msgstr "Amérique/Port-au-Prince"
+
+#: ../applets/clock/zone_tab.h:353
+msgid "Europe/Budapest"
+msgstr "Europe/Budapest"
+
+#: ../applets/clock/zone_tab.h:355
+msgid "Asia/Jakarta"
+msgstr "Asie/Jakarta"
+
+#: ../applets/clock/zone_tab.h:357
+msgid "Asia/Pontianak"
+msgstr "Asie/Pontianak"
+
+#: ../applets/clock/zone_tab.h:359
+msgid "Asia/Makassar"
+msgstr "Asie/Makasar"
+
+#: ../applets/clock/zone_tab.h:361
+msgid "Asia/Jayapura"
+msgstr "Asie/Jayapura"
+
+#: ../applets/clock/zone_tab.h:363
+msgid "Europe/Dublin"
+msgstr "Europe/Dublin"
+
+#: ../applets/clock/zone_tab.h:365
+msgid "Asia/Jerusalem"
+msgstr "Asie/Jérusalem"
+
+#: ../applets/clock/zone_tab.h:369
+msgid "Asia/Calcutta"
+msgstr "Asie/Calcutta"
+
+#: ../applets/clock/zone_tab.h:371
+msgid "Indian/Chagos"
+msgstr "Inde/Îles_Chagos"
+
+#: ../applets/clock/zone_tab.h:373
+msgid "Asia/Baghdad"
+msgstr "Asie/Bagdad"
+
+#: ../applets/clock/zone_tab.h:375
+msgid "Asia/Tehran"
+msgstr "Asie/Téhéran"
+
+#: ../applets/clock/zone_tab.h:377
+msgid "Atlantic/Reykjavik"
+msgstr "Atlantique/Reykjavik"
+
+#: ../applets/clock/zone_tab.h:379
+msgid "Europe/Rome"
+msgstr "Europe/Rome"
+
+#: ../applets/clock/zone_tab.h:383
+msgid "America/Jamaica"
+msgstr "Amérique/Jamaïque"
+
+#: ../applets/clock/zone_tab.h:385
+msgid "Asia/Amman"
+msgstr "Asie/Amman"
+
+#: ../applets/clock/zone_tab.h:387
+msgid "Asia/Tokyo"
+msgstr "Asie/Tokyo"
+
+#: ../applets/clock/zone_tab.h:389
+msgid "Africa/Nairobi"
+msgstr "Afrique/Nairobi"
+
+#: ../applets/clock/zone_tab.h:391
+msgid "Asia/Bishkek"
+msgstr "Asie/Bichkek"
+
+#: ../applets/clock/zone_tab.h:393
+msgid "Asia/Phnom_Penh"
+msgstr "Asie/Phnom_Penh"
+
+#: ../applets/clock/zone_tab.h:395
+msgid "Pacific/Tarawa"
+msgstr "Pacifique/Tarawa"
+
+#: ../applets/clock/zone_tab.h:397
+msgid "Pacific/Enderbury"
+msgstr "Pacifique/Enderbury"
+
+#: ../applets/clock/zone_tab.h:399
+msgid "Pacific/Kiritimati"
+msgstr "Pacifique/Kiritimati"
+
+#: ../applets/clock/zone_tab.h:401
+msgid "Indian/Comoro"
+msgstr "Inde/Comores"
+
+#: ../applets/clock/zone_tab.h:403
+msgid "America/St_Kitts"
+msgstr "Amérique/Saint-Christophe_et_Niévès"
+
+#: ../applets/clock/zone_tab.h:405
+msgid "Asia/Pyongyang"
+msgstr "Asie/Pyongyang"
+
+#: ../applets/clock/zone_tab.h:407
+msgid "Asia/Seoul"
+msgstr "Asie/Séoul"
+
+#: ../applets/clock/zone_tab.h:409
+msgid "Asia/Kuwait"
+msgstr "Asie/Koweït"
+
+#: ../applets/clock/zone_tab.h:411
+msgid "America/Cayman"
+msgstr "Amérique/Îles_Caïman"
+
+#: ../applets/clock/zone_tab.h:413
+msgid "Asia/Almaty"
+msgstr "Asie/Alma-Ata"
+
+#: ../applets/clock/zone_tab.h:415
+msgid "Asia/Qyzylorda"
+msgstr "Asie/Qyzylorda"
+
+#: ../applets/clock/zone_tab.h:417
+msgid "Asia/Aqtobe"
+msgstr "Asie/Aqtobe"
+
+#: ../applets/clock/zone_tab.h:419
+msgid "Asia/Aqtau"
+msgstr "Asie/Aqtau"
+
+#: ../applets/clock/zone_tab.h:421
+msgid "Asia/Oral"
+msgstr "Asie/Oural"
+
+#: ../applets/clock/zone_tab.h:423
+msgid "Asia/Vientiane"
+msgstr "Asie/Vientiane"
+
+#: ../applets/clock/zone_tab.h:425
+msgid "Asia/Beirut"
+msgstr "Asie/Beyrouth"
+
+#: ../applets/clock/zone_tab.h:427
+msgid "America/St_Lucia"
+msgstr "Amérique/Sainte_Lucie"
+
+#: ../applets/clock/zone_tab.h:429
+msgid "Europe/Vaduz"
+msgstr "Europe/Vaduz"
+
+#: ../applets/clock/zone_tab.h:431
+msgid "Asia/Colombo"
+msgstr "Asie/Colombo"
+
+#: ../applets/clock/zone_tab.h:433
+msgid "Africa/Monrovia"
+msgstr "Afrique/Monrovia"
+
+#: ../applets/clock/zone_tab.h:435
+msgid "Africa/Maseru"
+msgstr "Afrique/Maseru"
+
+#: ../applets/clock/zone_tab.h:437
+msgid "Europe/Vilnius"
+msgstr "Europe/Vilnius"
+
+#: ../applets/clock/zone_tab.h:439
+msgid "Europe/Luxembourg"
+msgstr "Europe/Luxembourg"
+
+#: ../applets/clock/zone_tab.h:441
+msgid "Europe/Riga"
+msgstr "Europe/Riga"
+
+#: ../applets/clock/zone_tab.h:443
+msgid "Africa/Tripoli"
+msgstr "Afrique/Tripoli"
+
+#: ../applets/clock/zone_tab.h:445
+msgid "Africa/Casablanca"
+msgstr "Afrique/Casablanca"
+
+#: ../applets/clock/zone_tab.h:447
+msgid "Europe/Monaco"
+msgstr "Europe/Monaco"
+
+#: ../applets/clock/zone_tab.h:449
+msgid "Europe/Chisinau"
+msgstr "Europe/Chisinau"
+
+#: ../applets/clock/zone_tab.h:453
+msgid "Indian/Antananarivo"
+msgstr "Inde/Antananarivo"
+
+#: ../applets/clock/zone_tab.h:455
+msgid "Pacific/Majuro"
+msgstr "Pacifique/Majuro"
+
+#: ../applets/clock/zone_tab.h:457
+msgid "Pacific/Kwajalein"
+msgstr "Pacifique/Kwajalein"
+
+#: ../applets/clock/zone_tab.h:459
+msgid "Europe/Skopje"
+msgstr "Europe/Skopje"
+
+#: ../applets/clock/zone_tab.h:461
+msgid "Africa/Bamako"
+msgstr "Afrique/Bamako"
+
+#: ../applets/clock/zone_tab.h:463
+msgid "Asia/Rangoon"
+msgstr "Asie/Rangoon"
+
+#: ../applets/clock/zone_tab.h:465
+msgid "Asia/Ulaanbaatar"
+msgstr "Asie/Ulaanbaatar"
+
+#: ../applets/clock/zone_tab.h:467
+msgid "Asia/Hovd"
+msgstr "Asie/Hovd"
+
+#: ../applets/clock/zone_tab.h:469
+msgid "Asia/Choibalsan"
+msgstr "Asie/Choibalsan"
+
+#: ../applets/clock/zone_tab.h:471
+msgid "Asia/Macau"
+msgstr "Asie/Macao"
+
+#: ../applets/clock/zone_tab.h:473
+msgid "Pacific/Saipan"
+msgstr "Pacifique/Saipan"
+
+#: ../applets/clock/zone_tab.h:475
+msgid "America/Martinique"
+msgstr "Amérique/Martinique"
+
+#: ../applets/clock/zone_tab.h:477
+msgid "Africa/Nouakchott"
+msgstr "Afrique/Nouakchott"
+
+#: ../applets/clock/zone_tab.h:479
+msgid "America/Montserrat"
+msgstr "Amérique/Montserrat"
+
+#: ../applets/clock/zone_tab.h:481
+msgid "Europe/Malta"
+msgstr "Europe/Malte"
+
+#: ../applets/clock/zone_tab.h:483
+msgid "Indian/Mauritius"
+msgstr "Inde/Île Maurice"
+
+#: ../applets/clock/zone_tab.h:485
+msgid "Indian/Maldives"
+msgstr "Inde/Maldives"
+
+#: ../applets/clock/zone_tab.h:487
+msgid "Africa/Blantyre"
+msgstr "Afrique/Blantyre"
+
+#: ../applets/clock/zone_tab.h:489
+msgid "America/Mexico_City"
+msgstr "Amérique/Mexico"
+
+#: ../applets/clock/zone_tab.h:491
+msgid "America/Cancun"
+msgstr "Amérique/Cancún"
+
+#: ../applets/clock/zone_tab.h:493
+msgid "America/Merida"
+msgstr "Amérique/Mérida"
+
+#: ../applets/clock/zone_tab.h:495
+msgid "America/Monterrey"
+msgstr "Amérique/Monterrey"
+
+#: ../applets/clock/zone_tab.h:497
+msgid "America/Mazatlan"
+msgstr "Amérique/Mazatlán"
+
+#: ../applets/clock/zone_tab.h:499
+msgid "America/Chihuahua"
+msgstr "Amérique/Chihuahua"
+
+#: ../applets/clock/zone_tab.h:501
+msgid "America/Hermosillo"
+msgstr "Amérique/Hermosillo"
+
+#: ../applets/clock/zone_tab.h:503
+msgid "America/Tijuana"
+msgstr "Amérique/Tijuana"
+
+#: ../applets/clock/zone_tab.h:505
+msgid "Asia/Kuala_Lumpur"
+msgstr "Asie/Kuala_Lumpur"
+
+#: ../applets/clock/zone_tab.h:507
+msgid "Asia/Kuching"
+msgstr "Asie/Kuching"
+
+#: ../applets/clock/zone_tab.h:509
+msgid "Africa/Maputo"
+msgstr "Afrique/Maputo"
+
+#: ../applets/clock/zone_tab.h:511
+msgid "Africa/Windhoek"
+msgstr "Afrique/Windhoek"
+
+#: ../applets/clock/zone_tab.h:513
+msgid "Pacific/Noumea"
+msgstr "Pacifique/Nouméa"
+
+#: ../applets/clock/zone_tab.h:515
+msgid "Africa/Niamey"
+msgstr "Afrique/Niamey"
+
+#: ../applets/clock/zone_tab.h:517
+msgid "Pacific/Norfolk"
+msgstr "Pacifique/Norfolk"
+
+#: ../applets/clock/zone_tab.h:519
+msgid "Africa/Lagos"
+msgstr "Afrique/Lagos"
+
+#: ../applets/clock/zone_tab.h:521
+msgid "America/Managua"
+msgstr "Amérique/Managua"
+
+#: ../applets/clock/zone_tab.h:523
+msgid "Europe/Amsterdam"
+msgstr "Europe/Amsterdam"
+
+#: ../applets/clock/zone_tab.h:525
+msgid "Europe/Oslo"
+msgstr "Europe/Oslo"
+
+#: ../applets/clock/zone_tab.h:527
+msgid "Asia/Katmandu"
+msgstr "Asie/Katmandou"
+
+#: ../applets/clock/zone_tab.h:529
+msgid "Pacific/Nauru"
+msgstr "Pacifique/Nauru"
+
+#: ../applets/clock/zone_tab.h:531
+msgid "Pacific/Niue"
+msgstr "Pacifique/Niue"
+
+#: ../applets/clock/zone_tab.h:533
+msgid "Pacific/Auckland"
+msgstr "Pacifique/Auckland"
+
+#: ../applets/clock/zone_tab.h:535
+msgid "Pacific/Chatham"
+msgstr "Pacifique/San_Cristóbal"
+
+#: ../applets/clock/zone_tab.h:537
+msgid "Asia/Muscat"
+msgstr "Asie/Muscat"
+
+#: ../applets/clock/zone_tab.h:539
+msgid "America/Panama"
+msgstr "Amérique/Panama"
+
+#: ../applets/clock/zone_tab.h:541
+msgid "America/Lima"
+msgstr "Amérique/Lima"
+
+#: ../applets/clock/zone_tab.h:543
+msgid "Pacific/Tahiti"
+msgstr "Pacifique/Tahiti"
+
+#: ../applets/clock/zone_tab.h:545
+msgid "Pacific/Marquesas"
+msgstr "Pacifique/Îles_Marquises"
+
+#: ../applets/clock/zone_tab.h:547
+msgid "Pacific/Gambier"
+msgstr "Pacifique/Îles_Gambier"
+
+#: ../applets/clock/zone_tab.h:549
+msgid "Pacific/Port_Moresby"
+msgstr "Pacifique/Port_Moresby"
+
+#: ../applets/clock/zone_tab.h:551
+msgid "Asia/Manila"
+msgstr "Asie/Manille"
+
+#: ../applets/clock/zone_tab.h:553
+msgid "Asia/Karachi"
+msgstr "Asie/Karachi"
+
+#: ../applets/clock/zone_tab.h:555
+msgid "Europe/Warsaw"
+msgstr "Europe/Varsovie"
+
+#: ../applets/clock/zone_tab.h:557
+msgid "America/Miquelon"
+msgstr "Amérique/Miquelon"
+
+#: ../applets/clock/zone_tab.h:559
+msgid "Pacific/Pitcairn"
+msgstr "Pacifique/Pitcairn"
+
+#: ../applets/clock/zone_tab.h:561
+msgid "America/Puerto_Rico"
+msgstr "Amérique/Puerto_Rico"
+
+#: ../applets/clock/zone_tab.h:563
+msgid "Asia/Gaza"
+msgstr "Asie/Gaza"
+
+#: ../applets/clock/zone_tab.h:565
+msgid "Europe/Lisbon"
+msgstr "Europe/Lisbonne"
+
+#: ../applets/clock/zone_tab.h:567
+msgid "Atlantic/Madeira"
+msgstr "Atlantique/Madère"
+
+#: ../applets/clock/zone_tab.h:569
+msgid "Atlantic/Azores"
+msgstr "Atlantique/Açores"
+
+#: ../applets/clock/zone_tab.h:571
+msgid "Pacific/Palau"
+msgstr "Pacifique/Îles_Belau"
+
+#: ../applets/clock/zone_tab.h:573
+msgid "America/Asuncion"
+msgstr "Amérique/Assomption"
+
+#: ../applets/clock/zone_tab.h:575
+msgid "Asia/Qatar"
+msgstr "Asie/Qatar"
+
+#: ../applets/clock/zone_tab.h:577
+msgid "Indian/Reunion"
+msgstr "Inde/Réunion"
+
+#: ../applets/clock/zone_tab.h:579
+msgid "Europe/Bucharest"
+msgstr "Europe/Bucarest"
+
+#: ../applets/clock/zone_tab.h:581
+msgid "Europe/Belgrade"
+msgstr "Europe/Belgrade"
+
+#: ../applets/clock/zone_tab.h:583
+msgid "Europe/Kaliningrad"
+msgstr "Europe/Kaliningrad"
+
+#: ../applets/clock/zone_tab.h:585
+msgid "Europe/Moscow"
+msgstr "Europe/Moscou"
+
+#: ../applets/clock/zone_tab.h:589
+msgid "Europe/Samara"
+msgstr "Europe/Samara"
+
+#: ../applets/clock/zone_tab.h:591
+msgid "Asia/Yekaterinburg"
+msgstr "Asie/Yekaterinburg"
+
+#: ../applets/clock/zone_tab.h:593
+msgid "Asia/Omsk"
+msgstr "Asie/Omsk"
+
+#: ../applets/clock/zone_tab.h:595
+msgid "Asia/Novosibirsk"
+msgstr "Asie/Novossibirsk"
+
+#: ../applets/clock/zone_tab.h:597
+msgid "Asia/Krasnoyarsk"
+msgstr "Asie/Krasnoïarsk"
+
+#: ../applets/clock/zone_tab.h:599
+msgid "Asia/Irkutsk"
+msgstr "Asie/Irkoutsk"
+
+#: ../applets/clock/zone_tab.h:601
+msgid "Asia/Yakutsk"
+msgstr "Asie/Iakutsk"
+
+#: ../applets/clock/zone_tab.h:603
+msgid "Asia/Vladivostok"
+msgstr "Asie/Vladivostok"
+
+#: ../applets/clock/zone_tab.h:605
+msgid "Asia/Sakhalin"
+msgstr "Asie/Sakhalin"
+
+#: ../applets/clock/zone_tab.h:607
+msgid "Asia/Magadan"
+msgstr "Asie/Magadan"
+
+#: ../applets/clock/zone_tab.h:609
+msgid "Asia/Kamchatka"
+msgstr "Asie/Kamchatka"
+
+#: ../applets/clock/zone_tab.h:611
+msgid "Asia/Anadyr"
+msgstr "Asie/Anadyr"
+
+#: ../applets/clock/zone_tab.h:613
+msgid "Africa/Kigali"
+msgstr "Afrique/Kigali"
+
+#: ../applets/clock/zone_tab.h:615
+msgid "Asia/Riyadh"
+msgstr "Asie/Riyad"
+
+#: ../applets/clock/zone_tab.h:617
+msgid "Pacific/Guadalcanal"
+msgstr "Pacifique/Guadalcanal"
+
+#: ../applets/clock/zone_tab.h:619
+msgid "Indian/Mahe"
+msgstr "Inde/Mahé"
+
+#: ../applets/clock/zone_tab.h:621
+msgid "Africa/Khartoum"
+msgstr "Afrique/Khartoum"
+
+#: ../applets/clock/zone_tab.h:623
+msgid "Europe/Stockholm"
+msgstr "Europe/Stockholm"
+
+#: ../applets/clock/zone_tab.h:625
+msgid "Asia/Singapore"
+msgstr "Asie/Singapour"
+
+#: ../applets/clock/zone_tab.h:627
+msgid "Atlantic/St_Helena"
+msgstr "Atlantique/Sainte-Hélène"
+
+#: ../applets/clock/zone_tab.h:629
+msgid "Europe/Ljubljana"
+msgstr "Europe/Ljubljana"
+
+#: ../applets/clock/zone_tab.h:631
+msgid "Arctic/Longyearbyen"
+msgstr "Arctique/Longyearbyen"
+
+#: ../applets/clock/zone_tab.h:633
+msgid "Atlantic/Jan_Mayen"
+msgstr "Atlantique/Jan_Mayen"
+
+#: ../applets/clock/zone_tab.h:635
+msgid "Europe/Bratislava"
+msgstr "Europe/Bratislava"
+
+#: ../applets/clock/zone_tab.h:637
+msgid "Africa/Freetown"
+msgstr "Afrique/Freetown"
+
+#: ../applets/clock/zone_tab.h:639
+msgid "Europe/San_Marino"
+msgstr "Europe/République_de_Saint-Marin"
+
+#: ../applets/clock/zone_tab.h:641
+msgid "Africa/Dakar"
+msgstr "Afrique/Dakar"
+
+#: ../applets/clock/zone_tab.h:643
+msgid "Africa/Mogadishu"
+msgstr "Afrique/Muqdisho"
+
+#: ../applets/clock/zone_tab.h:645
+msgid "America/Paramaribo"
+msgstr "Amérique/Paramaribo"
+
+#: ../applets/clock/zone_tab.h:647
+msgid "Africa/Sao_Tome"
+msgstr "Afrique/Sao_Tomé"
+
+#: ../applets/clock/zone_tab.h:649
+msgid "America/El_Salvador"
+msgstr "Amérique/Salvador"
+
+#: ../applets/clock/zone_tab.h:651
+msgid "Asia/Damascus"
+msgstr "Asie/Damas"
+
+#: ../applets/clock/zone_tab.h:653
+msgid "Africa/Mbabane"
+msgstr "Afrique/Mbabane"
+
+#: ../applets/clock/zone_tab.h:655
+msgid "America/Grand_Turk"
+msgstr "Amérique/Grand_Turk"
+
+#: ../applets/clock/zone_tab.h:657
+msgid "Africa/Ndjamena"
+msgstr "Afrique/N'Djamena"
+
+#: ../applets/clock/zone_tab.h:659
+msgid "Indian/Kerguelen"
+msgstr "Inde/Kerguelen"
+
+#: ../applets/clock/zone_tab.h:661
+msgid "Africa/Lome"
+msgstr "Afrique/Lomé"
+
+#: ../applets/clock/zone_tab.h:663
+msgid "Asia/Bangkok"
+msgstr "Asie/Bangkok"
+
+#: ../applets/clock/zone_tab.h:665
+msgid "Asia/Dushanbe"
+msgstr "Asie/Dushanbe"
+
+#: ../applets/clock/zone_tab.h:667
+msgid "Pacific/Fakaofo"
+msgstr "Pacifique/Fakaofo"
+
+#: ../applets/clock/zone_tab.h:669
+msgid "Asia/Dili"
+msgstr "Asie/Dili"
+
+#: ../applets/clock/zone_tab.h:671
+msgid "Asia/Ashgabat"
+msgstr "Asie/Ashgabat"
+
+#: ../applets/clock/zone_tab.h:673
+msgid "Africa/Tunis"
+msgstr "Afrique/Tunis"
+
+#: ../applets/clock/zone_tab.h:675
+msgid "Pacific/Tongatapu"
+msgstr "Pacifique/Tongatapu"
+
+#: ../applets/clock/zone_tab.h:677
+msgid "Europe/Istanbul"
+msgstr "Europe/Istanbul"
+
+#: ../applets/clock/zone_tab.h:679
+msgid "America/Port_of_Spain"
+msgstr "Amérique/Port_of_Spain"
+
+#: ../applets/clock/zone_tab.h:681
+msgid "Pacific/Funafuti"
+msgstr "Pacifique/Funafuti"
+
+#: ../applets/clock/zone_tab.h:683
+msgid "Asia/Taipei"
+msgstr "Asie/Taipei"
+
+#: ../applets/clock/zone_tab.h:685
+msgid "Africa/Dar_es_Salaam"
+msgstr "Afrique/Dar_es-Salaam"
+
+#: ../applets/clock/zone_tab.h:687
+msgid "Europe/Kiev"
+msgstr "Europe/Kiev"
+
+#: ../applets/clock/zone_tab.h:689
+msgid "Europe/Uzhgorod"
+msgstr "Europe/Uzhgorod"
+
+#: ../applets/clock/zone_tab.h:691
+msgid "Europe/Zaporozhye"
+msgstr "Europe/Zaporojie"
+
+#: ../applets/clock/zone_tab.h:693
+msgid "Europe/Simferopol"
+msgstr "Europe/Simferopol"
+
+#: ../applets/clock/zone_tab.h:695
+msgid "Africa/Kampala"
+msgstr "Afrique/Kampala"
+
+#: ../applets/clock/zone_tab.h:697
+msgid "Pacific/Johnston"
+msgstr "Pacifique/Îles_Johnston"
+
+#: ../applets/clock/zone_tab.h:699
+msgid "Pacific/Midway"
+msgstr "Pacifique/Midway"
+
+#: ../applets/clock/zone_tab.h:701
+msgid "Pacific/Wake"
+msgstr "Océan Pacifique/Wake"
+
+#: ../applets/clock/zone_tab.h:703
+msgid "America/New_York"
+msgstr "Amérique/New_York"
+
+#: ../applets/clock/zone_tab.h:705
+msgid "America/Detroit"
+msgstr "Amérique/Detroit"
+
+#: ../applets/clock/zone_tab.h:709
+msgid "America/Kentucky/Monticello"
+msgstr "Amérique/Kentucky/Monticello"
+
+#: ../applets/clock/zone_tab.h:713
+msgid "America/Indiana/Marengo"
+msgstr "Amérique/Indiana/Marengo"
+
+#: ../applets/clock/zone_tab.h:715
+msgid "America/Indiana/Knox"
+msgstr "Amérique/Indiana/Knox"
+
+#: ../applets/clock/zone_tab.h:717
+msgid "America/Indiana/Vevay"
+msgstr "Amérique/Indiana/Vevay"
+
+#: ../applets/clock/zone_tab.h:719
+msgid "America/Chicago"
+msgstr "Amérique/Chicago"
+
+#: ../applets/clock/zone_tab.h:725
+msgid "America/Menominee"
+msgstr "Amérique/Menominee"
+
+#: ../applets/clock/zone_tab.h:727
+msgid "America/North_Dakota/Center"
+msgstr "Amérique/Dakota nord/Centre"
+
+#: ../applets/clock/zone_tab.h:731
+msgid "America/Denver"
+msgstr "Amérique/Denver"
+
+#: ../applets/clock/zone_tab.h:733
+msgid "America/Boise"
+msgstr "Amérique/Boise"
+
+#: ../applets/clock/zone_tab.h:735
+msgid "America/Shiprock"
+msgstr "Amérique/Shiprock"
+
+#: ../applets/clock/zone_tab.h:737
+msgid "America/Phoenix"
+msgstr "Amérique/Phœnix"
+
+#: ../applets/clock/zone_tab.h:739
+msgid "America/Los_Angeles"
+msgstr "Amérique/Los_Angeles"
+
+#: ../applets/clock/zone_tab.h:741
+msgid "America/Anchorage"
+msgstr "Amérique/Anchorage"
+
+#: ../applets/clock/zone_tab.h:743
+msgid "America/Juneau"
+msgstr "Amérique/Juneau"
+
+#: ../applets/clock/zone_tab.h:745
+msgid "America/Yakutat"
+msgstr "Amérique/Yakutat"
+
+#: ../applets/clock/zone_tab.h:747
+msgid "America/Nome"
+msgstr "Amérique/Nome"
+
+#: ../applets/clock/zone_tab.h:749
+msgid "America/Adak"
+msgstr "Amérique/Adak"
+
+#: ../applets/clock/zone_tab.h:751
+msgid "Pacific/Honolulu"
+msgstr "Pacifique/Honolulu"
+
+#: ../applets/clock/zone_tab.h:753
+msgid "America/Montevideo"
+msgstr "Amérique/Montevideo"
+
+#: ../applets/clock/zone_tab.h:755
+msgid "Asia/Samarkand"
+msgstr "Asie/Samarkand"
+
+#: ../applets/clock/zone_tab.h:757
+msgid "Asia/Tashkent"
+msgstr "Asie/Tachkent"
+
+#: ../applets/clock/zone_tab.h:759
+msgid "Europe/Vatican"
+msgstr "Europe/Vatican"
+
+#: ../applets/clock/zone_tab.h:761
+msgid "America/St_Vincent"
+msgstr "Amérique/Saint_Vincent"
+
+#: ../applets/clock/zone_tab.h:763
+msgid "America/Caracas"
+msgstr "Amérique/Caracas"
+
+#: ../applets/clock/zone_tab.h:765
+msgid "America/Tortola"
+msgstr "Amérique/Tortola"
+
+#: ../applets/clock/zone_tab.h:767
+msgid "America/St_Thomas"
+msgstr "Amérique/Saint_Thomas"
+
+#: ../applets/clock/zone_tab.h:769
+msgid "Asia/Saigon"
+msgstr "Asie/Saigon"
+
+#: ../applets/clock/zone_tab.h:771
+msgid "Pacific/Efate"
+msgstr "Pacifique/Efate"
+
+#: ../applets/clock/zone_tab.h:773
+msgid "Pacific/Wallis"
+msgstr "Pacifique/Wallis"
+
+#: ../applets/clock/zone_tab.h:775
+msgid "Pacific/Apia"
+msgstr "Pacifique/Apia"
+
+#: ../applets/clock/zone_tab.h:777
+msgid "Asia/Aden"
+msgstr "Asie/Aden"
+
+#: ../applets/clock/zone_tab.h:779
+msgid "Indian/Mayotte"
+msgstr "Inde/Mayotte"
+
+#: ../applets/clock/zone_tab.h:781
+msgid "Africa/Johannesburg"
+msgstr "Afrique/Johannesburg"
+
+#: ../applets/clock/zone_tab.h:783
+msgid "Africa/Lusaka"
+msgstr "Afrique/Lusaka"
+
+#: ../applets/clock/zone_tab.h:785
+msgid "Africa/Harare"
+msgstr "Afrique/Harare"
+
+#: ../applets/clock/zone_tab.h:787 ../applets/clock/zone_tab.h:789
+#: ../applets/clock/zone_tab.h:791
+msgid "Europe/"
+msgstr "Europe/"
+
+# SUN LING REVIEWED
+#: ../applets/wncklet/GNOME_WorkspaceSwitcherApplet.xml.h:3
+msgid "_Change Workspace Label..."
+msgstr "Modifier l'étiquette de l'espa_ce de travail..."
+
+# REVIEWED
+# SUN MESSAGE
+# SUN LING REVIEWED
+#: ../applets/wncklet/workspace-switcher.c:1313
+msgid "Changing Workspace Label"
+msgstr "Modification de l'étiquette de l'espace de travail"
+
+#
+# REVIEWED
+#: ../gnome-panel/menu.c:1834 ../gnome-panel/panel-action-button.c:318
+msgid "Run Application..."
+msgstr "Lancer une application..."
+
+#
+#
+# REVIEWED
+#: ../gnome-panel/menu.c:1922 ../gnome-panel/panel-menu-items.c:712
+msgid "Preferences"
+msgstr "Préférences"
+
+# REVIEWED
+#: ../gnome-panel/menu.c:1927 ../gnome-panel/panel-menu-items.c:717
+msgid "Administration"
+msgstr "Administration"
