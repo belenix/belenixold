@@ -3,21 +3,65 @@
 #
 # includes module(s): wine
 #
+# Owner: lewellyn
 %include Solaris.inc
 
-%define src_name	wine
-%define src_url		%{sf_download}/%{src_name}
+%define sname           wine
+%define src_url		%{sf_download}/%{sname}
+
+# To attempt building a certain wine version, as opposed to the latest
+# Wine version available from Sourceforge, pass the version as an argument.
+# example version number: 1.1.27
+# $ pkgtool build SFEwine --define 'version 1.1.27'
+
+# In case of an unstable wine version, temporarily set this to the
+# last-known-good version. This should be reverted the next stable version.
+%if %{!?version:1}
+ 	%define version 1.1.30
+%endif
+
+%if %{!?version:1}
+	%define version %{!?version:%( version=`wget -O - "ftp://ibiblio.org/pub/linux/system/emulators/wine/wine.lsm" 2>/dev/null | grep "Version: " | head -1 | sed -e 's,^Version: ,,'`; if [ "$version" = "" ]; then version=`ls %{_sourcedir}/wine-*.tar.bz2 | sed -e 's,^.*wine-,,' -e 's,\.tar\.bz2,,' | tail -1`; fi; echo $version )}
+%endif
 
 Name:                   SFEwine
-Summary:                Windows Emulator
-Version:                1.0
+Summary:                Windows API compatibility and ABI runtime
+Version:                %{version}
 URL:                    http://www.winehq.org/
-Source:                 %{src_url}/%{src_name}-%{version}.tar.bz2
-Patch1:			wine-01-nameconfict.diff
-Patch2:			wine-02-xim-workaround.diff
-Patch4:			wine-04-event-completion.diff
-Patch3:			wine-03-shell.diff
-Patch6:			wine-06-iphlpapi.diff
+Source:                 %{src_url}/%{sname}-%{version}.tar.bz2
+# See: http://lists.freedesktop.org/archives/tango-artists/2009-July/001973.html
+# Also: http://www.airwebreathe.org.uk/wine-icon/
+Source1:                http://winezeug.googlecode.com/svn/trunk/winetricks
+Source10:               winetricks.desktop
+Source101:              wine-appwiz.desktop
+Source102:              wine-cmd.desktop
+Source103:              wine-notepad.desktop
+Source104:              wine-regedit.desktop
+Source105:              wine-taskmgr.desktop
+Source106:              wine-winecfg.desktop
+Source107:              wine-winefile.desktop
+Source108:              wine-winemine.desktop
+Source109:              wine-wordpad.desktop
+Source1000:             http://www.airwebreathe.org.uk/wine-icon/oic_winlogo-svg.zip
+Source1001:             http://www.airwebreathe.org.uk/wine-icon/appwiz.svg.zip
+#Source1002:             http://www.airwebreathe.org.uk/wine-icon/wcmd.svg.zip
+Source1002:             http://www.airwebreathe.org.uk/wine-icon/wcmd-48.png
+Source1003:             http://www.airwebreathe.org.uk/wine-icon/notepad.zip
+Source1004:             http://www.airwebreathe.org.uk/wine-icon/regedit.zip
+Source1005:             http://www.airwebreathe.org.uk/wine-icon/taskmgr.svg.zip
+# Source1006:             no replacement icon available
+#Source1007:             http://www.airwebreathe.org.uk/wine-icon/winefile.svg.zip
+Source1007:             http://www.airwebreathe.org.uk/wine-icon/winefile-48.png
+#Source1008:             http://www.airwebreathe.org.uk/wine-icon/winemine.svg.zip
+Source1008:             http://www.airwebreathe.org.uk/wine-icon/winemine-48.png
+#Source1009:             http://www.airwebreathe.org.uk/wine-icon/wordpad-svg.zip
+Patch1:                 wine-01-nohidden.diff
+NoSource:		1
+Group:			System/Virtualization
+License:		LGPL
+SUNW_HotLine:		http://www.winehq.org/help
+SUNW_Copyright:		%{name}.copyright
+ExclusiveArch:		i386 amd64
 SUNW_BaseDir:           %{_basedir}
 BuildRoot:              %{_tmppath}/%{name}-%{version}-build
 %include default-depend.inc
@@ -29,59 +73,86 @@ Requires:	SUNWhal
 BuildRequires:	SUNWdbus-devel
 Requires:	SUNWdbus
 Requires:	SUNWxorg-clientlibs
-BuildRequires:	SFEfontforge
-Requires:	SFEfreetype
-BuildRequires:	SFElcms-devel
+BuildRequires:	SUNWxorg-headers
+Requires:	SUNWxorg-mesa
 Requires:	SFElcms
-BuildRequires:	SFEcups-devel
-Requires:	SFEcups
+BuildRequires:	SFElcms-devel
+BuildRequires:	SUNWjpg-devel
+Requires:	SUNWjpg
+BuildRequires:	SUNWpng-devel
+Requires:	SUNWpng
+Requires:	SUNWlxml
+Requires:	SUNWlxsl
+Requires:	SUNWcupsu
+Requires:	SFEsane-backends
+BuildRequires:	SFEsane-backends-devel
 BuildRequires:	SFEncurses-devel
 Requires:	SFEncurses
+BuildRequires:	SUNWopenssl-include
+Requires:	SUNWopenssl-libraries
+BuildRequires:	SUNWgnutls-devel
+Requires:	SUNWgnutls
+Requires:	SUNWfreetype2
+BuildRequires:  SFEgcc
+Requires:       SFEgccruntime
 BuildRequires:	SFElibaudioio-devel
 Requires:	SFElibaudioio
+Requires:	SFEjack
+BuildRequires:	SFEjack-devel
+Requires:	SFEnas
+BuildRequires:	SFEnas-devel
+#Requires:       SFEmpg123
+# Make sure all the package components get installed.
+#Requires:       %{name}-devel
+# Following are for winetricks, not wine directly.
+Requires:       SFEcabextract
 
 %package devel
-Summary:                 wine - developer files, /usr
+Summary:                 wine - developer files
 SUNW_BaseDir:            %{_basedir}
 Requires: %name
 %include default-depend.inc
+Requires:  SUNWgnome-camera-devel
+Requires:  SUNWhea
+Requires:  SUNWdbus-devel
+Requires:  SUNWxorg-headers
+Requires:  SUNWjpg-devel
+Requires:  SUNWpng-devel
+Requires:  SFEncurses-devel
+Requires:  SUNWopenssl-include
+Requires:  SUNWgnutls-devel
+Requires:  SFEgcc
+Requires:  SFElibaudioio-devel
+Requires:  SFElcms-devel
+Requires:  SFEsane-backends-devel
+Requires:  SFEjack-devel
+Requires:  SFEnas-devel
 
 %prep
-%setup -q -n %{src_name}-%{version}
+%setup -q -n %{sname}-%{version}
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch6 -p1
-
-# change all occurences of duplicate functions/structs named "list"*
-#bash change_functions_structs_named_list_asterisk.sh
-
-# see above, cleanup concurrency with /usr/include/sys/list.h
-#mv include/wine/list.h include/wine/wine_list.h
-
-# Wine assumes libraries are mapped to contiguous memory regions.
-# Use less restrictive alignment for data section to avoid "holes" between
-# sections that the OS is allowed to use for an anonymous mmap:
-# http://opensolaris.org/jive/message.jspa?messageID=229817#229799
-cat > map.relaxalign <<EOF
-# ABI says alignment is 0x10000
-data = A0x1000;
-EOF
+unzip %{SOURCE1000}
+unzip %{SOURCE1001}
+#unzip %{SOURCE1002}
+unzip %{SOURCE1003}
+unzip %{SOURCE1004}
+unzip %{SOURCE1005}
+#unzip %{SOURCE1006}
+#unzip %{SOURCE1007}
+#unzip %{SOURCE1008}
+#unzip %{SOURCE1009}
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
 if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
-X11LIB="-L/usr/X11/lib -R/usr/X11/lib"
-SFWLIB="-L/usr/sfw/lib -R/usr/sfw/lib"
-RELAX_ALIGN="-Wl,-M -Wl,`pwd`/map.relaxalign"
 export ACLOCAL_FLAGS="-I %{_datadir}/aclocal"
-export CC=/usr/sfw/bin/gcc
-export CPPFLAGS="-I/usr/X11/include -I%{gnu_inc} -I%{gnu_inc}/ncurses -I/usr/sfw/include -D__C99FEATURES__"
-export CFLAGS="%gcc_optflags -march=i686 -O3 -fno-omit-frame-pointer -fpic -Dpic"
-export LDFLAGS="$X11LIB %{gnu_lib_path} $SFWLIB $RELAX_ALIGN"
+export CC="/usr/gnu/bin/gcc"
+# Solaris requires a Pentium, hence -march=i586.
+# Most desktop users on OpenSolaris probably have a recent Intel. Hence -mtune=prescott.
+export CFLAGS="-g -Os -march=i586 -mtune=prescott -pipe -fno-omit-frame-pointer -I/usr/include -I%{xorg_inc} -I%{gnu_inc} -I%{sfw_inc} -Xlinker -i" 
+export LDFLAGS="-L/lib -R/lib -L/usr/lib -R/usr/lib %{xorg_lib_path} %{gnu_lib_path} %{sfw_lib_path}"
 export LD=/usr/ccs/bin/ld
 
 autoconf -f
@@ -93,36 +164,87 @@ autoheader
             --datadir=%{_datadir}	\
             --libexecdir=%{_libexecdir} \
             --sysconfdir=%{_sysconfdir} \
-            --enable-shared		\
-	    --disable-static		
+	    --with-cups=/usr            \
+	    --with-openssl=/            \
+	    --without-alsa		\
+	    --without-capi		\
+	    --without-coreaudio		\
+	    --without-esd		\
+	    --without-ldap              \
+	    --without-mpg123            \
+            --without-shm		\
+	    --without-audioio
 
 make -j$CPUS || make
 
 %install
+# First, install wine.
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
+# Then, it's time for winetricks
+mkdir -p $RPM_BUILD_ROOT%{_bindir}
+ginstall -m 0555 %{SOURCE1} $RPM_BUILD_ROOT%{_bindir} # winetricks
+rm %{SOURCE1} # So it's freshly downloaded next time, as it's straight from svn
+
+# Next, deal with the icons.
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/pixmaps
+# The default wine icon is... ugly.
+# When it gets updated, this should be about the right thing to do, instead.
+# install -m 0644 programs/winemenubuilder/wine.xpm $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine.xpm
+# And, since the program icons are also ugly, fix them up too. None for winecfg; using wine.svg
+ginstall -m 0644 oic_winlogo-svg/oic_winlogo-48.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine.svg
+ginstall -m 0644 appwiz.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-appwiz.svg
+#install -m 0644 wcmd.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-cmd.svg
+ginstall -m 0644 %{SOURCE1002} $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-cmd.png
+ginstall -m 0644 notepad/notepad-48.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-notepad.svg
+ginstall -m 0644 regedit/regedit-48.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-regedit.svg
+ginstall -m 0644 taskmgr.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-taskmgr.svg
+#install -m 0644 winefile.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-winefile.svg
+ginstall -m 0644 %{SOURCE1007} $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-winefile.png
+#install -m 0644 winemine.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-winemine.svg
+ginstall -m 0644 %{SOURCE1008} $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-winemine.png
+#install -m 0644 wordpad-svg/wordpad-48.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-wordpad.svg
+ginstall -m 0644 programs/wordpad/wordpad.svg $RPM_BUILD_ROOT%{_datadir}/pixmaps/wine-wordpad.svg
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/scalable/apps 2>&1
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps 2>&1
+ginstall -m 0644 appwiz.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/scalable/apps/wine-appwiz.svg
+#install -m 0644 wcmd.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/scalable/apps/wine-cmd.svg
+ginstall -m 0644 %{SOURCE1002} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/wine-cmd.png
+ginstall -m 0644 notepad/notepad-48.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/scalable/apps/wine-notepad.svg
+ginstall -m 0644 taskmgr.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/scalable/apps/wine-taskmgr.svg
+#install -m 0644 winefile.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/scalable/apps/wine-winefile.svg
+ginstall -m 0644 %{SOURCE1007} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/wine-winefile.png
+#install -m 0644 winemine.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/scalable/apps/wine-winemine.svg
+ginstall -m 0644 %{SOURCE1008} $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/wine-winemine.png
+for size in 16 22 32 48; do
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${size}x${size}/apps 2>&1
+ginstall -m 0644 oic_winlogo-svg/oic_winlogo-${size}.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${size}x${size}/apps/wine.svg
+ginstall -m 0644 regedit/regedit-${size}.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${size}x${size}/apps/wine-regedit.svg
+#ginstall -m 0644 wordpad-svg/wordpad-${size}.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${size}x${size}/apps/wine-wordpad.svg
+done
+for size in 32 48; do
+ginstall -m 0644 notepad/notepad-${size}.svg $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${size}x${size}/apps/wine-notepad.svg
+done
+
+# Finally, the menu items.
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
+ginstall -m 0644 %{SOURCE10} $RPM_BUILD_ROOT%{_datadir}/applications # winetricks.desktop
+ginstall -m 0644 %{SOURCE101} $RPM_BUILD_ROOT%{_datadir}/applications # wine-appwiz.desktop
+ginstall -m 0644 %{SOURCE102} $RPM_BUILD_ROOT%{_datadir}/applications # wine-cmd.desktop
+ginstall -m 0644 %{SOURCE103} $RPM_BUILD_ROOT%{_datadir}/applications # wine-notepad.desktop
+ginstall -m 0644 %{SOURCE104} $RPM_BUILD_ROOT%{_datadir}/applications # wine-regedit.desktop
+ginstall -m 0644 %{SOURCE105} $RPM_BUILD_ROOT%{_datadir}/applications # wine-taskmgr.desktop
+ginstall -m 0644 %{SOURCE106} $RPM_BUILD_ROOT%{_datadir}/applications # wine-winecfg.desktop
+ginstall -m 0644 %{SOURCE107} $RPM_BUILD_ROOT%{_datadir}/applications # wine-winefile.desktop
+ginstall -m 0644 %{SOURCE108} $RPM_BUILD_ROOT%{_datadir}/applications # wine-winemine.desktop
+ginstall -m 0644 %{SOURCE109} $RPM_BUILD_ROOT%{_datadir}/applications # wine-wordpad.desktop
+
 %post
-( echo 'test -x /usr/bin/update-desktop-database || exit 0';
-  echo '/usr/bin/update-desktop-database'
-) | $BASEDIR/lib/postrun -b -u -c JDS_wait
-( echo 'test -x %{_bindir}/update-mime-database || exit 0';
-  echo '%{_bindir}/update-mime-database %{_datadir}/mime'
-) | $BASEDIR/lib/postrun -b -u -c JDS_wait
-( echo 'test -x /usr/bin/scrollkeeper-update || exit 0';
-  echo '/usr/bin/scrollkeeper-update'
-) | $BASEDIR/lib/postrun -b -u -c JDS
+%restart_fmri desktop-mime-cache
 
 %postun
-( echo 'test -x /usr/bin/update-desktop-database || exit 0';
-  echo '/usr/bin/update-desktop-database'
-) | $BASEDIR/lib/postrun -b -u -c JDS_wait
-( echo 'test -x %{_bindir}/update-mime-database || exit 0';
-  echo '%{_bindir}/update-mime-database %{_datadir}/mime'
-) | $BASEDIR/lib/postrun -b -u -c JDS_wait
-( echo 'test -x /usr/bin/scrollkeeper-update || exit 0';
-  echo '/usr/bin/scrollkeeper-update'
-) | $BASEDIR/lib/postrun -b -u -c JDS
+%restart_fmri desktop-mime-cache
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -136,15 +258,109 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/wine
 %defattr (-, root, other)
 %{_datadir}/applications
+%dir %attr (0755, root, other) %{_datadir}/pixmaps
+%{_datadir}/pixmaps/*
+%dir %attr (0755, root, other) %{_datadir}/icons
+%{_datadir}/icons/*
 
 %files devel
 %defattr (-, root, bin)
 %{_includedir}
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, other) %{_datadir}/aclocal
-%{_datadir}/aclocal/*
 
 %changelog
+* Sat Oct 03 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Imported from SFE repo with a bunch of changes.
+* Tue Aug 25 2009 - matt@greenviolet.net
+- Add dependency on SFEmpg123, as it will no longer
+  be included with wine as of 1.1.29, and is required for
+  winemp3.acm (to allow DirectShow playback of MP3 files). See
+  http://source.winehq.org/git/wine.git/?a=commit;h=db71d7c083dccd0e3f1cf43aa1034c9a46a70715
+
+* Fri Aug 22 2009 - matt@greenviolet.net
+- Fix the version detection logic to hopefully bypass the mirror system
+- Allow packaging with an empty aclocal
+
+* Thu Aug 20 2009 - matt@greenviolet.net
+- Allow overriding automatic versioning
+- Add Winetricks and Wine applications to the menus
+- Fix configure flags; force CUPS and OpenSSL
+- Jump to SFEgcc for gcc4 (back to /usr/gnu/bin)
+- Disable Xshm due to X server bugs in current Xorg
+- Clean up %post tasks
+- A bit of compile/link flags updating
+- Remove dependency on SFEgxmessage as it is no longer required by winetricks
+- Clean up winetricks prep/install
+- Move winetricks to Source1 (working around pkgbuild bug, still)
+- Change maintainership to myself
+* Wed Aug 12 2009 - matt@greenviolet.net
+- Remove obsolete patches
+- Clean up configure options
+- Remove old freetype deps
+- Add dependency SFEgxmessage currently needed for winetricks fallback messages
+- Force winetricks to be redownloaded each build, as filename doesn't change
+- Remove soundcard.h, as Boomer's is serviceable and it's unneeded pre-Boomer
+- Auto-version based on newest (topmost) version number reference on sf.net
+- Install icons for wine
+- Changed summary to be more descriptive
+- Added a bit of metainformation "sugar" for completeness
+- Enable gnutls, as disabling it causes loss of functionality
+* Mon Jun 01 2009 - trisk@forkgnu.org
+- Add patch4
+* Sun May 31 2009 - andras.barna@gmail.com
+- Add SFEcabextract dep needed by winetricks
+* Sun May 31 2009 - trisk@forkgnu.org
+- Use included soundcard.h
+- Use winetricks from trunk
+- Update patch2
+- Disable patch101
+- Explicitly disable GnuTLS to prevent schannel-related crashes
+- Add SUNWncurses dependency
+* Sat May 30 2009 - andras.barna@gmail.com
+- bump to 1.1.22
+* Sat Apr 11 2009 - andras.barna@gmail.com
+- bump to 1.1.19
+* Tue Mar 24 2009 - andras.barna@gmail.com
+- fix Requires, disable patch2 (needs rework?)
+* Mon Mar 16 2009 - andras.barna@gmail.com
+- Bump to 1.1.17, disable patch3, it's fixed upstream
+* Sun Jan 25 2009 - Thomas Wagner
+- Bump to 1.1.13
+- rework patch3 wine-03-iphlpapi.diff for 1.1.13 - could update bug http://bugs.winehq.org/show_bug.cgi?id=14185
+* Mon Dec 15 2008 - halton.huo@sun.com
+- Bump to 1.1.10
+* Mon Nov 17 2008 - halton.huo@sun.com
+- Bump to 1.1.8
+- Remove upstreamed patch and reorder
+* Thu Jul 31 2008 - trisk@acm.jhu.edu
+- Bump to 1.1.2
+- Pause patch7 (partially upstreamed), add patch8
+* Wed Jul 16 2008 - trisk@acm.jhu.edu
+- Bump to 1.1.1
+* Wed Jul 09 2008 - trisk@acm.jhu.edu
+- Bump to 1.1.0
+- Drop patch1 (upstreamed), patch2 (unnecessary)
+* Thu Jun 19 2008 - trisk@acm.jhu.edu
+- Add patch7, remove mapfile hack
+* Tue Jun 17 2008 - trisk@acm.jhu.edu
+- Bump to 1.0
+- Add patch1
+- Add winetricks
+* Mon Jun 09 2008 - trisk@acm.jhu.edu
+- Replace SFEfreetype dependency
+* Mon Jun 09 2008 - trisk@acm.jhu.edu
+- Bump to 1.0-rc4
+- Drop patch1
+- Replace SFEcups with SUNWcupsu
+- Add lots of missing dependencies
+- Use curses instead of ncurses
+* Wed Jun 04 2008 - trisk@acm.jhu.edu
+- Drop SFEfontforge, SUNWlcms-devel dependencies
+- Add patch5 for http://bugs.winehq.org/show_bug.cgi?id=9787
+- List bug URLs
+* Sat May 31 2008 - trisk@acm.jhu.edu
+- Bump to 1.0-rc3
 * Sat May 24 2008 - trisk@acm.jhu.edu
 - Bump to 1.0-rc2
 * Sun May 18 2008 - trisk@acm.jhu.edu.

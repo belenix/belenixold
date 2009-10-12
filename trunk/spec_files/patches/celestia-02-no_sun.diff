@@ -1,0 +1,465 @@
+--- celestia-1.6.0/src/celengine/body.h.orig	2009-10-03 16:17:47.289868334 +0530
++++ celestia-1.6.0/src/celengine/body.h	2009-10-03 16:18:17.095707657 +0530
+@@ -239,18 +239,18 @@
+     const Surface& getSurface() const;
+     Surface& getSurface();
+ 
+-    float getLuminosity(const Star& sun,
++    float getLuminosity(const Star& Sun,
+                         float distanceFromSun) const;
+     float getLuminosity(float sunLuminosity,
+                         float distanceFromSun) const;
+ 
+-    float getApparentMagnitude(const Star& sun,
++    float getApparentMagnitude(const Star& Sun,
+                                float distanceFromSun,
+                                float distanceFromViewer) const;
+     float getApparentMagnitude(float sunLuminosity,
+                                float distanceFromSun,
+                                float distanceFromViewer) const;
+-    float getApparentMagnitude(const Star& sun,
++    float getApparentMagnitude(const Star& Sun,
+                                const Vec3d& sunPosition,
+                                const Vec3d& viewerPosition) const;
+     float getApparentMagnitude(float sunLuminosity,
+--- celestia-1.6.0/src/celengine/body.cpp.orig	2009-10-03 16:18:32.155355045 +0530
++++ celestia-1.6.0/src/celengine/body.cpp	2009-10-03 16:18:56.904753064 +0530
+@@ -674,10 +674,10 @@
+ }
+ 
+ 
+-float Body::getLuminosity(const Star& sun,
++float Body::getLuminosity(const Star& Sun,
+                           float distanceFromSun) const
+ {
+-    return getLuminosity(sun.getLuminosity(), distanceFromSun);
++    return getLuminosity(Sun.getLuminosity(), distanceFromSun);
+ }
+ 
+ 
+@@ -706,11 +706,11 @@
+ /*! Get the apparent magnitude of the body, neglecting the phase (as if
+  *  the body was at opposition.
+  */
+-float Body::getApparentMagnitude(const Star& sun,
++float Body::getApparentMagnitude(const Star& Sun,
+                                  float distanceFromSun,
+                                  float distanceFromViewer) const
+ {
+-    return astro::lumToAppMag(getLuminosity(sun, distanceFromSun),
++    return astro::lumToAppMag(getLuminosity(Sun, distanceFromSun),
+                               astro::kilometersToLightYears(distanceFromViewer));
+ }
+ 
+@@ -728,11 +728,11 @@
+ 
+ /*! Get the apparent magnitude of the body, corrected for its phase.
+  */
+-float Body::getApparentMagnitude(const Star& sun,
++float Body::getApparentMagnitude(const Star& Sun,
+                                  const Vec3d& sunPosition,
+                                  const Vec3d& viewerPosition) const
+ {
+-    return getApparentMagnitude(sun.getLuminosity(),
++    return getApparentMagnitude(Sun.getLuminosity(),
+                                 sunPosition,
+                                 viewerPosition);
+ }
+--- celestia-1.6.0/src/celengine/axisarrow.cpp.orig	2009-10-03 16:25:35.838154022 +0530
++++ celestia-1.6.0/src/celengine/axisarrow.cpp	2009-10-03 16:25:58.939376418 +0530
+@@ -488,18 +488,18 @@
+ SunDirectionArrow::getDirection(double tdb) const
+ {
+     const Body* b = &body;
+-    Star* sun = NULL;
++    Star* Sun = NULL;
+     while (b != NULL)
+     {
+         Selection center = b->getOrbitFrame(tdb)->getCenter();
+         if (center.star() != NULL)
+-            sun = center.star();
++            Sun = center.star();
+         b = center.body();
+     }
+ 
+-    if (sun != NULL)
++    if (Sun != NULL)
+     {
+-        return Selection(sun).getPosition(tdb) - body.getPosition(tdb);
++        return Selection(Sun).getPosition(tdb) - body.getPosition(tdb);
+     }
+     else
+     {
+--- celestia-1.6.0/src/celengine/render.h.orig	2009-10-03 16:28:05.702849033 +0530
++++ celestia-1.6.0/src/celengine/render.h	2009-10-03 16:27:40.246190236 +0530
+@@ -55,7 +55,7 @@
+     };
+ 
+     Point3f position;
+-    Vec3f sun;
++    Vec3f Sun;
+     float distance;
+     float radius;
+     float centerZ;
+--- celestia-1.6.0/src/celengine/render.cpp.orig	2009-06-22 21:14:08.000000000 +0530
++++ celestia-1.6.0/src/celengine/render.cpp	2009-10-03 16:51:50.375345207 +0530
+@@ -3026,8 +3026,8 @@
+         for (vector<const Star*>::const_iterator iter = nearStars.begin();
+              iter != nearStars.end(); iter++)
+         {
+-            const Star* sun = *iter;
+-            SolarSystem* solarSystem = universe.getSolarSystem(sun);
++            const Star* Sun = *iter;
++            SolarSystem* solarSystem = universe.getSolarSystem(Sun);
+             if (solarSystem != NULL)
+             {
+                 FrameTree* solarSysTree = solarSystem->getFrameTree();
+@@ -3041,7 +3041,7 @@
+                     }
+ 
+                     // Compute the position of the observer in astrocentric coordinates
+-                    Point3d astrocentricObserverPos = astrocentricPosition(observer.getPosition(), *sun, now);
++                    Point3d astrocentricObserverPos = astrocentricPosition(observer.getPosition(), *Sun, now);
+ 
+                     // Build render lists for bodies and orbits paths
+                     buildRenderLists(astrocentricObserverPos,
+@@ -3062,7 +3062,7 @@
+                 }
+             }
+ 
+-            addStarOrbitToRenderList(*sun, observer, now);
++            addStarOrbitToRenderList(*Sun, observer, now);
+         }
+ 
+         if ((labelMode & (BodyLabelMask)) != 0)
+@@ -3243,7 +3243,7 @@
+                     if (density > 1.0f)
+                         density = 1.0f;
+ 
+-                    Vec3f sunDir = iter->sun;
++                    Vec3f sunDir = iter->Sun;
+                     Vec3f normal = Point3f(0.0f, 0.0f, 0.0f) - iter->position;
+                     sunDir.normalize();
+                     normal.normalize();
+@@ -7786,10 +7786,10 @@
+         Point3d posReceiver = receiver.getAstrocentricPosition(now);
+         Point3d posCaster = caster.getAstrocentricPosition(now);
+ 
+-        //const Star* sun = receiver.getSystem()->getStar();
+-        //assert(sun != NULL);
++        //const Star* Sun = receiver.getSystem()->getStar();
++        //assert(Sun != NULL);
+         //double distToSun = posReceiver.distanceFromOrigin();
+-        //float appSunRadius = (float) (sun->getRadius() / distToSun);
++        //float appSunRadius = (float) (Sun->getRadius() / distToSun);
+         float appSunRadius = light.apparentSize;
+ 
+         Vec3d dir = posCaster - posReceiver;
+@@ -8562,7 +8562,7 @@
+ 
+     if (body.getClassification() == Body::Comet && (renderFlags & ShowCometTails) != 0)
+     {
+-        float radius = cometDustTailLength(rle.sun.length(), body.getRadius());
++        float radius = cometDustTailLength(rle.Sun.length(), body.getRadius());
+         float discSize = (radius / (float) rle.distance) / pixelSize;
+         if (discSize > 1)
+         {
+@@ -8727,7 +8727,7 @@
+                 // length, and for calculating sky brightness to adjust the limiting magnitude.
+                 // In both cases, it's the wrong quantity to use (e.g. for objects with orbits
+                 // defined relative to the SSB.)
+-                rle.sun = Vec3f((float) -pos_s.x, (float) -pos_s.y, (float) -pos_s.z);
++                rle.Sun = Vec3f((float) -pos_s.x, (float) -pos_s.y, (float) -pos_s.z);
+ 
+                 addRenderListEntries(rle, *body, isLabeled);
+             }
+--- celestia-1.6.0/src/celengine/skygrid.cpp.orig	2009-10-03 16:57:57.256682161 +0530
++++ celestia-1.6.0/src/celengine/skygrid.cpp	2009-10-03 17:01:48.755319113 +0530
+@@ -35,11 +35,11 @@
+ const double POLAR_CROSS_SIZE = 0.01;
+ 
+ // Grid line spacing tables
+-static const int MSEC = 1;
+-static const int SEC = 1000;
+-static const int MIN = 60 * SEC;
+-static const int DEG = 60 * MIN;
+-static const int HR  = 60 * MIN;
++static const int _MSEC = 1;
++static const int _SEC = 1000;
++static const int _MIN = 60 * _SEC;
++static const int DEG = 60 * _MIN;
++static const int HR  = 60 * _MIN;
+ 
+ static const int HOUR_MIN_SEC_TOTAL = 24 * HR;
+ static const int DEG_MIN_SEC_TOTAL  = 180 * DEG;
+@@ -48,23 +48,23 @@
+ {
+     2*HR,
+     1*HR,
+-    30*MIN,
+-    15*MIN,
+-    10*MIN,
+-    5*MIN,
+-    3*MIN,
+-    2*MIN,
+-    1*MIN,
+-    30*SEC,
+-    15*SEC,
+-    10*SEC,
+-    5*SEC,
+-    3*SEC,
+-    2*SEC,
+-    1*SEC,
+-    500*MSEC,
+-    200*MSEC,
+-    100*MSEC
++    30*_MIN,
++    15*_MIN,
++    10*_MIN,
++    5*_MIN,
++    3*_MIN,
++    2*_MIN,
++    1*_MIN,
++    30*_SEC,
++    15*_SEC,
++    10*_SEC,
++    5*_SEC,
++    3*_SEC,
++    2*_SEC,
++    1*_SEC,
++    500*_MSEC,
++    200*_MSEC,
++    100*_MSEC
+ };
+ 
+ static const int DEG_MIN_SEC_SPACING[]  =
+@@ -76,23 +76,23 @@
+     3*DEG,
+     2*DEG,
+     1*DEG,
+-    30*MIN,
+-    15*MIN,
+-    10*MIN,
+-    5*MIN,
+-    3*MIN,
+-    2*MIN,
+-    1*MIN,
+-    30*SEC,
+-    15*SEC,
+-    10*SEC,
+-    5*SEC,
+-    3*SEC,
+-    2*SEC,
+-    1*SEC,
+-    500*MSEC,
+-    200*MSEC,
+-    100*MSEC
++    30*_MIN,
++    15*_MIN,
++    10*_MIN,
++    5*_MIN,
++    3*_MIN,
++    2*_MIN,
++    1*_MIN,
++    30*_SEC,
++    15*_SEC,
++    10*_SEC,
++    5*_SEC,
++    3*_SEC,
++    2*_SEC,
++    1*_SEC,
++    500*_MSEC,
++    200*_MSEC,
++    100*_MSEC
+ };
+     
+ 
+@@ -102,16 +102,16 @@
+ // integer multiples of subsequent spacings.
+ static const int HOUR_MIN_SEC_SPACING[] =
+ {
+-    2*HR,   1*HR,  30*MIN, 10*MIN,  5*MIN,
+-    1*MIN, 30*SEC, 10*SEC,  5*SEC,  1*SEC,
+-    500*MSEC, 100*MSEC
++    2*HR,   1*HR,  30*_MIN, 10*_MIN,  5*_MIN,
++    1*_MIN, 30*_SEC, 10*_SEC,  5*_SEC,  1*_SEC,
++    500*_MSEC, 100*_MSEC
+ }; 
+ 
+ static const int DEG_MIN_SEC_SPACING[]  =
+ {
+-    30*DEG, 10*DEG,  5*DEG,  1*DEG, 30*MIN,
+-    10*MIN,  5*MIN,  1*MIN, 30*SEC, 10*SEC,
+-    5*SEC,  1*SEC, 500*MSEC, 100*MSEC
++    30*DEG, 10*DEG,  5*DEG,  1*DEG, 30*_MIN,
++    10*_MIN,  5*_MIN,  1*_MIN, 30*_SEC, 10*_SEC,
++    5*_SEC,  1*_SEC, 500*_MSEC, 100*_MSEC
+ };
+ #endif
+ 
+@@ -119,17 +119,17 @@
+ // Max step between spacings is 3x
+ static const int HOUR_MIN_SEC_STEPS[] =
+ {
+-    2*HR,   1*HR,  30*MIN, 10*MIN,  5*MIN, 2*MIN+30*SEC,
+-    1*MIN, 30*SEC, 10*SEC,  5*SEC, 2*SEC+500*MSEC, 1*SEC,
+-    500*MSEC, 200*MSEC, 100*MSEC, 50*MSEC, 20*MSEC, 10*MSEC
++    2*HR,   1*HR,  30*_MIN, 10*_MIN,  5*_MIN, 2*_MIN+30*_SEC,
++    1*_MIN, 30*_SEC, 10*_SEC,  5*_SEC, 2*_SEC+500*_MSEC, 1*_SEC,
++    500*_MSEC, 200*_MSEC, 100*_MSEC, 50*_MSEC, 20*_MSEC, 10*_MSEC
+ }; 
+ 
+ static const int DEG_MIN_SEC_STEPS[]  =
+ { 
+-    30*DEG, 10*DEG,  5*DEG, 2*DEG+30*MIN, 1*DEG, 30*MIN,
+-    10*MIN,  5*MIN, 2*MIN+30*SEC, 1*MIN, 30*SEC, 10*SEC,
+-    5*SEC, 2*SEC+500*MSEC, 1*SEC, 500*MSEC, 200*MSEC, 100*MSEC,
+-    50*MSEC, 20*MSEC, 10*MSEC
++    30*DEG, 10*DEG,  5*DEG, 2*DEG+30*_MIN, 1*DEG, 30*_MIN,
++    10*_MIN,  5*_MIN, 2*_MIN+30*_SEC, 1*_MIN, 30*_SEC, 10*_SEC,
++    5*_SEC, 2*_SEC+500*_MSEC, 1*_SEC, 500*_MSEC, 200*_MSEC, 100*_MSEC,
++    50*_MSEC, 20*_MSEC, 10*_MSEC
+ };
+ #endif
+ 
+@@ -286,12 +286,12 @@
+     out << std::abs(latitude / DEG) << UTF8_DEGREE_SIGN;
+     if (latitudeStep % DEG != 0)
+     {
+-        out << ' ' << setw(2) << setfill('0') << std::abs((latitude / MIN) % 60) << '\'';
+-        if (latitudeStep % MIN != 0)
++        out << ' ' << setw(2) << setfill('0') << std::abs((latitude / _MIN) % 60) << '\'';
++        if (latitudeStep % _MIN != 0)
+         {
+-            out << ' ' << setw(2) << setfill('0') << std::abs((latitude / SEC) % 60);
+-            if (latitudeStep % SEC != 0)
+-                out << '.' << setw(3) << setfill('0') << latitude % SEC;
++            out << ' ' << setw(2) << setfill('0') << std::abs((latitude / _SEC) % 60);
++            if (latitudeStep % _SEC != 0)
++                out << '.' << setw(3) << setfill('0') << latitude % _SEC;
+             out << '"';
+         }
+     }
+@@ -334,12 +334,12 @@
+     out << longitude / baseUnit << baseUnitSymbol;
+     if (longitudeStep % baseUnit != 0)
+     {
+-        out << ' ' << setw(2) << setfill('0') << (longitude / MIN) % 60 << minuteSymbol;
+-        if (longitudeStep % MIN != 0)
++        out << ' ' << setw(2) << setfill('0') << (longitude / _MIN) % 60 << minuteSymbol;
++        if (longitudeStep % _MIN != 0)
+         {
+-            out << ' ' << setw(2) << setfill('0') << (longitude / SEC) % 60;
+-            if (longitudeStep % SEC != 0)
+-                out << '.' << setw(3) << setfill('0') << longitude % SEC;
++            out << ' ' << setw(2) << setfill('0') << (longitude / _SEC) % 60;
++            if (longitudeStep % _SEC != 0)
++                out << '.' << setw(3) << setfill('0') << longitude % _SEC;
+             out << secondSymbol;
+         }
+     }
+--- celestia-1.6.0/src/celestia/celestiacore.cpp.orig	2009-10-03 17:45:09.266327477 +0530
++++ celestia-1.6.0/src/celestia/celestiacore.cpp	2009-10-03 17:43:50.181908338 +0530
+@@ -3252,28 +3252,28 @@
+ 	{
+ 		bool showPhaseAngle = false;
+ 
+-		Star* sun = parent.star();
+-		if (sun->getVisibility())
++		Star* Sun = parent.star();
++		if (Sun->getVisibility())
+ 		{
+ 			showPhaseAngle = true;
+ 		}
+-		else if (sun->getOrbitingStars())
++		else if (Sun->getOrbitingStars())
+ 		{
+ 			// The planet's orbit is defined with respect to a barycenter. If there's
+ 			// a single star orbiting the barycenter, we'll compute the phase angle
+ 			// for the planet with respect to that star. If there are no stars, the
+ 			// planet is an orphan, drifting through space with no star. We also skip
+ 			// displaying the phase angle when there are multiple stars (for now.)
+-			if (sun->getOrbitingStars()->size() == 1)
++			if (Sun->getOrbitingStars()->size() == 1)
+ 			{
+-				sun = sun->getOrbitingStars()->at(0);
+-				showPhaseAngle = sun->getVisibility();
++				Sun = Sun->getOrbitingStars()->at(0);
++				showPhaseAngle = Sun->getVisibility();
+ 			}
+ 		}
+ 
+ 		if (showPhaseAngle)
+ 		{
+-			Vec3d sunVec = Selection(&body).getPosition(t) - Selection(sun).getPosition(t);
++			Vec3d sunVec = Selection(&body).getPosition(t) - Selection(Sun).getPosition(t);
+ 			sunVec.normalize();
+ 			double cosPhaseAngle = sunVec * ((1.0 / viewVec.length()) * viewVec);
+ 			double phaseAngle = acos(cosPhaseAngle);
+@@ -3293,13 +3293,13 @@
+         PlanetarySystem* system = body.getSystem();
+         if (system != NULL)
+         {
+-            const Star* sun = system->getStar();
+-            if (sun != NULL)
++            const Star* Sun = system->getStar();
++            if (Sun != NULL)
+             {
+                 double distFromSun = body.getAstrocentricPosition(t).distanceFromOrigin();
+-                float planetTemp = sun->getTemperature() *
++                float planetTemp = Sun->getTemperature() *
+                     (float) (::pow(1.0 - body.getAlbedo(), 0.25) *
+-                             sqrt(sun->getRadius() / (2.0 * distFromSun)));
++                             sqrt(Sun->getRadius() / (2.0 * distFromSun)));
+                 overlay << setprecision(0);
+                 overlay << _("Temperature: ") << planetTemp << " K\n";
+                 overlay << setprecision(3);
+@@ -3310,7 +3310,7 @@
+             // accurate.  Too many simplifications are used when computing the amount
+             // of light reflected from a body.
+             Point3d bodyPos = body.getAstrocentricPosition(t);
+-            float appMag = body.getApparentMagnitude(*sun,
++            float appMag = body.getApparentMagnitude(*Sun,
+                                                      bodyPos - Point3d(0, 0, 0),
+                                                      viewVec);
+             overlay.oprintf(_("Apparent mag: %.2f\n"), appMag);
+@@ -4901,19 +4901,19 @@
+         else if (refMark == "terminator")
+         {
+             double now = getSimulation()->getTime();
+-            Star* sun = NULL;
++            Star* Sun = NULL;
+             Body* b = body;
+             while (b != NULL)
+             {
+                 Selection center = b->getOrbitFrame(now)->getCenter();
+                 if (center.star() != NULL)
+-                    sun = center.star();
++                    Sun = center.star();
+                 b = center.body();
+             }
+ 
+-            if (sun != NULL)
++            if (Sun != NULL)
+             {
+-                VisibleRegion* visibleRegion = new VisibleRegion(*body, Selection(sun));
++                VisibleRegion* visibleRegion = new VisibleRegion(*body, Selection(Sun));
+                 visibleRegion->setTag("terminator");
+                 body->addReferenceMark(visibleRegion);
+             }
+--- celestia-1.6.0/src/celestia/eclipsefinder.cpp.orig	2009-10-03 17:46:49.388297790 +0530
++++ celestia-1.6.0/src/celestia/eclipsefinder.cpp	2009-10-03 17:46:18.912157068 +0530
+@@ -62,10 +62,10 @@
+         Point3d posReceiver = receiver.getAstrocentricPosition(now);
+         Point3d posCaster = caster.getAstrocentricPosition(now);
+ 
+-        const Star* sun = receiver.getSystem()->getStar();
+-        assert(sun != NULL);
++        const Star* Sun = receiver.getSystem()->getStar();
++        assert(Sun != NULL);
+         double distToSun = posReceiver.distanceFromOrigin();
+-        float appSunRadius = (float) (sun->getRadius() / distToSun);
++        float appSunRadius = (float) (Sun->getRadius() / distToSun);
+ 
+         Vec3d dir = posCaster - posReceiver;
+         double distToCaster = dir.length() - receiver.getRadius();

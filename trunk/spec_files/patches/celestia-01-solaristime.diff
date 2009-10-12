@@ -1,0 +1,66 @@
+--- celestia-1.6.0/src/celengine/astro.cpp.orig	2009-10-03 15:04:20.391985226 +0530
++++ celestia-1.6.0/src/celengine/astro.cpp	2009-10-03 16:22:19.965855716 +0530
+@@ -106,7 +106,7 @@
+ };
+ 
+ 
+-#if !defined(__GNUC__) || defined(_WIN32)
++#if !defined(__GNUC__) || defined(_WIN32) || defined(__sun)
+ static const char* MonthAbbrList[12] =
+ { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+ #endif
+@@ -511,7 +511,8 @@
+ 
+     // MinGW's libraries don't have the tm_gmtoff and tm_zone fields for
+     // struct tm.
+-#if defined(__GNUC__) && !defined(_WIN32)
++    // Solaris does not have tm_gmtoff and tm_zone fields as well
++#if defined(__GNUC__) && !defined(_WIN32) && !defined(__sun)
+     struct tm cal_time;
+     memset(&cal_time, 0, sizeof(cal_time));
+     cal_time.tm_year = year-1900;
+@@ -807,7 +808,7 @@
+             d.minute = localt->tm_min;
+             d.seconds = (int) localt->tm_sec;
+             d.wday = localt->tm_wday;
+-        #if defined(__GNUC__) && !defined(_WIN32)
++        #if defined(__GNUC__) && !defined(_WIN32) && !defined(__sun)
+             d.utc_offset = localt->tm_gmtoff;
+             d.tzname = localt->tm_zone;
+         #else
+--- celestia-1.6.0/src/celutil/basictypes.h.orig	2009-06-22 21:14:24.000000000 +0530
++++ celestia-1.6.0/src/celutil/basictypes.h	2009-10-03 16:55:14.360733646 +0530
+@@ -31,8 +31,16 @@
+ #include <limits>
+ typedef          int64_t int64;
+ typedef         uint64_t uint64;
++
++// INT64_MAX and UINT64_MAX are predefined on OpenSolaris
++#ifndef INT64_MAX
+ #define INT64_MAX 9223372036854775807LL
++#endif
++
++#ifndef UINT64_MAX
+ #define UINT64_MAX 0xffffffffffffffffULL
++#endif
++
+ //#define INT64_MAX  std::numeric_limits<int64_t>::max()
+ //#define UINT64_MAX std::numeric_limits<uint64_t>::max()
+ #endif
+--- celestia-1.6.0/src/celestia/gtk/common.cpp.orig	2009-10-03 17:05:20.468195702 +0530
++++ celestia-1.6.0/src/celestia/gtk/common.cpp	2009-10-03 17:31:43.577471520 +0530
+@@ -32,9 +32,13 @@
+ 	#else
+ 	time_t time = (time_t)astro::julianDateToSeconds(date - astro::Date(1970, 1, 1));
+ 	struct tm *d = localtime(&time);
+-	
++
++	#if defined(__sun)
++	return (gint)altzone;
++	#else
+ 	return (gint)d->tm_gmtoff;
+ 	#endif
++	#endif
+ }
+ 
+ 
