@@ -14,12 +14,17 @@ Summary:      LibAudioIO - audio foundation library
 URL:          http://libaudioio.sourceforge.net/
 Source:       http://pkgbuild.sf.net/spec-files-extra/tarballs/libaudioio-%{version}.tar.gz
 Patch1:       libaudioio-01-sunpro.diff
+Patch2:       libaudioio-02-gcc44.diff
 BuildRoot:    %{_tmppath}/%{name}-%{version}-build
 Docdir:	      %{_defaultdocdir}/doc
 SUNW_BaseDir: %{_basedir}
 Autoreqprov:  on
 %include default-depend.inc
+%if %cc_is_gcc
+Requires: SFEgccruntime
+%else
 Requires: SUNWlibC
+%endif
 Requires: SUNWlibms
 
 %package devel
@@ -31,6 +36,7 @@ Requires:      %name
 %prep
 %setup -q -n libaudioio-%version
 %patch1 -p1
+%patch2 -p1
 for release in 2.10 2.11; do
 	ln -s sys_i386solaris2.9.cc system/sys_%{base_arch}solaris$release.cc
 	ln -s sys_i386solaris2.9.h system/sys_%{base_arch}solaris$release.h
@@ -44,11 +50,15 @@ fi
 
 export CFLAGS="%optflags"
 export CXXFLAGS="%cxx_optflags"
+%if %cc_is_gcc
+export LDFLAGS="%_ldflags %{gnu_lib_path} -lstdc++"
+%else
 export LDFLAGS="%_ldflags -lCrun"
+%endif
 
-libtoolize --copy --force
-aclocal $ACLOCAL_FLAGS
-autoconf
+#libtoolize --copy --force
+#aclocal $ACLOCAL_FLAGS
+#autoconf
 ./configure --prefix=%{_prefix} \
 		--libdir=%{_libdir}
 make -j $CPUS

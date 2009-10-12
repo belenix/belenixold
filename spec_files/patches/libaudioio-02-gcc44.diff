@@ -1,0 +1,11 @@
+--- libaudioio-0.6.1alpha/audioconvert.h.orig	2009-10-02 19:02:52.782743606 +0530
++++ libaudioio-0.6.1alpha/audioconvert.h	2009-10-02 19:03:03.971642998 +0530
+@@ -52,7 +52,7 @@
+     AudioConvert (SampleSpec_t RecordingAudioSpec,
+ 		  SampleSpec_t PlaybackAudioSpec);
+ //      ~AudioConvert(void);            // Destructor
+-  int AudioConvert::SetClientSettings (SampleSpec_t RecordingAudioSpec,
++  int SetClientSettings (SampleSpec_t RecordingAudioSpec,
+ 				       SampleSpec_t PlaybackAudioSpec);
+ //      int Setup(long rate=44200, int precision=16, int encoding=ENCODE_PCM, int channels=STEREO);
+   int Convert (void *InputBuffer = NULL, size_t InputSize =
