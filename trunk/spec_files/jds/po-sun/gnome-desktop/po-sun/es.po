@@ -1,0 +1,174 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the gnome-desktop package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-desktop HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-26 03:36+0900\n"
+"PO-Revision-Date: 2008-10-15 11:09+0100\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-about/gnome-about.desktop.in.in.h:3
+msgid "GNOME version, licence and useful links"
+msgstr "Versión de GNOME, licencia y vínculos útiles"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-about/gnome-about.in:66
+msgid "Software"
+msgstr "Software"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-about/gnome-about.in:68
+msgid "Developers"
+msgstr "Desarrolladores"
+
+#
+# REVIEWED
+#: ../gnome-about/gnome-about.desktop.in.in.h:1
+#: ../gnome-about/gnome-about.in:64
+msgid "About GNOME"
+msgstr "Acerca de GNOME"
+
+#
+# REVIEWED
+#: ../gnome-about/gnome-about.in:62
+msgid "About JDS"
+msgstr "Acerca de JDS"
+
+#: ../gnome-about/gnome-about.in:70
+msgid "GNOME Library"
+msgstr "Biblioteca de GNOME"
+
+#: ../gnome-about/gnome-about.in:72
+msgid "Contact"
+msgstr "Contacto"
+
+# REVIEWED
+#: ../gnome-version.xml.in.in.h:2
+msgid ""
+"Contains Macromedia Flash Player technology by Macromedia, Inc., Copyright "
+"1995-2002 Macromedia, Inc. All rights reserved. Macromedia, Flash and "
+"Macromedia Flash are trademarks or registered trademarks of Macromedia, Inc. "
+"in the United States and internationally."
+msgstr ""
+"Utiliza la tecnología Macromedia Flash Player de Macromedia, Inc., Copyright "
+"1995-2002 Macromedia, Inc. Todos los derechos reservados. Macromedia, Flash "
+"y Macromedia Flash son marcas comerciales o marcas comerciales registradas "
+"de Macromedia, Inc. en Estados Unidos e internacionalmente."
+
+#
+#
+# REVIEWED
+#: ../gnome-version.xml.in.in.h:4
+msgid "Copyright 2007 Sun Microsystems, Inc. All rights reserved."
+msgstr "Copyright © 2007 Sun Microsystems, Inc. Todos los derechos reservados."
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-version.xml.in.in.h:6
+msgid ""
+"Developers and System Support personnel should be aware that future versions "
+"of GNOME may contain different applications, tools and programming "
+"interfaces from those found in GNOME 2.0, 2.6 or later released versions."
+msgstr ""
+"Los desarrolladores y responsables de asistencia deben tener en cuenta que "
+"las versiones futuras de GNOME pueden contener aplicaciones, herramientas e "
+"interfaces de programación distintas de las que hay en GNOME 2.0, 2.6 o "
+"versiones lanzadas posteriormente."
+
+# L10N RE: Forgot legal review of the translation
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-version.xml.in.in.h:8
+msgid ""
+"For the avoidance of doubt, except that if any license choice other than GPL "
+"or LGPL is available it will apply instead, Sun elects to use only the "
+"General Public License version 2 (GPLv2) at this time for any software where "
+"a choice of GPL license versions is made available with the language "
+"indicating that GPLv2 or any later version may be used, or where a choice of "
+"which version of the GPL is applied is otherwise unspecified."
+msgstr ""
+"Para evitar dudas, en este momento Sun decide utilizar únicamente General "
+"Public License versión 2 (GPLv2) para cualquier software en que haya "
+"opciones de versiones de licencia GPL con el idioma que indiquen que puede "
+"utilizarse GPLv2 o cualquier versión posterior, o donde no se especifique "
+"qué versión de GPL se aplica, excepto si está disponible una opción de "
+"licencia distinta de GPL o LGPL que se aplicará en su lugar."
+
+# REVIEWED
+#: ../gnome-version.xml.in.in.h:10
+msgid ""
+"Sun, Sun Microsystems, the Sun logo and Java are trademarks or registered "
+"trademarks of Sun Microsystems, Inc. in the U.S. and other countries."
+msgstr ""
+"Sun, Sun Microsystems, el logotipo de Sun y Solaris son marcas comerciales o "
+"marcas comerciales registradas de Sun Microsystems, Inc. en los Estados "
+"Unidos y en otros países."
+
+#
+# REVIEWED
+#: ../gnome-version.xml.in.in.h:12
+msgid ""
+"U.S. Government Rights - Commercial software. Government users are subject "
+"to the Sun Microsystems, Inc. standard license agreement and applicable "
+"provisions of the FAR and its supplements. Use is subject to license terms. "
+"This distribution may include materials developed by third parties. Portions "
+"may be derived from Berkeley BSD systems, licensed from U. of CA."
+msgstr ""
+"Derechos gubernamentales de los EEUU - Software comercial. Los usuarios del "
+"gobierno de los Estados Unidos están sujetos a los acuerdos de la licencia "
+"estándar de Sun Microsystems, Inc. y a las disposiciones aplicables sobre "
+"los FAR (derechos federales de adquisición) y sus suplementos. El uso está "
+"sujeto a las condiciones de la licencia. Esta distribución puede incluir "
+"material desarrollado por otras empresas. Algunas partes pueden derivarse "
+"del sistema Berkeley BSD, concedido bajo licencia por la Universidad de "
+"California."
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#~ msgid "Learn more about Java Desktop System"
+#~ msgstr "Aprenda más cosas sobre Java Desktop System"
+
+# 
+# REVIEWED
+# SUN MESSAGE
+#~ msgid "Could not execute \"%s\": %s"
+#~ msgstr "No se ha podido ejecutar \"%s\": %s"
+
+#
+# REVIEWED
+#~ msgid "Version"
+#~ msgstr "Versión"
+
+# REVIEWED
+# SUN MESSAGE
+#~ msgid "Report a bug"
+#~ msgstr "Enviar un fallo"
+
+# SUN_BRANDING
+#~ msgid "About Java Desktop System"
+#~ msgstr "Acerca de Java Desktop System"

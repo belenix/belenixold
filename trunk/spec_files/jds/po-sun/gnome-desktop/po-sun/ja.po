@@ -1,0 +1,157 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the gnome-desktop package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-desktop HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-26 03:36+0900\n"
+"PO-Revision-Date: 2007-09-07 10:30+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../gnome-about/gnome-about.desktop.in.in.h:3
+msgid "GNOME version, licence and useful links"
+msgstr "GNOME のバージョン、ライセンス、および便利なリンク集"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../gnome-about/gnome-about.in:66
+msgid "Software"
+msgstr "ソフトウェア"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../gnome-about/gnome-about.in:68
+msgid "Developers"
+msgstr "開発者"
+
+# SUN MESSAGE
+#: ../gnome-about/gnome-about.desktop.in.in.h:1
+#: ../gnome-about/gnome-about.in:64
+msgid "About GNOME"
+msgstr "GNOME について"
+
+# SUN MESSAGE
+#: ../gnome-about/gnome-about.in:62
+msgid "About JDS"
+msgstr "JDS について"
+
+#: ../gnome-about/gnome-about.in:70
+msgid "GNOME Library"
+msgstr "GNOME ライブラリ"
+
+#: ../gnome-about/gnome-about.in:72
+msgid "Contact"
+msgstr "問い合わせ先"
+
+# SUN REVIEWED
+#: ../gnome-version.xml.in.in.h:2
+msgid ""
+"Contains Macromedia Flash Player technology by Macromedia, Inc., Copyright "
+"1995-2002 Macromedia, Inc. All rights reserved. Macromedia, Flash and "
+"Macromedia Flash are trademarks or registered trademarks of Macromedia, Inc. "
+"in the United States and internationally."
+msgstr ""
+"本製品には、Macromedia 社による Macromedia Flash Player テクノロジが含まれて"
+"います。Copyright 1995-2002 Macromedia, Inc. All rights reserved.Macromedia、"
+"Flash、および Macromedia Flash は、米国および世界各国における商標または登録商"
+"標です。"
+
+# SUN MESSAGE
+#: ../gnome-version.xml.in.in.h:4
+msgid "Copyright 2007 Sun Microsystems, Inc. All rights reserved."
+msgstr "Copyright 2007 Sun Microsystems, Inc. All rights reserved."
+
+# SUN MESSAGE
+#: ../gnome-version.xml.in.in.h:6
+msgid ""
+"Developers and System Support personnel should be aware that future versions "
+"of GNOME may contain different applications, tools and programming "
+"interfaces from those found in GNOME 2.0, 2.6 or later released versions."
+msgstr ""
+"開発者やシステムサポートの方々は GNOME の将来のバージョンが GNOME 2.0、2.6 も"
+"しくはそれ以降のバージョンで使用されていたものとは異なるアプリケーションやプ"
+"ログラムインターフェイスを含む可能性があることをご了承ください。"
+
+# L10N RE: Forgot legal review of the translation
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../gnome-version.xml.in.in.h:8
+msgid ""
+"For the avoidance of doubt, except that if any license choice other than GPL "
+"or LGPL is available it will apply instead, Sun elects to use only the "
+"General Public License version 2 (GPLv2) at this time for any software where "
+"a choice of GPL license versions is made available with the language "
+"indicating that GPLv2 or any later version may be used, or where a choice of "
+"which version of the GPL is applied is otherwise unspecified."
+msgstr ""
+"誤解を避けるため、GPL または LGPL 以外のライセンスが選択できるときは、それが"
+"代わりに適用される場合を除き、Sun は 現時点で次に示すあらゆるソフトウェアに対"
+"して GPLv2 (General Public License version 2) のみの使用を選択します。該当す"
+"るソフトウェアは、GPLv2 以降のバージョンが利用可能な言語で提供されていて、"
+"GPL ライセンスの 1 つのバージョンを選択できるソフトウェア、または適用される "
+"GPL のバージョンがほかに指定されていないソフトウェアです。"
+
+# SUN REVIEWED
+#: ../gnome-version.xml.in.in.h:10
+msgid ""
+"Sun, Sun Microsystems, the Sun logo and Java are trademarks or registered "
+"trademarks of Sun Microsystems, Inc. in the U.S. and other countries."
+msgstr ""
+"Sun、Sun Microsystems、Sun のロゴマーク、および Java は米国およびその他の国に"
+"おける Sun Microsystems の商標または登録商標です。"
+
+# SUN REVIEWED
+#: ../gnome-version.xml.in.in.h:12
+msgid ""
+"U.S. Government Rights - Commercial software. Government users are subject "
+"to the Sun Microsystems, Inc. standard license agreement and applicable "
+"provisions of the FAR and its supplements. Use is subject to license terms. "
+"This distribution may include materials developed by third parties. Portions "
+"may be derived from Berkeley BSD systems, licensed from U. of CA."
+msgstr ""
+"米国連邦政府による使用: 市販ソフトウェア -- 米国政府機関による使用は、Sun "
+"Microsystems, Inc. の標準のライセンス条項および FAR とその補足規定の適用条項"
+"に従うものとします。使用はライセンス条項に従うものとします。本製品の一部は、"
+"カリフォルニア大学からライセンスされている Berkeley BSD システムに基づいてい"
+"ることがあります。"
+
+# SUN REVIEWED
+#~ msgid "Could not execute \"%s\": %s"
+#~ msgstr "\"%s\" を実行できません: %s"
+
+# SUN MESSAGE
+#~ msgid "Version"
+#~ msgstr "バージョン"
+
+# SUN REVIEWED
+#~ msgid "Report a bug"
+#~ msgstr "バグを報告"
+
+# SUN_BRANDING
+#~ msgid "About Java Desktop System"
+#~ msgstr "Java Desktop System について"
+
+# SUN_BRANDING
+#~ msgid "Learn more about Java Desktop System"
+#~ msgstr "Java Desktop System についてより深く知る"

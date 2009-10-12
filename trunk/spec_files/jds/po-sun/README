@@ -1,0 +1,240 @@
+# CDDL HEADER START
+#
+# The contents of this file are subject to the terms of the
+# Common Development and Distribution License, Version 1.0 only
+# (the "License").  You may not use this file except in compliance
+# with the License.
+#
+# You can obtain a copy of the license at usr/src/OPENSOLARIS.LICENSE
+# or http://www.opensolaris.org/os/licensing.
+# See the License for the specific language governing permissions
+# and limitations under the License.
+#
+# When distributing Covered Code, include this CDDL HEADER in each
+# file and include the License file at usr/src/OPENSOLARIS.LICENSE.
+# If applicable, add the following below this CDDL HEADER, with the
+# fields enclosed by brackets "[]" replaced with your own identifying
+# information: Portions Copyright [yyyy] [name of copyright owner]
+#
+# CDDL HEADER END
+#
+#
+# Copyright 2007 Sun Microsystems, Inc.  All rights reserved.
+# Use is subject to license terms.
+#
+
+
+What is the "SUN_BRANDING" tag
+==============================
+
+        The purpose is to extract Sun specific messages on GUI.
+        CLI warning messages don't have to be translated but we need
+        translations with visible GUI.
+        I'ld like to extract the Sun specific message strings when adding 
+        new strings and/or changing community strings for community packages.
+
+
+Supported file types
+====================
+
+        .c, .h,
+        .py,
+        .desktop.in, .directory.in,
+        .sh.in,
+        .server.in,
+        .kbd.in,
+        .xml[.in],
+        .shcemas.in,
+        .glade [1]
+
+
+Comment format per File type
+============================
+
+        - .c, .h
+
+          /* SUN_BRANDING
+             This is a comment line. */
+          _("C string");
+
+          /* SUN_BRANDING
+             This is a comment line. */
+          function (_("C string"), /* SUN_BRANDING */ _("another string"));
+
+          /* SUN_BRANDING
+             This is a comment line. */  [2]
+          _("This is a "
+            "multiple lines.");
+
+          /* SUN_BRANDING
+             This is a comment line. */
+          ngettext ("snapshot", "snapshots", i);
+
+
+        - .py
+
+          # SUN_BRANDING
+          print _("Python string")
+
+          # SUN_BRANDING                 [2]
+          a = N_("This is a "
+                 "multiple lines.")
+
+
+        - .desktop.in, .directory.in
+
+          # SUN_BRANDING
+          _Name=C string
+          # SUN_BRANDING
+          _Comment=C string
+
+
+        - .sh.in [3]
+
+          #!/bin/bash
+          # SUN_BRANDING
+          printf $"C string"
+
+
+        - .server.in
+
+          <!-- SUN_BRANDING
+               This is a comment line. -->
+          <oaf_attribute name="name" type="string" _value="C string"/>
+
+
+        - .kbd.in
+
+          <!-- SUN_BRANDING
+               This is a comment line. -->
+          <_GOK:label>C string</_GOK:label>
+
+
+        - .xml[.in]
+
+          <!-- SUN_BRANDING
+               This is a comment line. -->
+          <foo _name="C string">
+
+
+        - .shcemas.in
+
+          <locale name="C">
+            <default><!-- SUN_BRANDING
+                          This is a comment line. -->C string</default>
+          </locale>
+
+
+        - .glade
+
+          <property name="title" translatable="yes" comments="SUN_BRANDING">C string</property>
+
+
+FIXME: 
+1. .theme and .icon files are not defined the comment "^#".
+http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html
+2. Comments in .keys.in are not extracted by intltool-update.
+3. Need tests to work fine with comments in .cave and .soundlist files.
+
+Requirement: intltool 0.35.5 or later
+
+[1] Also works .in.in. files. e.g. desktop.in.in
+[2] Please do not use '+' to unite multiple lines in Python/C++ because
+    intltool(xgettext) fails to extract whole strings.
+[3] It seem bash 3.0 i18n doesn't work on none UTF-8 so need to convert from UTF-8.
+
+
+How to generate po tarballs
+===========================
+
+# cd po-sun
+# make clean
+# make
+# cp po-sun-tarballs/* %{_builddir}/SOURCES/.
+# pkgbuild --with-build-l10n -bp SUNWfoo.spec
+
+
+How to add a new module
+=======================
+
+# module=foo
+# cd %{_builddir}/%{name}-%{version}/$module/po
+# intltool-update -m
+# cp POTFILES.in POTFILES.in.org
+# cat POTFILES.in.orig missing | env LANG=C sort > POTFILES.in
+# intltool-update -p
+# sed -e 's/#\. .*SUN_BRANDING/# SUN_BRANDING/' ${module}.pot \
+  > ${module}-sun.pot
+# msggrep -C -e "SUN_BRANDING" ${module}-sun.pot -o ${module}-sun.pot
+# mkdir -p $SVN/trunk/po-sun/$module/po-sun
+# cp ${module}-sun.pot $SVN/trunk/po-sun/$module/po-sun/.
+# cd $SVN/trunk/po-sun
+# vi Makefile
+# diff Makefile.orig Makefile
+72a73
+> 	foo				\
+79a81,83
+> foo_PAGES = foo/po-sun
+> foo.PAGES: $(foo_PAGES)
+> 
+# make
+# bzcat po-sun-tarballs/foo-po-sun-*.tar.bz2 | tar tfv -
+
+
+How to add/update translations 
+==============================
+
+Please make sure 'make clean; make' and pkgbuild and commit your .po files 
+in the module dir.
+
+
+How to update .spec files
+=========================
+
+Modify spec-files/foo.spec
+--- spec-files/foo.spec.orig
++++ spec-files/foo.spec
+@@ -7,6 +7,7 @@
+ #
+ # Owner: foo
+ #
++%include l10n.inc
+ Name:         foo
+ License:      GPL
+ Group:        System/GUI/GNOME
+@@ -20,6 +21,9 @@
+ Source2:      gfloppy.1.gz
+ Source3:      gnome-dictionary.1.gz
+ Source4:      gnome-screenshot.1.gz
++%if %build_l10n
++Source5:      %{name}-po-sun-%{po_sun_version}.tar.bz2
++%endif
+ # date:2005-05-02 type:bug bugster:6222777 owner:mattman
+ Patch1:       gnome-utils-01-gfloppy-permission.diff
+ # date:2006-04-05 type:branding owner:gman
+@@ -63,6 +65,10 @@ This package contains some essential uti
+ 
+ %prep
+ %setup -q
++%if %build_l10n
++bzcat %SOURCE5 | tar xf -
++cd po-sun; make; cd ..
++%endif
+ %patch1 -p1
+ %patch2 -p1
+ %patch3 -p1
+@@ -159,3 +165,6 @@ done
+ %{_libdir}/pkgconfig
+ 
+ %changelog
++* Thu Dec 28 2006 - foo@sun.com
++- Add l10n tarball.
++
+
+
+How to delete Sun l10n tarball in .spec files
+=============================================
+
+1. Upstream foo.diff
+2. Remove foo-po-sun*.tar.bz2 from .spec files
+
