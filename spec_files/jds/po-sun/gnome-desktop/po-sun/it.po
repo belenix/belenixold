@@ -1,0 +1,172 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the gnome-desktop package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-desktop HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-26 03:36+0900\n"
+"PO-Revision-Date: 2008-10-14 18:25+0100\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-about/gnome-about.desktop.in.in.h:3
+msgid "GNOME version, licence and useful links"
+msgstr "Versione, licenza e collegamenti utili di GNOME"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-about/gnome-about.in:66
+msgid "Software"
+msgstr "Software"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-about/gnome-about.in:68
+msgid "Developers"
+msgstr "Sviluppatori"
+
+#
+# REVIEWED
+#: ../gnome-about/gnome-about.desktop.in.in.h:1
+#: ../gnome-about/gnome-about.in:64
+msgid "About GNOME"
+msgstr "Informazioni su GNOME"
+
+#
+# REVIEWED
+#: ../gnome-about/gnome-about.in:62
+msgid "About JDS"
+msgstr "Informazioni su JDS"
+
+#: ../gnome-about/gnome-about.in:70
+msgid "GNOME Library"
+msgstr "Biblioteca GNOME"
+
+#: ../gnome-about/gnome-about.in:72
+msgid "Contact"
+msgstr "Contatti"
+
+# REVIEWED
+#: ../gnome-version.xml.in.in.h:2
+msgid ""
+"Contains Macromedia Flash Player technology by Macromedia, Inc., Copyright "
+"1995-2002 Macromedia, Inc. All rights reserved. Macromedia, Flash and "
+"Macromedia Flash are trademarks or registered trademarks of Macromedia, Inc. "
+"in the United States and internationally."
+msgstr ""
+"Contiene la tecnologia Flash Player di Macromedia, Inc., Copyright 1995-2002 "
+"di Macromedia, Inc. Tutti i diritti riservati. Macromedia, Flash e "
+"Macromedia Flash sono marchi o marchi registrati di Macromedia, Inc. negli "
+"Stati Uniti e in altri paesi."
+
+#
+#
+# REVIEWED
+#: ../gnome-version.xml.in.in.h:4
+msgid "Copyright 2007 Sun Microsystems, Inc. All rights reserved."
+msgstr "Copyright © 2007 Sun Microsystems, Inc. Tutti i diritti riservati."
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-version.xml.in.in.h:6
+msgid ""
+"Developers and System Support personnel should be aware that future versions "
+"of GNOME may contain different applications, tools and programming "
+"interfaces from those found in GNOME 2.0, 2.6 or later released versions."
+msgstr ""
+"Si avvisano gli sviluppatori e il personale preposto alla configurazione del "
+"sistema che le versioni future di GNOME potrebbero contenere applicazioni, "
+"strumenti e interfacce di programmazione diversi da quelli presenti in GNOME "
+"2.0, 2.6 o nelle versioni successive."
+
+# L10N RE: Forgot legal review of the translation
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-version.xml.in.in.h:8
+msgid ""
+"For the avoidance of doubt, except that if any license choice other than GPL "
+"or LGPL is available it will apply instead, Sun elects to use only the "
+"General Public License version 2 (GPLv2) at this time for any software where "
+"a choice of GPL license versions is made available with the language "
+"indicating that GPLv2 or any later version may be used, or where a choice of "
+"which version of the GPL is applied is otherwise unspecified."
+msgstr ""
+"Per evitare qualsiasi dubbio, a eccezione del caso in cui sia disponibile e "
+"applicabile in sostituzione una licenza diversa da GPL o LGPL, allo stato "
+"attuale Sun ha deciso di utilizzare solo la General Public License versione "
+"2 (GPLv2) per qualsiasi software per cui sia disponibile una scelta tra "
+"versioni di licenze GPL e venga indicato il possibile utilizzo di GPLv2 o di "
+"qualsiasi versione successiva oppure quando non è diversamente specificata "
+"una scelta della versione della GPL applicata. "
+
+# REVIEWED
+#: ../gnome-version.xml.in.in.h:10
+msgid ""
+"Sun, Sun Microsystems, the Sun logo and Java are trademarks or registered "
+"trademarks of Sun Microsystems, Inc. in the U.S. and other countries."
+msgstr ""
+"Sun, Sun Microsystems, il logo Sun e Java sono marchi o marchi registrati di "
+"Sun Microsystems, Inc. negli Stati Uniti e in altri paesi."
+
+#
+# REVIEWED
+#: ../gnome-version.xml.in.in.h:12
+msgid ""
+"U.S. Government Rights - Commercial software. Government users are subject "
+"to the Sun Microsystems, Inc. standard license agreement and applicable "
+"provisions of the FAR and its supplements. Use is subject to license terms. "
+"This distribution may include materials developed by third parties. Portions "
+"may be derived from Berkeley BSD systems, licensed from U. of CA."
+msgstr ""
+"U.S. Government Rights - Commercial software. Government users are subject "
+"to the Sun Microsystems, Inc. standard license agreement and applicable "
+"provisions of the FAR and its supplements. L'uso è soggetto ai termini della "
+"licenza. Questa distribuzione può contenere materiale sviluppato da terze "
+"parti. Parti possono derivare dai sistemi Berkeley BSD, concessi in licenza "
+"dalla U. of CA."
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+# COMMUNITY FUZZY
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#~ msgid "Learn more about Java Desktop System"
+#~ msgstr "Ulteriori informazioni su Java Desktop System"
+
+#
+# REVIEWED
+# SUN MESSAGE
+#~ msgid "Could not execute \"%s\": %s"
+#~ msgstr "Impossibile eseguire \"%s\": %s"
+
+#
+# REVIEWED
+#~ msgid "Version"
+#~ msgstr "Versione"
+
+# REVIEWED
+# SUN MESSAGE
+#~ msgid "Report a bug"
+#~ msgstr "Notifica un errore"
+
+# SUN_BRANDING
+#~ msgid "About Java Desktop System"
+#~ msgstr "Informazioni su Java Desktop System"
