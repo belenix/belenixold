@@ -1,0 +1,62 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the gnome-session package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-session HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-30 13:02+0900\n"
+"PO-Revision-Date: 2008-01-29 10:30+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../data/session-properties.desktop.in.in.h:2
+msgid "Choose what happens when you log in or log out"
+msgstr "로그인하거나 로그아웃할 때 수행되는 작업을 선택합니다."
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-session/trusted.c:107
+msgid ""
+"Unable to login to Trusted Session. Required X server security extension not "
+"loaded."
+msgstr ""
+"신뢰할 수 있는 세션에 로그인할 수 없습니다. 필요한 X 서버 보안 확장이 로드되"
+"지않았습니다."
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-session/main.c:539
+msgid "Completing post install setup..."
+msgstr "설치 설정 게시를 완료하는 중..."
+
+#: ../gnome-session/main.c:579
+msgid "Used for Trusted Multi-Label Session"
+msgstr "신뢰할 수 있는 다중 레이블 세션에 사용"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#~ msgid ""
+#~ "Your X Server has not been set up with SUN_TSOL extension to login to "
+#~ "Trusted JDS. Select ordinary JDS to login.\n"
+#~ msgstr ""
+#~ "X 서버가 SUN_TSOL 확장과 함께 설치되지 않아 Trusted JDS에 로그인할 수 없습"
+#~ "니다. 로그인하려면 일반 JDS를 선택하십시오.\n"
+
+#~ msgid "Trusted Stripe"
+#~ msgstr "신뢰할 수 있는 스트라이프"
