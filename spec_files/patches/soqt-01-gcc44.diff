@@ -1,0 +1,11 @@
+--- SoQt-1.4.1/src/Inventor/Qt/SoQtComponent.cpp.orig	2009-10-04 15:44:02.932968734 +0530
++++ SoQt-1.4.1/src/Inventor/Qt/SoQtComponent.cpp	2009-10-04 15:44:21.554337277 +0530
+@@ -100,7 +100,7 @@
+   this->parent->removeEventFilter(this);
+ }
+ 
+-static void delete_dict_value(unsigned long key, void * value)
++static void delete_dict_value(SbDictKeyType key, void * value)
+ {
+   delete (QCursor *)value;
+ }

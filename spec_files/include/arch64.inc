@@ -107,9 +107,8 @@
 %define _bindir		 %{_prefix}/bin/%{bld_arch}
 %define _libdir		 %{_prefix}/lib/%{bld_arch}
 %define _libexecdir	 %{_prefix}/lib/%{bld_arch}
-%define _pkg_config_path %{_libdir}/pkgconfig
-# obsolete, don't use:
-%define _pkg_config_path64 %{_prefix}/lib/%{_arch64}/pkgconfig
+%define _pkg_config_path %{_libdir}/pkgconfig:%{_prefix}/gnu/lib/%{bld_arch}/pkgconfig
+%define _pkg_config_path64 %{_prefix}/lib/%{_arch64}/pkgconfig:%{_prefix}/gnu/lib/%{_arch64}/pkgconfig
 
 %endif
 

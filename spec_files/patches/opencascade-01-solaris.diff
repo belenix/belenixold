@@ -1,0 +1,539 @@
+--- OpenCASCADE6.3.0/ros/src/TCollection/TCollection_HSequence.gxx.orig	2009-10-05 00:38:56.868644219 +0530
++++ OpenCASCADE6.3.0/ros/src/TCollection/TCollection_HSequence.gxx	2009-10-05 00:39:13.441824388 +0530
+@@ -109,11 +109,11 @@
+ Handle (TCollection_HSequence) 
+             TCollection_HSequence::Split(const Standard_Integer Index)
+ {
+-  TheSequence SS;
+-  mySequence.Split(Index,SS);
++  TheSequence _SS;
++  mySequence.Split(Index,_SS);
+   Handle(TCollection_HSequence) NS = new TCollection_HSequence();
+-  Standard_Integer i,l = SS.Length();
+-  for (i=1; i<= l; i++) NS->Append(SS(i));
++  Standard_Integer i,l = _SS.Length();
++  for (i=1; i<= l; i++) NS->Append(_SS(i));
+   return NS;
+ }
+ 
+--- OpenCASCADE6.3.0/ros/inc/TCollection_HSequence.gxx.orig	2009-10-05 09:05:14.862438658 +0530
++++ OpenCASCADE6.3.0/ros/inc/TCollection_HSequence.gxx	2009-10-05 09:05:32.867158086 +0530
+@@ -109,11 +109,11 @@
+ Handle (TCollection_HSequence) 
+             TCollection_HSequence::Split(const Standard_Integer Index)
+ {
+-  TheSequence SS;
+-  mySequence.Split(Index,SS);
++  TheSequence _SS;
++  mySequence.Split(Index,_SS);
+   Handle(TCollection_HSequence) NS = new TCollection_HSequence();
+-  Standard_Integer i,l = SS.Length();
+-  for (i=1; i<= l; i++) NS->Append(SS(i));
++  Standard_Integer i,l = _SS.Length();
++  for (i=1; i<= l; i++) NS->Append(_SS(i));
+   return NS;
+ }
+ 
+--- ./ros/src/NCollection/NCollection_TypeDef.hxx.orig	2009-10-05 09:27:56.585263830 +0530
++++ ./ros/src/NCollection/NCollection_TypeDef.hxx	2009-10-05 09:28:23.990845128 +0530
+@@ -10,7 +10,11 @@
+ // Macro TYPENAME - either C++ keyword typename, or empty on
+ // platforms that do not support it
+ #ifdef SOLARIS
+-#define TYPENAME 
++#ifdef __GNUC__
++#define TYPENAME typename
++#else
++#define TYPENAME
++#endif
+ #else
+ #define TYPENAME typename
+ #endif
+--- ./ros/inc/NCollection_TypeDef.hxx.orig	2009-10-05 09:27:46.353109450 +0530
++++ ./ros/inc/NCollection_TypeDef.hxx	2009-10-05 09:26:40.379956297 +0530
+@@ -10,7 +10,11 @@
+ // Macro TYPENAME - either C++ keyword typename, or empty on
+ // platforms that do not support it
+ #ifdef SOLARIS
+-#define TYPENAME 
++#ifdef __GNUC__
++#define TYPENAME typename
++#else
++#define TYPENAME
++#endif
+ #else
+ #define TYPENAME typename
+ #endif
+--- OpenCASCADE6.3.0/ros/src/Quantity/Quantity_Color.cxx.orig	2009-10-05 09:51:09.973724444 +0530
++++ OpenCASCADE6.3.0/ros/src/Quantity/Quantity_Color.cxx	2009-10-05 09:51:25.899770854 +0530
+@@ -384,16 +384,16 @@
+ 
+ void Quantity_Color::RgbHls (const Quantity_Parameter R, const Quantity_Parameter G, const Quantity_Parameter B, Quantity_Parameter& H, Quantity_Parameter& L, Quantity_Parameter& S) {
+ 
+-Standard_ShortReal HH, LL, SS;
++Standard_ShortReal HH, LL, _SS;
+ 
+ 	call_rgbhls (Standard_ShortReal (R),
+ 			Standard_ShortReal (G),
+ 			Standard_ShortReal (B),
+-			HH, LL, SS);
++			HH, LL, _SS);
+ 
+ 	H	= Quantity_Parameter (HH);
+ 	L	= Quantity_Parameter (LL);
+-	S	= Quantity_Parameter (SS);
++	S	= Quantity_Parameter (_SS);
+ 
+ }
+ 
+--- OpenCASCADE6.3.0/ros/src/Units/Units_UnitsDictionary.cxx.orig	2009-10-05 10:14:26.977497215 +0530
++++ OpenCASCADE6.3.0/ros/src/Units/Units_UnitsDictionary.cxx	2009-10-05 10:14:46.718901822 +0530
+@@ -77,7 +77,7 @@
+   Standard_Boolean ismove,emptyline;
+   Standard_Integer charnumber,unitscomputed;
+   Standard_Integer fr,i,j,k;
+-  char MM[11],LL[11],TT[11],II[11],tt[11],NN[11],JJ[11],PP[11],SS[11];
++  char MM[11],LL[11],TT[11],II[11],tt[11],NN[11],JJ[11],PP[11],_SS[11];
+   Standard_Real M=0,L=0,T=0,I=0,t=0,N=0,J=0,P=0,S=0;
+   char unite[52];
+   char symbol[28],unit2[28];
+@@ -195,10 +195,10 @@
+       for(i=0; i<11; i++)NN[i] = 0;
+       for(i=0; i<11; i++)JJ[i] = 0;
+       for(i=0; i<11; i++)PP[i] = 0;
+-      for(i=0; i<11; i++)SS[i] = 0;
++      for(i=0; i<11; i++)_SS[i] = 0;
+ 
+       fr = sscanf(line,"%40c%10c%10c%10c%10c%10c%10c%10c%10c%10c",
+-		  name,MM,LL,TT,II,tt,NN,JJ,PP,SS);
++		  name,MM,LL,TT,II,tt,NN,JJ,PP,_SS);
+       OSD::CStringToReal(MM, M);
+       OSD::CStringToReal(LL, L);
+       OSD::CStringToReal(TT, T);
+@@ -207,7 +207,7 @@
+       OSD::CStringToReal(NN, N);
+       OSD::CStringToReal(JJ, J);
+       OSD::CStringToReal(PP, P);
+-      OSD::CStringToReal(SS, S);
++      OSD::CStringToReal(_SS, S);
+       //for ( i = 0 ; i < 80 ; i++ ) {
+       //  fr = sscanf(&line[i],"%c",&name[i]);
+       //}
+@@ -222,7 +222,7 @@
+       /*cout << " Name of Dimension : " << name << endl ;
+ 	  cout << MM << " " << LL << " " << TT << " " 
+ 		   << II << " " << tt << " " << NN << " " 
+-		   << JJ << " " << PP << " " << SS << endl;
++		   << JJ << " " << PP << " " << _SS << endl;
+ 	  cout << M << " " << L << " " << T << " " 
+ 		   << I << " " << t << " " << N << " " 
+ 		   << J << " " << P << " " << S << endl;*/
+--- OpenCASCADE6.3.0/ros/src/CSLib/CSLib.cxx.orig	2009-10-05 10:28:22.034489961 +0530
++++ OpenCASCADE6.3.0/ros/src/CSLib/CSLib.cxx	2009-10-05 10:28:41.732580893 +0530
+@@ -275,7 +275,7 @@
+             inf=0;
+ 	    sup=Standard_PI;
+ 	 }
+-	 Standard_Boolean CS=0;
++	 Standard_Boolean _CS=0;
+ 	 Standard_Real Vprec=0,Vsuiv;
+ 	 //Creation du polynome
+ 	 CSLib_NormalPolyDef  Poly(Order,Ratio);
+@@ -319,12 +319,12 @@
+                       if(ifirst == 0) 
+                       {
+                          ifirst=i;
+-                         CS=Standard_False;
++                         _CS=Standard_False;
+                          Vprec=Vsuiv;
+                       }
+                       else 
+                       {
+-                         CS=(Vprec*Vsuiv)<0;
++                         _CS=(Vprec*Vsuiv)<0;
+                          Vprec=Vsuiv;
+                       }
+                    }
+@@ -333,12 +333,12 @@
+             else
+             {
+                //SAPS n'a pas de racine donc forcement ne change pas de signe
+-               CS=Standard_False;
++               _CS=Standard_False;
+                Poly.Value(inf,Vsuiv);
+             }
+             //fin if(MFR.NbSolutions()>0)
+          }//fin if(MFR>IsDone())
+-         if(CS)
++         if(_CS)
+          //Le polynome change de signe
+             SP=0;
+ 	 else if(Vsuiv>0)
+--- OpenCASCADE6.3.0/ros/src/GeomTools/GeomTools_SurfaceSet.cxx.orig	2009-10-05 21:38:40.928232074 +0530
++++ OpenCASCADE6.3.0/ros/src/GeomTools/GeomTools_SurfaceSet.cxx	2009-10-05 21:40:15.807755576 +0530
+@@ -924,97 +924,97 @@
+ 
+     case PLANE :
+       {
+-        Handle(Geom_Plane) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_Plane) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case CYLINDER :
+       {
+-        Handle(Geom_CylindricalSurface) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_CylindricalSurface) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case CONE :
+       {
+-        Handle(Geom_ConicalSurface) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_ConicalSurface) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case SPHERE :
+       {
+-        Handle(Geom_SphericalSurface) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_SphericalSurface) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case TORUS :
+       {
+-        Handle(Geom_ToroidalSurface) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_ToroidalSurface) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case LINEAREXTRUSION :
+       {
+-        Handle(Geom_SurfaceOfLinearExtrusion) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_SurfaceOfLinearExtrusion) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case REVOLUTION :
+       {
+-        Handle(Geom_SurfaceOfRevolution) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_SurfaceOfRevolution) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case BEZIER :
+       {
+-        Handle(Geom_BezierSurface) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_BezierSurface) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case BSPLINE :
+       {
+-        Handle(Geom_BSplineSurface) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_BSplineSurface) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case RECTANGULAR :
+       {
+-        Handle(Geom_RectangularTrimmedSurface) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_RectangularTrimmedSurface) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+ 
+     case OFFSET :
+       {
+-        Handle(Geom_OffsetSurface) SS;
+-        IS >> SS;
+-        S = SS;
++        Handle(Geom_OffsetSurface) _SS;
++        IS >> _SS;
++        S = _SS;
+       }
+       break;
+       
+     default :
+       {
+-        Handle(Geom_Surface) SS;
+-        GeomTools::GetUndefinedTypeHandler()->ReadSurface(stype,IS,SS);
+-        S = SS;
++        Handle(Geom_Surface) _SS;
++        GeomTools::GetUndefinedTypeHandler()->ReadSurface(stype,IS,_SS);
++        S = _SS;
+       }
+       break;
+     }
+--- OpenCASCADE6.3.0/ros/src/IntAna/IntAna_IntQuadQuad.cxx.orig	2009-10-05 22:14:12.015689410 +0530
++++ OpenCASCADE6.3.0/ros/src/IntAna/IntAna_IntQuadQuad.cxx	2009-10-05 22:12:33.850117603 +0530
+@@ -176,7 +176,7 @@
+ class MyTrigonometricFunction {
+  
+  private:
+-  Standard_Real CC,SS,SC,S,C,Cte;
++  Standard_Real CC,_SS,SC,S,C,Cte;
+  
+  public:
+   //
+@@ -187,7 +187,7 @@
+ 			  const Standard_Real xS,
+ 			  const Standard_Real xCte) {
+     CC=xCC; 
+-    SS=xSS; 
++    _SS=xSS; 
+     SC=xSC; 
+     S=xS; 
+     C=xC; 
+@@ -200,7 +200,7 @@
+     sinus=sin(U);
+     cosinus=cos(U);
+     aRet= CC*cosinus*cosinus + 
+-          SS*sinus*sinus +
++          _SS*sinus*sinus +
+ 	  2.0*(sinus*(SC*cosinus+S)+cosinus*C)+
+ 	  Cte;
+     //
+@@ -213,7 +213,7 @@
+     sinus=sin(U);
+     cosinus=cos(U);
+     //
+-    return(2.0*((sinus*cosinus)*(SS-CC)
++    return(2.0*((sinus*cosinus)*(_SS-CC)
+ 		+S*cosinus
+ 		-C*sinus
+ 		+SC*(cosinus*cosinus-sinus*sinus)));
+--- OpenCASCADE6.3.0/ros/src/ProjLib/ProjLib_ComputeApproxOnPolarSurface.cxx.orig	2009-10-05 22:41:06.321486619 +0530
++++ OpenCASCADE6.3.0/ros/src/ProjLib/ProjLib_ComputeApproxOnPolarSurface.cxx	2009-10-05 22:41:23.374929143 +0530
+@@ -228,12 +228,12 @@
+     SurfLittle.Load(GBSS, uInfLi, uSupLi, vInfLi, vSupLi);
+   }
+   else if (Type == GeomAbs_BezierSurface) {
+-    Handle(Geom_Surface) GS(Surf->Surface().Bezier());
+-    SurfLittle.Load(GS, uInfLi, uSupLi, vInfLi, vSupLi);
++    Handle(Geom_Surface) _GS(Surf->Surface().Bezier());
++    SurfLittle.Load(_GS, uInfLi, uSupLi, vInfLi, vSupLi);
+   }
+   else if (Type == GeomAbs_OffsetSurface) {
+-    Handle(Geom_Surface) GS = GeomAdaptor::MakeSurface(Surf->Surface());
+-    SurfLittle.Load(GS, uInfLi, uSupLi, vInfLi, vSupLi);
++    Handle(Geom_Surface) _GS = GeomAdaptor::MakeSurface(Surf->Surface());
++    SurfLittle.Load(_GS, uInfLi, uSupLi, vInfLi, vSupLi);
+   }
+   else {
+     Standard_NoSuchObject::Raise("");
+--- OpenCASCADE6.3.0/ros/src/BRepTools/BRepTools.cxx.orig	2009-10-05 23:12:19.937692609 +0530
++++ OpenCASCADE6.3.0/ros/src/BRepTools/BRepTools.cxx	2009-10-05 23:13:57.697285031 +0530
+@@ -292,9 +292,9 @@
+ //purpose  : 
+ //=======================================================================
+ 
+-void BRepTools::Update(const TopoDS_CompSolid& CS)
++void BRepTools::Update(const TopoDS_CompSolid& _CS)
+ {
+-  TopExp_Explorer ex(CS,TopAbs_FACE);
++  TopExp_Explorer ex(_CS,TopAbs_FACE);
+   while (ex.More()) {
+     Update(TopoDS::Face(ex.Current()));
+     ex.Next();
+@@ -592,10 +592,10 @@
+ 
+ void  BRepTools::Dump(const TopoDS_Shape& Sh, Standard_OStream& S)
+ {
+-  BRepTools_ShapeSet SS;
+-  SS.Add(Sh);
+-  SS.Dump(Sh,S);
+-  SS.Dump(S);
++  BRepTools_ShapeSet _SS;
++  _SS.Add(Sh);
++  _SS.Dump(Sh,S);
++  _SS.Dump(S);
+ }
+ 
+ #ifdef DEB
+@@ -618,11 +618,11 @@
+ void  BRepTools::Write(const TopoDS_Shape& Sh, Standard_OStream& S,
+                        const Handle(Message_ProgressIndicator)& PR)
+ {
+-  BRepTools_ShapeSet SS;
+-  SS.SetProgress(PR);
+-  SS.Add(Sh);
+-  SS.Write(S);
+-  SS.Write(Sh,S);
++  BRepTools_ShapeSet _SS;
++  _SS.SetProgress(PR);
++  _SS.Add(Sh);
++  _SS.Write(S);
++  _SS.Write(Sh,S);
+ }
+ 
+ 
+@@ -636,10 +636,10 @@
+                       const BRep_Builder& B,
+                       const Handle(Message_ProgressIndicator)& PR)
+ {
+-  BRepTools_ShapeSet SS(B);
+-  SS.SetProgress(PR);
+-  SS.Read(S);
+-  SS.Read(Sh,S);
++  BRepTools_ShapeSet _SS(B);
++  _SS.SetProgress(PR);
++  _SS.Read(S);
++  _SS.Read(Sh,S);
+ }
+ 
+ //=======================================================================
+@@ -660,15 +660,15 @@
+   if(!isGood)
+     return isGood;
+   
+-  BRepTools_ShapeSet SS;
+-  SS.SetProgress(PR);
+-  SS.Add(Sh);
++  BRepTools_ShapeSet _SS;
++  _SS.SetProgress(PR);
++  _SS.Add(Sh);
+   
+   os << "DBRep_DrawableShape\n";  // for easy Draw read
+-  SS.Write(os);
++  _SS.Write(os);
+   isGood = os.good();
+   if(isGood )
+-    SS.Write(Sh,os);
++    _SS.Write(Sh,os);
+   os.flush();
+   isGood = os.good();
+ 
+@@ -696,11 +696,11 @@
+   istream in(&fic);
+   if (!fic.open(File, ios::in)) return Standard_False;
+ 
+-  BRepTools_ShapeSet SS(B);
+-  SS.SetProgress(PR);
+-  SS.Read(in);
+-  if(!SS.NbShapes()) return Standard_False;
+-  SS.Read(Sh,in);
++  BRepTools_ShapeSet _SS(B);
++  _SS.SetProgress(PR);
++  _SS.Read(in);
++  if(!_SS.NbShapes()) return Standard_False;
++  _SS.Read(Sh,in);
+   return Standard_True;
+ }
+ 
+--- OpenCASCADE6.3.0/ros/src/IntPolyh/IntPolyh_Triangle.cxx.orig	2009-10-06 09:47:15.516982285 +0530
++++ OpenCASCADE6.3.0/ros/src/IntPolyh/IntPolyh_Triangle.cxx	2009-10-06 09:47:26.537694767 +0530
+@@ -796,9 +796,9 @@
+     for(Standard_Integer iioo=0; iioo<FinTE; iioo++) {
+       Standard_Integer EFP=TEdges[iioo].FirstPoint();
+       if (EFP==PE1) {
+-	Standard_Integer ESP=TEdges[iioo].SecondPoint();
+-	if (ESP!=EFP) {
+-	  if (ESP==PE2) {
++	Standard_Integer _ESP=TEdges[iioo].SecondPoint();
++	if (_ESP!=EFP) {
++	  if (_ESP==PE2) {
+ 	    SetEdgeOrientation(EdgeIndex,1);
+ 	    SetEdge(EdgeIndex,iioo);
+ 	    iioo=FinTE;
+@@ -812,9 +812,9 @@
+ 	}
+       }
+       else if (EFP==PE2) {
+-	Standard_Integer ESP=TEdges[iioo].SecondPoint();
+-	if (ESP!=EFP) {
+-	  if (ESP==PE1) {
++	Standard_Integer _ESP=TEdges[iioo].SecondPoint();
++	if (_ESP!=EFP) {
++	  if (_ESP==PE1) {
+ 	    SetEdgeOrientation(EdgeIndex,-1);
+ 	    SetEdge(EdgeIndex,iioo);
+ 	    iioo=FinTE;
+--- OpenCASCADE6.3.0/ros/src/Xw/Xw_save_gif_image.cxx.orig	2009-10-07 22:39:21.408592212 +0530
++++ OpenCASCADE6.3.0/ros/src/Xw/Xw_save_gif_image.cxx	2009-10-07 22:42:01.278442762 +0530
+@@ -24,6 +24,12 @@
+ //              static address in Xw_get_filename() space.
+ */
+ 
++#if defined(__sun) || defined(sun)
++/* bcopy on OpenSolaris */
++#include <sys/types.h>
++extern void bcopy(const void *, void *, size_t);
++#endif
++
+ #include <Xw_Extension.h>
+ #include <X11/Xfuncs.h>
+ 
+--- OpenCASCADE6.3.0/ros/src/OSD/OSD_signal.cxx.orig	2009-10-09 08:21:34.229028609 +0530
++++ OpenCASCADE6.3.0/ros/src/OSD/OSD_signal.cxx	2009-10-09 09:01:49.611291081 +0530
+@@ -64,7 +64,8 @@
+ #define	FPE_FLTINV_TRAP FPE_FLTINV	/* invalid floating point operation */
+ #define	FPE_FLTSUB_TRAP FPE_FLTSUB	/* subscript out of range */
+ 
+-extern "C" {int ieee_handler(char *,char *, sigfpe_handler_type&);}
++//extern "C" {int ieee_handler(char *,char *, sigfpe_handler_type&);}
++#include <fenv.h>
+ # include <stdlib.h>
+ #endif
+ 
+@@ -139,13 +140,15 @@
+     //==== Enable the floating point exceptions ===============
+ #if defined (__sun) || defined (SOLARIS)
+     sigfpe_handler_type PHandler = (sigfpe_handler_type) Handler ;
+-    stat = ieee_handler("set", "invalid",  PHandler);
+-    stat = ieee_handler("set", "division", PHandler) || stat;
+-    stat = ieee_handler("set", "overflow", PHandler) || stat;
++    stat = fex_set_handling(FEX_INVALID | FEX_DIVBYZERO | FEX_OVERFLOW, FEX_SIGNAL, PHandler);
++
++    // stat = ieee_handler("set", "invalid",  PHandler);
++    // stat = ieee_handler("set", "division", PHandler) || stat;
++    // stat = ieee_handler("set", "overflow", PHandler) || stat;
+     //stat = ieee_handler("set", "underflow", PHandler) || stat;
+     //stat = ieee_handler("set", "inexact", PHandler) || stat;
+-    if (stat) {
+-      cerr << "ieee_handler does not work !!! KO " << endl;
++    if (!stat) {
++      cerr << "fex_set_handling does not work !!! KO " << endl;
+     }
+ #elif defined (linux)
+     feenableexcept (FE_INVALID | FE_DIVBYZERO | FE_OVERFLOW);
