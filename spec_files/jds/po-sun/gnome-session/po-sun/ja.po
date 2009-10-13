@@ -1,0 +1,74 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the gnome-session package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-session HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-30 13:02+0900\n"
+"PO-Revision-Date: 2008-01-29 10:30+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../data/session-properties.desktop.in.in.h:2
+msgid "Choose what happens when you log in or log out"
+msgstr "ログインまたはログアウトしたときの動作を選択します"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../gnome-session/trusted.c:107
+msgid ""
+"Unable to login to Trusted Session. Required X server security extension not "
+"loaded."
+msgstr ""
+"トラステッドセッションにログインできません。必要な X サーバーのセキュリティー"
+"拡張がロードされていません。"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#: ../gnome-session/main.c:539
+msgid "Completing post install setup..."
+msgstr "インストール後の設定を完了しています..."
+
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+# SUN TECH REVIEWED
+#: ../gnome-session/main.c:579
+msgid "Used for Trusted Multi-Label Session"
+msgstr "トラステッドマルチラベルセッションで使用"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN TECH REVIEWED
+# SUN LING REVIEWED
+#~ msgid ""
+#~ "Your X Server has not been set up with SUN_TSOL extension to login to "
+#~ "Trusted JDS. Select ordinary JDS to login.\n"
+#~ msgstr ""
+#~ "使用している X サーバーには、Trusted JDS にログインするための SUN_TSOL 拡"
+#~ "張が設定されていません。通常の JDS を選択してログインしてください。\n"
+
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+# SUN TECH REVIEWED
+#~ msgid "Trusted Stripe"
+#~ msgstr "トラステッドストライプ"

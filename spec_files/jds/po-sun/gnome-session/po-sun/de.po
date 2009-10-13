@@ -1,0 +1,67 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the gnome-session package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-session HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-30 13:02+0900\n"
+"PO-Revision-Date: 2008-10-14 12:25+0100\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../data/session-properties.desktop.in.in.h:2
+msgid "Choose what happens when you log in or log out"
+msgstr ""
+"Festlegen, welche Vorgänge ausgeführt werden, wenn Sie sich an- oder abmelden"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-session/trusted.c:107
+msgid ""
+"Unable to login to Trusted Session. Required X server security extension not "
+"loaded."
+msgstr ""
+"Anmeldung bei vertrauenswürdig eingestufter Sitzung nicht möglich. "
+"Erforderliche X-Server-Sicherheitserweitung nicht geladen."
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../gnome-session/main.c:539
+msgid "Completing post install setup..."
+msgstr "Post-Installation-Setup wird abgeschlossen ..."
+
+# SUN LING REVIEWED
+#: ../gnome-session/main.c:579
+msgid "Used for Trusted Multi-Label Session"
+msgstr "Wird für vertrauenswürdige Mehrfachbeschriftungssitzung verwendet."
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#~ msgid ""
+#~ "Your X Server has not been set up with SUN_TSOL extension to login to "
+#~ "Trusted JDS. Select ordinary JDS to login.\n"
+#~ msgstr ""
+#~ "Ihr X-Server wurde nicht mit der SUN_TSOL-Erweiterung für die Anmeldung "
+#~ "bei Trusted JDS eingerichtet. Wählen Sie ein normales JDS, um sich "
+#~ "anzumelden.\n"
+
+# SUN MESSAGE
+# SUN LING REVIEWED
+#~ msgid "Trusted Stripe"
+#~ msgstr "Vertrauneswürdiger Streifen"
