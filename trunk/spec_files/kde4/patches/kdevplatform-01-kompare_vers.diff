@@ -1,0 +1,14 @@
+--- kdevplatform-0.9.95/cmake/modules/FindKompare.cmake.orig	2009-10-03 10:20:27.878317058 +0530
++++ kdevplatform-0.9.95/cmake/modules/FindKompare.cmake	2009-10-03 10:20:53.067853060 +0530
+@@ -3,9 +3,9 @@
+ find_path(KOMPARE_INCLUDES kompareinterface.h HINTS ${KDE4_INCLUDE_DIR}/kompare)
+ 
+ #FIXME: Remove the version_greater once KDevelop has moved to 4.3
+-if(KOMPARE_INCLUDES AND ${KDE_VERSION} VERSION_LESS 4.3.61 )
++if(KOMPARE_INCLUDES AND ${KDE_VERSION} VERSION_LESS 4.2.61 )
+     set(KOMPARE_INCLUDES KOMPARE_INCLUDES-NOTFOUND )
+-endif(KOMPARE_INCLUDES AND  ${KDE_VERSION} VERSION_LESS 4.3.61 )
++endif(KOMPARE_INCLUDES AND  ${KDE_VERSION} VERSION_LESS 4.2.61 )
+ 
+ INCLUDE(FindPackageHandleStandardArgs)
+ FIND_PACKAGE_HANDLE_STANDARD_ARGS(Kompare DEFAULT_MSG KOMPARE_INCLUDES)
