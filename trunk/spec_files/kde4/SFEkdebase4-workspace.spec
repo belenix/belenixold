@@ -64,6 +64,7 @@ Requires:      SUNWlibusb
 Requires:      SFEconsolekit
 Requires:      SFEpolicykit
 Requires:      SFEpolkit-qt4
+Requires:      SFEksysguard-daemon
 BuildRequires: SFEqt4-devel
 BuildRequires: SFEqimageblitz-devel
 BuildRequires: SFEkdelibs4-devel
@@ -91,6 +92,11 @@ Conflicts:     SFEkdmtheme
 
 %description
 The KDE Workspace is essentially the desktop of KDE 4.
+
+%package -n SFEksysguard-daemon
+Summary:                 KDE 4 System Monitoring Daemon.
+SUNW_BaseDir:            /
+%include default-depend.inc
 
 %package devel
 Summary:                 %{summary} - development files
@@ -252,7 +258,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr (0755, root, bin) %{_bindir}/ksplashx_scale
 %attr (0755, root, bin) %{_bindir}/kstartupconfig4
 %attr (0755, root, bin) %{_bindir}/ksysguard
-%attr (4755, root, bin) %{_bindir}/ksysguardd
 %attr (0755, root, bin) %{_bindir}/ksystraycmd
 %attr (0755, root, bin) %{_bindir}/kwin
 %attr (0755, root, bin) %{_bindir}/kwin_killer_helper
@@ -340,6 +345,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/wallpapers/*
 %dir %attr (0755, root, sys) %{_datadir}/autostart
 %{_datadir}/autostart/*
+
+%files -n SFEksysguard-daemon
+%attr (4755, root, bin) %{_bindir}/ksysguardd
+%defattr (-, root, bin)
+%dir %attr (0755, root, sys) %{_prefix}
+%dir %attr (0755, root, bin) %{_bindir}
 
 %files devel
 %defattr (-, root, bin)

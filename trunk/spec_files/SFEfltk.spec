@@ -7,7 +7,7 @@
 
 Name:                SFEfltk
 Summary:             A C++ user interface toolkit
-Version:             1.1.7
+Version:             1.1.9
 Source:              http://ftp.easysw.com/pub/fltk/%{version}/fltk-%{version}-source.tar.bz2
 SUNW_BaseDir:        %{_basedir}
 BuildRoot:           %{_tmppath}/%{name}-%{version}-build
