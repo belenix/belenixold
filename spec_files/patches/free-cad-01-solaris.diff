@@ -1,0 +1,214 @@
+--- FreeCAD-0.8.2237/src/FCConfig.h.orig	2009-10-11 12:20:04.161563789 +0530
++++ FreeCAD-0.8.2237/src/FCConfig.h	2009-10-11 12:24:25.013385644 +0530
+@@ -70,12 +70,12 @@
+ #	define HAVE_INTPTR_T
+ #	define HAVE_UINTPTR_T
+ #	endif
+-//#elif defined(sun) || defined(__sun) || defined(__sun__)
+-//#	if defined(__SVR4)
+-//#		define _FC_OS_SOLARIS
+-//#	else
+-//#		define _FC_OS_SUN_
+-//#	endif
++#elif defined(sun) || defined(__sun) || defined(__sun__)
++#	if defined(__SVR4)
++#		define _FC_OS_SOLARIS
++#	else
++#		define _FC_OS_SUN_
++#	endif
+ //#elif defined(hpux) || defined(__hpux) || defined(__hpux__)
+ //#	define FC_OS_HPUX_
+ //#elif defined(__FreeBSD__)
+--- FreeCAD-0.8.2237/src/Base/FileInfo.cpp.orig	2009-10-11 12:27:02.092404097 +0530
++++ FreeCAD-0.8.2237/src/Base/FileInfo.cpp	2009-10-11 12:28:56.396270844 +0530
+@@ -32,7 +32,10 @@
+ # include <fstream>
+ # include <climits>
+ # include <cstring>
+-# if defined (FC_OS_LINUX) || defined(FC_OS_CYGWIN) || defined(FC_OS_MACOSX)
++# if defined (FC_OS_LINUX) || defined(FC_OS_CYGWIN) || defined(FC_OS_MACOSX) || defined(_FC_OS_SOLARIS)
++#ifdef _FC_OS_SOLARIS
++#include <sys/types.h>
++#endif
+ # include <dirent.h>
+ # include <unistd.h>
+ # include <sys/stat.h>
+--- FreeCAD-0.8.2237/src/Gui/View3DInventorViewer.cpp.orig	2009-10-11 12:52:40.684532086 +0530
++++ FreeCAD-0.8.2237/src/Gui/View3DInventorViewer.cpp	2009-10-11 12:54:27.564380389 +0530
+@@ -33,6 +33,11 @@
+ # else
+ # include <GL/gl.h>
+ # endif
++
++#ifdef _FC_OS_SOLARIS
++#include <stdlib.h>
++#endif
++
+ # include <Inventor/SbBox.h>
+ # include <Inventor/SbTesselator.h>
+ # include <Inventor/actions/SoGetBoundingBoxAction.h>
+@@ -357,7 +362,7 @@
+ 
+ void View3DInventorViewer::setEnabledFPSCounter(bool on)
+ {
+-#if defined (FC_OS_LINUX) || defined(FC_OS_CYGWIN) || defined(FC_OS_MACOSX)
++#if defined (FC_OS_LINUX) || defined(FC_OS_CYGWIN) || defined(FC_OS_MACOSX) || defined(_FC_OS_SOLARIS)
+     setenv("COIN_SHOW_FPS_COUNTER", (on?"1":"0"), 1);
+ #else
+     on ? _putenv ("COIN_SHOW_FPS_COUNTER=1") : _putenv ("COIN_SHOW_FPS_COUNTER=0");
+--- FreeCAD-0.8.2237/src/Main/MainPy.cpp.orig	2009-10-11 13:01:32.826196342 +0530
++++ FreeCAD-0.8.2237/src/Main/MainPy.cpp	2009-10-11 13:04:24.859299431 +0530
+@@ -81,6 +81,8 @@
+ #   define GNU_SOURCE
+ # endif
+ # include <dlfcn.h>
++#elif defined(_FC_OS_SOLARIS)
++# include <dlfcn.h>
+ #elif defined(FC_OS_CYGWIN)
+ # include <windows.h>
+ #endif
+@@ -117,7 +119,7 @@
+         argv[0] = (char*)malloc(MAX_PATH);
+         strncpy(argv[0],szFileName,MAX_PATH);
+         argv[0][MAX_PATH-1] = '\0'; // ensure null termination
+-#elif defined(FC_OS_LINUX)
++#elif defined(FC_OS_LINUX) || defined(_FC_OS_SOLARIS)
+         // get whole path of the library
+         Dl_info info;
+         int ret = dladdr((void*)initFreeCAD, &info);
+--- FreeCAD-0.8.2237/src/Mod/Mesh/App/WildMagic4/Wm4QuadricSurface.h.orig	2009-10-11 13:08:31.557074955 +0530
++++ FreeCAD-0.8.2237/src/Mod/Mesh/App/WildMagic4/Wm4QuadricSurface.h	2009-10-11 13:10:59.165668775 +0530
+@@ -20,6 +20,9 @@
+ #include "Wm4FoundationLIB.h"
+ #include "Wm4ImplicitSurface.h"
+ #include "Wm4RVector3.h"
++#if defined(B0)
++#undef B0 // Terminal hang-up.  We assume that you do not want that.
++#endif
+ 
+ namespace Wm4
+ {
+--- FreeCAD-0.8.2237/src/Mod/Sketcher/App/sketchflat/sketch.h.orig	2009-10-11 13:47:41.306126701 +0530
++++ FreeCAD-0.8.2237/src/Mod/Sketcher/App/sketchflat/sketch.h	2009-10-11 13:55:51.587437460 +0530
+@@ -51,6 +51,29 @@
+ #define MAX_PATH         PATH_MAX
+ #endif
+ 
++#ifdef _FC_OS_SOLARIS
++#include <sys/types.h>
++#include <time.h>
++#include <utmpx.h>
++
++inline DWORD GetTickCount()
++{
++    struct utmpx *utx;
++    time_t currtime;
++    DWORD  uptime = 1000;
++
++    setutxent();
++    while ((utx = getutxent()) != NULL) {
++        if (utx->ut_type == BOOT_TIME) {
++            time(&currtime);
++            uptime = (currtime - utx->ut_xtime) * 1000;
++        }
++    }
++    endutxent();
++
++    return (uptime);
++}
++#else
+ #include <sys/sysinfo.h>
+ 
+ inline DWORD GetTickCount()
+@@ -60,6 +83,7 @@
+     if (sysinfo(&si) == 0) return (si.uptime * 1000);
+     else return 1000;
+ }
++#endif
+ 
+ inline int _vsnprintf(char* buffer, size_t count, const char* format, va_list argptr)
+ {
+--- FreeCAD-0.8.2237/src/App/Application.cpp.orig	2009-10-11 12:41:03.986309330 +0530
++++ FreeCAD-0.8.2237/src/App/Application.cpp	2009-10-11 21:07:21.985245996 +0530
+@@ -30,7 +30,7 @@
+ # include <iostream>
+ # include <sstream>
+ # include <exception>
+-# if defined(FC_OS_LINUX) || defined(FC_OS_MACOSX)
++# if defined(FC_OS_LINUX) || defined(FC_OS_MACOSX) || defined (_FC_OS_SOLARIS)
+ # include <unistd.h>
+ # include <pwd.h>
+ # include <sys/types.h>
+@@ -1623,7 +1623,7 @@
+     mConfig["BinPath"] = mConfig["AppHomePath"] + "bin" + PATHSEP;
+     mConfig["DocPath"] = mConfig["AppHomePath"] + "doc" + PATHSEP;
+ 
+-#if defined(FC_OS_LINUX) || defined(FC_OS_CYGWIN) || defined(FC_OS_MACOSX)
++#if defined(FC_OS_LINUX) || defined(FC_OS_CYGWIN) || defined(FC_OS_MACOSX) || defined(_FC_OS_SOLARIS)
+     // Default paths for the user depending stuff on the platform
+     struct passwd *pwd = getpwuid(getuid());
+     if (pwd == NULL)
+@@ -1746,13 +1746,18 @@
+ #endif
+ }
+ 
+-#if defined (FC_OS_LINUX) || defined(FC_OS_CYGWIN)
++#if defined (FC_OS_LINUX) || defined(FC_OS_CYGWIN) || defined(_FC_OS_SOLARIS)
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <sys/param.h>
++#ifdef _FC_OS_SOLARIS
++#include <string.h>
++#endif
+ 
+ std::string Application::FindHomePath(const char* sCall)
+ {
++    char resolved[PATH_MAX];
++
+     // We have three ways to start this application either use one of the both executables or
+     // import the FreeCAD.so module from a running Python session. In the latter case the
+     // Python interpreter is already initialized.
+@@ -1763,23 +1768,41 @@
+         // expands the given path to an absolute path of unknown length.
+         // Even setting PATH_MAX does not necessarily solve the problem
+         // for sure but the risk of overflow is rather small.
+-        char resolved[PATH_MAX];
+         char* path = realpath(sCall, resolved);
+         if (path)
+             absPath = path;
+     }
+     else {
++#ifdef _FC_OS_SOLARIS
++        const char *epath;
++        char tpath[PATH_MAX];
++
++        epath = getexecname();
++        if (epath == NULL)
++            throw Base::Exception("Cannot determine the absolute path of the executable");
++        if (epath[0] == '/') {
++            strlcpy(tpath, epath, PATH_MAX);
++        } else {
++            char *pwd = getcwd(NULL, PATH_MAX);
++            strlcpy(tpath, pwd, PATH_MAX);
++            strlcat(tpath, "/", PATH_MAX);
++            strlcat(tpath, epath, PATH_MAX);
++        }
++        char* path = realpath(tpath, resolved);
++        if (path)
++            absPath = path;
++#else
+         // Find the path of the executable. Theoretically, there could  occur a
+         // race condition when using readlink, but we only use  this method to
+         // get the absolute path of the executable to compute the actual home
+         // path. In the worst case we simply get q wrong path and FreeCAD is not
+         // able to load its modules.
+-        char resolved[PATH_MAX];
+         int nchars = readlink("/proc/self/exe", resolved, PATH_MAX);
+         if (nchars < 0 || nchars >= PATH_MAX)
+             throw Base::Exception("Cannot determine the absolute path of the executable");
+         resolved[nchars] = '\0'; // enfore null termination
+         absPath = resolved;
++#endif
+     }
+ 
+     // should be an absolute path now
