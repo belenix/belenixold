@@ -1,0 +1,51 @@
+
+Portability Libraries.
+======================
+             by Steve Baker.
+
+All the documentation and installation instructions
+are now online at:
+
+  http://plib.sourceforge.net
+
+They are also downloadable - along with example
+programs and demos from the same site.
+
+
+SUPPORT:
+
+Please don't email me (Steve Baker) directly - I
+get *WAY* too much mail as it is!  Instead, please
+sign up to the PLIB user's mailing list.  Instructions
+can be found here:
+
+  http://plib.sourceforge.net
+
+
+LICENSING:
+
+These libraries are offered as OpenSource freeware
+under the provisions of the GNU Library Public
+License (LGPL). Those terms and conditions are
+detailed in the file 'LICENSE' in this directory.
+
+I have added a short preamble to LGPL that removes
+no rights from ordinary users but offers special
+dispensation to allow PLIB to be used under certain
+commercial conditions (such as Games Consoles) where
+the constraints of LGPL are impossible to meet.
+
+|  As a special exception Steve Baker gives permission to link these 
+|  libraries with proprietary software and distribute the resulting 
+|  executable without including that proprietary code in any distribution 
+|  as the LGPL would normally dictate. 
+| 
+|  This exception is ONLY granted in the case of an embedded system in 
+|  which there is no possibility of an end user re-linking or recompiling 
+|  against new versions of this library that may appear in the future.
+
+
+             Steve Baker.
+             <sjbaker1@airmail.net>
+             http://www.sjbaker.org
+
