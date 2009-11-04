@@ -1,0 +1,71 @@
+--- stellarium-0.10.2/src/modules/Skybright.cpp.orig	2009-10-14 22:48:04.893923171 +0530
++++ stellarium-0.10.2/src/modules/Skybright.cpp	2009-10-14 22:48:30.483454678 +0530
+@@ -118,10 +118,10 @@
+ 
+ 	// Daylight brightness
+ 	const float distSun = fastAcos(cosDistSun);
+-	const float FS = 18886.28f / (distSun*distSun + 0.0007f)
++	const float _FS = 18886.28f / (distSun*distSun + 0.0007f)
+ 	               + pow10(6.15f - (distSun+0.001f)* 1.43239f)
+ 	               + 229086.77f * ( 1.06f + cosDistSun*cosDistSun );
+-	const float b_daylight = 9.289663e-12 * (1.f - bKX) * (FS * C4 + 440000.f * (1.f - C4));
++	const float b_daylight = 9.289663e-12 * (1.f - bKX) * (_FS * C4 + 440000.f * (1.f - C4));
+ 
+ 	//Twilight brightness
+ 	const float b_twilight = pow10(bTwilightTerm + 0.063661977f * fastAcos(cosDistZenith)/(K> 0.05f ? K : 0.05f)) * (1.7453293f / distSun) * (1.f-bKX);
+--- stellarium-0.10.2/src/modules/ConstellationMgr.cpp.orig	2009-10-17 16:30:30.596093215 +0530
++++ stellarium-0.10.2/src/modules/ConstellationMgr.cpp	2009-10-17 18:57:46.830052005 +0530
+@@ -880,21 +880,34 @@
+ 		return false;
+ 	}
+ 
+-	QTextStream istr(&dataFile);
+ 	float DE, RA;
+ 	float oDE, oRA;
+ 	Vec3f XYZ;
+ 	unsigned num, numc;
+ 	vector<Vec3f> *points = NULL;
+ 	QString consname;
++	QString record;
+ 	i = 0;
+-	while (!istr.atEnd())	
++	while (!dataFile.atEnd())
+ 	{
+ 		points = new vector<Vec3f>;
+ 
++		QString line = dataFile.readLine();
++		while (line.at(line.size()-1) == '\n')
++			line.chop(1);
++		record.append(line);
++		if (! line.at(line.size()-1).isLetter()) {
++			record.append(" ");
++			continue;
++		}
++		QTextStream istr(&record);
+ 		num = 0;
+ 		istr >> num;
+-		if(num == 0) continue;  // empty line
++		if(num == 0) {
++			delete points;
++			record = "";
++			continue;  // empty line
++		}
+ 
+ 		for (j=0;j<num;j++)
+ 		{
+@@ -929,14 +942,12 @@
+ 			else 
+ 				cons->isolatedBoundarySegments.push_back(points);
+ 		}
+-
+ 		if (cons) cons->sharedBoundarySegments.push_back(points);
++		record = "";
+ 		i++;
+-
+ 	}
+ 	dataFile.close();
+ 	qDebug() << "Loaded" << i << "constellation boundary segments";
+-	delete points;
+ 
+ 	return true;
+ }

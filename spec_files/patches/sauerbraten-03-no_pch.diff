@@ -1,0 +1,21 @@
+--- sauerbraten/src/Makefile.orig	2009-11-01 18:06:58.940624860 +0530
++++ sauerbraten/src/Makefile	2009-11-01 18:07:19.881789133 +0530
+@@ -82,7 +82,8 @@
+ ifneq (,$(findstring MINGW,$(PLATFORM)))
+ CLIENT_OBJS+= vcpp/SDL_win32_main.o
+ endif
+-CLIENT_PCH= shared/cube.h.gch engine/engine.h.gch fpsgame/game.h.gch
++#CLIENT_PCH= shared/cube.h.gch engine/engine.h.gch fpsgame/game.h.gch
++CLIENT_PCH= 
+ 
+ ifneq (,$(findstring MINGW,$(PLATFORM)))
+ SERVER_INCLUDES= -DSTANDALONE $(INCLUDES) -Iinclude
+@@ -177,7 +178,7 @@
+ 
+ depend:
+ 	makedepend -Y -Ishared -Iengine -Ifpsgame $(subst .o,.cpp,$(CLIENT_OBJS))
+-	makedepend -a -o.h.gch -Y -Ishared -Iengine -Ifpsgame $(subst .h.gch,.h,$(CLIENT_PCH))
++	#makedepend -a -o.h.gch -Y -Ishared -Iengine -Ifpsgame $(subst .h.gch,.h,$(CLIENT_PCH))
+ 	makedepend -a -o-standalone.o -Y -Ishared -Iengine -Ifpsgame $(subst -standalone.o,.cpp,$(SERVER_OBJS))
+ 	makedepend -a -o-standalone.o -Y -Ishared -Iengine -Ifpsgame $(subst -standalone.o,.cpp,$(filter-out $(SERVER_OBJS), $(MASTER_OBJS)))
+ 

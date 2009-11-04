@@ -1,0 +1,14 @@
+diff -up stellarium-0.10.2/CMakeLists.txt.cm stellarium-0.10.2/CMakeLists.txt
+--- stellarium-0.10.2/CMakeLists.txt.cm	2009-03-09 12:28:34.000000000 +0100
++++ stellarium-0.10.2/CMakeLists.txt	2009-03-12 22:01:54.000000000 +0100
+@@ -22,8 +22,8 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
+ ENDIF()
+ 
+ IF(UNIX AND NOT WIN32)
+- SET(CMAKE_C_FLAGS "-Wall -Wextra -Wno-unused-parameter")       # additional C compile flags
+- SET(CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-unused-parameter")     # additional CPP compile flags
++ SET(CMAKE_C_FLAGS ${CMAKE_C_FLAGS})       # additional C compile flags
++ SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})     # additional CPP compile flags
+ ELSE()
+  SET(CMAKE_C_FLAGS "-Wall -fexceptions -fident -mthreads")
+  SET(CMAKE_CXX_FLAGS "-Wall -Wsign-promo -fexceptions -fident -mthreads")
