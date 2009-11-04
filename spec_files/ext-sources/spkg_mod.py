@@ -845,7 +845,7 @@ def normalize_versions(pkgs):
 			vl = vre.findall(vers)
 			if len(vl) < 1 or len(vl[0]) < 1:
 				raise PKGError(_("Invalid package version string " + pn))
-			vers = compute_version("VERSION=" + vl[0][0] + ",REV=" + vl[0][1])
+			vers = compute_version("VERSION=" + vl[0][0] + ",REV=" + vl[0][1].rstrip(')'))
 			npkgs.append([pkgn, vers, pn])
 		else:
 			npkgs.append(pn)

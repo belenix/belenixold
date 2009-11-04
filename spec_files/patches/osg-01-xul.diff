@@ -1,0 +1,17 @@
+--- OpenSceneGraph-2.8.2-64/CMakeModules/FindXUL.cmake.orig	2009-11-01 23:35:14.096267102 +0530
++++ OpenSceneGraph-2.8.2-64/CMakeModules/FindXUL.cmake	2009-11-01 23:36:12.150518871 +0530
+@@ -16,10 +16,10 @@
+ 
+     INCLUDE(FindPkgConfig)
+ 
+-    pkg_check_modules(XULRUNNER_XPCOM xulrunner-xpcom<=1.8.9)
+-    pkg_check_modules(XULRUNNER_JS xulrunner-js)
+-    pkg_check_modules(XULRUNNER_NSPR xulrunner-nspr)
+-    pkg_check_modules(XULRUNNER_NSS xulrunner-nss)
++    pkg_check_modules(XULRUNNER_XPCOM libxul<=1.8.9)
++    pkg_check_modules(XULRUNNER_JS mozilla-js)
++    pkg_check_modules(XULRUNNER_NSPR mozilla-nspr)
++    pkg_check_modules(XULRUNNER_NSS mozilla-nss)
+ 
+ ENDIF(PKG_CONFIG_FOUND)
+ 

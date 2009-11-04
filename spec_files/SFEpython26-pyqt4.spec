@@ -53,6 +53,11 @@ Conflicts: SFEpyqt-devel
 cd PyQt-x11-gpl-%{version}
 %patch1 -p1
 %patch2 -p1
+#
+# Hack broken configure
+#
+cp configure.py configure.py.orig
+cat configure.py.orig | sed 's/Desktop/free/' > configure.py
 cd ..
 
 %ifarch amd64 sparcv9
@@ -125,6 +130,14 @@ cp GPL* ${RPM_BUILD_ROOT}%{_docdir}/%{name}
 cp LICENSE* ${RPM_BUILD_ROOT}%{_docdir}/%{name}
 cp OPENSOURCE* ${RPM_BUILD_ROOT}%{_docdir}/%{name}
 
+mkdir -p ${RPM_BUILD_ROOT}%{_datadir}/PyQt4
+(cd examples
+ for pf in `find . -type f `
+ do
+   cp ${pf} ${pf}.orig
+   cat ${pf}.orig | sed 's#/usr/bin/env python#/usr/bin/python%{python_version}#' > ${pf}
+ done)
+cp -r examples ${RPM_BUILD_ROOT}%{_datadir}/PyQt4
 cd ..
 export PATH="${OPATH}"
 
@@ -156,7 +169,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_datadir}/sip
 %dir %attr (0755, root, bin) %{_datadir}/sip/PyQt4
 %{_datadir}/sip/PyQt4/*
+%dir %attr (0755, root, bin) %{_datadir}/PyQt4
+%dir %attr (0755, root, bin) %{_datadir}/PyQt4/examples
+%{_datadir}/PyQt4/examples/*
 
 %changelog
+* Sun Oct 18 2009 - moinakg<at>belenix[dot]org
+- Rebuild for Qt4.5, configure hack, fix and package examples.
 * Mon Jun 15 2009 - moinakg@belenix(dot)org
 - Initial version.

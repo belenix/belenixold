@@ -11,14 +11,11 @@
 
 Name:                    SFEscorched3d
 Summary:                 A 3D game based on the classic DOS game, Scorched Earth
-Version:                 41.3
+Version:                 42.1
 Source:                  %{sf_download}/scorched3d/Scorched3D-%{version}-src.tar.gz
 Source1:                 scorched3d.png
 Source2:                 scorched3d.desktop
 Patch1:                  scorched3d-01-securid.diff
-Patch2:                  scorched3d-02-sunpro.diff
-Patch3:                  scorched3d-03-const.diff
-Patch4:                  scorched3d-04-prototype.diff
 
 SUNW_BaseDir:            %{_basedir}
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
@@ -40,8 +37,8 @@ Requires: SUNWfreetype2
 %endif
 Requires: SFEfftw
 BuildRequires: SFEfftw-devel
-Requires: SFEwxwidgets
-BuildRequires: SFEwxwidgets-devel
+Requires: SFEwxwidgets-gnu
+BuildRequires: SFEwxwidgets-gnu-devel
 Requires: SFEfreealut
 BuildRequires: SFEfreealut-devel
 Requires: SFEsdl-net
@@ -50,9 +47,6 @@ BuildRequires: SFEsdl-net-devel
 %prep
 %setup -q -n scorched
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -78,7 +72,7 @@ export LIBS=${LDFLAGS}
             --disable-nls			\
             --enable-shared			\
 	    --disable-static			\
-            --with-wx-config=%{_prefix}/bin/wx-config
+            --with-wx-config=%{gnu_bin}/wx-config
 
 make -j$CPUS 
 
@@ -105,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/*
 
 %changelog
+* Wed Oct 14 2009 - Moinak Ghosh
+- Revert back to SFEwxwidgets-gnu since we are using GCC.
+- Remove unneeded patches and bump to version 42.1.
 * Fri Feb 22 2008 - trisk@acm.jhu.edu
 - Use SFEwxwidgets instead of SFEwxwidgets-gnu
 - Fix linking

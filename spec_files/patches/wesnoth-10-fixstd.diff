@@ -1,0 +1,11 @@
+--- wesnoth-1.5.3/src/variant.cpp.fixstd	2008-08-30 15:49:05.426701591 +0200
++++ wesnoth-1.5.3/src/variant.cpp	2008-08-30 15:49:22.372065298 +0200
+@@ -529,7 +529,7 @@
+ 
+ variant variant::operator^(const variant& v) const
+ {
+-	return variant(static_cast<int>(pow(static_cast<float>(as_int()), v.as_int())));
++	return variant(static_cast<int>(std::pow(static_cast<float>(as_int()), v.as_int())));
+ }
+ 
+ variant variant::operator-() const

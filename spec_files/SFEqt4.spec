@@ -1057,10 +1057,11 @@ cd ..
 %dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, other) %{_datadir}/doc
 %dir %attr (0755, root, bin) %{_datadir}/doc/qt4
-%{_datadir}/doc/qt4/*
+%attr (0755, root, other) %{_datadir}/doc/qt4/*
 %dir %attr (0755, root, bin) %{_datadir}/qt4
-%{_datadir}/qt4/q3porting.xml
-%{_datadir}/qt4/doc
+%attr (0755, root, other) %{_datadir}/qt4/q3porting.xml
+%dir %attr (0755, root, other) %{_datadir}/qt4/doc
+%attr (0755, root, other) %{_datadir}/qt4/doc/*
 
 #%files debug
 #%defattr (-, root, bin)
@@ -1104,6 +1105,8 @@ cd ..
 #%{_bindir}/*.debug
 
 %changelog
+* Mon Nov 02 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Update permissions.
 * Sat Sep 05 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Changes to build Qt 4.5.
 - Reduce arch to pentium3.
