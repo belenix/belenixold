@@ -8,7 +8,7 @@
 
 Name:                SFEspkg
 Summary:             spkg - Package and repository management toolkit
-Version:             0.2.1
+Version:             0.2.2
 Source1:             spkg
 Source2:             spkg_mod.py
 Source3:             tsort.py
@@ -105,6 +105,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/python2.4/site-packages/*
 
 %changelog
+* Mon Nov 02 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
+- Bump version.
 * Sun Aug 16 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Fix handling of repeated package names.
 * Thu May 14 2009 - moinakg@belenix.org
