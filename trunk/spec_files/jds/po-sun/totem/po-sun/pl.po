@@ -1,0 +1,30 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the totem package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: totem HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-30 17:38+0900\n"
+"PO-Revision-Date: 2007-02-13 10:30+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+# SUN_BRANDING
+#: ../data/totem.desktop.in.in.in.h:2
+msgid "Play movies and music"
+msgstr ""
+
+#. Title
+#: ../data/totem.desktop.in.in.in.h:4 ../data/totem.ui.h:95
+#: ../src/totem.c:1015 ../src/totem.c:3419 ../src/totem.c:3451
+#: ../browser-plugin/totem-plugin-viewer.c:737
+#: ../browser-plugin/totem-plugin-viewer.c:1789
+msgid "Totem Movie Player"
+msgstr "Odtwarzacz filmów Totem"

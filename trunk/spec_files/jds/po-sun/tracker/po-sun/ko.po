@@ -1,0 +1,33 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the tracker package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tracker HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-09-30 17:49+0900\n"
+"PO-Revision-Date: 2008-09-30 17:49+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../src/tracker-preferences/tracker-preferences.desktop.in.in.h:2
+msgid "Choose how files are indexed for searching"
+msgstr "검색 시 파일이 색인화되는 방법을 선택합니다."
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../src/tracker-preferences/tracker-preferences.desktop.in.in.h:4
+msgid "File Indexing"
+msgstr "파일 색인화"
