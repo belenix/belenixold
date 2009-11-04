@@ -1,0 +1,83 @@
+--- sauerbraten/src/engine/main.cpp.orig	2009-09-06 11:52:50.986911992 +0100
++++ sauerbraten/src/engine/main.cpp	2009-09-06 11:53:17.014690075 +0100
+@@ -479,9 +479,9 @@
+ 
+ COMMAND(screenres, "ii");
+ 
+-VARFP(gamma, 30, 100, 300,
++VARFP(screen_gamma, 30, 100, 300,
+ {
+-	float f = gamma/100.0f;
++	float f = screen_gamma/100.0f;
+     if(SDL_SetGamma(f,f,f)==-1)
+     {
+         conoutf(CON_ERROR, "Could not set gamma (card/driver doesn't support it?)");
+@@ -491,7 +491,7 @@
+ 
+ void resetgamma()
+ {
+-	float f = gamma/100.0f;
++	float f = screen_gamma/100.0f;
+ 	if(f==1) return;
+ 	SDL_SetGamma(1, 1, 1);
+ 	SDL_SetGamma(f, f, f);
+--- sauerbraten/src/engine/lensflare.h.orig	2009-09-06 11:52:32.353836453 +0100
++++ sauerbraten/src/engine/lensflare.h	2009-09-06 11:53:17.013533617 +0100
+@@ -1,3 +1,6 @@
++#ifdef sun
++#undef sun
++#endif
+ static struct flaretype
+ {
+     int type;             /* flaretex index, 0..5, -1 for 6+random shine */
+--- sauerbraten/src/engine/movie.cpp.orig	2009-09-06 11:52:43.153800377 +0100
++++ sauerbraten/src/engine/movie.cpp	2009-09-06 11:53:17.014149763 +0100
+@@ -632,7 +632,7 @@
+         
+         void cleanup() { DELETEA(sound); maxsize = 0; }
+     };
+-    static queue<soundbuffer, MAXSOUNDBUFFERS> soundbuffers;
++    static aqueue<soundbuffer, MAXSOUNDBUFFERS> soundbuffers;
+     static SDL_mutex *soundlock = NULL;
+     
+     enum { MAXVIDEOBUFFERS = 2 }; // double buffer
+@@ -657,7 +657,7 @@
+          
+         void cleanup() { DELETEA(video); }
+     };
+-    static queue<videobuffer, MAXVIDEOBUFFERS> videobuffers;
++    static aqueue<videobuffer, MAXVIDEOBUFFERS> videobuffers;
+     static uint lastframe = ~0U;
+ 
+     static GLuint scalefb = 0, scaletex[2] = { 0, 0 };
+--- sauerbraten/src/shared/tools.h.orig	2009-09-06 11:52:15.257870469 +0100
++++ sauerbraten/src/shared/tools.h	2009-09-06 11:54:22.540493303 +0100
+@@ -679,12 +679,12 @@
+     }
+ };
+ 
+-template <class T, int SIZE> struct queue
++template <class T, int SIZE> struct aqueue
+ {
+     int head, tail, len;
+     T data[SIZE];
+     
+-    queue() { clear(); }
++    aqueue() { clear(); }
+     
+     void clear() { head = tail = len = 0; }
+ 
+@@ -764,6 +764,13 @@
+ template<class T> inline void bigswap(T *buf, int len) { if(*(const uchar *)&islittleendian) endianswap(buf, len); }
+ #endif
+ 
++#ifdef getchar
++#undef getchar
++#endif
++#ifdef putchar
++#undef putchar
++#endif
++
+ struct stream
+ {
+     virtual ~stream() {}

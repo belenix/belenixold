@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=stellarium
+Icon=stellarium
+Terminal=false
+Name=Stellarium Night Sky viewer
+Comment=A real-time night sky viewer
+Categories=Education;Science;Astronomy;
+StartupNotify=true

@@ -1,0 +1,19 @@
+--- sauerbraten/sauerbraten_unix.orig	2009-09-08 12:25:58.955974815 +0100
++++ sauerbraten/sauerbraten_unix	2009-09-08 12:27:21.642128911 +0100
+@@ -2,7 +2,7 @@
+ # SAUER_DATA should refer to the directory in which Sauerbraten data files are placed.
+ #SAUER_DATA=~/sauerbraten
+ #SAUER_DATA=/usr/local/sauerbraten
+-SAUER_DATA=.
++SAUER_DATA=/usr/share/sauerbraten
+ 
+ # SAUER_BIN should refer to the directory in which Sauerbraten executable files are placed.
+ SAUER_BIN=${SAUER_DATA}/bin_unix
+@@ -52,6 +52,7 @@
+ 
+ if [ -x ${SAUER_BIN}/${SYSTEM_NAME}${MACHINE_NAME}client ]
+ then
++  unset LANG # Solaris Bug
+   cd ${SAUER_DATA}
+   exec ${SAUER_BIN}/${SYSTEM_NAME}${MACHINE_NAME}client ${SAUER_OPTIONS} "$@"
+ else
