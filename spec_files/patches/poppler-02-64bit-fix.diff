@@ -15,3 +15,21 @@
  }
  
  /**
+--- poppler-0.12.1-64/glib/poppler-layer.cc.orig	2009-10-25 19:18:13.838339485 +0530
++++ poppler-0.12.1-64/glib/poppler-layer.cc	2009-10-25 19:24:29.956863122 +0530
+@@ -197,7 +197,14 @@
+ gint 
+ poppler_layer_get_radio_button_group_id (PopplerLayer *poppler_layer)
+ {
++  void *rb_group_id;
++
+   g_return_val_if_fail (POPPLER_IS_LAYER (poppler_layer), FALSE);
+ 
+-  return GPOINTER_TO_INT (poppler_layer->rbgroup);
++  /*
++   * Ugly hacks for 64Bit pointer to int coercion for 64Bit compilation.
++   * We should not be generating a group id this way.
++   */
++  rb_group_id = &(poppler_layer->rbgroup);
++  return GPOINTER_TO_INT (*((int *)rb_group_id));
+ }

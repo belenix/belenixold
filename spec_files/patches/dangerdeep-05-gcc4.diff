@@ -1,0 +1,58 @@
+--- dangerdeep-0.3.0/src/ptrlist.h.orig	2009-10-27 22:09:28.325972987 +0530
++++ dangerdeep-0.3.0/src/ptrlist.h	2009-10-27 22:10:49.701016935 +0530
+@@ -25,6 +25,7 @@
+ 
+ #include <list>
+ #include <stdexcept>
++#include <memory>
+ 
+ // same as std::list regarding the interface (partly), but handles pointers.
+ template <class T>
+--- dangerdeep-0.3.0/src/ptrvector.h.orig	2009-10-27 22:26:20.879837124 +0530
++++ dangerdeep-0.3.0/src/ptrvector.h	2009-10-27 22:26:33.917357307 +0530
+@@ -25,6 +25,7 @@
+ 
+ #include <vector>
+ #include <stdexcept>
++#include <memory>
+ 
+ // same as std::vector regarding the interface, but handles pointers.
+ template <class T>
+--- dangerdeep-0.3.0/src/convoy.h.orig	2009-10-27 22:27:55.154462579 +0530
++++ dangerdeep-0.3.0/src/convoy.h	2009-10-27 22:28:09.223741488 +0530
+@@ -27,6 +27,7 @@
+ #include "vector2.h"
+ #include <new>
+ #include <list>
++#include <memory>
+ class ship;
+ 
+ ///\brief Grouping of ships and other objects with central control.
+--- dangerdeep-0.3.0/src/date.cpp.orig	2009-10-27 22:31:18.399711158 +0530
++++ dangerdeep-0.3.0/src/date.cpp	2009-10-27 22:31:45.365402000 +0530
+@@ -21,6 +21,7 @@
+ // subsim (C)+(W) Markus Petermann and Thorsten Jordan. SEE LICENSE
+ 
+ #include <iomanip>
++#include <stdlib.h>
+ #include "date.h"
+ #include "texts.h"
+ 
+--- dangerdeep-0.3.0/src/widget.cpp.orig	2009-10-27 23:01:17.630153918 +0530
++++ dangerdeep-0.3.0/src/widget.cpp	2009-10-27 23:01:31.307852500 +0530
+@@ -32,6 +32,7 @@
+ #include "datadirs.h"
+ #include <set>
+ #include <sstream>
++#include <algorithm>
+ using std::vector;
+ using std::list;
+ using std::string;
+@@ -39,6 +40,7 @@
+ using std::auto_ptr;
+ using std::ostringstream;
+ using std::cout;
++using std::unique;
+ 
+ std::auto_ptr<widget::theme> widget::globaltheme;
+ widget* widget::focussed = 0;

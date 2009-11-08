@@ -3,9 +3,9 @@
 # This file and all modifications and additions to the pristine
 # package are under the same license as the package itself.
 #
-# spec file for package SUNWgmp
+# spec file for package SUNWapch22r
 #
-# includes module(s): GNU gmp
+# includes module(s): Apache2
 #
 %include Solaris.inc
 
@@ -35,15 +35,26 @@
 %define APR_USR_PREFIX /usr/gnu
 %define APR_UTIL_USR_PREFIX /usr/gnu
 
+%if %cc_is_gcc
+%define LD_OPTIONS "-Wl,-M%{SOURCE51}"
+%define CFLAGS_COMMON "-O2 -fno-omit-frame-pointer -DSSL_EXPERIMENTAL -DSSL_ENGINE -D__EXTENSIONS__"
+%else
 %define LD_OPTIONS "-M %{SOURCE51}"
 %define CFLAGS_COMMON "-xchip=pentium -xspace -Xa  -xildoff -xc99=all -DSSL_EXPERIMENTAL -DSSL_ENGINE -xO4"
+%endif
 %define CPPFLAGS "-I%{sfw_inc} -I%{gnu_inc} -I%{_includedir}"
 %define MAKE %{_basedir}/ccs/bin/make
 %define INSTALL %{_basedir}/ucb/install
 %define PERL %{_basedir}/perl5/bin/perl
+%if %cc_is_gcc
+%define CXXFLAGS ""
+%define LDFLAGS32 "-L/lib -R/lib %{sfw_lib_path} ${LD_OPTIONS} -L%{_libdir} -R%{_libdir} %{gnu_lib_path}"
+%define LDFLAGS64 "-m64 -L/lib/%{_arch64} -R/lib/%{_arch64} %{sfw_lib_path64} ${LD_OPTIONS} -L%{_libdir}/%{_arch64} -R%{_libdir}/%{_arch64} %{gnu_lib_path64}"
+%else
 %define CXXFLAGS "-norunpath"
-%define LDFLAGS32 "-L%{sfw_lib} -R%{sfw_lib} -s  ${LD_OPTIONS} -L%{_libdir} -R%{_libdir} -L%{gnu_lib} -R%{gnu_lib}"
-%define LDFLAGS64 "-L%{sfw_lib}/%{_arch64} -R%{sfw_lib}/%{_arch64} -s  ${LD_OPTIONS} -L%{_libdir}/%{_arch64} -R%{_libdir}/%{_arch64} -L%{gnu_lib}/%{_arch64} -R%{gnu_lib}/%{_arch64}"
+%define LDFLAGS32 "-L/lib -R/lib %{sfw_lib_path} -s ${LD_OPTIONS} -L%{_libdir} -R%{_libdir} %{gnu_lib_path}"
+%define LDFLAGS64 "-m64 -L/lib/%{_arch64} -R/lib/%{_arch64} %{sfw_lib_path64} -s ${LD_OPTIONS} -L%{_libdir}/%{_arch64} -R%{_libdir}/%{_arch64} %{gnu_lib_path64}"
+%endif
 
 
 %define src1    %{_sourcedir}/apache2/patches/mod_auth_gss_Makefile.patch.64
@@ -220,10 +231,10 @@ Requires: SUNWapch22m-security
 
 
 %prep
-if [ "x`basename $CC`" = xgcc ]
-then
-	%error This spec file requires SUN Studio, set the CC and CXX env variables
-fi
+#if [ "x`basename $CC`" = xgcc ]
+#then
+#	%error This spec file requires SUN Studio, set the CC and CXX env variables
+#fi
 
 PATH=/usr/bin:/usr/sfw/bin:/usr/X11/bin:/opt/SUNWspro/bin
 export PATH
@@ -231,7 +242,7 @@ export PATH
 rm -rf %{name}-%{version}
 mkdir %{name}-%{version}
 cd %{name}-%{version}
-
+ln -sf ${CC} cc
 cp -r %{_sourcedir}/apache2/* .
 
 #
@@ -254,6 +265,18 @@ for i in `ls *.sed *.patch http-apache22`; do
            -e 's!::APU_PREFIX::!/__dummy__!g' \
       < $i > ../64/$i
 done)
+
+%if %cc_is_gcc
+(cd Solaris
+ [ ! -f fix-config.nice.sed.orig ] && cp fix-config.nice.sed fix-config.nice.sed.orig 
+ cat fix-config.nice.sed.orig | sed "s#/opt/SUNWspro/bin/cc#${CC}#" > fix-config.nice.sed
+ [ ! -f fix-config_vars.sed.orig ] && cp fix-config_vars.sed fix-config_vars.sed.orig
+ cat fix-config_vars.sed.orig | sed "{
+   s#MKDEP = /opt/SUNWspro/bin/cc \-xM#MKDEP = %{xorg_bin}#
+   s#/opt/SUNWspro/bin/cc#${CC}#
+ }" > fix-config_vars.sed
+)
+%endif
 
 gunzip -c %{SOURCE} | tar xopf -
 mv %{APACHE_DIR} %{APACHE_PREFORK_DIR}
@@ -358,7 +381,7 @@ mv modules/tomcat-connectors-%{connector_version}-src modules/tomcat-connectors-
 cd %{name}-%{version}
 BLDDIR=`pwd`
 
-PATH=/usr/bin:/usr/sfw/bin:/usr/X11/bin:/opt/SUNWspro/bin
+PATH=${BLDDIR}:/usr/bin:/usr/sfw/bin:/usr/X11/bin:/opt/SUNWspro/bin
 export PATH
 
 HTTPD_COMMON_CONFIGURE_OPTIONS="\
@@ -407,7 +430,11 @@ export LD_OPTIONS PATH MAKE DESTDIR INSTALL PERL CXXFLAGS CPPFLAGS APR_USR_PREFI
 #
 %ifarch amd64 sparcv9
 cd %{APACHE_PREFORK_DIR64}
+%if %cc_is_gcc
+CFLAGS="-m64 -march=opteron ${CFLAGS_COMMON}"
+%else
 CFLAGS="-m64 ${CFLAGS_COMMON}"
+%endif
 LDFLAGS="-m64 ${LDFLAGS64}"
 export CFLAGS LDFLAGS
 
@@ -425,7 +452,11 @@ cd ${BLDDIR}/%{APACHE_WORKER_DIR64}
 %endif
 
 cd ${BLDDIR}/%{APACHE_PREFORK_DIR}
+%if %cc_is_gcc
+CFLAGS="-m32 -march=pentium3 ${CFLAGS_COMMON}"
+%else
 CFLAGS="-m32 ${CFLAGS_COMMON}"
+%endif
 LDFLAGS="-m32 ${LDFLAGS32}"
 export CFLAGS LDFLAGS
 ./configure ${HTTPD_COMMON_CONFIGURE_OPTIONS} \
@@ -446,7 +477,11 @@ cd ${BLDDIR}/%{APACHE_WORKER_DIR}
 #
 %ifarch amd64 sparcv9
 cd ${BLDDIR}/%{APACHE_PREFORK_DIR64}
+%if %cc_is_gcc
+CFLAGS="-m64 -march=opteron ${CFLAGS_COMMON}"
+%else
 CFLAGS="-m64 ${CFLAGS_COMMON}"
+%endif
 LDFLAGS="-m64 ${LDFLAGS64}"
 export CFLAGS LDFLAGS
 
@@ -458,7 +493,11 @@ ${MAKE} -e
 %endif
 
 cd ${BLDDIR}/%{APACHE_PREFORK_DIR}
+%if %cc_is_gcc
+CFLAGS="-m32 -march=pentium3 ${CFLAGS_COMMON}"
+%else
 CFLAGS="-m32 ${CFLAGS_COMMON}"
+%endif
 LDFLAGS="-m32 ${LDFLAGS32}"
 export CFLAGS LDFLAGS
 
@@ -477,6 +516,8 @@ mkdir -p $RPM_BUILD_ROOT
 cd %{name}-%{version}
 
 BLDDIR=`pwd`
+export PATH=${BLDDIR}:${PATH}
+
 TMP_HDR_DIR32=${BLDDIR}/Solaris/32/include
 TMP_HDR_DIR64=${BLDDIR}/Solaris/64/include
 TMP_HDR_DIR=${BLDDIR}/Solaris/include
@@ -520,7 +561,14 @@ mkdir -p ${RPM_BUILD_ROOT}/%{_mandir}/man1m
 
 %ifarch amd64 sparcv9
 cd ${APACHE_WORKER_DIR64}
+%if %cc_is_gcc
+CFLAGS="-m64 -march=opteron ${CFLAGS_COMMON}"
+[ ! -f support/apxs.orig ] && cp support/apxs support/apxs.orig
+cat support/apxs.orig | sed 's#mode=link \$CFG_CC#mode=link \$CFG_CC -m64#' > support/apxs
+%else
 CFLAGS="-m64 ${CFLAGS_COMMON}"
+%endif
+
 LDFLAGS="-m64 ${LDFLAGS64}"
 export CFLAGS LDFLAGS
 
@@ -532,6 +580,9 @@ mkdir -p ${TMP_HDR_DIR64}
 cp ${DESTDIR}${APACHE_USR_PREFIX}/include/ap_config_layout.h ${TMP_HDR_DIR64}
 
 cd ${BLDDIR}/${APACHE_PREFORK_DIR64}
+[ ! -f support/apxs.orig ] && cp support/apxs support/apxs.orig
+cat support/apxs.orig | sed 's#mode=link \$CFG_CC#mode=link \$CFG_CC -m64#' > support/apxs
+
 ${MAKE} -e install DESTDIR=${RPM_BUILD_ROOT}
 cp ${DESTDIR}${APACHE_ETC_PREFIX}/original/httpd.conf ../Solaris/64
 
@@ -541,8 +592,12 @@ ${MAKE} install DESTDIR=${RPM_BUILD_ROOT} ROOT=${RPM_BUILD_ROOT}
 %endif
 
 
-cd ${BLDDIR}/${APACHE_WORKER_DIR64}
+cd ${BLDDIR}/${APACHE_WORKER_DIR}
+%if %cc_is_gcc
+CFLAGS="-m32 -march=pentium3 ${CFLAGS_COMMON}"
+%else
 CFLAGS="-m32 ${CFLAGS_COMMON}"
+%endif
 LDFLAGS="-m32 ${LDFLAGS32}"
 export CFLAGS LDFLAGS
 
@@ -618,7 +673,11 @@ APACHE_SCONFD=${RPM_BUILD_ROOT}/${APACHE_ETC_PREFIX}/samples-conf.d
 cd ${BLDDIR}/modules-64
 PDIR=`pwd`
 MACH64=%{_arch64}
+%if %cc_is_gcc
+LDFLAGS="${LDFLAGS64} -Wl,-M${PDIR}/mod_dtrace-%{mod_dtrace_version}-64/mapfile"
+%else
 LDFLAGS="${LDFLAGS64} -M ${PDIR}/mod_dtrace-%{mod_dtrace_version}-64/mapfile"
+%endif
 CFLAGS="-m64"
 export ROOT MACH64 LDFLAGS CFLAGS
 sh ./apxs-dtrace.ksh93 -b 64
@@ -649,7 +708,11 @@ cp workers.properties ${APACHE_CONFD}/workers.properties
 cd ${BLDDIR}/modules
 PDIR=`pwd`
 MACH64=""
+%if %cc_is_gcc
+LDFLAGS="${LDFLAGS32} -Wl,-M${PDIR}/mod_dtrace-%{mod_dtrace_version}-32/mapfile"
+%else
 LDFLAGS="${LDFLAGS32} -M ${PDIR}/mod_dtrace-%{mod_dtrace_version}-32/mapfile"
+%endif
 CFLAGS="-m32"
 export MACH64 LDFLAGS CFLAGS
 sh ./apxs-dtrace.ksh93 -b 32
@@ -671,8 +734,19 @@ sh ./apxs-jk.ksh93 -b 32
   sh ../install-module.ksh93 -b 32 -m jk)
 
 (cd mod_perl-%{mod_perl_version}
+  (cd src/modules/perl
+   [ ! -f modperl_perl_includes.h.orig ] && cp modperl_perl_includes.h modperl_perl_includes.h.orig
+   cat modperl_perl_includes.h.orig | sed '{
+     s@#include "EXTERN.h"@#include "EXTERN.h"\n#include <sys/stat.h>\n#include <sys/vnode.h>@
+   }' > modperl_perl_includes.h)
+
+%if %cc_is_gcc
+  PATH="/usr/perl5/bin:${PATH}"
+  CFLAGS="-O2"
+%else
   PATH="/opt/SUNWspro/bin:/usr/perl5/bin:${PATH}"
   CFLAGS="-xO3"
+%endif
   MODPERL_AP_INCLUDEDIR=${APACHE_USR_PREFIX}/include
   MODPERL_AP_LIBEXECDIR=${APACHE_USR_PREFIX}/libexec
   export PATH CFLAGS MODPERL_AP_INCLUDEDIR MODPERL_AP_LIBEXECDIR
@@ -695,6 +769,16 @@ sh ./apxs-jk.ksh93 -b 32
       do
       sed -e '/^CC/s;CC = cc;CC = ${CC};' \
           -e '/^LD =/s;LD = cc;LD = ${CC};' \
+          -e '/^MODPERL_CC/s;MODPERL_CC = cc;MODPERL_CC = ${CC};' \
+          -e '/^MODPERL_LD/s;MODPERL_LD = cc;MODPERL_LD = /usr/bin/ld;' \
+          -e '/^MODPERL_CPPRUN/s;MODPERL_CPPRUN = cc;MODPERL_CPPRUN = ${CC};' \
+%if %cc_is_gcc
+          -e '/^MODPERL_CCCDLFLAGS/s;MODPERL_CCCDLFLAGS = -KPIC;MODPERL_CCCDLFLAGS = -fPIC;' \
+          -e '/^CCCDLFLAGS/s;CCCDLFLAGS = -KPIC;CCCDLFLAGS = -fPIC -DPIC;' \
+          -e '/^MODPERL_OPTIMIZE/s;MODPERL_OPTIMIZE = -xO3 -xspace -xildoff;MODPERL_OPTIMIZE = -O2;' \
+          -e '/^OPTIMIZE/s;OPTIMIZE = -xO3 -xspace -xildoff;OPTIMIZE = -O2;' \
+          -e '/^LD/s;LD = \${CC};LD = /usr/bin/ld;' \
+%endif
           -e '/^CCFLAGS/s;CCFLAGS = ;CCFLAGS = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64;' \
           -e '/^MODPERL_CCOPTS/s;MODPERL_CCOPTS = ;MODPERL_CCOPTS = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64;' \
           -e '/^MODPERL_INC/s;-I'${APACHE_USR_PREFIX}'/include;-I'${ROOT}${APACHE_USR_PREFIX}'/include;g' \
@@ -714,6 +798,13 @@ sh ./apxs-jk.ksh93 -b 32
           $$i > $$i.1
           mv $$i.1 $$i
       done
+
+  (cd src/modules/perl
+   [ ! -f modperl_xsinit.c.orig ] && cp modperl_xsinit.c modperl_xsinit.c.orig 
+   cat modperl_xsinit.c.orig | sed '{
+     s@#include <EXTERN.h>@#include <EXTERN.h>\n#include <sys/stat.h>\n#include <sys/vnode.h>@
+   }' > modperl_xsinit.c)
+
   ${MAKE} -e install
 
   PREFIX=${ROOT}/${APACHE_USR_PREFIX}
@@ -1048,6 +1139,8 @@ rm -rf $RPM_BUILD_ROOT
 %config %class(renamenew) %attr (0644, root, bin) %{_sysconfdir}/apache2/%{APACHE_VERSION_DIR}/samples-conf.d/security2.conf
 
 %changelog
+* Sun Nov 08 2009 - Moinak Ghosh
+- Major changes to build with Gcc4.
 * Mon Feb 23 2009 - moinakg@gmail.com
 - Add mod_perl and many other fixes.
 - Fixup packaging information.

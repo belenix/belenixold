@@ -1,0 +1,75 @@
+--- dangerdeep-0.3.0/src/bspline.h.orig	2007-06-11 20:46:23.000000000 +0530
++++ dangerdeep-0.3.0/src/bspline.h	2009-10-27 22:23:49.297147421 +0530
+@@ -25,6 +25,7 @@
+ #include <stdexcept>
+ #include <vector>
+ #include <cmath>
++#include <limits>
+ 
+ #if (defined(__APPLE__) && defined(__GNUC__)) || defined(__MACOSX__)
+ #include <complex.h>
+@@ -37,8 +38,14 @@
+ #define isfinite(x) _finite(x)
+ #endif
+ #else
++#if defined(sun)
++#ifndef isfinite
++#define isfinite(val) (val <= std::numeric_limits<double>::max())
++#endif
++#else
+ using std::isfinite;
+ #endif
++#endif
+ 
+ 
+ ///\brief Represents a non-uniform-B-spline interpolation object
+--- dangerdeep-0.3.0/src/make_mesh.cpp.orig	2007-06-11 20:46:23.000000000 +0530
++++ dangerdeep-0.3.0/src/make_mesh.cpp	2009-10-27 23:05:33.321690554 +0530
+@@ -22,6 +22,7 @@
+ 
+ #include "make_mesh.h"
+ #include <cmath>
++#include <limits>
+ 
+ #if (defined(__APPLE__) && defined(__GNUC__)) || defined(__MACOSX__)
+ #include <complex.h>
+@@ -34,8 +35,14 @@
+ #define isfinite(x) _finite(x)
+ #endif
+ #else
++#if defined(sun)
++#ifndef isfinite
++#define isfinite(val) (val <= std::numeric_limits<double>::max())
++#endif
++#else
+ using std::isfinite;
+ #endif
++#endif
+ 
+ using namespace std;
+ 
+--- dangerdeep-0.3.0/src/model.cpp.orig	2007-06-11 20:46:23.000000000 +0530
++++ dangerdeep-0.3.0/src/model.cpp	2009-10-27 23:05:59.171212973 +0530
+@@ -28,6 +28,7 @@
+ #endif
+ 
+ #include <cmath>
++#include <limits>
+ #if (defined(__APPLE__) && defined(__GNUC__)) || defined(__MACOSX__)
+ #include <complex.h>
+ #ifndef isfinite
+@@ -39,8 +40,14 @@
+ #define isfinite(x) _finite(x)
+ #endif
+ #else
++#if defined(sun)
++#ifndef isfinite
++#define isfinite(val) (val <= std::numeric_limits<double>::max())
++#endif
++#else
+ using std::isfinite;
+ #endif
++#endif
+ 
+ #include "system.h"
+ #include "datadirs.h"

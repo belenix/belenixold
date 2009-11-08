@@ -1,0 +1,35 @@
+--- kdebase-workspace-4.3.1/krunner/lock/lockdlg.cc.orig	2009-10-31 18:25:51.349353118 +0530
++++ kdebase-workspace-4.3.1/krunner/lock/lockdlg.cc	2009-10-31 18:28:48.566864471 +0530
+@@ -314,9 +314,21 @@
+ void PasswordDlg::reapVerify()
+ {
+     ::close( sFd );
+-    int status;
+-    ::waitpid( sPid, &status, 0 );
+-    if (WIFEXITED(status))
++    int status, rv;
++    rv = ::waitpid( sPid, &status, 0 );
++    if (rv == -1) {
++        /*
++         * Waitpid can fail due to EINTR if signals are being issued to the screensaver
++         * hack process. We simply retry.
++         */
++        if (errno == EINTR) {
++            rv = ::waitpid( sPid, &status, 0 );
++            if (rv == -1) {
++                perror("waitpid: ");
++            }
++        }
++    }
++    if (WIFEXITED(status)) {
+         switch (WEXITSTATUS(status)) {
+         case AuthOk:
+             greet->succeeded();
+@@ -334,6 +346,7 @@
+         case AuthAbort:
+             return;
+         }
++    }
+     cantCheck();
+ }
+ 

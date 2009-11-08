@@ -40,6 +40,9 @@ Patch17:                 kdebase-workspace-17-checkpass_pam.diff
 #
 Patch18:                 kdebase-workspace-18-ksysguard.diff
 
+# Fix screen unlocking issue.
+Patch19:                 kdebase-workspace-19-lockdlg.diff
+
 SUNW_BaseDir:            /
 SUNW_Copyright:          %{name}.copyright
 BuildRoot:               %{_tmppath}/%{name}-%{version}-build
@@ -149,6 +152,7 @@ cd %{src_dir}-%{version}
 %patch16 -p1
 %patch17 -p0
 %patch18 -p1
+%patch19 -p1
 cd ..
 
 %build
@@ -370,6 +374,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Sun Nov 08 2009 - Moinak Ghosh
+- Fix screen unlocking issue.
 * Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Initial port of Ksysguard.
 - make ksysguardd set-uid.
