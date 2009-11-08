@@ -10,14 +10,14 @@
 
 %define have_kivio 0
 %define have_kexi 0
-%define have_kformula 0
+%define have_kformula 1
 %define have_kugar 0
 
 %define src_dir          koffice
 %define python_version   2.6
 Name:                    SFEkoffice
 Summary:                 Base package for KOffice an integrated office suite for KDE (2.1Beta2).
-Version:                 2.0.82
+Version:                 2.0.91
 License:                 GPLv2
 URL:                     http://www.koffice.org/
 Source:                  ftp://gd.tuwien.ac.at/kde/unstable/koffice-%{version}/src/koffice-%{version}.tar.bz2
@@ -379,7 +379,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde4/koffice_graya_u16_plugin.so
 %{_libdir}/kde4/kofficegrayau8plugin.so
 %{_libdir}/kde4/kofficedockers.so
-%{_libdir}/kde4/kofficesimpletextedit.so
+#%{_libdir}/kde4/kofficesimpletextedit.so
 %{_libdir}/kde4/libkounavailpart.*
 %{_libdir}/kde4/paragraphtool.so
 %{_libdir}/kde4/spellcheck.so
@@ -410,7 +410,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde4/libhtmlimport.*
 %{_libdir}/kde4/libkspreadlatexexport.*
 %{_libdir}/kde4/libkwordkword1dot3import.*
-%{_libdir}/kde4/libmswordodf_import.*
+#%{_libdir}/kde4/libmswordodf_import.*
 %{_libdir}/kde4/libmswriteexport.*
 %{_libdir}/kde4/libmswriteimport.*
 %{_libdir}/kde4/liboowriterexport.*
@@ -448,7 +448,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/kde4/services/kofficedockers.desktop
 %{_datadir}/kde4/services/kopabackgroundtool.desktop
 %{_datadir}/kde4/services/kounavail.desktop
-%{_datadir}/kde4/services/kofficesimpletextedit.desktop
+#%{_datadir}/kde4/services/kofficesimpletextedit.desktop
 %{_datadir}/kde4/services/paragraphtool.desktop
 %{_datadir}/kde4/services/spellcheck.desktop
 %{_datadir}/kde4/services/textvariables.desktop
@@ -463,6 +463,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/kde4/services/divineproportionshape.desktop
 %{_datadir}/kde4/services/generic_filter.desktop
 %{_datadir}/kde4/services/xslt*.desktop
+%if %{?have_kformula}
+%{_datadir}/kde4/services/*formulashape*
+%endif
+
 %dir %attr (0755, root, bin) %{_datadir}/kde4/servicetypes
 %{_datadir}/kde4/servicetypes/filtereffect.desktop
 %{_datadir}/kde4/servicetypes/kochart.desktop
@@ -703,7 +707,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/libkdeinit4_krita.so
 %{_libdir}/libkrita*.so*
-%{_libdir}/libkrossmodulekrita*
+#%{_libdir}/libkrossmodulekrita*
 
 %dir %attr (0755, root, bin) %{_libdir}/kde4
 %{_libdir}/kde4/*krita*
@@ -825,19 +829,18 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, bin) %{_bindir}
 %{_bindir}/kformula
 %dir %attr (0755, root, bin) %{_libdir}
-%{_libdir}/libkdeinit4_kformula.so
+#%{_libdir}/libkdeinit4_kformula.so
+%{_libdir}/libkdeinit_kformula.so
 %{_libdir}/libkformulaprivate.so*
 
 %dir %attr (0755, root, bin) %{_libdir}/kde4
 %{_libdir}/kde4/*kformula*
-%{_libdir}/kde4/kspread*.so
-%{_libdir}/kde4/formulashape*
 
 %dir %attr (0755, root, sys) %{_datadir}
-%dir %attr (0755, root, other) %{_datadir}/doc
-%dir %attr (0755, root, bin) %{_datadir}/doc/HTML
-%dir %attr (0755, root, bin) %{_datadir}/doc/HTML/en
-%{_datadir}/doc/HTML/en/kformula
+#%dir %attr (0755, root, other) %{_datadir}/doc
+#%dir %attr (0755, root, bin) %{_datadir}/doc/HTML
+#%dir %attr (0755, root, bin) %{_datadir}/doc/HTML/en
+#%{_datadir}/doc/HTML/en/kformula
 %dir %attr (0755, root, bin) %{_datadir}/kde4
 %dir %attr (0755, root, bin) %{_datadir}/kde4/services
 %{_datadir}/kde4/services/kformula*.desktop
@@ -846,8 +849,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %defattr (-, root, other)
 %dir %attr (0755, root, other) %{_datadir}/apps
-%dir %attr (0755, root, other) %{_datadir}/apps/kformula
-%{_datadir}/apps/kformula/*
+#%dir %attr (0755, root, other) %{_datadir}/apps/kformula
+#%{_datadir}/apps/kformula/*
 %dir %attr (0755, root, other) %{_datadir}/applications
 %dir %attr (0755, root, other) %{_datadir}/applications/kde4
 %{_datadir}/applications/kde4/*kformula.desktop
@@ -858,5 +861,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %attr (0755, root, sys) %{_prefix}
 
 %changelog
+* Sun Nov 08 2009 - Moinak Ghosh
+- Bump to 2.1 RC1.
 * Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Initial version.

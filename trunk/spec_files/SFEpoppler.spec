@@ -14,8 +14,8 @@
 
 Name:                    SFEpoppler
 Summary:                 PDF Rendering Library. Alternate build with Qt support.
-Version:                 0.10.7
-%define dataversion      0.2.1
+Version:                 0.12.1
+%define dataversion      0.3.0
 URL:                     http://poppler.freedesktop.org/
 Source:                  http://poppler.freedesktop.org/poppler-%{version}.tar.gz
 Source1:                 http://poppler.freedesktop.org/poppler-data-%{dataversion}.tar.gz
@@ -96,9 +96,9 @@ unset QTDIR
 
 %ifarch amd64 sparcv9
 cd poppler-%{version}-64
-export CFLAGS="%optflags64"
-export CXXFLAGS="%cxx_optflags64"
-export LDFLAGS="-L%{_libdir}/%{_arch64} -R%{_libdir}/%{_arch64} %{gnu_lib_path64} %{xorg_lib_path64} %_ldflags64"
+export CFLAGS="-O2 -march=opteron -m64 -fno-omit-frame-pointer -fPIC -DPIC"
+export CXXFLAGS="-O2 -march=opteron -m64 -fno-omit-frame-pointer -fPIC -DPIC"
+export LDFLAGS="-L%{_libdir}/%{_arch64} -R%{_libdir}/%{_arch64} %{gnu_lib_path64} %{xorg_lib_path64} -m64"
 export QTINC=%{_basedir}/include/qt3
 export QTLIB=%{_basedir}/lib/%{_arch64}
 
@@ -119,9 +119,9 @@ cd ..
 %endif
 
 cd poppler-%{version}
-export CFLAGS="%optflags"
-export CXXFLAGS="%cxx_optflags"
-export LDFLAGS="%_ldflags %{gnu_lib_path} %{xorg_lib_path}"
+export CFLAGS="-O2 -march=pentiumpro -fno-omit-frame-pointer -fPIC -DPIC"
+export CXXFLAGS="-O2 -march=pentiumpro -fno-omit-frame-pointer -fPIC -DPIC"
+export LDFLAGS="%{gnu_lib_path} %{xorg_lib_path}"
 export QTINC=%{_basedir}/include/qt3
 export QTLIB=%{_basedir}/lib
 
@@ -199,6 +199,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Nov 08 2009 - Moinak Ghosh
+- Bump version and fix crash.
 * Mon Sep 28 2009 - Moinak Ghosh <moinakg<at>belenix(dot)org>
 - Fix build, enable optional xpdf features.
 * Tue Jun 23 2009 - Moinak Ghosh <moinakg@belenix(dot)org>
