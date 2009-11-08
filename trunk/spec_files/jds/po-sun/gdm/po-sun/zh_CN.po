@@ -1,0 +1,74 @@
+# Copyright (C) 2009 Sun Microsystems, Inc
+# This file is distributed under the same license as the gdm package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gdm HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-03-04 19:32+0900\n"
+"PO-Revision-Date: 2007-02-12 10:30+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+#. Note translate the A-M to the A-M you used in the group label
+#: ../gui/gdmlanguages.c:165
+msgid "A-M|Georgian"
+msgstr "A-M|格鲁吉亚语"
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+#. Note translate the A-M to the A-M you used in the group label
+#: ../gui/gdmlanguages.c:202
+msgid "A-M|Kazakh"
+msgstr "A-M|哈萨克语"
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+#. Note translate the N-Z to the N-Z you used in the group label
+#: ../gui/gdmlanguages.c:297
+msgid "N-Z|Spanish (USA)"
+msgstr "N-Z|西班牙语(USA)"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#~ msgid "Log in to another session in a desktop window without logging out"
+#~ msgstr "在不注销的情况下登录到桌面窗口中的另一个会话"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#~ msgid "Log in to another session without logging out"
+#~ msgstr "在不注销的情况下登录到另一个会话"
+
+#~ msgid "Java Desktop System"
+#~ msgstr "Java Desktop System"
+
+#~ msgid "This session logs you into the Java Desktop System"
+#~ msgstr "此会话使您登录到 Java Desktop System"
+
+#~ msgid "Failsafe _Java Desktop System"
+#~ msgstr "安全模式 _Java Desktop System"
+
+# SUN_BRANDING
+#~ msgid "Failsafe Java Desktop System"
+#~ msgstr "安全模式 Java Desktop System"
+
+#~ msgid ""
+#~ "This is a failsafe session that will log you into Java Desktop System. No "
+#~ "startup scripts will be read and it is only to be used when you can't log "
+#~ "in otherwise.  Java Desktop System will use the 'Default' session."
+#~ msgstr ""
+#~ "这是可让您登录到 Java Desktop System 的安全模式会话。此时不会读取启动脚"
+#~ "本，所以仅当您无法以其它方式登录时再使用此会话类型。Java Desktop System 将"
+#~ "使用“默认”会话。"

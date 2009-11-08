@@ -1,0 +1,223 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the control-center package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: control-center HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-12-15 12:07+0900\n"
+"PO-Revision-Date: 2007-02-08 21:48+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:708
+#, c-format
+msgid ""
+"Testing the new settings. If you don't respond in %d second the previous "
+"settings will be restored."
+msgid_plural ""
+"Testing the new settings. If you don't respond in %d seconds the previous "
+"settings will be restored."
+msgstr[0] ""
+msgstr[1] ""
+
+# SUN_BRANDING
+#: ../capplets/accessibility/at-properties/at-properties.desktop.in.in.h:3
+msgid "Choose which accessibility features to enable when you log in"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:753
+msgid "Keep Settings"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:760
+msgid "Do you want to keep these settings?"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:788
+msgid "Use _previous settings"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:791
+msgid "_Keep settings"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:852
+msgid "Desktop effects could not be enabled"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:1148
+msgid ""
+"<b>Visual effects cannot be enabled</b>\n"
+"\n"
+"Details :\n"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:1161
+msgid ""
+"\n"
+"Composite extension is not enabled"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:1167
+msgid ""
+"\n"
+"This application was compiled without the OpenGL extension"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:1170
+msgid ""
+"\n"
+"The OpenGL extension TextureFromPixmap is not enabled"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:1176
+msgid ""
+"\n"
+"Compiz is not installed on the system"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/appearance-effects.c:1186
+msgid "Check if visual effects can be enabled"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/data/appearance.glade.h:3
+msgid "<b>C_ustom:</b> Uses custom set of effects."
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/data/appearance.glade.h:5
+msgid ""
+"<b>E_xtra:</b> Provides more aesthetically pleasing set of effects. Requires "
+"faster graphics-card."
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/data/appearance.glade.h:10
+msgid ""
+"<b>N_ormal:</b> Provides improved usability and good balance between "
+"attractiveness and moderate performance-requirements."
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/data/appearance.glade.h:16
+msgid ""
+"<b>_None:</b> Provides a simple desktop environment without any effects."
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/appearance/data/appearance.glade.h:70
+msgid "Visual Effects"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/default-applications/default-applications.desktop.in.in.h:2
+msgid "Choose applications to open different types of document"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/display/display-properties.desktop.in.in.h:2
+msgid "Adjust the screen resolution and rotation"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/display/xrandr-capplet.c:1716
+#: ../capplets/display/xrandr-capplet.c:1718
+msgid ""
+"The X server does not support the XRANDR extension.  Runtime resolution "
+"changes to the display size are not available."
+msgstr ""
+
+#: ../capplets/keybindings/custom-binding.c:435
+#, c-format
+msgid "Key Binding (%s) has its action defined multiple times\n"
+msgstr "Svázání s klávesami (%s) má svoji akci definovanou vícekrát\n"
+
+#: ../capplets/keybindings/custom-binding.c:452
+#, c-format
+msgid "Key Binding (%s) has its binding defined multiple times\n"
+msgstr "Svázání s klávesami (%s) má svoji vazbu definovanou vícekrát\n"
+
+#: ../capplets/keybindings/custom-binding.c:459
+#, c-format
+msgid "Key Binding (%s) is incomplete\n"
+msgstr "Svázání s klávesami (%s) není úplné\n"
+
+# SUN MESSAGE
+#: ../capplets/keybindings/gnome-keybinding-properties.c:856
+#: ../capplets/keybindings/gnome-keybinding-properties.c:905
+msgid "Custom Shortcuts"
+msgstr "Vlastní zkratky"
+
+# SUN MESSAGE
+#: ../capplets/keybindings/gnome-keybinding-properties.glade.h:3
+msgid "Browse"
+msgstr "Prohlížet"
+
+# SUN MESSAGE
+#: ../capplets/keybindings/gnome-keybinding-properties.glade.h:5
+msgid "Custom Binding"
+msgstr "Vlastní vazba"
+
+# SUN MESSAGE
+#: ../capplets/keybindings/gnome-keybinding-properties.glade.h:7
+msgid "Custom Shortcuts:"
+msgstr "Vlastní zkratky:"
+
+# SUN MESSAGE
+#: ../capplets/keybindings/gnome-keybinding-properties.glade.h:11
+msgid "_Browse"
+msgstr "_Prohlížet"
+
+#: ../capplets/keybindings/gnome-keybinding-properties.glade.h:13
+msgid "_Edit..."
+msgstr "_Upravit..."
+
+# SUN MESSAGE
+#: ../capplets/keybindings/gnome-keybinding-properties.glade.h:15
+msgid "_New Command: "
+msgstr "_Nový příkaz:"
+
+# SUN_BRANDING
+#: ../capplets/keyboard/keyboard.desktop.in.in.h:3
+msgid "Set auto-repeat preferences and enforce typing breaks"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/mouse/gnome-settings-mouse.desktop.in.in.h:3
+msgid "Set mouse button and motion preferences"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/network/gnome-network-preferences.desktop.in.in.h:3
+msgid "Set up a network proxy for most desktop applications"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/sound/gnome-settings-sound.desktop.in.in.h:3
+msgid "Turn sounds on or off, and associate sounds with events"
+msgstr ""
+
+# SUN_BRANDING
+#: ../capplets/windows/window-properties.desktop.in.in.h:2
+msgid "Change window selection, movement and sizing behavior"
+msgstr ""

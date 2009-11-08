@@ -1,0 +1,78 @@
+# Copyright (C) 2009 Sun Microsystems, Inc
+# This file is distributed under the same license as the gdm package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gdm HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-03-04 19:32+0900\n"
+"PO-Revision-Date: 2008-10-15 11:09+0100\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+#. Note translate the A-M to the A-M you used in the group label
+#: ../gui/gdmlanguages.c:165
+msgid "A-M|Georgian"
+msgstr "A-M|Georgiano"
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+#. Note translate the A-M to the A-M you used in the group label
+#: ../gui/gdmlanguages.c:202
+msgid "A-M|Kazakh"
+msgstr "A-M|Kazako"
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+#. Note translate the N-Z to the N-Z you used in the group label
+#: ../gui/gdmlanguages.c:297
+msgid "N-Z|Spanish (USA)"
+msgstr "A-M|Español (USA)"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#~ msgid "Log in to another session in a desktop window without logging out"
+#~ msgstr ""
+#~ "Inicia otra sesión en una ventana de escritorio sin salir de la sesión "
+#~ "actual"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#~ msgid "Log in to another session without logging out"
+#~ msgstr ""
+#~ "Iniciar otra sesión en una ventana de escritorio sin salir de la sesión "
+#~ "actual"
+
+#~ msgid "Java Desktop System"
+#~ msgstr "Java Desktop System"
+
+#~ msgid "This session logs you into the Java Desktop System"
+#~ msgstr "Esta sesión accede a Java Desktop System"
+
+#~ msgid "Failsafe _Java Desktop System"
+#~ msgstr "_Java Desktop System a prueba de fallos"
+
+#~ msgid "Failsafe Java Desktop System"
+#~ msgstr "Java Desktop System a prueba de fallos"
+
+#~ msgid ""
+#~ "This is a failsafe session that will log you into Java Desktop System. No "
+#~ "startup scripts will be read and it is only to be used when you can't log "
+#~ "in otherwise.  Java Desktop System will use the 'Default' session."
+#~ msgstr ""
+#~ "Esto es una sesión a prueba de fallos que le permitirá acceder a Java "
+#~ "Desktop System. No se leerán scripts de inicio y solamente se usa cuando "
+#~ "no puede entrar de ningún otro modo. Java Desktop System utilizará la "
+#~ "sesión «Predeterminada»."

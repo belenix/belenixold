@@ -1,0 +1,60 @@
+# Copyright (C) 2009 Sun Microsystems, Inc
+# This file is distributed under the same license as the gdm package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gdm HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-03-04 19:32+0900\n"
+"PO-Revision-Date: 2007-02-12 10:30+0900\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+#. Note translate the A-M to the A-M you used in the group label
+#: ../gui/gdmlanguages.c:165
+msgid "A-M|Georgian"
+msgstr "A-M|Grúz"
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+#. Note translate the A-M to the A-M you used in the group label
+#: ../gui/gdmlanguages.c:202
+msgid "A-M|Kazakh"
+msgstr "A-M|Kazak"
+
+# SUN_BRANDING
+# COMMUNITY MESSAGE
+#. Note translate the N-Z to the N-Z you used in the group label
+#: ../gui/gdmlanguages.c:297
+msgid "N-Z|Spanish (USA)"
+msgstr "N-Z|Spanyol (USA)"
+
+#~ msgid "Java Desktop System"
+#~ msgstr "Java Desktop System"
+
+#~ msgid "This session logs you into the Java Desktop System"
+#~ msgstr "Ez a környezet a Java Desktop System-ba jelentkezteti be"
+
+#~ msgid "Failsafe _Java Desktop System"
+#~ msgstr "Csökkentett _Java Desktop System"
+
+#~ msgid "Failsafe Java Desktop System"
+#~ msgstr "Csökkentett Java Desktop System"
+
+#~ msgid ""
+#~ "This is a failsafe session that will log you into Java Desktop System. No "
+#~ "startup scripts will be read and it is only to be used when you can't log "
+#~ "in otherwise.  Java Desktop System will use the 'Default' session."
+#~ msgstr ""
+#~ "Ez egy csökkentett munkamenet, amely a Java Desktop System-ba fogja "
+#~ "bejelentkeztetni. A rendszerindítási parancsfájlok nem lesznek beolvasva "
+#~ "és csak akkor használja, ha nem tud más módon bejelentkezni. A Java "
+#~ "Desktop System az alapértelmezett munkamenetet fogja használni."
