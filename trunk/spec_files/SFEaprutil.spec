@@ -17,7 +17,7 @@
 
 Name:			SFEaprutil
 License:		Apache,LGPL,BSD
-Version:		1.3.4
+Version:		1.3.9
 Summary:		Abstraction layer on top of Apache Portable Runtime
 Source:			http://apache.mirrors.tds.net/apr/apr-util-%{version}.tar.gz
 Patch1:                 aprutil-01-dbd.m4.diff
@@ -121,10 +121,10 @@ MYS_DIR=/usr/mysql/%{mysql_version}
 cd apr-util-%{version}-64
 
 PATH=/usr/ccs/bin:/usr/gnu/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/opt/jdsbld/bin
-CFLAGS="%optflags64 -I/usr/gnu/include -I/usr/sfw/include -I/usr/include/pgsql -I/usr/include/pgsql/server -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
-CPPFLAGS="%optflags64 -I/usr/gnu/include -I/usr/sfw/include -I/usr/include/pgsql -I/usr/include/pgsql/server -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+CFLAGS="-m64 -march=opteron -fno-omit-frame-pointer -O2 -I/usr/gnu/include -I/usr/sfw/include -I/usr/include/pgsql -I/usr/include/pgsql/server -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+CPPFLAGS="-m64 -march=opteron -fno-omit-frame-pointer -O2 -I/usr/gnu/include -I/usr/sfw/include -I/usr/include/pgsql -I/usr/include/pgsql/server -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 LD=/usr/ccs/bin/ld
-LDFLAGS="%_ldflags64 -L$RPM_BUILD_ROOT%{_libdir} -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64} -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64}"
+LDFLAGS="-m64 %{gnu_lib_path64} -lgnuintl -lgnuiconv -L$RPM_BUILD_ROOT%{_libdir} -L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64} -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64}"
 LIBS="-m64 -lgdbm"
 PGSQL_CONFIG=${PG_DIR}/bin/%{_arch64}/pg_config
 MYSQL_CONFIG=${MYS_DIR}/bin/%{_arch64}/mysql_config
@@ -168,7 +168,7 @@ cat build/rules.mk | sed "s|^CFLAGS=.*|CFLAGS=${CFLAGS}|" > build/rules.mk.new
 cp build/rules.mk.new build/rules.mk
 rm -f build/rules.mk.new 
 
-LDFLAGS="-L/usr/gnu/lib/%{_arch64} -R/usr/gnu/lib/%{_arch64} -L/usr/sfw/lib/%{_arch64} -R/usr/sfw/lib/%{_arch64}"
+LDFLAGS="%{gnu_lib_path64} %{sfw_lib_path64}"
 cat apu-1-config | \
   sed "s|^LDFLAGS=|LDFLAGS=\"${LDFLAGS}\"|" > apu-1-config.new
 cp apu-1-config.new apu-1-config
@@ -180,10 +180,10 @@ cd ..
 
 cd apr-util-%{version}
 PATH=/usr/ccs/bin:/usr/gnu/bin:/usr/bin:/usr/sbin:/bin:/usr/sfw/bin:/opt/SUNWspro/bin:/opt/jdsbld/bin
-CFLAGS="%optflags -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+CFLAGS="-march=pentiumpro -fno-omit-frame-pointer -O2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
 CPPFLAGS="-I/usr/gnu/include -I/usr/sfw/include -I/usr/include/pgsql -I/usr/include/pgsql/server"
 LD=/usr/ccs/bin/ld
-LDFLAGS="%_ldflags -L$RPM_BUILD_ROOT%{_libdir} -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib"
+LDFLAGS="%{gnu_lib_path} -lgnuintl -lgnuiconv -L$RPM_BUILD_ROOT%{_libdir} -L/usr/gnu/lib -R/usr/gnu/lib -L/usr/sfw/lib -R/usr/sfw/lib"
 PGSQL_CONFIG=${PG_DIR}/bin/pg_config
 MYSQL_CONFIG=${MYS_DIR}/bin/mysql_config
 
@@ -288,6 +288,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Fri Nov 06 2009 - Moinak Ghosh
+- Bump version and fix build.
 * Sun Feb 15 2009 - moinakg@gmail.com
 - Major fixes.
 * Tue Feb 10 2009 - moinakg@gmail.com

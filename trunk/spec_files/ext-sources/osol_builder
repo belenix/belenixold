@@ -8,10 +8,22 @@ then
 	exit 1
 fi
 
+if [ "$1" = "-p" ]
+then
+	shift
+	ON_PATCH_URL="$1"
+	shift
+fi
+
 PATH=/opt/onbld/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
 export PATH
 PKGSRV=http://pkg.opensolaris.org/dev
-ON_PATCH_URL=http://belenix.svn.sourceforge.net/viewvc/belenix/trunk/misc/ext-patches/ON_patches.tar.gz?view=tar
+if [ "x$OSOL_DL_URL" = "x" ]
+then
+	OSOL_DL_URL=http://dlc.sun.com/osol/on/downloads
+	export OSOL_DL_URL
+fi
+
 unalias ls
 unset LS_COLORS
 rm -f /tmp/catalog
@@ -137,6 +149,8 @@ then
 		then
 			get_file SUNWhea usr/include/sys/localedef.h
 			get_file SUNWhea usr/include/sys/lc_core.h
+		else
+			pkg install SUNWhea
 		fi
 	else
 		printf "found\n"
@@ -149,28 +163,84 @@ then
 		spkg install SUNWuiu8
 		spkg install SUNWtss
 		spkg install SUNWpostgr-83-devel
+		spkg install SUNWpostgr-83-libs
 		spkg install SUNWsmagt-devel
+		spkg install SUNWhea
+		spkg install SUNWzoneu
+		spkg install SUNWzoneint
+		spkg install SUNWprd
+		spkg install SUNWtlsd
+		spkg install SUNWapch22u
+		spkg install SUNWastdev
 	else
-		pkg install SUNWsvn SUNWbtool SUNWj6cfg SUNWgnu-automake-19 SUNWj6rt SUNWaconf SUNWmercurial SUNWlibtool SUNWgnu-automake-110 SUNWj6rtx SUNWgmake SUNWj6dvx SUNWsprot SUNWbison SUNWj6dev SUNWflexlex SUNWcvs SUNWtss SUNWpostgr-83-devel SUNWsmagt
+		pkg install SUNWsvn SUNWbtool SUNWj6cfg SUNWgnu-automake-19 SUNWj6rt SUNWaconf SUNWmercurial SUNWlibtool SUNWgnu-automake-110 SUNWj6rtx SUNWgmake SUNWj6dvx SUNWsprot SUNWbison SUNWj6dev SUNWflexlex SUNWcvs SUNWtss SUNWpostgr-83-devel SUNWsmagt SUNWcpp SUNWuiu8 SUNWzone SUNWprd SUNWtlsd SUNWgcc SUNWapch SUNWsfwhea SUNWpostgr-83-libs SUNWastdev
 	fi
 	rm -f /tmp/catalog
 	rm -rf /tmp/pkglocal
 
-	printf "*** Fetching necessary patches\n"
-	if [ ! -d /var/osol_builder ]
+	if [ "x$ON_PATCH_URL" != "x" ]
 	then
-		mkdir /var/osol_builder
+		printf "*** Fetching necessary patches\n"
+		if [ ! -d /var/osol_builder ]
+		then
+			mkdir /var/osol_builder
+		fi
+		wget $ON_PATCH_URL -O /var/osol_builder/ON_Patches.tar.gz
+		(cd /var/osol_builder/
+	 	gunzip -c ON_Patches.tar.gz | tar xf -)
 	fi
-	wget $ON_PATCH_URL -O /var/osol_builder/ON_Patches.tar.gz
-	(cd /var/osol_builder/
-	 gunzip -c ON_Patches.tar.gz | tar xf -)
 	exit 0
 fi
+
+#
+# Setup a build workspace in the layout that osol_builder expects.
+#
+setup_wksp() {
+	DIR="$1"
+
+	mkdir -p ${DIR}/downloads
+	mkdir -p ${DIR}/patches/on_patches
+	mkdir -p ${DIR}/patches/xvm_patches
+}
+
+download_build() {
+	DIR="$1"
+	buildid=$2
+
+	cd $DIR/downloads
+	wget $OSOL_DL_URL/$buildid/on-src.tar.bz2
+	[ $? -ne 0 ] && echo "Wget failed"
+	wget $OSOL_DL_URL/$buildid/xvm-src.tar.bz2
+	[ $? -ne 0 ] && echo "Wget failed"
+	wget $OSOL_DL_URL/$buildid/SUNWonbld.i386.tar.bz2
+	[ $? -ne 0 ] && echo "Wget failed"
+	wget $OSOL_DL_URL/$buildid/on-closed-bins-nd.i386.tar.bz2
+	[ $? -ne 0 ] && echo "Wget failed"
+}
+
 
 if [ "$1" = "build" ]
 then
 	shift
 	exec /usr/bin/osol_builder.py "$@"
+
+elif [ "$1" = "prepare" ]
+then
+	shift
+	wkspdir="$1"
+	if [ "x$wkspdir" = "x" ]
+	then
+		echo "$0 prepare <Workspace Dir> [<osol build id>]"
+		exit 1
+	fi
+	buildid="$2"
+	setup_wksp "$wkspdir"
+
+	if [ "x$buildid" != "x" ]
+	then
+		download_build "$wkspdir" $buildid
+	fi
+	exit 0
 fi
 
 if [ "x$1" = "x" ]

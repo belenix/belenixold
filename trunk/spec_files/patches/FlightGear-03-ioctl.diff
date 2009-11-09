@@ -1,0 +1,12 @@
+--- FlightGear-1.9.1/src/FDM/JSBSim/input_output/FGfdmSocket.cpp.orig	2009-11-03 00:40:39.683295077 +0530
++++ FlightGear-1.9.1/src/FDM/JSBSim/input_output/FGfdmSocket.cpp	2009-11-03 00:42:53.283438941 +0530
+@@ -40,6 +40,9 @@
+ 
+ #include "FGfdmSocket.h"
+ #include <cstring>
++#ifdef __sun
++#include <sys/filio.h>
++#endif
+ 
+ namespace JSBSim {
+ 

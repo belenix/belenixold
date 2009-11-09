@@ -48,7 +48,7 @@ class Workspace(object):
 	This is the main workspace instance that validates directories, patches and flags and builds.
 	"""
 
-	def __init__(self, basedir, distroname, arch, incremental):
+	def __init__(self, basedir, distroname, arch, incremental, consolidations):
 		self.basedir = basedir
 		self.distroname = distroname
 		self.arch = arch
@@ -67,6 +67,7 @@ class Workspace(object):
 		self.incremental = incremental
 		self.nightly_attrs = []
 		self.patchdir = "/var/osol_builder/ON_patches"
+		self.consolidations = consolidations
 
 	def check(self):
 		print "*** Checking workspace\n"
@@ -76,12 +77,15 @@ class Workspace(object):
 			raise BLDError(_(self.downloads + " directory not found"))
 		if not os.path.isdir(self.patches):
 			raise BLDError(_(self.patches + " directory not found"))
-		if not os.path.isfile(self.on_src):
-			raise BLDError(_(self.on_src + " not found"))
-		if not os.path.isfile(self.on_closed_bins):
-			raise BLDError(_(self.on_closed_bins + " not found"))
-		if not os.path.isfile(self.xvm_src):
-			raise BLDError(_(self.xvm_src + " not found"))
+
+		if "ON" in self.consolidations:
+			if not os.path.isfile(self.on_src):
+				raise BLDError(_(self.on_src + " not found"))
+			if not os.path.isfile(self.on_closed_bins):
+				raise BLDError(_(self.on_closed_bins + " not found"))
+		if "XVM" in self.consolidations:
+			if not os.path.isfile(self.xvm_src):
+				raise BLDError(_(self.xvm_src + " not found"))
 		if not os.path.isfile(self.sunwonbld_pkg):
 			raise BLDError(_(self.sunwonbld_pkg + " not found"))
 		if not os.path.isfile("/opt/SUNWspro/bin/cc"):
@@ -232,6 +236,8 @@ merge=/opt/onbld/bin/hgmerge"""
 		    os.path.join(self.on_patches, "Makefiles.diff"))
 		shutil.copyfile(os.path.join(self.patchdir, "nightly.options"), \
 		    os.path.join(self.patches, "nightly.options"))
+		shutil.copyfile(os.path.join(self.patchdir, "rip_wbem.script"), \
+		    os.path.join(self.on_patches, "rip_wbem.script"))
 
 		pwd = os.getcwd()
 		os.chdir(self.on_ws)
@@ -296,44 +302,52 @@ merge=/opt/onbld/bin/hgmerge"""
 		#
 		# Extract ON source
 		#
-		isonsrc = True
-		if not os.path.exists(self.on_ws):
-			os.mkdir(self.on_ws)
-			isonsrc = False
-		else:
-			if not self.incremental:
-				print "*** [" + str(time.time()) + \
-				    "]: Cleaning up  " + self.on_ws + "\n"
-				shutil.rmtree(self.on_ws)
+		if "ON" in self.consolidations:
+			isonsrc = True
+			if not os.path.exists(self.on_ws):
 				os.mkdir(self.on_ws)
+				isonsrc = False
+			else:
+				if not self.incremental:
+					tm = time.strftime("%b %d %Y %H;%M", time.localtime())
+					print "*** [" + tm + \
+					    "]: Cleaning up  " + self.on_ws + "\n"
+					shutil.rmtree(self.on_ws)
+					os.mkdir(self.on_ws)
 
-		if not self.incremental or not isonsrc:
-			print "*** [" + str(time.time()) + \
-			    "]: Extracting ON source into " + self.on_ws + "\n"
-			self.extract_tar(self.on_src, self.on_ws)
-			self.extract_tar(self.on_closed_bins, self.on_ws)
-			print "*** [" + str(time.time()) + "]: Done extracting ON source. \n"
+			if not self.incremental or not isonsrc:
+				tm = time.strftime("%b %d %Y %H;%M", time.localtime())
+				print "*** [" + tm + \
+				    "]: Extracting ON source into " + self.on_ws + "\n"
+				self.extract_tar(self.on_src, self.on_ws)
+				self.extract_tar(self.on_closed_bins, self.on_ws)
+				tm = time.strftime("%b %d %Y %H;%M", time.localtime())
+				print "*** [" + tm + "]: Done extracting ON source. \n"
 
 		#
 		# Extract XVM source
 		#
-		isxvmsrc = True
-		if not os.path.exists(self.xvm_ws):
-			os.mkdir(self.xvm_ws)
-			isxvmsrc = False
-		else:
-			if not self.incremental:
-				print "*** [" + str(time.time()) + \
-				    "]: Cleaning up  " + self.xvm_ws + "\n"
-				shutil.rmtree(self.xvm_ws)
+		if "XVM" in self.consolidations:
+			isxvmsrc = True
+			if not os.path.exists(self.xvm_ws):
 				os.mkdir(self.xvm_ws)
+				isxvmsrc = False
+			else:
+				if not self.incremental:
+					tm = time.strftime("%b %d %Y %H;%M", time.localtime())
+					print "*** [" + tm + \
+					    "]: Cleaning up  " + self.xvm_ws + "\n"
+					shutil.rmtree(self.xvm_ws)
+					os.mkdir(self.xvm_ws)
 
-		if not self.incremental or not isxvmsrc:
-			count = 1
-			print "*** [" + str(time.time()) + \
-			    "]: Extracting XVM source into " + self.xvm_ws + "\n"
-			self.extract_tar(self.xvm_src, self.xvm_ws)
-			print "*** [" + str(time.time()) + "]: Done extracting XVM source. \n"
+			if not self.incremental or not isxvmsrc:
+				count = 1
+				tm = time.strftime("%b %d %Y %H;%M", time.localtime())
+				print "*** [" + tm + \
+				    "]: Extracting XVM source into " + self.xvm_ws + "\n"
+				self.extract_tar(self.xvm_src, self.xvm_ws)
+				tm = time.strftime("%b %d %Y %H;%M", time.localtime())
+				print "*** [" + tm + "]: Done extracting XVM source. \n"
 	
 		#
 		# Extract and install SUNWonbld
@@ -366,110 +380,114 @@ merge=/opt/onbld/bin/hgmerge"""
 		#
 		# Apply ON patches
 		#
-		print "*** Applying ON patches ..."
-		self.patch_on(isonsrc)
+		if "ON" in self.consolidations:
+			print "*** Applying ON patches ..."
+			self.patch_on(isonsrc)
 
 		#
 		# Some environmental setup
 		#
-		self.write_hgrc()
-		self.fixup_tools()
+		if "XVM" in self.consolidations:
+			self.write_hgrc()
+			self.fixup_tools()
 
-		#
-		# Prepare XVM dir
-		#
-		print "*** Preparing XVM source ..."
-		pwd = os.getcwd()
-		os.chdir(self.xvm_ws)
-		cmd = 'ws xen.hg -c "hg qpush -a"'
-		pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
-		rt = pipe.wait()
-		if rt != 0:
-			raise BLDError(cmd + " failed.")
-		os.chdir(pwd)
+			#
+			# Prepare XVM dir
+			#
+			print "*** Preparing XVM source ..."
+			pwd = os.getcwd()
+			os.chdir(self.xvm_ws)
+			cmd = 'ws xen.hg -c "hg qpush -a"'
+			pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
+			rt = pipe.wait()
+			if rt != 0:
+				raise BLDError(cmd + " failed.")
+			os.chdir(pwd)
 
-		print "*** Patching XVM source ..."
-		self.patch_xvm()
+			print "*** Patching XVM source ..."
+			self.patch_xvm()
 
 	def do_build(self):
 		"""
 		Run all the builds with fingers crossed!
 		"""
 
-		#
-		# First run ON build
-		#
-		pwd = os.getcwd()
-		os.chdir(self.on_ws)
+		if "ON" in self.consolidations:
+			#
+			# First run ON build
+			#
+			pwd = os.getcwd()
+			os.chdir(self.on_ws)
 
-		if self.incremental:
-			print "*** Running nightly ON incremental build"
-			cmd = "nightly -i ./opensolaris.sh"
-		else:
-			print "*** Running nightly ON full build"
-			cmd = "nightly ./opensolaris.sh"
-		pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
-		rt = pipe.wait()
-		if rt != 0:
-			raise BLDError("ON nightly build failed.")
+			if self.incremental:
+				print "*** Running nightly ON incremental build"
+				cmd = "nightly -i ./opensolaris.sh"
+			else:
+				print "*** Running nightly ON full build"
+				cmd = "nightly ./opensolaris.sh"
+			pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
+			rt = pipe.wait()
+			if rt != 0:
+				raise BLDError("ON nightly build failed.")
 
-		#
-		# Now massage ON pkgdefs
-		#
-		self.process_pkgdefs()
-		os.chdir(self.on_ws)
+			#
+			# Now massage ON pkgdefs
+			#
+			self.process_pkgdefs()
+			os.chdir(self.on_ws)
 
-		#
-		# We want ksh93 for /sbin/sh and /usr/bin/ksh
-		#
-		proto = os.path.join(self.on_ws, "proto/root_" + self.arch)
-		sbin_sh = os.path.join(proto, "sbin/sh")
-		bin_ksh = os.path.join(proto, "usr/bin/ksh")
-		ksh93 = os.path.join(proto, "usr/bin/i86/ksh93")
-		shutil.copyfile(ksh93, sbin_sh)
-		try:
-			os.unlink(bin_ksh)
-		except:
-			pass
-		shutil.copyfile(ksh93, bin_ksh)
+			#
+			# We want ksh93 for /sbin/sh and /usr/bin/ksh
+			#
+			proto = os.path.join(self.on_ws, "proto/root_" + self.arch)
+			sbin_sh = os.path.join(proto, "sbin/sh")
+			bin_ksh = os.path.join(proto, "usr/bin/ksh")
+			ksh93 = os.path.join(proto, "usr/bin/i86/ksh93")
+			shutil.copyfile(ksh93, sbin_sh)
+			try:
+				os.unlink(bin_ksh)
+			except:
+				pass
+			shutil.copyfile(ksh93, bin_ksh)
 
-		#
-		# Now replace some files in the proto dir for a properly functional distro
-		#
-		proto_replace = os.path.join(self.patchdir, "proto_replace")
-		if os.path.isdir(proto_replace):
-			lf = open(os.path.join(proto_replace, "proto_replace.files"), "r")
-			for line in lf:
-				print line
-				path = line.strip()
-				src_path = os.path.join(proto_replace, path)
-				proto_path = os.path.join(proto, path)
-				shutil.copyfile(src_path, proto_path)
-			lf.close()
+			#
+			# Now replace some files in the proto dir for a properly functional distro
+			#
+			proto_replace = os.path.join(self.patchdir, "proto_replace")
+			if os.path.isdir(proto_replace):
+				lf = open(os.path.join(proto_replace, "proto_replace.files"), "r")
+				for line in lf:
+					print line
+					path = line.strip()
+					src_path = os.path.join(proto_replace, path)
+					proto_path = os.path.join(proto, path)
+					shutil.copyfile(src_path, proto_path)
+				lf.close()
 
-		#
-		# Build ON packages
-		#
-		cmd = "bldenv ./opensolaris.sh 'cd usr/src/pkgdefs; make install'"
-		pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
-		rt = pipe.wait()
-		if rt != 0:
-			raise BLDError("ON package build failed.")
-		os.chdir(pwd)
+			#
+			# Build ON packages
+			#
+			cmd = "bldenv ./opensolaris.sh 'cd usr/src/pkgdefs; make install'"
+			pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
+			rt = pipe.wait()
+			if rt != 0:
+				raise BLDError("ON package build failed.")
+			os.chdir(pwd)
 
-		#
-		# Run XVM build
-		#
-		print "*** Running XVM build ..."
-		os.chdir(self.xvm_ws)
-		cmd = "EMAIL=nobody@localhost; export EMAIL;"
-		cmd += " XVM_WS=%s; export XVM_WS;" % self.xvm_ws
-		cmd += " EDITOR=/usr/bin/vi; export EDITOR;"
-		cmd += ' ws sunos.hg -c "./bin/build-all nondebug"'
-		pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
-		rt = pipe.wait()
-		if rt != 0:
-			raise BLDError("XVM build failed")
+		if "XVM" in self.consolidations:
+			#
+			# Run XVM build
+			#
+			print "*** Running XVM build ..."
+			os.chdir(self.xvm_ws)
+			cmd = "EMAIL=nobody@localhost; export EMAIL;"
+			cmd += " XVM_WS=%s; export XVM_WS;" % self.xvm_ws
+			cmd += " EDITOR=/usr/bin/vi; export EDITOR;"
+			cmd += ' ws sunos.hg -c "./bin/build-all nondebug"'
+			pipe = Popen(cmd, shell=True, stdout=None, stderr=None, close_fds=False)
+			rt = pipe.wait()
+			if rt != 0:
+				raise BLDError("XVM build failed")
 
 	def process_pkgdefs(self):
 		"""
@@ -709,7 +727,7 @@ osol_builder prereq
 	Check system for presence of prerequsities for building ON. This can automatically
 	fetch necessary packages and files except for SUN Studio 12 compiler.
 
-osol_builder build -R <base dir> [-d <distro name tag>] [-i] [-b]
+osol_builder build -R <base dir> [-d <distro name tag>] [-i] [-b] [-c ON|XVM]
 	-R <base dir> - Directory containing downloaded ON and XVM source 
 	tarballs and patches.
 	Structure of this directory is as follows:
@@ -729,7 +747,16 @@ osol_builder build -R <base dir> [-d <distro name tag>] [-i] [-b]
 	-b
 	Just run the build and skip the initial preparation steps. This is useful
 	to rerun build full or incremental when the workspace is already properly
-	setup.""")
+	setup.
+
+	-c
+	Specify a particular consolidation to build. Either ON for OpenSolaris
+	base OS or XVM for the XVM component.
+
+osol_builder prepare <workspace dir> [<osol build id>]
+	Prepare a workspace in the directory layout as mentioned above. If
+	the optional <osol build id> is given then it will download the OpenSolaris
+	sources from dlc.sun.com corresponding to that build.""")
 
 
 def do_main():
@@ -746,9 +773,10 @@ def do_main():
 	plat = platform.uname()
 	arch = plat[5]
 	build_only = False
+	consolidations = ["ON", "XVM"]
 
 	try:
-		opts, pargs = getopt.getopt(sys.argv[1:], "R:d:ib")
+		opts, pargs = getopt.getopt(sys.argv[1:], "R:d:ibc:")
 	except getopt.GetoptError, e:
 		print >> sys.stderr, \
 		    _("build_on: illegal global option -- %s") % e.opt
@@ -767,6 +795,8 @@ def do_main():
 			incremental = True
 		elif opt == "-b":
 			build_only = True
+		elif opt == "-c":
+			consolidations = [ arg ]
 
 	if basedir == "":
 		print >> sys.stderr, \
@@ -775,7 +805,7 @@ def do_main():
 		sys.exit(1)
 		
 
-	wksp = Workspace(basedir, distroname, arch, incremental)
+	wksp = Workspace(basedir, distroname, arch, incremental, consolidations)
 	if not build_only:
 		wksp.check()
 		wksp.prepare()
