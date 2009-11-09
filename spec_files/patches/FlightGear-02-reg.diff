@@ -1,0 +1,71 @@
+--- FlightGear-1.9.1/src/Navaids/navdb.cxx.orig	2009-11-03 00:21:30.837494510 +0530
++++ FlightGear-1.9.1/src/Navaids/navdb.cxx	2009-11-03 00:21:40.290607284 +0530
+@@ -90,7 +90,7 @@
+         loclist->add(r);
+         break;
+         
+-      case FGPositioned::GS:
++      case FGPositioned::_GS:
+         gslist->add(r);
+         break;
+       
+--- FlightGear-1.9.1/src/Navaids/navlist.cxx.orig	2009-11-03 00:21:48.981941327 +0530
++++ FlightGear-1.9.1/src/Navaids/navlist.cxx	2009-11-03 00:22:02.155141260 +0530
+@@ -256,7 +256,7 @@
+     return NULL;
+ }
+ 
+-// LOC, ILS, GS, and DME antenna's could potentially be
++// LOC, ILS, _GS, and DME antenna's could potentially be
+ // installed at the opposite end of the runway.  So it's not
+ // enough to simply find the closest antenna with the right
+ // frequency.  We need the closest antenna with the right
+@@ -272,7 +272,7 @@
+   switch (aNav->type()) {
+   case FGPositioned::ILS:
+   case FGPositioned::LOC:
+-  case FGPositioned::GS:
++  case FGPositioned::_GS:
+ // FIXME
+ //  case FGPositioned::DME: we can't get the heading for a DME transmitter, oops
+     break;
+@@ -281,7 +281,7 @@
+   }
+   
+   double hdg_deg = 0.0;
+-  if (aNav->type() == FGPositioned::GS) {
++  if (aNav->type() == FGPositioned::_GS) {
+     int tmp = (int)(aNav->get_multiuse() / 1000.0);
+     hdg_deg = aNav->get_multiuse() - (tmp * 1000);
+   } else {    
+--- FlightGear-1.9.1/src/Navaids/navrecord.cxx.orig	2009-11-03 00:22:10.006605237 +0530
++++ FlightGear-1.9.1/src/Navaids/navrecord.cxx	2009-11-03 00:22:20.923485883 +0530
+@@ -63,7 +63,7 @@
+     
+     case LOC:
+     case ILS:
+-    case GS:
++    case _GS:
+       range = FG_LOC_DEFAULT_RANGE;
+       break;
+       
+@@ -93,7 +93,7 @@
+   case 3: return FGPositioned::VOR;
+   case 4: return FGPositioned::LOC;
+   case 5: return FGPositioned::ILS;
+-  case 6: return FGPositioned::GS;
++  case 6: return FGPositioned::_GS;
+   case 7: return FGPositioned::OM;
+   case 8: return FGPositioned::MM;
+   case 9: return FGPositioned::IM;
+--- FlightGear-1.9.1/src/Navaids/positioned.hxx.orig	2009-11-03 00:20:40.524278710 +0530
++++ FlightGear-1.9.1/src/Navaids/positioned.hxx	2009-11-03 00:21:00.025560938 +0530
+@@ -47,7 +47,7 @@
+     NDB,
+     ILS,
+     LOC,
+-    GS,
++    _GS,
+     OM,
+     MM,
+     IM,

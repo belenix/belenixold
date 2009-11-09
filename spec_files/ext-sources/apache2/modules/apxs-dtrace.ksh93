@@ -39,6 +39,7 @@ DTRACE="/usr/sbin/dtrace"
 INCLUDES=""
 
 do_apxs() {
+    MFLAG="$1"
     export LTFLAGS="--silent --tag=CC"
     apxs_bin=${ROOT}/usr/apache2/2.2/bin/${APXS}
 
@@ -47,12 +48,26 @@ do_apxs() {
     LDFLAGS_SHLIB="${LDFLAGS_SHLIB} -R ${APCH_LIBEXEC}"
 
     (cd ${MDIR}
+        echo "${apxs_bin} -S CC=${CC} -c -o ${MODULE} ${INCLUDES} ${SRC}"
         ${apxs_bin} \
 	     -S CC=${CC} \
 	     -c -o ${MODULE} ${INCLUDES} ${SRC}
+
+        echo "cp .libs/mod_dtrace.o ."
         cp .libs/mod_dtrace.o .
+
+        echo "${DTRACE} -o apache.o -s apache.d mod_dtrace.o"
         ${DTRACE} -o apache.o -s apache.d mod_dtrace.o
-        ${CC} -M mapfile ${CFLAGS} -KPIC -G ${LDFLAGS_SHLIB} -o .libs/${MODULE} mod_dtrace.o apache.o
+
+        echo "${CC}" | grep gcc > /dev/null
+        if [ $? -eq 0 ]
+        then
+            echo "${CC} -Wl,-Mmapfile ${CFLAGS} $MFLAG -fPIC -DPIC -shared ${LDFLAGS_SHLIB} -o .libs/${MODULE} mod_dtrace.o apache.o"
+            ${CC} -Wl,-Mmapfile ${CFLAGS} $MFLAG -fPIC -DPIC -shared ${LDFLAGS_SHLIB} -o .libs/${MODULE} mod_dtrace.o apache.o
+        else
+            echo "${CC} -M mapfile ${CFLAGS} -KPIC -G ${LDFLAGS_SHLIB} -o .libs/${MODULE} mod_dtrace.o apache.o"
+            ${CC} -M mapfile ${CFLAGS} -KPIC -G ${LDFLAGS_SHLIB} -o .libs/${MODULE} mod_dtrace.o apache.o
+        fi
     )
 }
 
@@ -65,15 +80,17 @@ do
                MDIR="${VER}-64"
                DTRACE="/usr/sbin/dtrace -64 -G"
                APCH_LIBEXEC="${APACHE_VAR_PREFIX}/libexec/${MACH64}"
+               MFLAG="-m64"
            else
                MDIR="${VER}-32"
                DTRACE="/usr/sbin/dtrace -32 -G"
                APCH_LIBEXEC="${APACHE_VAR_PREFIX}/libexec"
+               MFLAG=""
            fi
        ;;
     esac
 done
 
-do_apxs
+do_apxs "$MFLAG"
 
 exit 0
