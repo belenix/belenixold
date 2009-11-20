@@ -1,0 +1,52 @@
+diff -up vegastrike-source-0.5.0/src/cmd/music.cpp.foobar vegastrike-source-0.5.0/src/cmd/music.cpp
+--- vegastrike-source-0.5.0/src/cmd/music.cpp.foobar	2008-05-02 12:02:12.000000000 +0200
++++ vegastrike-source-0.5.0/src/cmd/music.cpp	2008-05-02 12:08:50.000000000 +0200
+@@ -120,9 +120,7 @@ Music::Music (Unit *parent):random(false
+   if (g_game.music_enabled&&!soundServerPipes()) {
+     int pid=fork();
+     if (!pid) {
+-	  string soundserver_path = VSFileSystem::datadir+"/bin/soundserver";
+-      pid=execlp(soundserver_path.c_str() , soundserver_path.c_str(),NULL);
+-      soundserver_path = VSFileSystem::datadir+"/soundserver";
++ 	  string soundserver_path = "/usr/lib/vegastrike/soundserver";
+       pid=execlp(soundserver_path.c_str() , soundserver_path.c_str(),NULL);
+       g_game.music_enabled=false;
+       VSFileSystem::vs_fprintf(stderr,"Unable to spawn music player server\n");
+@@ -190,24 +188,9 @@ Music::Music (Unit *parent):random(false
+       }
+ #else
+   if (g_game.music_enabled) {
+-    std::string tmp=VSFileSystem::datadir+"/bin/soundserver";
+-    FILE * fp=fopen (tmp.c_str(),"rb");
+-    if (!fp) {
+-      tmp=VSFileSystem::datadir+"/soundserver";
+-      fp = fopen(tmp.c_str(),"rb");
+-      if (!fp){
+-        g_game.music_enabled=false;
+-        socketw=-1;
+-        socketr=-1;
+-      }else fclose(fp);
+-    }else fclose(fp);
+-  }
+-  if (g_game.music_enabled) {
+     int pid=fork();
+     if (!pid) {
+-	  string soundserver_path = VSFileSystem::datadir+"/bin/soundserver";
+-      pid=execlp(soundserver_path.c_str() , soundserver_path.c_str(),buffer1,buffer2,NULL);
+-      soundserver_path = VSFileSystem::datadir+"/soundserver";
++ 	  string soundserver_path = "/usr/lib/vegastrike/soundserver";
+       pid=execlp(soundserver_path.c_str() , soundserver_path.c_str(),buffer1,buffer2,NULL);
+       g_game.music_enabled=false;
+       VSFileSystem::vs_fprintf(stderr,"Unable to spawn music player server\n");
+diff -up vegastrike-source-0.5.0/src/gfx/mesh_xml.cpp.foobar vegastrike-source-0.5.0/src/gfx/mesh_xml.cpp
+--- vegastrike-source-0.5.0/src/gfx/mesh_xml.cpp.foobar	2008-04-26 12:00:33.000000000 +0200
++++ vegastrike-source-0.5.0/src/gfx/mesh_xml.cpp	2008-05-02 11:58:14.000000000 +0200
+@@ -1175,7 +1175,7 @@ void LaunchConverter(const char * input,
+ #ifndef _WIN32
+     int pid=fork();
+     if (!pid) {
+-      string soundserver_path = VSFileSystem::datadir+"/bin/mesher";
++      string soundserver_path = "/usr/lib/vegastrike/mesher";
+ 	  string firstarg = string("\"")+soundserver_path+string("\"");
+       pid=execlp(soundserver_path.c_str() , soundserver_path.c_str(),input,output,args,NULL);
+       soundserver_path = VSFileSystem::datadir+"/mesher";

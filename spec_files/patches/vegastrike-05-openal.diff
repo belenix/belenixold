@@ -1,0 +1,15 @@
+--- vegastrike-0.4.3/src/aldrv/al_init.cpp.openal	2007-02-25 16:17:45.000000000 +0100
++++ vegastrike-0.4.3/src/aldrv/al_init.cpp	2007-02-25 16:17:45.000000000 +0100
+@@ -135,12 +135,8 @@
+ ///I don't think we'll need to switch contexts or devices in vegastrike
+ static ALCdevice *dev=NULL;
+ 
+-#ifndef _WIN32
+-static ALvoid *context_id=NULL;
+-#else
+ static ALCcontext * context_id=NULL;
+ #endif
+-#endif
+ bool AUDInit () {
+   g_game.sound_enabled = false;
+ #ifdef HAVE_AL
