@@ -1,0 +1,101 @@
+--- vegastrike-source-0.5.0/src/galaxy_gen.cpp.orig	2009-11-15 18:32:34.224100190 +0530
++++ vegastrike-source-0.5.0/src/galaxy_gen.cpp	2009-11-15 18:33:30.118555136 +0530
+@@ -639,12 +639,12 @@
+   string s =  getRandName (jumps);
+   if (s.length()==0)
+     return;
+-  Vector RR,SS;
++  Vector _RR,_SS;
+   if (forceRS) {
+-    RR=R;SS=S;
+-    Updateradii (mmax(RR.Mag(),SS.Mag()),radius);
++    _RR=R;_SS=S;
++    Updateradii (mmax(_RR.Mag(),_SS.Mag()),radius);
+   }else {
+-    center=generateAndUpdateRS (RR,SS,radius,true);
++    center=generateAndUpdateRS (_RR,_SS,radius,true);
+   }
+   string thisname;
+   thisname = string("Jump_To_")+getStarSystemName(s);
+@@ -653,10 +653,10 @@
+   }
+   Tab();
+   f.Fprintf ("<Jump name=\"%s\" file=\"%s\" ",thisname.c_str(),"jump.png");
+-  f.Fprintf ("ri=\"%f\" rj=\"%f\" rk=\"%f\" si=\"%f\" sj=\"%f\" sk=\"%f\" ",RR.i,RR.j,RR.k,SS.i,SS.j,SS.k);
++  f.Fprintf ("ri=\"%f\" rj=\"%f\" rk=\"%f\" si=\"%f\" sj=\"%f\" sk=\"%f\" ",_RR.i,_RR.j,_RR.k,_SS.i,_SS.j,_SS.k);
+   f.Fprintf ("radius=\"%f\" ",radius);
+   f.Fprintf ("x=\"%f\" y=\"%f\" z=\"%f\" ",center.i,center.j,center.k);
+-  float loy = LengthOfYear(RR,SS);
++  float loy = LengthOfYear(_RR,_SS);
+   float temprandom=.1*fmod(loy,10);//use this so as not to alter state here
+   if (loy||thisloy) {
+     f.Fprintf ("year= \"%f\" ",thisloy?thisloy:loy);
+@@ -744,8 +744,8 @@
+   }
+   if (texturename.length()==0) // FIXME?
+     return;
+-  Vector RR,SS;
+-  Vector center=generateAndUpdateRS (RR,SS,radius,false);
++  Vector _RR,_SS;
++  Vector center=generateAndUpdateRS (_RR,_SS,radius,false);
+   string thisname;
+   thisname=getRandName(names);
+   Tab();
+@@ -769,10 +769,10 @@
+     cname=planetlites.substr(lites[randomnum]+1,lites[randomnum+1]);
+   }
+   f.Fprintf ("<Planet name=\"%s\" file=\"%s\" ",thisname.c_str(),texturename.c_str());
+-  f.Fprintf ("ri=\"%f\" rj=\"%f\" rk=\"%f\" si=\"%f\" sj=\"%f\" sk=\"%f\" ",RR.i,RR.j,RR.k,SS.i,SS.j,SS.k);
++  f.Fprintf ("ri=\"%f\" rj=\"%f\" rk=\"%f\" si=\"%f\" sj=\"%f\" sk=\"%f\" ",_RR.i,_RR.j,_RR.k,_SS.i,_SS.j,_SS.k);
+   f.Fprintf ("radius=\"%f\" ",radius);
+   f.Fprintf ("x=\"%f\" y=\"%f\" z=\"%f\" ",center.i,center.j,center.k);
+-  float loy = LengthOfYear(RR,SS);
++  float loy = LengthOfYear(_RR,_SS);
+   float temprandom=.1*fmod(loy,10);//use this so as not to alter state here
+   if (loy) {
+     f.Fprintf ("year= \"%f\" ",loy);
+--- vegastrike-source-0.5.0/src/cmd/basecomputer.cpp.orig	2009-11-15 19:26:28.019712952 +0530
++++ vegastrike-source-0.5.0/src/cmd/basecomputer.cpp	2009-11-15 19:27:21.803960151 +0530
+@@ -3111,7 +3111,7 @@
+         if (strstr(entry->d_name,autosave.c_str()))
+           return 0;
+   */
+-#if defined(_WIN32)
++#if defined(_WIN32) || defined(SOLARIS)
+ 	// Have to check if we have the full path or just relative (which would be a problem)
+ 	std::string tmp=VSFileSystem::homedir+"/save/"+entry->d_name;
+ 	struct stat s;
+--- vegastrike-source-0.5.0/src/gfx/vec.h.orig	2009-11-15 22:04:57.088564047 +0530
++++ vegastrike-source-0.5.0/src/gfx/vec.h	2009-11-15 22:05:20.989988837 +0530
+@@ -5,6 +5,9 @@
+ #include <math.h>
+ 
+ #ifdef SOLARIS
++#ifdef __cplusplus
++extern "C" {
++#endif
+ extern float __sqrtf( float);
+ extern float __cosf( float);
+ extern float __sinf( float);
+@@ -13,6 +16,9 @@
+ #define cosf __cosf
+ #define sinf __sinf
+ #define tanf __tanf
++#ifdef __cplusplus
++}
++#endif
+ #endif
+ 
+ #include "endianness.h"
+--- vegastrike-source-0.5.0/setup/src/c/setup.cpp.orig	2009-11-15 23:57:55.559309124 +0530
++++ vegastrike-source-0.5.0/setup/src/c/setup.cpp	2009-11-15 23:58:16.284710084 +0530
+@@ -21,7 +21,9 @@
+ #include <direct.h>
+ #include <windows.h>
+ #else
++#ifndef SOLARIS
+ #include <sys/dir.h>
++#endif
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <pwd.h>

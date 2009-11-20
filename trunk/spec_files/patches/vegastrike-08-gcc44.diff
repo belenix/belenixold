@@ -1,0 +1,38 @@
+diff -up vegastrike-source-0.5.0/src/cmd/basecomputer.cpp~ vegastrike-source-0.5.0/src/cmd/basecomputer.cpp
+--- vegastrike-source-0.5.0/src/cmd/basecomputer.cpp~	2008-04-26 12:00:24.000000000 +0200
++++ vegastrike-source-0.5.0/src/cmd/basecomputer.cpp	2009-05-23 17:23:55.000000000 +0200
+@@ -3128,9 +3128,9 @@ static int	nodirs( const struct dirent *
+ 	return 0;
+ }
+ 
+-static int datesort ( const void *v1, const void *v2 ) {
+-	const struct dirent *d1=*(const struct dirent**)v1;
+-	const struct dirent *d2=*(const struct dirent**)v2;
++static int datesort ( const struct dirent **v1, const struct dirent **v2 ) {
++	const struct dirent *d1=*v1;
++	const struct dirent *d2=*v2;
+ 	struct stat s1, s2;
+ 	std::string tmp=VSFileSystem::homedir+"/save/"+d1->d_name;
+ 	if (stat(tmp.c_str(), &s1))
+@@ -3142,12 +3142,6 @@ static int datesort ( const void *v1, co
+ 	return s1.st_mtime - s2.st_mtime;
+ }
+ 
+-#if defined(_WIN32) && !defined(__CYGWIN__)
+-typedef int (*scancompare) ( const struct dirent **v1, const struct dirent **v2 );
+-#else
+-typedef int (*scancompare) ( const void *v1, const void *v2 );
+-#endif
+-
+ // Load the controls for the News display.
+ void BaseComputer::loadLoadSaveControls(void) {
+     SimplePicker* picker = static_cast<SimplePicker*>( window()->findControlById("LoadSavePicker") );
+@@ -3160,7 +3154,7 @@ void BaseComputer::loadLoadSaveControls(
+ 		const int playerNum=UnitUtil::isPlayerStarship(playerUnit);
+ 		struct dirent ** dirlist;
+ 		std::string savedir = VSFileSystem::homedir+"/save/";
+-		int ret = scandir (savedir.c_str(),&dirlist,nodirs,(scancompare)&datesort);
++		int ret = scandir (savedir.c_str(),&dirlist,nodirs,datesort);
+ 		while( ret-->0) {
+ 			picker->addCell(new SimplePickerCell(dirlist[ret]->d_name));
+ 		}		

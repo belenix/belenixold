@@ -1,0 +1,19 @@
+--- vegastrike-source-0.5.0/src/python/init.cpp.orig	2008-04-26 12:00:00.000000000 +0200
++++ vegastrike-source-0.5.0/src/python/init.cpp	2008-05-02 13:09:08.000000000 +0200
+@@ -235,7 +235,6 @@ void Python::initpaths(){
+   // Find all the mods dir (ignore homedir)
+   for( int i=1; i<VSFileSystem::Rootdir.size(); i++)
+   {
+-	  modpaths += "r\""+VSFileSystem::Rootdir[i]+ PATHSEP +moduledir+ PATHSEP "builtin\",";
+ 	  modpaths += "r\""+VSFileSystem::Rootdir[i]+ PATHSEP +moduledir+"\",";
+ 	  modpaths += "r\""+VSFileSystem::Rootdir[i]+ PATHSEP +basesdir+"\"";
+ 	  if( i+1<VSFileSystem::Rootdir.size())
+@@ -246,7 +245,7 @@ void Python::initpaths(){
+   while ((backslash=modpaths.find("\\"))!=std::string::npos) {
+      modpaths[backslash]='/';
+      }*/
+-   std::string changepath ("import sys\nprint sys.path\nsys.path = ["+modpaths+"]\n");
++   std::string changepath ("import sys\nprint sys.path\nsys.path += ["+modpaths+"]\n");
+   /*
+    std::string changepath ("import sys\nprint sys.path\nsys.path = ["
+ 			  "\""+VSFileSystem::datadir+DELIMSTR"modules"DELIMSTR"builtin\""
