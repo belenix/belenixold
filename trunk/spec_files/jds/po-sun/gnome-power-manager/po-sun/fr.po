@@ -1,0 +1,72 @@
+# Copyright (C) 2009 Sun Microsystems, Inc
+# This file is distributed under the same license as the gnome-power-manager package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+# Pascal.Kreyer <pascal.kreyer@sun.com>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-power-manager HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-02-20 12:28+0900\n"
+"PO-Revision-Date: 2008-10-14 17:47+0100\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../data/gnome-power-preferences.desktop.in.in.h:2
+msgid "Optimize your computer's power usage and CPU speed"
+msgstr ""
+"Optimiser l'utilisation électrique et la vitesse de CPU de l'ordinateur"
+
+# SUN_BRANDING
+# COMMUNITY UNTRANS
+# SUN CHANGED MESSAGE
+# SUN LING REVIEWED
+#: ../data/gnome-power-statistics.desktop.in.in.h:3
+msgid "Show graphs of recent battery performance"
+msgstr "Afficher les graphiques des performances de batterie récentes"
+
+# COMMUNITY MESSAGE
+# SUN_BRANDING
+#: ../data/gpm-prefs.glade.h:7
+msgid "Computer sp_eed policy:"
+msgstr "Gestion d_e la vitesse de l'ordinateur :"
+
+# COMMUNITY MESSAGE
+# SUN_BRANDING
+#: ../data/gpm-prefs.glade.h:31
+msgid ""
+"_Lock screen when computer is restored from blank screen, suspend or "
+"hibernate"
+msgstr "Verrouiller l'écran quand l'ordinateur revient de l'hibernation, "
+"d'un suspend ou d'une désactivation d'écran"
+
+# COMMUNITY MESSAGE
+# SUN_BRANDING
+#: ../src/gpm-prefs-core.c:108
+msgid "Based on processor load"
+msgstr "Basée sur la charge du processeur"
+
+# SUN_BRANDING
+#: ../src/gpm-prefs-core.c:110
+msgid "Automatic power saving"
+msgstr ""
+
+# SUN_BRANDING
+#: ../src/gpm-prefs-core.c:112
+msgid "Maximum power saving"
+msgstr ""
+
+# COMMUNITY MESSAGE
+# SUN_BRANDING
+#: ../src/gpm-prefs-core.c:114
+msgid "Always maximum speed"
+msgstr "Toujours à vitesse maximum"
