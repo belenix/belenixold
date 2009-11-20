@@ -1,0 +1,54 @@
+# Copyright (C) 2008 Sun Microsystems, Inc
+# This file is distributed under the same license as the gtk2 package.
+#
+# Desktop Discuss <desktop-discuss@opensolaris.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gtk20 HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-07-25 18:42+0900\n"
+"PO-Revision-Date: 2006-12-31 12:35+0100\n"
+"Last-Translator: desktop-discuss@opensolaris.org\n"
+"Language-Team: desktop-discuss@opensolaris.org\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../gtk/gtkfilesel.c:723
+msgid "_Documents"
+msgstr "_Dokument"
+
+#: ../gtk/gtkfilesel.c:746
+msgid "D_esktop"
+msgstr "S_krivbord"
+
+#: ../gtk/gtkfilesel.c:769 ../gtk/gtkstock.c:336
+msgid "_Home"
+msgstr "_Hem"
+
+# SUN_BRANDING
+#: ../modules/printbackends/papi/gtkprintbackendpapi.c:810
+msgid "printer offline"
+msgstr ""
+
+# SUN_BRANDING
+#: ../modules/printbackends/papi/gtkprintbackendpapi.c:828
+msgid "ready to print"
+msgstr ""
+
+# SUN_BRANDING
+#: ../modules/printbackends/papi/gtkprintbackendpapi.c:831
+msgid "processing job"
+msgstr ""
+
+# SUN_BRANDING
+#: ../modules/printbackends/papi/gtkprintbackendpapi.c:835
+msgid "paused"
+msgstr ""
+
+# SUN_BRANDING
+#: ../modules/printbackends/papi/gtkprintbackendpapi.c:838
+msgid "unknown"
+msgstr ""
