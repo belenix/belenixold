@@ -1,0 +1,51 @@
+--- src/cal3d/hardwaremodel.cpp~	2008-02-21 19:20:18.000000000 -0800
++++ src/cal3d/hardwaremodel.cpp	2008-02-21 19:20:33.000000000 -0800
+@@ -12,7 +12,7 @@
+ #include "config.h"
+ #endif
+ 
+-
++#include <string.h>
+ #include "cal3d/error.h"
+ #include "cal3d/hardwaremodel.h"
+ #include "cal3d/coremodel.h"
+--- src/cal3d/platform.cpp~	2008-02-21 19:20:26.000000000 -0800
++++ src/cal3d/platform.cpp	2008-02-21 19:20:40.000000000 -0800
+@@ -16,6 +16,7 @@
+ // Includes                                                                   //
+ //****************************************************************************//
+ 
++#include <string.h>
+ #include "cal3d/platform.h"
+ 
+  /*****************************************************************************/
+--- src/cal3d/renderer.cpp~	2008-02-21 19:30:35.000000000 -0800
++++ src/cal3d/renderer.cpp	2008-02-21 19:30:43.000000000 -0800
+@@ -16,6 +16,7 @@
+ // Includes                                                                   //
+ //****************************************************************************//
+ 
++#include <string.h>
+ #include "cal3d/error.h"
+ #include "cal3d/renderer.h"
+ #include "cal3d/coremodel.h"
+--- src/cal3d/submesh.cpp~	2008-02-21 19:35:00.000000000 -0800
++++ src/cal3d/submesh.cpp	2008-02-21 19:35:10.000000000 -0800
+@@ -12,6 +12,7 @@
+ #include "config.h"
+ #endif
+ 
++#include <string.h>
+ #include "cal3d/submesh.h"
+ #include "cal3d/error.h"
+ #include "cal3d/coresubmesh.h"
+--- src/cal3d_converter.cpp~	2008-02-21 19:40:07.000000000 -0800
++++ src/cal3d_converter.cpp	2008-02-21 19:40:22.000000000 -0800
+@@ -9,6 +9,7 @@
+ // your option) any later version.                                            //
+ //****************************************************************************//
+ 
++#include <strings.h>
+ #include "cal3d/cal3d.h"
+ 
+ #define SKELETON 0

@@ -1,0 +1,19 @@
+--- allegro-4.2.2/include/allegro/platform/alunixac.hin.multilib	2007-07-15 06:28:15.000000000 +0200
++++ allegro-4.2.2/include/allegro/platform/alunixac.hin	2007-07-23 12:36:16.000000000 +0200
+@@ -59,10 +59,14 @@
+ #undef ALLEGRO_ASM_PREFIX
+ 
+ /* Define if assembler supports MMX. */
+-#undef ALLEGRO_MMX
++#ifdef __i386__
++#define ALLEGRO_MMX
++#endif
+ 
+ /* Define if assembler supports SSE. */
+-#undef ALLEGRO_SSE
++#ifdef __i386__
++#define ALLEGRO_SSE
++#endif
+ 
+ /* Define if target platform is Darwin. */
+ #undef ALLEGRO_DARWIN

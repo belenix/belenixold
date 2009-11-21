@@ -1,0 +1,39 @@
+--- CEGUI-0.6.2/include/CEGUIDynamicModule.h.orig	2009-11-13 20:35:15.310463883 +0530
++++ CEGUI-0.6.2/include/CEGUIDynamicModule.h	2009-11-13 20:36:02.076601288 +0530
+@@ -42,7 +42,7 @@
+     struct HINSTANCE__;
+     typedef struct HINSTANCE__* hInstance;
+ 
+-#elif defined(__linux__)
++#elif defined(__linux__) || defined(__sun)
+ #    define DYNLIB_HANDLE void*
+ #    define DYNLIB_LOAD( a ) dlopen( a, RTLD_LAZY )
+ #    define DYNLIB_GETSYM( a, b ) dlsym( a, b )
+--- CEGUI-0.6.2/src/CEGUIDynamicModule.cpp.orig	2009-11-13 20:41:04.863368767 +0530
++++ CEGUI-0.6.2/src/CEGUIDynamicModule.cpp	2009-11-13 20:41:48.725551218 +0530
+@@ -46,7 +46,7 @@
+ #   include "macPlugins.h"
+ #endif
+ 
+-#if defined(__linux__)
++#if defined(HAVE_DLFCN_H)
+ #   include "dlfcn.h"
+ #endif
+ 
+--- CEGUI-0.6.2/src/CEGUISystem.cpp.orig	2009-11-13 20:46:02.423331840 +0530
++++ CEGUI-0.6.2/src/CEGUISystem.cpp	2009-11-13 20:45:27.547666702 +0530
+@@ -108,6 +108,14 @@
+     gettimeofday(&timeStructure, 0);
+     return timeStructure.tv_sec + timeStructure.tv_usec / 1000000.0;
+ }
++#elif defined(__sun)
++#include <sys/time.h>
++double SimpleTimer::currentTime()
++{
++    struct timeval timeStructure;
++    gettimeofday(&timeStructure, 0);
++    return timeStructure.tv_sec + timeStructure.tv_usec / 1000000.0;
++}
+ #else
+ #error "SimpleTimer not available for this platform, please implement it"
+ #endif

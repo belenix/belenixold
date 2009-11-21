@@ -1,0 +1,16 @@
+--- allegro-4.2.2/src/x/xwin.c	2009-09-10 22:29:53.000000000 +0200
++++ allegro-4.2.2.new/src/x/xwin.c	2009-09-10 21:48:21.000000000 +0200
+@@ -2853,6 +2853,13 @@
+       }
+    }
+       
++   /* Warp the pointer to the upper left corner (where our fs_window is),
++      this is necessary as the: XF86VidModeSetViewPort() call below does
++      not seem to do anything on newer Xorg servers, instead the viewport
++      seems to always be centered at the last mouse cursor position. */
++   XWarpPointer(_xwin.display, None, XDefaultRootWindow(_xwin.display),
++                0, 0, 0, 0, 0, 0);
++
+    /* Switch video mode.  */
+    if ((_xwin.modesinfo[i] == _xwin.orig_modeinfo) ||
+        !XF86VidModeSwitchToMode(_xwin.display, _xwin.screen,
