@@ -1,0 +1,28 @@
+diff -up allegro-4.2.2/misc/allegro-config.in.multilib2 allegro-4.2.2/misc/allegro-config.in
+--- allegro-4.2.2/misc/allegro-config.in.multilib2	2007-07-22 09:45:47.000000000 +0200
++++ allegro-4.2.2/misc/allegro-config.in	2007-07-24 21:27:21.000000000 +0200
+@@ -16,15 +16,22 @@ exec_prefix=$prefix
+ exec_prefix_set=no
+ include_prefix=@INCLUDE_PREFIX@
+ include_path=@includedir@
+-lib_path=@libdir@
+ bin_path=@bindir@
++arch=$(/usr/bin/isainfo | cut -f1 -d" ")
++if [ "$arch" = "amd64" -o "$arch" = "ppc64" \
++    -o "$arch" = "ia64" ];
++then
++    lib_path="/usr/lib/amd64"
++else
++    lib_path="/usr/lib"
++fi
+ 
+ static_libs=@LINK_WITH_STATIC_LIBS@
+ lib_type=@LIB_TO_LINK@
+ 
+ accepts_frameworks=no
+ 
+-allegro_ldflags="@LDFLAGS@"
++allegro_ldflags="@LDFLAGS@"
+ allegro_libs="@LIBS@"
+ allegro_frameworks="@FRAMEWORKS@"
+ allegro_cflags=""

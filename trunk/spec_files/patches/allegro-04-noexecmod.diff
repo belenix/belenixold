@@ -1,0 +1,46 @@
+--- allegro-4.2.1/src/x/xdga2s.s~	2006-12-22 16:14:41.000000000 +0100
++++ allegro-4.2.1/src/x/xdga2s.s	2006-12-22 16:14:41.000000000 +0100
+@@ -24,7 +24,7 @@
+ 
+ .text
+ 
+-
++#if 0 /* this is non PIC and we have a C alternative, so don't use it! */
+ #if (!defined ALLEGRO_NO_ASM) && (defined ALLEGRO_XWINDOWS_WITH_XF86DGA2)
+ #if (!defined ALLEGRO_WITH_MODULES) || (defined ALLEGRO_MODULE)
+ 
+@@ -50,4 +50,5 @@
+ 
+ #endif
+ #endif
++#endif
+ 
+--- allegro-4.2.1/src/x/xdga2.c~	2006-12-22 16:17:40.000000000 +0100
++++ allegro-4.2.1/src/x/xdga2.c	2006-12-22 16:17:40.000000000 +0100
+@@ -49,7 +49,7 @@
+ static void _xdga2_acquire(BITMAP *bmp);
+ static GFX_MODE_LIST *_xdga2_fetch_mode_list(void);
+ 
+-#ifdef ALLEGRO_NO_ASM
++#if 1 /* the asm is non PIC and we have a C alternative, so don't use it! */
+ uintptr_t _xdga2_write_line(BITMAP *bmp, int line);
+ #else
+ uintptr_t _xdga2_write_line_asm(BITMAP *bmp, int line);
+@@ -559,7 +559,7 @@
+       /* Hardware acceleration has been requested */
+       
+       /* Updates line switcher to accommodate framebuffer synchronization */
+-#ifdef ALLEGRO_NO_ASM
++#if 1 /* the asm is non PIC and we have a C alternative, so don't use it! */
+       bmp->write_bank = _xdga2_write_line;
+       bmp->read_bank = _xdga2_write_line;
+ #else
+@@ -816,7 +816,7 @@
+ }
+ 
+ 
+-#ifdef ALLEGRO_NO_ASM
++#if 1 /* the asm is non PIC and we have a C alternative, so don't use it! */
+ 
+ /* _xdga2_write_line:
+  *  Returns new line and synchronizes framebuffer if needed.

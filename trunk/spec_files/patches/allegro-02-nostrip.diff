@@ -1,0 +1,11 @@
+--- allegro-4.2.0/misc/deplib.sh.nostrip	2006-01-23 21:35:02.000000000 +0100
++++ allegro-4.2.0/misc/deplib.sh	2006-01-23 21:35:09.000000000 +0100
+@@ -70,7 +70,7 @@
+ done
+ echo "$prev"
+ echo ""
+-write_code alleg LIBALLEG -s
++write_code alleg LIBALLEG ""
+ echo ""
+ echo ""
+ 
