@@ -1,0 +1,109 @@
+diff -ur ogre/RenderSystems/GL/src/glew.cpp ogre.new/RenderSystems/GL/src/glew.cpp
+--- ogre/RenderSystems/GL/src/glew.cpp	2008-09-28 11:10:34.000000000 +0400
++++ ogre.new/RenderSystems/GL/src/glew.cpp	2008-09-28 11:12:46.000000000 +0400
+@@ -29,6 +29,10 @@
+ ** THE POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
++// SJS
++#include "OgreGLSupport.h"
++// SJS
++
+ #include <GL/glew.h>
+ #if defined(_WIN32)
+ #  include <GL/wglew.h>
+@@ -56,13 +60,13 @@
+ #  endif /* _WIN32 */
+ #  define GLEW_CONTEXT_ARG_DEF_LIST GLEWContext* ctx
+ #else /* GLEW_MX */
+-#  define GLEW_CONTEXT_ARG_DEF_INIT void
+-#  define GLEW_CONTEXT_ARG_VAR_INIT
+-#  define GLEW_CONTEXT_ARG_DEF_LIST void
+-#  define WGLEW_CONTEXT_ARG_DEF_INIT void
+-#  define WGLEW_CONTEXT_ARG_DEF_LIST void
+-#  define GLXEW_CONTEXT_ARG_DEF_INIT void
+-#  define GLXEW_CONTEXT_ARG_DEF_LIST void
++#  define GLEW_CONTEXT_ARG_DEF_INIT Ogre::GLSupport *glSupport
++#  define GLEW_CONTEXT_ARG_VAR_INIT glSupport
++#  define GLEW_CONTEXT_ARG_DEF_LIST Ogre::GLSupport *glSupport
++#  define WGLEW_CONTEXT_ARG_DEF_INIT Ogre::GLSupport *glSupport
++#  define WGLEW_CONTEXT_ARG_DEF_LIST Ogre::GLSupport *glSupport
++#  define GLXEW_CONTEXT_ARG_DEF_INIT Ogre::GLSupport *glSupport
++#  define GLXEW_CONTEXT_ARG_DEF_LIST Ogre::GLSupport *glSupport
+ #endif /* GLEW_MX */
+ 
+ #if defined(__APPLE__)
+@@ -80,7 +84,7 @@
+     image = NSAddImage("/System/Library/Frameworks/OpenGL.framework/Versions/Current/OpenGL", NSADDIMAGE_OPTION_RETURN_ON_ERROR);
+   }
+   /* prepend a '_' for the Unix C symbol mangling convention */
+-  symbolName = malloc(strlen((const char*)name) + 2);
++  symbolName = (char*)malloc(strlen((const char*)name) + 2);
+   strcpy(symbolName+1, (const char*)name);
+   symbolName[0] = '_';
+   symbol = NULL;
+@@ -5326,9 +5330,11 @@
+ 
+ /* ------------------------------------------------------------------------- */
+ 
+-#ifndef GLEW_MX
+-static
+-#endif
++// SJS
++//#ifndef GLEW_MX
++//static
++//#endif
++// SJS
+ GLenum glewContextInit (GLEW_CONTEXT_ARG_DEF_LIST)
+ {
+   const GLubyte* s;
+@@ -7299,11 +7305,15 @@
+ 
+ #ifdef GLX_VERSION_1_2
+ 
++// FB: Patched to allow Ogre to overload glXGetCurrentDisplay
+ static GLboolean _glewInit_GLX_VERSION_1_2 (GLXEW_CONTEXT_ARG_DEF_INIT)
+ {
+   GLboolean r = GL_FALSE;
+ 
+-  r = ((glXGetCurrentDisplay = (PFNGLXGETCURRENTDISPLAYPROC)glewGetProcAddress((const GLubyte*)"glXGetCurrentDisplay")) == NULL) || r;
++  if (glXGetCurrentDisplay == NULL) 
++  {
++      r = ((glXGetCurrentDisplay = (PFNGLXGETCURRENTDISPLAYPROC)glewGetProcAddress((const GLubyte*)"glXGetCurrentDisplay")) == NULL) || r;
++  }
+ 
+   return r;
+ }
+@@ -7976,18 +7986,20 @@
+ extern GLenum glxewContextInit (void);
+ #endif /* _WIN32 */
+ 
+-GLenum glewInit ()
+-{
+-  GLenum r;
+-  if ( (r = glewContextInit()) ) return r;
+-#if defined(_WIN32)
+-  return wglewContextInit();
+-#elif !defined(__APPLE__) || defined(GLEW_APPLE_GLX) /* _UNIX */
+-  return glxewContextInit();
+-#else
+-  return r;
+-#endif /* _WIN32 */
+-}
++// SJS
++//GLenum glewInit ()
++//{
++//  GLenum r;
++//  if ( (r = glewContextInit()) ) return r;
++//#if defined(_WIN32)
++//  return wglewContextInit();
++//#elif !defined(__APPLE__) || defined(GLEW_APPLE_GLX) /* _UNIX */
++//  return glxewContextInit();
++//#else
++//  return r;
++//#endif /* _WIN32 */
++//}
++// End SJS
+ 
+ #endif /* !GLEW_MX */
+ #ifdef GLEW_MX

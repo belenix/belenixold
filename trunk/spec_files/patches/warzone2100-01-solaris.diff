@@ -1,0 +1,14 @@
+--- warzone2100-2.2.1/lib/script/script_parser.tab.h.orig	2009-11-18 19:56:54.319212825 +0530
++++ warzone2100-2.2.1/lib/script/script_parser.tab.h	2009-11-18 19:58:03.653696182 +0530
+@@ -33,6 +33,11 @@
+    This special exception was added by the Free Software Foundation in
+    version 2.2 of Bison.  */
+ 
++#ifdef __sun
++/* Solaris defines a _VOID macro for pre-historic compatibility, ugh! */
++#undef _VOID
++#endif
++
+ /* Tokens.  */
+ #ifndef YYTOKENTYPE
+ # define YYTOKENTYPE
