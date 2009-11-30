@@ -1,0 +1,24 @@
+diff -up ogrenew/OgreMain/src/Makefile.am~ ogrenew/OgreMain/src/Makefile.am
+--- ogrenew/OgreMain/src/Makefile.am~	2007-06-30 21:18:34.000000000 +0200
++++ ogrenew/OgreMain/src/Makefile.am	2007-06-30 21:18:34.000000000 +0200
+@@ -185,7 +185,7 @@ endif
+ 
+ platformdir = $(libdir)
+ libOgreMain_la_LIBADD= $(STLPORT_LIBS) $(FT2_LIBS) $(ZZIPLIB_LIBS) $(GTK_LIBS) $(OGRE_THREAD_LIBS) $(PLATFORM_LIBS)
+-libOgreMain_la_LDFLAGS = $(SHARED_FLAGS) -release @PACKAGE_VERSION@ -Wl,-rpath,$(platformdir)
++libOgreMain_la_LDFLAGS = $(SHARED_FLAGS) -release @PACKAGE_VERSION@
+ #-version-info @OGREMAIN_VERSION_INFO@ -Wl,-rpath,$(platformdir)
+ #-Wl,--version-script=$(top_srcdir)/OgreMain/src/ogremain.map
+ 
+diff -up ogrenew/OgreMain/src/Makefile.in~ ogrenew/OgreMain/src/Makefile.in
+--- ogrenew/OgreMain/src/Makefile.in~	2007-06-30 21:19:23.000000000 +0200
++++ ogrenew/OgreMain/src/Makefile.in	2007-06-30 21:19:23.000000000 +0200
+@@ -488,7 +488,7 @@ platformdir = $(libdir)
+ libOgreMain_la_LIBADD = $(STLPORT_LIBS) $(FT2_LIBS) $(ZZIPLIB_LIBS) \
+ 	$(GTK_LIBS) $(OGRE_THREAD_LIBS) $(PLATFORM_LIBS) \
+ 	$(am__append_3)
+-libOgreMain_la_LDFLAGS = $(SHARED_FLAGS) -release @PACKAGE_VERSION@ -Wl,-rpath,$(platformdir)
++libOgreMain_la_LDFLAGS = $(SHARED_FLAGS) -release @PACKAGE_VERSION@
+ all: all-am
+ 
+ .SUFFIXES:

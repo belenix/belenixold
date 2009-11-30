@@ -1,0 +1,67 @@
+--- tolua++-1.0.92/SConstruct.orig	2006-04-10 10:45:44.000000000 +0100
++++ tolua++-1.0.92/SConstruct	2006-06-02 15:12:34.000000000 +0100
+@@ -22,7 +22,7 @@
+ opts.Add('LIBPATH', 'library path', [])
+ 
+ opts.Add('tolua_bin', 'the resulting binary', 'tolua++')
+-opts.Add('tolua_lib', 'the resulting library', 'tolua++')
++opts.Add('tolua_lib', 'the resulting library', 'tolua++-5.1')
+ opts.Add('TOLUAPP', 'the name of the tolua++ binary (to use with built_dev=1)', 'tolua++')
+ 
+ opts.Add('prefix', 'The installation prefix')
+--- tolua++-1.0.92/config_linux.py.orig	2005-04-30 03:20:38.000000000 +0100
++++ tolua++-1.0.92/config_linux.py	2006-06-02 15:09:03.000000000 +0100
+@@ -15,8 +15,8 @@
+ #
+ # You can see more 'generic' options for POSIX systems on config_posix.py
+ 
+-prefix = '/usr/local'
++prefix = '/usr'
+ 
+ # libraries (based on Debian's installation of lua)
+-LIBS = ['lua50', 'lualib50', 'dl', 'm']
++LIBS = ['lua', 'dl', 'm']
+ 
+--- tolua++-1.0.92/custom-5.1.py.orig	2006-02-13 23:57:26.000000000 +0000
++++ tolua++-1.0.92/custom-5.1.py	2006-06-02 15:10:08.000000000 +0100
+@@ -1,11 +1,11 @@
+ CC = 'gcc'
+ CCFLAGS = ['-I/usr/include/lua5.1', '-O2', '-ansi']
+ #LIBPATH = ['/usr/local/lib']
+-LIBS = ['lua5.1', 'dl', 'm']
+-prefix = '/usr/local'
++LIBS = ['lua', 'dl', 'm']
++prefix = '/usr'
+ build_dev = 1
+-ENV = {'PATH': '/usr/local/bin:/bin:/usr/bin'}
+-tolua_bin = 'tolua++5.1'
+-tolua_lib = 'tolua++5.1'
++ENV = {'PATH': '/bin:/usr/bin:/usr/local/bin'}
++tolua_bin = 'tolua++'
++tolua_lib = 'tolua++-5.1'
+ TOLUAPP = 'tolua++5.1'
+ 
+--- tolua++-1.0.92/src/lib/SCsub.orig	2005-11-28 13:51:15.000000000 +0000
++++ tolua++-1.0.92/src/lib/SCsub	2006-06-02 15:11:17.000000000 +0100
+@@ -9,5 +9,4 @@
+ 	'tolua_to.c',
+ 	]
+ 
+-env.lib_target = env.Library('#/lib/'+env['tolua_lib'], sources)
+-
++env.lib_target = env.SharedLibrary('#/lib/'+env['tolua_lib'], sources)
+--- tolua++-1.0.92/config_posix.py.orig	2009-11-12 21:54:45.891050411 +0530
++++ tolua++-1.0.92/config_posix.py	2009-11-12 21:55:22.224989891 +0530
+@@ -13,10 +13,10 @@
+ # You can also specify this directory on the command line with the 'prefix'
+ # option
+ 
+-prefix = '/usr/local'
++prefix = '/usr'
+ 
+ # libraries
+-LIBS = ['lua', 'lualib', 'm']
++LIBS = ['lua', 'dl', 'm']
+ 
+ 
+ 

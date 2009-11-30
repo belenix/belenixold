@@ -1,0 +1,12 @@
+--- ogre/OgreMain/src/nedmalloc/nedmalloc.c.orig	2009-11-15 15:05:32.743664954 +0530
++++ ogre/OgreMain/src/nedmalloc/nedmalloc.c	2009-11-15 15:06:08.381613217 +0530
+@@ -37,6 +37,9 @@
+ #ifdef WIN32
+  #include <malloc.h>
+ #endif
++#ifdef __sun
++#include <alloca.h>
++#endif
+ #define MSPACES 1
+ #define ONLY_MSPACES 1
+ #ifndef USE_LOCKS

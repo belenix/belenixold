@@ -1,0 +1,13 @@
+--- zziplib-0.13.58/configure.ac.orig	2009-11-14 22:51:22.467274532 +0530
++++ zziplib-0.13.58/configure.ac	2009-11-14 22:50:32.886897643 +0530
+@@ -284,6 +284,10 @@
+     ZZIPLIB_LDFLAGS="-no-undefined -export-all-symbols -mconsole"
+     RESOLVES=' '
+   ;;
++  *solaris*)
++    ZZIPLIB_LDFLAGS=""
++    RESOLVES=' # '
++  ;;
+   *)
+ 
+     if test ".$can_build_shared" = .no

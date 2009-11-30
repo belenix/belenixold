@@ -1,0 +1,38 @@
+diff -up FreeImage/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox~ FreeImage/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox
+--- FreeImage/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox~	2008-03-18 14:39:25.000000000 +0100
++++ FreeImage/Wrapper/FreeImagePlus/doc/FreeImagePlus.dox	2008-03-18 14:39:25.000000000 +0100
+@@ -5,7 +5,7 @@
+ #---------------------------------------------------------------------------
+ PROJECT_NAME           = FreeImagePlus
+ PROJECT_NUMBER         = "FreeImage 3.9.0"
+-OUTPUT_DIRECTORY       = C:/Projects/FreeImage/Wrapper/FreeImagePlus/
++OUTPUT_DIRECTORY       = .
+ CREATE_SUBDIRS         = NO
+ OUTPUT_LANGUAGE        = English
+ USE_WINDOWS_ENCODING   = YES
+@@ -67,12 +67,11 @@ WARN_IF_UNDOCUMENTED   = YES
+ WARN_IF_DOC_ERROR      = YES
+ WARN_NO_PARAMDOC       = NO
+ WARN_FORMAT            = "$file:$line: $text"
+-WARN_LOGFILE           = C:\Projects\FreeImage\Wrapper\FreeImagePlus\doc\doxygen.log
++WARN_LOGFILE           = ./doxygen.log
+ #---------------------------------------------------------------------------
+ # configuration options related to the input files
+ #---------------------------------------------------------------------------
+-INPUT                  = C:/Projects/FreeImage/Source/FreeImage.h \
+-                         C:/Projects/FreeImage/Wrapper/FreeImagePlus/FreeImagePlus.h
++INPUT                  = ../../../Source/FreeImage.h ../FreeImagePlus.h
+ FILE_PATTERNS          = *.h
+ RECURSIVE              = YES
+ EXCLUDE                = 
+@@ -106,8 +105,8 @@ IGNORE_PREFIX          = 
+ GENERATE_HTML          = YES
+ HTML_OUTPUT            = html
+ HTML_FILE_EXTENSION    = .html
+-HTML_HEADER            = C:/Projects/FreeImage/Wrapper/FreeImagePlus/doc/header.html
+-HTML_FOOTER            = C:/Projects/FreeImage/Wrapper/FreeImagePlus/doc/footer.html
++HTML_HEADER            = ./header.html
++HTML_FOOTER            = ./footer.html
+ HTML_STYLESHEET        = 
+ HTML_ALIGN_MEMBERS     = YES
+ GENERATE_HTMLHELP      = YES

@@ -1,0 +1,47 @@
+--- torcs-1.3.1/src/modules/graphic/ssggraph/grscene.cpp.orig	2009-11-17 20:14:35.916521991 +0530
++++ torcs-1.3.1/src/modules/graphic/ssggraph/grscene.cpp	2009-11-17 20:15:28.546681785 +0530
+@@ -81,7 +81,7 @@
+ ssgBranch *CarlightAnchor = 0;
+ 
+ ssgBranch *ThePits = 0;
+-ssgTransform *sun = NULL ;
++ssgTransform *Sun = NULL ;
+ 
+ static void initBackground(void);
+ 
+@@ -150,13 +150,13 @@
+     glEnable(GL_LIGHT0);
+     glEnable(GL_DEPTH_TEST);
+ 
+-    if (!sun) {
+-	ssgaLensFlare      *sun_obj      = NULL ;
+-	sun_obj  = new ssgaLensFlare () ;
+-	sun      = new ssgTransform ;
+-	sun      -> setTransform    ( light_position ) ;
+-	sun      -> addKid          ( sun_obj  ) ;
+-	SunAnchor-> addKid(sun) ;
++    if (!Sun) {
++	ssgaLensFlare      *Sun_obj      = NULL ;
++	Sun_obj  = new ssgaLensFlare () ;
++	Sun      = new ssgTransform ;
++	Sun      -> setTransform    ( light_position ) ;
++	Sun      -> addKid          ( Sun_obj  ) ;
++	SunAnchor-> addKid(Sun) ;
+     }
+ 
+     /* GUIONS GL_TRUE */
+--- torcs-1.3.1/src/drivers/olethros/learn.cpp.orig	2009-11-17 21:15:50.028015739 +0530
++++ torcs-1.3.1/src/drivers/olethros/learn.cpp	2009-11-17 21:15:57.856087144 +0530
+@@ -28,6 +28,12 @@
+ #define finite _finite
+ #endif
+ 
++#if defined(__sun) && defined(__SVR4)
++#include <limits.h>
++#include <math.h>
++#define finite isfinite
++#endif
++
+ #ifdef USE_OLETHROS_NAMESPACE
+ //namespace olethros
+ //{
