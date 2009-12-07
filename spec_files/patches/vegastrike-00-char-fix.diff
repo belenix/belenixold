@@ -1,0 +1,21 @@
+diff -urN vegastrike-0.4.2.orig/src/xml_serializer.h vegastrike-0.4.2/src/xml_serializer.h
+--- vegastrike-0.4.2.orig/src/xml_serializer.h	2004-04-25 22:24:48.000000000 -0400
++++ vegastrike-0.4.2/src/xml_serializer.h	2004-11-22 17:16:54.000000000 -0500
+@@ -12,7 +12,7 @@
+ 	unsigned int *ui;
+     float *f;
+     void * p;
+-    char * c;
++    signed char * c;
+    // short * s;
+     bool * b;
+     double * d;
+@@ -30,7 +30,7 @@
+   XMLType (float myhardfloat) {w.hardfloat = myhardfloat;}
+   XMLType (float  *myfloat) {w.f =myfloat;}
+   XMLType (void * myvoid) {w.p=myvoid;}
+-  XMLType (char * mychar) {w.c=mychar;}
++  XMLType (signed char * mychar) {w.c=mychar;}
+   //XMLType (short * mychar) {w.s=mychar;} // removing useless shorts - use integers instead
+   //XMLType (unsigned short * mychar) {w.us=mychar;} // removing useless shorts - use integers instead
+   XMLType (unsigned char * mychar) {w.uc=mychar;}
