@@ -1,0 +1,47 @@
+--- llvm-2.6/include/llvm/System/Path.h.orig	2009-11-26 22:49:06.734023824 +0530
++++ llvm-2.6/include/llvm/System/Path.h	2009-11-26 23:42:35.933802363 +0530
+@@ -386,6 +386,13 @@
+       /// in the file system.
+       bool canWrite() const;
+ 
++      /// This function checks that what we're trying to work only on a regular file
++      /// or directory. Check for things like /dev/null, any block special file,
++      /// or other things that aren't "regular" files.
++      /// @returns true if the file is S_ISREG.
++      /// @brief Determines if the file is a regular file
++      bool isRegularFile() const;
++
+       /// This function determines if the path name references an executable
+       /// file in the file system. This function checks for the existence and
+       /// executability (by the current program) of the file.
+--- llvm-2.6/lib/System/Unix/Path.inc.orig	2009-11-26 22:50:49.815639930 +0530
++++ llvm-2.6/lib/System/Unix/Path.inc	2009-11-26 23:44:31.112568063 +0530
+@@ -331,7 +331,7 @@
+   free(pv);
+   return (NULL);
+ }
+-#endif
++#endif // __FreeBSD__
+ 
+ /// GetMainExecutable - Return the path to the main executable, given the
+ /// value of argv[0] from program startup.
+@@ -438,6 +438,19 @@
+ }
+ 
+ bool
++Path::isRegularFile() const {
++  // Get the status so we can determine if its a file or directory
++  struct stat buf;
++
++  if (0 != stat(path.c_str(), &buf)) {
++    if (S_ISREG(buf.st_mode))
++      return true;
++  }
++
++  return false;
++}
++
++bool
+ Path::canExecute() const {
+   if (0 != access(path.c_str(), R_OK | X_OK ))
+     return false;

@@ -1,0 +1,47 @@
+--- llvm-2.6/include/llvm/ADT/Triple.h.orig	2009-11-26 23:50:27.444563237 +0530
++++ llvm-2.6/include/llvm/ADT/Triple.h	2009-11-26 23:47:35.845294625 +0530
+@@ -59,7 +59,7 @@
+     msp430,  // MSP430: msp430
+     pic16,   // PIC16: pic16
+     ppc,     // PPC: powerpc
+-    ppc64,   // PPC64: powerpc64
++    ppc64,   // PPC64: powerpc64, ppu
+     sparc,   // Sparc: sparc
+     systemz, // SystemZ: s390x
+     tce,     // TCE (http://tce.cs.tut.fi/): tce
+@@ -85,6 +85,7 @@
+     DragonFly,
+     FreeBSD,
+     Linux,
++    Lv2,       // PS3
+     MinGW32,
+     MinGW64,
+     NetBSD,
+--- llvm-2.6/lib/Support/Triple.cpp.orig	2009-11-26 23:50:33.980863925 +0530
++++ llvm-2.6/lib/Support/Triple.cpp	2009-11-26 23:49:31.008248550 +0530
+@@ -65,6 +65,7 @@
+   case DragonFly: return "dragonfly";
+   case FreeBSD: return "freebsd";
+   case Linux: return "linux";
++  case Lv2: return "lv2";
+   case MinGW32: return "mingw32";
+   case MinGW64: return "mingw64";
+   case NetBSD: return "netbsd";
+@@ -136,7 +137,7 @@
+     Arch = pic16;
+   else if (ArchName == "powerpc")
+     Arch = ppc;
+-  else if (ArchName == "powerpc64")
++  else if ((ArchName == "powerpc64") || (ArchName == "ppu"))
+     Arch = ppc64;
+   else if (ArchName == "arm" ||
+            ArchName.startswith("armv") ||
+@@ -200,6 +201,8 @@
+     OS = FreeBSD;
+   else if (OSName.startswith("linux"))
+     OS = Linux;
++  else if (OSName.startswith("lv2"))
++    OS = Lv2;
+   else if (OSName.startswith("mingw32"))
+     OS = MinGW32;
+   else if (OSName.startswith("mingw64"))

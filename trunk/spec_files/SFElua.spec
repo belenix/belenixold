@@ -24,6 +24,9 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
      CPUS=1
 fi
 
+(cd src
+ %{gnu_bin}/sed -i 's/-DLUA_USE_DLOPEN/-DLUA_USE_DLOPEN -fPIC -DPIC/' Makefile)
+
 make solaris
 
 %install
@@ -51,6 +54,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/lua/*
 
 %changelog
+* Mon Dec 07 2009 - Moinak Ghosh
+- Add PIC flags for position-independent code.
 * Thu Mar 05 2009 - sobotkap@gmail.com
 - Fix patch and bump to version 5.1.4
 * Tue Sep 11 2007 - Petr Sobotka sobotkap@centum.cz

@@ -6,7 +6,7 @@
 %include Solaris.inc
 
 %define src_name	openal
-%define src_url		http://www.openal.org/openal_webstf/downloads
+%define src_url		http://www.belenix.org/binfiles
 
 Name:                   SFEopenal
 Summary:                OpenAL is a cross-platform 3D audio API
@@ -42,7 +42,7 @@ fi
 
 
 %if %cc_is_gcc
-export CFLAGS="%optflags -D__EXTENSIONS__"
+export CFLAGS="%optflags -std=c99 -D__EXTENSIONS__"
 export CPP="$CC -E"
 
 %else
@@ -66,13 +66,18 @@ export LDFLAGS="%_ldflags"
             --sysconfdir=%{_sysconfdir} \
             --enable-shared		\
 	    --disable-static
-make clean
-make # -j$CPUS 
+
+export echo=echo
+gmake clean ECHO=echo
+gmake ECHO=echo # -j$CPUS 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+export echo=echo
+make install DESTDIR=$RPM_BUILD_ROOT ECHO=echo
 rm $RPM_BUILD_ROOT/%{_libdir}/lib*.*a
+cp $RPM_BUILD_ROOT%{_libdir}/pkgconfig/openal.pc .
+cat openal.pc | sed 's/Requires: @requirements@//' > $RPM_BUILD_ROOT%{_libdir}/pkgconfig/openal.pc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -91,6 +96,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Mon Dec 07 2009 - Moinak Ghosh
+- Fix gcc4 build. Fix pkgconfig file.
 * Thu Feb 21 2008 - moinak.ghosh@sun.com
 - Fixed build with Gcc.
 * Tue Jun  5 2007 - dougs@truemail.co.th
