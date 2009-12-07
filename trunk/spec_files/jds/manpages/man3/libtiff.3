@@ -1,0 +1,1134 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "libtiff">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub EntList brvbar bull cross dash diam diams frac12 frac13 frac14 hellip
+ laquo lArr loz mdash nabla ndash para pound rArr raquo sect yen lt gt bsol>
+<?Pub Inc>
+<refentry id="libtiff-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">06 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>libtiff</primary></indexterm><indexterm><primary>introduction
+to <filename>libtiff</filename>, a library for reading and writing TIFF files
+</primary></indexterm>
+<refnamediv id="libtiff-3-name"><refname>libtiff</refname><refpurpose>introduction
+to <filename>libtiff</filename>, a library for reading and writing TIFF files
+</refpurpose></refnamediv>
+<refsect1 id="libtiff-3-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+
+cc [ <replaceable>flag</replaceable> ...]  -I/usr/sfw/include	 <replaceable>
+file</replaceable>  [  <replaceable>library</replaceable>  ...	]
+	-L/usr/sfw/lib -R/usr/sfw/lib -ltiff</programlisting>
+</refsect1>
+<refsect1 id="libtiff-3-desc"><title>&desc-tt;</title>
+<para><filename>&cmd;</filename> is a library for reading and writing data
+files encoded with the Tag Image File format, Revision 4.0 or later. The TIFF
+file format is suitable for archiving multicolor and monochromatic image data.
+</para>
+</refsect1>
+<refsect1 id="libtiff-3-exde"><title>&exde-tt;</title>
+<para>The <filename>&cmd;</filename> library supports several compression
+algorithms, as indicated by the Compression field, including:</para>
+<itemizedlist>
+<listitem><para>No compression (1)</para></listitem>
+<listitem><para>CCITT 1D Huffman compression (2)</para></listitem>
+<listitem><para>CCITT Group 3 Facsimile compression (3)</para></listitem>
+<listitem><para>CCITT Group 4 Facsimile compression (4)</para></listitem>
+<listitem><para>Lempel-Ziv &amp; Welch compression (5)</para></listitem>
+<listitem><para>Baseline JPEG compression (7)</para></listitem>
+<listitem><para>Word-aligned 1D Huffman compression (32771)</para></listitem>
+<listitem><para>PackBits compression (32773)</para></listitem>
+</itemizedlist>
+<para>In addition, several nonstandard compression algorithms are supported:
+</para>
+<itemizedlist>
+<listitem><para>4-bit compression algorithm used by the ThunderScan program
+(32809) (decompression only)</para></listitem>
+<listitem><para>NeXT's 2-bit compression algorithm (32766) (decompression
+only)</para></listitem>
+<listitem><para>Experimental LZ-style algorithm known as Deflate (32946)</para>
+</listitem>
+<listitem><para>Experimental CIE LogLuv compression scheme designed for images
+with high dynamic range (32845 for LogL and 32845 for LogLuv)</para></listitem>
+</itemizedlist>
+<para>Directory information may be in either little- or big-endian byte order.
+Byte swapping is automatically done by the library.</para>
+<para>Data bit ordering may be either Most Significant Bit (MSB) to Least
+Significant Bit (LSB), or LSB to MSB.</para>
+<para>The library does not support files in which the BitsPerSample, Compression,
+MinSampleValue, or MaxSampleValue fields are defined differently on a per-sample
+basis. In Revision 6.0, the Compression tag is not defined on a per-sample
+basis, so this is immaterial.</para>
+<refsect2 id="libtiff-3-exde-data">
+<title>Data Types</title>
+<para>The <filename>&cmd;</filename> library makes extensive use of C typedefs
+to promote portability. Two sets of typedefs are used, one for communication
+with clients of the library and one for internal data structures and parsing
+of the TIFF format. The following typedefs are exposed to users either through
+function definitions or through parameters passed through the <literal>varargs
+</literal> interfaces.</para>
+<itemizedlist>
+<listitem><para><literal>typedef unsigned short uint16;</literal> &mdash;
+16-bit unsigned integer</para></listitem>
+<listitem><para><literal>typedef unsigned &lt;thing> uint32;</literal> &mdash;
+32-bit unsigned integer</para></listitem>
+<listitem><para><literal>typedef unsigned int ttag_t;</literal> &mdash; directory
+tag</para></listitem>
+<listitem><para><literal>typedef uint16 tdir_t;</literal> &mdash; directory
+index</para></listitem>
+<listitem><para><literal>typedef uint16 tsample_t;</literal> &mdash; sample
+number</para></listitem>
+<listitem><para><literal>typedef uint32 tstrip_t;</literal> &mdash; strip
+number</para></listitem>
+<listitem><para><literal>typedef uint32 ttile_t;</literal> &mdash; tile number
+</para></listitem>
+<listitem><para><literal>typedef int32 tsize_t;</literal> &mdash; i/o size
+in bytes</para></listitem>
+<listitem><para><literal>typedef void* tdata_t;</literal> &mdash; image data
+ref</para></listitem>
+<listitem><para><literal>typedef void* thandle_t;</literal> &mdash; client
+data handle</para></listitem>
+<listitem><para><literal>typedef int32 toff_t;</literal> &mdash; file offset
+</para></listitem>
+</itemizedlist>
+<para><literal>tstrip_t</literal>, <literal>ttile_t</literal>, and <literal>
+tsize_t</literal> are limited to 32-bit quantities because they are stored
+in 32-bit fields in the TIFF image. Similarly, <literal>tsample_t</literal>
+is limited by the 16-bit field used to store the <literal>SamplesPerPixel
+</literal> tag. <literal>tdir_t</literal> constrains the maximum number of
+IFDs that may appear in an image and may be an arbitrary size without penalty.
+</para>
+<para><literal>ttag_t</literal> must be <literal>int</literal>, <literal>
+unsigned int</literal>, <literal>pointer</literal>, or <literal>double</literal>
+because the library uses a <literal>varargs</literal> interface and ANSI C
+restricts the type of the parameter before an ellipsis to be a promoted type.
+</para>
+<para><literal>toff_t</literal> is defined as <literal>int32</literal> because
+TIFF file offsets are unsigned 32-bit quantities. A signed value is used because
+some interfaces return -1 on error.</para>
+<para>User-specified data references are passed as opaque handles and only
+cast at the lowest layers where their type is presumed.</para>
+</refsect2>
+<refsect2 id="libtiff-3-exde-routines">
+<title>Library Routines</title>
+<para>The following routines are part of the <filename>&cmd;</filename> library.
+Consult specific reference pages for details on their operation. The reference
+page names listed below are for systems where the full function names cannot
+be encoded in the file system. On most systems, the command <command>man <replaceable>
+function-name</replaceable></command> will work.</para>
+<variablelist termlength="xtrawide">
+<varlistentry><term><literal>_TIFFfree</literal></term><listitem><para>Release
+allocated memory. See <citerefentry><refentrytitle>TIFFmemory</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>_TIFFmalloc</literal></term><listitem><para>
+Dynamically allocate memory. See <citerefentry><refentrytitle>TIFFmemory</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>_TIFFmemcmp</literal></term><listitem><para>
+Compare allocated memory. See <citerefentry><refentrytitle>TIFFmemory</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>_TIFFmemcpy</literal></term><listitem><para>
+Copy allocated memory to another memory location. See <citerefentry><refentrytitle>
+TIFFmemory</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>_TIFFmemset</literal></term><listitem><para>
+Set allocated memory to known value. See <citerefentry><refentrytitle>TIFFmemory
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>_TIFFrealloc</literal></term><listitem><para>
+Dynamically reallocate memory. See <citerefentry><refentrytitle>TIFFmemory
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFbuffer</literal></term><listitem><para>Specify
+i/o buffer for reading or writing. See <citerefentry><refentrytitle>TIFFbuffer
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFCheckTile</literal></term><listitem><para>
+Every <replaceable>x,y,z,sample</replaceable> is within image. See <citerefentry>
+<refentrytitle>TIFFtile</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFClientOpen</literal></term><listitem><para>
+Open a file for reading or writing. See <citerefentry><refentrytitle>TIFFOpen
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFClose</literal></term><listitem><para>Close
+an open file. See <citerefentry><refentrytitle>TIFFClose</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFcodec</literal></term><listitem><para>Work
+with codecs. See <citerefentry><refentrytitle>TIFFcodec</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFComputeStrip</literal></term><listitem><para>
+Return strip containing <replaceable>x,y,z,sample</replaceable>. See <citerefentry>
+<refentrytitle>TIFFstrip</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFComputeTile</literal></term><listitem><para>
+Return tile containing <replaceable>y,sample</replaceable>. See <citerefentry>
+<refentrytitle>TIFFtile</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFCurrentDirectory</literal></term><listitem>
+<para>Return index of current directory. See <citerefentry><refentrytitle>
+TIFFquery</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFCurrentRow</literal></term><listitem><para>
+Return index of current scanline. See <citerefentry><refentrytitle>TIFFquery
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFCurrentStrip</literal></term><listitem><para>
+Return index of current strip. See <citerefentry><refentrytitle>TIFFquery
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFCurrentTile</literal></term><listitem><para>
+Return index of current tile. See <citerefentry><refentrytitle>TIFFquery</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFDefaultStripSize</literal></term><listitem>
+<para>Return size of a strip. See <citerefentry><refentrytitle>TIFFstrip</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFDefaultTileSize</literal></term><listitem>
+<para>Return size of a tile. See <citerefentry><refentrytitle>TIFFtile</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFError</literal></term><listitem><para>Library
+error handler. See <citerefentry><refentrytitle>TIFFError</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFFdOpen</literal></term><listitem><para>Open
+a file for reading or writing. See <citerefentry><refentrytitle>TIFFOpen</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFFileName</literal></term><listitem><para>
+Return name of open file. See <citerefentry><refentrytitle>TIFFquery</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFFileno</literal></term><listitem><para>Return
+open file descriptor. See <citerefentry><refentrytitle>TIFFquery</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFFindCODEC</literal></term><listitem><para>
+Find a codec. See <citerefentry><refentrytitle>TIFFcodec</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFFlush</literal></term><listitem><para>Flush
+all pending writes. See <citerefentry><refentrytitle>TIFFFlush</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFFlushData</literal></term><listitem><para>
+Flush pending data writes. See <citerefentry><refentrytitle>TIFFFlush</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFGetBitRevTable</literal></term><listitem>
+<para>Return bit reversal table. See <citerefentry><refentrytitle>TIFFswab
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFGetField</literal></term><listitem><para>
+Return tag value in current directory. See <citerefentry><refentrytitle>TIFFGetField
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFGetFieldDefaulted</literal></term><listitem>
+<para>Return tag value in current directory. See <citerefentry><refentrytitle>
+TIFFGetField</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFGetMode</literal></term><listitem><para>
+Return open file mode. See <citerefentry><refentrytitle>TIFFquery</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFGetVersion</literal></term><listitem><para>
+Return library version string. See <citerefentry><refentrytitle>TIFFquery
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFIsByteSwapped</literal></term><listitem>
+<para>Return true if image data is byte-swapped. See <citerefentry><refentrytitle>
+TIFFquery</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFIsMSB2LSB</literal></term><listitem><para>
+Return true if image data is returned with bit 0 as the most significant bit.
+See <citerefentry><refentrytitle>TIFFquery</refentrytitle><manvolnum>3tiff
+</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFIsTiled</literal></term><listitem><para>
+Return true if image data is tiled. See <citerefentry><refentrytitle>TIFFquery
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFIsUpSampled</literal></term><listitem><para>
+Return true if image data is up-sampled. See <citerefentry><refentrytitle>
+TIFFquery</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFLastDirectory</literal></term><listitem>
+<para>Return a non-zero value if the current directory is the last directory
+in the file. See <citerefentry><refentrytitle>TIFFquery</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFmemory</literal></term><listitem><para>Manage
+memory. See <citerefentry><refentrytitle>TIFFmemory</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFNumberOfStrips</literal></term><listitem>
+<para>Return number of strips in an image. See <citerefentry><refentrytitle>
+TIFFstrip</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFNumberOfTiles</literal></term><listitem>
+<para>Return number of tiles in an image. See <citerefentry><refentrytitle>
+TIFFtile</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFOpen</literal></term><listitem><para>Open
+a file for reading or writing. See <citerefentry><refentrytitle>TIFFOpen</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFPrintDirectory</literal></term><listitem>
+<para>Print description of the current directory. See <citerefentry><refentrytitle>
+TIFFPrintDirectory</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFquery</literal></term><listitem><para>Return
+information about image. See <citerefentry><refentrytitle>TIFFquery
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFRasterScanlineSize</literal></term><listitem>
+<para>Return size of a raster scanline. See <citerefentry><refentrytitle>
+TIFFsize</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadBufferSetup</literal></term><listitem>
+<para>Specify i/o buffer for reading. See <citerefentry><refentrytitle>TIFFbuffer
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadDirectory</literal></term><listitem>
+<para>Read the next directory. See <citerefentry><refentrytitle>TIFFReadDirectory
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadEncodedStrip</literal></term><listitem>
+<para>Read and decode a strip of data. See <citerefentry><refentrytitle>TIFFReadEncodedStrip
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadEncodedTile</literal></term><listitem>
+<para>Read and decode a tile of data. See <citerefentry><refentrytitle>TIFFReadEncodedTile
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadRawStrip</literal></term><listitem><para>
+Read a raw strip of data. See <citerefentry><refentrytitle>TIFFReadRawStrip
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadRawTile</literal></term><listitem><para>
+Read a raw tile of data. See <citerefentry><refentrytitle>TIFFReadRawTile
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadRGBAImage</literal></term><listitem>
+<para>Read an image into a fixed format raster. See <citerefentry><refentrytitle>
+TIFFReadRGBAImage</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadRGBAStrip</literal></term><listitem>
+<para>Read an image strip into a fixed format raster. See <citerefentry><refentrytitle>
+TIFFReadRGBAStrip</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadRGBATile</literal></term><listitem><para>
+Read an image tile into a fixed format raster. See <citerefentry><refentrytitle>
+TIFFReadRGBATile</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadScanline</literal></term><listitem><para>
+Read and decode a row of data. See <citerefentry><refentrytitle>TIFFReadScanline
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReadTile</literal></term><listitem><para>
+Read and decode a tile of data. See <citerefentry><refentrytitle>TIFFReadTile
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFRegisterCODEC</literal></term><listitem>
+<para>Register a codec. See <citerefentry><refentrytitle>TIFFcodec</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFReverseBits</literal></term><listitem><para>
+Reverse bits in an array of bytes. See <citerefentry><refentrytitle>TIFFswab
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFRGBAImage</literal></term><listitem><para>
+Read and decode an image into a raster. See <citerefentry><refentrytitle>
+TIFFRGBAImage</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFRGBAImageBegin</literal></term><listitem>
+<para>Set up decoder state for <literal>TIFFRGBAImageGet</literal>. See <citerefentry>
+<refentrytitle>TIFFRGBAImage</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFRGBAImageEnd</literal></term><listitem><para>
+Release <literal>TIFFRGBAImage</literal> decoder state. See <citerefentry>
+<refentrytitle>TIFFRGBAImage</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFRGBAImageGet</literal></term><listitem><para>
+Read and decode an image. See <citerefentry><refentrytitle>TIFFRGBAImage</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFRGBAImageOK</literal></term><listitem><para>
+Determine whether image is readable by <literal>TIFFRGBAImageGet</literal>.
+See <citerefentry><refentrytitle>TIFFRGBAImage</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFScanlineSize</literal></term><listitem><para>
+Return size of a scanline. See <citerefentry><refentrytitle>TIFFsize</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFSetDirectory</literal></term><listitem><para>
+Set the current directory. See <citerefentry><refentrytitle>TIFFSetDirectory
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFSetSubDirectory</literal></term><listitem>
+<para>Set the current directory. See <citerefentry><refentrytitle>TIFFSetDirectory
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFSetErrorHandler</literal></term><listitem>
+<para>Set error handler function. See <citerefentry><refentrytitle>TIFFError
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFSetField</literal></term><listitem><para>
+Set tag value in the current directory. See <citerefentry><refentrytitle>
+TIFFSetField</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFSetWarningHandler</literal></term><listitem>
+<para>Set warning handler function. See <citerefentry><refentrytitle>TIFFWarning
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFsize</literal></term><listitem><para>Return
+the size. See <citerefentry><refentrytitle>TIFFsize</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFstrip</literal></term><listitem><para>Work
+with strips. See <citerefentry><refentrytitle>TIFFstrip</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFStripSize</literal></term><listitem><para>
+Return size of a strip. See <citerefentry><refentrytitle>TIFFstrip</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFswab</literal></term><listitem><para>Swap
+bytes. See <citerefentry><refentrytitle>TIFFswab</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFSwabShort</literal></term><listitem><para>
+Swap bytes of short. See <citerefentry><refentrytitle>TIFFswab</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFSwabLong</literal></term><listitem><para>
+Swap bytes of long. See <citerefentry><refentrytitle>TIFFswab</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFSwabArrayOfShort</literal></term><listitem>
+<para>Swap bytes of an array of shorts. See <citerefentry><refentrytitle>
+TIFFswab</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFSwabArrayOfLong</literal></term><listitem>
+<para>Swap bytes of an array of longs. See <citerefentry><refentrytitle>TIFFswab
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFtile</literal></term><listitem><para>Return
+tile information. See <citerefentry><refentrytitle>TIFFtile</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFTileRowSize</literal></term><listitem><para>
+Return size of a row in a tile. See <citerefentry><refentrytitle>TIFFtile
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFTileSize</literal></term><listitem><para>
+Return size of a tile. See <citerefentry><refentrytitle>TIFFtile</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFUnregisterCODEC</literal></term><listitem>
+<para>Unregister a codec. See <citerefentry><refentrytitle>TIFFcodec</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFVGetField</literal></term><listitem><para>
+Return tag value in current directory. See <citerefentry><refentrytitle>TIFFGetField
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFVGetFieldDefaulted</literal></term><listitem>
+<para>Return tag value in current directory. See <citerefentry><refentrytitle>
+TIFFGetField</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFVSetField</literal></term><listitem><para>
+Set tag value in current directory. See <citerefentry><refentrytitle>TIFFSetField
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFVStripSize</literal></term><listitem><para>
+Return size of a strip. See <citerefentry><refentrytitle>TIFFstrip</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFVTileSize</literal></term><listitem><para>
+Return size of a tile. See <citerefentry><refentrytitle>TIFFtile</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFWarning</literal></term><listitem><para>
+Library warning handler. See <citerefentry><refentrytitle>TIFFWarning</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFWriteBufferSetup</literal></term><listitem>
+<para>Specify i/o buffer for writing. See <citerefentry><refentrytitle>TIFFbuffer
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFWriteDirectory</literal></term><listitem>
+<para>Write the current directory. See <citerefentry><refentrytitle>TIFFWriteDirectory
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFWriteEncodedStrip</literal></term><listitem>
+<para>Compress and write a strip of data. See <citerefentry><refentrytitle>
+TIFFWriteEncodedStrip</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFWriteEncodedTile</literal></term><listitem>
+<para>Compress and write a tile of data. See <citerefentry><refentrytitle>
+TIFFWriteEncodedTile</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFWriteRawStrip</literal></term><listitem>
+<para>Write a raw strip of data. See <citerefentry><refentrytitle>TIFFWriteRawStrip
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFWriteRawTile</literal></term><listitem><para>
+Write a raw tile of data. See <citerefentry><refentrytitle>TIFFWriteRawTile
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFWriteScanline</literal></term><listitem>
+<para>Write a scanline of data. See <citerefentry><refentrytitle>TIFFWriteScanline
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFWriteTile</literal></term><listitem><para>
+Compress and write a tile of data. See <citerefentry><refentrytitle>TIFFWriteTile
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="libtiff-3-exde-tags">
+<title>Tag Usage</title>
+<para>The table below lists the TIFF tags that are recognized and supported
+by the <filename>&cmd;</filename> library. If no use is indicated in the table,
+then the library reads and writes the tag, but does not use the tag internally.
+Note that some tags are meaningful only when a particular compression scheme
+is used. For example, <literal>Group3Options</literal> is only useful if Compression
+is set to <literal>CCITT Group 3</literal> encoding. Tags of this sort are
+considered codec-specific tags and the library does not recognize them except
+when the Compression tag has been previously set to the relevant compression
+scheme.</para>
+<informaltable frame="all">
+<tgroup cols="4" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="25*">
+<colspec colname="COLSPEC1" colwidth="25*"><colspec colname="COLSPEC2" colwidth="25*">
+<colspec colname="COLSPEC3" colwidth="25*">
+<thead>
+<row rowsep="1"><entry colsep="1" rowsep="1"><para>TAG NAME</para></entry>
+<entry colsep="1" rowsep="1"><para>VALUE</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para>LIBRARY USE / NOTES</para></entry>
+</row>
+</thead>
+<tbody>
+<row><entry colsep="1" rowsep="1"><para><literal>Artist</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>315</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>BadFaxLines</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>326</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>BitsPerSample</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>258</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para>Lots.</para></entry>
+</row>
+<row><entry colsep="1" rowsep="1"><para><literal>CellLength</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>265</para></entry><entry colsep="1" rowsep="1"><para></para></entry>
+<entry colsep="1" rowsep="1"><para>Parsed but ignored.</para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>CellWidth</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>264</para></entry><entry colsep="1" rowsep="1"><para></para></entry>
+<entry colsep="1" rowsep="1"><para>Parsed but ignored.</para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>CleanFaxData</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>327</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>ColorMap</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>320</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>ColorResponseUnit</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>300</para></entry><entry colsep="1" rowsep="1"><para></para></entry>
+<entry colsep="1" rowsep="1"><para>Parsed but ignored.</para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>Compression</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>259</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para>Choosing codec.</para></entry>
+</row>
+<row><entry colsep="1" rowsep="1"><para><literal>ConsecutiveBadFaxLines</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>328</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>DataType</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>32996</para></entry><entry colsep="1" rowsep="1"><para>
+R</para></entry><entry colsep="1" rowsep="1"><para>Obsoleted by <literal>
+SampleFormat</literal> tag.</para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>DateTime</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>306</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>DocumentName</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>269</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>DotRange</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>336</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>ExtraSamples</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>338</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para>Lots.</para></entry>
+</row>
+<row><entry colsep="1" rowsep="1"><para><literal>FaxRecvParams</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>34908</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>FaxSubAddress</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>34909</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>FaxRecvTime</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>34910</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colsep="1" rowsep="1"><para><literal>FillOrder</literal></para></entry>
+<entry colsep="1" rowsep="1"><para>266</para></entry><entry colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colsep="1" rowsep="1"><para>Control bit order.</para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>FreeByteCounts
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+289</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para></para></entry>
+<entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Parsed but ignored.
+</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>FreeOffsets
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+288</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para></para></entry>
+<entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Parsed but ignored.
+</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>GrayResponseCurve
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+291</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para></para></entry>
+<entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Parsed but ignored.
+</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>GrayResponseUnit
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+290</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para></para></entry>
+<entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Parsed but ignored.
+</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>Group3Options
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+292</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Used
+by Group 3 codec.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>Group4Options
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+293</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>HostComputer
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+316</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>ImageDepth
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+32997</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Tile/strip
+calculations.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>ImageDescription
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+270</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>ImageLength
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+257</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Lots.
+</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>ImageWidth
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+256</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Lots.
+</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>InkNames
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+333</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>InkSet
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+332</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>JPEGTables
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+347</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Used
+by JPEG codec.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>Make</literal></para></entry>
+<entry colname="COLSPEC1" colsep="1" rowsep="1"><para>271</para></entry><entry
+colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W</para></entry><entry colname="COLSPEC3"
+colsep="1" rowsep="1"><para></para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>Matteing
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+32995</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>
+R</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Obsoleted
+by <literal>ExtraSamples</literal> tag.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>MaxSampleValue
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+281</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>MinSampleValue
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+280</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>Model
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+272</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>NewSubFileType
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+254</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Called <literal>
+SubFileType</literal> in spec.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>NumberOfInks
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+334</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>Orientation
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+274</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>PageName
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+285</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>PageNumber
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+297</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>PhotometricInterpretation
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+262</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Used
+by Group 3 and JPEG codecs.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>PlanarConfiguration
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+284</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Data
+i/o.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>Predictor
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+317</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Used
+by LZW and Deflate codecs.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>PrimaryChromacities
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+319</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>ReferenceBlackWhite
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+532</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>ResolutionUnit
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+296</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Used
+by Group 3 codec.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>RowsPerStrip
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+278</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Data
+i/o.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>SampleFormat
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+339</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>SamplesPerPixel
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+277</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Lots.
+</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>SMinSampleValue
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+340</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>SMaxSampleValue
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+341</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>Software
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+305</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>StoNits
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+37439</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>StripByteCounts
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+279</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Data
+i/o.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>StripOffsets
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+273</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Data
+i/o.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>SubFileType
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+255</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Called <literal>
+OSubFileType</literal> in spec.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>TargetPrinter
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+337</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>Thresholding
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+263</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>TileByteCounts
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+324</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Data
+i/o.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>TileDepth
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+32998</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>
+R/W</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Tile/strip
+calculations.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>TileLength
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+323</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Data
+i/o.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>TileOffsets
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+324</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Data
+i/o.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>TileWidth
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+322</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Data
+i/o.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>TransferFunction
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+301</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>WhitePoint
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+318</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>XPosition
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+286</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>XResolution
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+282</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>YCbCrCoefficients
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+529</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Used
+by TIFFRGBAImage support.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>YCbCrPositioning
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+531</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Tile/strip
+size calulcations.</para></entry></row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>YCbCrSubsampling
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+530</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>YPosition
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+286</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para></para></entry>
+</row>
+<row><entry colname="COLSPEC0" colsep="1" rowsep="1"><para><literal>YResolution
+</literal></para></entry><entry colname="COLSPEC1" colsep="1" rowsep="1"><para>
+283</para></entry><entry colname="COLSPEC2" colsep="1" rowsep="1"><para>R/W
+</para></entry><entry colname="COLSPEC3" colsep="1" rowsep="1"><para>Used
+by Group 3 codec.</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect2>
+<refsect2 id="libtiff-3-exde-pseudo">
+<title>Pseudo Tags</title>
+<para>In addition to the normal TIFF tags, the <filename>&cmd;</filename>
+library supports a collection of tags whose values lie in a range outside
+the valid range of TIFF tags. These tags are termed pseudo-tags and are used
+to control various codec-specific functions within the library. The table
+below summarizes the defined pseudo-tags.</para>
+<informaltable frame="all">
+<tgroup cols="4" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="25*">
+<colspec colname="COLSPEC1" colwidth="25*"><colspec colname="COLSPEC2" colwidth="25*">
+<colspec colname="COLSPEC3" colwidth="25*">
+<thead>
+<row><entry colname="COLSPEC0"><para>TAG NAME</para></entry><entry colname="COLSPEC1"><para>
+CODEC</para></entry><entry colname="COLSPEC2"><para>R/W</para></entry><entry
+colname="COLSPEC3"><para>LIBRARY USE / NOTES</para></entry></row>
+</thead>
+<tbody>
+<row><entry colname="COLSPEC0"><para><literal>TIFFTAG_FAXMODE</literal></para></entry>
+<entry colname="COLSPEC1"><para>G3</para></entry><entry colname="COLSPEC2"><para>
+R/W</para></entry><entry colname="COLSPEC3"><para>General codec operation.
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para><literal>TIFFTAG_FAXFILLFUNC</literal></para></entry>
+<entry colname="COLSPEC1"><para>G3/G4</para></entry><entry colname="COLSPEC2"><para>
+R/W</para></entry><entry colname="COLSPEC3"><para>Bitmap fill function.</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para><literal>TIFFTAG_JPEGQUALITY</literal></para></entry>
+<entry colname="COLSPEC1"><para>JPEG</para></entry><entry colname="COLSPEC2"><para>
+R/W</para></entry><entry colname="COLSPEC3"><para>Compression quality control.
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para><literal>TIFFTAG_JPEGCOLORMODE</literal></para></entry>
+<entry colname="COLSPEC1"><para>JPEG</para></entry><entry colname="COLSPEC2"><para>
+R/W</para></entry><entry colname="COLSPEC3"><para>Control colorspace conversions.
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para><literal>TIFFTAG_JPEGTABLESMODE</literal></para></entry>
+<entry colname="COLSPEC1"><para>JPEG</para></entry><entry colname="COLSPEC2"><para>
+R/W</para></entry><entry colname="COLSPEC3"><para>Control contents of <literal>
+JPEGTables</literal> tag.</para></entry></row>
+<row><entry colname="COLSPEC0"><para><literal>TIFFTAG_ZIPQUALITY</literal></para></entry>
+<entry colname="COLSPEC1"><para>Deflate</para></entry><entry colname="COLSPEC2"><para>
+R/W</para></entry><entry colname="COLSPEC3"><para>Compression quality level.
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para><literal>TIFFTAG_PIXARLOGDATAFMT</literal></para></entry>
+<entry colname="COLSPEC1"><para>PixarLog</para></entry><entry colname="COLSPEC2"><para>
+R/W</para></entry><entry colname="COLSPEC3"><para>User data format.</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para><literal>TIFFTAG_PIXARLOGQUALITY</literal></para></entry>
+<entry colname="COLSPEC1"><para>PixarLog</para></entry><entry colname="COLSPEC2"><para>
+R/W</para></entry><entry colname="COLSPEC3"><para>Compression quality level.
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para><literal>TIFFTAG_SGILOGDATAFMT</literal></para></entry>
+<entry colname="COLSPEC1"><para>SGILog</para></entry><entry colname="COLSPEC2"><para>
+R/W</para></entry><entry colname="COLSPEC3"><para>User data format.</para></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<refsect3 id="libtiff-3-exde-pseudo-faxmode">
+<title>TIFFTAG_FAXMODE</title>
+<para>Controls the operation of the Group 3 codec. Possible values (independent
+bits that can be combined by or'ing them together) are: </para>
+<variablelist>
+<varlistentry><term><literal>FAXMODE_BYTEALIGN</literal></term><listitem>
+<para>Align each encoded row to an 8-bit boundary.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>FAXMODE_CLASSIC</literal></term><listitem><para>
+Enable old-style format in which the RTC is written at the end of the last
+strip.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>FAXMODE_NOEOL</literal></term><listitem><para>
+Do not write EOL codes at the start of each row of data.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>FAXMODE_NORTC</literal>, also called <literal>
+FAXMODE_CLASSF</literal></term><listitem><para>Opposite of <literal>FAXMODE_CLASSIC
+</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>FAXMODE_WORDALIGN</literal></term><listitem>
+<para>Align each encoded row to a 16-bit boundary.</para>
+</listitem></varlistentry>
+</variablelist><para>The default value depends on the compression scheme.
+This pseudo-tag is used by the various G3 and G4 codecs to share code.</para>
+</refsect3>
+<refsect3 id="libtiff-3-exde-pseudo-faxfillfunc">
+<title>TIFFTAG_FAXFILLFUNC</title>
+<para>Controls the function used to convert arrays of black and white runs
+to packed bit arrays. This hook can be used to image decoded scanlines in
+multi-bit depth rasters (for example, for display in colormap mode) or for
+other purposes. The default value is a pointer to a builtin function that
+images packed bilevel data.</para>
+</refsect3>
+<refsect3 status="" id="libtiff-3-exde-pseudo-iptcnewsphoto">
+<title>TIFFTAG_IPTCNEWSPHOTO</title>
+<para>Contains image metadata per the IPTC newsphoto specification: Headline,
+captioning, credit, and so on. Used by most wire services.</para>
+</refsect3>
+<refsect3 id="libtiff-3-exde-pseudo-photoshop">
+<title>TIFFTAG_PHOTOSHOP</title>
+<para>Contains Photoshop captioning information and metadata. Photoshop uses
+in parallel and redundantly alongside <literal>IPTCNEWSPHOTO</literal> information.
+</para>
+</refsect3>
+<refsect3 id="libtiff-3-exde-pseudo-jpegquality">
+<title>TIFFTAG_JPEGQUALITY</title>
+<para>Controls the compression quality level used in the baseline algorithm.
+Note that quality levels are in the range 0-100 with a default value of 75.
+</para>
+</refsect3>
+<refsect3 id="libtiff-3-exde-pseudo-jpegcolormode">
+<title>TIFFTAG_JPEGCOLORMODE</title>
+<para>Controls whether or not conversion is done between RGB and YCbCr colorspaces.
+Possible values are: <literal>JPEGCOLORMODE_RAW</literal> (do not convert),
+and <literal>JPEGCOLORMODE_RGB</literal> (convert to/from RGB). The default
+value is <literal>JPEGCOLORMODE_RAW</literal>.</para>
+</refsect3>
+<refsect3 id="libtiff-3-exde-pseudo-jpegtablesmode">
+<title>TIFFTAG_JPEGTABLESMODE</title>
+<para>Controls the information written in the <literal>JPEGTables</literal>
+tag. Possible values (independent bits that can be combined by or'ing them
+together) are: <literal>JPEGTABLESMODE_QUANT</literal> (include quantization
+tables), and <literal>JPEGTABLESMODE_HUFF</literal> (include Huffman encoding
+tables).</para>
+</refsect3>
+<refsect3 id="libtiff-3-exde-pseudo-zipquality">
+<title>TIFFTAG_ZIPQUALITY</title>
+<para>Controls the compression technique used by the Deflate codec. Quality
+levels are in the range 1-9 with larger numbers yielding better compression
+at the cost of more computation. The default quality level is 6 which yields
+a good time-space tradeoff.</para>
+</refsect3>
+<refsect3 id="libtiff-3-exde-pseudo-pixarlogdatafmt">
+<title>TIFFTAG_PIXARLOGDATAFMT</title>
+<para>Controls the format of user data passed to the PixarLog codec when encoding
+and passed from the PixarLog codec when decoding. Possible values are:</para>
+<itemizedlist>
+<listitem><para><literal>PIXARLOGDATAFMT_8BIT</literal> for 8-bit unsigned
+pixels</para></listitem>
+<listitem><para><literal>PIXARLOGDATAFMT_8BITABGR</literal> for 8-bit unsigned
+ABGR-orderedpixels</para></listitem>
+<listitem><para><literal>PIXARLOGDATAFMT_11BITLOG</literal> for 11-bit log-encoded
+raw data</para></listitem>
+<listitem><para><literal>PIXARLOGDATAFMT_12BITPICIO</literal> for 12-bit PICIO-compatible
+data</para></listitem>
+<listitem><para><literal>PIXARLOGDATAFMT_16BIT</literal> for 16-bit signed
+samples</para></listitem>
+<listitem><para><literal>PIXARLOGDATAFMT_FLOAT</literal> for 32-bit IEEE floating
+point samples</para></listitem>
+</itemizedlist>
+</refsect3>
+<refsect3 id="libtiff-3-exde-pseudo-pixarlogquality">
+<title>TIFFTAG_PIXARLOGQUALITY</title>
+<para>Controls the compression technique used by the PixarLog codec. This
+value is treated identically to <literal>TIFFTAG_ZIPQUALITY</literal>.</para>
+</refsect3>
+<refsect3 id="libtiff-3-exde-pseudo-sgilogdatafmt">
+<title>TIFFTAG_SGILOGDATAFMT</title>
+<para>Controls the format of client data passed to the SGILog codec when encoding
+and passed from the SGILog codec when decoding. Possible values are:</para>
+<itemizedlist>
+<listitem><para><literal>SGILOGDATAFMT_FLTXYZ</literal> for converting between
+LogLuv and 32-bit IEEE floating valued XYZ pixels</para></listitem>
+<listitem><para><literal>SGILOGDATAFMT_16BITLUV</literal> for 16-bit encoded
+Luv pixels</para></listitem>
+<listitem><para><literal>SGILOGDATAFMT_32BITRAW</literal> and <literal>SGILOGDATAFMT_24BITRAW
+</literal> for no conversion of data</para></listitem>
+<listitem><para><literal>SGILOGDATAFMT_8BITRGB</literal> for returning 8-bit
+RGB data (valid only when decoding LogLuv-encoded data)</para></listitem>
+<listitem><para><literal>SGILOGDATAFMT_FLTY</literal> for converting between
+LogL and 32-bit IEEE floating valued Y pixels</para></listitem>
+<listitem><para><literal>SGILOGDATAFMT_16BITL</literal> for 16-bit encoded
+L pixels</para></listitem>
+<listitem><para><literal>SGILOGDATAFMT_8BITGRY</literal> for returning 8-bit
+greyscale data (valid only when decoding LogL-encoded data)</para></listitem>
+</itemizedlist>
+</refsect3>
+</refsect2>
+<refsect2 id="libtiff-3-exde-diags">
+<title>Diagnostics</title>
+<para>All error messages are directed through the <literal>TIFFError</literal>
+routine. By default, messages are directed to <literal>stderr</literal> in
+the form: <literal><replaceable>module</replaceable>: <replaceable>message
+</replaceable>\\n</literal>. Warning messages are likewise directed through
+the TIFFWarning routine.</para>
+</refsect2>
+</refsect1>
+<refsect1 id="libtiff-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libtiff-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>fax2tiff</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gif2tiff</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>pal2rgb</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ppm2tiff</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ras2tiff</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>rgb2ycbcr</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>sgi2tiff</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiff2bw</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffcmp</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffcp</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffdither</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffdump</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffgt</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffinfo</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffmedian</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffsplit</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>tiffsv</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para><citetitle>Tag Image File Format Specification</citetitle> Revision
+6.0, an Aldus Technical Memorandum.</para>
+<para><citetitle>The Spirit of TIFF Class F</citetitle> an appendix to the
+TIFF 5.0 specification prepared by Cygnet Technologies.</para>
+</refsect1>
+<refsect1 id="libtiff-3-note"><title>&note-tt;</title>
+<para>The <filename>&cmd;</filename> library does not support multisample
+images where some samples have different bits/sample.</para>
+<para>The library does not support random access to compressed data that is
+organized with more than one row per tile or strip. The library discards unknown
+tags. The library should do more validity checking of a directory's contents.
+</para>
+<para>This man page was originally written by Sam Leffler. Updated by Breda
+McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>

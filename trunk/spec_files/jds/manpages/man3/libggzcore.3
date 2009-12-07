@@ -1,0 +1,145 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "libggzcore">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libggzcore-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta>
+   <refentrytitle>libggzcore</refentrytitle><manvolnum>3</manvolnum>
+   <refmiscinfo class="date">29 May 2008</refmiscinfo>
+   <refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+   <refmiscinfo class="software">&release;</refmiscinfo>
+   <refmiscinfo class="arch">generic</refmiscinfo>
+   <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>libggzcore</primary></indexterm>
+<indexterm><primary>The GGZ Gaming Zone core client library</primary></indexterm>
+
+<refnamediv id="libggzcore-3-name">
+   <refname>libggzcore</refname>
+   <refpurpose>
+The GGZ Gaming Zone core client library
+</refpurpose>
+</refnamediv>
+<refsect1 id="libggzcore-3-desc">
+   <title>&desc-tt;</title>
+   <para>
+This library is used by client programs to connect to the GGZ 
+Gaming Zone server, handle game rooms, control user participation in the games,
+control chat and player properties.
+   </para>
+   <para>
+The <filename>ggzcore</filename> library handles the connection of a client 
+application to the GGZ Gaming Zone server. It starts with offering a global 
+configuration object for storing connection profiles for each server. The
+server list can be maintained by hand or updated via the GGZ metaserver. After
+this it goes on to callback registration for the connection, negotiation and 
+authentication methods, which might include guest logins, first time player or 
+registered player on the GGZ server.
+   </para>
+   <para>
+After a login it handles the global server object, the current room object and, 
+when playing a game, the active game object. Additional objects include the 
+table the game is associated with, players, game types and game modules which 
+represent client-side game executables. 
+   </para>
+   <para>
+Alternatively, a game can integrate ggzcore directly instead of being launched 
+by a ggzcore-using GGZ core client, which is known as embedded ggzcore. 
+   </para>
+   <para>
+Other tasks handled by the library are querying the local game registry with
+all properties per game; retrieving the server message of the day (MOTD) or
+player statistics; handling public, private and per-table chat as well as 
+administrative messages; and managing the game launch and join events for 
+players and spectators. 
+   </para>
+</refsect1>
+
+<refsect1 id="libggzcore-3-file">
+   <title>&file-tt;</title>
+   <para>The following files are used by this library:</para>
+   <variablelist termlength="wide">
+      <varlistentry>
+         <term><filename>/usr/lib/&cmd;.so</filename> </term>
+         <listitem>
+            <para>The GGZ Gaming Zone core client shared library</para>
+         </listitem>
+      </varlistentry>
+   </variablelist>
+</refsect1>
+
+<refsect1 id="libggzcore-3-attr">
+   <title>&attr-tt;</title>
+   <para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</olink> for descriptions of the following attributes:
+   </para>
+   <informaltable frame="all">
+      <tgroup cols="2" colsep="1" rowsep="1">
+         <colspec colname="COLSPEC0" colwidth="1*">
+         <colspec colname="COLSPEC1" colwidth="1*">
+         <thead>
+            <row>
+               <entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+               <entry align="center" valign="middle">ATTRIBUTE VALUE</entry>
+            </row>
+         </thead>
+         <tbody>
+            <row>
+               <entry><para>Availability</para></entry>
+               <entry><para>SUNWgnome-games</para></entry>
+            </row>
+            <row>
+               <entry colname="COLSPEC0"><para>Interface stability</para></entry>
+               <entry colname="COLSPEC1"><para>Volatile</para></entry>
+            </row>
+         </tbody>
+      </tgroup>
+   </informaltable>
+</refsect1>
+
+<refsect1 id="libggzcore-3-also"><title>&also-tt;</title>
+   <!--Reference to another man page-->
+   <!--Reference to a Help manual-->
+   <!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>ggz_h</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggzcore_h</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggzmod_h</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libggz</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libggzmod</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz.modules</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz</refentrytitle><manvolnum>6</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz-config</refentrytitle><manvolnum>6</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz</refentrytitle><manvolnum>7</manvolnum></citerefentry>
+</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><filename>GGZ Gaming Zone:</filename></term>
+<listitem><para>
+<programlisting>
+<literal>http://www.ggzgamingzone.org/</literal>
+<literal>http://www.ggzgamingzone.org/docs/api/libggz/</literal>
+<literal>http://www.ggzgamingzone.org/docs/api/ggzcore/</literal>
+<literal>http://www.ggzgamingzone.org/docs/api/ggzmod/</literal>
+</programlisting></para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id="libggzcore-3-note"><title>&note-tt;</title>
+   <para>Written by Michal Pryc, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+</refentry>

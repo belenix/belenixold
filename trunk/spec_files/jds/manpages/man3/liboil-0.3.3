@@ -1,0 +1,110 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734 GNOME For Nevada -->
+<!ENTITY cmd "liboil-0.3">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="liboil-03-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">20 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+Library of optimized functions.
+</primary></indexterm>
+<refnamediv id="liboil-03-3-name"><refname>&cmd;</refname>
+<refpurpose>Library of optimized functions</refpurpose></refnamediv>
+<refsect1 id="liboil-03-3-desc"><title>&desc-tt;</title>
+<para>
+<literal>&cmd;</literal> is a library of simple functions that are optimized
+for various CPUs. These functions are generally loops implementing simple
+algorithms, such as converting an array of N integers to floating-point numbers
+or multiplying and summing an array of N numbers. Such functions are candidates
+for significant optimization using various techniques, especially by using
+extended instructions provided by modern CPUs (Altivec, MMX, SSE, etc.).
+</para>
+<para>
+Liboil has a number of function classes, which are primarily seen by a
+developer using the library as actual functions. One such function is: 
+</para>
+<para>
+<para>
+<screen>
+    * void oil_tablelookup_u8 (uint8_t *dest, int dstr,
+          uint8_t *src, o int sstr, uint8_t *table,
+          int tablestride, int n); 
+</screen>
+</para>
+<para>
+This function performs a table lookup for each element in the src array, and
+puts the results in the dest array. In actuality, oil_tablelookup_u8 is
+currently implemented as a preprocessor macro that generates the correct code
+to call an indirect function. 
+</para>
+<para>
+Each function class has one or more function implementations, which are real
+functions that perform the exact same action as defined by the documentation
+for the function. Each class has one implementation that is the reference
+implementation. This reference implementation is used to test the accuracy of
+other implementations. 
+</para>
+<para>
+Presumably, the non-reference implementations can perform the action faster
+than the reference implementation. Thus, the liboil initialization code (at
+runtime) checks each implementation in a class to determine the fastest
+implementation. Once this is done, the class's indirect function pointer points
+to the optimal implementation. After this, any calls to the function class
+(such as oil_tablelookup_u8() described above) will automatically be routed to
+the fastest implementation. 
+</para>
+</refsect1>
+<refsect1 id="liboil-03-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline">
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename> </term><listitem>
+<para>&cmd; shared library</para></varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/liboil</filename> </term><listitem>
+<para>Location of developer documentation</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="liboil-03-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-3"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWliboil</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="liboil-03-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>oil-bugreport</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+</refentry>

@@ -1,0 +1,104 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2009/142 LibUnique-->
+<!ENTITY cmd "libunique-1.0">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libunique-10-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">27 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>A library for writing a single instance applications</primary></indexterm>
+<refnamediv id="libunique-10-3-name"><refname>&cmd;</refname>
+<refpurpose>A library for writing single instance applications</refpurpose></refnamediv>
+
+<refsect1 id="libunique-10-3-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> is a library for writing single instance applications.
+If you launch a single instance application twice, the second instance will
+exit quietly or will send a message to the running instance.
+</para>
+<para>
+<command>&cmd;</command> makes it easy to write these kind of applications, by
+providing a base class, taking care of all the IPC machinery needed to send
+messages to a running instance, and also handling startup notification.
+</para>
+<para>
+<command>&cmd;</command> supports two IPC backends: bacon and dbus. When dbus
+is used, the messages are transmitted through a D\-Bus private channel. When
+bacon is used, <command>&cmd;</command> uses PF_UNIX family
+<citerefentry><refentrytitle>socket</refentrytitle><manvolnum>3head</manvolnum></citerefentry>
+to allow communications between processes on the same machine.
+</para>
+</refsect1>
+
+<refsect1 id="pkg-config-1-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of environment variables.</para>
+
+<variablelist termlength="narrow">
+<varlistentry>
+<term><envar>UNIQUE_BACKEND</envar></term>
+<listitem><para>
+The default backend is dbus. User can override the default backend by setting
+the UNIQUE_BACKEND environment variable with the name of the desired backend.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="libunique-10-3-file"><title>&file-tt;</title>
+<para>The following files are used by this library:</para>
+<variablelist termlength="wholepage">
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename></term><listitem>
+<para>API shared library</para></listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/unique</filename></term><listitem>
+<para>Location of developer documentation</para></listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="libunique-10-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row>
+<entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+<entry align="center" valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWlibunique</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libunique-10-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>socket</refentrytitle><manvolnum>3head</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="libunique-10-3-note"><title>&note-tt;</title>
+<para>Written by Halton Huo, Sun Microsystems Inc., 2009.
+</para>
+</refsect1>
+</refentry>

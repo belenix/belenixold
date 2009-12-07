@@ -1,0 +1,366 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "java-gnome">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2006, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="java-gnome-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">2 Nov 2006</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>Java bindings for Cairo 2D graphic library and GNOME librar\
+ies.</primary></indexterm>
+<refnamediv id="java-gnome-3-name"><refname>&cmd</refname>
+<refpurpose>Java bindings for Cairo 2D graphic library and GNOME libraries.
+</refpurpose></refnamediv>
+
+<refsect1 id="java-gnome-3-desc"><title>&synp-tt;</title>
+<para>
+<list>
+  <item>import org.freedesktop.cairo</item>
+  <item>import org.gnu.atk</item>
+  <item>import org.gnu.gconf</item>
+  <item>import org.gnu.gdk</item>
+  <item>import org.gnu.glade</item>
+  <item>import org.gnu.glib</item>
+  <item>import org.gnu.gnome</item>
+  <item>import org.gnu.gnome.event</item>
+  <item>import org.gnu.gtk</item>
+  <item>import org.gnu.gtk.event</item>
+  <item>import org.gnu.pango</item>
+  <item>import org.gnu.gnomevte</item>
+  <item>import org.gnu.gnomevte.event</item>
+</list>
+</para>
+</refsect1>
+
+<refsect1 id="java-gnome-3-desc"><title>&desc-tt;</title>
+<para><literal>&cmd;</literal> is a set of Java bindings for the Cairo 2D \
+Freedesktop.org 
+graphics API and a subset of bindings for the GNOME 2.x Developer Platform 
+Libraries namely glib, gtk, atk, gdk, pango, gnome, glade, gconf and vte 
+which allow GNOME and GTK+ applications to be written in Java. 
+</para>
+<para>As one of the Official Gnome Platform Bindings, Java-Gnome follows the 
+GNOME schedule, and GNOME Bindings rules which guarantee API stability 
+and time-based releases.
+</para>
+<para><literal>&cmd;</literal> bindings consist of the following jars and \
+supporting jni
+libraries: glib-java, cario-java, libgtk-java, libgnome-java, 
+libglade-java, libgconf-java and libvte-java. The first four provide the 
+core drawing, widget set, font, accessibility and application support for 
+Gnome Developers. libglade-java provides support to use Glade based XML 
+UI's in Java applications, created using the Gnome Glade UI designer. 
+libgconf-java provides an interface to the Gnome configuration 
+database for Java applications. libvte-java provides access to a gnome
+terminal widget.
+</para>
+<para>Java-gnome bindings come with additional documentation: API javadoc, 
+source code jars for each library and example Java Gtk, Gnome and Glade
+applications.
+</para>
+</refsect1>
+
+<refsect1 id="java-gnome-3-intf"><title>&intf-tt;</title>
+<informaltable frame="all">
+<tgroup cols="3" colsep="1" rowsep="1">
+<colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<colspec colname="COLSPEC2" colwidth="1*">
+<thead>
+<row>
+<entry align="center" valign="middle">Interface</entry>
+<entry align="center" valign="middle">Stability</entry>
+<entry align="center" valign="middle">Comment</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>org.freedesktop.cairo</entry>
+<entry>Volatile</entry>
+<entry>
+<para>2D graphics library</para>
+</entry>
+</row>
+<row>
+<entry>org.gnu.atk</entry>
+<entry>Volatile</entry>
+<entry>
+<para>Gnome Accessibility</para>
+<para>Support</para>
+</entry>
+</row>
+<row>
+<entry>org.gnu.gconf</entry>
+<entry>Volatile</entry>
+<entry>Configuration Support</entry>
+</row>
+<row>
+<entry>org.gnu.gdk</entry>
+<entry>Volatile</entry>
+<entry>Low level drawing support</entry>
+</row>
+<row>
+<entry>org.gnu.glade</entry>
+<entry>Volatile</entry>
+<entry>Glade UI design support</entry>
+</row>
+<row>
+<entry>org.gnu.glib</entry>
+<entry>Volatile</entry>
+<entry>Low level core API</entry>
+</row>
+<row>
+<entry>org.gnu.gnome</entry>
+<entry>Volatile</entry>
+<entry>Gnome application support</entry>
+</row>
+<row>
+<entry>org.gnu.gnome.event</entry>
+<entry>Volatile</entry>
+<entry>
+<para>Gnome application</para>
+<para>event support</para>
+</entry>
+</row>
+<row>
+<entry>org.gnu.gtk</entry>
+<entry>Volatile</entry>
+<entry>Gtk widget support</entry>
+</row>
+<row>
+<entry>org.gnu.gtk.event</entry>
+<entry>Volatile</entry>
+<entry>Gtk widget event support</entry>
+</row>
+<row>
+<entry>org.gnu.pango</entry>
+<entry>Volatile</entry>
+<entry>
+<para>Gnome text</para>
+<para>rendering support</para>
+</entry>
+</row>
+<row>
+<entry>org.gnu.gnomevte</entry>
+<entry>Volatile</entry>
+<entry>
+<para>Gnome terminal</para>
+<para>widget support</para>
+</entry>
+</row>
+<row>
+<entry>org.gnu.gnomevte.event</entry>
+<entry>Volatile</entry>
+<entry>
+<para>Gnome terminal</para>
+<para>widget event support</para>
+</entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+<note>
+<para>The above interfaces have been marked as Volatile even though
+they are marked as stable by the community [part of the Official Gnome
+Bindings and so must adhere to API Binding Rules]. The reason for this
+is that the community is planning an extensive redesign of the 2.x 
+series of Java-Gnome that will be released as a new 4.x series. Primary
+goals are to incorporate some automation for interface generation and 
+simplify the exposed API, both of which will ease future maintenance
+of the bindings.
+</para>
+<para>This new redesign will break backwards compatibility. However, as much 
+as possible the community is going to keep the older interfaces around 
+for several releases after the redesign. As the two interfaces will use 
+different namespaces they will be able to be installed on the same 
+system so developers will be able to plan a controlled deprecation of 
+the 2.x API's they are using. 
+</para>
+</note>
+
+</refsect1>
+
+<refsect1 id="java-gnome-3-file"><title>&file-tt;</title>
+<para>Jar files and shared libraries:</para>
+<para>
+
+<informaltable frame="all">
+<tgroup cols="3" colsep="1" rowsep="1">
+<colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<colspec colname="COLSPEC2" colwidth="1*">
+<thead>
+<row>
+<entry>Spec Files</entry>
+<entry>
+<para>Delivers Jars to:</para>
+<para><filename>/usr/share/lib/\
+java</filename></para>
+</entry>
+<entry>
+<para>Delivers libs to:</para>
+<para><filename>/usr/lib</filename></para>
+</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry align="left">SUNWgnome-base-libs-java</entry>
+<entry align="left">
+<filename>glib##.jar</filename>
+<filename>cairo##.jar</filename>
+<filename>gtk##.jar</filename>
+<filename>glade##.jar</filename>
+<filename>gnome##.jar</filename>
+</entry>
+<entry align="left"><filename>libglibjni-##.so</filename>
+<filename>libcairojni-##.so</filename>
+<filename>libgtkjni-##.so</filename>
+<filename>libgladejni-##.so</filename>
+<filename>libgnomejni-##.so</filename>
+</entry>
+</row>
+<row>
+<entry align="left">SUNWgnome-config-java</entry>
+<entry align="left"><filename>gconf##.jar</filename></entry>
+<entry align="left"><filename>libgconfjni-##.so</filename></entry>
+</row>
+<row>
+<entry align="left">SUNWgnome-terminal-java</entry>
+<entry align="left"><filename>libvte##.jar</filename></entry>
+<entry align="left"><filename>libvtejni-##.so</filename></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+<para>Documentation files:</para>
+<itemizedlist><listitem><para>API Javadoc for the Java-Gnome libraries
+<screen><userinput>/usr/share/lib/java/javadoc/java-gnome/glib-java-##/api/\
+index.html
+/usr/share/lib/java/javadoc/java-gnome/cairo-java-##/api/index.html
+/usr/share/lib/java/javadoc/java-gnome/libgtk-java-##/api/index.html
+/usr/share/lib/java/javadoc/java-gnome/libgnome-java-##/api/index.html
+/usr/share/lib/java/javadoc/java-gnome/libglade-java-##/api/index.html
+/usr/share/lib/java/javadoc/java-gnome/libgconf-java-##/api/index.html
+/usr/share/lib/java/javadoc/java-gnome/libvte-java-##/api/\
+index.html</userinput></screen></para></listitem>
+
+<listitem><para>Source jars for the Java-Gnome libraries
+<screen><userinput>/usr/share/lib/java/src/java-gnome/glib##-src.jar
+/usr/share/lib/java/src/java-gnome/cairo##-src.jar
+/usr/share/lib/java/src/java-gnome/gtk##-src.jar
+/usr/share/lib/java/src/java-gnome/gnome##-src.jar
+/usr/share/lib/java/src/java-gnome/glade##-src.jar
+/usr/share/lib/java/src/java-gnome/gconf##-src.jar
+/usr/share/lib/java/src/java-gnome/\
+vte##-src.jar</userinput></screen></para></listitem>
+<listitem><para>Examples for the Java-Gnome libraries
+<screen><userinput>/usr/share/lib/java/javadoc/java-gnome/\
+libgtk-java-##/examples/*
+/usr/share/lib/java/javadoc/java-gnome/libgnome-java-##/examples/*
+/usr/share/lib/java/javadoc/java-gnome/libglade-java-##/examples/*
+/usr/share/lib/java/javadoc/java-gnome/libgconf-java-##/examples/*
+</userinput></screen></para></listitem>
+</itemizedlist>
+</refsect1>
+
+<refsect1 ide="java-gnome-3-attr"><title>&attr-tt;</title>
+<para>See attributes(5) for descriptions of the following attributes:</para>
+<para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1">
+<colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row>
+<entry align="left" valign="bottom">ATTRIBUTE TYPE</entry>
+<entry align="left" valign="bottom">ATTRIBUTE VALUE</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry align="left" valign="bottom">Availability</entry>
+<entry align="left" valign="bottom">SUNWgnome-base-libs-java
+SUNWgnome-config-java
+SUNWgnome-terminal-java</entry>
+</row>
+<entry align="left" valign="bottom">Interface stability</entry>
+<entry align="left" valign="bottom">Volatile</entry>
+</tbody>
+</tgroup>
+</informaltable>
+</para>
+</refsect1>
+
+<refsect1 ide="java-gnome-3-exam"><title>&exam-tt;</title>
+<para>Copy the examples to a directory you have read/write access to so you can 
+compile and run them. You can use the helper runExample.sh script provided in 
+the examples directory or compile and run them directly adding the appropriate 
+jars to the classpath.
+</para>
+<orderedlist>
+<listitem><para>Compile and run Gtk example:</para>
+<screen><userinput>$ cd ~/examples-gtk
+./runExample.sh testgtk/TestGTK</userinput></screen>
+</listitem>
+<listitem><para>Compile and run Gnome example:</para>
+<screen><userinput>$ cd ~/examples-gnome
+./runExample.sh  testgnome/TestGNOME</userinput></screen>
+</listitem>
+<listitem><para>Compile and run glade example:</para>
+<para>$ cd ~/examples-glade</para>
+<para>$ javac -classpath /usr/share/lib/java/glib0.4.jar:\&#92;
+ /usr/share/lib/java/gtk2.10.jar:\&#92;
+ /usr/share/lib/java/glade2.12.jar \&#92;
+ glade/LibGladeTest.java</para>
+<para>$ java -classpath .:/usr/share/lib/java/glib0.4.jar:\&#92;
+ /usr/share/lib/java/gtk2.10.jar:\&#92;
+ /usr/share/lib/java/glade2.12.jar \&#92;
+ glade/LibGladeTest glade/gtk.glade </para>
+</listitem>
+</orderedlist>
+</refsect1>
+
+<refsect1 id="java-gnome-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<list>
+<item><screen>Java-Gnome Community HomePage:
+<literal>http://java-gnome.sourceforge.net</literal></screen></item>
+<item><screen>Java-Gnome Community Documentation:
+<literal>http://java-gnome.sourceforge.net/cgi-bin/bin/view/Main/\
+HintsAndTips</literal></screen></item>
+<item><screen>Gnome Language Bindings:
+<literal>http://developer.gnome.org/arch/lang/</literal></screen></item>
+<item><screen>Gnome Platform Binding Rules:
+<literal>http://cvs.gnome.org/viewcvs/web-devel-2/content/dotplan/\
+bindings/rules.html?rev=1.5</literal></screen></item>
+<listitem><screen>Gnome Platform Bindings requirements:
+<literal>http://live.gnome.org/ReleasePlanning/ModuleRequirements/\
+PlaformBindings</literal></screen></item>
+<item><screen>Gtk Bindings: 
+<literal>http://www.gtk.org/bindings.html</literal></screen></item>
+</list>
+</refsect1>
+
+<refsect1 id="java-gnome-3-note"><title>&note-tt;</title>
+<para>This man page was written by John Rice, Sun Microsystems Inc., 2006.
+Updated by Michal Pryc, Sun Microsystems Inc., November 2006.</para>
+</refsect1>
+
+</refentry>

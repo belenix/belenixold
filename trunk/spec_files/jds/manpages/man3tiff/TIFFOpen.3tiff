@@ -1,0 +1,252 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFOpen">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFOpen-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFOpen</refentrytitle><manvolnum>3tiff</manvolnum>
+<refmiscinfo class="date">05 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFOpen</primary></indexterm><indexterm><primary>TIFFFdOpen
+</primary></indexterm><indexterm><primary>TIFFClientOpen</primary></indexterm>
+<indexterm><primary>open a TIFF file for reading or writing</primary></indexterm>
+<refnamediv id="TIFFOpen-3tiff-name"><refname>TIFFOpen</refname><refname>TIFFFdOpen
+</refname><refname>TIFFClientOpen</refname><refpurpose>open a TIFF file for
+reading or writing</refpurpose></refnamediv>
+<refsect1 id="TIFFOpen-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+TIFF* TIFFOpen(const char* filename, const char* mode)
+TIFF* TIFFFdOpen(const int fd, const char* filename, const char* mode)
+typedef tsize_t (*TIFFReadWriteProc)(thandle_t, tdata_t, tsize_t);
+typedef toff_t (*TIFFSeekProc)(thandle_t, toff_t, int);
+typedef int (*TIFFCloseProc)(thandle_t);
+typedef toff_t (*TIFFSizeProc)(thandle_t);
+typedef int (*TIFFMapFileProc)(thandle_t, tdata_t*, toff_t*);
+typedef void (*TIFFUnmapFileProc)(thandle_t, tdata_t, toff_t);
+TIFF* TIFFClientOpen(const char* filename, const char* mode,
+         thandle_t clientdata,TIFFReadWriteProc readproc,
+         TIFFReadWriteProc writeproc, TIFFSeekProc seekproc,
+         TIFFCloseProc closeproc, TIFFSizeProc sizeproc,
+         TIFFMapFileProc mapproc, TIFFUnmapFileProc unmapproc)</programlisting>
+</refsect1>
+<refsect1 id="TIFFOpen-3tiff-desc"><title>&desc-tt;</title>
+<para><literal>TIFFOpen</literal> opens a TIFF file whose name is <replaceable>
+filename</replaceable> and returns a handle to be used in subsequent calls
+to routines in <literal>libtiff</literal>. If the open operation fails, then
+zero is returned.</para>
+<para>The <literal>mode</literal> parameter specifies whether the file is
+to be opened for reading (&ldquo;<literal>r</literal>&rdquo;), writing (&ldquo;<literal>
+w</literal>&rdquo;), or appending (&ldquo;<literal>a</literal>&rdquo;) and,
+optionally, whether to override certain default aspects of library operation
+(see below). When a file is opened for appending, existing data is not touched.
+Instead, new data is written as additional subfiles. If an existing file is
+opened for writing, all previous data is overwritten.</para>
+</refsect1>
+<refsect1 id="TIFFOpen-3tiff-exde"><title>&exde-tt;</title>
+<para>If a file is opened for reading, the first TIFF directory in the file
+is automatically read. See also <literal>TIFFSetDirectory(3tiff)</literal> for
+information on how to read directories other than the first. If a file is
+opened for writing or appending, a default directory is automatically created
+for writing subsequent data. This directory has all of the default values
+specified in TIFF Revision 6.0:</para>
+<itemizedlist>
+<listitem><para><literal>BitsPerSample=1</literal></para></listitem>
+<listitem><para><literal>ThreshHolding=bilevel art scan</literal></para></listitem>
+<listitem><para><literal>FillOrder=1</literal> (most significant bit of each
+data byte is filled first)</para></listitem>
+<listitem><para><literal>Orientation=1</literal> (the 0th row represents the
+visual top of the image, and the 0th column represents the visual left-hand
+side)</para></listitem>
+<listitem><para><literal>SamplesPerPixel=1</literal></para></listitem>
+<listitem><para><literal>RowsPerStrip=infinity</literal></para></listitem>
+<listitem><para><literal>ResolutionUnit=2 (inches)</literal></para></listitem>
+<listitem><para><literal>Compression=1 (no compression)</literal></para></listitem>
+</itemizedlist>
+<para>To alter these values, or to define values for additional fields, <literal>
+TIFFSetField(3tiff)</literal> must be used.</para>
+<para><literal>TIFFFdOpen</literal> is like <literal>TIFFOpen</literal> except
+that <literal>TIFFFdOpen</literal> opens a TIFF file given an open file descriptor <literal>
+fd</literal>. The file name and mode must reflect that of the open descriptor.
+The object associated with the file descriptor must support random access.
+</para>
+<para><literal>TIFFClientOpen</literal> is like <literal>TIFFOpen</literal>
+except that the caller supplies a collection of functions that the library
+uses to perform UNIX-like I/O operations:</para>
+<itemizedlist>
+<listitem><para><literal>readproc</literal> and <literal>writeproc</literal>
+are called to read and write data at the current file position.</para></listitem>
+<listitem><para><literal>seekproc</literal> is called to change the current
+file position. See also <literal>lseek(2)</literal>.</para></listitem>
+<listitem><para><literal>closeproc</literal> is invoked to release any resources
+associated with an open file.</para></listitem>
+<listitem><para><literal>sizeproc</literal> is invoked to obtain the size
+in bytes of a file.</para></listitem>
+<listitem><para><literal>mapproc</literal> and <literal>unmapproc</literal>
+are called to map and unmap the contents of a file in memory. See also <literal>
+mmap(2)</literal> and <literal>munmap(2)</literal>.</para></listitem>
+<listitem><para>The <literal>clientdata</literal> parameter is an opaque &ldquo;handle&rdquo;
+passed to the client-specified routines that are passed as parameters to <literal>
+TIFFClientOpen</literal>.</para></listitem>
+</itemizedlist>
+<refsect2 id="TIFFOpen-3tiff-exde-byte">
+<title>Byte Order</title>
+<para>The TIFF specification (all versions) states that compliant readers
+must be capable of reading images written in either byte order. However, some
+software that claims to support the reading of TIFF images is incapable of
+reading images in anything but the native CPU byte order on which the software
+was written. By default, the library creates new files with the native byte-order
+of the CPU on which the application is run. This ensures optimal performance
+and is portable to any application that conforms to the TIFF specification.
+To force the library to use a specific byte-order when creating a new file,
+the &ldquo;<literal>b</literal>&rdquo; and &ldquo;<literal>l</literal>&rdquo;
+option flags may be included in the call to open a file. For example, &ldquo;<literal>
+wb</literal>&rdquo; or &ldquo;<literal>wl</literal>&rdquo;.</para>
+</refsect2>
+<refsect2 id="TIFFOpen-3tiff-exde-diags">
+<title>Diagnostics</title>
+<para>All error messages are directed to the <literal>TIFFError(3tiff)</literal>
+routine. Likewise, warning messages are directed to the <literal>TIFFWarning(3tiff)
+</literal> routine.</para>
+<variablelist>
+<varlistentry><term>"%s": Bad mode.</term><listitem><para>The specified mode
+parameter is not one of &ldquo;<literal>r</literal>&rdquo; (read), &ldquo;<literal>
+w</literal>&rdquo; (write), or &ldquo;<literal>a</literal>&rdquo; (append).
+</para>
+</listitem></varlistentry>
+<varlistentry><term>%s: Cannot open.</term><listitem><para><literal>TIFFOpen()
+</literal> is unable to open the specified filename for reading or writing.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Cannot read TIFF header.</term><listitem><para>An error
+occurred while attempting to read the header information.</para>
+</listitem></varlistentry>
+<varlistentry><term>Error writing TIFF header.</term><listitem><para>An error
+occurred while writing the default header information for a new file.</para>
+</listitem></varlistentry>
+<varlistentry><term>Not a TIFF file, bad magic number %d (0x%x).</term><listitem>
+<para>The magic number in the header was not (hex) <literal>0x4d4d</literal>
+or (hex) <literal>0x4949</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term>Not a TIFF file, bad version number %d (0x%x).</term>
+<listitem><para>The version field in the header was not <literal>42</literal>
+(decimal).</para>
+</listitem></varlistentry>
+<varlistentry><term>Cannot append to file that has opposite byte ordering.<?Pub Caret>
+</term><listitem><para>A file with a byte ordering opposite to the native
+byte ordering of the current machine was opened for appending (&ldquo;<literal>
+a</literal>&rdquo;). This is a limitation of the library.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="TIFFOpen-3tiff-opts"><title>&opts-tt;</title>
+<para>The open <literal>mode</literal> parameter can include the following
+flags in addition to the &ldquo;r&rdquo;, &ldquo;w&rdquo;, and &ldquo;a&rdquo;
+flags. Note however that option flags must follow the read-write-append specification.
+</para>
+<variablelist>
+<varlistentry><term><option role="nodash">B</option></term><listitem><para>
+Force image data that is read or written to be treated with bits filled from
+Most Significant Bit (MSB) to Least Significant Bit (LSB). This is the default.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">b</option></term><listitem><para>
+When creating a new file, force information to be written with Big-Endian
+byte order (but see the Byte Order section of this reference page). By default,
+the library creates new files using the native CPU byte order.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">C</option></term><listitem><para>
+Enable the use of &ldquo;strip chopping&rdquo; when reading images that are
+comprised of a single strip or tile of uncompressed data. Strip chopping is
+a mechanism by which the library automatically converts the single-strip image
+to multiple strips, each of which has about 8 Kilobytes of data. This facility
+can be useful in reducing the amount of memory used to read an image because
+the library normally reads each strip in its entirety. Strip chopping does
+however alter the apparent contents of the image because when an image is
+divided into multiple strips, the image looks as though the underlying file
+contains multiple separate strips. Finally, note that default handling of
+strip chopping is a compile-time configuration parameter. The default behaviour,
+for backwards compatibility, is to enable strip chopping.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">c</option></term><listitem><para>
+Disable the use of strip chopping when reading images.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">H</option></term><listitem><para>
+Force image data that is read or written to be treated with bits filled in
+the same order as the native CPU.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">L</option></term><listitem><para>
+Force image data that is read or written to be treated with bits filled from
+Least Significant Bit (LSB) to Most Significant Bit (MSB). Note that this
+is the opposite to the way that the library has worked from its inception.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">l</option></term><listitem><para>
+When creating a new file, force information to be written with Little-Endian
+byte order (but see the Byte Order section of this reference page). By default,
+the library creates new files using the native CPU byte order.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">M</option></term><listitem><para>
+Enable the use of memory-mapped files for images opened as read-only. If the
+underlying system does not support memory-mapped files, or if the specific
+image being opened cannot be memory-mapped, the library uses the normal system
+interface for reading information. By default, the library attempts to use
+memory-mapped files.</para>
+</listitem></varlistentry>
+<varlistentry><term><option role="nodash">m</option></term><listitem><para>
+Disable the use of memory-mapped files.</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="TIFFOpen-3tiff-rtrn"><title>&rtrn-tt;</title>
+<para>Upon successful completion, <literal>TIFFOpen</literal>, <literal>TIFFFdOpen
+</literal>, and <literal>TIFFClientOpen</literal> return a TIFF pointer. Otherwise,
+NULL is returned.</para>
+</refsect1>
+<refsect1 id="TIFFOpen-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFOpen-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFClose</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFOpen-3tiff-note"><title>&note-tt;</title>
+<para>This man page was originally written by Sam Leffler. Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000013953>

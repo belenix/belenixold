@@ -1,0 +1,175 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFReadDirectory">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFReadDirectory-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFReadDirectory</refentrytitle><manvolnum>3tiff
+</manvolnum>
+<refmiscinfo class="date">05 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFReadDirectory</primary></indexterm><indexterm><primary>
+get the contents of the next directory in an open TIFF file</primary></indexterm>
+<refnamediv id="TIFFReadDirectory-3tiff-name"><refname>TIFFReadDirectory</refname>
+<refpurpose>get the contents of the next directory in an open TIFF file</refpurpose>
+</refnamediv>
+<refsect1 id="TIFFReadDirectory-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+int TIFFReadDirectory(TIFF* tif)</programlisting>
+</refsect1>
+<refsect1 id="TIFFReadDirectory-3tiff-desc"><title>&desc-tt;</title>
+<para>Read the next directory in the specified file and make that the current
+directory. Applications only need to call <literal>TIFFReadDirectory</literal>
+to read multiple subfiles in a single TIFF file. The first directory in a
+file is automatically read when <literal>TIFFOpen</literal> is called.</para>
+</refsect1>
+<refsect1 id="TIFFReadDirectory-3tiff-exde"><title>&exde-tt;</title>
+<para>If the library is compiled with <literal>STRIPCHOP_SUPPORT</literal>
+enabled, then images that have a single uncompressed strip or tile of data
+are automatically treated as if they were made up of multiple strips or tiles
+of approximately 8 kilobytes each. This operation is performed only in-memory
+and does not alter the contents of the file. However, the construction of
+the &ldquo;chopped strips&rdquo; is visible to the application through the
+number of strips [tiles] returned by <literal>TIFFNumberOfStrips</literal>
+[<literal>TIFFNumberOfTiles</literal>].</para>
+<refsect2 id="TIFFReadDirectory-3tiff-exde-diags">
+<title>Diagnostics</title>
+<para>All error messages are directed to the <literal>TIFFError(3tiff)</literal>
+routine. All warning messages are directed to the <literal>TIFFWarning(3tiff)
+</literal> routine.</para>
+<variablelist termlength="wholeline">
+<varlistentry><term>Seek error accessing TIFF directory.</term><listitem>
+<para>An error occurred while positioning to the location of the directory.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>Wrong data type %d for field "%s".</term><listitem><para>
+The tag entry in the directory had an incorrect data type. For example, an <literal>
+ImageDescription</literal> tag with a <literal>SHORT</literal> data type.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>TIFF directory is missing required "%s" field.</term>
+<listitem><para>The specified tag is required by the TIFF 5.0 specification
+to be present, but is missing. The directory is usually unusable.</para>
+</listitem></varlistentry>
+<varlistentry><term>%s: Rational with zero denominator.</term><listitem><para>
+A directory tag has a <literal>RATIONAL</literal> value whose denominator
+is zero.</para>
+</listitem></varlistentry>
+<varlistentry><term>Incorrect count %d for field "%s" (%lu, expecting %lu);
+tag ignored.</term><listitem><para>The count field for the specified tag is
+bad. For example, a count other than 1 for a <literal>SubFileType</literal>
+tag.</para>
+</listitem></varlistentry>
+<varlistentry><term>Cannot handle different per-sample values for field "%s".
+</term><listitem><para>The tag has <literal>SamplesPerPixel</literal> values
+that are not all the same. For example, <literal>BitsPerSample</literal>.
+The library is unable to manage images of this sort.</para>
+</listitem></varlistentry>
+<varlistentry><term>Count mismatch for field "%s"; expecting %d, got %d.</term>
+<listitem><para>The count field in a tag does not agree with the number expected
+by the library. This should never happen. If this situation occurs, the library
+refuses to read the directory.</para>
+</listitem></varlistentry>
+<varlistentry><term>Invalid TIFF directory; tags are not sorted in ascending
+order.</term><listitem><para>The directory tags are not properly sorted as
+specified in the TIFF 5.0 specification. This error is not fatal.</para>
+</listitem></varlistentry>
+<varlistentry><term>Ignoring unknown field with tag %d (0x%x).</term><listitem>
+<para>An unknown tag was encountered in the directory. The library ignores
+all such tags.</para>
+</listitem></varlistentry>
+<varlistentry><term>TIFF directory is missing required "ImageLength" field.
+</term><listitem><para>The image violates the specification by not having
+a necessary field. The library cannot recover from this error.</para>
+</listitem></varlistentry>
+<varlistentry><term>TIFF directory is missing required "PlanarConfig" field.
+</term><listitem><para>The image violates the specification by not having
+a necessary field. The library cannot recover from this error.</para>
+</listitem></varlistentry>
+<varlistentry><term>TIFF directory is missing required "StripOffsets" field.
+</term><listitem><para>The image has multiple strips, but does not have the tag
+that specifies the file offset to each strip of data. The library cannot recover
+from this error.</para>
+</listitem></varlistentry>
+<varlistentry><term>TIFF directory is missing required "TileOffsets" field.
+</term><listitem><para>The image has multiple tiles, but does not have the tag
+that specifies the file offset to each tile of data. The library cannot recover
+from this error.</para>
+</listitem></varlistentry>
+<varlistentry><term>TIFF directory is missing required "StripByteCounts" field.
+</term><listitem><para>The image has multiple strips, but does not have the tag
+that specifies the size of each strip of data. The library cannot recover
+from this error.</para>
+</listitem></varlistentry>
+<varlistentry><term>TIFF directory is missing required "StripByteCounts" field,
+calculating from imagelength.</term><listitem><para>The image violates the
+specification by not having a necessary field. However, when the image is
+comprised of only one strip or tile, the library estimates the missing value
+based on the file size.</para>
+</listitem></varlistentry>
+<varlistentry><term>Bogus "StripByteCounts" field, ignoring and calculating
+from imagelength.</term><listitem><para>Certain vendors violate the specification
+by writing zero for the <literal>StripByteCounts</literal> tag when they want
+<?Pub Caret>the value to remain unspecified. If the image has a single strip,
+the library estimates the missing value based on the file size.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="TIFFReadDirectory-3tiff-rtrn"><title>&rtrn-tt;</title>
+<para>If the next directory was successfully read, 1 is returned. Otherwise,
+0 is returned if an error was encountered, or if there are no more directories
+to be read.</para>
+</refsect1>
+<refsect1 id="TIFFReadDirectory-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFReadDirectory-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFOpen</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>TIFFWriteDirectory
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFSetDirectory</refentrytitle><manvolnum>3tiff</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFSetSubDirectory</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFReadDirectory-3tiff-note"><title>&note-tt;</title>
+<para>This man page was originally written by Sam Leffler. Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000009232>

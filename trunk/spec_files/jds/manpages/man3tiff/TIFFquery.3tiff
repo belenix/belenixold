@@ -1,0 +1,150 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFquery">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFquery-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFquery</refentrytitle><manvolnum>3tiff</manvolnum>
+<refmiscinfo class="date">01 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFquery</primary></indexterm><indexterm><primary>TIFFCurrentRow
+</primary></indexterm><indexterm><primary>TIFFCurrentStrip</primary></indexterm>
+<indexterm><primary>TIFFCurrentTile</primary></indexterm><indexterm><primary>
+TIFFCurrentDirectory</primary></indexterm><indexterm><primary>TIFFLastDirectory
+</primary></indexterm><indexterm><primary>TIFFFileno</primary></indexterm>
+<indexterm><primary>TIFFFileName</primary></indexterm><indexterm><primary>
+TIFFGetMode</primary></indexterm><indexterm><primary>TIFFIsTiled</primary>
+</indexterm><indexterm><primary>TIFFIsByteSwapped</primary></indexterm><indexterm>
+<primary>TIFFIsUpSampled</primary></indexterm><indexterm><primary>TIFFIsMSB2LSB
+</primary></indexterm><indexterm><primary>query routines</primary></indexterm>
+<refnamediv id="TIFFquery-3tiff-name"><refdescriptor>TIFFquery</refdescriptor>
+<refname>TIFFCurrentDirectory</refname><refname>TIFFCurrentRow</refname><refname>
+TIFFCurrentStrip</refname><refname>TIFFCurrentTile</refname><refname>TIFFFileName
+</refname><refname>TIFFFileno</refname><refname>TIFFGetMode</refname><refname>
+TIFFGetVersion</refname><refname>TIFFIsByteSwapped</refname><refname>TIFFIsMSB2LSB
+</refname><refname>TIFFIsTiled</refname><refname>TIFFIsUpSampled</refname>
+<refname>TIFFLastDirectory</refname><?Pub Caret><refpurpose>query routines
+</refpurpose></refnamediv>
+<refsect1 id="TIFFquery-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+uint32 TIFFCurrentRow(TIFF* tif)
+tstrip_t TIFFCurrentStrip(TIFF* tif)
+ttile_t TIFFCurrentTile(TIFF* tif)
+tdir_t TIFFCurrentDirectory(TIFF* tif)
+int TIFFLastDirectory(TIFF* tif)
+int TIFFFileno(TIFF* tif)
+char* TIFFFileName(TIFF* tif)
+int TIFFGetMode(TIFF* tif)
+int TIFFIsTiled(TIFF* tif)
+int TIFFIsByteSwapped(TIFF* tif)
+int TIFFIsUpSampled(TIFF* tif)
+int TIFFIsMSB2LSB(TIFF* tif)
+const char* TIFFGetVersion(void)</programlisting>
+</refsect1>
+<refsect1 id="TIFFquery-3tiff-desc"><title>&desc-tt;</title>
+<para>The following routines return status information about an open TIFF
+file.</para>
+<variablelist>
+<varlistentry><term><literal>TIFFCurrentDirectory</literal></term><listitem>
+<para>Returns the index of the current directory. Directories are numbered
+starting at 0. This number is suitable for use with the <literal>TIFFSetDirectory
+</literal> routine.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFLastDirectory</literal></term><listitem>
+<para>Returns a non-zero value if the current directory is the last directory
+in the file. Otherwise, zero is returned.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFCurrentRow</literal>, <literal>TIFFCurrentStrip
+</literal>, <literal>TIFFCurrentTile</literal></term><listitem><para>Returns
+the current row, strip, and tile, respectively, that is being read or written.
+These values are updated each time a read or write is performed.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFFileno</literal></term><listitem><para>Returns
+the underlying file descriptor used to access the TIFF image in the file system.
+</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFFileName</literal></term><listitem><para>
+Returns the <literal>pathname</literal> argument passed to <literal>TIFFOpen
+</literal> or <literal>TIFFFdOpen</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFGetMode</literal></term><listitem><para>
+Returns the mode with which the underlying file was opened. On UNIX systems,
+this is the value passed to the <literal>open(2)</literal> system call.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFIsTiled</literal></term><listitem><para>
+Returns a non-zero value if the image data has a tiled organization. Zero
+is returned if the image data is organized in strips.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFIsByteSwapped</literal></term><listitem>
+<para>Returns a non-zero value if the image data is in a different byte-order
+than the host machine. Zero is returned if the TIFF file and local host byte-orders
+are the same. Note that the <literal>TIFFReadTile()</literal>, <literal>TIFFReadStrip()
+</literal> and <literal>TIFFReadScanline()</literal> functions already normally
+perform byte swapping to local host order if needed.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFIsUpSampled</literal></term><listitem><para>
+Returns a non-zero value if image data returned through the read interface
+routines is being up-sampled. This can be useful to applications that want
+to calculate I/O buffer sizes to reflect this usage, though the usual strip
+and tile size routines already do this.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFIsMSB2LSB</literal></term><listitem><para>
+Returns a non-zero value if the image data is being returned with bit 0 as
+the most significant bit.</para>
+</listitem></varlistentry>
+<varlistentry><term><literal>TIFFGetVersion</literal></term><listitem><para>
+Returns an ASCII string that has a version stamp for the TIFF library software.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="TIFFquery-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFquery-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFOpen</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>TIFFFdOpen
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFquery-3tiff-note"><title>&note-tt;</title>
+<para>This man page was originally written by Sam Leffler. Updated by Breda
+McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000007651>

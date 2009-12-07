@@ -1,0 +1,85 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2007/309  GNOME Multi-protocol instant messaging client Pidgin -->
+<!ENTITY cmd "libpurple">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libpurple-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">28 Jul 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+core IM library</primary></indexterm>
+<refnamediv id="libpurple-3-name"><refname>&cmd;</refname><refpurpose>
+core IM library</refpurpose></refnamediv>
+<refsect1 id="libpurple-3-desc"><title>&desc-tt;</title>
+<para>
+&cmd; is a core library to be used by IM programs. It is used by
+<citerefentry><refentrytitle>pidgin</refentrytitle> <manvolnum>1</manvolnum></citerefentry>.
+</para>
+<para>
+libpurple library could connect to the IM networks, manage accounts and
+preferences, and other helpful things.  When using libpurple, you will
+basically be writing a UI for this core code.  pidgin is a GTK+ frontend to
+&cmd;.</para>
+</refsect1>
+<refsect1 id="libpurple-3-file"><title>&file-tt;</title>
+<para>The following files are used:</para>
+<variablelist termlength="medium">
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename> </term><listitem>
+<para>Core IM library of Pidgin</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libpurple-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-im-client
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libpurple-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>pidgin</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libpurple-client</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<variablelist termlength="wholeline"><varlistentry>
+<term><filename>&cmd information:</filename></term>
+<listitem><para><programlisting>
+<literal>http://developer.pidgin.im/wiki/WhatIsLibpurple</literal>
+</programlisting>
+</para></listitem>
+</varlistentry></variablelist>
+</refsect1>
+<refsect1 id="libpurple-3-note"><title>&note-tt;</title>
+<para>Written by Rick Ju, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+</refentry>

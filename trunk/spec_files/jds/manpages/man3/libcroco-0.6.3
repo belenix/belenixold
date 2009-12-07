@@ -1,0 +1,130 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "libcroco-0.6">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libcroco-06-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">26 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>
+CSS Toolkit for GNOME
+</primary></indexterm><refnamediv id="libcroco-06-3-name">
+<refname>&cmd;</refname><refpurpose>
+CSS Toolkit for GNOME
+</refpurpose></refnamediv>
+<refsect1 id="libcroco-06-3-desc"><title>&desc-tt;</title>
+<para>
+The <filename>&cmd;</filename> library provides a generic Cascading Style Sheet
+(CSS) parsing and manipulation toolkit that can be used by GNOME applications
+in need of CSS support.  <filename>&cmd;</filename> includes the following:
+</para>
+<itemizedlist>
+<listitem>
+A parser module that provides:
+<itemizedlist>
+<listitem>
+A SAC like api. SAC stands for Simple Api for CSS. SAC is an event driven API
+wich resembles SAX in the xml world.
+</listitem>
+<listitem>
+A CSSOM like API. CSSOM stands for Cascading Style Sheet Object Model.
+</listitem>
+<para>
+<filename>&cmd;</filename> implements the CSS Level 2 specification, the CSS
+forward compatibility rules and the CSS cascading rules.  
+</para>
+</listitem>
+</listitem>
+<listitem>
+<para>
+A CSS2 selection engine
+</para>
+<para>
+Given an XML element node and a stylesheet cascade, the
+<filename>&cmd;</filename> selection engine can evalutate the CSS selectors of
+the cascade and return the style properties associated to the XML element node.
+</para>
+<para>
+</listitem>
+<listitem>
+<para>
+An XML/CSS layout/rendering engine
+</para>
+<para>
+<filename>&cmd;</filename> has a rendering engine that provides a widget
+that knows how to render an XML document by interpreting the style information
+present in an associated style sheet.
+</para>
+</refsect1>
+<refsect1 id="libcroco-06-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term>
+<filename>/usr/lib/&cmd;.so</filename></term>
+<listitem><para>
+<command>&cmd;</command> shared library.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libcroco-06-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row>
+<entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+<entry align="center" valign="middle">ATTRIBUTE VALUE</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry><para>Availability</para></entry>
+<entry><para>SUNWlibcroco</para></entry>
+</row>
+<row>
+<entry colname="COLSPEC0"><para>Interface stability</para></entry>
+<entry colname="COLSPEC1"><para>Volatile</para></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libcroco-06-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>csslint-0.6</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>croco-0.6-config</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+<variablelist termlength="wholeline"><varlistentry>
+<term><filename>&cmd information:</filename></term>
+<listitem><para><programlisting>
+<literal>http://www.freespiders.org/projects/libcroco</literal>
+</programlisting>
+</para></listitem>
+</varlistentry></variablelist>
+
+</para>
+</refsect1>
+<refsect1 id="libcroco-06-3-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2009.</para>
+</refsect1>
+</refentry>

@@ -1,0 +1,10 @@
+
+MANDIR=/usr/share/man
+MAN1DIR=$(MANDIR)/man1
+MAN1mDIR=$(MANDIR)/man1m
+MAN3DIR=$(MANDIR)/man3
+MAN3tiffDIR=$(MANDIR)/man3tiff
+MAN4DIR=$(MANDIR)/man4
+MAN5DIR=$(MANDIR)/man5
+MANentitiesDIR=$(MANDIR)/entities
+

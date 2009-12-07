@@ -1,0 +1,79 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734 GNOME For Nevada-->
+<!ENTITY cmd "FLAC">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libFLAC-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>libFLAC</refentrytitle><manvolnum>3</manvolnum>
+  <refmiscinfo class="date">25 Feb 2009</refmiscinfo>
+  <refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+  <refmiscinfo class="software">&release;</refmiscinfo>
+  <refmiscinfo class="arch">generic</refmiscinfo>
+  <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+  </refmeta>
+<indexterm><primary>libFLAC</primary></indexterm><indexterm><primary>
+Free Lossless Audio Codec</primary></indexterm>
+
+<refnamediv id="libFLAC-3-name">
+  <refname>&cmd;</refname>
+  <refpurpose>Free Lossless Audio Codec</refpurpose></refnamediv>
+
+<refsect1 id="libFLAC-3-desc"><title>&desc-tt;</title>
+  <para><literal>&cmd;</literal> an audio format similar to MP3, but lossless, meaning that audio is compressed in FLAC without any loss in quality. This is similar to how Zip works, except with FLAC you will get much better compression because it is designed specifically for audio, and you can play back compressed FLAC files in your favorite player (or your car or home stereo, see supported devices) just like you would an MP3 file.</para>
+  <para><literal>&cmd;</literal> stands out as the fastest and most widely supported lossless audio codec, and the only one that at once is non-proprietary, is unencumbered by patents, has an open-source reference implementation, has a well documented format and API, and has several other independent implementations.</para>
+ <para><literal>&cmd;</literal> supports tagging, cover art, and fast seeking. FLAC is freely available and supported on most operating systems, including Windows, "unix" (Linux, *BSD, Solaris, OS X, IRIX), BeOS, OS/2, and Amiga.</para>
+ <para>To access the API documentation, you must install the developer version of the package.
+ </para>
+</refsect1>
+
+<refsect1 id="libFLAC-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/lib/libFLAC.so</filename> </term><listitem>
+</listitem></varlistentry>
+<para>	FLAC shared library</para>
+<varlistentry><term><filename>/usr/share/doc/flac-1.2.1</filename> </term><listitem>
+</listitem></varlistentry>
+<para>	Location of developer documentation</para>
+</variablelist></refsect1>
+
+<refsect1 id="libFLAC-3-attr"><title>&attr-tt;</title>
+  <para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+    <refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+
+  <informaltable frame="all">
+    <tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+    <colspec colname="COLSPEC1" colwidth="1*">
+    <thead>
+      <row>
+        <entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+        <entry align="center" valign="middle">ATTRIBUTE VALUE</entry></row> </thead>
+    <tbody>
+      <row>
+        <entry><para>Availability</para></entry><entry><para>SUNWflac</para></entry></row>
+      <row>
+        <entry colname="COLSPEC0"><para>Interface stability</para></entry>
+        <entry colname="COLSPEC1"><para>Volatile</para></entry></row> </tbody> </tgroup> </informaltable> </refsect1>
+
+<refsect1 id="libFLAC-3-also"><title>&also-tt;</title>
+  <!--Reference to another man page-->
+  <!--Reference to a Help manual-->
+  <!--Reference to a book.-->
+  <para>
+  <citerefentry><refentrytitle>libvorbis</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+  <citerefentry><refentrytitle>libspeex</refentrytitle><manvolnum>3</manvolnum></citerefentry>
+  </para>
+  </refsect1>
+
+<refsect1 id="libFLAC-3-note"><title>&note-tt;</title>
+  <para>Written by Jerry Tan, Sun Microsystems Inc., 2009.</para></refsect1>
+  </refentry>

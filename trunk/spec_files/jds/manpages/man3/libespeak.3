@@ -1,0 +1,88 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!-- ARC : LSARC 2008/536 espeak for OpenSolaris-->
+<!ENTITY cmd "libespeak">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+
+<refentry id="libespeak-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">21 Aug 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>C++ bindings
+for espeak speech synthesis</primary></indexterm>
+<refnamediv id="libespeak-3-name"><refname>&cmd;</refname><refpurpose>C++ bindings
+for espeak speech synthesis</refpurpose></refnamediv>
+
+<refsect1 id="libespeak-3-desc"><title>&desc-tt;</title>
+<para>&cmd;  is a set of C++ bindings to speech synthesis
+services for use by client applications and assistive
+technologies.</para>
+<para>
+Please note that these C++ interfaces are built with the Sun Studio C++
+Compiler and compiled with the -compat=5 C++ compiler option, so version 5
+(Standard Mode) of the C++ ABI standard is used.
+</para>
+<para>
+To access the API documentation, you must install the developer version
+of the package.
+</para>
+<refsect1 id="libespeak-3-file"><title>&file-tt;</title>
+<para>The following files are used by this library:</para>
+<variablelist termlength="wholeline">
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename> </term><listitem>
+<para>Library for espeak speech synthesis</para>
+</listitem></varlistentry>
+
+<varlistentry><term><filename>/usr/share/espeak-data</filename> </term><listitem>
+<para>Directory of voice language and data files</para>
+</listitem></varlistentry>
+
+<varlistentry><term><filename>/usr/include/espeak/speak_lib.h</filename> </term><listitem>
+<para>Header file for development purposes</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+
+<refsect1 id="libespeak-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWespeak</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+
+<refsect1 id="libespeak-3-also"><title>&also-tt;</title>
+<para>
+<citerefentry><refentrytitle>espeak</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>orca</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomespeech</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>Additional information is also available from the following site:</para>
+<para>http://espeak.sourceforge.net/</para>
+</refsect1>
+
+</refentry>

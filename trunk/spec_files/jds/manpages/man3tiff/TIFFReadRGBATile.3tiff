@@ -1,0 +1,176 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY exde-tt "EXTENDED DESCRIPTION">
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFReadRGBATile">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFReadRGBATile-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFReadRGBATile</refentrytitle><manvolnum>3tiff</manvolnum>
+<refmiscinfo class="date">05 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFReadRGBATile</primary></indexterm><indexterm><primary>
+read and decode an image tile into a fixed-format raster</primary></indexterm>
+<refnamediv id="TIFFReadRGBATile-3tiff-name"><refname>TIFFReadRGBATile</refname>
+<refpurpose>read and decode an image tile into a fixed-format raster</refpurpose>
+</refnamediv>
+<refsect1 id="TIFFReadRGBATile-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+#define TIFFGetR(abgr) ((abgr) &amp; 0xff)
+#define TIFFGetG(abgr) (((abgr) >> 8) &amp; 0xff)
+#define TIFFGetB(abgr) (((abgr) >> 16) &amp; 0xff)
+#define TIFFGetA(abgr) (((abgr) >> 24) &amp; 0xff)
+int TIFFReadRGBATile(TIFF* tif, uint32 x, uint32 y, uint32 * raster )</programlisting>
+</refsect1>
+<refsect1 id="TIFFReadRGBATile-3tiff-desc"><title>&desc-tt;</title>
+<para><literal>TIFFReadRGBATile</literal> reads a single tile of a tile-based
+image into memory, storing the result in the user-supplied RGBA raster. The
+raster is assumed to be an array of <replaceable>width</replaceable> times <replaceable>
+length</replaceable> 32-bit entries, where <replaceable>width</replaceable>
+is the width of a tile (<literal>TIFFTAG_TILEWIDTH</literal>), and <replaceable>
+height</replaceable> is the height of a tile (<literal>TIFFTAG_TILELENGTH<?Pub Caret>
+</literal>).</para>
+<para>The <replaceable>x</replaceable> and <replaceable>y</replaceable> values
+are the offsets from the top-left corner to the top-left corner of the
+tile to be read. These values must be an exact multiple of the tile width
+and length.</para>
+<para>Note that the raster is assumed to be organized such that the pixel
+at location (<replaceable>x,y</replaceable>) is <replaceable>raster[y*width+x]
+</replaceable>, with the raster origin in the bottom-left corner of the tile.
+That is, bottom-to-top organization. Edge tiles that partly fall off the image
+are filled out with appropriate zeroed areas.</para>
+</refsect1>
+<refsect1 id="TIFFReadRGBATile-3tiff-exde"><title>&exde-tt;</title>
+<para>Raster pixels are 8-bit packed red, green, blue, alpha samples. The
+macros <literal>TIFFGetR</literal>, <literal>TIFFGetG</literal>, <literal>
+TIFFGetB</literal>, and <literal>TIFFGetA</literal> should be used to access
+individual samples. Images without Associated Alpha matting information have
+a constant Alpha of 1.0 (255).</para>
+<para>See <literal>TIFFRGBAImage(3tiff)</literal> for more information about how
+various image types are converted to RGBA values.</para>
+<refsect2 id="TIFFReadRGBATile-3tiff-exde-diags">
+<title>Diagnostics</title>
+<para>All error messages are directed to the <literal>TIFFError(3tiff)</literal>
+routine.</para>
+<variablelist termlength="wholeline">
+<varlistentry><term>Sorry, can not handle %d-bit pictures.</term><listitem>
+<para>The image has a <literal>BitsPerSample</literal> value other than 1,
+2, 4, 8, or 16.</para>
+</listitem></varlistentry>
+<varlistentry><term>Sorry, can not handle %d-channel images.</term><listitem>
+<para>The image has a <literal>SamplesPerPixel</literal> value other than
+1, 3, or 4.</para>
+</listitem></varlistentry>
+<varlistentry><term>Missing needed "PhotometricInterpretation" tag.</term>
+<listitem><para>The image does not have a tag that describes how to display
+the data.</para>
+</listitem></varlistentry>
+<varlistentry><term>No "PhotometricInterpretation" tag, assuming RGB.</term>
+<listitem><para>The image does not have a tag that describes how to display
+the data, but is assumed to be RGB because the image has 3 or 4 samples/pixel.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>No "PhotometricInterpretation" tag, assuming min-is-black.
+</term><listitem><para>The image does not have a tag that describes how to
+display the data, but is assumed to be a grayscale or bilevel image because
+the image has 1 sample/pixel.</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for photometric conversion table.</term><listitem>
+<para>There is insufficient memory for a table needed to convert image samples
+to 8-bit RGB.</para>
+</listitem></varlistentry>
+<varlistentry><term>Missing required "Colormap" tag.</term><listitem><para>
+A Palette image does not have a required <literal>Colormap</literal> tag.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for tile buffer.</term><listitem><para>There
+is insufficient memory to allocate an i/o buffer.</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for strip buffer.</term><listitem><para>There
+is insufficient memory to allocate an i/o buffer.</para>
+</listitem></varlistentry>
+<varlistentry><term>Can not handle format.</term><listitem><para>The image
+has a format (combination of <literal>BitsPerSample</literal>, <literal>SamplesPerPixel
+</literal>, and <literal>PhotometricInterpretation</literal>) that <literal>
+TIFFReadRGBAStrip</literal> cannot process.</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for B&amp;W mapping table.</term><listitem><para>
+There is insufficient memory to allocate a table needed to map grayscale data
+to RGB.</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for Palette mapping table.</term><listitem><para>
+There is insufficient memory to allocate a table needed to map data to 8-bit
+RGB.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="TIFFReadRGBATile-3tiff-rtrn"><title>&rtrn-tt;</title>
+<para>1 is returned if the image was successfully read and converted. Otherwise,
+0 is returned if an error was encountered.</para>
+</refsect1>
+<refsect1 id="TIFFReadRGBATile-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFReadRGBATile-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFOpen</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>TIFFRGBAImage
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFReadRGBAImage</refentrytitle><manvolnum>3tiff</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFReadRGBAStrip</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFReadRGBATile-3tiff-note"><title>&note-tt;</title>
+<para>Orientations other than bottom-left or top-left are not processed correctly.
+</para>
+<para>Samples must be either 1, 2, 4, 8, or 16 bits. Colorimetric samples/pixel
+must be either 1, 3, or 4 (that is, <literal>SamplesPerPixel</literal> minus <literal>
+ExtraSamples</literal>).</para>
+<para>Palette image colormaps that appear to be incorrectly written as 8-bit
+values are automatically scaled to 16-bits.</para>
+<para><literal>TIFFReadRGBATile</literal> is just a wrapper around the more
+general <literal>TIFFRGBAImage(3tiff)</literal> facilities. The main advantage
+of <literal>TIFFReadRGBATile</literal> over the similar <literal>TIFFReadRGBAImage()
+</literal> function is that for large images, it is not necessary to allocate
+a single buffer capable of holding the whole image. The buffer only needs
+to hold one tile. The <literal>TIFFReadRGBAStrip()</literal> function performs
+a similar operation for stripped images.</para>
+<para>This man page was originally written by Sam Leffler. Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000009194>

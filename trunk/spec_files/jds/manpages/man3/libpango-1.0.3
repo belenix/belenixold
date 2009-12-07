@@ -1,0 +1,112 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/384 Gtk+ 2.0 / glib 2.0-->
+<!--ARC : LSARC 2001/781 location of GTK/Glib-->
+<!--ARC : PSARC 2001/804 GTK/Glib becomes Contracted External-->
+<!ENTITY cmd "libpango-1.0">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libpango-10-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">31 Aug 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+layout and rendering of internationalized text</primary></indexterm>
+
+<indexterm><primary>libpangox-1.0</primary></indexterm><indexterm>
+<primary>X11 support for Pango</primary></indexterm>
+
+<indexterm><primary>libpangoft2-1.0</primary></indexterm>
+<indexterm><primary>FreeType2 fonts and rendering support for Pango</primary></indexterm>
+
+<indexterm><primary>libpangoxft-1.0</primary></indexterm><indexterm>
+<primary>Font handling and rendering with the Xft backend</primary></indexterm>
+
+<indexterm><primary>libpangocairo-1.0</primary></indexterm><indexterm>
+<primary>Rendering with the Cairo backend</primary></indexterm>
+
+<refnamediv id="libpango-10-3-name"><refname>&cmd;</refname><refname>
+libpangoft2-1.0</refname><refname>libpangox-1.0</refname>
+<refname>libpangoxft-1.0</refname><refname>libpangocairo-1.0</refname>
+<refpurpose>layout and rendering of internationalized text with X11, FreeType2,
+Xft, and Cairo support</refpurpose></refnamediv>
+<refsect1 id="libpango-10-3-desc"><title>&desc-tt;</title>
+<para>Pango provides a framework for the layout and rendering of internationalized
+text. The name is derived from the Greek "Pan" which means "All", and the
+Japanese "Go" which means "Language".</para>
+<para>To access the API documentation, you must install the developer version
+of the package.</para>
+</refsect1>
+<refsect1 id="libpango-10-3-file"><title>&file-tt;</title>
+<para>The following files are used by this library:</para>
+<variablelist termlength="wide">
+
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename> </term><listitem>
+<para>Internationalization shared library</para>
+</listitem></varlistentry>
+
+<varlistentry><term>/usr/lib/libpangocairo-1.0.so</term><listitem><para>Pango Cairo
+rendering backend shared library</para>
+</listitem></varlistentry>
+
+<varlistentry><term>/usr/lib/libpangox-1.0.so</term><listitem><para>X11 support
+for Pango shared library</para>
+</listitem></varlistentry>
+
+<varlistentry><term>/usr/lib/libpangoft2-1.0.so</term><listitem><para>FreeType2
+font and rendering backend for Pango shared library</para>
+</listitem></varlistentry>
+
+<varlistentry><term>/usr/lib/libpangoxft2-1.0.so</term><listitem><para>Font 
+handling and rendering with the Xft backend for Pango shared library</para>
+</listitem></varlistentry>
+
+<varlistentry><term><filename>/usr/share/gtk-doc/html/pango</filename> </term><listitem>
+<para>Location of developer documentation</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libpango-10-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-base-libs
+SUNWgnome-base-libs-64</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Committed</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libpango-10-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>pango-querymodules</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="libpango-10-3-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2003, 2004.</para>
+</refsect1>
+</refentry>

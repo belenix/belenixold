@@ -1,0 +1,84 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/703 Gegl for OpenSolaris-->
+<!ENTITY cmd "libgegl-0.0">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libgegl-00-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">19 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+Generic Graphics Library</primary></indexterm>
+
+<refnamediv id="libgegl-00-3-name"><refname>&cmd;</refname><refpurpose>Generic Graphics Library</refpurpose></refnamediv>
+<refsect1 id="libgegl-00-3-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> provides infrastructure to do demand-based cached,
+non-destructive image editing on larger than RAM buffers.
+<command>&cmd;</command> uses the
+<citerefentry><refentrytitle>libbabl-0.0</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>
+library to provide support for a wide range of color models and pixel storage
+formats for input and output.
+</para>
+
+</refsect1>
+<refsect1 id="libgegl-00-3-file"><title>&file-tt;</title>
+<para>The following files are used by this library:</para>
+<variablelist termlength="wide">
+
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename></term>
+<listitem><para>gegl shared library</para>
+</listitem></varlistentry>
+
+<refsect1 id="libgegl-00-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgegl</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libgegl-00-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gegl</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libbabl-0.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>
+Online documentation:
+<para>
+http://gegl.org/#_documentation_2
+</para>
+</para>
+</refsect1>
+<refsect1 id="libgegl-00-3-note"><title>&note-tt;</title>
+<para>Written by Chris Wang, Sun Microsystems Inc., 2009.</para>
+</refsect1>
+</refentry>
