@@ -1,0 +1,89 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/534 libcanberra -->
+<!ENTITY cmd "libcanberra">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libcanberra-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">20 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man1;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+Implementation of the XDG Sound Theme and Name Specification
+</primary></indexterm>
+<indexterm><primary>libcanberra-gtk</primary></indexterm><indexterm><primary>
+Implementation of the XDG Sound Theme and Name Specification
+</primary></indexterm>
+<refnamediv id="libcanberra-3-name">
+<refname>&cmd;</refname>
+<refname>libcanberra-gtk</refname>
+<refpurpose>
+Implementation of the XDG Sound Theme and Name Specification
+</refpurpose></refnamediv>
+<refsect1 id="libcanberra-3-desc"><title>&desc-tt;</title>
+<para>
+<literal>&cmd;</literal> is an implementation of the FreeDesktop &quot;XDG
+Sound Theme and Name Specifications&quot; and is used for generating
+desktop event sounds.
+</para>
+<para>
+libcanberra-gtk provides interfaces making it easier to use &cmd; from GTK+
+based applications.
+</para>
+</refsect1>
+<refsect1 id="libcanberra-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline">
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename></term><listitem>
+<para>&cmd; shared library</para></varlistentry>
+<varlistentry><term><filename>/usr/lib/libcanberra-gtk.so</filename></term><listitem>
+<para>libcanberra-gtk shared library</para></varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/libcanberra</filename> </term><listitem>
+<para>Location of developer documentation</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libcanberra-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-3"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWlibcanberra</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libcanberra-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>canberra-gtk-play</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="gst-feedback-1-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2009.</para>
+</refsect1>
+</refentry>

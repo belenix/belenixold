@@ -1,0 +1,107 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFPrintDirectory">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFPrintDirectory-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFPrintDirectory</refentrytitle><manvolnum>3tiff
+</manvolnum>
+<refmiscinfo class="date">01 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFPrintDirectory</primary></indexterm><indexterm><primary>
+print a description of a TIFF directory</primary></indexterm>
+<refnamediv id="TIFFPrintDirectory-3tiff-name"><refname>TIFFPrintDirectory
+</refname><refpurpose>print a description of a TIFF directory</refpurpose>
+</refnamediv>
+<refsect1 id="TIFFPrintDirectory-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+void TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)</programlisting>
+</refsect1>
+<refsect1 id="TIFFPrintDirectory-3tiff-desc"><title>&desc-tt;</title>
+<para><literal>TIFFPrintDirectory</literal> prints a description of the current
+directory in the specified TIFF file to the standard I/O output stream <literal>
+fd</literal>. <?Pub Caret>The <literal>flags</literal> parameter is used to
+control the level of detail of the printed information, and is a bit-or of
+the flags defined in <filename>tiffio.h</filename>.</para>
+<informaltable frame="none">
+<tgroup cols="3" colsep="0" rowsep="0"><colspec colwidth="1*"><colspec colwidth="1*">
+<colspec colwidth="1*">
+<tbody>
+<row><entry><para><literal>#define TIFFPRINT_NONE</literal></para></entry>
+<entry><para><literal>0x0</literal></para></entry><entry><para>/* no extra
+info */</para></entry></row>
+<row><entry><para><literal>#define TIFFPRINT_STRIPS</literal></para></entry>
+<entry><para><literal>0x1</literal></para></entry><entry><para>/* strips/tiles
+info */</para></entry></row>
+<row><entry><para><literal>#define TIFFPRINT_CURVES</literal></para></entry>
+<entry><para><literal>0x2</literal></para></entry><entry><para>/* color/gray
+response curves */</para></entry></row>
+<row><entry><para><literal>#define TIFFPRINT_COLORMAP</literal></para></entry>
+<entry><para><literal>0x4</literal></para></entry><entry><para>/* colormap
+*/</para></entry></row>
+<row><entry><para><literal>#define TIFFPRINT_JPEGQTABLES</literal></para></entry>
+<entry><para><literal>0x100</literal></para></entry><entry><para>/* JPEG Q
+matrices */</para></entry></row>
+<row><entry><para><literal>#define TIFFPRINT_JPEGACTABLES</literal></para></entry>
+<entry><para><literal>0x200</literal></para></entry><entry><para>/* JPEG AC
+tables */</para></entry></row>
+<row><entry><para><literal>#define TIFFPRINT_JPEGDCTABLES</literal></para></entry>
+<entry><para><literal>0x200</literal></para></entry><entry><para>/* JPEG DC
+tables */</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFPrintDirectory-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFPrintDirectory-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFOpen</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>TIFFReadDirectory
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFSetDirectory</refentrytitle><manvolnum>3tiff</manvolnum>
+</citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFPrintDirectory-3tiff-note"><title>&note-tt;</title>
+<para>In C++ the <literal>flags</literal> parameter defaults to 0.</para>
+<para>This man page was originally written by Sam Leffler. Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000005133>

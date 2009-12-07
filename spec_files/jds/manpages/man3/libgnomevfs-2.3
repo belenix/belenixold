@@ -1,0 +1,101 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "libgnomevfs-2">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004,2006,2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libgnomevfs-2-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">14 May 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+GNOME Virtual File System</primary></indexterm>
+<refnamediv id="libgnomevfs-2-3-name"><refname>&cmd;</refname><refpurpose>
+GNOME Virtual File System</refpurpose></refnamediv>
+<refsect1 id="libgnomevfs-2-3-desc"><title>&desc-tt;</title>
+<para>
+GnomeVFS is obsolete.  It has been superseded by libgio-2.0.  See
+<citerefentry><refentrytitle>libgio-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>.
+</para>
+<para>GnomeVFS is a filesystem abstraction library which gives applications
+plugable transparent access to a variety of "real" filesystems, from WebDAV
+to digital cameras, to the local filesystem. It also contains a number of
+other convenient file utilities such as a comprehensive MIME database / Application
+registry, and a copy engine. Use of GnomeVFS also ensures that an application
+or component will be usable by Nautilus or other GnomeVFS applications for
+handling the display of data from various URIs.</para>
+<para>Besides providing transparent access to data methods that you might
+otherwise have to implement, GnomeVFS provides a number of convenient libraries
+for processing URIs, detecting the MIME type of files, and identifying which
+applications or components to launch to view a file or what icon to use. Writing
+a GnomeVFS module may also be an appropriate solution to some data access
+problems as it allows the developer to implement a relatively small number
+of functions to gain general filesystem semantics.</para>
+<para>To access the API documentation, you must install the developer version
+of the package.</para>
+</refsect1>
+<refsect1 id="libgnomevfs-2-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline">
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename> </term><listitem>
+<para>GNOME Virtual File System shared library</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/gnome-vfs-2.0</filename> </term><listitem>
+<para>Location of developer documentation</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libgnomevfs-2-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-vfs</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Obsolete Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libgnomevfs-2-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gnomevfs-cat</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-copy</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-info</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-ls</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnomevfs-mkdir</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>nautilus</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgio-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-vfs-mime-magic</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-vfs.applications</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-vfs.keys</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-vfs.mime</refentrytitle><manvolnum>4</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="libgnomevfs-2-3-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2003, 2004, 2006, 2008.</para>
+</refsect1>
+</refentry>

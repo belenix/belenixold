@@ -1,0 +1,105 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFbuffer">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub EntList brvbar bull cross dash diam diams frac12 frac13 frac14 hellip
+ laquo lArr loz mdash nabla ndash para pound rArr raquo sect yen percnt>
+<?Pub Inc>
+<refentry id="TIFFbuffer-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFbuffer</refentrytitle><manvolnum>3tiff</manvolnum>
+<refmiscinfo class="date">01 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFbuffer</primary></indexterm><indexterm><primary>TIFFReadBufferSetup
+</primary></indexterm><indexterm><primary>TIFFWriteBufferSetup</primary></indexterm>
+<indexterm><primary>I<?Pub Caret1>/O buffering control routines</primary>
+</indexterm>
+<refnamediv id="TIFFbuffer-3tiff-name"><refdescriptor>TIFFbuffer</refdescriptor>
+<refname>TIFFReadBufferSetup</refname><refname>TIFFWriteBufferSetup</refname>
+<refpurpose>I/O buffering control routines</refpurpose></refnamediv>
+<refsect1 id="TIFFbuffer-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+int TIFFReadBufferSetup(TIFF*, tdata_t buffer, tsize_t size);
+int TIFFWriteBufferSetup(TIFF*, tdata_t buffer, tsize_t size);
+
+</programlisting>
+</refsect1>
+<refsect1 id="TIFFbuffer-3tiff-desc"><title>&desc-tt;</title>
+<para>The following routines are provided for client-control of the I/O buffers
+used by the library. Applications need never use these routines. The routines
+are provided only for &ldquo;intelligent clients&rdquo; that wish to optimize
+memory usage and/or eliminate potential copy operations that can occur when
+working with images that have data stored without compression.</para>
+</refsect1>
+<refsect1 id="TIFFbuffer-3tiff-exde"><title>&exde-tt;</title>
+<para><literal>TIFFReadBufferSetup</literal> sets up the data buffer used
+to read raw (encoded) data from a file. If the specified pointer is NULL (zero),
+then a buffer of the appropriate size is allocated. Otherwise, the caller
+must guarantee that the buffer is large enough to hold any individual strip
+of raw data. <literal>TIFFReadBufferSetup</literal> returns a non-zero value
+if the setup was successful.</para>
+<para><literal>TIFFWriteBufferSetup</literal> sets up the data buffer used
+to write raw (encoded) data to a file. If the specified size is -1 then the
+buffer size is selected to hold a complete tile or strip, or at least 8 kilobytes,
+whichever is greater. If the specified buffer is NULL (zero), then a buffer
+of the appropriate size is dynamically allocated. <literal>TIFFWriteBufferSetup
+</literal> returns a non-zero value if the setup was successful.</para>
+<refsect2 id="TIFFbuffer-3tiff-exde-diags">
+<title>Diagnostics</title>
+<variablelist termlength="wholeline">
+<varlistentry><term>%s: No space for data buffer at scanline %ld.</term><listitem>
+<para><literal>TIFFReadBufferSetup</literal> was unable to dynamically allocate
+space for a data buffer.</para>
+</listitem></varlistentry>
+<varlistentry><term>%s: No space for output buffer.</term><listitem><para><literal>
+TIFFWriteBufferSetup</literal> was unable to dynamically allocate space for
+a data buffer.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="TIFFbuffer-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFbuffer-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFbuffer-3tiff-note"><title>&note-tt;</title>
+<para>This man page was originally written by Sam Leffler. Updated by Breda McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000005045>

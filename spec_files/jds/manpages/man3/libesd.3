@@ -1,0 +1,100 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "libesd">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libesd-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">10 Jan 2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>
+GNOME Enlightenment Sound Daemon Interface library
+</primary></indexterm>
+<refnamediv id="libesd-3-name"><refname>&cmd;</refname><refpurpose>
+GNOME Enlightenment Sound Daemon Interface library
+</refpurpose></refnamediv>
+<refsect1 id="libesd-3-desc"><title>&desc-tt;</title>
+<para>
+The <filename>&cmd;</filename> library provides access to the Enlightened
+Sound Daemon (<filename>esd</filename>).  The Enlightened Sound Daemon is
+launched automatically by <filename>&cmd;</filename> if the daemon is not
+already present. A sockets connection is managed with the daemon by this API.
+The connection allows sound data to be written to the daemon for playback,
+or read from the daemon for recording purposes.
+</para>
+<para>
+The daemon will automatically sample an incoming stream from a client
+to the best format that is supported by the sound device. Therefore, client
+programs do not have to be concerned with writing platform-specific code for
+handling sound data.
+</para>
+<para>
+The daemon supports caching. Each sample is given an ID tag, and sound
+data can then be accessed via this API with this ID tag.
+</para>
+<para>
+If the audio device supports simultaneous record and playback at the
+same bit resolution, bit rate, and number of channels (in other words, is
+full duplex), then the daemon and API also supports simultaneous reading
+and writing from the audio device.
+</para>
+</refsect1>
+<refsect1 id="libesd-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="medium"><varlistentry><term><filename>/usr/lib/&cmd;.so
+</filename> </term><listitem><para>GNOME Enlightened Sound Daemon Interface
+shared library</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libesd-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-audio
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libesd-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>esdcat</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esdplay</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esdrec</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esdsample</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esdmon</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esdctl</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>esd-config</refentrytitle><manvolnum>1</manvolnum></citerefentry>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="libesd-3-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2003.</para>
+</refsect1>
+</refentry>

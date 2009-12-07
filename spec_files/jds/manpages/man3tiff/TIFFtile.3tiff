@@ -1,0 +1,116 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFtile">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFtile-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFtile</refentrytitle><manvolnum>3tiff</manvolnum>
+<refmiscinfo class="date">02 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFtile</primary></indexterm><indexterm><primary>tile-related
+utility routines</primary></indexterm>
+<refnamediv id="TIFFtile-3tiff-name"><refdescriptor>TIFFtile</refdescriptor>
+<refname>TIFFTileSize</refname><refname>TIFFTileRowSize</refname><refname>
+TIFFVTileSize</refname><refname>TIFFDefaultTileSize</refname><refname>TIFFComputeTile
+</refname><refname>TIFFCheckTile</refname><refname>TIFFNumberOfTiles</refname>
+<refpurpose>tile-related utility routines</refpurpose></refnamediv>
+<refsect1 id="TIFFtile-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+void TIFFDefaultTileSize(TIFF* tif, uint32* tw, uint32* th)
+tsize_t TIFFTileSize(TIFF* tif)
+tsize_t TIFFTileRowSize(TIFF* tif)
+tsize_t TIFFVTileSize(TIFF* tif, uint32 nrows)
+ttile_t TIFFComputeTile(TIFF* tif, uint32 x, uint32 y, uint32 z, tsample_t sample)
+int TIFFCheckTile(TIFF* tif, uint32 x, uint32 y, uint32 z, tsample_t sample)
+ttile_t TIFFNumberOfTiles(TIFF* tif)</programlisting>
+</refsect1>
+<refsect1 id="TIFFtile-3tiff-desc"><title>&desc-tt;</title>
+<para><literal>TIFFDefaultTileSize</literal> returns the pixel width and height
+of a reasonable-sized tile, suitable for setting up the <literal>TileWidth
+</literal> and <literal>TileLength</literal> tags. If the <replaceable>tw
+</replaceable> and <replaceable>th</replaceable> values passed in are non-zero,
+then they are adjusted to reflect any compression-specific requirements. The
+returned width and height are constrained to be a multiple of 16 pixels, to
+conform with the TIFF specification.</para>
+<para><literal>TIFFTileSize</literal> returns the equivalent size for a tile
+of data as it would be returned in a call to <literal>TIFFReadTile</literal>
+or as it would be expected in a call to <literal>TIFFWriteTile</literal>.
+</para>
+<para><literal>TIFFVTileSize</literal> returns the number of bytes in a row-aligned
+tile with <literal>nrows</literal> of data.</para>
+<para><literal>TIFFTileRowSize</literal> returns the number of bytes of a
+row of data in a tile.</para>
+<para><literal>TIFFComputeTile</literal> returns the tile that contains the
+specified coordinates. A valid tile is always returned. Out-of-range coordinate
+values are clamped to the bounds of the image. The <literal>x</literal> and <literal>
+y</literal> parameters are always used in calculating a tile. The <literal>
+z</literal> parameter is used if the image is deeper than 1 slice (ImageDepth>1).
+The <literal>sample</literal> parameter is used only if data is organized
+in separate planes (PlanarConfiguration=2).</para>
+<para><literal>TIFFCheckTile</literal> returns a non-zero value if the supplied
+coordinates are within the bounds of the image, and zero otherwise. The <literal>
+x</literal> parameter is checked against the value of the ImageWidth tag.
+The <literal>y</literal> parameter is checked against the value of the <literal>
+ImageLength</literal> tag. The <literal>z</literal> parameter is checked against
+the value of the <literal>ImageDepth</literal> tag (if defined). The <literal>
+sample</literal> parameter is checked against the value of the <literal>SamplesPerPixel
+</literal> parameter if the data is organized in separate planes.</para>
+<para><literal>TIFFNumberOfTiles</literal> returns the number of tiles in
+the image.</para>
+</refsect1>
+<refsect1 id="TIFFtile-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFtile-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFReadEncodedTile</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>
+TIFFReadRawTile</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFReadTile</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFWriteEncodedTile</refentrytitle><manvolnum>3tiff</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFWriteRawTile</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>
+TIFFWrite<?Pub Caret>Tile</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFtile-3tiff-note"><title>&note-tt;</title>
+<para>This man page was originally written by Sam Leffler. Updated by Breda
+McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000006263>

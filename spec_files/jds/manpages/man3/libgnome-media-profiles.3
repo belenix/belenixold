@@ -1,0 +1,88 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2005/734 GNOME For Nevada -->
+<!ENTITY cmd "libgnome-media-profiles">
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libgnome-media-profiles-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+  <refmiscinfo class="date">24 Feb 2009</refmiscinfo>
+  <refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+  <refmiscinfo class="software">&release;</refmiscinfo>
+  <refmiscinfo class="arch">generic</refmiscinfo>
+  <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+  </refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+a GNOME Library to edit audio profile</primary></indexterm>
+<refnamediv id="libgnome-media-profiles-3-name">
+  <refname>&cmd;</refname>
+  <refpurpose>a GNOME Library to edit audio profile</refpurpose></refnamediv>
+<refsect1 id="libgnome-media-profiles-3-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;profiles/gnome-media-profiles.h>
+
+cc [<replaceable>flag</replaceable> ...]  `pkg-config --cflags --libs gnome-media-profiles `  <replaceable>
+file</replaceable> </programlisting>
+</refsect1>
+
+<refsect1 id="libgnome-media-profiles-3-desc"><title>&desc-tt;</title>
+  <para><literal>&cmd;</literal> is a library to be used to edit audio profile. </para>
+  <para>It provides several functions:</para>
+  <para>a) a function to get a dialog to edit audio profiles</para>
+  <para>   GapProfilesEdit * gm_audio_profile_edit_new()</para>
+  <para>b) a function to get a dialog to edit a specific audio profile based on its id</para>
+  <para>   GapProfileEdit *gm_audio_profile_edit_new(const char *id)</para>
+  <para>c) functions to manipulate the profiles
+   - get list/count of profiles
+   - get profile specifics</para>
+  <para>d) a function to get a dialog to choose a profile from</para>
+  <para>   GtkDialog * gm_audio_profile_choose()
+</para>
+</refsect1>
+
+<refsect1 id="libgnome-media-profiles-3-file"><title>&file-tt;</title>
+<para>The following files are used by this library:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/lib/libgnome-media-profiles.so</filename> </term><listitem>
+</listitem></varlistentry>
+<para>	libgnome-media-profiles library</para>
+</variablelist></refsect1>
+
+<refsect1 id="libgnome-media-profiles-3-attr"><title>&attr-tt;</title>
+  <para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+    <refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+
+  <informaltable frame="all">
+    <tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+    <colspec colname="COLSPEC1" colwidth="1*">
+    <thead>
+      <row>
+        <entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+        <entry align="center" valign="middle">ATTRIBUTE VALUE</entry></row> </thead>
+    <tbody>
+      <row>
+        <entry><para>Availability</para></entry><entry><para>SUNWgnome-media-apps</para></entry></row>
+      <row>
+        <entry colname="COLSPEC0"><para>Interface stability</para></entry>
+        <entry colname="COLSPEC1"><para>Volatile</para></entry></row> </tbody> </tgroup> </informaltable> </refsect1>
+
+<refsect1 id="libgnome-media-profiles-3-also"><title>&also-tt;</title>
+  <!--Reference to another man page-->
+  <!--Reference to a Help manual-->
+  <!--Reference to a book.-->
+  <para>
+  <citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+  </para>
+  </refsect1>
+
+<refsect1 id="libgnome-media-profiles-3-note"><title>&note-tt;</title>
+  <para>Written by Jerry Tan, Sun Microsystems Inc., 2009.</para></refsect1>
+  </refentry>

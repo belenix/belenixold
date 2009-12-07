@@ -1,0 +1,105 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/384 Gtk+ 2.0 / glib 2.0-->
+<!--ARC : LSARC 2001/781 location of GTK/Glib-->
+<!--ARC : PSARC 2001/804 GTK/Glib becomes Contracted External-->
+<!ENTITY cmd "libglib-2.0">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004,2006,2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libglib-20-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">14 May 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm>
+<indexterm><primary>general purpose utility library</primary></indexterm>
+<indexterm><primary>libgmodule-2.0</primary></indexterm>
+<indexterm><primary>support for dynamic plug-ins</primary></indexterm>
+<indexterm><primary>libgthread-2.0</primary></indexterm>
+<indexterm><primary>support for thread abstraction</primary></indexterm>
+<refnamediv id="libglib-20-3-name">
+<refname>&cmd;</refname>
+<refname>libgmodule-2.0</refname>
+<refname>libgthread-2.0</refname>
+<refpurpose>
+general purpose utility library, support for dynamic plug-ins, and thread
+abstraction.
+</refpurpose></refnamediv>
+<refsect1 id="libglib-20-3-desc"><title>&desc-tt;</title>
+<para>GLib is a general-purpose utility library, which provides many useful
+data types, macros, type conversions, string utilities, a main loop abstraction,
+and so on.</para>
+<para><filename>libgmodule-2.0</filename> provides a portable method of dynamically
+loading plug-ins or shared object modules.</para>
+<para><filename>libgthread-2.0</filename> provides a thread abstraction which
+includes threads, different mutex methods, conditions, and thread private
+data. It also provides different useful patterns such as thread pools.</para>
+<para>To access the API documentation, you must install the developer version
+of the package.</para>
+</refsect1>
+<refsect1 id="libglib-20-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename> </term><listitem>
+<para>GNOME general purpose shared library</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/lib/libgmodule-2.0.so</filename> </term>
+<listitem><para>GLib dynamic plug-in shared library</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/lib/libgthread-2.0.so</filename> </term>
+<listitem><para>GLib thread abstraction shared library</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/glib</filename> </term><listitem>
+<para>Location of developer documentation</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libglib-20-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-base-libs
+SUNWgnome-base-libs-64</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Committed</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libglib-20-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>glib-genmarshal</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-gettextize</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>glib-mkenums</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgobject-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgio-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libglibmm-2.4</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-std-options</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="libglib-20-3-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2003, 2004, 2006, 2008.</para>
+</refsect1>
+</refentry>

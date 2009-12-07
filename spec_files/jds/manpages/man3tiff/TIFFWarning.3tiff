@@ -1,0 +1,91 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFWarning">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFWarning-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFWarning</refentrytitle><manvolnum>3tiff</manvolnum>
+<refmiscinfo class="date">02 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFWarning</primary></indexterm><indexterm><primary>
+library warning interface</primary></indexterm>
+<refnamediv id="TIFFWarning-3tiff-name"><refname>TIFFWarning</refname><refname>
+TIFFSetWarningHandler</refname><refpurpose>library warning interface</refpurpose>
+</refnamediv>
+<refsect1 id="TIFFWarning-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+void TIFFWarning(const char* module, const char* fmt, ...)
+#include &lt;stdarg.h>
+typedef void (*TIFFWarningHandler)(const char* module, const
+char* fmt, va_list ap);
+TIFFWarningHandler TIFFSetWarningHandler(TIFFWarningHandler
+handler);</programlisting>
+</refsect1>
+<refsect1 id="TIFFWarning-3tiff-desc"><title>&desc-tt;</title>
+<para><literal>TIFFWarning</literal> invokes the library-wide warning handler
+function to (normally) write a warning message to <literal>stderr</literal>.
+The <literal>fmt</literal> parameter is a <literal>printf(3S)</literal> format
+string, and any number of arguments can be supplied. The <literal>module</literal>
+parameter is interpreted as a string that, if non-zero, should be printed
+before the message, and is typically used to identify the software module
+in which a warning is detected.</para>
+<para>Applications that desire to capture control in the event of a warning
+should use <literal>TIFFSetWarningHandler</literal> to override the default
+warning handler. A NULL (0) warning handler function may be installed to suppress
+error messages.</para>
+</refsect1>
+<refsect1 id="TIFFWarning-3tiff-rtrn"><title>&rtrn-tt;</title>
+<para><literal>TIFFSetWarningHandler</literal> returns a reference to the
+previous error handling function.</para>
+</refsect1>
+<refsect1 id="TIFFWarning-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFWarning-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFError</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>printf</refentrytitle>
+<manvolnum>3S</manvolnum></citerefentry><?Pub Caret></para>
+</refsect1>
+<refsect1 id="TIFFWarning-3tiff-note"><title>&note-tt;</title>
+<para>This man page was originally written by Sam Leffler. Updated by Breda
+McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000004211>

@@ -1,0 +1,201 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/201 GNOME 2.X on Solaris-->
+<!ENTITY cmd "libaudiofile">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub EntList brvbar bull cross dash diam diams frac12 frac13 frac14 hellip
+ laquo lArr loz mdash nabla ndash para pound rArr raquo sect yen lt gt>
+<?Pub Inc>
+<refentry id="libaudiofile-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">3 Apr2003</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>
+audio file library</primary></indexterm><refnamediv id="libaudiofile-3-name">
+<refname>&cmd;</refname><refpurpose>audio file library</refpurpose></refnamediv>
+<refsynopsisdiv id="libaudiofile-3-synp"><title>&synp-tt;</title>
+<cmdsynopsis><command>#include &lt;audiofile.h></command>
+</cmdsynopsis>
+<cmdsynopsis><command>#include &lt;aupvlist.h></command>
+</cmdsynopsis>
+<cmdsynopsis><command>#include &lt;af_vfs.h></command>
+</cmdsynopsis></refsynopsisdiv>
+<refsect1 id="libaudiofile-3-desc"><title>&desc-tt;</title>
+<para>The audio file library provides a uniform programming interface to standard
+digital audio file formats. This library allows the processing of audio data
+to and from audio files of many common formats (currently AIFF, AIFF-C, WAVE,
+NeXT/Sun .snd/.au, and IRCAM).  The library also supports compression (currently
+G.711 mu-law, A-law, IMA, and MS ADPCM) as well as PCM formats of 	all flavors
+(signed and unsigned integer, floating point and double-precision floating
+point).</para>
+<para><filename>audiofile.h</filename> contains all of the public interfaces
+to the library. <filename>aupvlist.h</filename> contains the interfaces to
+the parameter value list data structures and routines. <filename>af_vfs.h
+</filename> should only be included if using audio file library through virtual
+file operations.</para>
+</refsect1>
+<refsect1 id="libaudiofile-3-exde"><title>&exde-tt;</title>
+<para>One premise of the audio file library is that the data presented to
+an application need not be in the same format as the data contained in the
+file.  Another, however, is that the capabilities of the file format are exposed
+to the application programmer should the programmer wish to take advantage
+of them.</para>
+<para>To read from a file containing audio data, you typically use the following
+sequence of function calls:</para>
+<screen>AFfilehandle afOpenFile (const char *filename, const char *mode, AFfilesetup setup);
+int afReadFrames (AFfilehandle, int track, void *buffer, int frameCount);
+int afCloseFile (AFfilehandle file);</screen>
+<para>To write to a file, you typically use a similar sequence of commands:
+</para>
+<screen>AFfilesetup afNewFileSetup (void);
+AFfilehandle afOpenFile (const char *filename, const char *mode, AFfilesetup setup);	
+int afWriteFrames (AFfilehandle, int track, const void *buffer,
+int frameCount);
+int afCloseFile (AFfilehandle file);</screen>
+<para>Data format transparency is achieved in the audio file library by providing
+the data in a virtual format. The virtual format consists of a virtual byte
+order and a virtual sample format. Virtual byte order is by default set to
+the host byte order and does not depend on the native byte order of the file
+format being used. Virtual sample format is by default in an uncompressed
+format.</para>
+<para>The current audio file library does not support the concept of a virtual
+sampling rate, but this may be supported in the future.</para>
+<para>At present, the audio file library supports only CCITT G.711 mu-law/A-law
+compression.</para>
+<para>An audio file is manipulated through the <literal>AFfilehandle</literal>
+opaque data type. Calls to the library are made with this file handle as an
+argument. When opening a file for writing, another opaque data structure called <literal>
+AFfilesetup</literal> is used. This structure is then passed to calls that
+set various file parameters at the time the file is created, such as its file
+type and data format. Such properties cannot be modified for an existing file.
+</para>
+<refsect2 id="libaudiofile-3-exde-func"><title>Functions</title>
+<para>The following functions are available through the library:</para>
+<variablelist><varlistentry><term>afNewFileSetup</term><listitem><para>Create
+a file setup structure.</para>
+</listitem></varlistentry>
+<varlistentry><term>afFreeFileSetup</term><listitem><para>Free a file setup
+structure.</para>
+</listitem></varlistentry>
+<varlistentry><term>afOpenFile</term><listitem><para>Create a file handle
+structure given a file name and optionally a file setup.</para>
+</listitem></varlistentry>
+<varlistentry><term>afCloseFile</term><listitem><para>Close an open audio
+file.</para>
+</listitem></varlistentry>
+<varlistentry><term>afSyncFile</term><listitem><para>Update an audio file
+that has been opened for writing.</para>
+</listitem></varlistentry>
+<varlistentry><term>afSetVirtual{ByteOrder,Channels,PCMMapping,SampleFormat}
+</term><listitem><para>Set virtual format for audio data within a specified
+track.</para>
+</listitem></varlistentry>
+<varlistentry><term>afInit{ByteOrder,Channels,Rate,SampleFormat}</term><listitem>
+<para>Set parameters of an <literal>AFfilesetup</literal> structure which
+will be used to open an audio file for writing.</para>
+</listitem></varlistentry>
+<varlistentry><term>afQuery</term><listitem><para>Query regarding the capabilities
+of the audio file library.</para>
+</listitem></varlistentry>
+<varlistentry><term>afQueryLong</term><listitem><para>Query whether the data
+is of type <literal>long</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term>afQueryPointer</term><listitem><para>Query whether the
+data is of type <literal>pointer</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term>afQueryDouble</term><listitem><para>Query whether the
+data is of type <literal>double</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term>afSetLoop*</term><listitem><para>The group of functions
+that set loop parameters.</para>
+</listitem></varlistentry>
+<varlistentry><term>afGetLoop*</term><listitem><para>The group of functions
+that get loop parameters.</para>
+</listitem></varlistentry>
+<varlistentry><term>afSetMark*</term><listitem><para>The group of functions
+that set mark parameters.</para>
+</listitem></varlistentry>
+<varlistentry><term>afGetMark*</term><listitem><para>The group of functions
+that get mark parameters.</para>
+</listitem></varlistentry>
+<varlistentry><term>afSetInst*</term><listitem><para>The group of functions
+that set instrument parameters.</para>
+</listitem></varlistentry>
+<varlistentry><term>afGetInst*</term><listitem><para>The group of functions
+that get instrument parameters.</para>
+</listitem></varlistentry>
+<varlistentry><term>afGetAESChannelData</term><listitem><para>Get AES channel
+data for a given audio file.</para>
+</listitem></varlistentry>
+<varlistentry><term>afSetAESChannelData</term><listitem><para>Set AES channel
+data for a given audio file.</para>
+</listitem></varlistentry>
+<varlistentry><term>afInitAESChannelData</term><listitem><para>Specify that
+storage space is to be allocated for AES channel status data in a given audio
+file.</para>
+</listitem></varlistentry>
+<varlistentry><term>afInitAESChannelDataTo</term><listitem><para>Specify whether
+storage space is to be allocated for AES channel status data in a given audio
+file.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="libaudiofile-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide"><varlistentry><term><filename>/usr/&cmd;.so
+</filename></term><listitem><para>Audio file shared library</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/include/audiofile.h</filename></term><listitem>
+<para>Public interfaces C header file</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/include/aupvlist.h</filename></term><listitem>
+<para>Parameter value list C header file</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/include/af_vfs.h</filename></term><listitem>
+<para>Virtual File System C header file</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libaudiofile-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-audio</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libaudiofile-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>audiofile-config</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libesd</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="libaudiofile-3-note"><title>&note-tt;</title>
+<para>Written by Ghee Teo, Sun Microsystems Inc., 2003. This library is provided
+as an Open Source project by Silicon Graphics.</para>
+</refsect1>
+</refentry>

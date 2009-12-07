@@ -1,0 +1,137 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2001/650 GNOME Accessibility-->
+<!ENTITY cmd "libcspi">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libcspi-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">31 Aug 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>AT-SPI
+C Bindings</primary></indexterm><indexterm><primary>at-spi</primary></indexterm>
+<indexterm><primary>Assistive Technology Service Provider Interface</primary>
+</indexterm>
+<refnamediv id="libcspi-3-name"><refname>at-spi</refname>
+<refname>&cmd;</refname>
+<refname>libspi</refname>
+<refpurpose>Assistive Technology Service Provider Interface, and AT-SPI C
+Bindings</refpurpose></refnamediv>
+<refsect1 id="libcspi-3-desc"><title>&desc-tt;</title>
+<para><filename>at-spi</filename> is the Assistive Technology Service Provider
+Interface, which provides a set of client-side APIs for use by assistive technologies.
+Assistive Technologies are augmentative or adaptive technologies that make
+the desktop user interface accessible to persons with disabilities.</para>
+<para>These APIs for assistive technology developers are available in two
+forms.</para>
+<para><filename>at-spi</filename> is defined by CORBA IDL in the following
+files:</para>
+
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Accessible.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Action.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Application.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Collection.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Component.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Desktop.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Document.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_EditableText.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Event.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Hyperlink.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Hypertext.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Image.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_LoginHelper.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Registry.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Relation.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Role.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Selection.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_State.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_StreamableContent.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Table.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Text.idl</filename></para>
+<para><filename>/usr/share/idl/at-spi-1.0/Accessibility_Value.idl</filename></para>
+
+<para>An AT-SPI client can use any programming language for which general
+CORBA language bindings are available (for example, Java, C, C++) and may
+use any CORBA 2.2-compliant ORB. The client bindings are generated from the
+above IDL by a language-specific IDL compiler which is usually bundled with
+ORBs. The GNOME 2 environment includes an efficient ORB with C bindings (ORBit2). 
+</para>
+<para><filename>&cmd;</filename> AT-SPI clients may also use the C language
+bindings that are defined in <filename>&cmd;</filename> and documented in
+the developer documentation.</para>
+<para>To access the developer documentation, you must install the developer
+version of the package.</para>
+<para>Such clients may also link to <filename>&cmd;</filename>, which provides
+CORBA server-side implementations of the Accessibility::EventLister interfaces
+which are used for AT-SPI event notification support.</para>
+<para>Python bindings are also provided in pyatspi. It Wraps the Gnome Assistive 
+Technology Service Provider Interface for use in Python.</para>
+</refsect1>
+<refsect1 id="libcspi-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline">
+<varlistentry><term><filename>/usr/lib/libspi.so</filename> </term><listitem>
+<para>AT-SPI shared library</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename> </term><listitem>
+<para>AT-SPI C Binding shared library</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/at-spi-cspi</filename> </term><listitem>
+<para>Location of developer documentation</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libcspi-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-a11y-libs
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Committed</para></entry></row>
+<row><entry colname="COLSPEC0"><para>/usr/include/at-spi-1.0/libspi/Accessibility.h</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+<row><entry colname="COLSPEC0"><para>/usr/lib/python2.4/site-packages/pyatspi/*</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libcspi-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>at-spi-registryd</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>magnifier</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libatk-1.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnome-mag</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgnomespeech</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libloginhelper</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="libcspi-3-note"><title>&note-tt;</title>
+<para>Written by Brian Cameron, Sun Microsystems Inc., 2003, 2004, 2006.</para>
+</refsect1>
+</refentry>

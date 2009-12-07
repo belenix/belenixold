@@ -1,0 +1,231 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "libggzmod">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libggzmod-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta>
+   <refentrytitle>libggzmod</refentrytitle><manvolnum>3</manvolnum>
+   <refmiscinfo class="date">29 May 2008</refmiscinfo>
+   <refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+   <refmiscinfo class="software">&release;</refmiscinfo>
+   <refmiscinfo class="arch">generic</refmiscinfo>
+   <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>libggzmod</primary></indexterm>
+<indexterm><primary>The GGZ Gaming Zone game frontend library</primary></indexterm>
+
+<refnamediv id="libggzmod-3-name">
+   <refname>libggzmod</refname>
+   <refpurpose>
+The GGZ Gaming Zone game frontend library.
+</refpurpose>
+</refnamediv>
+
+<refsect1 id="libggzmod-3-desc">
+   <title>&desc-tt;</title>
+   <para>
+This library allows games to communicate with the GGZ Gaming Zone
+core client, which allows establishing the connection to the GGZ Gaming Zone
+server and its associated game server.
+   </para>
+   <para>
+The <filename>libggzmod</filename> allows game authors to use GGZ Gaming Zone in 
+their game clients. This library provides a state engine and an event 
+dispatcher. The states are associated with the game tables. Each table has a 
+current state which is tracked by GGZMod and the GGZMOD_EVENT_STATE is 
+propagated to the game server, each time game state changes.
+   </para>
+
+<refsect3 id="libggzmod-3-exde-optb-stat">
+<title>STATES</title>
+   <para>
+<variablelist termlength="medium">
+<varlistentry><term><literal>GGZMOD_STATE_CREATED</literal></term><listitem>
+<para>
+The game is in this state when it is executed for the first time. This state
+should never be changed back once the state is set.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_STATE_CONNECTED</literal></term><listitem>
+Once the GGZ client and the game are connected, the game changes state to this
+automatically. This state should never be changed back once the game leaves
+this state.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_STATE_WAITING</literal></term><listitem>
+After the game client and game server are connected, the client enters this
+state. The game client may now call ggzmod_set_state to change states 
+between GGZMOD_STATE_WAITING, GGZMOD_STATE_PLAYING, and GGZMOD_STATE_DONE. 
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_STATE_PLAYING</literal></term><listitem>
+This state tells that the game is actively being played, while the 
+GGZMOD_STATE_WAITING state in the game is considered waiting for players.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_STATE_DONE</literal></term><listitem>
+This state indicates the table is considered dead and will exit shortly
+thereafter.
+</listitem>
+</varlistentry>
+</variablelist>
+   </para>
+</refsect3>
+
+<refsect3 id="libggzmod-3-exde-optb-even">
+<title>EVENTS</title>
+   <para>
+For each of the events available in GGZModEvent, the table may register a 
+handler to handle that event.
+Events include:
+<variablelist termlength="long">
+<varlistentry><term><literal>GGZMOD_EVENT_STATE</literal></term><listitem>
+Inform about a new game status. The old state (a GGZModState*) is passed as the 
+event's data.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_EVENT_SERVER</literal></term><listitem>
+This event occurs when a new connection to the game server has been made, 
+either by the core client or by the game client itself. In this case the fd is 
+passed as the event's data.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_EVENT_PLAYER</literal></term><listitem>
+This event occurs when the player's seat status changes.  For example, if a 
+player or bot joins, leaves seat, or starts/stops spectating. The passed event
+data is a int[2] pair consisting of the old {is_spectator, seat_num}.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_EVENT_SEAT</literal></term><listitem>
+Informs about seat changes.  The old seat (a GGZSeat*) is passed as the event 
+data. The seat information will be updated before this event is invoked.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_EVENT_SPECTATOR_SEAT</literal></term><listitem>
+This event occurs when a spectator seat change happens.   The old spectator (a
+GGZSpectator*) is passed as the event data. The spectator information will be 
+updated before this event is invoked.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_EVENT_CHAT</literal></term><listitem>
+This is an event for receiving a chat. The chat may have originated in another 
+game client or from the GGZ client. The chat information (a GGZChat*) is passed 
+as the event's data.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_EVENT_STATS</literal></term><listitem>
+This is an event informing that player's statistics have been updated.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_EVENT_INFO</literal></term><listitem>
+This event fires when information about one or more other players has been
+requested and has been received. The event's data is in a GGZPlayerInfo*
+structure or NULL if information about all players was requested.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>GGZMOD_EVENT_ERROR</literal></term><listitem>
+This event informs about GGZMod errors. An error message (a char*) is passed as
+the event's data. The GGZMod may attempt to recover from the error, but it is
+not guaranteed that the GGZ connection will continue to work after an error has
+happened. 
+</listitem>
+</varlistentry>
+</variablelist>
+  </para>
+</refsect3>
+</refsect1>
+
+<refsect1 id="libggzmod-3-file">
+   <title>&file-tt;</title>
+   <para>The following files are used by this library:</para>
+   <variablelist termlength="wide">
+      <varlistentry>
+         <term><filename>/usr/lib/&cmd;.so</filename> </term>
+         <listitem>
+            <para>The GGZ Gaming Zone game frontend shared library</para>
+         </listitem>
+      </varlistentry>
+      <varlistentry>
+         <term><filename>/etc/ggz.modules</filename> </term>
+         <listitem>
+            <para>Game module registry for game clients</para>
+         </listitem>
+      </varlistentry>
+   </variablelist>
+</refsect1>
+
+<refsect1 id="libggzmod-3-attr">
+   <title>&attr-tt;</title>
+   <para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</olink> for descriptions of the following attributes:
+   </para>
+   <informaltable frame="all">
+      <tgroup cols="2" colsep="1" rowsep="1">
+         <colspec colname="COLSPEC0" colwidth="1*">
+         <colspec colname="COLSPEC1" colwidth="1*">
+         <thead>
+            <row>
+               <entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+               <entry align="center" valign="middle">ATTRIBUTE VALUE</entry>
+            </row>
+         </thead>
+         <tbody>
+            <row>
+               <entry><para>Availability</para></entry>
+               <entry><para>SUNWgnome-games</para></entry>
+            </row>
+            <row>
+               <entry colname="COLSPEC0"><para>Interface stability</para></entry>
+               <entry colname="COLSPEC1"><para>Volatile</para></entry>
+            </row>
+         </tbody>
+      </tgroup>
+   </informaltable>
+</refsect1>
+
+<refsect1 id="libggzmod-3-also"><title>&also-tt;</title>
+   <!--Reference to another man page-->
+   <!--Reference to a Help manual-->
+   <!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>ggz_h</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggzcore_h</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggzmod_h</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libggz</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libggzcore</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz.modules</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz</refentrytitle><manvolnum>6</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz-config</refentrytitle><manvolnum>6</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz</refentrytitle><manvolnum>7</manvolnum></citerefentry>
+</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><filename>GGZ Gaming Zone:</filename></term>
+<listitem><para>
+<programlisting>
+<literal>http://www.ggzgamingzone.org/</literal>
+<literal>http://www.ggzgamingzone.org/docs/api/libggz/</literal>
+<literal>http://www.ggzgamingzone.org/docs/api/ggzcore/</literal>
+<literal>http://www.ggzgamingzone.org/docs/api/ggzmod/</literal>
+</programlisting></para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id="libggzmod-3-note"><title>&note-tt;</title>
+   <para>Written by Michal Pryc, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+</refentry>

@@ -1,0 +1,119 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/074 Gtkmm,glibmm,cairomm and libsigc++ for Indiana-->
+<!ENTITY cmd "libpango-1.4">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libgtkmm-24-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>libpangomm-1.4</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">29 Jul 2008</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>libgtkmm-2.4</primary></indexterm><indexterm><primary>
+C++ interface for gtk+</primary></indexterm>
+
+<indexterm><primary>libatkmm-1.6</primary></indexterm><indexterm>
+<primary>C++ interface for atk</primary></indexterm>
+
+<indexterm><primary>libgdkmm-2.4</primary></indexterm>
+<indexterm><primary>C++ interface for gdk</primary></indexterm>
+
+<indexterm><primary>libpangomm-1.4</primary></indexterm><indexterm>
+<primary>C++ interface for pango</primary></indexterm>
+
+<refnamediv id="libpangomm-14-3-name"><refname>libgtkmm-2.4</refname><refname>
+libatkmm-1.6</refname><refname>libgdkmm-2.4</refname>
+<refname>libpangomm-1.4</refname><refpurpose>C++ interfaces for ATK, GDK, GTK+, and Pango</refpurpose></refnamediv>
+<refsect1 id="libgtkmm-24-3-desc"><title>&desc-tt;</title>
+<para>
+libatkmm, libgdkmm, libgtkmm and libpangomm  provide official C++ interfaces
+for the ATK, GDK, GTK+ and Pango libraries, respectively. Highlights include
+typesafe callbacks and a comprehensive set of widgets that are easily
+extensible via inheritance.
+</para>
+<para>
+These libraries follow the official GNOME Platform Bindings release schedule.
+This guarantees API/ABI-stability and new releases on a predictable schedule,
+delivering C++ API for the underlying APIs as soon as possible.
+</para>
+<para>
+Please note that these C++ interfaces are built with the Sun Studio C++
+Compiler and compiled with the -compat=5 C++ compiler option, so version 5
+(Standard Mode) of the C++ ABI standard is used.
+</para>
+</refsect1>
+<refsect1 id="libgtkmm-24-3-file"><title>&file-tt;</title>
+<para>The following files are used by this library:</para>
+<variablelist termlength="wide">
+
+<varlistentry><term><filename>/usr/lib/libgtkmm-2.4.so</filename> </term><listitem>
+<para>gtkmm shared library</para>
+</listitem></varlistentry>
+
+<varlistentry><term>/usr/lib/libatkmm-1.6.so</term><listitem><para>atkmm shared library</para>
+</listitem></varlistentry>
+
+<varlistentry><term>/usr/lib/libgdkmm-2.4.so</term><listitem><para>gdkmm shared library</para>
+</listitem></varlistentry>
+
+<varlistentry><term>/usr/lib/libpangomm-1.4.so</term><listitem><para>pangomm shared library</para>
+</listitem></varlistentry>
+<varlistentry><term>/usr/demo/jds/bin/gtkmm-demo</term><listitem><para>gtkmm demo</para>
+</listitem></varlistentry>
+<varlistentry><term>/usr/share/gtkmm-2.4</term><listitem><para>example sourcecode used by pango-demo</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libpangomm-24-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgtkmm SUNWpangomm</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libgtkmm-24-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>libatk-1.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgdk-x11-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgdk_pixbuf-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libglibmm-2.4</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libgtk-x11-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libpango-1.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<para>
+Online documentation:
+<para>
+<para>
+http://www.gtkmm.org/documentation.shtml
+</para>
+</refsect1>
+<refsect1 id="libgtkmm-24-3-note"><title>&note-tt;</title>
+<para>Written by Chris Wang, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+</refentry>

@@ -1,0 +1,139 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2009/088 Libproxy for Opensolaris-->
+<!ENTITY cmd "libproxy">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004,2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libproxy-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">9 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>A library that provides
+automatic proxy configuration management</primary></indexterm>
+<refnamediv id="libproxy-3-name"><refname>&cmd;</refname>
+<refpurpose>a library that provides automatic proxy configuration management</refpurpose></refnamediv>
+<refsect1 id="libproxy-3-desc"><title>&desc-tt;</title>
+<para>
+<command>&cmd;</command> provides interfaces to get the proxy that will be used
+to access network resources. It uses various plugins to get proxy configuration
+via different mechanisms (e.g. environment variables, GConf, PAC).
+</para>
+<para>
+The envvar plugin gets the proxy configuration from the http_proxy and no_proxy
+environment variables. The file plugin gets proxy configuration from
+<filename>/etc/proxy.conf</filename> and
+<filename>$HOME/.proxy.conf</filename>. The gnome plugin gets the proxy
+configuration via GConf, and if the configuration uses PAC, then the mozjs
+plugin is used.
+</para>
+<para>
+The order in which each proxy mechanism will be checked is specified by the
+environment PX_CONFIG_ORDER.  The default order is
+&quot;USER,SESSION,SYSTEM,envvar&quot;. USER, SESSION and SYSTEM are all
+categories of proxy configuration.  envvar means the plugin who get proxy
+setting from the environment variable &quot;http_proxy&quot;.
+</para>
+<para>
+The GConf plugin belongs to the SESSION category, so the GConf setting will be
+checked before the environment variable.
+</para>
+<para>
+<command>&cmd;</command> also supports the feature of WPAD. But for the
+consideration of WPAD security risks, the wpad-fallback plugin is disabled by
+default. Users who want to enable this feature can set the PX_CONFIG_ORDER
+environment variable to &quot;USER,SESSION,SYSTEM,envvar,wpad-fallback&quot;,
+so the WPAD will be used if all the other plugins fail to find a proxy.
+</para>
+</refsect1>
+<refsect1 id="libproxy-3-envr"><title>&envr-tt;</title>
+<para>See <citerefentry><refentrytitle>environ</refentrytitle><manvolnum>
+5</manvolnum></citerefentry> for descriptions of environment variables.</para>
+<variablelist termlength="narrow">
+<varlistentry>
+<term><envar>http_proxy</envar></term>
+<listitem><para>
+URL of HTTP proxy to use.
+</para>
+</listitem></varlistentry>
+<varlistentry>
+<term><envar>no_proxy</envar></term>
+<listitem><para>
+A comma delimited list of hosts (or domains) for which proxying is not to be
+used.
+</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+</refsect1>
+<refsect1 id="libproxy-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><filename>/usr/lib/&cmd;.so</filename></term>
+<listitem><para>
+libproxy shared library
+</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>/usr/lib/libproxy/*</filename></term>
+<listitem><para>
+libproxy plugins
+</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><filename>/etc/proxy.conf</filename></term>
+<term><filename>$HOME/.proxy.conf</filename></term>
+<listitem><para>
+configuration file used by file plugin to look for proxy configuration
+</para></listitem>
+</varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libproxy-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-3"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWlibproxy</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libproxy-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>environ</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+<variablelist termlength="wholeline"><varlistentry>
+<term><filename>&cmd home page:</filename></term>
+<listitem><para><programlisting>
+<literal>http://code.google.com/p/libproxy/</literal>
+</programlisting>
+</para></listitem>
+</varlistentry></variablelist>
+</refsect1>
+<refsect1 id="libproxy-3-note"><title>&note-tt;</title>
+<para>Written by Ke Wang, Sun Microsystems Inc., 2004, 2009.</para>
+</refsect1>
+</refentry>

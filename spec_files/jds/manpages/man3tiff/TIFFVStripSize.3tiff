@@ -1,0 +1,7 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY TIFFVStripSize-3tiff SYSTEM "TIFFstrip.3tiff">
+<!-- SHADOW_PAGE -->
+]>
+&TIFFVStripSize-3tiff

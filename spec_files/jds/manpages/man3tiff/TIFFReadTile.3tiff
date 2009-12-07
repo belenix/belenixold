@@ -1,0 +1,97 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFReadTile">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFReadTile-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFReadTile</refentrytitle><manvolnum>3tiff</manvolnum>
+<refmiscinfo class="date">05 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFReadTile</primary></indexterm><indexterm><primary>
+read and decode a tile of data from an open TIFF file</primary></indexterm>
+<refnamediv id="TIFFReadTile-3tiff-name"><refname>TIFFReadTile</refname><refpurpose>
+read and decode a tile of data from an open TIFF file</refpurpose></refnamediv>
+<refsect1 id="TIFFReadTile-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+tsize_t TIFFReadTile(TIFF* tif, tdata_t buf, uint32 x,
+uint32 y, uint32 z, tsample_t sample)</programlisting>
+</refsect1>
+<refsect1 id="TIFFReadTile-3tiff-desc"><title>&desc-tt;</title>
+<para>Return the data for the tile containing the specified coordinates. The
+data is returned decompressed and in the native byte- and bit-ordering, but
+is otherwise packed as described below. The buffer must be large enough to
+hold an entire tile of data. Applications should call the routine <literal>
+TIFFTileSize</literal> to find out the size in bytes of a tile buffer. The <literal>
+x</literal> and <literal>y</literal> parameters are always used by <literal>
+TIFFReadTile</literal>. The <literal>z</literal> parameter is used if the
+image is deeper than 1 slice (ImageDepth>1). The <literal>sample</literal>
+parameter is used only if data is organized in separate planes (PlanarConfiguration=2).
+</para>
+<para>The library attempts to hide bit- and byte-ordering differences between
+the image and the native machine by converting data to the native machine
+order. Bit reversal is performed if the <literal>FillOrder</literal> tag is
+opposite to the native machine bit order. 16- and 32-bit samples are automatically
+byte-swapped if the file was written with a byte order opposite to the native
+machine byte order.</para>
+<para>All error messages are directed to the <literal>TIFFError(3tiff)</literal>
+routine.</para>
+</refsect1>
+<refsect1 id="TIFFReadTile-3tiff-rtrn"><title>&rtrn-tt;</title>
+<para>Returns -1 if an error was encountered. Otherwise, returns the number
+of bytes <?Pub Caret>in the decoded tile. </para>
+</refsect1>
+<refsect1 id="TIFFReadTile-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFReadTile-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFCheckTile</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>
+TIFFComputeTile</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFOpen</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFReadEncodedTile</refentrytitle><manvolnum>3tiff</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFReadRawTile</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFReadTile-3tiff-note"><title>&note-tt;</title>
+<para>This man page was originally written by Sam Leffler. Updated by Breda
+McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000004884>

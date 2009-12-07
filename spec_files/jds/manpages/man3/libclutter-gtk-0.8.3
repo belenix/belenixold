@@ -1,0 +1,82 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2008/426 Clutter for OpenSolaris-->
+<!ENTITY cmd "libclutter-gtk-0.8">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2009 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libclutter-gtk-08-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>libclutter-gtk-0.8</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">19 Feb 2009</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>libclutter-gtk-0.8</primary></indexterm><indexterm><primary>
+Gtk library add-on of Clutter </primary></indexterm>
+
+<refnamediv id="libclutter-gtk-08-3-name"><refname>libclutter-gtk-0.8</refname><refpurpose>Gtk library add-on of Cluter.</refpurpose></refnamediv>
+<refsect1 id="libclutter-gtk-08-3-desc"><title>&desc-tt;</title>
+<para>
+Clutter uses OpenGL (and optionally OpenGL ES for use on Mobile and embedded platforms) for rendering but with an API which hides the underlying GL complexity from the developer. The Clutter API is intended to be easy to use, efficient and flexible. 
+</para>
+
+<para>
+Clutter support for media playback with GStreamer, Cairo graphics rendering, GTK+ embedding, via libclutter-gst, libclutter-gtk, and libclutter-gtk.
+</para>
+
+</refsect1>
+<refsect1 id="libclutter-gtk-08-3-file"><title>&file-tt;</title>
+<para>The following files are used by this library:</para>
+<variablelist termlength="wide">
+
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename> </term><listitem>
+<para>Clutter shared library</para>
+</listitem></varlistentry>
+
+
+<refsect1 id="libclutter-gtk-08-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWclutter-gtk</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libclutter-gtk-08-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>libclutter-glx-0.8</refentrytitle><manvolnum>3</manvolnum></citerefentry>
+<citerefentry><refentrytitle>libgtk-x11-2.0</refentrytitle><manvolnum>3</manvolnum></citerefentry>
+</para>
+<para>
+Online documentation:
+<para>
+http://clutter-project.org/docs.html
+</para>
+</para>
+</refsect1>
+<refsect1 id="libclutter-gtk-08-3-note"><title>&note-tt;</title>
+<para>Written by Chris Wang, Sun Microsystems Inc., 2009.</para>
+</refsect1>
+</refentry>

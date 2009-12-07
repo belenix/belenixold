@@ -1,0 +1,123 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFWriteEncodedStrip">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFWriteEncodedStrip-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFWriteEncodedStrip</refentrytitle><manvolnum>3tiff
+</manvolnum>
+<refmiscinfo class="date">05 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFWriteEncodedStrip</primary></indexterm><indexterm>
+<primary>c<?Pub Caret1>ompress and write a strip of data to an open TIFF file
+</primary></indexterm>
+<refnamediv id="TIFFWriteEncodedStrip-3tiff-name"><refname>TIFFWriteEncodedStrip
+</refname><refpurpose>compress and write a strip of data to an open TIFF file
+</refpurpose></refnamediv>
+<refsect1 id="TIFFWriteEncodedStrip-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+tsize_t TIFFWriteEncodedStrip(TIFF* tif, tstrip_t strip,
+tdata_t buf, tsize_t size)</programlisting>
+</refsect1>
+<refsect1 id="TIFFWriteEncodedStrip-3tiff-desc"><title>&desc-tt;</title>
+<para>Compress <literal>size</literal> bytes of raw data from <literal>buf
+</literal> and write the result to the specified strip, replacing any previously
+written data. Note that the value of <literal>strip</literal> is a &ldquo;raw
+strip number&rdquo;. That is, the caller must take into account whether or
+not the data is organized in separate planes (PlanarConfiguration=2).</para>
+</refsect1>
+<refsect1 id="TIFFWriteEncodedStrip-3tiff-exde"><title>&exde-tt;</title>
+<para>The library writes encoded data using the native machine byte order.
+Correctly implemented TIFF readers are expected to do any necessary byte-swapping
+to correctly process image data with <literal>BitsPerSample</literal> greater
+than 8.</para>
+<para>The strip number must be valid according to the current settings of
+the <literal>ImageLength</literal> and <literal>RowsPerStrip</literal> tags.
+An image may be dynamically grown by increasing the value of <literal>ImageLength
+</literal> prior to each call to <literal>TIFFWriteEncodedStrip</literal>.
+</para>
+<refsect2 id="TIFFWriteEncodedStrip-3tiff-exde-diags">
+<title>Diagnostics</title>
+<para>All error messages are directed to the <literal>TIFFError(3tiff)</literal>
+routine.</para>
+<variablelist>
+<varlistentry><term>%s: File not open for writing.</term><listitem><para>
+The file was opened for reading, not writing.</para>
+</listitem></varlistentry>
+<varlistentry><term>Can not write scanlines to a tiled image.</term><listitem>
+<para>The image is assumed to be organized in tiles because the <literal>
+TileWidth</literal> and <literal>TileLength</literal> tags have been set with <literal>
+TIFFSetField(3tiff)</literal>.</para>
+</listitem></varlistentry>
+<varlistentry><term>%s: Must set "ImageWidth" before writing data.</term>
+<listitem><para>The image width has not been set before the first write. See <literal>
+TIFFSetField(3tiff)</literal> for information on how to do this.</para>
+</listitem></varlistentry>
+<varlistentry><term>%s: Must set "PlanarConfiguration" before writing data.
+</term><listitem><para>The organization of data has not been defined before
+the first write. See <literal>TIFFSetField(3tiff)</literal> for information on
+how to do this.</para>
+</listitem></varlistentry>
+<varlistentry><term>%s: No space for strip arrays".</term><listitem><para>
+There was not enough space for the arrays that hold strip offsets and byte
+counts.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="TIFFWriteEncodedStrip-3tiff-rtrn"><title>&rtrn-tt;</title>
+<para>-1 is returned if an error was encountered. Otherwise, the value of <literal>
+size</literal> is returned.</para>
+</refsect1>
+<refsect1 id="TIFFWriteEncodedStrip-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFWriteEncodedStrip-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFOpen</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>TIFFWriteRawStrip
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFWriteScanline</refentrytitle><manvolnum>3tiff</manvolnum>
+</citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFWriteEncodedStrip-3tiff-note"><title>&note-tt;</title>
+<para>This man page was originally written by Sam Leffler. Updated by Breda
+McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000005999>

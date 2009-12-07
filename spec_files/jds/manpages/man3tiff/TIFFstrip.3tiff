@@ -1,0 +1,103 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFstrip">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFstrip-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFstrip</refentrytitle><manvolnum>3tiff</manvolnum>
+<refmiscinfo class="date">02 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFstrip</primary></indexterm><indexterm><primary>strip-related
+utility routines</primary></indexterm>
+<refnamediv id="TIFFstrip-3tiff-name"><refdescriptor>TIFFstrip</refdescriptor>
+<refname>TIFFDefaultStripSize</refname><refname>TIFFStripSize</refname><refname>
+TIFFVStripSize</refname><refname>TIFFComputeStrip</refname><refname>TIFFNumberOfStrips
+</refname><refpurpose>strip-related utility routines</refpurpose></refnamediv>
+<refsect1 id="TIFFstrip-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+uint32 TIFFDefaultStripSize(TIFF* tif, uint32 estimate)
+tsize_t TIFFStripSize(TIFF* tif)
+tsize_t TIFFVStripSize(TIFF* tif, uint32 nrows)
+tstrip_t TIFFComputeStrip(TIFF* tif, uint32 row, tsample_t sample)
+tstrip_t TIFFNumberOfStrips(TIFF* tif)</programlisting>
+</refsect1>
+<refsect1 id="TIFFstrip-3tiff-desc"><title>&desc-tt;</title>
+<para><literal>TIFFDefaultStripSize</literal> returns the number of rows for
+a reasonable-sized strip according to the current settings of the <literal>
+ImageWidth</literal>, <literal>BitsPerSample</literal>, and <literal>SamplesPerPixel
+</literal> tags, and any compression-specific requirements. If the <literal>
+estimate</literal> parameter is non-zero, then it is taken as an estimate
+of the desired strip size and adjusted according to any compression-specific
+requirements. The value returned by this function is typically used to define
+the <literal>RowsPerStrip</literal> tag. In lieu of any unusual requirements, <literal>
+TIFFDefaultStripSize</literal> tries to create strips that have approximately
+8 kilobytes of uncompressed data.</para>
+<para><literal>TIFFStripSize</literal> returns the equivalent size for a strip
+of data as it would be returned in a call to <literal>TIFFReadEncodedStrip
+</literal> or as it would be expected in a call to <literal>TIFFWriteEncodedStrip
+</literal>.</para>
+<para><literal>TIFFVStripSize</literal> returns the number of bytes in a strip
+with <literal>nrows</literal> rows of data.</para>
+<para><literal>TIFFComputeStrip</literal> returns the strip that contains
+the specified coordinates. A valid strip is always returned. Out-of-range
+coordinate values are clamped to the bounds of the image. The <literal>row
+</literal> parameter is always used in calculating a strip. The <literal>
+sample</literal> parameter is used only if data is organized in separate planes
+(PlanarConfiguration=2).</para>
+<para><literal>TIFFNumberOfStrips</literal> returns the number of strips in
+the image.</para>
+</refsect1>
+<refsect1 id="TIFFstrip-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFstrip-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>,<?Pub Caret1> <citerefentry><refentrytitle>TIFFReadEncodedStrip
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFReadRawStrip</refentrytitle><manvolnum>3tiff</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFWriteEncodedStrip</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>
+TIFFWriteRawStrip</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFstrip-3tiff-note"><title>&note-tt;</title>
+<para>This man page was originally written by Sam Leffler. Updated by Breda
+McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000005287>

@@ -1,0 +1,192 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!ENTITY cmd "libggz">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2008, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libggz-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta>
+   <refentrytitle>libggz</refentrytitle><manvolnum>3</manvolnum>
+   <refmiscinfo class="date">29 May 2008</refmiscinfo>
+   <refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+   <refmiscinfo class="software">&release;</refmiscinfo>
+   <refmiscinfo class="arch">generic</refmiscinfo>
+   <refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+
+<indexterm><primary>libggz</primary></indexterm>
+<indexterm><primary>The GGZ Gaming Zone base library</primary></indexterm>
+
+<refnamediv id="libggz-3-name">
+   <refname>libggz</refname>
+   <refpurpose>
+The GGZ Gaming Zone base library
+   </refpurpose>
+</refnamediv>
+
+<refsect1 id="libggz-3-desc">
+   <title>&desc-tt;</title>
+   <para>
+&cmd; is used by GGZ Gaming Zone server, the ggzcore library and other
+components. This library handles networking, configuration files, structure
+management functions and wrappers around glibc functions.
+   </para>
+   <para>
+The <filename>libggz</filename> library contains different groups of functions:
+   </para>
+<refsect2 id="libggz-3-exde-optb-func">
+<title>FUNCTION GROUPS</title>
+   <para>
+<variablelist termlength="long">
+<varlistentry><term><literal>Memory handling</literal></term><listitem>
+<para>
+These functions provide an alternative to the normal C library functions for 
+dynamically allocating memory. They keep track of memory allocated by storing
+the name of the function and file in which they were called similar to glibc but 
+are more convenient to use. For instance, ggz_strdup(NULL) returns NULL instead 
+of crashing, and ggz_malloc() includes a reference counter to be used for 
+debugging in combination with ggz_free(). With enabled MEMORY debugging the 
+function ggz_memory_check() may be called to make sure all allocated memory has 
+been freed.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>Configuration file management</literal></term><listitem>
+This group of functions is used for XML configuration file routines to store
+and retrieve values. For example, the ggz_conf_parse() function can be used to
+open a config file. To create such file automatically the GGZ_CONF_CREATE must
+be specified. If exactly the same configuration pathname is being opened more
+than one time, the original handle is being returned and only one copy is
+retained within memory.
+
+Configuration values are stored using a system of sections and keys. A key must
+be unique within a section and cannot be both an integer and a string within the
+same key. Section and key names may contain any characters except an equal sign.
+Although keys may not have leading or trailing whitespace, section names may
+have them.  It is suggested that any whitespace (other than possibly internal
+spaces) be avoided when specifying section and key names.  
+
+For writing the values to the physical file, the ggz_conf_commit() function must
+be called, otherwise all values are in the memory only, which makes writing 
+multiple values in rapid succession more efficient, as the entire file must be 
+regenerated in order to be written to the flat-file format of the configuration 
+file.
+
+The string and list reading functions return dynamically allocated memory to
+the caller.  The user is responsible for calling ggz_free() on this memory when
+they no longer need the returned values.
+
+All memory used internally by the configuration functions will be released when 
+ggz_conf_cleanup() is called.  Note that this does not commit any changes made 
+to the configuration files, so the ggz_conf_commit() have to be called to do 
+such commit. The ggz_conf_cleanup() is expected to call this at program 
+termination, but it may be called at any time earlier than termination and new 
+files may be subsequently opened.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>Debug functions</literal></term><listitem>
+The functions allow switching on and off debug messages for a certain tag.
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>Network functions</literal></term><listitem>
+Those functions, historically known as the easysock library, permits the
+creation of server or client sockets, compatible with IPv6, as well as reading
+and writing basic datatypes such as integers or strings.
+</listitem>
+</varlistentry>
+</varlistentry>
+<varlistentry><term><literal>Security functions</literal></term><listitem>
+This group of functions are for both cryptographic hash creation and comparison 
+using the gcrypt library, and for TLS encryption for network channels using 
+OpenSSL. 
+</listitem>
+</varlistentry>
+   </para>
+</refsect2>
+</para>
+</refsect1>
+
+<refsect1 id="libggz-3-file">
+   <title>&file-tt;</title>
+   <para>The following files are used by this library:</para>
+   <variablelist termlength="wide">
+      <varlistentry>
+         <term><filename>/usr/lib/&cmd;.so</filename> </term>
+         <listitem>
+            <para>The base GGZ Gaming Zone shared library</para>
+         </listitem>
+      </varlistentry>
+   </variablelist>
+</refsect1>
+
+<refsect1 id="libggz-3-attr">
+   <title>&attr-tt;</title>
+   <para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</olink> for descriptions of the following attributes:
+   </para>
+   <informaltable frame="all">
+      <tgroup cols="2" colsep="1" rowsep="1">
+         <colspec colname="COLSPEC0" colwidth="1*">
+         <colspec colname="COLSPEC1" colwidth="1*">
+         <thead>
+            <row>
+               <entry align="center" valign="middle">ATTRIBUTE TYPE</entry>
+               <entry align="center" valign="middle">ATTRIBUTE VALUE</entry>
+            </row>
+         </thead>
+         <tbody>
+            <row>
+               <entry><para>Availability</para></entry>
+               <entry><para>SUNWgnome-games</para></entry>
+            </row>
+            <row>
+               <entry colname="COLSPEC0"><para>Interface stability</para></entry>
+               <entry colname="COLSPEC1"><para>Volatile</para></entry>
+            </row>
+         </tbody>
+      </tgroup>
+   </informaltable>
+</refsect1>
+
+<refsect1 id="libggz-3-also"><title>&also-tt;</title>
+   <!--Reference to another man page-->
+   <!--Reference to a Help manual-->
+   <!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>ggz_h</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggzcore_h</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggzmod_h</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libggzcore</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>libggzmod</refentrytitle><manvolnum>3</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz.modules</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz</refentrytitle><manvolnum>6</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz-config</refentrytitle><manvolnum>6</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>ggz</refentrytitle><manvolnum>7</manvolnum></citerefentry>
+</para>
+<variablelist termlength="wholeline">
+<varlistentry>
+<term><filename>GGZ Gaming Zone:</filename></term>
+<listitem><para>
+<programlisting>
+<literal>http://www.ggzgamingzone.org/</literal>
+<literal>http://www.ggzgamingzone.org/docs/api/libggz/</literal>
+<literal>http://www.ggzgamingzone.org/docs/api/ggzcore/</literal>
+<literal>http://www.ggzgamingzone.org/docs/api/ggzmod/</literal>
+</programlisting></para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id="libggz-3-note"><title>&note-tt;</title>
+   <para>Written by Michal Pryc, Sun Microsystems Inc., 2008.</para>
+</refsect1>
+</refentry>

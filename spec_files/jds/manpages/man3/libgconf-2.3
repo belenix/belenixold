@@ -1,0 +1,95 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2002/146 GNOME 2.0 Configuration - GConf-->
+<!ENTITY cmd "libgconf-2">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2003,2004,2006 Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<refentry id="libgconf-2-3">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>&cmd;</refentrytitle><manvolnum>3</manvolnum>
+<refmiscinfo class="date">31 Aug 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>&cmd;</primary></indexterm><indexterm><primary>GNOME
+Configuration API</primary></indexterm>
+<refnamediv id="libgconf-2-3-name"><refname>&cmd;</refname><refpurpose>
+GNOME Configuration API</refpurpose></refnamediv>
+<refsect1 id="libgconf-2-3-desc"><title>&desc-tt;</title>
+<para>The <filename>&cmd;</filename> library is used by applications to store
+or retrieve configuration data.</para>
+<para>To access the API documentation, you must install the developer version
+of the package.</para>
+</refsect1>
+<refsect1 id="libgconf-2-3-file"><title>&file-tt;</title>
+<para>The following files are used by this application:</para>
+<variablelist termlength="wide">
+<varlistentry><term><filename>/usr/lib/&cmd;.so</filename></term><listitem>
+<para>GNOME Configuration API shared library</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/<replaceable>version_number</replaceable>/path
+</filename></term><listitem><para>File containing the locations of the various
+GConf configuration files</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>$HOME/.gconf</filename></term><listitem><para>
+Directory containing configuration database for GCconf</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/gconf.xml.defaults</filename></term>
+<listitem><para>Directory containing the default system configuration settings
+</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/gconf.xml.mandatory</filename></term>
+<listitem><para>Directory containing the mandatory system configuration settings
+</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/etc/gconf/schemas</filename></term><listitem>
+<para>Directory containing the system GConf schema files</para>
+</listitem></varlistentry>
+<varlistentry><term><filename>/usr/share/gtk-doc/html/gconf</filename> </term><listitem>
+<para>Location of developer documentation</para>
+</listitem></varlistentry>
+</variablelist></refsect1>
+<refsect1 id="libgconf-2-3-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWgnome-config
+</para></entry></row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Volatile</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="libgconf-2-3-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para>
+<citerefentry><refentrytitle>gconf-editor</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gconftool-2</refentrytitle><manvolnum>1</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry>,
+<citerefentry><refentrytitle>gnome-interfaces</refentrytitle><manvolnum>5</manvolnum></citerefentry>
+</para>
+</refsect1>
+<refsect1 id="libgconf-2-3-note"><title>&note-tt;</title>
+<para>Written by Ghee Teo and Brian Cameron, Sun Microsystems Inc., 2003,
+2004, 2006.</para>
+</refsect1>
+</refentry>

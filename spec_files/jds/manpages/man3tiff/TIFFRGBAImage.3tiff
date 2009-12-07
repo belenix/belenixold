@@ -1,0 +1,254 @@
+<!DOCTYPE REFENTRY PUBLIC "-//Sun Microsystems//DTD DocBook V3.0-Based SolBook Subset V2.0//EN" [
+<!--ArborText, Inc., 1988-1999, v.4002-->
+<!--ARC : LSARC 2003/085 libtiff, libjpeg, and libpng-->
+<!ENTITY exde-tt "EXTENDED DESCRIPTION">
+<!ENTITY synp-tt "SYNOPSIS">
+<!ENTITY cmd "TIFFRGBAImage">
+<!ENTITY % commonents SYSTEM "smancommon.ent">
+%commonents;
+<!ENTITY % gnomecommonents SYSTEM "gnomecommon.ent">
+%gnomecommonents;
+<!ENTITY % booktitles SYSTEM "booktitles.ent">
+%booktitles;
+<!ENTITY suncopy "Copyright (c) 2004, Sun Microsystems, Inc. All Rights Reserved.">
+]>
+<?Pub UDT _bookmark _target>
+<?Pub Inc>
+<?PubInc>
+<refentry id="TIFFRGBAImage-3tiff">
+<!-- %Z%%M% %I% %E% SMI; -->
+<refmeta><refentrytitle>TIFFRGBAImage</refentrytitle><manvolnum>3tiff</manvolnum>
+<refmiscinfo class="date">05 Apr 2004</refmiscinfo>
+<refmiscinfo class="sectdesc">&man3;</refmiscinfo>
+<refmiscinfo class="software">&release;</refmiscinfo>
+<refmiscinfo class="arch">generic</refmiscinfo>
+<refmiscinfo class="copyright">&suncopy;</refmiscinfo>
+</refmeta>
+<indexterm><primary>TIFFRGBAImage</primary></indexterm><indexterm><primary>
+read and decode an image into a raster</primary></indexterm>
+<refnamediv id="TIFFRGBAImage-3tiff-name"><refdescriptor>TIFFRGBAImage</refdescriptor>
+<refname>TIFFRGBAImageBegin</refname><refname>TIFFRGBAImageEnd</refname><refname>
+TIFFRGBAImageGet</refname><refname>TIFFRGBAImageOK</refname><refname>TIFFRGBAImageOriented<?Pub Caret>
+</refname><refpurpose>read and decode an image into a raster</refpurpose>
+</refnamediv>
+<refsect1 id="TIFFRGBAImage-3tiff-synp"><title>&synp-tt;</title>
+<programlisting>#include &lt;tiffio.h>
+typedef unsigned char TIFFRGBValue;
+typedef struct _TIFFRGBAImage TIFFRGBAImage;
+int TIFFRGBAImageOK(TIFF* tif, char emsg[1024]);
+int TIFFRGBAImageBegin(TIFFRGBAImage* img, TIFF* tif, int stopOnError, char emsg[1024]);
+int TIFFRGBAImageGet(TIFFRGBAImage* img, uint32* raster, uint32 width, uint32 height);
+void TIFFRGBAImageEnd(TIFFRGBAImage* img);</programlisting>
+</refsect1>
+<refsect1 id="TIFFRGBAImage-3tiff-desc"><title>&desc-tt;</title>
+<para>The routines described here provide a high-level interface through which
+TIFF images may be read into memory. Images may be strip- or tile-based and
+have a variety of different characteristics: bits/sample, samples/pixel, photometric,
+and so on. Decoding state is encapsulated in a <literal>TIFFRGBAImage</literal>
+structure, which makes it possible to capture state for multiple images and
+quickly switch between them. The target raster format can be customized to
+the needs of a particular application by installing custom routines that manipulate
+image data according to application requirements.</para>
+<para>The default usage of these routines is as follows:</para>
+<orderedlist>
+<listitem><para>Use <literal>TIFFRGBAImageOK</literal> to check whether an
+image can be processed.</para></listitem>
+<listitem><para>Use <literal>TIFFRGBAImageBegin</literal> to construct a decoder
+state block.</para></listitem>
+<listitem><para>Use <literal>TIFFRGBAImageGet</literal> to read and decode
+an image into a target raster.</para></listitem>
+<listitem><para>Use <literal>TIFFRGBAImageEnd</literal> to release resources.
+</para></listitem>
+</orderedlist>
+<para><literal>TIFFRGBAImageGet</literal> can be called multiple times to
+decode an image using different state parameters. If multiple images are
+to be displayed and there is not enough space for each of the decoded rasters,
+multiple state blocks can be managed and then calls can be made to <literal>
+TIFFRGBAImageGet</literal> as needed to display an image.</para>
+<para>The generated raster is assumed to be an array of <replaceable>width
+</replaceable> times <replaceable>height</replaceable> 32-bit entries, where <replaceable>
+width</replaceable> must be less than or equal to the width of the image,
+and <replaceable>height</replaceable> may be any non-zero size. If the raster
+dimensions are smaller than the image, the image data is cropped to the raster
+bounds. If the raster height is greater than that of the image, then the image
+data is placed in the lower part of the raster. Note that the raster is assumed
+to be organized such that the pixel at location (<replaceable>x,y</replaceable>)
+is <replaceable>raster[y*width+x]</replaceable>, with the raster origin in
+the bottom-left corner.</para>
+</refsect1>
+<refsect1 id="TIFFRGBAImage-3tiff-exde"><title>&exde-tt;</title>
+<para>Raster pixels are 8-bit packed red, green, blue, alpha samples. The
+macros <literal>TIFFGetR</literal>, <literal>TIFFGetG</literal>, <literal>
+TIFFGetB</literal>, and <literal>TIFFGetA</literal> should be used to access
+individual samples. Images without Associated Alpha matting information have
+a constant Alpha of 1.0 (255).</para>
+<para><literal>TIFFRGBAImageGet</literal> converts non-8-bit images by scaling
+sample values. Palette, grayscale, bilevel, CMYK, and YCbCr images are converted
+to RGB transparently. Raster pixels are returned uncorrected by any colorimetry
+information present in the directory.</para>
+<para>The parameter <literal>stopOnError</literal> specifies how to act if
+an error is encountered while reading the image. If <literal>stopOnError</literal>
+is non-zero, then an error terminates the operation. Otherwise, <literal>
+TIFFRGBAImageGet</literal> continues to process data until all of the possible
+data in the image has been requested.</para>
+<refsect2 id="TIFFRGBAImage-3tiff-exde-raster">
+<title>Alternate Raster Formats</title>
+<para>To use the core support for reading and processing TIFF images, but
+write the resulting raster data in a different format, you need only override
+the &ldquo;put methods&rdquo; used to store raster data. These methods are
+defined in the <literal>TIFFRGBAImage</literal> structure and initially set
+up by <literal>TIFFRGBAImageBegin</literal> to point to routines that pack
+raster data in the default ABGR pixel format. </para>
+<para>Two different routines are used according to the physical organization
+of the image data in the file:</para>
+<itemizedlist>
+<listitem><para>PlanarConfiguration=1 (packed samples)</para></listitem>
+<listitem><para>PlanarConfiguration=2 (separated samples). </para></listitem>
+</itemizedlist>
+<para>Note that this mechanism can be used to transform the data before storing
+the data in the raster. For example, you can convert data to colormap indices
+for display on a colormap display.</para>
+</refsect2>
+<refsect2 id="TIFFRGBAImage-3tiff-exde-display">
+<title>Simultaneous Raster Store and Display</title>
+<para>An image can be displayed as the image is being into memory by overriding
+the put methods as described above to support alternate raster formats. Simply
+keep a reference to the default put methods set up by <literal>TIFFRGBAImageBegin
+</literal> and then invoke these methods before or after each display operation.
+For example, the <command>tiffgt(1)</command> utility uses the following put
+method to update the display as the raster is being filled:</para>
+<programlisting>static void
+putContigAndDraw(TIFFRGBAImage* img, uint32* raster,
+    uint32 x, uint32 y, uint32 w, uint32 h,
+    int32 fromskew, int32 toskew,
+    unsigned char* cp)
+{
+    (*putContig)(img, raster, x, y, w, h, fromskew, toskew, cp);
+    if (x+w == width) {
+     w = width;
+     if (img->orientation == ORIENTATION_TOPLEFT)
+         lrectwrite(0, y-(h-1), w-1, y, raster-x-(h-1)*w);
+     else
+         lrectwrite(0, y, w-1, y+h-1, raster);
+    }
+}
+
+</programlisting>
+<para>The original routine provided by the library is saved in the variable <literal>
+putContig</literal>.</para>
+</refsect2>
+<refsect2 id="TIFFRGBAImage-3tiff-exde-tiff">
+<title>Supporting Additional TIFF Formats</title>
+<para>The <literal>TIFFRGBAImage</literal> routines support the most commonly
+encountered flavors of TIFF. You can extend this support by overriding the &ldquo;get
+method&rdquo; invoked by <literal>TIFFRGBAImageGet</literal> to read TIFF
+image data. Details of how to do this can be quite involved, it is best to
+make a copy of an existing get method and modify to suit the needs of an application.
+</para>
+</refsect2>
+<refsect2 id="TIFFRGBAImage-3tiff-exde-diags">
+<title>Diagnostics</title>
+<para>All error messages are directed to the <literal>TIFFError(3tiff)</literal>
+routine.</para>
+<variablelist termlength="wholeline">
+<varlistentry><term>Sorry, can not handle %d-bit pictures.</term><listitem>
+<para>The image has a <literal>BitsPerSample</literal> value other than 1,
+2, 4, 8, or 16.</para>
+</listitem></varlistentry>
+<varlistentry><term>Sorry, can not handle %d-channel images.</term><listitem>
+<para>The image has a <literal>SamplesPerPixel</literal> value other than
+1, 3, or 4.</para>
+</listitem></varlistentry>
+<varlistentry><term>Missing needed "PhotometricInterpretation" tag.</term>
+<listitem><para>The image does not have a tag that describes how to display
+the data.</para>
+</listitem></varlistentry>
+<varlistentry><term>No "PhotometricInterpretation" tag, assuming RGB.</term>
+<listitem><para>The image does not have a tag that describes how to display
+the data, but is assumed to be RGB because the image has 3 or 4 samples/pixel.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>No "PhotometricInterpretation" tag, assuming min-is-black.
+</term><listitem><para>The image does not have a tag that describes how to
+display the data, but is assumed to be a grayscale or bilevel image because
+the image has 1 sample/pixel.</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for photometric conversion table.</term><listitem>
+<para>There is insufficient memory for a table needed to convert image samples
+to 8-bit RGB.</para>
+</listitem></varlistentry>
+<varlistentry><term>Missing required "Colormap" tag.</term><listitem><para>
+A Palette image does not have a required <literal>Colormap</literal> tag.
+</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for tile buffer.</term><listitem><para>There
+is insufficient memory to allocate an i/o buffer.</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for strip buffer.</term><listitem><para>There
+is insufficient memory to allocate an i/o buffer.</para>
+</listitem></varlistentry>
+<varlistentry><term>Can not handle format.</term><listitem><para>The image
+has a format (combination of <literal>BitsPerSample</literal>, <literal>SamplesPerPixel
+</literal>, and <literal>PhotometricInterpretation</literal>) that <literal>
+TIFFReadRGBAImage</literal> cannot process.</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for B&amp;W mapping table.</term><listitem><para>
+There is insufficient memory to allocate a table needed to map grayscale data
+to RGB.</para>
+</listitem></varlistentry>
+<varlistentry><term>No space for Palette mapping table.</term><listitem><para>
+There is insufficient memory to allocate a table needed to map data to 8-bit
+RGB.</para>
+</listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+<refsect1 id="TIFFRGBAImage-3tiff-rtrn"><title>&rtrn-tt;</title>
+<para>All routines return 1 if the operation was successful. Otherwise, 0
+is returned if an error was encountered and <literal>stopOnError</literal>
+is zero.</para>
+</refsect1>
+<refsect1 id="TIFFRGBAImage-3tiff-attr"><title>&attr-tt;</title>
+<para>See <olink targetdocent="REFMAN5" localinfo="attributes-5"><citerefentry>
+<refentrytitle>attributes</refentrytitle><manvolnum>5</manvolnum></citerefentry></olink>
+for descriptions of the following attributes:</para>
+<informaltable frame="all">
+<tgroup cols="2" colsep="1" rowsep="1"><colspec colname="COLSPEC0" colwidth="1*">
+<colspec colname="COLSPEC1" colwidth="1*">
+<thead>
+<row><entry align="center" valign="middle">ATTRIBUTE TYPE</entry><entry align="center"
+valign="middle">ATTRIBUTE VALUE</entry></row>
+</thead>
+<tbody>
+<row><entry><para>Availability</para></entry><entry><para>SUNWTiff</para></entry>
+</row>
+<row><entry colname="COLSPEC0"><para>Interface stability</para></entry><entry
+colname="COLSPEC1"><para>Uncommitted</para></entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+</refsect1>
+<refsect1 id="TIFFRGBAImage-3tiff-also"><title>&also-tt;</title>
+<!--Reference to another man page-->
+<!--Reference to a Help manual-->
+<!--Reference to a book.-->
+<para><citerefentry><refentrytitle>libtiff</refentrytitle><manvolnum>3</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFOpen</refentrytitle><manvolnum>
+3tiff</manvolnum></citerefentry>, <citerefentry><refentrytitle>TIFFReadRGBAImage
+</refentrytitle><manvolnum>3tiff</manvolnum></citerefentry>, <citerefentry>
+<refentrytitle>TIFFReadRGBAStrip</refentrytitle><manvolnum>3tiff</manvolnum>
+</citerefentry>, <citerefentry><refentrytitle>TIFFReadRGBATile</refentrytitle>
+<manvolnum>3tiff</manvolnum></citerefentry></para>
+</refsect1>
+<refsect1 id="TIFFRGBAImage-3tiff-note"><title>&note-tt;</title>
+<para>Samples must be either 1, 2, 4, 8, or 16 bits. Colorimetric samples/pixel
+must be either 1, 3, or 4 (that is, <literal>SamplesPerPixel</literal> minus <literal>
+ExtraSamples</literal>).</para>
+<para>Palette image colormaps that appear to be incorrectly written as 8-bit
+values are automatically scaled to 16-bits.</para>
+<para>Orientations other than bottom-left or top-left are not processed correctly.
+</para>
+<para>This man page was originally written by Sam Leffler. Updated by Breda
+McColgan, Sun Microsystems Inc., 2004.</para>
+</refsect1>
+</refentry>
+<?Pub *0000013365>
