@@ -49,6 +49,17 @@ export LDFLAGS_EXTRA="-L/usr/gnu/lib -R/usr/gnu/lib"
 PATH=/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
 export PATH
 
+elif [ "$cmp" = "sfw_gcc" ]
+then
+export CC=/usr/sfw/bin/gcc
+export CXX=/usr/sfw/bin/g++
+
+export CXXFLAGS_EXTRA="-L/usr/sfw/lib -R/usr/sfw/lib"
+export CFLAGS_EXTRA="-L/usr/sfw/lib -R/usr/sfw/lib"
+export LDFLAGS_EXTRA="-L/usr/sfw/lib -R/usr/sfw/lib"
+PATH=/usr/sfw/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/gnu/bin
+export PATH
+
 else
 PATH=/opt/SUNWspro/bin:/usr/gnu/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:/usr/sfw/bin
 export PATH
