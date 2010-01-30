@@ -60,6 +60,9 @@ clean:
 
 install:
 	@mkdir -p $(DESTDIR)/usr/lib
-	@cp  btaskq.so.1 $(DESTDIR)/usr/lib
+	@cp libtaskq.so.1 $(DESTDIR)/usr/lib
 	@chmod 0755 $(DESTDIR)/usr/lib/libtaskq.so.1
 	@ln -s $(DESTDIR)/usr/lib/libtaskq.so libtaskq.so.1
+	@cp libtaskq.h $(DESTDIR)/usr/include
+        @cp libtaskq_defs.h $(DESTDIR)/usr/include
+	@chmod 0444 $(DESTDIR)/usr/include/libtaskq*
