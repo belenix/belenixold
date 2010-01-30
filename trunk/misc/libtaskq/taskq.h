@@ -63,6 +63,7 @@ extern "C" {
 /*#include <sys/resource.h>*/
 #include <sys/byteorder.h>
 #include <sys/list.h>
+#include "libtaskq_defs.h"
 
 /*
  * Debugging
@@ -258,20 +259,6 @@ typedef umem_cache_t kmem_cache_t;
 /*
  * Task queues
  */
-typedef struct taskq taskq_t;
-typedef uintptr_t taskqid_t;
-typedef void (task_func_t)(void *);
-
-#define	TASKQ_PREPOPULATE	0x0001
-#define	TASKQ_CPR_SAFE		0x0002	/* Use CPR safe protocol */
-#define	TASKQ_DYNAMIC		0x0004	/* Use dynamic thread scheduling */
-
-#define	TQ_SLEEP	KM_SLEEP	/* Can block for memory */
-#define	TQ_NOSLEEP	KM_NOSLEEP	/* cannot block for memory; may fail */
-#define	TQ_NOQUEUE	0x02	/* Do not enqueue if can't dispatch */
-
-extern taskq_t *system_taskq;
-
 extern taskq_t	*taskq_create(const char *, int, pri_t, int, int, uint_t);
 extern taskqid_t taskq_dispatch(taskq_t *, task_func_t, void *, uint_t);
 extern void	taskq_destroy(taskq_t *);
@@ -292,11 +279,7 @@ extern void	system_taskq_init(void);
 extern void delay(clock_t ticks);
 
 #define	gethrestime_sec() time(NULL)
-
 #define	max_ncpus	64
-
-#define	minclsyspri	60
-#define	maxclsyspri	99
 
 extern void libtaskq_init(int);
 extern void libtaskq_fini(void);

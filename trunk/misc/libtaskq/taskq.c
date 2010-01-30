@@ -63,7 +63,7 @@ task_alloc(taskq_t *tq, int tqflags)
 	} else {
 		mutex_exit(&tq->tq_lock);
 		if (tq->tq_nalloc >= tq->tq_maxalloc) {
-			if (!(tqflags & KM_SLEEP)) {
+			if (!(tqflags & TQ_SLEEP)) {
 				mutex_enter(&tq->tq_lock);
 				return (NULL);
 			}
@@ -190,7 +190,7 @@ taskq_create(const char *name, int nthreads, pri_t pri,
 	if (flags & TASKQ_PREPOPULATE) {
 		mutex_enter(&tq->tq_lock);
 		while (minalloc-- > 0)
-			task_free(tq, task_alloc(tq, KM_SLEEP));
+			task_free(tq, task_alloc(tq, TQ_SLEEP));
 		mutex_exit(&tq->tq_lock);
 	}
 
@@ -220,7 +220,7 @@ taskq_destroy(taskq_t *tq)
 	tq->tq_minalloc = 0;
 	while (tq->tq_nalloc != 0) {
 		ASSERT(tq->tq_freelist != NULL);
-		task_free(tq, task_alloc(tq, KM_SLEEP));
+		task_free(tq, task_alloc(tq, TQ_SLEEP));
 	}
 
 	mutex_exit(&tq->tq_lock);
