@@ -26,26 +26,37 @@
 #
 
 objs = taskq.o kernel.o
-CFLAGS = -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -std=c99 -D__EXTENSIONS__ -fPIC -DPIC
-LDFLAGS = -lthread -lumem
+mcp_objs = mcp.o
+CFLAGS = -D_FILE_OFFSET_BITS=64 -std=c99 -D__EXTENSIONS__ -fPIC -DPIC -I.
+LDFLAGS = -lthread -lumem -L /usr/gnu/lib -R /usr/gnu/lib
 INC = 
+CC = gcc
+SHLIB_FLAGS = -shared
+MCP_LDFLAGS = -L. -R. -ltaskq -L /usr/gnu/lib -R /usr/gnu/lib
 
 # Uncomment this for debugging information in the files
 DEBUG = -g
 
-all: libtaskq.so.1
+all: libtaskq.so.1 mcp
 
 libtaskq.so.1: $(objs)
 	@echo Linking
-	@gcc -shared $(DEBUG) $(CFLAGS) $(LDFLAGS) $(objs) -o libtaskq.so.1
+	$(CC) $(SHLIB_FLAGS) $(DEBUG) $(CFLAGS) $(LDFLAGS) $(objs) -o libtaskq.so.1
+	ln -sf libtaskq.so.1 libtaskq.so
 
 .c.o:
 	@echo Compiling $<
-	@gcc -c $< $(DEBUG) $(INC) $(CFLAGS)
+	$(CC) -c $< $(DEBUG) $(INC) $(CFLAGS)
+
+mcp: libtaskq.so.1 $(mcp_objs)
+	@echo Linking mcp
+	$(CC) $(DEBUG) $(CFLAGS) $(MCP_LDFLAGS) $(mcp_objs) -o mcp
 
 clean:
 	@rm -f *.o
 	@rm -f libtaskq.so.1
+	@rm -f libtaskq.so
+	@rm -f mcp
 
 install:
 	@mkdir -p $(DESTDIR)/usr/lib
