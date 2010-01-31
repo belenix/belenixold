@@ -27,12 +27,12 @@
 
 objs = taskq.o kernel.o
 mcp_objs = mcp.o
-CFLAGS = -D_FILE_OFFSET_BITS=64 -std=c99 -D__EXTENSIONS__ -fPIC -DPIC -I.
-LDFLAGS = -lthread -lumem -L /usr/gnu/lib -R /usr/gnu/lib
+CFLAGS = -D_FILE_OFFSET_BITS=64 -xc99=%all -D__EXTENSIONS__ -fPIC -DPIC -I.
+LDFLAGS = -lthread -lumem 
 INC = 
-CC = gcc
-SHLIB_FLAGS = -shared
-MCP_LDFLAGS = -L. -R. -ltaskq -L /usr/gnu/lib -R /usr/gnu/lib
+CC = /opt/SUNWspro/bin/cc
+SHLIB_FLAGS = -G
+MCP_LDFLAGS = -L. -R. -ltaskq
 
 # Uncomment this for debugging information in the files
 DEBUG = -g
@@ -64,5 +64,5 @@ install:
 	@chmod 0755 $(DESTDIR)/usr/lib/libtaskq.so.1
 	@ln -s $(DESTDIR)/usr/lib/libtaskq.so libtaskq.so.1
 	@cp libtaskq.h $(DESTDIR)/usr/include
-        @cp libtaskq_defs.h $(DESTDIR)/usr/include
+	@cp libtaskq_defs.h $(DESTDIR)/usr/include
 	@chmod 0444 $(DESTDIR)/usr/include/libtaskq*
