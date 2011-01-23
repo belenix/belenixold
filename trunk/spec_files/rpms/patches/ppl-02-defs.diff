@@ -1,0 +1,22 @@
+--- src/Linear_System.defs.hh.orig	Mon Jan 17 20:51:37 2011
++++ src/Linear_System.defs.hh	Mon Jan 17 20:52:01 2011
+@@ -25,7 +25,7 @@
+ 
+ #include "Linear_System.types.hh"
+ #include "Row.types.hh"
+-#include "Bit_Row.types.hh"
++#include "Bit_Row.defs.hh"
+ #include "Bit_Matrix.types.hh"
+ #include "Matrix.defs.hh"
+ #include "Topology.hh"
+--- src/MIP_Problem.defs.hh.orig	Mon Jan 17 21:40:00 2011
++++ src/MIP_Problem.defs.hh	Mon Jan 17 21:40:11 2011
+@@ -28,7 +28,7 @@
+ #include "Row.defs.hh"
+ #include "Matrix.defs.hh"
+ #include "Linear_Expression.defs.hh"
+-#include "Constraint.types.hh"
++#include "Constraint.defs.hh"
+ #include "Constraint_System.types.hh"
+ #include "Generator.defs.hh"
+ #include "Variables_Set.defs.hh"

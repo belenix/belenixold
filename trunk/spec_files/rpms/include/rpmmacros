@@ -1,0 +1,118 @@
+#
+# Some useful constants, utilities.
+#
+%sf_download          %{!?sf_download: http://downloads.sourceforge.net}
+%kde_mirror           %{!?kde_mirror: ftp://mirrors.dotsrc.org/kde/stable}
+%kde4_version         %{!?kde4_version: 4.2.3}
+#cc_is_gcc            %{expand:%%(strings ${CC-:x} 2>/dev/null | grep sunmath >/dev/null; echo $?)}
+%gcc_compiler         %{?cc_is_gcc:1}%{!?cc_is_gcc:0}
+%xfce_pkg_version     4.4.2
+%xfce_src_url         http://www.us.xfce.org/archive/xfce-%{xfce_pkg_version}/src
+%restart_fmri         $BASEDIR/share/desktop-cache/restart_fmri
+%_gpp_version         %(g++ --version | head -1 | cut -f3 -d' ')
+%__id_u               /usr/bin/id -u
+%_arch64              amd64
+%_arch32              i86
+
+# Turn on XZ compression for binary RPMs.
+%_binary_payload w7.xzdio
+
+%build_64bit          %{?use_arch64:1}%{!?use_arch64:0}
+#
+# Define a variety of 32-bit and 64-bit paths. If the macro %use_arch64 is defined
+# to '1' then all default paths point to 64-bit directories. Otherwise the corresponding
+# pathname macro with '64' appended will point to the 64-bit dir.
+#
+%gnu_bin              %{!?use_arch64:/usr/gnu/bin}%{?use_arch64:/usr/gnu/bin/%{_arch64}}
+%gnu_inc              /usr/gnu/include
+%gnu_lib              %{!?use_arch64:/usr/gnu/lib}%{?use_arch64:/usr/gnu/lib/%{_arch64}}
+%gnu_lib_path         -L%{gnu_lib} -R%{gnu_lib}
+%sfw_bin              %{!?use_arch64:/usr/sfw/bin}%{?use_arch64:/usr/sfw/bin/%{_arch64}}
+%sfw_inc              /usr/sfw/include
+%sfw_lib              %{!?use_arch64:/usr/sfw/lib}%{?use_arch64:/usr/sfw/lib/%{_arch64}}
+%sfw_lib_path         -L%{sfw_lib} -R%{sfw_lib}
+%xorg_bin             %{!?use_arch64:/usr/X11/bin}%{?use_arch64:/usr/X11/bin/%{_arch64}}
+%xorg_lib             %{!?use_arch64:/usr/X11/lib}%{?use_arch64:/usr/X11/lib/%{_arch64}}
+%xorg_inc             /usr/X11/include
+%xorg_lib_path        -L%{xorg_lib} -R%{xorg_lib}
+%qt4_bin_path         %{!?use_arch64:/usr/qt4/bin}%{?use_arch64:/usr/qt4/bin/%{_arch64}}
+
+%gnu_bin64            /usr/gnu/bin/%{_arch64}
+%gnu_lib64            /usr/gnu/lib/%{_arch64}
+%gnu_lib_path64       -L%{gnu_lib64} -R%{gnu_lib64}
+%sfw_bin64            /usr/sfw/bin/%{_arch64}
+%sfw_lib64            /usr/sfw/lib/%{_arch64}
+%sfw_lib_path64       -L%{sfw_lib64} -R%{sfw_lib64}
+%xorg_bin64           /usr/X11/bin/%{_arch64}
+%xorg_lib64           /usr/X11/lib/%{_arch64}
+%xorg_lib_path64      -L%{xorg_lib64} -R%{xorg_lib64}
+%qt4_bin_path64       /usr/qt4/bin/%{_arch64}
+
+%_bindir64            %{_exec_prefix}/bin/%{_arch64}
+%_libdir64            %{_exec_prefix}/lib/%{_arch64}
+%_libexecdir64        %{_exec_prefix}/libexec/%{_arch64}
+%_lib64               /lib/%{_arch64}
+%_pkgconfigdir64      %{_libdir64}/pkgconfig
+
+%_bindir              %{?use_arch64:%{_bindir64}}%{!?use_arch64:%{_exec_prefix}/bin}
+%_libdir              %{?use_arch64:%{_libdir64}}%{!?use_arch64:%{_exec_prefix}/%{_lib}}
+%_libexecdir          %{?use_arch64:%{_libexecdir64}}%{!?use_arch64:%{_exec_prefix}/libexec}
+%_lib                 %{?use_arch64:%{_lib64}}%{!?use_arch64:/lib}
+%_pkgconfigdir        %{?use_arch64:%{_pkgconfigdir64}}%{!?use_arch64:%{_libdir}/pkgconfig}
+
+%_bindir32            %{_exec_prefix}/bin
+%_libdir32            %{_exec_prefix}/lib
+%_libexecdir32        %{_exec_prefix}/libexec
+%_lib32               /lib
+%_pkgconfigdir32      %{_libdir}/pkgconfig
+
+%_cxx_libdir          %{?use_arch64:%{_prefix}/lib/g++/%{_gpp_version}/%{_arch64}}%{!?use_arch64:%{_prefix}/lib/g++/%{_gpp_version}}
+%_cxx_libdir64        %{_prefix}/lib/g++/%{_gpp_version}/%{_arch64}
+
+#
+# Define Gcc and SUN Studio compiler flags and linker flags. If %debug_build is '1' then
+# debug symbols are built. If %use_arch64 is defined to '1' then default path arguments
+# are all 64-bit paths.
+#
+%arch_ld              -L%{_libdir} -R%{_libdir} %{?use_arch64:-m64}%{!?use_arch64:-m32}
+%arch_ldextra         -Wl,-zignore -R%{gnu_lib} -lgnuintl -lgnuiconv
+%arch_ldadd           %{arch_ld} %{?with_gnu_iconv:%{arch_ldextra}}
+%_ldopt               -Wl,-zignore -Wl,-zcombreloc -Wl,-Bdirect
+%_gcc_arch_flag       %{?use_arch64:-m64}%{!?use_arch64:-march=pentium3 -m32}
+%_suncc_arch_flag     %{?use_arch64:-m64}%{!?use_arch64:-m32}
+
+%arch_ld64            -L%{_libdir64} -R%{_libdir64} -m64
+%arch_ldextra64       -Wl,-zignore -R%{gnu_lib64} -lgnuintl -lgnuiconv
+%arch_ldadd64         %{arch_ld64} %{?with_gnu_iconv:%{arch_ldextra64}}
+
+%_gcc_picflags        -fPIC -DPIC
+%_suncc_picflags      -KPIC -DPIC
+
+%_suncc_opt_level     %{?debug_build: -g}%{!?debug_build: -xO4 -xspace}
+%_suncxx_opt_level    %{?debug_build: -g}%{!?debug_build: -xO3 -xspace}
+%_gcc_opt_level       %{?debug_build: -g}%{!?debug_build: -O2}
+%_gxx_opt_level       %{?debug_build: -g}%{!?debug_build: -O2}
+
+%gcc_optflags         %{_gcc_opt_level} %{_gcc_arch_flag} -fno-omit-frame-pointer %{_gcc_picflags} 
+%gcc_cxx_optflags     %{_gxx_opt_level} %{_gcc_arch_flag} -fno-omit-frame-pointer %{_gcc_picflags}
+
+%suncc_optflags       -i %{_suncc_opt_level} %{_suncc_arch_flag} -xstrconst -xpentium -mr -xregs=no%%frameptr %{_suncc_picflags}
+%suncc_cxx_optflags   -i %{_suncxx_opt_level} %{_suncc_arch_flag} -pentium -mr -norunpath -xregs=no%%frameptr %{_suncc_picflags}
+
+%picflags             %{!?cc_is_gcc: %{_suncc_picflags}}%{?cc_is_gcc: %{_gcc_picflags}}
+%optflags             %{!?cc_is_gcc: %{suncc_optflags}}%{?cc_is_gcc: %{gcc_optflags}} ${EXTRA_CFLAGS}
+%cxx_optflags         %{!?cc_is_gcc: %{suncc_cxx_optflags}}%{?cc_is_gcc: %{gcc_cxx_optflags}} ${EXTRA_CXXFLAGS}
+
+%_ldflags             %{?debug_build: %{arch_ldadd} ${EXTRA_LDFLAGS}}%{!?debug_build: %{arch_ldadd} %{_ldopt} ${EXTRA_LDFLAGS}}
+
+%gcc_optflags64       %{_gcc_opt_level} -m64 -fno-omit-frame-pointer %{_gcc_picflags}
+%gcc_cxx_optflags64   %{_gxx_opt_level} -m64 -fno-omit-frame-pointer %{_gcc_picflags}
+
+%suncc_optflags64     -i %{_suncc_opt_level} -m64 -xstrconst -xpentium -mr -xregs=no%%frameptr %{_suncc_picflags}
+%suncc_cxx_optflags64 -i %{_suncxx_opt_level} -m64 -pentium -mr -norunpath -xregs=no%%frameptr %{_suncc_picflags}
+
+%optflags64           %{!?cc_is_gcc: %{suncc_optflags64}}%{?cc_is_gcc: %{gcc_optflags64}} ${EXTRA_CFLAGS}
+%cxx_optflags64       %{!?cc_is_gcc: %{suncc_cxx_optflags64}}%{?cc_is_gcc: %{gcc_cxx_optflags64}} ${EXTRA_CXXFLAGS}
+%_ldflags64           %{?debug_build: %{arch_ldadd64} ${EXTRA_LDFLAGS}}%{!?debug_build: %{arch_ldadd64} %{_ldopt} ${EXTRA_LDFLAGS}}
+
+%_docdir              %{_datadir}/doc

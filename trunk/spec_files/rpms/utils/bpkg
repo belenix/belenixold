@@ -1,0 +1,36 @@
+#!/bin/sh -x
+
+if [ "$1" = "build" ]
+then
+	shift
+	RPMBUILD_PARAMS='--define "use_arch64=1"'
+	CC_IS_GCC=""
+	echo "$CC" | grep gcc > /dev/null
+	[ $? -eq 0 ] && CC_IS_GCC='--define "cc_is_gcc=1"'
+
+	if [ "$1" = "--32bit" ]
+	then
+		shift
+		spec="$1"
+		RPMBUILD_PARAMS='--target=i686-pc-solaris2.11 --define "_arch i686"'
+		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
+		[ $? -ne 0 ] && exit 1
+
+	elif [ "$1" = "--both" ]
+	then
+		shift
+		spec="$1"
+		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
+		[ $? -ne 0 ] && exit 1
+		RPMBUILD_PARAMS='--target=i686-pc-solaris2.11 --define "_arch i686"'
+		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bb ${spec}"
+		[ $? -ne 0 ] && exit 1
+
+	else
+		spec="$1"
+		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
+		[ $? -ne 0 ] && exit 1
+	fi
+fi
+
+
