@@ -1,10 +1,10 @@
 Summary: The zlib compression and decompression library
 Name: zlib
-Version: 1.2.5
-Release: 2%{?dist}
+Version: 1.2.3
+Release: 1%{?dist}
 Group: System Environment/Libraries
-Source: http://www.zlib.net/zlib-%{version}.tar.bz2
-Patch1: zlib-1.2.5-gentoo.patch
+#Source: http://www.zlib.net/zlib-%{version}.tar.bz2
+Source: http://prdownloads.sourceforge.net/libpng/zlib-1.2.3.tar.gz
 URL: http://www.gzip.org/zlib/
 License: zlib and Boost
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -27,21 +27,21 @@ library.
 
 %prep
 %setup -q 
-%patch1 -p1
 
 %build
 export CFLAGS="%optflags"
+export LDSHARED="$CC -shared %_ldflags"
 %if %build_64bit
 %if %gcc_compiler
-CFLAGS="$CFLAGS -O2 -msse2 -ftree-vectorize -flto -ftree-loop-linear -floop-interchange -floop-block"
+CFLAGS="$CFLAGS -O3 -msse2 -ftree-vectorize -flto -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-parallelize-all -ftree-loop-distribution"
 %endif
 %else
 %if %gcc_compiler
-CFLAGS="$CFLAGS -O2 -flto -ftree-loop-linear -floop-interchange -floop-block"
+CFLAGS="$CFLAGS -O3 -flto -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-parallelize-all -ftree-loop-distribution"
 %endif
 %endif
 
-./configure --libdir=%{_libdir} --includedir=%{_includedir} --prefix=%{_prefix}
+bash ./configure --shared --libdir=%{buildroot}/%{_libdir} --includedir=%{buildroot}/%{_includedir} --prefix=%{buildroot}/%{_prefix}
 gmake
 
 %install
