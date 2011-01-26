@@ -69,21 +69,16 @@ rm -f ${RPM_BUILD_ROOT}%{_libdir}/*.la
 cd ..
 
 rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
+%find_info
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post devel
-if [ -f %{_infodir}/mpc.info.gz ]; then # for --excludedocs
-   /sbin/install-info %{_infodir}/mpc.info.gz %{_infodir}/dir || :
-fi
+%install_info
 
 %preun devel
-if [ $1 = 0 ]; then
-   if [ -f %{_infodir}/mpc.info.gz ]; then # for --excludedocs
-      /sbin/install-info --delete %{_infodir}/mpc.info.gz %{_infodir}/dir || :
-   fi
-fi
+%uninstall_info
 
 %files
 %defattr (-, root, bin)
@@ -95,7 +90,7 @@ fi
 %dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*.h
 %dir %attr (0755, root, bin) %{_infodir}
-%{_infodir}/*.info*
+%{_infodir}/*
 
 %changelog
 * Wed May 06 2009 - moinakg@belenix.org

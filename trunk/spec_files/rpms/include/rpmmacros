@@ -13,6 +13,10 @@
 %__id_u               /usr/bin/id -u
 %_arch64              amd64
 %_arch32              i86
+%build_l10n           1
+
+# Dont want repackaging
+%_repackage_all_erasures 0
 
 # Turn on XZ compression for binary RPMs.
 %_binary_payload w7.xzdio
@@ -49,18 +53,21 @@
 %qt4_bin_path64       /usr/qt4/bin/%{_arch64}
 
 %_bindir64            %{_exec_prefix}/bin/%{_arch64}
+%_sbindir64           %{_exec_prefix}/sbin/%{_arch64}
 %_libdir64            %{_exec_prefix}/lib/%{_arch64}
 %_libexecdir64        %{_exec_prefix}/libexec/%{_arch64}
 %_lib64               /lib/%{_arch64}
 %_pkgconfigdir64      %{_libdir64}/pkgconfig
 
 %_bindir              %{?use_arch64:%{_bindir64}}%{!?use_arch64:%{_exec_prefix}/bin}
+%_sbindir             %{?use_arch64:%{_sbindir64}}%{!?use_arch64:%{_exec_prefix}/sbin}
 %_libdir              %{?use_arch64:%{_libdir64}}%{!?use_arch64:%{_exec_prefix}/%{_lib}}
 %_libexecdir          %{?use_arch64:%{_libexecdir64}}%{!?use_arch64:%{_exec_prefix}/libexec}
 %_lib                 %{?use_arch64:%{_lib64}}%{!?use_arch64:/lib}
 %_pkgconfigdir        %{?use_arch64:%{_pkgconfigdir64}}%{!?use_arch64:%{_libdir}/pkgconfig}
 
 %_bindir32            %{_exec_prefix}/bin
+%_sbindir32           %{_exec_prefix}/sbin
 %_libdir32            %{_exec_prefix}/lib
 %_libexecdir32        %{_exec_prefix}/libexec
 %_lib32               /lib
@@ -93,8 +100,8 @@
 %_gcc_opt_level       %{?debug_build: -g}%{!?debug_build: -O2}
 %_gxx_opt_level       %{?debug_build: -g}%{!?debug_build: -O2}
 
-%gcc_optflags         %{_gcc_opt_level} %{_gcc_arch_flag} -fno-omit-frame-pointer %{_gcc_picflags} 
-%gcc_cxx_optflags     %{_gxx_opt_level} %{_gcc_arch_flag} -fno-omit-frame-pointer %{_gcc_picflags}
+%gcc_optflags         %{_gcc_opt_level} %{_gcc_arch_flag} -fno-omit-frame-pointer %{_gcc_picflags} -pipe
+%gcc_cxx_optflags     %{_gxx_opt_level} %{_gcc_arch_flag} -fno-omit-frame-pointer %{_gcc_picflags} -pipe
 
 %suncc_optflags       -i %{_suncc_opt_level} %{_suncc_arch_flag} -xstrconst -xpentium -mr -xregs=no%%frameptr %{_suncc_picflags}
 %suncc_cxx_optflags   -i %{_suncxx_opt_level} %{_suncc_arch_flag} -pentium -mr -norunpath -xregs=no%%frameptr %{_suncc_picflags}
@@ -105,8 +112,8 @@
 
 %_ldflags             %{?debug_build: %{arch_ldadd} ${EXTRA_LDFLAGS}}%{!?debug_build: %{arch_ldadd} %{_ldopt} ${EXTRA_LDFLAGS}}
 
-%gcc_optflags64       %{_gcc_opt_level} -m64 -fno-omit-frame-pointer %{_gcc_picflags}
-%gcc_cxx_optflags64   %{_gxx_opt_level} -m64 -fno-omit-frame-pointer %{_gcc_picflags}
+%gcc_optflags64       %{_gcc_opt_level} -m64 -fno-omit-frame-pointer %{_gcc_picflags} -pipe
+%gcc_cxx_optflags64   %{_gxx_opt_level} -m64 -fno-omit-frame-pointer %{_gcc_picflags} -pipe
 
 %suncc_optflags64     -i %{_suncc_opt_level} -m64 -xstrconst -xpentium -mr -xregs=no%%frameptr %{_suncc_picflags}
 %suncc_cxx_optflags64 -i %{_suncxx_opt_level} -m64 -pentium -mr -norunpath -xregs=no%%frameptr %{_suncc_picflags}
@@ -115,4 +122,64 @@
 %cxx_optflags64       %{!?cc_is_gcc: %{suncc_cxx_optflags64}}%{?cc_is_gcc: %{gcc_cxx_optflags64}} ${EXTRA_CXXFLAGS}
 %_ldflags64           %{?debug_build: %{arch_ldadd64} ${EXTRA_LDFLAGS}}%{!?debug_build: %{arch_ldadd64} %{_ldopt} ${EXTRA_LDFLAGS}}
 
+%_datadir             %{_prefix}/share
+%_defaultdocdir       %{_datadir}/doc
 %_docdir              %{_datadir}/doc
+%_localstatedir       /var
+%_rootsbindir         /sbin
+%_smfdir              %{_localstatedir}/svc
+%_manifestdir         %{_smfdir}/manifest
+%_kerneldir           /kernel
+%_platformdir         /platform
+%_devicesdir          /devices
+%_devdir              /dev
+%_initdir             %{_sysconfdir}/init.d
+%_bootdir             /boot
+%_pkgconfigdir        %{_libdir}/pkgconfig
+%_localedir           %{_datadir}/locale
+%_aclocaldir          %{_datadir}/aclocal
+%bsetup               %setup -q -c -n %name-%version%{?use_arch64:-64}
+
+#
+# Standard directory permissions.
+#
+%_kerneldir_spec      %dir %attr (0755, root, sys) %{_kerneldir}
+%_platformdir_spec    %dir %attr (0755, root, sys) %{_platformdir}
+%_devicesdir_spec     %dir %attr (0755, root, sys) %{_devicesdir}
+%_devdir_spec         %dir %attr (0755, root, sys) %{_devdir}
+%_initdir_spec        %dir %attr (0755, root, sys) %{_initdir}
+%_rootsbindir_spec    %dir %attr (0755, root, sys) %{_rootsbindir}
+%_bootdir_spec        %dir %attr (0755, root, sys) %{_bootdir}
+%_prefix_spec         %dir %attr (0755, root, sys) %{_prefix}
+%_bindir_spec         %dir %attr (0755, root, bin) %{_bindir}
+%_bindir32_spec       %{?use_arch64:%dir %attr (0755, root, bin) %{_bindir32}}
+%_sbindir_spec        %dir %attr (0755, root, bin) %{_sbindir}
+%_sbindir32_spec      %{?use_arch64:%dir %attr (0755, root, bin) %{_sbindir32}}
+%_libdir_spec         %dir %attr (0755, root, bin) %{_libdir}
+%_libdir32_spec       %{?use_arch64:%dir %attr (0755, root, bin) %{_libdir32}}
+%_pkgconfigdir_spec   %dir %attr (0755, root, other) %{_pkgconfigdir}
+%_sysconfdir_spec     %dir %attr (0755, root, sys) %{_sysconfdir}
+%_localstatedir_spec  %dir %attr (0755, root, sys) %{_localstatedir}
+%_smfdir_spec         %dir %attr (0755, root, sys) %{_smfdir}
+%_manifestdir_spec    %dir %attr (0755, root, sys) %{_manifestdir}
+%_datadir_spec        %dir %attr (0755, root, sys) %{_datadir}
+%_mandir_spec         %dir %attr (0755, root, bin) %{_mandir}
+%_aclocaldir_spec     %dir %attr (0755, root, other) %{_aclocaldir}
+%_localedir_spec      %dir %attr (0755, root, other) %{_localedir}
+%_includedir_spec     %dir %attr (0755, root, bin) %{_includedir}
+%_docdir_spec         %dir %attr (0755, root, other) %{_datadir}/doc
+%_appdir_spec         %dir %attr (0755, root, other) %{_datadir}/apps
+%_applications_spec   %dir %attr (0755, root, other) %{_datadir}/applications
+%_configdir_spec      %dir %attr (0755, root, other) %{_datadir}/config
+%_iconsdir_spec       %dir %attr (0755, root, other) %{_datadir}/icons
+%_autostart_spec      %dir %attr (0755, root, sys) %{_datadir}/autostart
+%_templatesdir_spec   %dir %attr (0755, root, sys) %{_datadir}/templates
+
+
+#
+# Useful macros to avoid postinstall script messing.
+#
+%find_info()          %{_rpmhome}/find-info.sh %{buildroot} %{_infodir} %{name}
+%install_info()       %{_rpmhome}/install-info.sh %{_infodir} %{name}
+%uninstall_info()     %{_rpmhome}/uninstall-info.sh %{_infodir} %{name}
+

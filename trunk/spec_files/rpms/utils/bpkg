@@ -1,5 +1,8 @@
 #!/bin/sh -x
 
+PKG_CONFIG_ALLOW_SYSTEM_LIBS="yes"
+export PKG_CONFIG_ALLOW_SYSTEM_LIBS
+
 if [ "$1" = "build" ]
 then
 	shift
@@ -10,6 +13,10 @@ then
 
 	if [ "$1" = "--32bit" ]
 	then
+		PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
+		PATH=/usr/gnu/bin:/usr/bin:/usr/sbin:/sbin:/usr/bin/i86:/usr/local/bin/amd64
+		export PKG_CONFIG_PATH PATH
+
 		shift
 		spec="$1"
 		RPMBUILD_PARAMS='--target=i686-pc-solaris2.11 --define "_arch i686"'
@@ -18,15 +25,28 @@ then
 
 	elif [ "$1" = "--both" ]
 	then
+		PKG_CONFIG_PATH="/usr/lib/amd64/pkgconfig:/usr/share/pkgconfig"
+		PATH=/usr/gnu/bin:/usr/bin:/usr/sbin:/sbin:/usr/gnu/bin/amd64:/usr/bin/amd64:/usr/sbin/amd64:/usr/local/bin/amd64
+		export PKG_CONFIG_PATH PATH
+
 		shift
 		spec="$1"
 		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
 		[ $? -ne 0 ] && exit 1
+
+		PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
+		PATH=/usr/gnu/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/bin/amd64
+		export PKG_CONFIG_PATH PATH
+
 		RPMBUILD_PARAMS='--target=i686-pc-solaris2.11 --define "_arch i686"'
 		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bb ${spec}"
 		[ $? -ne 0 ] && exit 1
 
 	else
+		PKG_CONFIG_PATH="/usr/lib/amd64/pkgconfig:/usr/share/pkgconfig"
+		PATH=/usr/gnu/bin:/usr/bin:/usr/sbin:/sbin:/usr/gnu/bin/amd64:/usr/bin/amd64:/usr/sbin/amd64:/usr/local/bin/amd64
+		export PKG_CONFIG_PATH PATH
+
 		spec="$1"
 		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
 		[ $? -ne 0 ] && exit 1

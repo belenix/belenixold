@@ -1,4 +1,3 @@
-%define build_l10n 1
 %define build_gcc_with_gnu_ld 0
 %define build_libstdcxx_docs 0
 %define osrev %(/usr/bin/uname -r)
@@ -341,7 +340,7 @@ done
 %if %build_l10n
 %files -n gcc-l10n
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_prefix}
+%dir %attr (0755, root, sys) %{_prefix}
 %dir %attr (0755, root, sys) %{_datadir}
 %attr (-, root, other) %{_datadir}/locale
 %endif
