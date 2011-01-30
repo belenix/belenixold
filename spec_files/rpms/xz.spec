@@ -20,13 +20,17 @@ like Windows. XZ Utils are the successor to LZMA Utils.
 Summary:        Libraries for decoding LZMA compression
 Group:          System Environment/Libraries
 License:        LGPLv2+
+%if %gcc_compiler
+Requires:       libstdc++
+Requires:       libgcc
+%endif
 
 %description    libs
 Libraries for decoding files compressed with LZMA or XZ utils.
 
 %package devel
 Summary:                 Development files for the LZMA compression algo
-Requires: %name
+Requires: %{name}-libs = %{version}-%{release}
 
 %description devel
 Development header files and documentation for the XZ utils and library package.
@@ -131,10 +135,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir_spec}
 %{_pkgconfigdir}/*
 
-%defattr (-, root, other)
 %{_datadir_spec}
 %{_docdir_spec}
-%{_docdir}/*
+%dir %{_docdir}/xz
+
+%defattr (-, root, other)
+%{_docdir}/xz/*
 
 %if %build_l10n
 %files l10n

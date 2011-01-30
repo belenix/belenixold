@@ -30,14 +30,16 @@ library.
 
 %build
 export CFLAGS="%optflags"
-export LDSHARED="$CC -shared %_ldflags"
+
 %if %build_64bit
 %if %gcc_compiler
 CFLAGS="$CFLAGS -O3 -msse2 -ftree-vectorize -flto -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-parallelize-all -ftree-loop-distribution"
+export LDSHARED="$CC -shared %_ldflags -flto"
 %endif
 %else
 %if %gcc_compiler
 CFLAGS="$CFLAGS -O3 -flto -ftree-loop-linear -floop-interchange -floop-strip-mine -floop-block -floop-parallelize-all -ftree-loop-distribution"
+export LDSHARED="$CC -shared %_ldflags -flto"
 %endif
 %endif
 
