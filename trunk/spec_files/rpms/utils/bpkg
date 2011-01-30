@@ -3,6 +3,11 @@
 PKG_CONFIG_ALLOW_SYSTEM_LIBS="yes"
 export PKG_CONFIG_ALLOW_SYSTEM_LIBS
 
+CC=${CC:-/usr/bin/gcc}
+CXX=${CXX:-/usr/bin/g++}
+
+export CC CXX
+
 if [ "$1" = "build" ]
 then
 	shift

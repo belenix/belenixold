@@ -110,7 +110,7 @@
 %optflags             %{!?cc_is_gcc: %{suncc_optflags}}%{?cc_is_gcc: %{gcc_optflags}} ${EXTRA_CFLAGS}
 %cxx_optflags         %{!?cc_is_gcc: %{suncc_cxx_optflags}}%{?cc_is_gcc: %{gcc_cxx_optflags}} ${EXTRA_CXXFLAGS}
 
-%_ldflags             %{?debug_build: %{arch_ldadd} ${EXTRA_LDFLAGS}}%{!?debug_build: %{arch_ldadd} %{_ldopt} ${EXTRA_LDFLAGS}}
+%_ldflags             %{?debug_build: %{arch_ldadd} ${EXTRA_LDFLAGS}}%{!?debug_build: %{arch_ldadd} %{_ldopt} ${EXTRA_LDFLAGS}} %{picflags}
 
 %gcc_optflags64       %{_gcc_opt_level} -m64 -fno-omit-frame-pointer %{_gcc_picflags} -pipe
 %gcc_cxx_optflags64   %{_gxx_opt_level} -m64 -fno-omit-frame-pointer %{_gcc_picflags} -pipe
@@ -125,6 +125,8 @@
 %_datadir             %{_prefix}/share
 %_defaultdocdir       %{_datadir}/doc
 %_docdir              %{_datadir}/doc
+%_gtkdocdir           %{_datadir}/gtk-doc
+%_gtkdoc_htmldir      %{_datadir}/gtk-doc/html
 %_localstatedir       /var
 %_rootsbindir         /sbin
 %_smfdir              %{_localstatedir}/svc
@@ -157,6 +159,8 @@
 %_sbindir32_spec      %{?use_arch64:%dir %attr (0755, root, bin) %{_sbindir32}}
 %_libdir_spec         %dir %attr (0755, root, bin) %{_libdir}
 %_libdir32_spec       %{?use_arch64:%dir %attr (0755, root, bin) %{_libdir32}}
+%_lib_spec            %dir %attr (0755, root, bin) %{_lib}
+%_lib32_spec          %{?use_arch64:%dir %attr (0755, root, bin) %{_lib32}}
 %_pkgconfigdir_spec   %dir %attr (0755, root, other) %{_pkgconfigdir}
 %_sysconfdir_spec     %dir %attr (0755, root, sys) %{_sysconfdir}
 %_localstatedir_spec  %dir %attr (0755, root, sys) %{_localstatedir}
@@ -168,6 +172,8 @@
 %_localedir_spec      %dir %attr (0755, root, other) %{_localedir}
 %_includedir_spec     %dir %attr (0755, root, bin) %{_includedir}
 %_docdir_spec         %dir %attr (0755, root, other) %{_datadir}/doc
+%_gtkdocdir_spec      %dir %attr (0755, root, bin) %{_gtkdocdir}
+%_gtkdoc_htmldir_spec %dir %attr (0755, root, bin) %{_gtkdoc_htmldir}
 %_appdir_spec         %dir %attr (0755, root, other) %{_datadir}/apps
 %_applications_spec   %dir %attr (0755, root, other) %{_datadir}/applications
 %_configdir_spec      %dir %attr (0755, root, other) %{_datadir}/config
@@ -177,9 +183,16 @@
 
 
 #
+# Some predefined optimization flags
+#
+%gcc_opt_sse2         -msse2 -ftree-vectorize
+%gcc_opt_graphite     -ftree-loop-linear -floop-block -floop-interchange -floop-strip-mine
+
+#
 # Useful macros to avoid postinstall script messing.
 #
 %find_info()          %{_rpmhome}/find-info.sh %{buildroot} %{_infodir} %{name}
 %install_info()       %{_rpmhome}/install-info.sh %{_infodir} %{name}
 %uninstall_info()     %{_rpmhome}/uninstall-info.sh %{_infodir} %{name}
+
 
