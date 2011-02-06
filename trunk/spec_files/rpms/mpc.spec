@@ -82,14 +82,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/*.so*
 
 %files devel
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_includedir}
 %{_includedir}/*.h
-%dir %attr (0755, root, bin) %{_infodir}
 %{_infodir}/*
 
 %changelog

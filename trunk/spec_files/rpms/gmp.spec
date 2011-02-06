@@ -33,7 +33,12 @@ you'll need to install the gmp-devel package.  You'll also need to
 install the gmp package.
 
 %prep
-%setup -q -c -n %name-%version
+%bsetup
+%if %{build_64bit}
+cp -rp %{name}-%{version} %{name}-%{version}-sse4
+%else
+cp -rp %{name}-%{version} %{name}-%{version}-sse2
+%endif
 
 %build
 CPUS=`/usr/sbin/psrinfo | grep on-line | wc -l | tr -d ' '`
@@ -41,7 +46,7 @@ if test "x$CPUS" = "x" -o $CPUS = 0; then
     CPUS=1
 fi
 
-%if %cc_is_gcc
+%if %gcc_compiler
 CFLAGS_GEN="-fno-builtin -finline-functions -std=c99 -D_REENTRANT -D__EXTENSIONS__=1 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_XOPEN_SOURCE=600 -D_XPG6 -D_POSIX_PTHREAD_SEMANTICS -D_POSIX_C_SOURCE=200112L -D__XOPEN_OR_POSIX -D_STRICT_STDC -D_STRICT_STDC__ -D_STDC_C99 -D_ISOC99_SOURCE -DNDEBUG -DPIC -fPIC -z combreloc -z redlocsym -z ignore -z rescan -z absexec -s"
 export CPPFLAGS="-fexceptions"
 
@@ -75,8 +80,8 @@ export LDFLAGS="%_ldflags -lgcc_s"
 cd gmp-%{version}
 
 %if %{build_64bit}
-export CFLAGS="-m64 -mfpmath=sse,387 -msse2 -fPIC -DPIC -mtune=opteron -O3 -fomit-frame-pointer -fno-builtin -finline-functions -D_REENTRANT -D__EXTENSIONS__=1"
-export CXXFLAGS="-m64 -mfpmath=sse,387 -msse2 -fPIC -DPIC -mtune=opteron -O2 -fno-builtin -finline-functions -D_REENTRANT -D__EXTENSIONS__=1"
+export CFLAGS="-m64 -mfpmath=sse -msse2 -ftree-vectorize -fPIC -DPIC -mtune=opteron -O3 -fomit-frame-pointer -fno-builtin -finline-functions -D_REENTRANT -D__EXTENSIONS__=1"
+export CXXFLAGS="-m64 -mfpmath=sse -msse2 -ftree-vectorize -fPIC -DPIC -mtune=opteron -O2 -fno-builtin -finline-functions -D_REENTRANT -D__EXTENSIONS__=1"
 export ABI=64
 
 cp configure configure.orig
@@ -107,6 +112,40 @@ cat configure.orig | gsed '/# PATH needs CR/a archive_cmds_need_lc=no; archive_c
             --enable-cxx --enable-mpbsd
 make -j $CPUS 
 
+%if %{build_64bit}
+cd ../%{name}-%{version}-sse4
+
+export CFLAGS="-m64 -mfpmath=sse -msse4.1 -ftree-vectorize -fPIC -DPIC -mtune=opteron -O3 -fomit-frame-pointer -fno-builtin -finline-functions -D_REENTRANT -D__EXTENSIONS__=1"
+export CXXFLAGS="-m64 -mfpmath=sse -msse4.1 -ftree-vectorize -fPIC -DPIC -mtune=opteron -O2 -fno-builtin -finline-functions -D_REENTRANT -D__EXTENSIONS__=1"
+
+./configure --prefix=%{_prefix}         \
+            --mandir=%{_mandir}         \
+            --libdir=%{_libdir}/sse4    \
+            --infodir=%{_infodir}       \
+            --libexecdir=%{_libexecdir} \
+            --sysconfdir=%{_sysconfdir} \
+            --includedir=%{_includedir}/gmp             \
+            --enable-cxx --enable-mpbsd
+make -j $CPUS
+%else
+cd ../%{name}-%{version}-sse2
+
+export CFLAGS="-fPIC -DPIC -O2 -march=pentium4 -msse2 -ftree-vectorize -fno-builtin -finline-functions -D_REENTRANT -D__EXTENSIONS__=1"
+export CXXFLAGS="-fPIC -DPIC -O2 -march=pentium4 -msse2 -ftree-vectorize -fno-builtin -finline-functions -D_REENTRANT -D__EXTENSIONS__=1"
+
+./configure --prefix=%{_prefix}         \
+            --mandir=%{_mandir}         \
+            --libdir=%{_libdir}/sse2    \
+            --infodir=%{_infodir}       \
+            --libexecdir=%{_libexecdir} \
+            --sysconfdir=%{_sysconfdir} \
+            --includedir=%{_includedir}/gmp             \
+            --enable-cxx --enable-mpbsd
+make -j $CPUS
+%endif
+cd ..
+
+
 %install
 rm -rf $RPM_BUILD_ROOT
 cd gmp-%{version}
@@ -122,11 +161,37 @@ rm -f $RPM_BUILD_ROOT%{_infodir}/dir
 mv $RPM_BUILD_ROOT/%{_includedir}/gmp.h $RPM_BUILD_ROOT/%{_includedir}/gmp/gmp-64.h
 cp gmp-mparam.h $RPM_BUILD_ROOT/%{_includedir}/gmp/gmp-mparam-64.h
 chmod 0644 $RPM_BUILD_ROOT/%{_includedir}/gmp/gmp-mparam-64.h
+
+cd build-sse2
+mkdir $RPM_BUILD_ROOT%{_libdir}/sse2
+ginstall -m 755 .libs/libgmp.so.*.* $RPM_BUILD_ROOT%{_libdir}/sse2
+/usr/bin/cp -rp@ .libs/libgmp.so.[^.]* $RPM_BUILD_ROOT%{_libdir}/sse2
+chmod 755 $RPM_BUILD_ROOT%{_libdir}/sse2/libgmp.so.[^.]*
+ginstall -m 755 .libs/libgmpxx.so.*.* $RPM_BUILD_ROOT%{_libdir}/sse2
+/usr/bin/cp -rp@ .libs/libgmpxx.so.? $RPM_BUILD_ROOT%{_libdir}/sse2
+chmod 755 $RPM_BUILD_ROOT%{_libdir}/sse2/libgmpxx.so.?
+ginstall -m 755 .libs/libmp.so.*.* $RPM_BUILD_ROOT%{_libdir}/sse2
+/usr/bin/cp -rp@ .libs/libmp.so.? $RPM_BUILD_ROOT%{_libdir}/sse2
+chmod 755 $RPM_BUILD_ROOT%{_libdir}/sse2/libmp.so.?
+cd ..
 %else
 
 mv $RPM_BUILD_ROOT/%{_includedir}/gmp.h $RPM_BUILD_ROOT/%{_includedir}/gmp/gmp-i386.h
 cp gmp-mparam.h $RPM_BUILD_ROOT/%{_includedir}/gmp/gmp-mparam-i386.h
 chmod 0644 $RPM_BUILD_ROOT/%{_includedir}/gmp/gmp-mparam-i386.h
+
+cd build-sse4
+mkdir $RPM_BUILD_ROOT%{_libdir}/sse2
+ginstall -m 755 .libs/libgmp.so.*.* $RPM_BUILD_ROOT%{_libdir}/sse2
+/usr/bin/cp -rp@ .libs/libgmp.so.[^.]* $RPM_BUILD_ROOT%{_libdir}/sse2
+chmod 755 $RPM_BUILD_ROOT%{_libdir}/sse2/libgmp.so.[^.]*
+ginstall -m 755 .libs/libgmpxx.so.*.* $RPM_BUILD_ROOT%{_libdir}/sse2
+/usr/bin/cp -rp@ .libs/libgmpxx.so.? $RPM_BUILD_ROOT%{_libdir}/sse2
+chmod 755 $RPM_BUILD_ROOT%{_libdir}/sse2/libgmpxx.so.?
+ginstall -m 755 .libs/libmp.so.*.* $RPM_BUILD_ROOT%{_libdir}/sse2
+/usr/bin/cp -rp@ .libs/libmp.so.? $RPM_BUILD_ROOT%{_libdir}/sse2
+chmod 755 $RPM_BUILD_ROOT%{_libdir}/sse2/libmp.so.?
+cd ..
 %endif
 
 cp %{SOURCE1} $RPM_BUILD_ROOT/%{_includedir}/gmp/gmp.h
@@ -136,36 +201,29 @@ chmod 0644 $RPM_BUILD_ROOT/%{_includedir}/gmp/gmp-mparam.h
 
 mv $RPM_BUILD_ROOT/%{_includedir}/mp.h $RPM_BUILD_ROOT/%{_includedir}/gmp/
 
+%find_info
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post devel
-PATH=/usr/bin:/usr/sfw/bin; export PATH
-retval=0
-for info in gmp.info gmp.info-1 gmp.info-2
-do
-  install-info --quiet --info-dir=%{_infodir} %{_infodir}/$info
-done
-exit $retval
+%install_info
 
 %preun devel
-PATH=/usr/bin:/usr/sfw/bin; export PATH
-retval=0
-for info in gmp.info gmp.info-1 gmp.info-2
-do
-  install-info --quiet --info-dir=%{_infodir} --delete %{_infodir}/$info
-done
+%uninstall_info
 
 %files
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_libdir}
 %{_libdir}/lib*.so*
-%dir %attr (0755, root, sys) %{_datadir}
+%if %{build_64bit}
+%{_libdir}/sse4/lib*.so*
+%else
+%{_libdir}/sse2/lib*.so*
+%endif
 %{_datadir}/info
 
 %files devel
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_includedir}
 %dir %attr (0755, root, bin) %{_includedir}/gmp
 %{_includedir}/gmp/*.h
 

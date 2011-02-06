@@ -109,34 +109,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr (-, root, bin)
-%{_prefix_spec}
-%{_bindir32_spec}
-%{_bindir_spec}
 %{_bindir}/*
-%{_datadir_spec}
-%{_mandir_spec}
 %{_mandir}/*
 
 %files libs
 %defattr (-, root, bin)
-%{_prefix_spec}
-%{_libdir32_spec}
-%{_libdir_spec}
 %{_libdir}/*.so*
 
 %files devel
 %defattr (-, root, bin)
-%{_prefix_spec}
-%{_includedir_spec}
 %{_includedir}/*
-
-%{_libdir32_spec}
-%{_libdir_spec}
-%{_pkgconfigdir_spec}
 %{_pkgconfigdir}/*
-
-%{_datadir_spec}
-%{_docdir_spec}
 %dir %{_docdir}/xz
 
 %defattr (-, root, other)
@@ -145,9 +128,6 @@ rm -rf $RPM_BUILD_ROOT
 %if %build_l10n
 %files l10n
 %defattr (-, root, other)
-%{_prefix_spec}
-%{_datadir_spec}
-%{_localedir_spec}
 %{_localedir}/*
 %endif
 

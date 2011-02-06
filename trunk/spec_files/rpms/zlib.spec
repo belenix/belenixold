@@ -71,17 +71,11 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files
 %defattr (0655, root, bin)
-%dir %attr(0755, root, bin) %{_lib}
 %{_lib}/*
-%dir %attr(0755, root, bin) %{_libdir}
 %{_libdir}/*
-#%dir %attr(0755, root, other) %{_pkgconfigdir}
 #%{_pkgconfigdir}/*
 
 %files devel
 %defattr (0655, root, bin)
-%dir %attr(0755, root, bin) %{_includedir}
 %{_includedir}/*
-%dir %attr(0755, root, sys) %{_datadir}
-%dir %attr(0755, root, bin) %{_mandir}
 %{_mandir}/*
