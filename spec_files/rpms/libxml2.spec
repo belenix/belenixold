@@ -1,5 +1,3 @@
-%define pyname   python2.6
-
 Name:            libxml2
 Summary:         Library providing XML and HTML support
 Version:         2.7.8
@@ -130,40 +128,22 @@ rm -fr %{buildroot}
 
 %files
 %defattr(-, root, bin)
-%{_prefix_spec}
-%{_datadir_spec}
-%{_mandir_spec}
 %{_mandir}/*
 
-%{_lib_spec}
-%{_lib32_spec}
 %{_lib}/lib*.so*
-%{_libdir32_spec}
-%{_libdir_spec}
 %{_libdir}/lib*.so*
-%{_bindir32_spec}
-%{_bindir_spec}
 %{_bindir}/xmllint
 %{_bindir}/xmlcatalog
 %{_bindir}/xml2-config
 
 %files devel
 %defattr(-, root, bin)
-%{_prefix_spec}
-%{_libdir32_spec}
-%{_libdir_spec}
-%{_includedir_spec}
 %{_includedir}/*
-%{_aclocaldir_spec}
 %{_aclocaldir}/libxml.m4
-%{_pkgconfigdir_spec}
 %{_pkgconfigdir}/libxml-2.0.pc
 
 %defattr(0755, root, bin)
 %{_libdir}/*.sh
-
-%{_datadir_spec}
-%{_docdir_spec}
 %dir %{_docdir}/libxml2-%{version}
 
 %defattr(-, root, other)
@@ -177,19 +157,12 @@ rm -fr %{buildroot}
 
 %files python
 %defattr(-, root, bin)
-%{_prefix_spec}
-%{_libdir32_spec}
-%if !%{build_64bit}
-%{_libdir_spec}
-%endif
 %dir %{_libdir32}/%{pyname}
 %dir %{_libdir32}/%{pyname}/vendor-packages
 %dir %{_libdir32}/%{pyname}/lib-dynload
 %{_libdir32}/%{pyname}/vendor-packages/*
 %{_libdir32}/%{pyname}/lib-dynload/*
 
-%{_datadir_spec}
-%{_docdir_spec}
 %dir %{_docdir}/libxml2-%{version}
 %dir %{_docdir}/libxml2-%{version}/python
 
