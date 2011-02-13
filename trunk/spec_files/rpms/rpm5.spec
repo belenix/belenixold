@@ -266,9 +266,9 @@ done
 
 (cd ${RPM_BUILD_ROOT}%{__usrlibrpm}
  cp macros macros.tmp
- cat macros.tmp | sed 's/^%_repackage_all_erasures	1/%_repackage_all_erasures	0/' > macros
+ cat macros.tmp | sed 's/^%%_repackage_all_erasures	1/%%_repackage_all_erasures	0/' > macros
  cp macros.rpmbuild macros.rpmbuild.tmp
- cat macros.rpmbuild.tmp | sed 's/^#%_binary_payload	w9.gzdio/%_binary_payload	w6.xzio/' > macros.rpmbuild
+ cat macros.rpmbuild.tmp | sed 's/^#%%_binary_payload	w9.gzdio/%%_binary_payload	w6.xzio/' > macros.rpmbuild
  rm -f macros.tmp macros.rpmbuild.tmp)
 
 mkdir -p ${RPM_BUILD_ROOT}%{__usrlibrpm}/%{_arch}-solaris2.11/
@@ -287,6 +287,15 @@ cp -rp CHANGES doc/manual/[a-z]* ${RPM_BUILD_ROOT}%{_docdir}/rpm-%{version}
 mkdir ${RPM_BUILD_ROOT}%{_libdir32}/python%{with_python_version}/vendor-packages/rpm/%{_arch64}
 mv ${RPM_BUILD_ROOT}%{_libdir32}/python%{with_python_version}/vendor-packages/rpm/*.so* \
 	${RPM_BUILD_ROOT}%{_libdir32}/python%{with_python_version}/vendor-packages/rpm/%{_arch64}
+
+%if %{build_64bit}
+mkdir -p ${RPM_BUILD_ROOT}%{_bindir32}
+(cd ${RPM_BUILD_ROOT}%{_bindir}
+ for f in *
+ do
+   (cd ..; ln -s %{_arch64}/${f})
+ done)
+%endif
 
 %find_lang rpm
 
@@ -341,6 +350,11 @@ rm -rf $RPM_BUILD_ROOT
 %rpmattr	%{_bindir}/rpm
 %rpmattr	%{_bindir}/rpmconstant
 
+%if %{build_64bit}
+%{_bindir32}/rpm
+%{_bindir32}/rpmconstant
+%endif
+
 %rpmattr %dir	%{__rpmhome}
 %rpmattr	%{__rpmhome}/rpm.*
 %rpmattr	%{__rpmhome}/tgpg
@@ -382,6 +396,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0666, root, other) %{_docdir}/rpm-%{version}/*
 %rpmattr	%{_bindir}/rpm2cpio
 %rpmattr	%{_bindir}/gendiff
+
+%if %{build_64bit}
+%{_bindir32}/rpm2cpio
+%{_bindir32}/gendiff
+%endif
+
 %dir			/etc/rpm
 %attr(0755, root, bin)	%dir /var/lib/rpm
 %rpmdbattr		/var/lib/rpm/*
@@ -448,6 +468,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files build
 %rpmattr	%{_bindir}/rpmbuild
+
+%if %{build_64bit}
+%{_bindir32}/rpmbuild
+%endif
 
 %rpmattr	%{__rpmhome}/brp-*
 %rpmattr	%{__rpmhome}/check-files
