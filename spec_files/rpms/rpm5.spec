@@ -2,8 +2,8 @@
 %define	with_apidocs		0%{nil}
 %define popt_version            1.16
 
-%global _usrlibrpm /usr/lib/rpm
-%global _rpmhome /usr/lib/rpm
+%global __usrlibrpm /usr/lib/rpm
+%global __rpmhome /usr/lib/rpm
 
 %define	__prefix	%{?_prefix}%{!?_prefix:/usr}
 %{?!_lib: %define _lib lib}
@@ -180,8 +180,8 @@ cd rpm-%{version}
         --with-xz \
         --with-zlib \
         --with-python=%{with_python_version} \
-        --with-python-inc-dir=%{_includedir}/python2.6 \
-        --with-python-lib-dir=%{_libdir32}/python2.6 \
+        --with-python-inc-dir=%{_includedir}/python%{with_python_version} \
+        --with-python-lib-dir=%{_libdir32}/python%{with_python_version}/vendor-packages \
         --without-pythonembed \
         --without-perl --without-perlembed \
         --with-db --with-dbsql --without-db-tools-integrated --without-sqlite \
@@ -264,20 +264,29 @@ do
     touch $RPM_BUILD_ROOT/var/lib/rpm/$dbi
 done
 
-(cd ${RPM_BUILD_ROOTT}%{_usrlibrpm}
+(cd ${RPM_BUILD_ROOT}%{__usrlibrpm}
  cp macros macros.tmp
  cat macros.tmp | sed 's/^%_repackage_all_erasures	1/%_repackage_all_erasures	0/' > macros
  cp macros.rpmbuild macros.rpmbuild.tmp
  cat macros.rpmbuild.tmp | sed 's/^#%_binary_payload	w9.gzdio/%_binary_payload	w6.xzio/' > macros.rpmbuild
  rm -f macros.tmp macros.rpmbuild.tmp)
 
-mkdir -p %{_usrlibrpm}/%{_arch}-solaris2.11/
-cp %{SOURCE3} %{_usrlibrpm}/%{_arch}-solaris2.11/macros
-cp %{SOURCE4} %{_usrlibrpm}
-cp %{SOURCE5} %{_usrlibrpm}
-cp %{SOURCE6} %{_usrlibrpm}
+mkdir -p ${RPM_BUILD_ROOT}%{__usrlibrpm}/%{_arch}-solaris2.11/
+cp %{SOURCE3} ${RPM_BUILD_ROOT}%{__usrlibrpm}/%{_arch}-solaris2.11/macros
+cp %{SOURCE4} ${RPM_BUILD_ROOT}%{__usrlibrpm}
+cp %{SOURCE5} ${RPM_BUILD_ROOT}%{__usrlibrpm}
+cp %{SOURCE6} ${RPM_BUILD_ROOT}%{__usrlibrpm}
 
-chmod a+x %{_usrlibrpm}/find-info.sh %{_usrlibrpm}/install-info.sh %{_usrlibrpm}/drvtestadd
+chmod a+x ${RPM_BUILD_ROOT}%{__usrlibrpm}/find-info.sh \
+	${RPM_BUILD_ROOT}%{__usrlibrpm}/install-info.sh \
+	${RPM_BUILD_ROOT}%{__usrlibrpm}/drvtestadd
+
+mkdir -p ${RPM_BUILD_ROOT}%{_docdir}/rpm-%{version}
+cp -rp CHANGES doc/manual/[a-z]* ${RPM_BUILD_ROOT}%{_docdir}/rpm-%{version}
+
+mkdir ${RPM_BUILD_ROOT}%{_libdir32}/python%{with_python_version}/vendor-packages/rpm/%{_arch64}
+mv ${RPM_BUILD_ROOT}%{_libdir32}/python%{with_python_version}/vendor-packages/rpm/*.so* \
+	${RPM_BUILD_ROOT}%{_libdir32}/python%{with_python_version}/vendor-packages/rpm/%{_arch64}
 
 %find_lang rpm
 
@@ -288,7 +297,7 @@ gzip -9n apidocs/man/man*/* || :
 # Get rid of unpackaged files
 { cd $RPM_BUILD_ROOT
 
-  rm -f .%{_rpmhome}/{Specfile.pm,cpanflute,cpanflute2,rpmdiff,rpmdiff.cgi,sql.prov,sql.req,tcl.req,trpm}
+  rm -f .%{__rpmhome}/{Specfile.pm,cpanflute,cpanflute2,rpmdiff,rpmdiff.cgi,sql.prov,sql.req,tcl.req,trpm}
 
   rm -f .%{_mandir}/man8/rpmcache.8*
   rm -f .%{_mandir}/man8/rpmgraph.8*
@@ -316,9 +325,10 @@ gzip -9n apidocs/man/man*/* || :
   rm -rf .%{_includedir}/lzma*
   rm -f .%{_mandir}/man1/lz*.1
   rm -f .%{_libdir}/pkgconfig/liblzma*
+  rm -f .%{_libdir}/*.la
 
-  rm -f .%{_libdir}/python%{with_python_version}/site-packages/*.{a,la}
-  rm -f .%{_libdir}/python%{with_python_version}/site-packages/rpm/*.{a,la}
+  rm -f .%{_libdir32}/python%{with_python_version}/vendor-packages/*.{a,la}
+  rm -f .%{_libdir32}/python%{with_python_version}/vendor-packages/rpm/*.{a,la}
 }
 
 %clean
@@ -328,44 +338,48 @@ rm -rf $RPM_BUILD_ROOT
 %define	rpmdbattr %attr(0644, root, bin) %verify(not md5 size mtime) %ghost %config(missingok,noreplace)
 
 %files
-%pubkey pubkeys/JBJ-GPG-KEY
-
 %rpmattr	%{_bindir}/rpm
 %rpmattr	%{_bindir}/rpmconstant
 
-%rpmattr %dir	%{_rpmhome}
-%rpmattr	%{_rpmhome}/rpm.*
-%rpmattr	%{_rpmhome}/tgpg
-%attr(0644, root, bin)	%{_rpmhome}/macros
-%attr(0644, root, bin)	%{_rpmhome}/rpmpopt
+%rpmattr %dir	%{__rpmhome}
+%rpmattr	%{__rpmhome}/rpm.*
+%rpmattr	%{__rpmhome}/tgpg
+%attr(0644, root, bin)	%{__rpmhome}/macros
+%attr(0644, root, bin)	%{__rpmhome}/rpmpopt
+%rpmattr %dir    %{__rpmhome}/%{_arch}-solaris2.11
+%attr(0644, root, bin)  %{__rpmhome}/%{_arch}-solaris2.11/macros
 
-%rpmattr	%{_rpmhome}/rpmdb_loadcvt
-###%rpmattr	%{_rpmhome}/magic
-###%rpmattr	%{_rpmhome}/magic.mgc
-###%rpmattr	%{_rpmhome}/magic.mime
-###%rpmattr	%{_rpmhome}/magic.mime.mgc
-%rpmattr	%{_rpmhome}/rpm2cpio
-%rpmattr	%{_rpmhome}/vcheck
+%rpmattr	%{__rpmhome}/rpmdb_loadcvt
+###%rpmattr	%{__rpmhome}/magic
+###%rpmattr	%{__rpmhome}/magic.mgc
+###%rpmattr	%{__rpmhome}/magic.mime
+###%rpmattr	%{__rpmhome}/magic.mime.mgc
+%rpmattr	%{__rpmhome}/rpm2cpio
+%rpmattr	%{__rpmhome}/vcheck
 
-%rpmattr	%{_rpmhome}/helpers
+%rpmattr	%{__rpmhome}/helpers
 
-%rpmattr	%{_rpmhome}/qf
+%rpmattr	%{__rpmhome}/qf
 
-%rpmattr	%{_rpmhome}/cpuinfo.yaml
+%rpmattr	%{__rpmhome}/cpuinfo.yaml
 
-%rpmattr %dir	%{_rpmhome}/bin
-###%rpmattr	%{_rpmhome}/bin/db_*
-###%rpmattr	%{_rpmhome}/bin/grep
-%rpmattr	%{_rpmhome}/bin/mtree
-%rpmattr	%{_rpmhome}/bin/rpmkey
-%rpmattr	%{_rpmhome}/bin/rpmrepo
-%rpmattr	%{_rpmhome}/bin/rpmspecdump
-%rpmattr	%{_rpmhome}/bin/wget
+%rpmattr %dir	%{__rpmhome}/bin
+###%rpmattr	%{__rpmhome}/bin/db_*
+###%rpmattr	%{__rpmhome}/bin/grep
+%rpmattr	%{__rpmhome}/bin/mtree
+%rpmattr	%{__rpmhome}/bin/rpmrepo
+%rpmattr	%{__rpmhome}/bin/rpmspecdump
+%rpmattr	%{__rpmhome}/bin/wget
+%rpmattr	%{__rpmhome}/drvtestadd
+%rpmattr	%{__rpmhome}/find-info.sh
+%rpmattr	%{__rpmhome}/install-info.sh
+%rpmattr	%{__rpmhome}/dbconvert.sh
 
-%rpmattr %dir	%{_rpmhome}/lib
+%rpmattr %dir	%{__rpmhome}/lib
 
-%files common -f rpm.lang
-%doc CHANGES doc/manual/[a-z]*
+%files common -f rpm-%{version}/rpm.lang
+%dir %rpmattr	%{_docdir}/rpm-%{version}
+%attr(0666, root, other) %{_docdir}/rpm-%{version}/*
 %rpmattr	%{_bindir}/rpm2cpio
 %rpmattr	%{_bindir}/gendiff
 %dir			/etc/rpm
@@ -373,39 +387,8 @@ rm -rf $RPM_BUILD_ROOT
 %rpmdbattr		/var/lib/rpm/*
 %attr(0755, root, bin)	%dir /var/spool/repackage
 
-%attr(0755, root, bin)	%dir %{_usrlibrpm}
-%ifarch i386 i486 i586 i686 athlon pentium3 pentium4 x86_64
-%attr(-, root, bin)		%{_usrlibrpm}/i[3456]86*
-%attr(-, root, bin)		%{_usrlibrpm}/athlon*
-%attr(-, root, bin)		%{_usrlibrpm}/pentium*
-%attr(-, root, bin)		%{_usrlibrpm}/x86_64*
-%endif
-%ifarch alpha alphaev5 alphaev56 alphapca56 alphaev6 alphaev67
-%attr(-, root, bin)		%{_usrlibrpm}/alpha*
-%endif
-%ifarch sparc sparcv8 sparcv9 sparc64
-%attr(-, root, bin)		%{_usrlibrpm}/sparc*
-%endif
-%ifarch ia64
-%attr(-, root, bin)		%{_usrlibrpm}/ia64*
-%endif
-%ifarch powerpc ppc ppciseries ppcpseries ppcmac ppc64
-%attr(-, root, bin)		%{_usrlibrpm}/ppc*
-%endif
-%ifarch s390 s390x
-%attr(-, root, bin)		%{_usrlibrpm}/s390*
-%endif
-%ifarch armv3l armv4b armv4l
-%attr(-, root, bin)		%{_usrlibrpm}/armv[34][lb]*
-%endif
-%ifarch armv5teb armv5tel
-%attr(-, root, bin)		%{_usrlibrpm}/armv[345]*
-%endif
-%ifarch mips mipsel
-%attr(-, root, bin)		%{_usrlibrpm}/mips*
-%endif
-
-%attr(-, root, bin)		%{_usrlibrpm}/noarch*
+%attr(0755, root, bin)	%dir %{__usrlibrpm}
+#%attr(-, root, bin)		%{__usrlibrpm}/noarch*
 
 %dir %{__prefix}/src/rpm
 %dir %{__prefix}/src/rpm/BUILD
@@ -458,121 +441,120 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/librpmmisc-5.3.so
 %{_libdir}/librpmbuild-5.3.so
 
-###%{_rpmhome}/lib/libxar.so.*
-###%{_rpmhome}/lib/libjs.so.*
-###%{_rpmhome}/lib/librpmjsm.so.*
-###%{_rpmhome}/lib/rpmjsm.so
+###%{__rpmhome}/lib/libxar.so.*
+###%{__rpmhome}/lib/libjs.so.*
+###%{__rpmhome}/lib/librpmjsm.so.*
+###%{__rpmhome}/lib/rpmjsm.so
 
 %files build
 %rpmattr	%{_bindir}/rpmbuild
 
-%rpmattr	%{_rpmhome}/brp-*
-%rpmattr	%{_rpmhome}/check-files
-%rpmattr	%{_rpmhome}/cross-build
-%rpmattr	%{_rpmhome}/find-debuginfo.sh
-%rpmattr	%{_rpmhome}/find-lang.sh
-%rpmattr	%{_rpmhome}/find-prov.pl
-%rpmattr	%{_rpmhome}/find-provides.perl
-%rpmattr	%{_rpmhome}/find-req.pl
-%rpmattr	%{_rpmhome}/find-requires.perl
-%rpmattr	%{_rpmhome}/getpo.sh
-%rpmattr	%{_rpmhome}/http.req
-%rpmattr	%{_rpmhome}/javadeps.sh
-%rpmattr	%{_rpmhome}/mono-find-provides
-%rpmattr	%{_rpmhome}/mono-find-requires
+%rpmattr	%{__rpmhome}/brp-*
+%rpmattr	%{__rpmhome}/check-files
+%rpmattr	%{__rpmhome}/cross-build
+%rpmattr	%{__rpmhome}/find-debuginfo.sh
+%rpmattr	%{__rpmhome}/find-lang.sh
+%rpmattr	%{__rpmhome}/find-prov.pl
+%rpmattr	%{__rpmhome}/find-provides.perl
+%rpmattr	%{__rpmhome}/find-req.pl
+%rpmattr	%{__rpmhome}/find-requires.perl
+%rpmattr	%{__rpmhome}/getpo.sh
+%rpmattr	%{__rpmhome}/http.req
+%rpmattr	%{__rpmhome}/javadeps.sh
+%rpmattr	%{__rpmhome}/mono-find-provides
+%rpmattr	%{__rpmhome}/mono-find-requires
 
-%rpmattr	%{_rpmhome}/executabledeps.sh
-%rpmattr	%{_rpmhome}/libtooldeps.sh
-%rpmattr	%{_rpmhome}/osgideps.pl
-%rpmattr	%{_rpmhome}/perldeps.pl
-%rpmattr	%{_rpmhome}/perl.prov
-%rpmattr	%{_rpmhome}/perl.req
-%rpmattr	%{_rpmhome}/php.prov
-%rpmattr	%{_rpmhome}/php.req
-%rpmattr	%{_rpmhome}/pkgconfigdeps.sh
-%rpmattr	%{_rpmhome}/pythondeps.sh
+%rpmattr	%{__rpmhome}/executabledeps.sh
+%rpmattr	%{__rpmhome}/libtooldeps.sh
+%rpmattr	%{__rpmhome}/osgideps.pl
+%rpmattr	%{__rpmhome}/perldeps.pl
+%rpmattr	%{__rpmhome}/perl.prov
+%rpmattr	%{__rpmhome}/perl.req
+%rpmattr	%{__rpmhome}/php.prov
+%rpmattr	%{__rpmhome}/php.req
+%rpmattr	%{__rpmhome}/pkgconfigdeps.sh
+%rpmattr	%{__rpmhome}/pythondeps.sh
 
-%rpmattr	%{_rpmhome}/gem_helper.rb
+%rpmattr	%{__rpmhome}/gem_helper.rb
 
-%rpmattr	%{_rpmhome}/bin/debugedit
-%rpmattr	%{_rpmhome}/bin/rpmcache
-%rpmattr	%{_rpmhome}/bin/rpmcmp
-%rpmattr	%{_rpmhome}/bin/rpmdeps
-%rpmattr	%{_rpmhome}/bin/rpmdigest
-%rpmattr	%{_rpmhome}/bin/abi-compliance-checker.pl
-%rpmattr	%{_rpmhome}/bin/api-sanity-autotest.pl
-%rpmattr	%{_rpmhome}/bin/chroot
-%rpmattr	%{_rpmhome}/bin/cp
-%rpmattr	%{_rpmhome}/bin/dbsql
-%rpmattr	%{_rpmhome}/bin/find
-%rpmattr	%{_rpmhome}/bin/install-sh
-%rpmattr	%{_rpmhome}/bin/lua
-%rpmattr	%{_rpmhome}/bin/luac
-%rpmattr	%{_rpmhome}/bin/mkinstalldirs
-%rpmattr	%{_rpmhome}/bin/rpmlua
-%rpmattr	%{_rpmhome}/bin/rpmluac
-%rpmattr	%{_rpmhome}/bin/sqlite3
+#%rpmattr	%{__rpmhome}/bin/debugedit
+%rpmattr	%{__rpmhome}/bin/rpmcache
+%rpmattr	%{__rpmhome}/bin/rpmcmp
+%rpmattr	%{__rpmhome}/bin/rpmdeps
+%rpmattr	%{__rpmhome}/bin/rpmdigest
+%rpmattr	%{__rpmhome}/bin/abi-compliance-checker.pl
+%rpmattr	%{__rpmhome}/bin/api-sanity-autotest.pl
+%rpmattr	%{__rpmhome}/bin/chroot
+%rpmattr	%{__rpmhome}/bin/cp
+%rpmattr	%{__rpmhome}/bin/dbsql
+%rpmattr	%{__rpmhome}/bin/find
+%rpmattr	%{__rpmhome}/bin/install-sh
+%rpmattr	%{__rpmhome}/bin/lua
+%rpmattr	%{__rpmhome}/bin/luac
+%rpmattr	%{__rpmhome}/bin/mkinstalldirs
+%rpmattr	%{__rpmhome}/bin/rpmlua
+%rpmattr	%{__rpmhome}/bin/rpmluac
+%rpmattr	%{__rpmhome}/bin/sqlite3
 
-%rpmattr	%{_rpmhome}/lib/liblua.a
-%rpmattr	%{_rpmhome}/lib/liblua.la
+%rpmattr	%{__rpmhome}/lib/liblua.a
+%rpmattr	%{__rpmhome}/lib/liblua.la
 
-%rpmattr %dir	%{_rpmhome}/macros.d
-%rpmattr	%{_rpmhome}/macros.d/cmake
-%rpmattr	%{_rpmhome}/macros.d/java
-%rpmattr	%{_rpmhome}/macros.d/libtool
-%rpmattr	%{_rpmhome}/macros.d/mandriva
-%rpmattr	%{_rpmhome}/macros.d/mono
-%rpmattr	%{_rpmhome}/macros.d/perl
-%rpmattr	%{_rpmhome}/macros.d/php
-%rpmattr	%{_rpmhome}/macros.d/pkgconfig
-%rpmattr	%{_rpmhome}/macros.d/python
-%rpmattr	%{_rpmhome}/macros.d/ruby
-%rpmattr	%{_rpmhome}/macros.d/selinux
-%rpmattr	%{_rpmhome}/macros.d/tcl
-%rpmattr	%{_rpmhome}/macros.rpmbuild
+%rpmattr %dir	%{__rpmhome}/macros.d
+%rpmattr	%{__rpmhome}/macros.d/cmake
+%rpmattr	%{__rpmhome}/macros.d/java
+%rpmattr	%{__rpmhome}/macros.d/libtool
+%rpmattr	%{__rpmhome}/macros.d/mandriva
+%rpmattr	%{__rpmhome}/macros.d/mono
+%rpmattr	%{__rpmhome}/macros.d/perl
+%rpmattr	%{__rpmhome}/macros.d/php
+%rpmattr	%{__rpmhome}/macros.d/pkgconfig
+%rpmattr	%{__rpmhome}/macros.d/python
+%rpmattr	%{__rpmhome}/macros.d/ruby
+%rpmattr	%{__rpmhome}/macros.d/selinux
+%rpmattr	%{__rpmhome}/macros.d/tcl
+%rpmattr	%{__rpmhome}/macros.rpmbuild
 
-#%rpmattr	%{_rpmhome}/symclash.*
-%rpmattr	%{_rpmhome}/u_pkg.sh
-%rpmattr	%{_rpmhome}/vpkg-provides.sh
-%rpmattr	%{_rpmhome}/vpkg-provides2.sh
+#%rpmattr	%{__rpmhome}/symclash.*
+%rpmattr	%{__rpmhome}/u_pkg.sh
+%rpmattr	%{__rpmhome}/vpkg-provides.sh
+%rpmattr	%{__rpmhome}/vpkg-provides2.sh
 
 %files python
-%{_libdir}/python%{with_python_version}/site-packages/rpm
+%defattr (-, root, bin)
+%{_libdir32}/python%{with_python_version}/vendor-packages/rpm
 
 %files devel
+%defattr (-, root, bin)
 %if %{with_apidocs}
 %doc 
 %endif
 %{_includedir}/rpm
 %{_libdir}/librpm.a
-%{_libdir}/librpm.la
 %{_libdir}/librpm.so
 %{_libdir}/librpmconstant.a
-%{_libdir}/librpmconstant.la
 %{_libdir}/librpmconstant.so
 %{_libdir}/librpmdb.a
-%{_libdir}/librpmdb.la
 %{_libdir}/librpmdb.so
 %{_libdir}/librpmio.a
-%{_libdir}/librpmio.la
 %{_libdir}/librpmio.so
 %{_libdir}/librpmmisc.a
-%{_libdir}/librpmmisc.la
 %{_libdir}/librpmmisc.so
 %{_libdir}/librpmbuild.a
-%{_libdir}/librpmbuild.la
 %{_libdir}/librpmbuild.so
 %{_libdir}/pkgconfig/rpm.pc
 
-###%{_rpmhome}/lib/libxar.a
-###%{_rpmhome}/lib/libxar.la
-###%{_rpmhome}/lib/libxar.so
-###%{_rpmhome}/lib/libjs.a
-###%{_rpmhome}/lib/libjs.la
-###%{_rpmhome}/lib/libjs.so
-###%{_rpmhome}/lib/librpmjsm.a
-###%{_rpmhome}/lib/librpmjsm.la
-###%{_rpmhome}/lib/librpmjsm.so
+#%{_libdir}/librpm.la
+#%{_libdir}/librpmconstant.la
+#%{_libdir}/librpmdb.la
+#%{_libdir}/librpmio.la
+#%{_libdir}/librpmmisc.la
+#%{_libdir}/librpmbuild.la
+###%{__rpmhome}/lib/libjs.a
+###%{__rpmhome}/lib/libjs.la
+###%{__rpmhome}/lib/libjs.so
+###%{__rpmhome}/lib/librpmjsm.a
+###%{__rpmhome}/lib/librpmjsm.la
+###%{__rpmhome}/lib/librpmjsm.so
 
 %changelog
 * Sat Oct 23 2010 Jeff Johnson <jbj@rpm5.org> - 5.3.5-0.1

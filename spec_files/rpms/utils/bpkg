@@ -8,7 +8,18 @@ CXX=${CXX:-/usr/bin/g++}
 
 export CC CXX
 
+process=0
+
 if [ "$1" = "build" ]
+then
+	process=1
+fi
+if [ "$1" = "build-short-circuit" ]
+then
+	process=2
+fi
+
+if [ $process -gt 0 ]
 then
 	shift
 	RPMBUILD_PARAMS='--define "use_arch64=1"'
@@ -25,9 +36,16 @@ then
 		shift
 		spec="$1"
 		RPMBUILD_PARAMS='--target=i686-pc-solaris2.11 --define "_arch i686"'
-		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
-		[ $? -ne 0 ] && exit 1
-
+		if [ $process -gt 1 ]
+		then
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bi --short-circuit ${spec}"
+			[ $? -ne 0 ] && exit 1
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bb --short-circuit ${spec}"
+			[ $? -ne 0 ] && exit 1
+		else
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
+			[ $? -ne 0 ] && exit 1
+		fi
 	elif [ "$1" = "--both" ]
 	then
 		PKG_CONFIG_PATH="/usr/lib/amd64/pkgconfig:/usr/share/pkgconfig"
@@ -36,16 +54,32 @@ then
 
 		shift
 		spec="$1"
-		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
-		[ $? -ne 0 ] && exit 1
+		if [ $process -gt 1 ]
+		then
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bi --short-circuit ${spec}"
+			[ $? -ne 0 ] && exit 1
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bb --short-circuit ${spec}"
+			[ $? -ne 0 ] && exit 1
+		else
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
+			[ $? -ne 0 ] && exit 1
+		fi
 
 		PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
 		PATH=/usr/gnu/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/bin/amd64
 		export PKG_CONFIG_PATH PATH
 
 		RPMBUILD_PARAMS='--target=i686-pc-solaris2.11 --define "_arch i686"'
-		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bb ${spec}"
-		[ $? -ne 0 ] && exit 1
+		if [ $process -gt 1 ]
+		then
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bi --short-circuit ${spec}"
+			[ $? -ne 0 ] && exit 1
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bb --short-circuit ${spec}"
+			[ $? -ne 0 ] && exit 1
+		else
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bb ${spec}"
+			[ $? -ne 0 ] && exit 1
+		fi
 
 	else
 		PKG_CONFIG_PATH="/usr/lib/amd64/pkgconfig:/usr/share/pkgconfig"
@@ -53,8 +87,16 @@ then
 		export PKG_CONFIG_PATH PATH
 
 		spec="$1"
-		eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
-		[ $? -ne 0 ] && exit 1
+		if [ $process -gt 1 ]
+		then
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bi --short-circuit ${spec}"
+			[ $? -ne 0 ] && exit 1
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -bb --short-circuit ${spec}"
+			[ $? -ne 0 ] && exit 1
+		else
+			eval "rpmbuild ${RPMBUILD_PARAMS} ${CC_IS_GCC} -ba ${spec}"
+			[ $? -ne 0 ] && exit 1
+		fi
 	fi
 fi
 
