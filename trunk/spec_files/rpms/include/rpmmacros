@@ -195,4 +195,4 @@
 %install_info()       %{_rpmhome}/install-info.sh %{_infodir} %{name}
 %uninstall_info()     %{_rpmhome}/uninstall-info.sh %{_infodir} %{name}
 
-
+%pyname   python2.6

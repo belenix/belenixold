@@ -1,0 +1,15 @@
+--- rpm-5.3.6/lib/transaction.c.orig	2011-01-23 19:17:41.773362033 +0530
++++ rpm-5.3.6/lib/transaction.c	2011-02-06 23:58:06.566955379 +0530
+@@ -1512,6 +1512,12 @@
+ 	xx = Chdir("/");
+ 	/*@-modobserver@*/
+ 	if (rootDir != NULL && strcmp(rootDir, "/") && *rootDir == '/') {
++#if defined(__sun)
++            /*
++             * Set standard alternate root path on Solaris platform.
++             */
++            dosetenv("RPM_INSTALL_ROOT", rootDir, 1);
++#endif
+ 	    if (openall_before_chroot)
+ 		xx = rpmdbOpenAll(rpmtsGetRdb(ts));
+ 	    xx = Chroot(rootDir);
