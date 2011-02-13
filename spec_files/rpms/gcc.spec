@@ -225,6 +225,7 @@ export LD_OPTIONS="%ld_options"
 
 cd build
 gmake install DESTDIR=$RPM_BUILD_ROOT
+BDIR=`pwd`
 
 cd $RPM_BUILD_ROOT
 %patch1 -p0
@@ -233,14 +234,20 @@ cd $RPM_BUILD_ROOT%{_prefix}
 ln -s share/man man
 
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-rm -f $RPM_BUILD_ROOT%{_libdir32}/libiberty*
-rm -f $RPM_BUILD_ROOT%{_libdir64}/libiberty*
-rm -f $RPM_BUILD_ROOT%{_libdir32}/libssp*
-rm -f $RPM_BUILD_ROOT%{_libdir64}/libssp*
-rm -f $RPM_BUILD_ROOT%{_libdir32}/libsupc*
-rm -f $RPM_BUILD_ROOT%{_libdir64}/libsupc*
+rm -f $RPM_BUILD_ROOT%{_libdir32}/libssp.so*
+rm -f $RPM_BUILD_ROOT%{_libdir64}/libssp.so*
 rm -f $RPM_BUILD_ROOT%{_libdir32}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir64}/*.la
+
+mv $RPM_BUILD_ROOT%{_libdir32}/*.a  $RPM_BUILD_ROOT%{_libdir32}/gcc/i386-pc-solaris2.11/%{version}
+mv $RPM_BUILD_ROOT%{_libdir64}/*.a  $RPM_BUILD_ROOT%{_libdir32}/gcc/i386-pc-solaris2.11/%{version}/%{_arch64}
+
+(cd $RPM_BUILD_ROOT%{_libdir32}/gcc/i386-pc-solaris2.11/%{version}
+ rm -f libssp_nonshared.a
+ ar cr libssp_nonshared.a ${BDIR}/i386-pc-solaris2.11/libssp/.libs/*.o
+ ln -s libssp_nonshared.a libssp.a
+ cd %{_arch64}
+ ln -s libssp_nonshared.a libssp.a)
 
 %if %build_l10n
 %else
