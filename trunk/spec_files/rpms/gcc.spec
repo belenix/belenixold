@@ -275,66 +275,41 @@ done
 
 %files 
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_prefix}
 %{_prefix}/man
-%dir %attr (0755, root, bin) %{_bindir32}
 %{_bindir32}/*
-%dir %attr (0755, root, bin) %{_libdir32}
 %{_libdir32}/gcc
-%dir %attr (0755, root, bin) %{_libexecdir32}
 %{_libexecdir32}/gcc
-%dir %attr (0755, root, sys) %{_datadir}
-%dir %attr (0755, root, bin) %{_mandir}
-%dir %attr (0755, root, bin) %{_mandir}/man1
 %{_mandir}/man1/*.1
-%dir %attr (0755, root, bin) %{_mandir}/man7
 %{_mandir}/man7/*.7
-%dir %attr(0755, root, bin) %{_infodir}
 %{_infodir}/*
 %defattr (-, root, bin)
-%{_includedir}
+%{_includedir}/*
 
 %files -n libgcc
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_prefix}
-%dir %attr (0755, root, bin) %{_libdir32}
 %{_libdir32}/libgcc_s*
-%dir %attr (0755, root, bin) %{_libdir64}
 %{_libdir64}/libgcc_s*
 
 %files -n libstdc++
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_prefix}
-%dir %attr (0755, root, bin) %{_libdir32}
 %{_libdir32}/libstdc++*
-%dir %attr (0755, root, bin) %{_libdir64}
 %{_libdir64}/libstdc++*
-%dir %attr (0755, root, sys) %{_datadir}
 %dir %attr (0755, root, bin) %{_datadir}/gcc-%{version}
 %{_datadir}/gcc-%{version}/*
 
 %files -n libobjc
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_prefix}
-%dir %attr (0755, root, bin) %{_libdir32}
 %{_libdir32}/libobjc*
-%dir %attr (0755, root, bin) %{_libdir64}
 %{_libdir64}/libobjc*
 
 %files -n libgfortran
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_prefix}
-%dir %attr (0755, root, bin) %{_libdir32}
 %{_libdir32}/libgfortran*
-%dir %attr (0755, root, bin) %{_libdir64}
 %{_libdir64}/libgfortran*
 
 %files -n libgomp
 %defattr (-, root, bin)
-%dir %attr (0755, root, bin) %{_prefix}
-%dir %attr (0755, root, bin) %{_libdir32}
 %{_libdir32}/libgomp*
-%dir %attr (0755, root, bin) %{_libdir64}
 %{_libdir64}/libgomp*
 
 %if %{build_libstdcxx_docs}
@@ -347,9 +322,7 @@ done
 %if %build_l10n
 %files -n gcc-l10n
 %defattr (-, root, bin)
-%dir %attr (0755, root, sys) %{_prefix}
-%dir %attr (0755, root, sys) %{_datadir}
-%attr (-, root, other) %{_datadir}/locale
+%{_datadir}/locale/*
 %endif
 
 %changelog

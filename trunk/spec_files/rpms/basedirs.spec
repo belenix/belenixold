@@ -149,6 +149,7 @@ mkdir -p usr/lib/class/TS
 mkdir -p usr/lib/crypto
 mkdir -p usr/lib/devfsadm
 mkdir -p usr/lib/devfsadm/linkmod
+mkdir -p usr/libexec
 mkdir -p usr/lib/fs
 mkdir -p usr/lib/fs/autofs
 mkdir -p usr/lib/fs/autofs/%{_arch64}
@@ -263,6 +264,7 @@ mkdir -p usr/share/lib/zoneinfo/US
 mkdir -p usr/share/lib/zoneinfo/src
 mkdir -p usr/share/lib/zoneinfo/tab
 mkdir -p usr/share/src
+mkdir -p usr/share/locale
 mkdir -p usr/xpg4
 mkdir -p usr/xpg4/bin
 mkdir -p var
@@ -500,6 +502,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %dir %attr(0755, root, bin) /usr/lib/crypto
 %dir %attr(0755, root, sys) /usr/lib/devfsadm
 %dir %attr(0755, root, sys) /usr/lib/devfsadm/linkmod
+%dir %attr(0755, root, bin) /usr/libexec
 %dir %attr(0755, root, sys) /usr/lib/fs
 %dir %attr(0755, root, sys) /usr/lib/fs/autofs
 %dir %attr(0755, root, sys) /usr/lib/fs/autofs/%{_arch64}
@@ -614,6 +617,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %dir %attr(0755, root, bin) /usr/share/lib/zoneinfo/src
 %dir %attr(0755, root, bin) /usr/share/lib/zoneinfo/tab
 %dir %attr(0755, root, sys) /usr/share/src
+%dir %attr(0755, root, other) /usr/share/locale
 %dir %attr(0755, root, bin) /usr/xpg4
 %dir %attr(0755, root, bin) /usr/xpg4/bin
 %dir %attr(0755, root, sys) /var

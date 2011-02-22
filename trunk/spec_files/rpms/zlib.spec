@@ -78,4 +78,4 @@ rm -rf ${RPM_BUILD_ROOT}
 %files devel
 %defattr (0655, root, bin)
 %{_includedir}/*
-%{_mandir}/*
+%{_mandir}/man3/*

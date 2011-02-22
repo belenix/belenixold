@@ -50,17 +50,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr (-, root, bin)
-%{_bindir32_spec}
-%{_bindir_spec}
 %{_bindir}/*
-%{_datadir_spec}
-%{_mandir_spec}
-%{_mandir}/*
-%{_docdir_spec}
+%{_mandir}/man1/*
 %{_docdir}/*
 
 %defattr (-, root, other)
-%{_aclocaldir_spec}
 %{_aclocaldir}/*
 
 %changelog

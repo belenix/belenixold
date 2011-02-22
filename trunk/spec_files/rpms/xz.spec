@@ -110,7 +110,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr (-, root, bin)
 %{_bindir}/*
-%{_mandir}/*
+%{_mandir}/man1/*
 
 %files libs
 %defattr (-, root, bin)
