@@ -22,6 +22,8 @@ Source3: rpmmacros
 Source4: find-info.sh
 Source5: install-info.sh
 Source6: drvtestadd
+Source7: sysinfo
+Source8: platform
 License: LGPL
 #Requires: fileutils shadow-utils
 #Requires: getconf(GNU_LIBPTHREAD_VERSION) = NPTL
@@ -31,6 +33,8 @@ Requires: %{name}-common
 # XXX necessary only to drag in /usr/lib/libelf.a, otherwise internal elfutils.
 #BuildRequires: elfutils-libelf
 #BuildRequires: elfutils-devel
+BuildRequires: db5-devel
+BuildRequires: xz-devel
 BuildRequires: zlib-devel
 
 #BuildRequires: neon-devel
@@ -60,6 +64,13 @@ Group: Development/Libraries
 # XXX this Provides: is bogus, but getconf(...) needs to be bootstrapped.
 #Provides: getconf(GNU_LIBPTHREAD_VERSION) = NPTL
 #Requires: getconf(GNU_LIBPTHREAD_VERSION) = NPTL
+Requires: zlib
+Requires: xz-libs
+Requires: db5
+
+%if %{gcc_compiler}
+Requires: libgcc
+%endif
 
 %description libs
 This package contains the RPM shared libraries.
@@ -255,6 +266,11 @@ gmake DESTDIR="$RPM_BUILD_ROOT" install
 mkdir -p $RPM_BUILD_ROOT/etc/rpm
 mkdir -p $RPM_BUILD_ROOT/var/spool/repackage
 mkdir -p $RPM_BUILD_ROOT/var/lib/rpm
+
+cp %{SOURCE7} $RPM_BUILD_ROOT/etc/rpm
+cp %{SOURCE8} $RPM_BUILD_ROOT/etc/rpm
+chmod 0444 $RPM_BUILD_ROOT/etc/rpm/*
+
 for dbi in \
 	Basenames Conflictname Dirnames Group Installtid Name Packages \
 	Providename Provideversion Requirename Requireversion Triggername \
@@ -273,6 +289,13 @@ done
 
 mkdir -p ${RPM_BUILD_ROOT}%{__usrlibrpm}/%{_arch}-solaris2.11/
 cp %{SOURCE3} ${RPM_BUILD_ROOT}%{__usrlibrpm}/%{_arch}-solaris2.11/macros
+
+%if %{build_64bit}
+mkdir -p ${RPM_BUILD_ROOT}%{__usrlibrpm}/i686-solaris2.11
+(cd ${RPM_BUILD_ROOT}%{__usrlibrpm}/i686-solaris2.11
+ ln -s ../%{_arch}-solaris2.11/macros)
+%endif
+
 cp %{SOURCE4} ${RPM_BUILD_ROOT}%{__usrlibrpm}
 cp %{SOURCE5} ${RPM_BUILD_ROOT}%{__usrlibrpm}
 cp %{SOURCE6} ${RPM_BUILD_ROOT}%{__usrlibrpm}
@@ -363,6 +386,11 @@ rm -rf $RPM_BUILD_ROOT
 %rpmattr %dir    %{__rpmhome}/%{_arch}-solaris2.11
 %attr(0644, root, bin)  %{__rpmhome}/%{_arch}-solaris2.11/macros
 
+%if %{build_64bit}
+%rpmattr %dir    %{__rpmhome}/i686-solaris2.11
+%{__rpmhome}/i686-solaris2.11/*
+%endif
+
 %rpmattr	%{__rpmhome}/rpmdb_loadcvt
 ###%rpmattr	%{__rpmhome}/magic
 ###%rpmattr	%{__rpmhome}/magic.mgc
@@ -402,13 +430,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir32}/gendiff
 %endif
 
-%dir			/etc/rpm
+%dir		/etc/rpm
+%rpmattr	/etc/rpm/platform
+%rpmattr	/etc/rpm/sysinfo
 %attr(0755, root, bin)	%dir /var/lib/rpm
 %rpmdbattr		/var/lib/rpm/*
 %attr(0755, root, bin)	%dir /var/spool/repackage
 
 %attr(0755, root, bin)	%dir %{__usrlibrpm}
-#%attr(-, root, bin)		%{__usrlibrpm}/noarch*
+#%attr(-, root, bin)	%{__usrlibrpm}/noarch*
 
 %dir %{__prefix}/src/rpm
 %dir %{__prefix}/src/rpm/BUILD
